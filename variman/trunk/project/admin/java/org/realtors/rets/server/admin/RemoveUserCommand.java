@@ -10,14 +10,11 @@ package org.realtors.rets.server.admin;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 
-import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
 
-import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.UserUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,46 +25,36 @@ public class RemoveUserCommand extends wx
 {
     public void execute()
     {
-        SessionHelper helper = Admin.createSessionHelper();
         try
         {
             AdminFrame frame = Admin.getAdminFrame();
             RemoveUserDialog dialog =
                 new RemoveUserDialog(frame);
-            if (dialog.ShowModal() == wxID_CANCEL)
+            int response = dialog.ShowModal();
+            String username = dialog.getUsername();
+            dialog.Destroy();
+            if (response == wxID_CANCEL)
             {
                 return;
             }
-            dialog.Destroy();
 
-            String username = dialog.getUsername();
-            User user = null;
-            Session session = helper.beginTransaction();
-            List users = session.find(
-                "SELECT user " +
-                "  FROM User user " +
-                " WHERE user.username = ?",
-                username, Hibernate.STRING);
-            if (users.size() == 1)
+            User user = UserUtils.findByUsername(username);
+            if (user != null)
             {
-                user = (User) users.get(0);
-                session.delete(user);
+                UserUtils.delete(user);
                 LOG.debug("User deleted: " + user);
                 frame.SetStatusText("User " + user.getName() + " removed");
             }
             else
             {
-                LOG.debug("Expecting 1 user, found: " + users.size());
                 wxMessageBox("User not found: " + username,
                              "User Not Found", wxOK | wxICON_EXCLAMATION,
                              frame);
             }
-            helper.commit();
             frame.refreshUsers();
         }
         catch (HibernateException e)
         {
-            helper.rollback(LOG);
             LOG.error("Caught exception", e);
             StringWriter stackTraceWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stackTraceWriter));
@@ -75,10 +62,6 @@ public class RemoveUserCommand extends wx
             stackTrace = StringUtils.replace(stackTrace, "\t", "    ");
             wxLogMessage(stackTrace);
             wxLogError("Could not add user.");
-        }
-        finally
-        {
-            helper.close(LOG);
         }
     }
 
