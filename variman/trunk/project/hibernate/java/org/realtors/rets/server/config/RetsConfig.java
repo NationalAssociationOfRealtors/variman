@@ -151,7 +151,7 @@ public class RetsConfig
     {
         try
         {
-            IOUtils.writeString(file, toXml());
+            IOUtils.writeString(toXml(), file);
         }
         catch (IOException e)
         {
