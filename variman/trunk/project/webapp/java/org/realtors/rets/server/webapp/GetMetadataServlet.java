@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,21 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.ServerMetadata;
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.Lookup;
+import org.realtors.rets.server.metadata.LookupType;
+import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.ValidationExternal;
+import org.realtors.rets.server.metadata.ValidationExternalType;
+import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
 import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
 
@@ -36,6 +53,28 @@ import org.apache.log4j.Logger;
  */
 public class  GetMetadataServlet extends RetsServlet
 {
+    public void init() throws ServletException
+    {
+        mUseCache = true;
+        mValidTypes = new HashSet();
+        mValidTypes.add(MSystem.TABLE);
+        mValidTypes.add(Resource.TABLE);
+        mValidTypes.add(MClass.TABLE);
+        mValidTypes.add(Table.TABLE);
+        mValidTypes.add(Update.TABLE);
+        mValidTypes.add(UpdateType.TABLE);
+        mValidTypes.add(MObject.TABLE);
+        mValidTypes.add(SearchHelp.TABLE);
+        mValidTypes.add(EditMask.TABLE);
+        mValidTypes.add(Lookup.TABLE);
+        mValidTypes.add(LookupType.TABLE);
+        mValidTypes.add(ValidationLookup.TABLE);
+        mValidTypes.add(ValidationLookupType.TABLE);
+        mValidTypes.add(ValidationExternal.TABLE);
+        mValidTypes.add(ValidationExternalType.TABLE);
+        mValidTypes.add(ValidationExpression.TABLE);
+    }
+
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
         throws ServletException, IOException
@@ -45,20 +84,14 @@ public class  GetMetadataServlet extends RetsServlet
 
         try
         {
-            String type = request.getParameter("Type").toUpperCase();
+            String type = request.getParameter("Type");
             String id = request.getParameter("ID");
-            String formatString = request.getParameter("Format").toUpperCase();
+            String formatString = request.getParameter("Format");
             LOG.debug("type=" + type + ", id=" + id + ", format=" +
                       formatString);
 
-            // Clean up format
-            if (formatString == null)
-            {
-                formatString = COMPACT_FORMAT;
-            }
-
+            type = cleanUpType(type);
             int format = parseFormat(formatString);
-
             String[] ids = StringUtils.split(id, ":");
 
             // Clean up id
@@ -97,9 +130,26 @@ public class  GetMetadataServlet extends RetsServlet
         }
     }
 
+    private String cleanUpType(String type) throws RetsReplyException
+    {
+        type = type.toUpperCase();
+        if (!type.startsWith("METADATA-"))
+        {
+            throw new RetsReplyException(20501, "Invalid Type");
+        }
+
+        type = type.substring("METADATA-".length());
+        if (!mValidTypes.contains(type))
+        {
+            throw new RetsReplyException(20501, "Invalid Type");
+        }
+        return type;
+    }
+
     private int parseFormat(String formatString)
     {
-        if (formatString.equals(COMPACT_FORMAT))
+        formatString = formatString.toUpperCase();
+        if ((formatString == null) || formatString.equals(COMPACT_FORMAT))
         {
             return MetadataFormatter.COMPACT;
         }
@@ -136,44 +186,44 @@ public class  GetMetadataServlet extends RetsServlet
     private List getMetadata(String type, String[] levels, boolean recursive)
         throws RetsReplyException
     {
-        // Always need system to get version and date
-//        MSystem system = findSystem();
-//        String version = system.getVersionString();
-//        Date date = system.getDate();
-        String version = "1.00.001";
-        Date date = new Date();
-        List metadataResults = new ArrayList();
-
-        if (type.startsWith("METADATA-"))
+        if (mUseCache)
         {
-            type = type.substring("METADATA-".length());
-            MetadataManager manager = getMetadataManager();
-            List metadata = manager.find(type, StringUtils.join(levels, ":"));
-            metadataResults.add(new MetadataSegment(metadata, levels, version,
-                                                    date));
-            if (recursive)
-            {
-                recurseChildren(metadata,  metadataResults, version, date);
-            }
+            return getMetadataFromCache(type, levels, recursive);
         }
         else
         {
-            LOG.warn("Recieved query for unknown metadataResults type: " +
-                     type + ", level=" + StringUtils.join(levels, ":"));
-            throw new RetsReplyException(20501, "Invalid Type");
+            return getMetadataFromHibernate(type, levels, recursive);
+        }
+    }
+
+    private List getMetadataFromCache(String type, String[] levels,
+                                      boolean recursive)
+    {
+        // Always need system to get version and date
+        MSystem system = findSystem();
+        String version = system.getVersionString();
+        Date date = system.getDate();
+        List metadataResults = new ArrayList();
+
+        MetadataManager manager = getMetadataManager();
+        List metadata = manager.find(type, StringUtils.join(levels, ":"));
+        metadataResults.add(new MetadataSegment(metadata, levels, version,
+                                                date));
+        if (recursive)
+        {
+            recurseChildren(metadata,  metadataResults, version, date);
         }
         return metadataResults;
     }
 
-    private List getMetadata2(String type, String[] levels, boolean recursive)
+    private List getMetadataFromHibernate(String type, String[] levels,
+                                          boolean recursive)
         throws RetsReplyException
     {
         // Always need system to get version and date
-//        MSystem system = findSystem();
-//        String version = system.getVersionString();
-//        Date date = system.getDate();
-        String version = "1.00.001";
-        Date date = new Date();
+        MSystem system = findSystemFromHibernate();
+        String version = system.getVersionString();
+        Date date = system.getDate();
         List metadataResults = new ArrayList();
 
         MetadataFinder finder =
@@ -222,6 +272,13 @@ public class  GetMetadataServlet extends RetsServlet
 
     private MSystem findSystem()
     {
+        MetadataManager manager = getMetadataManager();
+        List systems = manager.find(MSystem.TABLE, "");
+        return (MSystem) systems.get(0);
+    }
+
+    private MSystem findSystemFromHibernate()
+    {
         SessionHelper helper = InitServlet.createHelper();
         MSystem system = null;
         try
@@ -254,41 +311,43 @@ public class  GetMetadataServlet extends RetsServlet
         Logger.getLogger(GetMetadataServlet.class);
     public static final String COMPACT_FORMAT = "COMPACT";
     private static Map sMetadataFinders;
+    private Set mValidTypes;
+    private boolean mUseCache;
 
     static
     {
         sMetadataFinders = new HashMap();
-        sMetadataFinders.put("METADATA-SYSTEM",
+        sMetadataFinders.put("SYSTEM",
                               new MetadataFinder("MSystem", 0));
-        sMetadataFinders.put("METADATA-RESOURCE",
+        sMetadataFinders.put("RESOURCE",
                               new MetadataFinder("Resource", 0));
-        sMetadataFinders.put("METADATA-CLASS",
+        sMetadataFinders.put("CLASS",
                               new MetadataFinder("MClass", 1));
-        sMetadataFinders.put("METADATA-TABLE",
+        sMetadataFinders.put("TABLE",
                              new MetadataFinder("Table", 2));
-        sMetadataFinders.put("METADATA-UPDATE",
+        sMetadataFinders.put("UPDATE",
                              new MetadataFinder("Update", 2));
-        sMetadataFinders.put("METADATA-UPDATE_TYPE",
+        sMetadataFinders.put("UPDATE_TYPE",
                              new MetadataFinder("UpdateType", 3));
-        sMetadataFinders.put("METADATA-OBJECT",
+        sMetadataFinders.put("OBJECT",
                              new MetadataFinder("MObject", 1));
-        sMetadataFinders.put("METADATA-SEARCH_HELP",
+        sMetadataFinders.put("SEARCH_HELP",
                              new MetadataFinder("SearchHelp", 1));
-        sMetadataFinders.put("METADATA-EDIT_MASK",
+        sMetadataFinders.put("EDIT_MASK",
                              new MetadataFinder("EditMask", 1));
-        sMetadataFinders.put("METADATA-LOOKUP",
+        sMetadataFinders.put("LOOKUP",
                              new MetadataFinder("Lookup", 1));
-        sMetadataFinders.put("METADATA-LOOKUP_TYPE",
+        sMetadataFinders.put("LOOKUP_TYPE",
                              new MetadataFinder("LookupType", 2));
-        sMetadataFinders.put("METADATA-VALIDATION_LOOKUP",
+        sMetadataFinders.put("VALIDATION_LOOKUP",
                              new MetadataFinder("ValidationLookup", 1));
-        sMetadataFinders.put("METADATA-VALIDATION_LOOKUP_TYPE",
+        sMetadataFinders.put("VALIDATION_LOOKUP_TYPE",
                              new MetadataFinder("ValidatoinLookupType", 2));
-        sMetadataFinders.put("METADATA-VALIDATION_EXTERNAL",
+        sMetadataFinders.put("VALIDATION_EXTERNAL",
                              new MetadataFinder("ValidationExternal", 1));
-        sMetadataFinders.put("METADATA-VALIDATION_EXTERNAL_TYPE",
+        sMetadataFinders.put("VALIDATION_EXTERNAL_TYPE",
                              new MetadataFinder("ValidationExternalType", 2));
-        sMetadataFinders.put("METADATA-VALIDATION_EXPRESSION",
+        sMetadataFinders.put("VALIDATION_EXPRESSION",
                              new MetadataFinder("ValidationExpression", 1));
     }
 }
