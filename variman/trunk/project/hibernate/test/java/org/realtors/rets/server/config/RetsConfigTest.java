@@ -38,8 +38,8 @@ public class RetsConfigTest extends LinesEqualTestCase
             "<rets-config>\n" +
             "  <port>7103</port>\n" +
             "  <metadata-dir>WEB-INF/rex/metadata</metadata-dir>\n" +
-            "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
+            "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
             "  <nonce-success-timeout>10</nonce-success-timeout>\n" +
             "  <database>\n" +
@@ -70,8 +70,8 @@ public class RetsConfigTest extends LinesEqualTestCase
             "<rets-config>\n" +
             "  <port>7103</port>\n" +
             "  <metadata-dir>WEB-INF/rex/metadata</metadata-dir>\n" +
-            "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
+            "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
             "  <nonce-success-timeout>10</nonce-success-timeout>\n" +
             "  <database>\n" +

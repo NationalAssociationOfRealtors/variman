@@ -116,8 +116,8 @@ public class RetsConfig
         Element retsConfig = new Element(RETS_CONFIG);
         addChild(retsConfig, PORT, mPort);
         addChild(retsConfig, METADATA_DIR, mMetadataDir);
-        addChild(retsConfig, GET_OBJECT_PATTERN, mGetObjectPattern);
         addChild(retsConfig, GET_OBJECT_ROOT, mGetObjectRoot);
+        addChild(retsConfig, GET_OBJECT_PATTERN, mGetObjectPattern);
         addChild(retsConfig, NONCE_INITIAL_TIMEOUT, mNonceInitialTimeout);
         addChild(retsConfig, NONCE_SUCCESS_TIMEOUT, mNonceSuccessTimeout);
         Element database = new Element(DATABASE);
