@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import org.apache.commons.lang.enum.Enum;
 import org.apache.commons.lang.StringUtils;
 
-public class RuleDescription
+public class FilterRule
 {
-    public RuleDescription()
+    public FilterRule()
     {
         this(INCLUDE);
     }
 
-    public RuleDescription(Type type)
+    public FilterRule(Type type)
     {
         mType = type;
         mSystemNames = new ArrayList();
