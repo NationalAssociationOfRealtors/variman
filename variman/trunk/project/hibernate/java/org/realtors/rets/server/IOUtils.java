@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URI;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -414,13 +414,18 @@ public class IOUtils
 
     public static File relativize(File base, File file)
     {
-        // Convert both to URIs
-        URI baseUri = base.toURI();
-        URI fileUri = file.toURI();
-        URI relativeUri = baseUri.relativize(fileUri);
-        // convert back to File. Don't use URI version of File constructor. For
-        // some reason, it doesn't like relative paths.
-        return new File(relativeUri.getPath());
+        String basePath = base.getPath();
+        String filePath = file.getPath();
+        if (filePath.startsWith(basePath))
+        {
+            // Need to add one for file separator
+            String relativePath = filePath.substring(basePath.length() + 1);
+            return new File(relativePath);
+        }
+        else
+        {
+            return file;
+        }
     }
 
     public static String relativize(String base, String file)
@@ -430,14 +435,20 @@ public class IOUtils
 
     public static File resolve(File base, File file)
     {
-        if (!file.isAbsolute())
+        try
         {
-            file = new File(base, file.getPath());
+            if (!file.isAbsolute())
+            {
+                file = new File(base, file.getPath());
+            }
+            URL baseUrl = base.toURL();
+            URL resolvedUrl = new URL(baseUrl, file.getPath());
+            return new File(resolvedUrl.getFile());
         }
-        URI baseUri = base.toURI();
-        URI fileUri = file.toURI();
-        URI resolvedUri = baseUri.resolve(fileUri);
-        return new File(resolvedUri);
+        catch (MalformedURLException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public static String resolve(String base, String file)
