@@ -11,7 +11,6 @@
 package org.realtors.rets.server.webapp;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -22,14 +21,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 
 import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.AccountingStatisticsUtils;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
@@ -83,29 +84,21 @@ public class AccountingFilter implements Filter, Constants
         {
             User user = (User)
                 session.getAttribute(AuthenticationFilter.AUTHORIZED_USER_KEY);
-            statistics = createStatistics(user);
+            statistics = findOrCreateStatistics(user);
             session.setAttribute(ACCOUNTING_KEY, statistics);
         }
         return statistics;
     }
 
-    private AccountingStatistics createStatistics(User user)
+    private AccountingStatistics findOrCreateStatistics(User user)
     {
         AccountingStatistics statistics = null;
-        SessionHelper helper = WebApp.createHelper();
+        SessionHelper helper = RetsServer.createHelper();
         try
         {
             Session session = helper.beginTransaction();
-            List results = session.find(
-                "  FROM AccountingStatistics stats" +
-                " WHERE stats.user = ?",
-                user, Hibernate.entity(User.class));
-            if (results.size() == 1)
-            {
-                LOG.debug("Found existing statistics");
-                statistics = (AccountingStatistics) results.get(0);
-            }
-            else if (results.size() == 0)
+            statistics = AccountingStatisticsUtils.findByUser(user, helper);
+            if (statistics == null)
             {
                 LOG.debug("Creating new statistics");
                 statistics = new AccountingStatistics();
@@ -136,22 +129,14 @@ public class AccountingFilter implements Filter, Constants
 
     private void saveStatistics(AccountingStatistics statistics)
     {
-        SessionHelper helper = WebApp.createHelper();
         try
         {
             LOG.debug("Saving statistics");
-            Session session = helper.beginTransaction();
-            session.saveOrUpdate(statistics);
-            helper.commit();
+            AccountingStatisticsUtils.update(statistics);
         }
         catch (HibernateException e)
         {
             LOG.warn("Exception", e);
-            helper.rollback(LOG);
-        }
-        finally
-        {
-            helper.close(LOG);
         }
     }
 
