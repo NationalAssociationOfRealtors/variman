@@ -3,16 +3,16 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.ValidationExpression;
 
 public class CompactValidationExpressionFormatter
     extends ValidationExpressionFormatter
 {
-    public void format(PrintWriter out,
-                       ValidationExpression[] validationExpressions)
+    public void format(PrintWriter out, List validationExpressions)
     {
-        if (validationExpressions.length == 0)
+        if (validationExpressions.size() == 0)
         {
             return;
         }
@@ -23,10 +23,12 @@ public class CompactValidationExpressionFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < validationExpressions.length; i++)
+        for (int i = 0; i < validationExpressions.size(); i++)
         {
-            ValidationExpression validationExpression = validationExpressions[i];
+            ValidationExpression validationExpression =
+                (ValidationExpression) validationExpressions.get(i);
             appendDataRow(out, validationExpression);
+            
         }
         tag.end();
     }

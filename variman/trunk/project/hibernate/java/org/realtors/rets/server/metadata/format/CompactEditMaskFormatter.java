@@ -3,14 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.EditMask;
 
 public class CompactEditMaskFormatter extends EditMaskFormatter
 {
-    public void format(PrintWriter out, EditMask[] editMasks)
+    public void format(PrintWriter out, List editMasks)
     {
-        if (editMasks.length == 0)
+        if (editMasks.size() == 0)
         {
             return;
         }
@@ -21,9 +22,9 @@ public class CompactEditMaskFormatter extends EditMaskFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < editMasks.length; i++)
+        for (int i = 0; i < editMasks.size(); i++)
         {
-            EditMask editMask = editMasks[i];
+            EditMask editMask = (EditMask) editMasks.get(i);
             appendDataRow(out, editMask);
         }
         tag.end();

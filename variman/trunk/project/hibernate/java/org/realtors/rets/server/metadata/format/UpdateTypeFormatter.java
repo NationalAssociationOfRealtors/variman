@@ -41,13 +41,7 @@ public abstract class UpdateTypeFormatter extends MetadataFormatter
         mUpdateName = updateName;
     }
 
-    public abstract void format(PrintWriter out, UpdateType[] updateTypes);
-
-    public void format(PrintWriter out, List updateTypes)
-    {
-        format(out, (UpdateType[])
-            updateTypes.toArray(new UpdateType[updateTypes.size()]));
-    }
+    public abstract void format(PrintWriter out, List updateTypes);
 
     protected String mResourceName;
     protected String mClassName;

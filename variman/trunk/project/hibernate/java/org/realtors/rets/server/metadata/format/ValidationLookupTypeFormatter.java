@@ -31,15 +31,7 @@ abstract public class ValidationLookupTypeFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract void format(PrintWriter out,
-                                ValidationLookupType[] validationLookupTypes);
-
-    public void format(PrintWriter out, List validationLookupTypes)
-    {
-        format(out, (ValidationLookupType[])
-            validationLookupTypes.toArray(
-                new ValidationLookupType[validationLookupTypes.size()]));
-    }
+    public abstract void format(PrintWriter out, List validationLookupTypes);
 
     protected String mValidationLookupName;
     protected String mResourceName;

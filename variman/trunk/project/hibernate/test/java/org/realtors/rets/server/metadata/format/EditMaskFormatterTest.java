@@ -50,7 +50,7 @@ public class EditMaskFormatterTest extends FormatterTestCase
     {
         EditMaskFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new EditMask[0]);
+        formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
     }
 

@@ -3,14 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.UpdateType;
 
 public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
 {
-    public void format(PrintWriter out, UpdateType[] updateTypes)
+    public void format(PrintWriter out, List updateTypes)
     {
-        if (updateTypes.length == 0)
+        if (updateTypes.size() == 0)
         {
             return;
         }
@@ -23,9 +24,9 @@ public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < updateTypes.length; i++)
+        for (int i = 0; i < updateTypes.size(); i++)
         {
-            UpdateType updateType = updateTypes[i];
+            UpdateType updateType = (UpdateType) updateTypes.get(i);
             apppendDataRow(out, updateType);
         }
         tag.end();

@@ -31,13 +31,7 @@ public abstract class ObjectFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract void format(PrintWriter out, MObject[] objects);
-
-    public void format(PrintWriter out, List objects)
-    {
-        format(out, (MObject[]) objects.toArray(
-            new MObject[objects.size()]));
-    }
+    public abstract void format(PrintWriter out, List objects);
 
     protected String mResourceName;
 }

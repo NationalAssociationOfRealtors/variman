@@ -53,7 +53,7 @@ public class UpdateFormatterTest extends FormatterTestCase
     {
         UpdateFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new Update[0]);
+        formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
     }
 

@@ -3,14 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.LookupType;
 
 public class CompactLookupTypeFormatter extends LookupTypeFormatter
 {
-    public void format(PrintWriter out, LookupType[] lookupTypes)
+    public void format(PrintWriter out, List lookupTypes)
     {
-        if (lookupTypes.length == 0)
+        if (lookupTypes.size() == 0)
         {
             return;
         }
@@ -22,9 +23,9 @@ public class CompactLookupTypeFormatter extends LookupTypeFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < lookupTypes.length; i++)
+        for (int i = 0; i < lookupTypes.size(); i++)
         {
-            LookupType lookupType = lookupTypes[i];
+            LookupType lookupType = (LookupType) lookupTypes.get(i);
             appendDataRow(out, lookupType);
         }
         tag.end();

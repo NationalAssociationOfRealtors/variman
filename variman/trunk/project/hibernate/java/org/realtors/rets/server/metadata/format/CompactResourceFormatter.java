@@ -3,15 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.Resource;
 
-public class CompactResourceFormatter
-    extends ResourceFormatter
+public class CompactResourceFormatter extends ResourceFormatter
 {
-    public void format(PrintWriter out, Resource[] resources)
+    public void format(PrintWriter out, List resources)
     {
-        if (resources.length == 0)
+        if (resources.size() == 0)
         {
             return;
         }
@@ -21,9 +21,9 @@ public class CompactResourceFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < resources.length; i++)
+        for (int i = 0; i < resources.size(); i++)
         {
-            Resource resource = resources[i];
+            Resource resource = (Resource) resources.get(i);
             appendDataRow(out, resource);
         }
         tag.end();

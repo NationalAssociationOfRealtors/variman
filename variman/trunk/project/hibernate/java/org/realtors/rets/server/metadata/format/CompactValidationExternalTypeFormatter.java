@@ -14,10 +14,9 @@ import org.realtors.rets.server.metadata.ValidationExternalType;
 public class CompactValidationExternalTypeFormatter
     extends ValidationExternalTypeFormatter
 {
-    public void format(
-        PrintWriter out, ValidationExternalType[] validationExternalTypes)
+    public void format(PrintWriter out, List validationExternalTypes)
     {
-        if (validationExternalTypes.length == 0)
+        if (validationExternalTypes.size() == 0)
         {
             return;
         }
@@ -29,10 +28,10 @@ public class CompactValidationExternalTypeFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < validationExternalTypes.length; i++)
+        for (int i = 0; i < validationExternalTypes.size(); i++)
         {
             ValidationExternalType validationExternalType =
-                validationExternalTypes[i];
+                (ValidationExternalType) validationExternalTypes.get(i);
             appendDataRow(out, validationExternalType);
         }
         tag.end();

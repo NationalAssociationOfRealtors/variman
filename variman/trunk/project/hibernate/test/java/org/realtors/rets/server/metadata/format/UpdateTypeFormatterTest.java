@@ -97,7 +97,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
     {
         UpdateTypeFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new UpdateType[0]);
+        formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
     }
 

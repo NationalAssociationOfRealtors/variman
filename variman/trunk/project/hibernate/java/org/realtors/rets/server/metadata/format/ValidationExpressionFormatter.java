@@ -26,15 +26,7 @@ public abstract class ValidationExpressionFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract void format(PrintWriter out,
-                                ValidationExpression[] validationExpressions);
-
-    public void format(PrintWriter out, List validationExpressions)
-    {
-        format(out, (ValidationExpression[])
-            validationExpressions.toArray(
-                new ValidationExpression[validationExpressions.size()]));
-    }
+    public abstract void format(PrintWriter out, List validationExpressions);
 
     protected String mResourceName;
 }

@@ -31,13 +31,7 @@ public abstract class ClassFormatter extends MetadataFormatter
         mResource = resource;
     }
 
-    public abstract void format(PrintWriter out, MClass[] classes);
-
-    public void format(PrintWriter out, List classesList)
-    {
-        format(out, (MClass[])
-            classesList.toArray(new MClass[classesList.size()]));
-    }
+    public abstract void format(PrintWriter out, List classesList);
 
     protected String mResource;
 }

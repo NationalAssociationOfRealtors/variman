@@ -26,13 +26,7 @@ public abstract class SearchHelpFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract void format(PrintWriter out, SearchHelp[] searchHelps);
-
-    public void format(PrintWriter out, List searchHelps)
-    {
-        format(out, (SearchHelp[]) searchHelps.toArray(
-            new SearchHelp[searchHelps.size()]));
-    }
+    public abstract void format(PrintWriter out, List searchHelps);
 
     protected String mResourceName;
 }

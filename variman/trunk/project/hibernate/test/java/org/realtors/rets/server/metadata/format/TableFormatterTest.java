@@ -119,7 +119,7 @@ public class TableFormatterTest extends FormatterTestCase
     {
         TableFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new Table[0]);
+        formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
     }
 

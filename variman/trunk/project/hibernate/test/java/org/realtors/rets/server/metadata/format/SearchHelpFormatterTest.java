@@ -53,7 +53,7 @@ public class SearchHelpFormatterTest extends FormatterTestCase
         SearchHelpFormatter formatter =
             getFormatter(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new SearchHelp[0]);
+        formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
     }
 

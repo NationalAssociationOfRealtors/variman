@@ -31,13 +31,7 @@ public abstract class LookupTypeFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract void format(PrintWriter out, LookupType[] lookupTypes);
-
-    public void format(PrintWriter out, List lookupTypes)
-    {
-        format(out, (LookupType[]) lookupTypes.toArray(
-            new LookupType[lookupTypes.size()]));
-    }
+    public abstract void format(PrintWriter out, List lookupTypes);
 
     protected String mLookupName;
     protected String mResourceName;

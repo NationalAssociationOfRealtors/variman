@@ -3,14 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.MObject;
 
 public class CompactObjectFormatter extends ObjectFormatter
 {
-    public void format(PrintWriter out, MObject[] objects)
+    public void format(PrintWriter out, List objects)
     {
-        if (objects.length == 0)
+        if (objects.size() == 0)
         {
             return;
         }
@@ -21,9 +22,9 @@ public class CompactObjectFormatter extends ObjectFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < objects.length; i++)
+        for (int i = 0; i < objects.size(); i++)
         {
-            MObject object = objects[i];
+            MObject object = (MObject) objects.get(i);
             appendDataRow(out, object);
         }
         tag.end();

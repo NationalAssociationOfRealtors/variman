@@ -26,10 +26,5 @@ public abstract class SystemFormatter extends MetadataFormatter
         }
     }
 
-    public abstract void format(PrintWriter out, MSystem system);
-
-    public void format(PrintWriter out, List systemList)
-    {
-        format(out, (MSystem) systemList.get(0));
-    }
+    public abstract void format(PrintWriter out, List systems);
 }

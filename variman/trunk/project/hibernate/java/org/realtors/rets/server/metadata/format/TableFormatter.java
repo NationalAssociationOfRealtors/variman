@@ -21,8 +21,6 @@ public abstract class TableFormatter extends MetadataFormatter
         }
     }
 
-    public abstract void format(PrintWriter out, Table[] tables);
-
     public void setClassName(String className)
     {
         mClassName = className;
@@ -33,10 +31,7 @@ public abstract class TableFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public void format(PrintWriter out, List tables)
-    {
-        format(out, (Table[]) tables.toArray(new Table[tables.size()]));
-    }
+    public abstract void format(PrintWriter out, List tables);
 
     protected String mClassName;
     protected String mResourceName;

@@ -62,7 +62,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
         ValidationExternalFormatter formatter =
             getFormatter(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ValidationExternal[0]);
+        formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
     }
 

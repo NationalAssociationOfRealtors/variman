@@ -3,16 +3,16 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.ValidationExternal;
 
 public class CompactValidationExternalFormatter
     extends ValidationExternalFormatter
 {
-    public void format(PrintWriter out,
-                       ValidationExternal[] validationExternals)
+    public void format(PrintWriter out, List validationExternals)
     {
-        if (validationExternals.length == 0)
+        if (validationExternals.size() == 0)
         {
             return;
         }
@@ -23,9 +23,10 @@ public class CompactValidationExternalFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < validationExternals.length; i++)
+        for (int i = 0; i < validationExternals.size(); i++)
         {
-            ValidationExternal validationExternal = validationExternals[i];
+            ValidationExternal validationExternal =
+                (ValidationExternal) validationExternals.get(i);
             appendDataRow(out, validationExternal);
         }
         tag.end();

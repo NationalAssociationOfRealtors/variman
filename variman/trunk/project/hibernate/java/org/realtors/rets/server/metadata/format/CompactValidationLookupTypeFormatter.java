@@ -3,16 +3,16 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
 public class CompactValidationLookupTypeFormatter
     extends ValidationLookupTypeFormatter
 {
-    public void format(PrintWriter out,
-                       ValidationLookupType[] validationLookupTypes)
+    public void format(PrintWriter out, List validationLookupTypes)
     {
-        if (validationLookupTypes.length == 0)
+        if (validationLookupTypes.size() == 0)
         {
             return;
         }
@@ -24,10 +24,10 @@ public class CompactValidationLookupTypeFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < validationLookupTypes.length; i++)
+        for (int i = 0; i < validationLookupTypes.size(); i++)
         {
             ValidationLookupType validationLookupType =
-                validationLookupTypes[i];
+                (ValidationLookupType) validationLookupTypes.get(i);
             appendDataRow(out, validationLookupType);
         }
         tag.end();

@@ -3,14 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.SearchHelp;
 
 public class CompactSearchHelpFormatter extends SearchHelpFormatter
 {
-    public void format(PrintWriter out, SearchHelp[] searchHelps)
+    public void format(PrintWriter out, List searchHelps)
     {
-        if (searchHelps.length == 0)
+        if (searchHelps.size() == 0)
         {
             return; 
         }
@@ -21,9 +22,9 @@ public class CompactSearchHelpFormatter extends SearchHelpFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < searchHelps.length; i++)
+        for (int i = 0; i < searchHelps.size(); i++)
         {
-            SearchHelp searchHelp = searchHelps[i];
+            SearchHelp searchHelp = (SearchHelp) searchHelps.get(i);
             appendDataRow(out, searchHelp);
         }
         tag.end();

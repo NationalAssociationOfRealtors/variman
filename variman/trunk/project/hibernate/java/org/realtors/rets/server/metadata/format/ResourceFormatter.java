@@ -26,11 +26,5 @@ public abstract class ResourceFormatter extends MetadataFormatter
         }
     }
 
-    public abstract void format(PrintWriter out, Resource[] resources);
-
-    public void format(PrintWriter out, List resources)
-    {
-        format(out, (Resource[]) resources.toArray(
-            new Resource[resources.size()]));
-    }
+    public abstract void format(PrintWriter out, List resources);
 }

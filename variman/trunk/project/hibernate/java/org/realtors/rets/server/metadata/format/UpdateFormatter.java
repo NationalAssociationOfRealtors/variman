@@ -26,8 +26,6 @@ public abstract class UpdateFormatter extends MetadataFormatter
         }
     }
 
-    public abstract void format(PrintWriter out, Update[] updates);
-
     public void setClassName(String className)
     {
         mClassName = className;
@@ -38,10 +36,7 @@ public abstract class UpdateFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public void format(PrintWriter out, List updates)
-    {
-        format(out, (Update[]) updates.toArray(new Update[updates.size()]));
-    }
+    public abstract void format(PrintWriter out, List updates);
 
     protected String mClassName;
     protected String mResourceName;

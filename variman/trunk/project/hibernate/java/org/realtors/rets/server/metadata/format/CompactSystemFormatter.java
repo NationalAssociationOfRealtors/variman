@@ -3,14 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.MSystem;
 
-public class CompactSystemFormatter
-    extends SystemFormatter
+public class CompactSystemFormatter extends SystemFormatter
 {
-    public void format(PrintWriter out, MSystem system)
+    public void format(PrintWriter out, List systems)
     {
+        MSystem system = (MSystem) systems.get(0);
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-SYSTEM");
         tag.appendAttribute("Version", system.getVersionString());

@@ -3,14 +3,15 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.Table;
 
 public class CompactTableFormatter extends TableFormatter
 {
-    public void format(PrintWriter out, Table[] tables)
+    public void format(PrintWriter out, List tables)
     {
-        if (tables.length == 0)
+        if (tables.size() == 0)
         {
             return;
         }
@@ -22,9 +23,9 @@ public class CompactTableFormatter extends TableFormatter
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
         tag.appendColumns(sColumns);
-        for (int i = 0; i < tables.length; i++)
+        for (int i = 0; i < tables.size(); i++)
         {
-            Table table = tables[i];
+            Table table = (Table) tables.get(i);
             appendDataRow(out, table);
         }
         tag.end();

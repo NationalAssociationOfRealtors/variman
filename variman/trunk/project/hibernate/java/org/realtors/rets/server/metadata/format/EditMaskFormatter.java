@@ -26,13 +26,7 @@ public abstract class EditMaskFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract void format(PrintWriter out, EditMask[] editMasks);
-
-    public void format(PrintWriter out, List editMasks)
-    {
-        format(out, (EditMask[]) editMasks.toArray(
-            new EditMask[editMasks.size()]));
-    }
+    public abstract void format(PrintWriter out, List editMasks);
 
     protected String mResourceName;
 }

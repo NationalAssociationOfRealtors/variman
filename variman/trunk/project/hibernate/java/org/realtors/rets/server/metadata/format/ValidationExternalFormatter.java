@@ -26,15 +26,7 @@ public abstract class ValidationExternalFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract void format(PrintWriter out,
-                                ValidationExternal[] validationExternals);
-
-    public void format(PrintWriter out, List validationExternals)
-    {
-        format(out, (ValidationExternal[])
-            validationExternals.toArray(
-                new ValidationExternal[validationExternals.size()]));
-    }
+    public abstract void format(PrintWriter out, List validationExternals);
 
     protected String mResourceName;
 }
