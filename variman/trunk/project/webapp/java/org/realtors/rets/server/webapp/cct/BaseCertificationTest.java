@@ -46,8 +46,6 @@ public abstract class BaseCertificationTest implements CertificationTest
         mMessage = mValidationResults.getMessage();
     }
 
-    protected abstract ValidationResults validate();
-
     public void cancel()
     {
         mStatus = StatusEnum.FAILED;
