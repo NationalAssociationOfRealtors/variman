@@ -10,6 +10,13 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ServerMetadata;
+import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.Lookup;
+import org.realtors.rets.server.metadata.MObject;
 
 import org.apache.log4j.Logger;
 
@@ -41,8 +48,90 @@ public class FormattingVisitor
         MClass[] classes = (MClass[]) segment.getData();
         ClassFormatter formatter = ClassFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
-        formatter.setResource(segment.getLevels()[0]);
+        formatter.setResourceName(segment.getLevels()[0]);
         formatter.format(mOut, classes);
+    }
+
+    public void visitTable(MetadataSegment segment)
+    {
+        Table[] tables = (Table[]) segment.getData();
+        String[] levels = segment.getLevels();
+        TableFormatter formatter = TableFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.setClassName(levels[1]);
+        formatter.format(mOut, tables);
+    }
+
+    public void visitUpdate(MetadataSegment segment)
+    {
+        Update[] updates = (Update[]) segment.getData();
+        String[] levels = segment.getLevels();
+        UpdateFormatter formatter = UpdateFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.setClassName(levels[1]);
+        formatter.format(mOut, updates);
+    }
+
+    public void visitUpdateType(MetadataSegment segment)
+    {
+        UpdateType[] updateTypes = (UpdateType[]) segment.getData();
+        String[] levels = segment.getLevels();
+        UpdateTypeFormatter formatter =
+            UpdateTypeFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.setClassName(levels[1]);
+        formatter.setUpdateName(levels[2]);
+        formatter.format(mOut, updateTypes);
+    }
+
+    public void visitMObject(MetadataSegment segment)
+    {
+        MObject[] objects = (MObject[]) segment.getData();
+        String[] levels = segment.getLevels();
+        ObjectFormatter formatter = ObjectFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.format(mOut, objects);
+    }
+
+    public void visitSearchHelp(MetadataSegment segment)
+    {
+        SearchHelp[] searchHelps = (SearchHelp[]) segment.getData();
+        String[] levels = segment.getLevels();
+        SearchHelpFormatter formatter =
+            SearchHelpFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.format(mOut, searchHelps);
+    }
+
+    public void visitEditMask(MetadataSegment segment)
+    {
+        EditMask[] editMasks = (EditMask[]) segment.getData();
+        String[] levels = segment.getLevels();
+        EditMaskFormatter formatter = EditMaskFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.format(mOut, editMasks);
+    }
+
+    public void visitLookup(MetadataSegment segment)
+    {
+        Lookup[] lookup = (Lookup[]) segment.getData();
+        String[] levels = segment.getLevels();
+        LookupFormatter formatter = LookupFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.format(mOut, lookup);
+    }
+
+    public void visitServerMetadata(MetadataSegment segment)
+    {
+        ServerMetadata[] data = segment.getData();
+        LOG.warn("Cannot handle: " + data.getClass().getName());
     }
 
     public void visitObject(Object object)
@@ -71,12 +160,12 @@ public class FormattingVisitor
         Method method = null;
 
         // Try all super classes
-//        Class superClass = clazz;
-//        while ((method == null) && (superClass != Object.class))
-//        {
+        Class superClass = clazz;
+        while ((method == null) && (superClass != Object.class))
+        {
             try
             {
-                String className = clazz.getName();
+                String className = superClass.getName();
                 className = className.substring(className.lastIndexOf('.') + 1);
                 String name = "visit" + className;
                 LOG.info("Checking dispatch to: " + name);
@@ -85,9 +174,9 @@ public class FormattingVisitor
             }
             catch (NoSuchMethodException e)
             {
-//                superClass = superClass.getSuperclass();
+                superClass = superClass.getSuperclass();
             }
-//        }
+        }
 
         // Default to visit(Object), bubbling up the exception which shouldn't
         // happen
