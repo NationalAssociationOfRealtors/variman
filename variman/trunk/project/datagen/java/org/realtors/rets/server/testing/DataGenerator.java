@@ -70,10 +70,11 @@ public class DataGenerator extends DataGenBase
             {
                 ps = con.prepareStatement(
                     "INSERT INTO " +
-                    "rets_property_res(id,lp,broker,agent_id,ln,zip_code,ld," +
-                    "                  sqft,e_school,m_school,h_school," +
-                    "                  stname, url, ltyp, stnum, vew, ar," +
-                    "                  status,owner)" +
+                    "rets_property_res(id,r_lp,r_broker,r_agent_id,r_ln," +
+                    "                  r_zip_code,r_ld,r_sqft,r_e_school," +
+                    "                  r_m_school,r_h_school,r_stname,r_url," +
+                    "                  r_ltyp, r_stnum, r_vew, r_ar,r_status," +
+                    "                  r_owner)" +
                     " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
                 );
                 // todo: LookupMulti EF needs to be added.
