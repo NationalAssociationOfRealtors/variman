@@ -3,9 +3,11 @@
       $tmpl_location = "Home";
       include("header.php");
 ?>
+<!--
     <div class="logo">
     <img src="variman_logo.gif" alt="Variman Logo">
     </div>
+-->
 
     <div class="body">
     <h3>Introduction</h3>
@@ -37,6 +39,12 @@
       href="http://jtds.sourceforge.net/">jTDS</a>.  </li> </ul>
 
     <h3>News</h3>
+    <ul>
+      <li>
+        <b>20 Dec 2004</b>: Version 2.1.2 released.  Name changed to
+        Variman.
+      </li>
+    </ul>
     <ul>
       <li><b>12 Nov 2004</b>: Version 2.1.1 released.</li>
     </ul>
