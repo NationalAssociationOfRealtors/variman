@@ -29,6 +29,7 @@ public class FileObjectStream implements ObjectStream
     {
         return mMimeType;
     }
+    
     public String getContentType(String file)
     {
         if (file.endsWith(".gif"))
@@ -41,9 +42,8 @@ public class FileObjectStream implements ObjectStream
         }
         else
         {
-            // Todo: Throw an HTTP exception?
             LOG.warn("Unknown file type: " + file);
-            return "";
+            return "application/octet-stream";
         }
     }
 
