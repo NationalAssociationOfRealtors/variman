@@ -16,10 +16,13 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.util.Properties;
 
 import org.realtors.rets.server.Util;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.IOUtils;
 
 import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.BeanReader;
@@ -132,20 +135,60 @@ public class RetsConfig
         }
     }
 
+    public void toXml(String file) throws RetsServerException
+    {
+        try
+        {
+            IOUtils.writeString(file, toXml());
+        }
+        catch (IOException e)
+        {
+            throw new RetsServerException(e);
+        }
+    }
+
     public static RetsConfig initFromXml(String xml)
-        throws SAXException, IOException, IntrospectionException
+        throws RetsServerException
     {
         return initFromXml(new StringReader(xml));
     }
 
-    public static RetsConfig initFromXml(Reader xml)
-        throws SAXException, IOException, IntrospectionException
+    public static RetsConfig initFromXmlFile(String file)
+        throws RetsServerException
     {
-        return createIfNull(createBeanReader().parse(xml));
+        try
+        {
+            return initFromXml(new FileReader(file));
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new RetsServerException(e);
+        }
+    }
+
+    public static RetsConfig initFromXml(Reader xml)
+        throws RetsServerException
+    {
+        try
+        {
+            return createIfNull(createBeanReader().parse(xml));
+        }
+        catch (IOException e)
+        {
+            throw new RetsServerException(e);
+        }
+        catch (SAXException e)
+        {
+            throw new RetsServerException(e);
+        }
+        catch (IntrospectionException e)
+        {
+            throw new RetsServerException(e);
+        }
     }
 
     public static RetsConfig initFromXml(InputStream xml)
-        throws IntrospectionException, SAXException, IOException
+        throws RetsServerException
     {
         if (xml == null)
         {
@@ -153,7 +196,22 @@ public class RetsConfig
         }
         else
         {
-            return createIfNull(createBeanReader().parse(xml));
+            try
+            {
+                return createIfNull(createBeanReader().parse(xml));
+            }
+            catch (IOException e)
+            {
+                throw new RetsServerException(e);
+            }
+            catch (SAXException e)
+            {
+                throw new RetsServerException(e);
+            }
+            catch (IntrospectionException e)
+            {
+                throw new RetsServerException(e);
+            }
         }
     }
 
