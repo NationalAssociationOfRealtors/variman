@@ -1,6 +1,9 @@
 package org.realtors.rets.server.webapp.cct;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.realtors.rets.server.cct.StatusEnum;
+import org.realtors.rets.server.cct.ValidationResult;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,18 +32,26 @@ public class IndexAction extends CctAction
                                  HttpServletResponse response)
         throws Exception
     {
-        Iterator iter = ((CertificationTestSuite)
-            request.getSession().getAttribute(TESTSUITE_KEY)).getTests();
+        TestRunner testRunner = getTestRunner(request.getSession());
+        List displayBeans = new ArrayList();
+        Iterator iter = testRunner.getTests(); 
         int i = 0;
         while (iter.hasNext())
         {
             CertificationTest test = (CertificationTest) iter.next();
-            if (test.getStatus() == StatusEnum.RUNNING)
+            ValidationResult result = testRunner.getResult(test.getName());
+            TestDisplayBean displayBean = new TestDisplayBean(test, result);
+            displayBeans.add(displayBean);
+            
+            if (result.getStatus() == StatusEnum.RUNNING)
             {
                 request.setAttribute("cctActiveTest", new Integer(i));
             }
             i++;
         }
+        
+        request.setAttribute("cctDisplayBeans", displayBeans);
+        
         return mapping.findForward("home");
     }
 
