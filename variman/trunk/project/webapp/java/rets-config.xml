@@ -1,0 +1,9 @@
+<?xml version='1.0' ?>
+<rets-config>
+  <!--
+  <get-object-root>/tmp/pictures</get-object-root>
+  <get-object-pattern>%k-%i.jpg</get-object-pattern>
+  <nonce-initial-timeout>1</nonce-initial-timeout>
+  <nonce-success-timeout>1</nonce-success-timeout>
+  -->
+</rets-config>
