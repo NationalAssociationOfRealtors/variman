@@ -31,9 +31,10 @@ Name: "{app}\logs"
 ; NOTE: The following entry contains an English phrase ("Uninstall"). You are free to translate it into another language if required.
 Name: "{group}\Uninstall CRT Rex RETS Server"; Filename: "{uninstallexe}"
 Name: "{group}\View README"; Filename: "{app}\doc\readme.txt"
+Name: "{group}\Rex Administration"; Filename: "javaw.exe"; Parameters: "-jar rex-admin.jar"; WorkingDir: "{app}";
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{app}\work"
+Type: filesandordirs; Name: "{app}\server\work"
 Type: filesandordirs; Name: "{app}\logs"
 
 [Run]
