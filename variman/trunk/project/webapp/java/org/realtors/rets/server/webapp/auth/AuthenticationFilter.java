@@ -115,6 +115,10 @@ public class AuthenticationFilter implements Filter, UserMap
     {
         MDC.put("addr", request.getRemoteAddr());
         String uri = request.getRequestURI();
+        if (request.getQueryString() != null)
+        {
+            uri = uri + "?" + request.getQueryString();
+        }
         String method = request.getMethod();
         LOG.debug("Authorizing URI: " + method + " " + uri);
         if (!uri.startsWith("/rets") && !uri.startsWith("/cct"))
