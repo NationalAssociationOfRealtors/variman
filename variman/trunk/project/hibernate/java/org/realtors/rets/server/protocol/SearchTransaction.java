@@ -66,7 +66,7 @@ public class SearchTransaction
         mMetadata = new ServerDmqlMetadata(tables,
                                            mParameters.isStandardNames());
         mFromClause = aClass.getDbTable();
-        generateWhereClause();
+        generateWhereClause(aClass);
         if (!mExecuteQuery)
         {
             RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
@@ -203,17 +203,38 @@ public class SearchTransaction
         buffer.append(" FROM ");
         buffer.append(mFromClause);
         buffer.append(" WHERE ");
-        buffer.append(mWhereCluase);
+        buffer.append(mWhereClause);
         return buffer.toString();
     }
 
-    private void generateWhereClause()
-        throws RetsReplyException
+    private void generateWhereClause(MClass aClass)
+        throws RetsServerException
     {
-        SqlConverter sqlConverter = parse(mMetadata);
-        StringWriter stringWriter = new StringWriter();
-        sqlConverter.toSql(new PrintWriter(stringWriter));
-        mWhereCluase = stringWriter.toString();
+        try
+        {
+            User user = mParameters.getUser();
+            SortedSet groups = UserUtils.getGroups(user);
+            ConditionRuleSet conditionRuleSet =
+                RetsServer.getConditionRuleSet();
+            String resourceName = aClass.getResource().getResourceID();
+            String className = aClass.getClassName();
+            String sqlConstraint =
+                conditionRuleSet.findSqlConstraint(groups, resourceName,
+                                                   className);
+            SqlConverter sqlConverter = parse(mMetadata);
+            StringWriter stringWriter = new StringWriter();
+            sqlConverter.toSql(new PrintWriter(stringWriter));
+            mWhereClause = stringWriter.toString();
+
+            if (StringUtils.isNotEmpty(sqlConstraint))
+            {
+                mWhereClause = "(" + mWhereClause + ") AND " + sqlConstraint;
+            }
+        }
+        catch (HibernateException e)
+        {
+            throw new RetsServerException(e);
+        }
     }
 
     private void printCountOnly(PrintWriter out)
@@ -378,7 +399,7 @@ public class SearchTransaction
     private SearchParameters mParameters;
     private boolean mExecuteQuery;
     private String mFromClause;
-    private String mWhereCluase;
+    private String mWhereClause;
     private int mCount;
     private SessionFactory mSessions;
     private ServerDmqlMetadata mMetadata;
