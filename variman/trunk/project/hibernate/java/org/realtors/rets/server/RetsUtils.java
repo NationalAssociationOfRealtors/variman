@@ -49,4 +49,9 @@ public class RetsUtils
     {
         out.println("</RETS-RESPONSE>");
     }
+
+    public static void printXmlHeader(PrintWriter out)
+    {
+        out.println("<?xml version=\"1.0\"?>");
+    }
 }
