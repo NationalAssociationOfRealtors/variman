@@ -77,10 +77,10 @@ public class RetsServlet extends HttpServlet implements Constants
 
     protected void printOpenRets(PrintWriter out, int code, String message)
     {
-        out.println("<RETS ReplyCode=\"");
-        out.println(code);
-        out.println("\" ReplyText=\"");
-        out.println(message);
+        out.print("<RETS ReplyCode=\"");
+        out.print(code);
+        out.print("\" ReplyText=\"");
+        out.print(message);
         out.println("\">");
         out.println("<RETS-RESPONSE>");
     }
