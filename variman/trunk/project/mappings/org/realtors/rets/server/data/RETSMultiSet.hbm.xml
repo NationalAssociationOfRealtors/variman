@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSMultiSet.hbm.xml,v 1.2 2003/05/28 21:31:58 kgarner Exp $ -->
+<!-- $Id: RETSMultiSet.hbm.xml,v 1.3 2003/06/09 18:07:08 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.data.RETSMultiSet" table="rets_multi_data">
@@ -12,12 +12,13 @@
     </id>
 
     <many-to-one name="parent" cascade="none"
-      class="org.nar.rets.data.RETSData">
+      class="org.nar.rets.data.RETSDataElement">
       <column name="parent" index="rets_multi_data_parent"/>
     </many-to-one>
 
     <set name="values" table="rets_multi_data_set">
       <key column="id"/>
+      <!-- This should be a pointer to LookupType? -->
       <element column="value" type="string"/>
     </set>
   </class>
