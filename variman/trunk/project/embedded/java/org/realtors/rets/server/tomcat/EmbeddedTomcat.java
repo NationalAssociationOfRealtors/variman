@@ -106,10 +106,11 @@ public class EmbeddedTomcat
 
         // Start the embedded server
         mEmbedded.start();
+
+        Runtime.getRuntime().addShutdownHook(new Shutdown());
     }
 
-    public void stopTomcat()
-        throws Exception
+    public void stopTomcat() throws Exception
     {
         mEmbedded.stop();
         synchronized (this)
@@ -208,10 +209,26 @@ public class EmbeddedTomcat
             tomcat.stopTomcat();
             */
             tomcat.waitUntilStopped();
+            System.out.println("Stopped");
         }
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    class Shutdown extends Thread
+    {
+        public void run()
+        {
+            try
+            {
+                EmbeddedTomcat.this.stopTomcat();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
