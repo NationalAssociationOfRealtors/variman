@@ -43,6 +43,7 @@
 
   <path id="importer.path">
     <pathelement location="${rets-client.jar}"/>
+    <pathelement location="${commons-cli.jar}"/>
     <pathelement path="build/hibernate/classes"/>
   </path>
 
@@ -488,6 +489,7 @@
     <copy file="${commons-logging.jar}" todir="build/importer/lib"/>
     <copy file="${log4j.jar}" todir="build/importer/lib"/>
     <copy file="${jdom.jar}" todir="build/importer/lib"/>
+    <copy file="${commons-cli.jar}" todir="build/importer/lib"/>
     <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
           todir="build/importer/lib"/>
     <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
