@@ -16,11 +16,25 @@ import junit.framework.TestCase;
 
 public class DatabaseConfigTest extends TestCase
 {
+    public void testTypeInformation()
+    {
+        DatabaseConfig config = new DatabaseConfig();
+        config.setDatabaseType(DatabaseType.POSTGRESQL);
+        config.setHostName("localhost");
+        config.setDatabaseName("rex_test");
+        assertEquals("org.postgresql.Driver", config.getDriver());
+        assertEquals("net.sf.hibernate.dialect.PostgreSQLDialect",
+                     config.getDialect());
+        assertEquals("jdbc:postgresql://localhost/rex_test",
+                     config.getUrl());
+    }
+
     public void testHibernateProperties()
     {
         DatabaseConfig config = new DatabaseConfig();
-        config.setDriver("org.postgresql.Driver");
-        config.setUrl("jdbc:postgresql://localhost/rex_test");
+        config.setDatabaseType(DatabaseType.POSTGRESQL);
+        config.setHostName("localhost");
+        config.setDatabaseName("rex_test");
         config.setUsername("dave");
         config.setPassword("");
         config.setMaxActive(100);
