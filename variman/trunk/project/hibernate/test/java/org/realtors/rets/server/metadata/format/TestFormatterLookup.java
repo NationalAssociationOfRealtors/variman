@@ -5,28 +5,12 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.realtors.rets.server.metadata.ServerMetadata;
 
-public class TestMetadataSegmentFormatter extends MetadataSegmentFormatter
+public class TestFormatterLookup implements FormatterLookup
 {
-    public TestMetadataSegmentFormatter(PrintWriter out)
-    {
-        super(out, MetadataFormatter.COMPACT);
-    }
-
-    public TestMetadataSegmentFormatter()
-    {
-        super(MetadataFormatter.COMPACT);
-    }
-
-    protected MetadataFormatter getFormatter(List metadataList)
-    {
-        return sTestFormatter;
-    }
-
-    public MetadataFormatter getFormatter(Collection metadataCollection)
+    public MetadataFormatter lookupFormatter(Collection metadataCollection)
     {
         return sTestFormatter;
     }

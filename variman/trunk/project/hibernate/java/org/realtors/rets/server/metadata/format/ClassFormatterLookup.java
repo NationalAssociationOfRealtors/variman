@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.realtors.rets.server.metadata.EditMask;
@@ -28,27 +27,13 @@ import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
-public class MetadataSegmentFormatter
+/**
+ * An implementation of FormatterLookup that uses the Class of the first
+ * element of the collection.
+ */
+public class ClassFormatterLookup implements FormatterLookup
 {
-    public MetadataSegmentFormatter(PrintWriter out, int format)
-    {
-        mOut = out;
-        initFormatters(format);
-    }
-
-    public MetadataSegmentFormatter(int format)
-    {
-        initFormatters(format);
-    }
-
-
-    /**
-     * Initializes the formatters map. This may be overridden by subclasses
-     * for specialized behavior.
-     *
-     * @param format
-     */
-    protected void initFormatters(int format)
+    public ClassFormatterLookup(int format)
     {
         mFormmatters = new HashMap();
         if (format == MetadataFormatter.COMPACT)
@@ -82,35 +67,60 @@ public class MetadataSegmentFormatter
             mFormmatters.put(ForeignKey.class,
                              new CompactForeignKeyFormatter());
         }
+        else if (format == MetadataFormatter.STANDARD)
+        {
+            mFormmatters.put(MSystem.class, new StandardSystemFormatter());
+            mFormmatters.put(Resource.class, new StandardResourceFormatter());
+            mFormmatters.put(MClass.class, new StandardClassFormatter());
+            mFormmatters.put(Table.class, new StandardTableFormatter());
+            mFormmatters.put(Update.class, new StandardUpdateFormatter());
+            mFormmatters.put(UpdateType.class,
+                             new StandardUpdateTypeFormatter());
+            mFormmatters.put(MObject.class, new StandardObjectFormatter());
+            mFormmatters.put(SearchHelp.class,
+                             new StandardSearchHelpFormatter());
+            mFormmatters.put(EditMask.class, new StandardEditMaskFormatter());
+            mFormmatters.put(Lookup.class, new StandardLookupFormatter());
+            mFormmatters.put(UpdateHelp.class,
+                             new StandardUpdateHelpFormatter());
+            mFormmatters.put(LookupType.class,
+                             new StandardLookupTypeFormatter());
+            mFormmatters.put(ValidationLookup.class,
+                             new StandardValidationLookupFormatter());
+            mFormmatters.put(ValidationLookupType.class,
+                             new StandardValidationLookupTypeFormatter());
+            mFormmatters.put(ValidationExternal.class,
+                             new StandardValidationExternalFormatter());
+            mFormmatters.put(ValidationExternalType.class,
+                             new StandardValidationExternalTypeFormatter());
+            mFormmatters.put(ValidationExpression.class,
+                             new StandardValidationExpressionFormatter());
+//            mFormmatters.put(ForeignKey.class,
+//                             new StandardForeignKeyFormatter());
+        }
         else
         {
             throw new IllegalArgumentException("Unknown format: " + format);
         }
     }
 
-    protected MetadataFormatter getFormatter(Class clazz)
+    /**
+     * Lookup a formatter from a class.  Package scope for testing
+     *
+     * @param clazz Class to lookup
+     * @return formatter for the class, or <code>null</code>
+     */
+    MetadataFormatter lookupFormatter(Class clazz)
     {
         return (MetadataFormatter) mFormmatters.get(clazz);
     }
 
-    public MetadataFormatter getFormatter(Collection metadataCollection)
+    public MetadataFormatter lookupFormatter(Collection metadataCollection)
     {
         Iterator i = metadataCollection.iterator();
         if (i.hasNext())
         {
-            return getFormatter(i.next().getClass());
-        }
-        else
-        {
-            return NULL_FORMATTER;
-        }
-    }
-
-    protected MetadataFormatter getFormatter(List metadataList)
-    {
-        if (metadataList.size() > 0)
-        {
-            return getFormatter(metadataList.get(0).getClass());
+            return lookupFormatter(i.next().getClass());
         }
         else
         {

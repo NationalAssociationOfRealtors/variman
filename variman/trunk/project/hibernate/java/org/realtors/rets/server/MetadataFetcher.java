@@ -2,7 +2,7 @@
  */
 package org.realtors.rets.server;
 
-import java.util.List;
+import org.realtors.rets.server.metadata.MetadataSegment;
 
 public interface MetadataFetcher
 {
@@ -11,9 +11,8 @@ public interface MetadataFetcher
      *
      * @param type Metadata type
      * @param levels Array of levels to start fetching metadata from
-     * @param recursive True if all metadata below the level should be fetched.
      * @return A list of <code>MetadataSegment</code> objects.
      */
-    public List fetchMetadata(String type, String[] levels, boolean recursive)
+    public MetadataSegment fetchMetadata(String type, String[] levels)
         throws RetsReplyException;
 }

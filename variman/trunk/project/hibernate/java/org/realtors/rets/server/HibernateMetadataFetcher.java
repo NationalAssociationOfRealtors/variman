@@ -3,7 +3,6 @@
 package org.realtors.rets.server;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,9 +16,10 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataSegment;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
 
-public class HibernateMetadataFetcher extends BaseMetadataFetcher
+public class HibernateMetadataFetcher implements MetadataFetcher
 {
     static
     {
@@ -68,29 +68,24 @@ public class HibernateMetadataFetcher extends BaseMetadataFetcher
                              new MetadataFinder("ValidationExpression", 1));
     }
 
-    public List fetchMetadata(String type, String[] levels, boolean recursive)
+    public MetadataSegment fetchMetadata(String type, String[] levels)
         throws RetsReplyException
     {
         // Always need system to get version and date
         MSystem system = findSystemFromHibernate();
-        String version = system.getVersionString();
-        Date date = system.getDate();
-        List metadataResults = new ArrayList();
 
-        MetadataFinder finder =
-            (MetadataFinder) sMetadataFinders.get(type);
+        MetadataFinder finder = (MetadataFinder) sMetadataFinders.get(type);
         if (finder != null)
         {
+            StopWatch stopWatch = new StopWatch();
             LOG.debug("Using finder for type: " + type);
-            long start = System.currentTimeMillis();
+            stopWatch.start();
             List metadata = finder.findMetadata(levels, mSessions);
-            LOG.debug("End finder: " + (System.currentTimeMillis() - start));
-            metadataResults.add(new MetadataSegment(metadata, levels, version,
-                                                    date));
-            if (recursive)
-            {
-                recurseChildren(metadata,  metadataResults, version, date);
-            }
+            stopWatch.stop();
+            LOG.debug("End finder: " + stopWatch.getTime());
+            return new MetadataSegment(metadata, levels,
+                                       system.getVersionString(),
+                                       system.getDate());
         }
         else
         {
@@ -98,7 +93,6 @@ public class HibernateMetadataFetcher extends BaseMetadataFetcher
                      type + ", level=" + StringUtils.join(levels, ":"));
             throw new RetsReplyException(20501, "Invalid Type");
         }
-        return metadataResults;
     }
 
     private MSystem findSystemFromHibernate()

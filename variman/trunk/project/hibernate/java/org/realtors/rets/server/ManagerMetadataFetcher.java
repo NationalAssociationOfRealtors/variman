@@ -3,16 +3,17 @@
 package org.realtors.rets.server;
 
 import java.util.List;
-import java.util.Date;
-import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.MetadataSegment;
 
 import org.apache.commons.lang.StringUtils;
 
-public class ManagerMetadataFetcher extends BaseMetadataFetcher
+/**
+ * Fetches metadata from a MetadataManager.
+ */
+public class ManagerMetadataFetcher implements MetadataFetcher
 {
     public ManagerMetadataFetcher()
     {
@@ -24,26 +25,25 @@ public class ManagerMetadataFetcher extends BaseMetadataFetcher
         mManager = manager;
     }
 
-    public List fetchMetadata(String type, String[] levels, boolean recursive)
+    public MetadataSegment fetchMetadata(String type, String[] levels)
         throws RetsReplyException
     {
         // Always need system to get version and date
         MetadataManager manager = getMetadataManager();
         MSystem system = findSystem(manager);
-        String version = system.getVersionString();
-        Date date = system.getDate();
-        List metadataResults = new ArrayList();
 
         List metadata = manager.find(type, StringUtils.join(levels, ":"));
-        metadataResults.add(new MetadataSegment(metadata, levels, version,
-                                                date));
-        if (recursive)
-        {
-            recurseChildren(metadata,  metadataResults, version, date);
-        }
-        return metadataResults;
+        return new MetadataSegment(metadata, levels, system.getVersionString(),
+                                   system.getDate());
     }
 
+    /**
+     * Returns the metadata manager to use for fetching metadata. By default,
+     * this returns the manager specified in the constructor. However, this
+     * may be overriden by subclasses for different behavior.
+     *
+     * @return the metadata manager to use for fetching metadata
+     */
     protected MetadataManager getMetadataManager()
     {
         return mManager;

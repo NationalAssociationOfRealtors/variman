@@ -3,12 +3,13 @@
 package org.realtors.rets.server;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 import org.realtors.rets.server.metadata.MetadataSegment;
-import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
+import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
 import org.realtors.rets.server.metadata.format.FormatterContext;
+import org.realtors.rets.server.metadata.format.FormatterLookup;
 
+import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
 
 public class GetMetadataTransaction extends RetsTransaction
@@ -28,20 +29,21 @@ public class GetMetadataTransaction extends RetsTransaction
                         MetadataFetcher fetcher)
         throws RetsReplyException
     {
-        List metadataObjects = fetcher.fetchMetadata(parameters.getType(),
-                                                     parameters.getIds(),
-                                                     false);
+        MetadataSegment segment = fetcher.fetchMetadata(parameters.getType(),
+                                                        parameters.getIds());
 
         printOpenRetsSuccess(out);
-        MetadataSegmentFormatter formatter =
-            new MetadataSegmentFormatter(parameters.getFormat());
-        MetadataSegment segment = (MetadataSegment) metadataObjects.get(0);
+        FormatterLookup lookup =
+            new ClassFormatterLookup(parameters.getFormat());
         FormatterContext context =
             new FormatterContext(segment.getVersion(), segment.getDate(),
-                                 parameters.isRecursive(), out, formatter);
+                                 parameters.isRecursive(), out, lookup);
+        StopWatch stopWatch = new StopWatch();
         LOG.debug("Formatting started");
+        stopWatch.start();
         context.format(segment.getDataList(), segment.getLevels());
-        LOG.debug("Formatting done");
+        stopWatch.stop();
+        LOG.debug("Formatting done: " + stopWatch.getTime());
         printCloseRets(out);
     }
 

@@ -10,13 +10,13 @@ public class FormatterContext
 {
     public FormatterContext(String version, Date date, boolean recursive,
                             PrintWriter writer,
-                            MetadataSegmentFormatter formatter)
+                            FormatterLookup lookup)
     {
         mVersion = version;
         mDate = date;
         mRecursive = recursive;
         mWriter = writer;
-        mFormatter = formatter;
+        mLookup = lookup;
     }
 
     public String getVersion()
@@ -41,7 +41,7 @@ public class FormatterContext
 
     public void format(Collection data, String[] levels)
     {
-        MetadataFormatter formatter = mFormatter.getFormatter(data);
+        MetadataFormatter formatter = mLookup.lookupFormatter(data);
         formatter.format(this, data, levels);
     }
 
@@ -52,5 +52,5 @@ public class FormatterContext
     private Date mDate;
     private boolean mRecursive;
     private PrintWriter mWriter;
-    private MetadataSegmentFormatter mFormatter;
+    private FormatterLookup mLookup;
 }

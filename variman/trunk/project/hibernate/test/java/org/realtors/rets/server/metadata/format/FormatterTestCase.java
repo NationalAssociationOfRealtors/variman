@@ -21,15 +21,14 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     }
 
     protected String format(MetadataFormatter formatter, Collection data,
-                          String[] levels, boolean recursive)
+                            String[] levels, boolean recursive)
     {
-        TestMetadataSegmentFormatter dispatcher =
-            new TestMetadataSegmentFormatter();
+        FormatterLookup lookup = new TestFormatterLookup();
         StringWriter formatted = new StringWriter();
         PrintWriter writer = new PrintWriter(formatted);
         FormatterContext context =
             new FormatterContext("1.00.001", DATE_OBJECT, recursive, writer,
-                                 dispatcher);
+                                 lookup);
         formatter.format(context, data, levels);
         return formatted.toString();
     }
@@ -65,20 +64,11 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
         assertLinesEqual("", formatted);
     }
 
-    protected MetadataFormatter getStandardFormatter()
-    {
-        return new NullMetadataFormatter();
-    }
+    protected abstract MetadataFormatter getStandardFormatter();
 
-    protected String getExpectedStandard()
-    {
-        return "";
-    }
+    protected abstract String getExpectedStandard();
 
-    protected String getExpectedStandardRecursive()
-    {
-        return "";
-    }
+    protected abstract String getExpectedStandardRecursive();
 
     public void testStandardFormat()
     {
