@@ -115,10 +115,8 @@ public class AuthenticationFilter implements Filter, UserMap
         try
         {
             String authorizationHeader = request.getHeader("Authorization");
-            LOG.debug("Authorization header: <" + authorizationHeader + ">");
             DigestAuthorizationRequest authorizationRequest =
-                new DigestAuthorizationRequest(authorizationHeader);
-            authorizationRequest.setMethod(method);
+                new DigestAuthorizationRequest(authorizationHeader, method);
             HttpSession session = request.getSession();
             if (verifyResponse(authorizationRequest, session))
             {
@@ -177,7 +175,7 @@ public class AuthenticationFilter implements Filter, UserMap
         {
             return null;
         }
-        
+
         User user = new User();
         user.setPasswordMethod(
             PasswordMethod.getInstance(PasswordMethod.PLAIN_TEXT));
