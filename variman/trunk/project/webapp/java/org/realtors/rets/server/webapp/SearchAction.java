@@ -16,6 +16,7 @@ import net.sf.hibernate.HibernateException;
 import org.realtors.rets.server.dmql.DmqlCompiler;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.RetsReplyException;
 
 import antlr.ANTLRException;
 import org.apache.commons.lang.builder.ToStringBuilder;

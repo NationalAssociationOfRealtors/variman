@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.realtors.rets.server.RetsReplyException;
+
 import org.apache.log4j.Logger;
 
 /**
