@@ -16,11 +16,9 @@ import org.apache.log4j.Logger;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.admin.Admin;
-import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.SecurityConstraints;
-import org.realtors.rets.server.config.ConditionRule;
 
 public class GroupsPanel extends JPanel
 {
@@ -39,6 +37,8 @@ public class GroupsPanel extends JPanel
         tvp.addRow("Name:", mName);
         mDescription = new JLabel();
         tvp.addRow("Description:", mDescription);
+        mRecordLimit = new JLabel("None");
+        tvp.addRow("Record Limit:", mRecordLimit);
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(tvp, BorderLayout.NORTH);
         panel.add(createRulesPanel(), BorderLayout.CENTER);
@@ -53,6 +53,8 @@ public class GroupsPanel extends JPanel
         mPopup.add(mAddGroupAction);
         mRemoveGroupAction = new RemoveGroupAction(this);
         mPopup.add(mRemoveGroupAction);
+        mEditGroupAction = new EditGroupAction(this);
+        mPopup.add(mEditGroupAction);
 
         PopupListener popupListener = new PopupListener();
         mGroupList.addMouseListener(popupListener);
@@ -76,9 +78,14 @@ public class GroupsPanel extends JPanel
         return mAddGroupAction;
     }
 
-    public Action getRemoveGroupAciton()
+    public Action getRemoveGroupAction()
     {
         return mRemoveGroupAction;
+    }
+
+    public Action getEditGroupAction()
+    {
+        return mEditGroupAction;
     }
 
     public GroupRules getGroupRules()
@@ -96,13 +103,16 @@ public class GroupsPanel extends JPanel
             mName.setText(group.getName());
             mDescription.setText(group.getDescription());
             mRemoveGroupAction.setEnabled(true);
+            mEditGroupAction.setEnabled(true);
             updateRulesList(group);
         }
         else
         {
             mName.setText("");
             mDescription.setText("");
+            mRecordLimit.setText("");
             mRemoveGroupAction.setEnabled(false);
+            mEditGroupAction.setEnabled(false);
             mFilterRulesPanel.unselectGroup();
             mConditionRulesPanel.unselectGroup();
         }
@@ -111,18 +121,20 @@ public class GroupsPanel extends JPanel
     private void updateRulesList(Group group)
     {
         RetsConfig retsConfig = Admin.getRetsConfig();
-        List filterRules = Collections.EMPTY_LIST;
-        List conditionRules = Collections.EMPTY_LIST;
         SecurityConstraints securityConstraints =
             retsConfig.getSecurityConstraints();
         mGroupRules = securityConstraints.getRulesForGroup(group.getName());
-        if (mGroupRules != null)
+        int recordLimit = mGroupRules.getRecordLimit();
+        if (recordLimit == 0)
         {
-            filterRules = mGroupRules.getFilterRules();
-            conditionRules = mGroupRules.getConditionRules();
+            mRecordLimit.setText("0 (None)");
         }
-        mFilterRulesPanel.updateRulesList(filterRules);
-        mConditionRulesPanel.updateRulesList(conditionRules);
+        else
+        {
+            mRecordLimit.setText(Integer.toString(recordLimit));
+        }
+        mFilterRulesPanel.updateRulesList(mGroupRules.getFilterRules());
+        mConditionRulesPanel.updateRulesList(mGroupRules.getConditionRules());
     }
 
     public void populateList()
@@ -214,13 +226,15 @@ public class GroupsPanel extends JPanel
     private static final Logger LOG =
         Logger.getLogger(GroupsPanel.class);
 
-    private AddGroupAction mAddGroupAction;
     private JList mGroupList;
     private JLabel mName;
     private JLabel mDescription;
+    private JLabel mRecordLimit;
     private JPopupMenu mPopup;
     private ListListModel mGroupListModel;
+    private AddGroupAction mAddGroupAction;
     private RemoveGroupAction mRemoveGroupAction;
+    private EditGroupAction mEditGroupAction;
     private GroupRules mGroupRules;
     private FilterRulesPanel mFilterRulesPanel;
     private ConditionRulesPanel mConditionRulesPanel;
