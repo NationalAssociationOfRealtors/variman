@@ -135,7 +135,10 @@ public class ConfigurationPanel extends JPanel
 
         public void actionPerformed(ActionEvent event)
         {
-            System.out.println("Eidt properties...");
+            DatabaseConfig dbConfig = Admin.getRetsConfig().getDatabase();
+            DatabasePropertiesDialog dialog =
+                new DatabasePropertiesDialog(dbConfig);
+            dialog.setVisible(true);
         }
 
     }
