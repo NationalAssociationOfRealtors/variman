@@ -2,10 +2,7 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.Set;
-
 import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.SearchHelp;
 
 import org.apache.commons.lang.StringUtils;
 
