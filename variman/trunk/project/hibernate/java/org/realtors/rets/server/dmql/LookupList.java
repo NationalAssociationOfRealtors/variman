@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import org.realtors.rets.server.Util;
 
 import org.apache.commons.lang.builder.ToStringBuilder;

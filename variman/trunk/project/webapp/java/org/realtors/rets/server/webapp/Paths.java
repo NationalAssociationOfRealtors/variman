@@ -2,9 +2,6 @@
  */
 package org.realtors.rets.server.webapp;
 
-import java.util.Set;
-import java.util.HashSet;
-
 public class Paths
 {
     public static final String LOGIN = "/rets/login";

@@ -5,7 +5,6 @@ package org.realtors.rets.server.dmql;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
-import java.io.StringWriter;
 import java.io.PrintWriter;
 
 public class DmqlStringList implements SqlConverter
