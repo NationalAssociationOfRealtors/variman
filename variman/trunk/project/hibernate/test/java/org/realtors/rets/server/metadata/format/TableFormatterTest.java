@@ -15,25 +15,29 @@ import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.TableStandardName;
 import org.realtors.rets.server.metadata.UnitEnum;
+import org.realtors.rets.server.Group;
+import org.realtors.rets.server.protocol.TableGroupFilter;
+import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.GroupRules;
 
 public class TableFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    public TableFormatterTest()
     {
-        List tables = new ArrayList();
+        HashSet allTables = new HashSet();
 
-        Table table = new Table(1);
-        table.setSystemName("E_SCHOOL");
-        table.setStandardName(new TableStandardName("ElementarySchool"));
-        table.setLongName("Elementary School");
-        table.setShortName("ElemSchool");
-        table.setDbName("E_SCHOOL");
-        table.setMaximumLength(4);
-        table.setDataType(DataTypeEnum.INT);
-        table.setPrecision(0);
-        table.setSearchable(true);
-        table.setInterpretation(InterpretationEnum.LOOKUP);
-        table.setAlignment(AlignmentEnum.LEFT);
+        mSchool = new Table(1);
+        mSchool.setSystemName("E_SCHOOL");
+        mSchool.setStandardName(new TableStandardName("ElementarySchool"));
+        mSchool.setLongName("Elementary School");
+        mSchool.setShortName("ElemSchool");
+        mSchool.setDbName("E_SCHOOL");
+        mSchool.setMaximumLength(4);
+        mSchool.setDataType(DataTypeEnum.INT);
+        mSchool.setPrecision(0);
+        mSchool.setSearchable(true);
+        mSchool.setInterpretation(InterpretationEnum.LOOKUP);
+        mSchool.setAlignment(AlignmentEnum.LEFT);
 
         EditMask em1 = new EditMask(1);
         em1.setEditMaskID("EM1");
@@ -42,43 +46,97 @@ public class TableFormatterTest extends FormatterTestCase
         Set editMasks = new HashSet();
         editMasks.add(em1);
         editMasks.add(em2);
-        table.setEditMasks(editMasks);
+        mSchool.setEditMasks(editMasks);
 
-        table.setUseSeparator(false);
+        mSchool.setUseSeparator(false);
         Lookup lookup = new Lookup();
         lookup.setLookupName("E_SCHOOL");
-        table.setLookup(lookup);
+        mSchool.setLookup(lookup);
 
-        table.setMaxSelect(1);
-        table.setUnits(UnitEnum.FEET);
-        table.setIndex(2);
-        table.setMinimum(3);
-        table.setMaximum(4);
-        table.setDefault(5);
-        table.setRequired(6);
-        table.setUnique(false);
-        tables.add(table);
+        mSchool.setMaxSelect(1);
+        mSchool.setUnits(UnitEnum.FEET);
+        mSchool.setIndex(2);
+        mSchool.setMinimum(3);
+        mSchool.setMaximum(4);
+        mSchool.setDefault(5);
+        mSchool.setRequired(6);
+        mSchool.setUnique(false);
+        allTables.add(mSchool);
 
-        table = new Table(2);
-        table.setSystemName("AGENT_ID");
-        table.setStandardName(new TableStandardName("ListAgentAgentID"));
-        table.setLongName("Listing Agent ID");
-        table.setShortName("AgentID");
-        table.setDbName("AGENT_ID");
-        table.setMaximum(6);
-        table.setDataType(DataTypeEnum.CHARACTER);
-        table.setPrecision(0);
-        table.setSearchable(true);
-        table.setAlignment(AlignmentEnum.LEFT);
-        table.setMaxSelect(0);
-        table.setIndex(0);
-        table.setMinimum(0);
-        table.setMaximum(0);
-        table.setDefault(5);
-        table.setRequired(0);
-        table.setUnique(false);
-        tables.add(table);
+        mAgent = new Table(2);
+        mAgent.setSystemName("AGENT_ID");
+        mAgent.setStandardName(new TableStandardName("ListAgentAgentID"));
+        mAgent.setLongName("Listing Agent ID");
+        mAgent.setShortName("AgentID");
+        mAgent.setDbName("AGENT_ID");
+        mAgent.setMaximum(6);
+        mAgent.setDataType(DataTypeEnum.CHARACTER);
+        mAgent.setPrecision(0);
+        mAgent.setSearchable(true);
+        mAgent.setAlignment(AlignmentEnum.LEFT);
+        mAgent.setMaxSelect(0);
+        mAgent.setIndex(0);
+        mAgent.setMinimum(0);
+        mAgent.setMaximum(0);
+        mAgent.setDefault(5);
+        mAgent.setRequired(0);
+        mAgent.setUnique(false);
+        allTables.add(mAgent);
+
+        mListingPrice = new Table(3);
+        mListingPrice.setSystemName("LISTING_PRICE");
+        mListingPrice.setStandardName(new TableStandardName("ListingPrice"));
+        mListingPrice.setLongName("Listing Price");
+        mListingPrice.setShortName("ListingPrice");
+        mListingPrice.setDbName("LP");
+        mListingPrice.setMaximum(6);
+        mListingPrice.setDataType(DataTypeEnum.INT);
+        mListingPrice.setPrecision(0);
+        mListingPrice.setSearchable(true);
+        mListingPrice.setAlignment(AlignmentEnum.LEFT);
+        mListingPrice.setMaxSelect(0);
+        mListingPrice.setIndex(0);
+        mListingPrice.setMinimum(0);
+        mListingPrice.setMaximum(0);
+        mListingPrice.setDefault(5);
+        mListingPrice.setRequired(0);
+        mListingPrice.setUnique(false);
+        allTables.add(mListingPrice);
+
+        mGroupFilter = new TableGroupFilter();
+        mGroupFilter.setTables("Property", "MOB", allTables);
+
+        mNewspapers = new Group("Newspapers");
+        mGroups = new HashSet();
+        mGroups.add(mNewspapers);
+
+        RuleDescription ruleDescription = new RuleDescription(
+            RuleDescription.EXCLUDE);
+        ruleDescription.setResource("Property");
+        ruleDescription.setRetsClass("MOB");
+        ruleDescription.addSystemName("LISTING_PRICE");
+        GroupRules rules = new GroupRules(mNewspapers.getName());
+        rules.addRule(ruleDescription);
+        mGroupFilter.addRules(rules);
+    }
+
+    protected List getData()
+    {
+        List tables = new ArrayList();
+        tables.add(mSchool);
+        tables.add(mAgent);
+        tables.add(mListingPrice);
         return tables;
+    }
+
+    protected TableGroupFilter getGroupFilter()
+    {
+        return mGroupFilter;
+    }
+
+    protected Set getGroups()
+    {
+        return mGroups;
     }
 
     protected String[] getLevels()
@@ -197,4 +255,20 @@ public class TableFormatterTest extends FormatterTestCase
     {
         return getExpectedStandard();
     }
+
+    public void testCompactFormatIsEmptyIfAllTablesFiltered()
+    {
+        ArrayList data = new ArrayList();
+        data.add(mListingPrice);
+        String formatted = format(getCompactFormatter(), data, 
+                                  getLevels(), FormatterContext.NOT_RECURSIVE);
+        assertLinesEqual("", formatted);
+    }
+
+    private Table mSchool;
+    private Table mAgent;
+    private Table mListingPrice;
+    private Group mNewspapers;
+    private HashSet mGroups;
+    private TableGroupFilter mGroupFilter;
 }
