@@ -6,6 +6,8 @@ package org.realtors.rets.server.webapp.cct;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.cct.ValidationResults;
@@ -63,7 +65,10 @@ public class TestRunner
             mRunningTest.validate(result);
             mRunningTest = null;
         }
-        // todo Throw error?
+        else
+        {
+            LOG.warn("No running test to stop");
+        }
     }
 
     public void stopRunningTest(int i)
@@ -73,7 +78,11 @@ public class TestRunner
         {
             stopRunningTest();
         }
-        // todo Throw Error?
+        else
+        {
+            LOG.warn("Trying to stop test that isn't actually running:" +
+                       test.getName());
+        }
     }
 
     /**
@@ -116,4 +125,5 @@ public class TestRunner
     private CertificationTest mRunningTest;
     private CertificationTestSuite mSuite;
     private String mTestContext;
+    private static final Logger LOG = Logger.getLogger(TestRunner.class);
 }
