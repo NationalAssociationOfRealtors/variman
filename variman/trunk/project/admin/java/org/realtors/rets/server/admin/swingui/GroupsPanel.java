@@ -6,12 +6,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.List;
+import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
@@ -261,8 +263,19 @@ public class GroupsPanel extends JPanel
             RuleDescription description = (RuleDescription) object;
             StringBuffer buffer = new StringBuffer();
 
+            buffer.append("In ");
             buffer.append(description.getResource()).append(":")
                 .append(description.getRetsClass());
+            if (description.getType() == RuleDescription.INCLUDE)
+            {
+                buffer.append(" include ");
+            }
+            else
+            {
+                buffer.append(" exclude ");
+            }
+            Iterator systemNames = description.getSystemNames().iterator();
+            buffer.append(StringUtils.join(systemNames, ", "));
             return buffer.toString();
         }
     }
