@@ -1,0 +1,17 @@
+#!/bin/sh
+# One can set IMPORT_HOME_DIR as an environmental variable and we'll use
+# that.  Otherwise, we'll guess it off of where we were called from.
+
+if [ x$IMPORT_HOME_DIR = 'x' ]; then
+    IMPORT_HOME_DIR=`dirname $0`/..
+fi
+
+IMPORT_LIB_DIR=$IMPORT_HOME_DIR/lib
+CLASSPATH=$IMPORT_HOME_DIR/classes
+
+for i in $IMPORT_LIB_DIR/*
+do
+    CLASSPATH=$i:$CLASSPATH
+done
+
+java -cp $CLASSPATH -Dadd.data="yes" org.realtors.rets.server.testing.DataGenerator $*
