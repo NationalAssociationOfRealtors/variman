@@ -4,60 +4,47 @@
 <%@ taglib uri="/WEB-INF/tld/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
 <html:html>
- <html:form action="/registration">
+ <!-- html:form action="/confirmation" -->
  <table>
   <tr><td>
   <bean:message key="registration.field.agentId"/></td><td>
-  <html:text property="agentId"/></td></tr>
+  <bean:write name="RegUser" property="agentId"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.company"/></td><td>
-  <html:text property="company"/></td></tr>
+  <bean:write name="RegUserInfo" property="company"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.email"/></td><td>
-  <html:text property="email"/></td></tr>
+  <bean:write name="RegUserInfo" property="email"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.firstName"/></td><td>
-  <html:text property="firstName"/></td></tr>
+  <bean:write name="RegUser" property="firstName"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.lastName"/></td><td>
-  <html:text property="lastName"/></td></tr>
-
-  <tr><td>
-  <bean:message key="registration.field.password"/></td><td>
-  <html:password property="password" /></td></tr>
-
-  <tr><td>
-  <bean:message key="registration.field.verifyPassword"/></td><td>
-  <html:password property="verifyPassword" /></td></tr>
+  <bean:write name="RegUser" property="lastName"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.productName"/></td><td>
-  <html:text property="productName"/></td></tr>
+  <bean:write name="RegUserInfo" property="productName"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.productVersion"/></td><td>
-  <html:text property="productVersion"/></td></tr>
+  <bean:write name="RegUserInfo" property="productVersion"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.userAgent"/></td><td>
-  <html:text property="userAgent"/></td></tr>
+  <bean:write name="RegUserInfo" property="userAgent"/></td></tr>
 
   <tr><td>
   <bean:message key="registration.field.username"/></td><td>
-  <html:text property="username"/></td></tr>
+  <bean:write name="RegUser" property="username"/></td></tr>
   <tr><td colspan=2 align="center">
-  <textarea>
-    <jsp:include page="eula.html" />
-  </textarea>
-  <br>
-  <bean:message key="registration.field.acceptLegalese"/>:
-  <html:checkbox property="acceptedLegalese" /><br>
-  <html:submit /><html:reset />
+  <bean:message key="registration.confirmation.instruction"/>
+  <!-- html:submit /-->
+ <!--/html:form -->
   </td></tr>
   </table>
- </html:form>
 </html:html>
