@@ -18,7 +18,8 @@ public class CompactFormatterTest extends LinesEqualTestCase
             "<DELIMITER value=\"09\"/>\n" +
             "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\tIF\t</COLUMNS>\n" +
             "<DATA>\tMain St.\t12345\t0\t\t</DATA>\n" +
-            "<DATA>\tMichigan Ave.\t60605\t1\tDW,FR\t</DATA>\n",
+            "<DATA>\tMichigan Ave.\t60605\t1\tDW,FR\t</DATA>\n" +
+            "<DATA>\tState St.\t60601\t\tDw\t</DATA>\n",
             format(CompactFormatter.NO_DECODING));
     }
 
@@ -29,7 +30,8 @@ public class CompactFormatterTest extends LinesEqualTestCase
             "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\tIF\t</COLUMNS>\n" +
             "<DATA>\tMain St.\t12345\tActive\t\t</DATA>\n" +
             "<DATA>\tMichigan Ave.\t60605\tInactive\tDishwasher,Freezer\t" +
-            "</DATA>\n",
+            "</DATA>\n" +
+            "<DATA>\tState St.\t60601\t\tDw\t</DATA>\n",
             format(CompactFormatter.DECODE_TO_SHORT_VALUE));
     }
 
@@ -40,8 +42,9 @@ public class CompactFormatterTest extends LinesEqualTestCase
             new CompactFormatter(lookupDecoding);
         MockResultSet results = new MockResultSet();
         results.setColumns(COLUMNS);
-        results.addRow(new String[] {"Main St.", "12345", "0", ""});
+        results.addRow(new String[] {"Main St.", "12345", "0", null});
         results.addRow(new String[] {"Michigan Ave.", "60605", "1", "DW,FR"});
+        results.addRow(new String[] {"State St.", "60601", null, "Dw"});
         SimpleDmqlMetadata metadata = new SimpleDmqlMetadata();
         metadata.addString("STNAME");
         metadata.addString("ZIP_CODE");
