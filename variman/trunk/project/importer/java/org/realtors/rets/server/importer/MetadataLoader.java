@@ -221,10 +221,6 @@ public class MetadataLoader extends MetadataHelpers
 
     /**
      * Meant to be called only from do Lookup.
-     *
-     * @param rSession the rets session
-     * @param hSession the hibernate session
-     * @exception HibernateException if an error occurs
      */
     private void doLookupTypes()
     {
@@ -735,10 +731,6 @@ public class MetadataLoader extends MetadataHelpers
 
     /**
      * Intended to be called by doValidationExternal.
-     *
-     * @param rSession the rets session
-     * @param hSession the hibernate session
-     * @exception HibernateException if an error occurs
      */
     private void doValidationExternalType()
     {
@@ -808,10 +800,6 @@ public class MetadataLoader extends MetadataHelpers
 
     /**
      * Requires that Table to be done.
-     *
-     * @param rSession the rets session
-     * @param hSession the hibernate session
-     * @exception HibernateException if an error occurs
      */
     private void doValidationLookup()
     {
@@ -925,7 +913,7 @@ public class MetadataLoader extends MetadataHelpers
 
     private MSystem mSystem;
     private static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.5 2003/09/04 17:33:58 kgarner Exp $";
+        "$Id: MetadataLoader.java,v 1.6 2003/09/04 21:06:45 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
 }
