@@ -127,15 +127,15 @@ public class AuthenticationFilter implements Filter, UserMap
                 return;
             }
 
-            String qop = authorizationRequest.getQop();
-            if ((qop == null) && !validNonce(authorizationRequest))
+            if (!WebApp.getNonceTable().validateRequest(authorizationRequest))
             {
-                send401(STALE, response);
-                return;
-            }
-
-            if ((qop != null) && !verifyNonce(authorizationRequest))
-            {
+                // A valid digest response but an invalid nonce means the user
+                // name and password validate, but we don't know about the
+                // nonce. Sending a 401 creates a new nonce, forcing the client
+                // to reauthenticate. This stops reply attacks. Setting stale
+                // tells the client not to re-prompt the user for credentials.
+                // If the nonce was truly just out of date, the client should be
+                // able to generate a valid response.
                 send401(STALE, response);
                 return;
             }
@@ -151,20 +151,6 @@ public class AuthenticationFilter implements Filter, UserMap
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,
                                e.getMessage());
         }
-    }
-
-    private boolean validNonce(DigestAuthorizationRequest authorizationRequest)
-    {
-        NonceTable nonceTable = WebApp.getNonceTable();
-        return nonceTable.isValidNonce(authorizationRequest.getNonce());
-    }
-
-    private boolean verifyNonce(DigestAuthorizationRequest authorizationRequest)
-    {
-        NonceTable nonceTable = WebApp.getNonceTable();
-        return nonceTable.validateRequest(authorizationRequest.getNonce(),
-                                          authorizationRequest.getOpaque(),
-                                          authorizationRequest.getNonceCount());
     }
 
     private boolean verifyResponse(DigestAuthorizationRequest request,
