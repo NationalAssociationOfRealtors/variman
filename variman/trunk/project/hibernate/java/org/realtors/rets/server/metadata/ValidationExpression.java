@@ -8,7 +8,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * @hibernate.class table="rets_metadata_validationexpression"
  */
-public class ValidationExpression implements Serializable
+public class ValidationExpression extends ServerMetadata implements Serializable
 {
     public ValidationExpression(long id)
     {

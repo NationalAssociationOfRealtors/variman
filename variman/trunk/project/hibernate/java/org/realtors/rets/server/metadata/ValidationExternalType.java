@@ -11,7 +11,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @hibernate.class table="rets_metadata_validationexternaltype"
  */
-public class ValidationExternalType implements Serializable
+public class ValidationExternalType
+    extends ServerMetadata
+    implements Serializable
 {
     /**
      *

@@ -9,7 +9,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * @hibernate.class table="rets_metadata_validationlookup"
  */
-public class ValidationLookup implements Serializable
+public class ValidationLookup extends ServerMetadata implements Serializable
 {
     public ValidationLookup(long id)
     {

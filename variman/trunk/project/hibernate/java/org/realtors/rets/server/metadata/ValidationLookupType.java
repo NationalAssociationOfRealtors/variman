@@ -9,7 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @hibernate.class table="rets_metadata_validationlookuptype"
  */
-public class ValidationLookupType implements Serializable
+public class ValidationLookupType extends ServerMetadata implements Serializable
 {
     /**
      *
