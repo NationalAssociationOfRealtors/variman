@@ -56,6 +56,8 @@ public class UsersPanel extends JPanel
         mPopup.add(mAddUserAction);
         mRemoveUserAction = new RemoveUserAction(this);
         mPopup.add(mRemoveUserAction);
+        mChangePasswordAction = new ChangePasswordAction(this);
+        mPopup.add(mChangePasswordAction);
 
         PopupListener popupListener = new PopupListener();
         mUserList.addMouseListener(popupListener);
@@ -81,6 +83,11 @@ public class UsersPanel extends JPanel
     public RemoveUserAction getRemoveUserAction()
     {
         return mRemoveUserAction;
+    }
+
+    public ChangePasswordAction getChangePasswordAction()
+    {
+        return mChangePasswordAction;
     }
 
     public void populateList()
@@ -137,6 +144,7 @@ public class UsersPanel extends JPanel
             setLabel(mAgentCode, user.getAgentCode());
             setLabel(mBrokerCode, user.getBrokerCode());
             mRemoveUserAction.setEnabled(true);
+            mChangePasswordAction.setEnabled(true);
         }
         else
         {
@@ -146,6 +154,7 @@ public class UsersPanel extends JPanel
             mAgentCode.setText("");
             mBrokerCode.setText("");
             mRemoveUserAction.setEnabled(false);
+            mChangePasswordAction.setEnabled(false);
         }
     }
 
@@ -221,4 +230,5 @@ public class UsersPanel extends JPanel
     private JPopupMenu mPopup;
     private AddUserAction mAddUserAction;
     private RemoveUserAction mRemoveUserAction;
+    private ChangePasswordAction mChangePasswordAction;
 }
