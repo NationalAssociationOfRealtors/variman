@@ -62,7 +62,7 @@ public class GetObjectTransaction
             {
                 throw new RetsReplyException(ReplyCode.NO_OBJECT_FOUND);
             }
-            else if (allFiles.size() == 1)
+            else if (!mParameters.isMultipartId())
             {
                 FileDescriptor fileDescriptor =
                     (FileDescriptor) allFiles.get(0);
@@ -232,4 +232,5 @@ public class GetObjectTransaction
     private GetObjectPatternContext mPatternContext;
     private GetObjectParameters mParameters;
     private MultipartBoundaryGenerator mBoundaryGenerator;
+    private boolean mUseMultipartResponse;
 }

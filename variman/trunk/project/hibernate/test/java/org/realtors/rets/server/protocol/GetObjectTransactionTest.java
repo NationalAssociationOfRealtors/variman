@@ -146,6 +146,38 @@ public class GetObjectTransactionTest extends TestCase
         assertTrue(Arrays.equals(expected, actual));
     }
 
+    public void testMultipartForSingleImage()
+        throws RetsServerException, IOException
+    {
+        GetObjectTransaction transaction = createTransaction("abc124:*");
+        transaction.setBoundaryGenerator(new TestBoundaryGenerator());
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("multipart/parallel; boundary=\"" + BOUNDARY + "\"",
+                     response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertNull(response.getHeader("Content-ID"));
+        assertNull(response.getHeader("Object-ID"));
+
+        ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(expectedStream);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
+        out.writeBytes("Content-ID: abc124" + CRLF);
+        out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes(CRLF);
+        InputStream stream = getClass().getResourceAsStream(JPEG_FILE_3);
+        IOUtils.copyStream(stream, out);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + "--" + CRLF);
+        out.flush();
+
+        byte[] expected = expectedStream.toByteArray();
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
     private GetObjectTransaction createTransaction()
     {
         return createTransaction("abc123:1");
