@@ -1,0 +1,13 @@
+Main-Class: org.realtors.rets.server.tomcat.EmbeddedTomcat
+Class-Path: bootstrap.jar
+  catalina.jar
+  commons-beanutils.jar
+  commons-collections.jar
+  commons-digester.jar
+  commons-logging.jar
+  naming-common.jar
+  naming-resources.jar
+  servlet.jar
+  tomcat-coyote.jar
+  tomcat-http11.jar
+  tomcat-util.jar

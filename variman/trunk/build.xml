@@ -25,6 +25,11 @@
     <pathelement path="${servlet.jar}"/>
   </path>
     
+  <path id="embedded.path">
+    <fileset dir="${tomcat.home}/server/lib" includes="*.jar"/>
+  </path>
+
+
   <!-- Add the checkstyle task -->
 <!--   <taskdef name="checkstyle" -->
 <!--            classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"> -->
@@ -56,8 +61,10 @@
     <mkdir dir="build/hibernate/generated"/>
     <mkdir dir="build/hibernate/schema"/>
     <mkdir dir="build/hibernate/jar"/>
-    <mkdir dir="build/webapp/root/WEB-INF/classes"/>
-    <mkdir dir="build/webapp/root/WEB-INF/lib"/>
+    <mkdir dir="build/embedded/classes"/>
+    <mkdir dir="build/rets-server/lib"/>
+    <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
+    <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
     <mkdir dir="dist" />
   </target>
 
@@ -70,25 +77,77 @@
          basedir="build/hibernate/final/classes" index="true"/>
   </target>
 
-  <target name="build-webapp" depends="build-hibernate">
+  <target name="build-embedded" depends="prepare">
+    <depend srcDir="project/embedded/java"
+            destDir="build/embedded/classes"
+            cache="build/embedded/depcache" closure="yes">
+      <classpath>
+        <path refid="embedded.path" />
+      </classpath>
+    </depend>
+    <javac srcdir="project/embedded/java"
+           destdir="build/embedded/classes"
+           optimize="${compile.optimize}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="embedded.path" />
+      </classpath>
+    </javac>
+
+    <jar jarfile="build/rets-server/lib/rets-server.jar"
+         basedir="build/embedded/classes"
+         manifest="project/build/rets-server.manifest"/>
+    <copy todir="build/rets-server/lib">
+      <fileset dir="${tomcat.home}/bin">
+        <include name="bootstrap.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="build/rets-server/lib">
+      <fileset dir="${tomcat.home}/common/lib">
+        <include name="servlet.jar"/>
+        <include name="naming-common.jar"/>
+        <include name="naming-resources.jar"/>
+        <include name="commons-collections.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="build/rets-server/lib">
+      <fileset dir="${tomcat.home}/server/lib">
+        <include name="catalina.jar"/>
+        <include name="commons-digester.jar"/>
+        <include name="tomcat-coyote.jar"/>
+        <include name="tomcat-util.jar"/>
+        <include name="tomcat-http11.jar"/>
+        <include name="commons-logging.jar"/>
+        <include name="commons-beanutils.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="build-webapp" depends="build-hibernate,build-embedded">
     <depend srcDir="project/webapp/java"
-            destDir="build/webapp/root/WEB-INF/classes"
+            destDir="build/rets-server/webapp/WEB-INF/classes"
             cache="build/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
+        <pathelement location="build/embedded/classes"/>
       </classpath>
     </depend>
     <javac srcdir="project/webapp/java"
-           destdir="build/webapp/root/WEB-INF/classes"
+           destdir="build/rets-server/webapp/WEB-INF/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
         <path refid="lib.path"/>
+        <pathelement location="build/embedded/classes"/>
       </classpath>
     </javac>
 
-
-    <copy todir="build/webapp/root/WEB-INF/lib"
+    <copy file="project/webapp/config/web.xml"
+          todir="build/rets-server/webapp/WEB-INF"/>
+    <copy file="project/webapp/config/tomcat-users.xml"
+          todir="build/rets-server/conf"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </target>
 
