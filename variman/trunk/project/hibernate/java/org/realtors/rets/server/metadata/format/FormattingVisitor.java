@@ -55,7 +55,8 @@ public class FormattingVisitor
         try
         {
             ServerMetadata[] data = segment.getData();
-            Method method = getMethod(data.getClass());
+            Class arrayType = data.getClass().getComponentType();
+            Method method = getMethod(arrayType);
             method.invoke(this, new Object[] {segment});
         }
         catch (Exception e)
@@ -76,8 +77,7 @@ public class FormattingVisitor
             try
             {
                 String className = clazz.getName();
-                className = className.substring(className.lastIndexOf('.') + 1,
-                                                className.length() - 1);
+                className = className.substring(className.lastIndexOf('.') + 1);
                 String name = "visit" + className;
                 LOG.info("Checking dispatch to: " + name);
                 method = getClass().getMethod(
