@@ -112,7 +112,7 @@ public class  GetMetadataServlet extends RetsServlet
         {
             MetadataSegment metadataSegment =
                 (MetadataSegment) metadataSegments.get(i);
-            visitor.visit(metadataSegment);
+            visitor.format(metadataSegment);
         }
     }
 
