@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.AccountingStatistics;
 import org.realtors.rets.server.LogoutTransaction;
+import org.realtors.rets.server.RetsServerException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,15 +29,16 @@ public class LogoutServlet extends RetsServlet
     }
 
     /**
-     * Logs out of RETS server.
+     * Logs out of a RETS server.
      *
      * @param request
      * @param response
-     * @throws ServletException
+     * @throws RetsServerException
+     * @throws IOException
      */
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-        throws ServletException, IOException
+    protected void doRets(RetsServletRequest request,
+                          RetsServletResponse response)
+        throws RetsServerException, IOException
     {
         HttpSession session = request.getSession();
         AccountingStatistics stats = getStatistics(request.getSession());
