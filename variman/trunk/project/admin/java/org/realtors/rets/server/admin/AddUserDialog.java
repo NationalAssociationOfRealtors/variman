@@ -50,7 +50,19 @@ public class AddUserDialog extends wxDialog
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT, 5);
         mPassword = new wxTextCtrl(this, -1, "", wxDefaultPosition,
                                    textSize, wxTE_PASSWORD);
-        grid.Add(mPassword, 0, wxALIGN_LEFT, 5);
+        grid.Add(mPassword, 0, wxALIGN_LEFT | wxBOTTOM, 5);
+
+        label = new wxStaticText(this, -1, "Agent Code:");
+        grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT, 5);
+        mAgentCode = new wxTextCtrl(this, -1, "", wxDefaultPosition,
+                                    textSize);
+        grid.Add(mAgentCode, 0, wxALIGN_LEFT | wxBOTTOM, 5);
+
+        label = new wxStaticText(this, -1, "Broker Code:");
+        grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT, 5);
+        mBrokerCode = new wxTextCtrl(this, -1, "", wxDefaultPosition,
+                                     textSize);
+        grid.Add(mBrokerCode, 0, wxALIGN_LEFT, 5);
 
         wxBoxSizer buttonBox = new wxBoxSizer(wxHORIZONTAL);
         wxButton add = new wxButton(this, wxID_OK, "Add User");
@@ -88,8 +100,20 @@ public class AddUserDialog extends wxDialog
         return mPassword.GetValue();
     }
 
+    public String getAgentCode()
+    {
+        return mAgentCode.GetValue();
+    }
+
+    public String getBrokerCode()
+    {
+        return mBrokerCode.GetValue();
+    }
+
     private wxTextCtrl mUsername;
     private wxTextCtrl mFirstName;
     private wxTextCtrl mLastName;
     private wxTextCtrl mPassword;
+    private wxTextCtrl mAgentCode;
+    private wxTextCtrl mBrokerCode;
 }

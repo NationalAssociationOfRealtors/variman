@@ -163,6 +163,40 @@ public class User implements Serializable
         return mPasswordMethod.verifyPassword(mPassword, passwordToVerify);
     }
 
+    /**
+     * Returns the agent code.
+     *
+     * @return The agent code
+     *
+     * @hibernate.property length="80"
+     */
+    public String getAgentCode()
+    {
+        return mAgentCode;
+    }
+
+    public void setAgentCode(String agentCode)
+    {
+        mAgentCode = agentCode;
+    }
+
+    /**
+     * Returns the broker code.
+     *
+     * @return The broker code
+     *
+     * @hibernate.property length="80"
+     */
+    public String getBrokerCode()
+    {
+        return mBrokerCode;
+    }
+
+    public void setBrokerCode(String brokerCode)
+    {
+        mBrokerCode = brokerCode;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -179,4 +213,6 @@ public class User implements Serializable
     private String mUsername;
     private String mPassword;
     private PasswordMethod mPasswordMethod;
+    private String mAgentCode;
+    private String mBrokerCode;
 }

@@ -8,9 +8,9 @@
 
 package org.realtors.rets.server.admin;
 
-import org.apache.log4j.Logger;
-import org.realtors.rets.server.User;
-import org.realtors.rets.server.UserUtils;
+import java.util.Collections;
+import java.util.List;
+
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxCommandEvent;
 import org.wxwindows.wxCommandListener;
@@ -27,8 +27,10 @@ import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
 
-import java.util.Collections;
-import java.util.List;
+import org.apache.log4j.Logger;
+
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.UserUtils;
 
 public class UsersPage extends wxPanel
 {
@@ -48,6 +50,10 @@ public class UsersPage extends wxPanel
         grid.addRow("Last Name:", mLastName);
         mUsername = new wxStaticText(panel, -1, "");
         grid.addRow("Username:", mUsername);
+        mAgentCode = new wxStaticText(panel, -1, "");
+        grid.addRow("Agent Code:", mAgentCode);
+        mBrokerCode = new wxStaticText(panel, -1, "");
+        grid.addRow("Broker Code:", mBrokerCode);
 
         pBox.Add(grid, 0, wxALL, 5);
         panel.SetSizer(pBox);
@@ -71,15 +77,31 @@ public class UsersPage extends wxPanel
         if (selection != -1)
         {
             User user = (User) mListBox.GetClientData(selection);
-            mFirstName.SetLabel(user.getFirstName());
-            mLastName.SetLabel(user.getLastName());
-            mUsername.SetLabel(user.getUsername());
+            setLabel(mFirstName, user.getFirstName());
+            setLabel(mLastName, user.getLastName());
+            setLabel(mUsername, user.getUsername());
+            setLabel(mAgentCode, user.getAgentCode());
+            setLabel(mBrokerCode, user.getBrokerCode());
         }
         else
         {
             mFirstName.SetLabel("");
             mLastName.SetLabel("");
             mUsername.SetLabel("");
+            mAgentCode.SetLabel("");
+            mBrokerCode.SetLabel("");
+        }
+    }
+
+    private static void setLabel(wxStaticText staticText, String  text)
+    {
+        if (text == null)
+        {
+            staticText.SetLabel("");
+        }
+        else
+        {
+            staticText.SetLabel(text);
         }
     }
 
@@ -244,4 +266,6 @@ public class UsersPage extends wxPanel
     private wxStaticText mFirstName;
     private wxStaticText mLastName;
     private wxStaticText mUsername;
+    private wxStaticText mAgentCode;
+    private wxStaticText mBrokerCode;
 }

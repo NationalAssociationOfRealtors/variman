@@ -42,6 +42,18 @@ public class EditUserDialog extends wxDialog
                                    textSize);
         grid.Add(mLastName, 0, wxALIGN_LEFT, 5);
 
+        label = new wxStaticText(this, -1, "Agent Code:");
+        grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
+        mAgentCode = new wxTextCtrl(this, -1, "", wxDefaultPosition,
+                                    textSize);
+        grid.Add(mAgentCode, 0, wxALIGN_LEFT | wxBOTTOM, 5);
+
+        label = new wxStaticText(this, -1, "Broker Code:");
+        grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
+        mBrokerCode = new wxTextCtrl(this, -1, "", wxDefaultPosition,
+                                     textSize);
+        grid.Add(mBrokerCode, 0, wxALIGN_LEFT, 5);
+
         wxBoxSizer buttonBox = new wxBoxSizer(wxHORIZONTAL);
         wxButton change = new wxButton(this, wxID_OK, "Save Changes");
         change.SetDefault();
@@ -57,8 +69,15 @@ public class EditUserDialog extends wxDialog
         box.Fit(this);
         CenterOnParent();
 
-        mFirstName.SetValue(user.getFirstName());
-        mLastName.SetValue(user.getLastName());
+        setValue(mFirstName, user.getFirstName());
+        setValue(mLastName, user.getLastName());
+        setValue(mAgentCode, user.getAgentCode());
+        setValue(mBrokerCode, user.getBrokerCode());
+    }
+
+    private void setValue(wxTextCtrl textCtrl, String string)
+    {
+        textCtrl.SetValue(string == null ? "" : string);
     }
 
     public String getFirstName()
@@ -71,6 +90,18 @@ public class EditUserDialog extends wxDialog
         return mLastName.GetValue();
     }
 
+    public String getAgentCode()
+    {
+        return mAgentCode.GetValue();
+    }
+
+    public String getBrokerCode()
+    {
+        return mBrokerCode.GetValue();
+    }
+
     private wxTextCtrl mFirstName;
     private wxTextCtrl mLastName;
+    private wxTextCtrl mAgentCode;
+    private wxTextCtrl mBrokerCode;
 }
