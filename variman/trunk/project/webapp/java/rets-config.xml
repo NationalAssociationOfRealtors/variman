@@ -6,4 +6,17 @@
   <nonce-initial-timeout>1</nonce-initial-timeout>
   <nonce-success-timeout>1</nonce-success-timeout>
   -->
+
+  <database>
+    <driver>org.postgresql.Driver</driver>
+    <url>jdbc:postgresql://localhost/rex_test</url>
+    <username>dave</username>
+    <password/>
+    <max-active>100</max-active>
+    <max-wait>120000</max-wait>
+    <max-idle>10</max-idle>
+    <max-ps-active>100</max-ps-active>
+    <max-ps-wait>120000</max-ps-wait>
+    <max-ps-idle>10</max-ps-idle>
+  </database>
 </rets-config>
