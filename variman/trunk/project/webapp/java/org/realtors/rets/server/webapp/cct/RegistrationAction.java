@@ -39,11 +39,11 @@ public class RegistrationAction extends Action
         {
             return new ActionForward(mapping.getInput());
         }
-        
+
         ActionErrors errors = new ActionErrors();
-        
+
         RegistrationForm form = (RegistrationForm) actionForm;
-        
+
         UserMap userMap = new HibernateUserMap();
         String username = form.getUsername();
         User user = userMap.findUser(username);
@@ -52,7 +52,7 @@ public class RegistrationAction extends Action
             errors.add(ActionErrors.GLOBAL_ERROR,
                        new ActionError("registration.user.exists"));
         }
-        
+
         if (!form.isAcceptedLegalese())
         {
             errors.add(ActionErrors.GLOBAL_ERROR,
@@ -70,10 +70,10 @@ public class RegistrationAction extends Action
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
         user.setPassword(form.getPassword());
-        
+
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(user);
-        userInfo.setAgentID(form.getAgentID());
+        userInfo.setAgentID(form.getAgentId());
         userInfo.setCompany(form.getCompany());
         userInfo.setEmail(form.getEmail());
         userInfo.setProductName(form.getProductName());
@@ -82,7 +82,7 @@ public class RegistrationAction extends Action
 
 //        UserUtils userUtils = new UserUtils();
 //        userUtils.createUser(user, userInfo);
-        
+
         HttpSession session = request.getSession();
         session.setAttribute("regUser", user);
         session.setAttribute("regUserInfo", userInfo);

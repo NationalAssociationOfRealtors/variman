@@ -29,7 +29,7 @@
     <filter-name>accounting-filter</filter-name>
     <url-pattern>/rets/*</url-pattern>
   </filter-mapping>
-
+    
   <servlet>
     <servlet-name>stop-servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.StopServlet</servlet-class>

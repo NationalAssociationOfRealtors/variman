@@ -19,16 +19,16 @@ import org.apache.struts.validator.ValidatorActionForm;
 public class RegistrationForm extends ValidatorActionForm
 {
     /**
-     * 
+     *
      * @return
      */
-    public String getAgentID()
+    public String getAgentId()
     {
-        return mAgentID;
+        return mAgentId;
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getCompany()
@@ -37,7 +37,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getEmail()
@@ -46,7 +46,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getFirstName()
@@ -55,7 +55,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getLastName()
@@ -64,7 +64,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getPassword()
@@ -73,7 +73,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getProductName()
@@ -82,7 +82,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getProductVersion()
@@ -91,7 +91,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getUserAgent()
@@ -100,7 +100,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getUsername()
@@ -109,7 +109,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @return
      */
     public String getVerifyPassword()
@@ -117,7 +117,7 @@ public class RegistrationForm extends ValidatorActionForm
         return mVerifyPassword;
     }
     /**
-     * 
+     *
      * @return
      */
     public boolean isAcceptedLegalese()
@@ -130,7 +130,7 @@ public class RegistrationForm extends ValidatorActionForm
      */
     public void reset(ActionMapping mapping, HttpServletRequest request)
     {
-        mAgentID = "";
+        mAgentId = "";
         mCompany = "";
         mEmail = "";
         mFirstName = "";
@@ -144,7 +144,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param b
      */
     public void setAcceptedLegalese(boolean b)
@@ -153,16 +153,16 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
-    public void setAgentID(String string)
+    public void setAgentId(String string)
     {
-        mAgentID = string;
+        mAgentId = string;
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setCompany(String string)
@@ -171,7 +171,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setEmail(String string)
@@ -180,7 +180,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setFirstName(String string)
@@ -189,7 +189,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setLastName(String string)
@@ -198,7 +198,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setPassword(String string)
@@ -207,7 +207,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setProductName(String string)
@@ -216,7 +216,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setProductVersion(String string)
@@ -225,7 +225,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setUserAgent(String string)
@@ -234,7 +234,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setUsername(String string)
@@ -243,7 +243,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     /**
-     * 
+     *
      * @param string
      */
     public void setVerifyPassword(String string)
@@ -268,7 +268,7 @@ public class RegistrationForm extends ValidatorActionForm
     }
 
     private boolean mAcceptedLegalese;
-    private String mAgentID;
+    private String mAgentId;
     private String mCompany;
     private String mEmail;
     private String mFirstName;

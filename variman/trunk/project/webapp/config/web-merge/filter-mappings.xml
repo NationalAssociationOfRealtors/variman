@@ -13,3 +13,8 @@
     <filter-name>accounting-filter</filter-name>
     <url-pattern>/rets/*</url-pattern>
   </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>authentication-filter</filter-name>
+    <url-pattern>/cct/*</url-pattern>
+  </filter-mapping>
