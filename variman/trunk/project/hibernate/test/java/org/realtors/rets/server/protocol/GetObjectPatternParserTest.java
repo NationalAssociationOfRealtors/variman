@@ -20,7 +20,7 @@ public class GetObjectPatternParserTest extends TestCase
     private GetObjectPatternContext createContext()
     {
         GetObjectPatternContext context =
-            new GetObjectPatternContext("Property", "Picture", "abcde12345", 1);
+            new GetObjectPatternContext("abcde12345", 1);
         return context;
     }
 
@@ -53,7 +53,7 @@ public class GetObjectPatternParserTest extends TestCase
     {
         GetObjectPatternContext context = createContext();
         assertEquals("foo _1 bar", format("foo %I bar", context));
-        context = new GetObjectPatternContext(null, null, context.getKey(), 0);
+        context = new GetObjectPatternContext(context.getKey(), 0);
         assertEquals("foo  bar", format("foo %I bar", context));
     }
 
