@@ -22,6 +22,8 @@ public class NonceTable
     public NonceTable()
     {
         mNonceTable = new HashMap();
+        mInitialTimeout = DEFAULT_INITIAL_TIMEOUT;
+        mSuccessTimeout = DEFAULT_SUCCESS_TIMEOUT;
     }
 
     public synchronized String generateNonce()
@@ -30,8 +32,14 @@ public class NonceTable
             "" + System.currentTimeMillis() +
             RandomStringUtils.randomAlphanumeric(5));
         mNonceTable.put(nonce, new Entry(nonce));
-        LOG.debug("Created new nonce <" + nonce + ">");
+        LOG.debug("Created new nonce <" + nonce + ">, table size: " +
+                  mNonceTable.size());
         return nonce;
+    }
+
+    public void addNonce(String nonce, String opaque, long nonceCount)
+    {
+        mNonceTable.put(nonce, new Entry(nonce, opaque, nonceCount));
     }
 
     public synchronized String getOpaque(String nonce)
@@ -40,8 +48,42 @@ public class NonceTable
         return (entry == null ? null : entry.getOpaque());
     }
 
-    public synchronized boolean validateRequest(String nonce, String opaque,
-                                                String nonceCount)
+    /**
+     * Validates a digest authorization request. If no qop is present, the
+     * request is assumed to be in RFC 2609 format, otherwise the request is
+     * assumed to be in RFC 2617 format. A successful validation updates the
+     * expiration time.
+     *
+     * @param request Request to validate
+     * @return <code>true</code> if the request is valide
+     */
+    public synchronized boolean validateRequest(
+        DigestAuthorizationRequest request)
+    {
+        if (request.getQop() == null)
+        {
+            return validate2609Request(request.getNonce());
+        }
+        else
+        {
+            return validate2617Request(request.getNonce(), request.getOpaque(),
+                                       request.getNonceCount());
+        }
+    }
+
+    /**
+     * Validate an RFC 2617 request, i.e. a request that contains a qop. A
+     * valid request contains a nonce that is in the table, contains the
+     * matching opaque value, and whose nonce count is alays increasing. A
+     * successful validation updates the expiration time.
+     *
+     * @param nonce  The nonce from the request
+     * @param opaque The opaque from the request
+     * @param nonceCount The hex nonce count from the request
+     * @return <code>true</code> if the request is valid
+     */
+    private boolean validate2617Request(String nonce, String opaque,
+                                        String nonceCount)
     {
         Entry entry = (Entry) mNonceTable.get(nonce);
         if (entry == null)
@@ -70,6 +112,27 @@ public class NonceTable
         return true;
     }
 
+    /**
+     * Validate an RFC 2069 request, i.e. no qop is specified. A valid request
+     * contains a nonce that is in the table. A successful validation updates
+     * the expiration time.
+     *
+     * @param nonce The nonce from the request
+     * @return <code>true</code> if the request is valid
+     */
+    private boolean validate2609Request(String nonce)
+    {
+        Entry entry = (Entry) mNonceTable.get(nonce);
+        if (entry == null)
+        {
+            LOG.debug("Unknown nonce: " + nonce);
+            return false;
+        }
+
+        entry.resetExpirationTime();
+        return true;
+    }
+
     public synchronized boolean isValidNonce(String nonce)
     {
         return mNonceTable.containsKey(nonce);
@@ -86,8 +149,8 @@ public class NonceTable
             entries = new ArrayList(mNonceTable.values());
         }
 
+        int numRemoved = 0;
         int numEntries = entries.size();
-        LOG.debug("Checking " + numEntries + " nonce entries");
         for (int i = 0; i < numEntries; i++)
         {
             Entry entry = (Entry) entries.get(i);
@@ -97,8 +160,13 @@ public class NonceTable
                 {
                     mNonceTable.remove(entry.getNonce());
                     LOG.debug("Removed old nonce <" + entry.getNonce() + ">");
+                    numRemoved++;
                 }
             }
+        }
+        if (numRemoved > 0)
+        {
+            LOG.debug("New table size: " + mNonceTable.size());
         }
     }
 
@@ -114,17 +182,47 @@ public class NonceTable
         return entry.getExpirationTime();
     }
 
-    private static class Entry
+    public long getInitialTimeout()
+    {
+        return mInitialTimeout;
+    }
+
+    public void setInitialTimeout(long initialTimeout)
+    {
+        mInitialTimeout = initialTimeout;
+    }
+
+    public long getSuccessTimeout()
+    {
+        return mSuccessTimeout;
+    }
+
+    public void setSuccessTimeout(long successTimeout)
+    {
+        mSuccessTimeout = successTimeout;
+    }
+
+    private class Entry
     {
         public Entry(String nonce)
         {
             String opaque = "" + System.currentTimeMillis() +
                 RandomStringUtils.randomAlphanumeric(5);
+            init(nonce, DigestUtils.md5Hex(opaque), 0);
+        }
+
+        public Entry(String nonce, String opaque, long nonceCount)
+        {
+            init(nonce, opaque, nonceCount);
+        }
+
+        private void init(String nonce, String opaque, long nonceCount)
+        {
             mNonce = nonce;
-            mOpaque = DigestUtils.md5Hex(opaque);
-            mCurrentNonceCount = 0;
+            mOpaque = opaque;
+            mCurrentNonceCount = nonceCount;
             mExpirationTime =
-                System.currentTimeMillis() + DEFAULT_INITIAL_TIMEOUT;
+                System.currentTimeMillis() + mInitialTimeout;
         }
 
         public String getNonce()
@@ -160,7 +258,9 @@ public class NonceTable
         public void resetExpirationTime()
         {
             mExpirationTime =
-                System.currentTimeMillis() + DEFAULT_SUCCESS_TIMEOUT;
+                System.currentTimeMillis() + mSuccessTimeout;
+            LOG.debug("Nonce <" + mNonce + "> expirationTime: " +
+                      mExpirationTime);
         }
 
         private String mOpaque;
@@ -172,14 +272,15 @@ public class NonceTable
     private static final Logger LOG =
         Logger.getLogger(NonceTable.class);
 
-    /** Initial timeout, before a succesful validation is 10 minutes.*/
+    /** Initial timeout, before a succesful validation is 2 minutes.*/
     public static final long DEFAULT_INITIAL_TIMEOUT =
-        10 * DateUtils.MILLIS_IN_MINUTE;
+        2 * DateUtils.MILLIS_IN_MINUTE;
 
-    /** Timeout after each successful validation is 2 hours.*/
+    /** Timeout after each successful validation is 5 minutes.*/
     public static final long DEFAULT_SUCCESS_TIMEOUT =
-        2 * DateUtils.MILLIS_IN_HOUR;
-//        DateUtils.MILLIS_IN_MINUTE;
+        5 * DateUtils.MILLIS_IN_MINUTE;
 
     private Map /* Entry */ mNonceTable;
+    private long mInitialTimeout;
+    private long mSuccessTimeout;
 }
