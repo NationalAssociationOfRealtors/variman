@@ -8,6 +8,8 @@
 
 package org.realtors.rets.server.admin;
 
+import java.io.File;
+
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 
@@ -50,8 +52,8 @@ public class AdminFrame extends wxFrame
 
         wxMenuBar menuBar = new wxMenuBar();
         menuBar.Append(fileMenu, "&File");
-        menuBar.Append(userMenu, "&User");
         menuBar.Append(databaseMenu, "&Database");
+        menuBar.Append(userMenu, "&User");
         SetMenuBar(menuBar);
 
         initConfig();
@@ -73,6 +75,7 @@ public class AdminFrame extends wxFrame
 
         EVT_MENU(ADD_USER, new OnAddUser());
         EVT_MENU(REMOVE_USER, new OnRemoveUser());
+
         EVT_NOTEBOOK_PAGE_CHANGED(NOTEBOOK, new OnPageChanged());
         EVT_CLOSE(new OnClose());
     }
@@ -81,8 +84,9 @@ public class AdminFrame extends wxFrame
     {
         try
         {
-            Admin.setConfigFile(
-                Admin.getRexHome() + "/webapp/WEB-INF/classes/rets-config.xml");
+            File configFile = new File(
+                Admin.getRexHome() + "/webapp/WEB-INF/rex/rets-config.xml");
+            Admin.setConfigFile(configFile.getAbsolutePath());
             Admin.setRetsConfig(
                 RetsConfig.initFromXmlFile(Admin.getConfigFile()));
         }
