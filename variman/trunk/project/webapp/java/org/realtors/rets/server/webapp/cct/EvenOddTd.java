@@ -16,6 +16,7 @@ public class EvenOddTd extends BodyTagSupport
     public EvenOddTd()
     {
         mCount = null;
+        mWidth = null;
     }
 
     /**
@@ -37,6 +38,23 @@ public class EvenOddTd extends BodyTagSupport
         mCount = count;
     }
 
+    /**
+     *
+     * @return
+     *
+     * @jsp:attribute required="false" rtexprvalue="false"
+     *   description="The width of the tag"
+     */
+    public String getWidth()
+    {
+        return mWidth;
+    }
+
+    public void setWidth(String width)
+    {
+        mWidth = width;
+    }
+
     public int doStartTag() throws JspException
     {
         JspWriter out = pageContext.getOut();
@@ -56,7 +74,14 @@ public class EvenOddTd extends BodyTagSupport
         {
             out.write("<td class=\"");
             out.write(tdclass);
-            out.write("\">");
+            out.write("\"");
+            if (mWidth != null)
+            {
+                out.write(" width=\"");
+                out.write(mWidth);
+                out.write("\"");
+            }
+            out.write(">");
         }
         catch (IOException e)
         {
@@ -82,6 +107,13 @@ public class EvenOddTd extends BodyTagSupport
         return EVAL_PAGE;
     }
 
-    private String mCount;
+    public void release()
+    {
+        super.release();
+        mWidth = null;
+    }
+
     private static final Logger LOG = Logger.getLogger(EvenOddTd.class);
+    private String mCount;
+    private String mWidth;
 }
