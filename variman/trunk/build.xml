@@ -18,7 +18,7 @@
 
   <path id="lib.path">
     <pathelement path="${hibernate.jar}"/>
-    <pathelement path="${postgres.jar}"/>
+    <pathelement path="${jdbc.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
   </path>
     
