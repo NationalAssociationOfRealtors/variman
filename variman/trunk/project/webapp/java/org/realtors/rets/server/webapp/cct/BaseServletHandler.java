@@ -247,6 +247,11 @@ public abstract class BaseServletHandler implements ServletHandler
         {
             failed = true;
         }
+        else if (mInvokeCount.equals(InvokeCount.ZERO_OR_TWO) &&
+                 !((mDoGetInvokeCount == 0) || (mDoGetInvokeCount == 2)))
+        {
+            failed = true;
+        }
 
         if (failed)
         {
