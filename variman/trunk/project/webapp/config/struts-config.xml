@@ -76,6 +76,11 @@
 
     <action path="/cct/resetAllTests"
             type="org.realtors.rets.server.webapp.cct.ResetAllTestsAction"/>
+
+    <action path="/cct/showTestProcedure"
+            type="org.realtors.rets.server.webapp.cct.ShowProcedureAction">
+      <forward name="showProcedure" path="/cct/showProcedure.jsp"/>
+    </action>
   </action-mappings>
 
   <message-resources parameter="ApplicationResources"/>

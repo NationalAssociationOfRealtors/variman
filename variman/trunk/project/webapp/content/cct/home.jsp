@@ -21,7 +21,10 @@
                  indexId="counter">
     <tr>
      <cct:evenoddtd count="counter" width="40%">
-      <bean:write name="displayBean" property="test.description" />
+      <html:link action="/cct/showTestProcedure" paramId="testNo"
+                 paramName="counter">
+       <bean:write name="displayBean" property="test.description" />
+      </html:link>
      </cct:evenoddtd>
      <cct:evenoddtd count="counter">
       <bean:write name="displayBean" property="result.formattedDate"/>
