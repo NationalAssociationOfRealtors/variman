@@ -85,7 +85,7 @@ public class CompactFormatter implements SearchResultsFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter(), DELIMITER);
         row.begin();
-        for (int i = 1; i <= numColumns; i++)
+        for (int i = 0; i < numColumns; i++)
         {
             String value = context.getResultString(i);
             if ((mLookupDecoding == DECODE_TO_SHORT_VALUE) &&
