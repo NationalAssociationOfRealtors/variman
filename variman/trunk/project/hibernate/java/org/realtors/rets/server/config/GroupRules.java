@@ -11,6 +11,8 @@ public class GroupRules
         mGroupName = groupName;
         mRules = new ArrayList();
         mReadOnlyRules = Collections.unmodifiableList(mRules);
+        mConditionRules = new ArrayList();
+        mReadOnlyConditionRules = Collections.unmodifiableList(mConditionRules);
     }
 
     public String getGroupName()
@@ -33,7 +35,19 @@ public class GroupRules
         mRules.remove(ruleDescription);
     }
 
+    public List /* ConditionRule */ getConditionRules()
+    {
+        return mReadOnlyConditionRules;
+    }
+
+    public void addConditionRule(ConditionRule conditionRule)
+    {
+        mConditionRules.add(conditionRule);
+    }
+
     private String mGroupName;
     private List mRules;
     private List mReadOnlyRules;
+    private List mConditionRules;
+    private List mReadOnlyConditionRules;
 }
