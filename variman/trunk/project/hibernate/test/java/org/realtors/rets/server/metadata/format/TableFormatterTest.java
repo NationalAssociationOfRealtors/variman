@@ -82,9 +82,17 @@ public class TableFormatterTest extends FormatterTestCase
         mTables.add(table);
     }
 
+    private TableFormatter getCompactFormatter()
+    {
+        TableFormatter formatter = new CompactTableFormatter();
+        formatter.setVersion("1.00.001", getDate());
+        formatter.setLevels(new String[]{"Property", "MOB"});
+        return formatter;
+    }
+
     public void testCompactFormatTable()
     {
-        TableFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        TableFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mTables);
         assertEquals(
@@ -117,18 +125,10 @@ public class TableFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormatTable()
     {
-        TableFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        TableFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
-    }
-
-    private TableFormatter getFormatter(int format)
-    {
-        TableFormatter formatter = TableFormatter.getInstance(format);
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[]{"Property", "MOB"});
-        return formatter;
     }
 
     private List mTables;

@@ -33,41 +33,37 @@ public class FormattingVisitor
         mFormmatters = new HashMap();
         if (format == MetadataFormatter.COMPACT)
         {
-            mFormmatters.put(MSystem.class,
-                             SystemFormatter.getInstance(format));
-            mFormmatters.put(Resource.class,
-                             ResourceFormatter.getInstance(format));
-            mFormmatters.put(MClass.class,
-                             ClassFormatter.getInstance(format));
-            mFormmatters.put(Table.class,
-                             TableFormatter.getInstance(format));
-            mFormmatters.put(Update.class,
-                             UpdateFormatter.getInstance(format));
+            mFormmatters.put(MSystem.class, new CompactSystemFormatter());
+            mFormmatters.put(Resource.class, new CompactResourceFormatter());
+            mFormmatters.put(MClass.class, new CompactClassFormatter());
+            mFormmatters.put(Table.class, new CompactTableFormatter());
+            mFormmatters.put(Update.class, new CompactUpdateFormatter());
             mFormmatters.put(UpdateType.class,
-                             UpdateTypeFormatter.getInstance(format));
-            mFormmatters.put(MObject.class,
-                             ObjectFormatter.getInstance(format));
+                             new CompactUpdateTypeFormatter());
+            mFormmatters.put(MObject.class, new CompactObjectFormatter());
             mFormmatters.put(SearchHelp.class,
-                             SearchHelpFormatter.getInstance(format));
-            mFormmatters.put(EditMask.class,
-                             EditMaskFormatter.getInstance(format));
-            mFormmatters.put(Lookup.class,
-                             LookupFormatter.getInstance(format));
+                             new CompactSearchHelpFormatter());
+            mFormmatters.put(EditMask.class, new CompactEditMaskFormatter());
+            mFormmatters.put(Lookup.class, new CompactLookupFormatter());
             mFormmatters.put(LookupType.class,
-                             LookupTypeFormatter.getInstance(format));
+                             new CompactLookupTypeFormatter());
             mFormmatters.put(ValidationLookup.class,
-                             ValidationLookupFormatter.getInstance(format));
+                             new CompactValidationLookupFormatter());
             mFormmatters.put(
                 ValidationLookupType.class,
-                ValidationLookupTypeFormatter.getInstance(format));
+                new CompactValidationLookupTypeFormatter());
             mFormmatters.put(ValidationExternal.class,
-                             ValidationExternalFormatter.getInstance(format));
+                             new CompactValidationExternalFormatter());
             mFormmatters.put(
                 ValidationExternalType.class,
-                ValidationExternalTypeFormatter.getInstance(format));
+                new CompactValidationExternalTypeFormatter());
             mFormmatters.put(
                 ValidationExpression.class,
-                ValidationExpressionFormatter.getInstance(format));
+                new CompactValidationExpressionFormatter());
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unknown format: " + format);
         }
     }
 

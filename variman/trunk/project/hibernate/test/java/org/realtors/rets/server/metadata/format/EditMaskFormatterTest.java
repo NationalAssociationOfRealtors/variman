@@ -20,9 +20,9 @@ public class EditMaskFormatterTest extends FormatterTestCase
         mEditMasks.add(editMask);
     }
 
-    private EditMaskFormatter getFormatter(int format)
+    private EditMaskFormatter getCompactFormatter()
     {
-        EditMaskFormatter formatter = EditMaskFormatter.getInstance(format);
+        EditMaskFormatter formatter = new CompactEditMaskFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property"});
         return formatter;
@@ -30,7 +30,7 @@ public class EditMaskFormatterTest extends FormatterTestCase
 
     public void testCompactFormatEditMask()
     {
-        EditMaskFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        EditMaskFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mEditMasks);
         assertEquals(
@@ -48,7 +48,7 @@ public class EditMaskFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormatEditMask()
     {
-        EditMaskFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        EditMaskFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

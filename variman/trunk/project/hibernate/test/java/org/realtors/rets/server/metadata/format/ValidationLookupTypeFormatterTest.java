@@ -21,10 +21,10 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
         mValidationLookupTypes.add(validationLookupType);
     }
 
-    private ValidationLookupTypeFormatter getFormatter(int format)
+    private ValidationLookupTypeFormatter getCompactFormatter()
     {
         ValidationLookupTypeFormatter formatter =
-            ValidationLookupTypeFormatter.getInstance(format);
+            new CompactValidationLookupTypeFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property", "School"});
         return formatter;
@@ -32,8 +32,7 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
     
     public void testCompactFormatLookupType()
     {
-        ValidationLookupTypeFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        ValidationLookupTypeFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mValidationLookupTypes);
         assertEquals(
@@ -51,8 +50,7 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormat()
     {
-        ValidationLookupTypeFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        ValidationLookupTypeFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

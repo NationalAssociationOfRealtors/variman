@@ -23,10 +23,9 @@ public class ClassFormatterTest extends FormatterTestCase
         mClasses.add(clazz);
     }
 
-    private ClassFormatter getFormatter(int format)
+    private ClassFormatter getCompactFormatter()
     {
-        ClassFormatter formatter =
-            ClassFormatter.getInstance(format);
+        ClassFormatter formatter = new CompactClassFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[]{"Property"});
         return formatter;
@@ -34,7 +33,7 @@ public class ClassFormatterTest extends FormatterTestCase
 
     public void testCompactFormatClass()
     {
-        ClassFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        ClassFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mClasses);
         assertEquals(
@@ -57,7 +56,7 @@ public class ClassFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactyFormatClass()
     {
-        ClassFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        ClassFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

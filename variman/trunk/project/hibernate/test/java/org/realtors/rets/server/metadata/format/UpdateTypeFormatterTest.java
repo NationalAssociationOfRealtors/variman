@@ -61,9 +61,9 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         mUpdateTypes.add(updateType);
     }
 
-    private UpdateTypeFormatter getFormatter(int format)
+    private UpdateTypeFormatter getCompactFormatter()
     {
-        UpdateTypeFormatter formatter = UpdateTypeFormatter.getInstance(format);
+        UpdateTypeFormatter formatter = new CompactUpdateTypeFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property", "RES", "Change"});
         return formatter;
@@ -71,7 +71,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 
     public void testCompactFormatUpdateType()
     {
-        UpdateTypeFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        UpdateTypeFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mUpdateTypes);
         assertEquals(
@@ -93,7 +93,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormatUpdateType()
     {
-        UpdateTypeFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        UpdateTypeFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

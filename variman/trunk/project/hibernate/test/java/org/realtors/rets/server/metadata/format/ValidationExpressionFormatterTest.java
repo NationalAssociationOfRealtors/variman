@@ -23,10 +23,10 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
         mValidationExpressions.add(validationExpression);
     }
 
-    private ValidationExpressionFormatter getFormatter(int format)
+    private ValidationExpressionFormatter getCompactFormatter()
     {
         ValidationExpressionFormatter formatter =
-            ValidationExpressionFormatter.getInstance(format);
+            new CompactValidationExpressionFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property"});
         return formatter;
@@ -34,8 +34,7 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
 
     public void testCompactFormatValidationExpression()
     {
-        ValidationExpressionFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        ValidationExpressionFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mValidationExpressions);
         assertEquals(
@@ -53,8 +52,7 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormat()
     {
-        ValidationExpressionFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        ValidationExpressionFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

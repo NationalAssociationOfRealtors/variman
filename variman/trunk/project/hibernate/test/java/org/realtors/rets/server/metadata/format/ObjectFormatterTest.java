@@ -23,9 +23,9 @@ public class ObjectFormatterTest extends FormatterTestCase
         mObjects.add(object);
     }
 
-    private ObjectFormatter getFormatter(int format)
+    private ObjectFormatter getCompactFormatter()
     {
-        ObjectFormatter formatter = ObjectFormatter.getInstance(format);
+        ObjectFormatter formatter = new CompactObjectFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property"});
         return formatter;
@@ -33,7 +33,7 @@ public class ObjectFormatterTest extends FormatterTestCase
 
     public void testCompactFormatObject()
     {
-        ObjectFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        ObjectFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mObjects);
         assertEquals(
@@ -52,7 +52,7 @@ public class ObjectFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormatObject()
     {
-        ObjectFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        ObjectFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

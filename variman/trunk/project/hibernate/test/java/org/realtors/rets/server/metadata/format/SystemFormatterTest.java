@@ -25,8 +25,7 @@ public class SystemFormatterTest extends FormatterTestCase
 
     public void testCompactFormatSystem()
     {
-        SystemFormatter formatter =
-            SystemFormatter.getInstance(MetadataFormatter.COMPACT);
+        SystemFormatter formatter = new CompactSystemFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mSystems);
         assertEquals(

@@ -30,17 +30,16 @@ public class ResourceFormatterTest extends FormatterTestCase
         mResources.add(resource);
     }
 
-    private ResourceFormatter getFormatter(int format)
+    private ResourceFormatter getCompactFormatter()
     {
-        ResourceFormatter formatter =
-            ResourceFormatter.getInstance(format);
+        ResourceFormatter formatter = new CompactResourceFormatter();
         formatter.setVersion("1.00.001", getDate());
         return formatter;
     }
 
     public void testCompactFormatResource()
     {
-        ResourceFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        ResourceFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mResources);
         assertEquals(
@@ -68,7 +67,7 @@ public class ResourceFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormatResource()
     {
-        ResourceFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        ResourceFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

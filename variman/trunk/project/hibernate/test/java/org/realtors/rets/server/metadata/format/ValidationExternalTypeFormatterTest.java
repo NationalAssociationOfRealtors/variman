@@ -39,10 +39,10 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
         mValidationExternalTypes.add(validationExternalType);
     }
 
-    private ValidationExternalTypeFormatter getFormatter(int format)
+    private ValidationExternalTypeFormatter getCompactFormatter()
     {
         ValidationExternalTypeFormatter formatter =
-            ValidationExternalTypeFormatter.getInstance(format);
+            new CompactValidationExternalTypeFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property", "VET1"});
         return formatter;
@@ -50,8 +50,7 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
 
     public void testCompactFormatValidationExternalType()
     {
-        ValidationExternalTypeFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        ValidationExternalTypeFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mValidationExternalTypes);
         assertEquals(
@@ -72,8 +71,7 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormat()
     {
-        ValidationExternalTypeFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        ValidationExternalTypeFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

@@ -20,10 +20,9 @@ public class SearchHelpFormatterTest extends FormatterTestCase
         mSearchHelps.add(searchHelp);
     }
 
-    private SearchHelpFormatter getFormatter(int format)
+    private SearchHelpFormatter getCompactFormatter()
     {
-        SearchHelpFormatter formatter =
-            SearchHelpFormatter.getInstance(format);
+        SearchHelpFormatter formatter = new CompactSearchHelpFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property"});
         return formatter;
@@ -31,8 +30,7 @@ public class SearchHelpFormatterTest extends FormatterTestCase
 
     public void testCompactFormatSeachHelp()
     {
-        SearchHelpFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        SearchHelpFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mSearchHelps);
         assertEquals(
@@ -50,8 +48,7 @@ public class SearchHelpFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormatSearchHelp()
     {
-        SearchHelpFormatter formatter =
-            getFormatter(MetadataFormatter.COMPACT);
+        SearchHelpFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());

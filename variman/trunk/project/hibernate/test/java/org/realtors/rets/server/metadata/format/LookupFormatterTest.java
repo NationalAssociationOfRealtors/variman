@@ -20,9 +20,9 @@ public class LookupFormatterTest extends FormatterTestCase
         mLookups.add(lookup);
     }
 
-    private LookupFormatter getFormatter(int format)
+    private LookupFormatter getCompactFormatter()
     {
-        LookupFormatter formatter = LookupFormatter.getInstance(format);
+        LookupFormatter formatter = new CompactLookupFormatter();
         formatter.setVersion("1.00.001", getDate());
         formatter.setLevels(new String[] {"Property"});
         return formatter;
@@ -30,7 +30,7 @@ public class LookupFormatterTest extends FormatterTestCase
 
     public void testCompactFormatLookup()
     {
-        LookupFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        LookupFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mLookups);
         assertEquals(
@@ -49,7 +49,7 @@ public class LookupFormatterTest extends FormatterTestCase
 
     public void testEmptyCompactFormatLookup()
     {
-        LookupFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        LookupFormatter formatter = getCompactFormatter();
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), new ArrayList());
         assertEquals("", formatted.toString());
