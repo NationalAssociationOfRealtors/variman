@@ -259,7 +259,7 @@ public class MetadataLoader
             Resource resource = (Resource) i.next();
             Set hLookups = new HashSet();
             MLookup[] lookups =
-                    mMetadata.getResource(resource.getResourceID()).getMLookups();
+                mMetadata.getResource(resource.getResourceID()).getMLookups();
             for (int j = 0; j < lookups.length; j++)
             {
                 MLookup in = lookups[j];
@@ -903,7 +903,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.12 2004/01/12 04:21:37 dterrell Exp $";
+        "$Id: MetadataLoader.java,v 1.13 2004/01/15 21:24:10 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
