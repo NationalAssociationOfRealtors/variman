@@ -59,7 +59,7 @@ public class GetObjectTransaction
             fileBuffer.append(File.separator);
             mPatternFormatter.format(fileBuffer, context);
             String file = fileBuffer.toString();
-            LOG.debug("GetObject file: " + file);
+            LOG.info("GetObject file: " + file);
             response.setContentType(getContentType(file));
             response.setHeader("MIME-Version", "1.0");
             response.setHeader("Content-ID", "12345");
