@@ -175,9 +175,7 @@ public class GetObjectTransaction
         location.append(mBaseLocationUrl);
         location.append(mResource).append("/");
         location.append(mType).append("/");
-        location.append(objectDescriptor.getObjectKey()).append("/");
-        location.append(objectDescriptor.getObjectId());
-        return location.toString();
+        return objectDescriptor.getLocationUrl(location.toString());
     }
 
     private List /* ObjectDescriptor */ findAllObjectDescriptors()
