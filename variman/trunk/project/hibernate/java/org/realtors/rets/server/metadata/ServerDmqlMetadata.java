@@ -15,7 +15,9 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 {
     private ServerDmqlMetadata()
     {
-        mFields = new HashMap();
+        mFields = new HashSet();
+        mFieldToColumn = new HashMap();
+        mColumnToField = new HashMap();
         mLookups = new HashMap();
         mStrings = new HashSet();
     }
@@ -38,7 +40,13 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         {
             Table table = (Table) i.next();
             String fieldName = getTableName(table,  standardNames);
-            mFields.put(fieldName, table.getDbName());
+            mFields.add(fieldName);
+
+            if (table.getInterpretation() != InterpretationEnum.LOOKUPMULTI)
+            {
+                mFieldToColumn.put(fieldName, table.getDbName());
+                mColumnToField.put(table.getDbName(), fieldName);
+            }
 
             Lookup lookup = table.getLookup();
             if (lookup != null)
@@ -93,7 +101,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public boolean isValidFieldName(String fieldName)
     {
-        return mFields.containsKey(fieldName);
+        return mFields.contains(fieldName);
     }
 
     public boolean isValidStringName(String fieldName)
@@ -112,9 +120,19 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         return values.containsKey(lookupValue);
     }
 
-    public String getFieldDbColumn(String fieldName)
+    public String fieldToColumn(String fieldName)
     {
-        return (String) mFields.get(fieldName);
+        return (String) mFieldToColumn.get(fieldName);
+    }
+
+    public String columnToField(String columnName)
+    {
+        return (String) mColumnToField.get(columnName);
+    }
+
+    public Collection getAllColumns()
+    {
+        return mFieldToColumn.values();
     }
 
     public String getLookupDbValue(String lookupName, String lookupValue)
@@ -132,7 +150,9 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
-    private Map mFields;
+    private Set mFields;
+    private Map mFieldToColumn;
+    private Map mColumnToField;
     private Map mLookups;
     private Set mStrings;
     private static final Map sListingStatusValues;
