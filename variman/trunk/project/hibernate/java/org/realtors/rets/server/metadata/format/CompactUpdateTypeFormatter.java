@@ -31,7 +31,8 @@ public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
     {
         DataRowBuilder row = new DataRowBuilder(out);
         row.begin();
-        row.append(updateType.getSystemName());
+        // updateType's systemName is really a table.
+        row.append(updateType.getSystemName().getSystemName());
         row.append(updateType.getSequence());
         row.append(updateType.getAttributes());
         row.append(updateType.getDefault());
