@@ -252,6 +252,10 @@
       <tag name="hibernate.map" scope="all" description="Hibernate Map"/>
       <tag name="hibernate.collection-index" scope="all"
            description="Hibernate Collection-Index"/>
+	  <tag name="hibernate.jcs-cache" scope="all"
+	       description="Hibernate JCD Cache"/>
+	  <tag name="hibernate.collection-jcs-cache" scope="all"
+	       description="Hibernate Collection JCD Cache"/>	     
       <tag name="web.servlet-mapping" scope="all"
            description="Servlet Mapping"/>
       <tag name="web.servlet" scope="all" description="Servlet"/>
