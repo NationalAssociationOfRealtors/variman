@@ -112,7 +112,7 @@ public class EmbeddedTomcat
         throws Exception
     {
         mEmbedded.stop();
-        synchronized(this)
+        synchronized (this)
         {
             notify();
         }
@@ -121,7 +121,7 @@ public class EmbeddedTomcat
     public void waitUntilStopped()
         throws InterruptedException
     {
-        synchronized(this)
+        synchronized (this)
         {
             wait();
         }
@@ -171,7 +171,7 @@ public class EmbeddedTomcat
         File dir = file.getParentFile();
         File jarFiles[] = dir.listFiles(new JarFileFilter());
         StringBuffer buffer = new StringBuffer();
-        for (int i = 0 ; i < jarFiles.length ; i++)
+        for (int i = 0; i < jarFiles.length; i++)
         {
             if (i > 0)
             {
