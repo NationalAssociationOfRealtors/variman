@@ -84,8 +84,7 @@ public class AccountingFilter implements Filter, Constants
     private AccountingStatistics createStatistics(User user)
     {
         AccountingStatistics statistics = null;
-        SessionHelper helper = new SessionHelper(InitServlet.getSessions(),
-                                                 LOG);
+        SessionHelper helper = new SessionHelper(InitServlet.getSessions());
         try
         {
             Session session = helper.beginTransaction();
@@ -109,12 +108,13 @@ public class AccountingFilter implements Filter, Constants
         }
         catch (HibernateException e)
         {
-            helper.loggedRollback();
+            LOG.warn("Exception", e);
+            helper.rollback(LOG);
             statistics = null;
         }
         finally
         {
-            helper.loggedClose();
+            helper.close(LOG);
         }
 
         if (statistics == null)
@@ -128,8 +128,7 @@ public class AccountingFilter implements Filter, Constants
 
     private void saveStatistics(AccountingStatistics statistics)
     {
-        SessionHelper helper = new SessionHelper(InitServlet.getSessions(),
-                                                 LOG);
+        SessionHelper helper = new SessionHelper(InitServlet.getSessions());
         try
         {
             LOG.debug("Saving statistics");
@@ -139,11 +138,12 @@ public class AccountingFilter implements Filter, Constants
         }
         catch (HibernateException e)
         {
-            helper.loggedRollback();
+            LOG.warn("Exception", e);
+            helper.rollback(LOG);
         }
         finally
         {
-            helper.loggedClose();
+            helper.close(LOG);
         }
     }
 

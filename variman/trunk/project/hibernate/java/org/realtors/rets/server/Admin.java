@@ -69,11 +69,12 @@ public class Admin
         }
         catch (HibernateException e)
         {
-            helper.loggedRollback();
+            e.printStackTrace();
+            helper.rollback(System.err);
         }
         finally
         {
-            helper.loggedClose();
+            helper.close(System.err);
         }
     }
 

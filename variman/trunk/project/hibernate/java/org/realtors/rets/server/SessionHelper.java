@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server;
 
+import java.io.PrintStream;
+
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
@@ -11,17 +13,11 @@ import org.apache.log4j.Logger;
 
 public class SessionHelper
 {
-    public SessionHelper(SessionFactory factory, Logger log)
-    {
-        mFactory = factory;
-        mLog = log;
-        mSession = null;
-        mTx = null;
-    }
-
     public SessionHelper(SessionFactory factory)
     {
-        this(factory, LOG);
+        mFactory = factory;
+        mSession = null;
+        mTx = null;
     }
 
     public Session beginTransaction() throws HibernateException
@@ -36,19 +32,6 @@ public class SessionHelper
         mTx.commit();
     }
 
-    public void loggedRollback()
-    {
-        try
-        {
-            rollback();
-        }
-        catch (HibernateException e)
-        {
-            mTx = null;
-            mLog.warn("Exception", e);
-        }
-    }
-
     public void rollback() throws HibernateException
     {
         if (mTx != null)
@@ -57,16 +40,29 @@ public class SessionHelper
         }
     }
 
-    public void loggedClose()
+    public void rollback(Logger log)
     {
         try
         {
-            close();
+            rollback();
         }
         catch (HibernateException e)
         {
-            mSession = null;
-            mLog.warn("Exception", e);
+            mTx = null;
+            log.warn("Exception", e);
+        }
+    }
+
+    public void rollback(PrintStream stream)
+    {
+        try
+        {
+            rollback();
+        }
+        catch (HibernateException e)
+        {
+            mTx = null;
+            e.printStackTrace(stream);
         }
     }
 
@@ -78,10 +74,33 @@ public class SessionHelper
         }
     }
 
-    private static final Logger LOG =
-        Logger.getLogger(SessionHelper.class);
+    public void close(Logger log)
+    {
+        try
+        {
+            close();
+        }
+        catch (HibernateException e)
+        {
+            mSession = null;
+            log.warn("Exception", e);
+        }
+    }
+
+    public void close(PrintStream stream)
+    {
+        try
+        {
+            close();
+        }
+        catch (HibernateException e)
+        {
+            mSession = null;
+            e.printStackTrace(stream);
+        }
+    }
+
     private SessionFactory mFactory;
     private Session mSession;
     private Transaction mTx;
-    private Logger mLog;
 }
