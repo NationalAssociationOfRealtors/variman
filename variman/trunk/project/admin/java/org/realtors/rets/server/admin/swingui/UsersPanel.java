@@ -51,14 +51,36 @@ public class UsersPanel extends JPanel
         splitPane.setDividerLocation(200);
         add(splitPane, BorderLayout.CENTER);
 
-        AdminFrame frame = SwingUtils.getAdminFrame();
         mPopup = new JPopupMenu();
-        mPopup.add(frame.getAddUserAction());
-        mPopup.add(frame.getRemoveUserAction());
+        mAddUserAction = new AddUserAction();
+        mPopup.add(mAddUserAction);
+        mRemoveUserAction = new RemoveUserAction(this);
+        mPopup.add(mRemoveUserAction);
 
         PopupListener popupListener = new PopupListener();
         mUserList.addMouseListener(popupListener);
         splitPane.addMouseListener(popupListener);
+    }
+
+    public User getSelectedUser()
+    {
+        User user = null;
+        int selection = mUserList.getSelectedIndex();
+        if (selection != -1)
+        {
+            user = mUserListModel.getUserAt(selection);
+        }
+        return user;
+    }
+
+    public AddUserAction getAddUserAction()
+    {
+        return mAddUserAction;
+    }
+
+    public RemoveUserAction getRemoveUserAction()
+    {
+        return mRemoveUserAction;
     }
 
     public void populateList()
@@ -91,6 +113,7 @@ public class UsersPanel extends JPanel
                     newSelection = users.size() - 1;
                 }
                 mUserList.setSelectedIndex(newSelection);
+                updateComponentsFromSelection();
             }
         };
         worker.start();
@@ -102,7 +125,7 @@ public class UsersPanel extends JPanel
         mUserList.setModel(model);
     }
 
-    private void updateDetailedInfo()
+    private void updateComponentsFromSelection()
     {
         int selection = mUserList.getSelectedIndex();
         if (selection != -1)
@@ -113,6 +136,7 @@ public class UsersPanel extends JPanel
             setLabel(mUsername, user.getUsername());
             setLabel(mAgentCode, user.getAgentCode());
             setLabel(mBrokerCode, user.getBrokerCode());
+            mRemoveUserAction.setEnabled(true);
         }
         else
         {
@@ -121,6 +145,7 @@ public class UsersPanel extends JPanel
             mUsername.setText("");
             mAgentCode.setText("");
             mBrokerCode.setText("");
+            mRemoveUserAction.setEnabled(false);
         }
     }
 
@@ -159,7 +184,7 @@ public class UsersPanel extends JPanel
     {
         public void valueChanged(ListSelectionEvent event)
         {
-            updateDetailedInfo();
+            updateComponentsFromSelection();
         }
     }
 
@@ -194,4 +219,6 @@ public class UsersPanel extends JPanel
     private JLabel mBrokerCode;
     private UserListModel mUserListModel;
     private JPopupMenu mPopup;
+    private AddUserAction mAddUserAction;
+    private RemoveUserAction mRemoveUserAction;
 }
