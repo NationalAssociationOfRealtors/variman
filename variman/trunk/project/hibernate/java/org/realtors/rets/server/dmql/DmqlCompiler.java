@@ -29,9 +29,19 @@ public class DmqlCompiler
                                          DmqlParserMetadata metadata)
         throws ANTLRException
     {
+        return parseDmql(dmql, metadata, false, false);
+    }
+
+    public static SqlConverter parseDmql(
+        String dmql, DmqlParserMetadata metadata, boolean traceParser,
+        boolean traceLexer)
+        throws ANTLRException
+    {
         DmqlLexer lexer = new DmqlLexer(new StringReader(dmql));
+        lexer.setTrace(traceLexer);
         DmqlParser parser = new DmqlParser(lexer);
         parser.setMetadata(metadata);
+        parser.setTrace(traceParser);
         return parser.query();
     }
 }
