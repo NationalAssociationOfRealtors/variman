@@ -47,7 +47,8 @@ public class  GetMetadataServlet extends RetsServlet
     {
         PrintWriter out = response.getXmlWriter();
         GetMetadataParameters parameters =
-            new GetMetadataParameters(request.getParameterMap());
+            new GetMetadataParameters(request.getParameterMap(),
+                                      getUser(request.getSession()));
         GetMetadataTransaction transaction =
             new GetMetadataTransaction(out, parameters, mMetadataFetcher);
         transaction.execute();
