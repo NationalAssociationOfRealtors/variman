@@ -19,6 +19,16 @@ import java.util.List;
 
 public class Bootstrap
 {
+    public Bootstrap()
+    {
+        setMain("Main");
+    }
+
+    private void setMain(String main)
+    {
+        mMain = "org.realtors.rets.server.admin." + main;
+    }
+
     private void callMain(String[] args) throws Exception
     {
         initRexHome();
@@ -29,8 +39,7 @@ public class Bootstrap
         URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);
         URLClassLoader classLoader = new URLClassLoader(urls);
         Thread.currentThread().setContextClassLoader(classLoader);
-        Class main =
-            classLoader.loadClass("org.realtors.rets.server.admin.Main");
+        Class main = classLoader.loadClass(mMain);
         Class[] paramTypes = new Class[] { args.getClass() };
         Object[] paramValues = new Object[] { args };
         Method method = main.getMethod("main", paramTypes);
@@ -74,9 +83,15 @@ public class Bootstrap
         throws Exception
     {
         Bootstrap bootstrap = new Bootstrap();
+        String main = System.getProperty("rex.main");
+        if (main != null)
+        {
+            bootstrap.setMain(main);
+        }
         bootstrap.callMain(args);
 
     }
 
     private String mRexHome;
+    private String mMain;
 }
