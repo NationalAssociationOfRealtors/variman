@@ -189,10 +189,14 @@ public class InitServlet extends RetsServlet
             WebApp.setGetObjectRoot(getObjectRoot);
             LOG.debug("GetObject root: " + getObjectRoot);
 
-            String getObjectPattern =
-                mRetsConfig.getGetObjectPattern("pictures/%k-%i.jpg");
-            WebApp.setGetObjectPattern(getObjectPattern);
-            LOG.debug("GetObject pattern: " + getObjectPattern);
+            String photoPattern = mRetsConfig.getPhotoPattern();
+            WebApp.setPhotoPattern(photoPattern);
+            LOG.debug("GetObject photo pattern: " + photoPattern);
+
+            String objectSetPattern = mRetsConfig.getObjectSetPattern();
+            WebApp.setObjectSetPattern(objectSetPattern);
+            LOG.debug("GetObject object set pattern: " + objectSetPattern);
+
             RetsServer.setSecurityConstraints(
                 mRetsConfig.getSecurityConstraints());
         }
