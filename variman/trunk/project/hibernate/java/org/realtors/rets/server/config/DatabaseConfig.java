@@ -144,6 +144,16 @@ public class DatabaseConfig implements Serializable
         mPassword = password;
     }
 
+    public void setShowSql(boolean showSql)
+    {
+        mShowSql = showSql;
+    }
+
+    public boolean getShowSql()
+    {
+        return mShowSql;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -158,6 +168,7 @@ public class DatabaseConfig implements Serializable
             .append("max ps active", mMaxPsActive)
             .append("max ps wait", mMaxPsWait)
             .append("max ps idle", mMaxPsIdle)
+            .append("show sql", mShowSql)
             .toString();
     }
 
@@ -179,7 +190,8 @@ public class DatabaseConfig implements Serializable
         properties.setProperty(Environment.PASS, mPassword);
         properties.setProperty(Environment.DIALECT,
                                mDatabaseType.getDialectClass());
-        properties.setProperty(Environment.SHOW_SQL, "false");
+        properties.setProperty(Environment.SHOW_SQL,
+                               Boolean.toString(mShowSql));
 
         properties.setProperty(Environment.DBCP_MAXACTIVE,
                                Integer.toString(mMaxActive));
@@ -210,4 +222,5 @@ public class DatabaseConfig implements Serializable
     private int mMaxPsActive;
     private int mMaxPsWait;
     private int mMaxPsIdle;
+    private boolean mShowSql;
 }
