@@ -31,7 +31,7 @@ public class SearchHandler extends BaseServletHandler
                                  request.getRetsVersion());
         LOG.debug(parameters);
         SearchTransaction search = new SearchTransaction(parameters);
-        search.setExecuteSql(false);
+        search.setExecuteQuery(false);
         search.execute(out, WebApp.getMetadataManager(), WebApp.getSessions());
     }
 
