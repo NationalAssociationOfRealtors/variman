@@ -8,41 +8,16 @@
 
 package org.realtors.rets.server.admin;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-
-import net.sf.hibernate.Hibernate;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.cfg.Configuration;
-import net.sf.hibernate.cfg.Environment;
-import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
-
-import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.SessionHelper;
-import org.realtors.rets.server.User;
 import org.realtors.rets.server.config.RetsConfig;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxCloseEvent;
 import org.wxwindows.wxCloseListener;
 import org.wxwindows.wxCommandEvent;
 import org.wxwindows.wxCommandListener;
-import org.wxwindows.wxDialog;
 import org.wxwindows.wxFrame;
-import org.wxwindows.wxJWorker;
 import org.wxwindows.wxMenu;
 import org.wxwindows.wxMenuBar;
 import org.wxwindows.wxNotebook;
@@ -50,10 +25,6 @@ import org.wxwindows.wxPanel;
 import org.wxwindows.wxPoint;
 import org.wxwindows.wxSize;
 import org.wxwindows.wxStaticText;
-import org.wxwindows.wxWindow;
-import org.wxwindows.wxWindowDisabler;
-
-import org.xml.sax.SAXException;
 
 public class AdminFrame extends wxFrame
 {
@@ -75,8 +46,6 @@ public class AdminFrame extends wxFrame
                          "Re-initialize database configuration");
         databaseMenu.Append(CREATE_SCHEMA, "&Create Schema...",
                          "Create metadata schema");
-        databaseMenu.Append(TEST_DATABASE, "&Test Connection...",
-                         "Tests database connection");
 
         wxMenuBar menuBar = new wxMenuBar();
         menuBar.Append(fileMenu, "&File");
@@ -88,7 +57,7 @@ public class AdminFrame extends wxFrame
 
         wxNotebook notebook = new wxNotebook(this, -1);
 
-        DatabasePage databasePage = new DatabasePage(notebook, mRetsConfig);
+        DatabasePage databasePage = new DatabasePage(notebook);
         notebook.AddPage(databasePage, "Database");
 
         wxPanel userPage = new wxPanel(notebook);
@@ -100,7 +69,6 @@ public class AdminFrame extends wxFrame
         EVT_MENU(QUIT, new OnQuit());
         EVT_MENU(INIT_DATABASE, new OnInitDatabase());
         EVT_MENU(CREATE_SCHEMA, new OnCreateSchema());
-        EVT_MENU(TEST_DATABASE, new OnTestDatabase());
 
         EVT_MENU(ADD_USER, new OnAddUser());
         EVT_MENU(REMOVE_USER, new OnRemoveUser());
@@ -111,171 +79,14 @@ public class AdminFrame extends wxFrame
     {
         try
         {
-            mRetsConfig = RetsConfig.initFromXml(
-                getClass().getResourceAsStream("/rets-config.xml"));
+            Admin.setConfigFile(
+                getClass().getResource("/rets-config.xml").getFile());
+            Admin.setRetsConfig(
+                RetsConfig.initFromXmlFile(Admin.getConfigFile()));
         }
-        catch (IntrospectionException e)
+        catch (RetsServerException e)
         {
             LOG.error("Caught exception", e);
-        }
-        catch (SAXException e)
-        {
-            LOG.error("Caught exception", e);
-        }
-        catch (IOException e)
-        {
-            LOG.error("Caught exception", e);
-        }
-    }
-
-    public void initDatabase()
-    {
-        final wxWindowDisabler disabler = new wxWindowDisabler();
-        SetStatusText("Initializing database...");
-        wxJWorker worker = new wxJWorker()
-        {
-            public Object construct()
-            {
-                String message = "";
-                try
-                {
-                    LOG.info("Initializing Hibernate configuration");
-                    mCfg = new Configuration()
-                        .addJar("rex-hbm-xml.jar")
-                        .setProperties(mRetsConfig.createHibernateProperties());
-                    mSessionFactory = mCfg.buildSessionFactory();
-                    PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
-                                                    PasswordMethod.RETS_REALM);
-                    LOG.info("Hibernate initialized");
-                }
-                catch (Throwable e)
-                {
-                    LOG.error("Caught", e);
-                    message = e.getMessage();
-                }
-                return message;
-            }
-
-            public void finished()
-            {
-                disabler.delete();
-                SetStatusText("Database initialized successfully");
-            }
-        };
-        worker.start();
-    }
-
-    private void testDatabase()
-    {
-        Connection connection = null;
-        boolean connectionSucceeded = false;
-        String errorMessage = "Database connection failed.";
-        try
-        {
-            String driver = mCfg.getProperty(Environment.DRIVER);
-            String url = mCfg.getProperty(Environment.URL);
-            String user = mCfg.getProperty(Environment.USER);
-            String password = mCfg.getProperty(Environment.PASS);
-
-            LOG.debug("driver: " + driver);
-            LOG.debug("url: " + url);
-            LOG.debug("user: " + user);
-            LOG.debug("password = " + password);
-            Class.forName(driver);
-            connection = DriverManager.getConnection(url, user, password);
-            connectionSucceeded = !connection.isClosed();
-        }
-        catch (Exception e)
-        {
-            LOG.error("Caught exception", e);
-            errorMessage = errorMessage + "\n\n" + e.getMessage();
-        }
-        finally
-        {
-            closeConnection(connection);
-        }
-
-        if (connectionSucceeded)
-        {
-            wxMessageBox("Database connection succeeded.", "Test Database",
-                         wxOK | wxICON_INFORMATION, AdminFrame.this);
-        }
-        else
-        {
-            wxMessageBox(errorMessage, "Test Database",
-                         wxOK | wxICON_EXCLAMATION, AdminFrame.this);
-        }
-    }
-
-    private void addUser()
-    {
-        SessionHelper helper = new SessionHelper(mSessionFactory);
-        try
-        {
-            AddUserDialog addUserDialog = new AddUserDialog(this);
-            int response = addUserDialog.ShowModal();
-            addUserDialog.Destroy();
-            if (response == wxID_CANCEL)
-            {
-                return;
-            }
-
-            User user = new User();
-            user.setFirstName(addUserDialog.getFirstName());
-            user.setLastName(addUserDialog.getLastName());
-            user.setUsername(addUserDialog.getUsername());
-            user.changePassword(addUserDialog.getPassword());
-            Session session = helper.beginTransaction();
-            session.save(user);
-            helper.commit();
-            SetStatusText("User " + user.getName() + " added");
-            LOG.debug("New user: " + user);
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            LOG.error("Caught exception", e);
-            StringWriter stackTraceWriter = new StringWriter();
-            e.printStackTrace(new PrintWriter(stackTraceWriter));
-            String stackTrace = stackTraceWriter.toString();
-            stackTrace = StringUtils.replace(stackTrace, "\t", "    ");
-            wxLogMessage(stackTrace);
-            wxLogError("Could not add user.");
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-    }
-
-    private void closeConnection(Connection connection)
-    {
-        try
-        {
-            if (connection != null)
-            {
-                connection.close();
-            }
-        }
-        catch (SQLException e)
-        {
-            LOG.error("Caught exception", e);
-        }
-    }
-
-    class InitializeHibernateDialog extends wxDialog
-    {
-        public InitializeHibernateDialog(wxWindow parent, int id, String title)
-        {
-            super(parent, id, title, wxDefaultPosition, wxDefaultSize,
-                  wxFRAME_FLOAT_ON_PARENT);
-            wxBoxSizer sizer = new wxBoxSizer(wxVERTICAL);
-            wxStaticText label =
-                new wxStaticText(this, -1, "Initializing hibernate...");
-            sizer.Add(label, 0, wxALIGN_LEFT | wxALL, 35);
-            SetSizer(sizer);
-            sizer.Fit(this);
-            CenterOnParent(wxBOTH);
         }
     }
 
@@ -293,16 +104,9 @@ public class AdminFrame extends wxFrame
         {
             try
             {
-                java.net.URL configFile =
-                    getClass().getResource("/rets-config.xml");
-                String xml = mRetsConfig.toXml();
-                IOUtils.writeString(configFile, xml);
+                Admin.getRetsConfig().toXml(Admin.getConfigFile());
             }
             catch (RetsServerException e)
-            {
-                LOG.error("Caught exception", e);
-            }
-            catch (IOException e)
             {
                 LOG.error("Caught exception", e);
             }
@@ -314,7 +118,7 @@ public class AdminFrame extends wxFrame
     {
         public void handleEvent(wxCommandEvent event)
         {
-            initDatabase();
+            new InitDatabaseCommand().execute();
         }
     }
 
@@ -322,72 +126,7 @@ public class AdminFrame extends wxFrame
     {
         public void handleEvent(wxCommandEvent event)
         {
-            int response = wxMessageBox(
-                "This will delete all your metadata and user " +
-                "information.\n\n" +
-                "Are you sure you would like to continue?",
-                "Create Schema",
-                wxYES_NO | wxNO_DEFAULT |
-                wxICON_EXCLAMATION,
-                AdminFrame.this);
-            if (response == wxYES)
-            {
-                createSchemaInBg();
-            }
-        }
-
-        /**
-         * Creates a schema in a background thread, while disabling the UI.
-         * Since there is no way to cancel the operation, there's no use in
-         * displaying a dialog box. However, running it in the main thread
-         * blocks the GUI thread, making the app looked locked up.
-         */
-        private void createSchemaInBg()
-        {
-            final wxWindowDisabler disabler = new wxWindowDisabler();
-            SetStatusText("Creating schema...");
-            wxJWorker worker = new wxJWorker()
-            {
-                public Object construct()
-                {
-                    Boolean success = Boolean.FALSE;
-                    try
-                    {
-                        new SchemaExport(mCfg).create(false, true);
-                        success = Boolean.TRUE;
-                    }
-                    catch (Throwable e)
-                    {
-                        LOG.error("Caught exception", e);
-                    }
-                    return success;
-                }
-
-                public void finished()
-                {
-                    disabler.delete();
-                    boolean success = ((Boolean) get()).booleanValue();
-                    if (success)
-                    {
-                        SetStatusText("Schema successfully created");
-                    }
-                    else
-                    {
-                        SetStatusText("Schema create error");
-                        wxMessageBox("Schema create error", "Create Schema",
-                                     wxOK | wxICON_ERROR, AdminFrame.this);
-                    }
-                }
-            };
-            worker.start();
-        }
-    }
-
-    class OnTestDatabase implements wxCommandListener
-    {
-        public void handleEvent(wxCommandEvent event)
-        {
-            testDatabase();
+            new CreateSchemaCommand().execute();
         }
     }
 
@@ -395,7 +134,7 @@ public class AdminFrame extends wxFrame
     {
         public void handleEvent(wxCommandEvent event)
         {
-            addUser();
+            new AddUserCommand().execute();
         }
     }
 
@@ -403,56 +142,7 @@ public class AdminFrame extends wxFrame
     {
         public void handleEvent(wxCommandEvent event)
         {
-            SessionHelper helper = new SessionHelper(mSessionFactory);
-            try
-            {
-                RemoveUserDialog dialog =
-                    new RemoveUserDialog(AdminFrame.this);
-                if (dialog.ShowModal() == wxID_CANCEL)
-                {
-                    return;
-                }
-                dialog.Destroy();
-
-                String username = dialog.getUsername();
-                User user = null;
-                Session session = helper.beginTransaction();
-                List users = session.find(
-                    "SELECT user " +
-                    "  FROM User user " +
-                    " WHERE user.username = ?",
-                    username, Hibernate.STRING);
-                if (users.size() == 1)
-                {
-                    user = (User) users.get(0);
-                    session.delete(user);
-                    LOG.debug("User deleted: " + user);
-                    SetStatusText("User " + user.getName() + " removed");
-                }
-                else
-                {
-                    LOG.debug("Expecting 1 user, found: " + users.size());
-                    wxMessageBox("User not found: " + username,
-                                 "User Not Found", wxOK | wxICON_EXCLAMATION,
-                                 AdminFrame.this);
-                }
-                helper.commit();
-            }
-            catch (HibernateException e)
-            {
-                helper.rollback(LOG);
-                LOG.error("Caught exception", e);
-                StringWriter stackTraceWriter = new StringWriter();
-                e.printStackTrace(new PrintWriter(stackTraceWriter));
-                String stackTrace = stackTraceWriter.toString();
-                stackTrace = StringUtils.replace(stackTrace, "\t", "    ");
-                wxLogMessage(stackTrace);
-                wxLogError("Could not add user.");
-            }
-            finally
-            {
-                helper.close(LOG);
-            }
+            new RemoveUserCommand().execute();
         }
     }
 
@@ -466,8 +156,4 @@ public class AdminFrame extends wxFrame
     public static final int ADD_USER = wxNewId();
     public static final int REMOVE_USER = wxNewId();
     public static final int LIST_USERS = wxNewId();
-
-    private Configuration mCfg;
-    private SessionFactory mSessionFactory;
-    private RetsConfig mRetsConfig;
 }
