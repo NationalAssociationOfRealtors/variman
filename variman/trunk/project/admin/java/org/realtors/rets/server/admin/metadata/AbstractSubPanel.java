@@ -8,14 +8,17 @@
 
 package org.realtors.rets.server.admin.metadata;
 
-import org.wxwindows.wxScrolledWindow;
-import org.wxwindows.wxWindow;
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxChoice;
+import org.wxwindows.wxObject;
+import org.wxwindows.wxScrolledWindow;
 import org.wxwindows.wxTextCtrl;
+import org.wxwindows.wxValidator;
+import org.wxwindows.wxWindow;
+import org.wxwindows.wxTextValidator;
 
-import org.realtors.rets.server.admin.TwoColumnGridSizer;
 import org.realtors.rets.server.admin.BooleanChoice;
+import org.realtors.rets.server.admin.TwoColumnGridSizer;
 
 public abstract class AbstractSubPanel extends wxScrolledWindow
 {
@@ -68,8 +71,15 @@ public abstract class AbstractSubPanel extends wxScrolledWindow
         }
     }
 
-    public void setValue(BooleanChoice choice, boolean b)
+    public static void setValue(BooleanChoice choice, boolean b)
     {
         choice.SetBooleanSelection(b);
+    }
+
+    public wxTextCtrl createNumericTextCtrl()
+    {
+        wxTextCtrl textCtrl = new wxTextCtrl(this, -1);
+        textCtrl.SetValidator(new wxTextValidator(wxFILTER_NUMERIC));
+        return textCtrl;
     }
 }
