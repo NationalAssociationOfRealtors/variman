@@ -8,8 +8,6 @@
 
 package org.realtors.rets.server.admin.metadata;
 
-import org.wxwindows.wxBoxSizer;
-import org.wxwindows.wxScrolledWindow;
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
 
@@ -17,14 +15,15 @@ import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
 import org.realtors.rets.server.metadata.Table;
 
-public class TablePanel extends wxScrolledWindow
+public class TablePanel extends AbstractSubPanel
 {
     public TablePanel(wxWindow parent)
     {
         super(parent);
-        wxBoxSizer box = new wxBoxSizer(wxVERTICAL);
+    }
 
-        TwoColumnGridSizer grid = new TwoColumnGridSizer(this);
+    protected void addContent(TwoColumnGridSizer grid)
+    {
         mSystemName = new wxTextCtrl(this, -1);
         grid.addRow("System Name:", mSystemName, wxEXPAND);
 
@@ -76,9 +75,22 @@ public class TablePanel extends wxScrolledWindow
         mMaximum = new wxTextCtrl(this, -1);
         grid.addRow("Maximum:", mMaximum, wxEXPAND);
 
-        box.Add(grid, 1, wxEXPAND | wxALL, 5);
-        SetSizer(box);
-        SetScrollRate(0, 10);
+        mDefault = new wxTextCtrl(this, -1);
+        grid.addRow("Default:", mDefault, wxEXPAND);
+
+        mRequired = new wxTextCtrl(this, -1);
+        grid.addRow("Required:", mRequired, wxEXPAND);
+
+        mUnique = new wxTextCtrl(this, -1);
+        grid.addRow("Unique:", mUnique, wxEXPAND);
+
+        // Todo: TablePanel.TablePanel EditMasks
+
+        mLookup = new wxTextCtrl(this, -1);
+        grid.addRow("Lookup:", mLookup, wxEXPAND);
+
+        mSearchHelp = new wxTextCtrl(this, -1);
+        grid.addRow("Search Help:", mSearchHelp, wxEXPAND);
     }
 
     public void setModel(Table table)
@@ -99,6 +111,11 @@ public class TablePanel extends wxScrolledWindow
         AdminUtils.setValue(mIndex, table.getIndex());
         AdminUtils.setValue(mMinimum, table.getMinimum());
         AdminUtils.setValue(mMaximum, table.getMaximum());
+        AdminUtils.setValue(mDefault, table.getDefault());
+        AdminUtils.setValue(mRequired, table.getRequired());
+        AdminUtils.setValue(mUnique, table.isUnique());
+        AdminUtils.setValue(mLookup, table.getLookup());
+        AdminUtils.setValue(mSearchHelp,  table.getSearchHelp());
     }
 
     private wxTextCtrl mSystemName;
@@ -118,4 +135,9 @@ public class TablePanel extends wxScrolledWindow
     private wxTextCtrl mIndex;
     private wxTextCtrl mMinimum;
     private wxTextCtrl mMaximum;
+    private wxTextCtrl mDefault;
+    private wxTextCtrl mRequired;
+    private wxTextCtrl mUnique;
+    private wxTextCtrl mLookup;
+    private wxTextCtrl mSearchHelp;
 }
