@@ -179,7 +179,7 @@
     </java>
   </target>
 
-  <target name="doc-api" depends="prepare">
+  <target name="doc-api" depends="prepare" description="build the api docs">
     <javadoc packagenames="org.realtors.rets.*"
              destdir="build/doc/api"
              author="true"
