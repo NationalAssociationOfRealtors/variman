@@ -24,7 +24,7 @@ public class EditUserAction extends AbstractAction
             User user = mUsersPanel.getSelectedUser();
             if (user == null)
             {
-                LOG.warn("Change password of null user");
+                LOG.warn("Edit null user");
                 return;
             }
 
