@@ -25,8 +25,7 @@ public class IndexAction extends CctAction
                                  HttpServletResponse response)
         throws Exception
     {
-        LOG.error("IndexAction.execute");
-        loadTestSuite(request.getSession());
+        loadCctState(request.getSession());
         return mapping.findForward("home");
     }
 
