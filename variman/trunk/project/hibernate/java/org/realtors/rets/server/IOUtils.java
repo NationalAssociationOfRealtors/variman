@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -409,6 +411,45 @@ public class IOUtils
             }
         }
         return allFiles;
+    }
+
+    public static File relativize(File base, File file)
+    {
+        // Convert both to URIs
+        URI baseUri = base.toURI();
+        URI fileUri = file.toURI();
+        URI relativeUri = baseUri.relativize(fileUri);
+        // convert back to File
+        return new File(relativeUri.getPath());
+    }
+
+    public static String relativize(String base, String file)
+    {
+        try
+        {
+            URI baseUri = new URI("file", null, base, null);
+            URI fileUri = new URI("file", null, file, null);
+            URI relativeUri = baseUri.relativize(fileUri);
+            return relativeUri.getPath();
+        }
+        catch (URISyntaxException e)
+        {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    public static String resolve(String base, String file)
+    {
+        try
+        {
+            URI baseUri = new URI("file", null, base, null);
+            URI resolvedUri = baseUri.resolve(file);
+            return resolvedUri.getPath();
+        }
+        catch (URISyntaxException e)
+        {
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 
     /**

@@ -81,4 +81,49 @@ public class IOUtilsTest extends TestCase
         expected.add(new File(file, "foo.ex1"));
         assertEquals(expected, files);
     }
+
+    public void testRelativizeFiles()
+    {
+        File base = new File("/root/directory/");
+        File subDir = new File("/root/directory/sub/directory");
+        File other = new File("/some/other/directory");
+
+        File relative = IOUtils.relativize(base, subDir);
+        File expected = new File("sub/directory");
+        assertEquals(expected, relative);
+
+        relative = IOUtils.relativize(base, other);
+        expected = new File("/some/other/directory");
+        assertEquals(expected, relative);
+    }
+
+    public void testRelativizeStrings()
+    {
+        String base = "/root/directory/";
+        String subDir = "/root/directory/sub/directory";
+        String other = "/some/other/directory";
+
+        String relative = IOUtils.relativize(base, subDir);
+        String expected = "sub/directory";
+        assertEquals(expected, relative);
+
+        relative = IOUtils.relativize(base, other);
+        expected = "/some/other/directory";
+        assertEquals(expected, relative);
+    }
+
+    public void testResolveString()
+    {
+        String base = "/root/directory/";
+        String subDir = "sub/directory";
+        String other = "/some/other/directory";
+
+        String resolved = IOUtils.resolve(base, subDir);
+        String expected = "/root/directory/sub/directory";
+        assertEquals(expected, resolved);
+
+        resolved = IOUtils.resolve(base, other);
+        expected = "/some/other/directory";
+        assertEquals(expected, resolved);
+    }
 }
