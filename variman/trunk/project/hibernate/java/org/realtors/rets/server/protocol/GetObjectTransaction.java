@@ -22,6 +22,7 @@ import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServerException;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 
 public class GetObjectTransaction
 {
@@ -58,6 +59,7 @@ public class GetObjectTransaction
             fileBuffer.append(File.separator);
             mPatternFormatter.format(fileBuffer, context);
             String file = fileBuffer.toString();
+            LOG.debug("GetObject file: " + file);
             response.setContentType(getContentType(file));
             response.setHeader("MIME-Version", "1.0");
             response.setHeader("Content-ID", "12345");
@@ -92,6 +94,8 @@ public class GetObjectTransaction
         }
     }
 
+    private static final Logger LOG =
+        Logger.getLogger(GetObjectTransaction.class);
     private String mRootDirectory;
     private GetObjectPatternFormatter mPatternFormatter;
     private GetObjectParameters mParameters;
