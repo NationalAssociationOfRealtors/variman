@@ -15,7 +15,7 @@
   </appender>
 
   <logger name="org.realtors.rets.server">
-    <level value="debug"/>
+    <level value="warn"/>
   </logger>
 
   <root>
