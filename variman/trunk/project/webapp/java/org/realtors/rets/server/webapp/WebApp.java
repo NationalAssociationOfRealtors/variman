@@ -10,6 +10,8 @@ import net.sf.hibernate.HibernateException;
 
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.webapp.auth.NonceTable;
+import org.realtors.rets.server.webapp.auth.NonceReaper;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.log4j.PropertyConfigurator;
@@ -98,10 +100,32 @@ public class WebApp
         return sGetObjectPattern;
     }
 
+    public static void setNonceTable(NonceTable nonceTable)
+    {
+        sNonceTable = nonceTable;
+    }
+
+    public static NonceTable getNonceTable()
+    {
+        return sNonceTable;
+    }
+
+    public static void setNonceReaper(NonceReaper reaper)
+    {
+        sReaper = reaper;
+    }
+
+    public static NonceReaper getReaper()
+    {
+        return sReaper;
+    }
+
     private static ServletContext sServletContext;
     private static MetadataManager sMetadataManager;
     private static SessionFactory sSessions;
     private static String sLog4jFile;
     private static String sGetObjectRoot;
     private static String sGetObjectPattern;
+    private static NonceTable sNonceTable;
+    private static NonceReaper sReaper;
 }
