@@ -25,7 +25,7 @@ public abstract class ClassFormatter extends MetadataFormatter
         }
     }
 
-    public void setResource(String resource)
+    public void setResourceName(String resource)
     {
         mResource = resource;
     }
