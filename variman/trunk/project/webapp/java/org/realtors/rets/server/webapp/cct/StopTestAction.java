@@ -20,9 +20,9 @@ public class StopTestAction extends CctAction
     {
         TestForm form = (TestForm) actionForm;
         TestRunner testRunner = getTestRunner(request.getSession());
-        int testNo = form.getTestNumber();
-        LOG.debug("Stopping test #" + testNo + ": " +
-                  testRunner.getDescription(testNo));
+        String testName = form.getTestName();
+        LOG.debug("Stopping test " + testName + ": " +
+                  testRunner.getDescription(testName));
         testRunner.stopRunningTest();
 
         return mapping.findForward("home");

@@ -43,7 +43,7 @@ public class IndexAction extends CctAction
             
             if (result.getStatus() == StatusEnum.RUNNING)
             {
-                request.setAttribute("cctActiveTest", new Integer(i));
+                request.setAttribute("cctActiveTest", test.getName());
             }
             i++;
         }

@@ -11,6 +11,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.realtors.rets.server.cct.ValidationResult;
+
 /**
  * 
  */
@@ -21,17 +23,17 @@ public class ShowProcedureAction extends CctAction
                                  HttpServletResponse response)
         throws Exception
     {
-        String testNo = request.getParameter("testNo");
-        if (testNo == null)
+        String testName = request.getParameter("testName");
+        if (testName == null)
         {
             return mapping.findForward("userPage");
         }
         
-        int iTestNo = Integer.parseInt(testNo);
         TestRunner testRunner = getTestRunner(request.getSession());
-        CertificationTest test = testRunner.getTest(iTestNo);
+        CertificationTest test = testRunner.getTest(testName);
+        ValidationResult result = testRunner.getResult(testName);
         
-        TestDisplayBean displayBean = new TestDisplayBean(test, null);
+        TestDisplayBean displayBean = new TestDisplayBean(test, result);
         request.setAttribute("cctDisplayBean", displayBean);
 
         return mapping.findForward("showProcedure");

@@ -6,15 +6,23 @@ import org.apache.struts.action.ActionForm;
 
 public class TestForm extends ActionForm
 {
-    public int getTestNumber()
+    /**
+     * 
+     * @return
+     */
+    public String getTestName()
     {
-        return mTestNumber;
+        return mTestName;
     }
 
-    public void setTestNumber(int testNumber)
+    /**
+     * 
+     * @param string
+     */
+    public void setTestName(String string)
     {
-        mTestNumber = testNumber;
+        mTestName = string;
     }
 
-    private int mTestNumber;
+    private String mTestName;
 }

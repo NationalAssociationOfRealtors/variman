@@ -20,12 +20,12 @@ public class StartTestAction extends CctAction
     {
         TestForm form = (TestForm) actionForm;
         TestRunner testRunner = getTestRunner(request.getSession());
-        int testNo = form.getTestNumber();
+        String testName = form.getTestName();
 
-        LOG.debug("Starting test #" + testNo + ": " +
-                  testRunner.getDescription(testNo));
+        LOG.debug("Starting test #" + testName + ": " +
+                  testRunner.getDescription(testName));
 
-        testRunner.startTestByNumber(testNo); 
+        testRunner.startTestByName(testName);
 
         return mapping.findForward("home");
     }
