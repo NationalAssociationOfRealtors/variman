@@ -221,7 +221,10 @@ public class UpdateType extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof UpdateType)) return false;
+        if (!(other instanceof UpdateType))
+        {
+            return false;
+        } 
         UpdateType castOther = (UpdateType) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -145,7 +145,10 @@ public class ValidationExternalType
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof ValidationExternalType)) return false;
+        if (!(other instanceof ValidationExternalType))
+        {
+            return false;
+        } 
         ValidationExternalType castOther = (ValidationExternalType) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -172,7 +172,10 @@ public class ValidationExternal extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof ValidationExternal)) return false;
+        if (!(other instanceof ValidationExternal))
+        {
+            return false;
+        } 
         ValidationExternal castOther = (ValidationExternal) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

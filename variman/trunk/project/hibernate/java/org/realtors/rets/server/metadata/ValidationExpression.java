@@ -146,7 +146,10 @@ public class ValidationExpression extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof ValidationExpression)) return false;
+        if (!(other instanceof ValidationExpression))
+        {
+            return false;
+        } 
         ValidationExpression castOther = (ValidationExpression) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

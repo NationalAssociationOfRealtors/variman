@@ -101,7 +101,10 @@ public class UpdateHelp implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof UpdateHelp)) return false;
+        if (!(other instanceof UpdateHelp))
+        {
+            return false;
+        } 
         UpdateHelp castOther = (UpdateHelp) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

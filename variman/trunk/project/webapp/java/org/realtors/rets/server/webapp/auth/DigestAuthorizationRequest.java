@@ -119,7 +119,7 @@ public class DigestAuthorizationRequest
         }
 
         int end = string.length();
-        if(string.endsWith("\""))
+        if (string.endsWith("\""))
         {
             end--;
         }

@@ -37,9 +37,6 @@ public class CctConfigPlugIn implements PlugIn
         return mTestRunnerClass;
     }
 
-    /**
-     * @see org.apache.struts.action.PlugIn#init(org.apache.struts.action.ActionServlet, org.apache.struts.config.ModuleConfig)
-     */
     public void init(ActionServlet servlet, ModuleConfig config)
         throws ServletException
     {

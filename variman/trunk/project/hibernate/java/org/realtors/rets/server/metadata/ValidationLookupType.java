@@ -129,7 +129,10 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof ValidationLookupType)) return false;
+        if (!(other instanceof ValidationLookupType))
+        {
+            return false;
+        } 
         ValidationLookupType castOther = (ValidationLookupType) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

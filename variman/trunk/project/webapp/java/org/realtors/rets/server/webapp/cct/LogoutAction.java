@@ -17,9 +17,6 @@ import org.apache.struts.action.ActionMapping;
  */
 public class LogoutAction extends CctAction
 {
-    /* (non-Javadoc)
-     * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
     public ActionForward execute(
         ActionMapping mapping,
         ActionForm actionForm,

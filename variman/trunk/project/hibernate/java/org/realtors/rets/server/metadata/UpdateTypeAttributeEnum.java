@@ -20,7 +20,10 @@ public class UpdateTypeAttributeEnum implements PersistentEnum
         this.mCode = code;
     }
 
-    public int toInt() { return mCode; }
+    public int toInt()
+    {
+        return mCode;
+    }
 
     public static UpdateTypeAttributeEnum fromInt(int code)
     {

@@ -103,9 +103,9 @@ public class Update extends ServerMetadata implements Serializable
         return mMClass;
     }
 
-    public void setMClass(MClass MClass)
+    public void setMClass(MClass mclass)
     {
-        mMClass = MClass;
+        mMClass = mclass;
     }
 
     /**
@@ -175,7 +175,10 @@ public class Update extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof Update)) return false;
+        if (!(other instanceof Update))
+        {
+            return false;
+        } 
         Update castOther = (Update) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

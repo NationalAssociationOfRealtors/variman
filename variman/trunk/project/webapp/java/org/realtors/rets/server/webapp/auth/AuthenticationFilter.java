@@ -76,7 +76,8 @@ public class AuthenticationFilter implements Filter, UserMap
         try
         {
             HttpServletRequest request = (HttpServletRequest) servletRequest;
-            HttpServletResponse response = (HttpServletResponse) servletResponse;
+            HttpServletResponse response =
+                (HttpServletResponse) servletResponse;
             doAuthentication(filterChain, request, response);
         }
         finally

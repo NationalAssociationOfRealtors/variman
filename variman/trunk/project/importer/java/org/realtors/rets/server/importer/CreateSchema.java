@@ -327,5 +327,5 @@ public class CreateSchema extends RetsHelpers
     private String mDialectClass;
     /** The Line Seperator */
     private String mLs;
-    private static Logger LOG = Logger.getLogger(CreateSchema.class);
+    private static final Logger LOG = Logger.getLogger(CreateSchema.class);
 }
