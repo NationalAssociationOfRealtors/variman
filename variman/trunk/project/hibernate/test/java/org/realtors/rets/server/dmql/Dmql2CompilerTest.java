@@ -27,7 +27,7 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
     public void testLookupOr() throws ANTLRException
     {
         SqlConverter sql = parse("(AR=|GENVA,BATV)");
-        LookupList lookup = new LookupList(LookupListType.OR, "AR");
+        LookupList lookup = new LookupList(LookupListType.OR, "r_AR");
         lookup.addLookup("GENVA");
         lookup.addLookup("BATV");
         assertEquals(lookup, sql);
@@ -36,7 +36,7 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
     public void testImpliedLookupOr() throws ANTLRException
     {
         SqlConverter sql = parse("(STATUS=A)");
-        LookupList lookup = new LookupList(LookupListType.OR, "STATUS");
+        LookupList lookup = new LookupList(LookupListType.OR, "r_STATUS");
         lookup.addLookup("A");
         assertEquals(lookup, sql);
     }
@@ -49,7 +49,7 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
     public void testLookupAnd() throws ANTLRException
     {
         SqlConverter sql = parse("(STATUS=+A,S)");
-        LookupList lookup = new LookupList(LookupListType.AND, "STATUS");
+        LookupList lookup = new LookupList(LookupListType.AND, "r_STATUS");
         lookup.addLookup("A");
         lookup.addLookup("S");
         assertEquals(lookup, sql);
@@ -58,7 +58,7 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
     public void testLookupNot() throws ANTLRException
     {
         SqlConverter sql = parse("(STATUS=~A,S)");
-        LookupList lookup = new LookupList(LookupListType.NOT, "STATUS");
+        LookupList lookup = new LookupList(LookupListType.NOT, "r_STATUS");
         lookup.addLookup("A");
         lookup.addLookup("S");
         assertEquals(lookup, sql);

@@ -26,7 +26,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testLookupOr() throws ANTLRException
     {
         SqlConverter sql = parse("(AR=|GENVA,BATV)");
-        LookupList lookup = new LookupList(LookupListType.OR, "AR");
+        LookupList lookup = new LookupList(LookupListType.OR, "r_AR");
         lookup.addLookup("GENVA");
         lookup.addLookup("BATV");
         assertEquals(lookup, sql);
@@ -35,7 +35,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testImpliedLookupOr() throws ANTLRException
     {
         SqlConverter sql = parse("(STATUS=A)");
-        LookupList lookup = new LookupList(LookupListType.OR, "STATUS");
+        LookupList lookup = new LookupList(LookupListType.OR, "r_STATUS");
         lookup.addLookup("A");
         assertEquals(lookup, sql);
     }
@@ -48,7 +48,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testLookupAnd() throws ANTLRException
     {
         SqlConverter sql = parse("(STATUS=+A,S)");
-        LookupList lookup = new LookupList(LookupListType.AND, "STATUS");
+        LookupList lookup = new LookupList(LookupListType.AND, "r_STATUS");
         lookup.addLookup("A");
         lookup.addLookup("S");
         assertEquals(lookup, sql);
@@ -57,7 +57,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testLookupNot() throws ANTLRException
     {
         SqlConverter sql = parse("(STATUS=~A,S)");
-        LookupList lookup = new LookupList(LookupListType.NOT, "STATUS");
+        LookupList lookup = new LookupList(LookupListType.NOT, "r_STATUS");
         lookup.addLookup("A");
         lookup.addLookup("S");
         assertEquals(lookup, sql);
@@ -76,7 +76,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testStringEquals() throws ANTLRException
     {
         SqlConverter sql = parse("(OWNER=foo)");
-        DmqlStringList list = new DmqlStringList("OWNER");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("foo"));
         assertEquals(list, sql);
     }
@@ -84,7 +84,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testStringStart() throws ANTLRException
     {
         SqlConverter sql = parse("(OWNER=f*)");
-        DmqlStringList list = new DmqlStringList("OWNER");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
         DmqlString string = new DmqlString();
         string.add("f");
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
@@ -95,7 +95,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testStringContains() throws ANTLRException
     {
         SqlConverter sql = parse("(OWNER=*foo*)");
-        DmqlStringList list = new DmqlStringList("OWNER");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
         DmqlString string = new DmqlString();
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
         string.add("foo");
@@ -107,7 +107,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testStringChar() throws ANTLRException
     {
         SqlConverter sql = parse("(OWNER=f?o)");
-        DmqlStringList list = new DmqlStringList("OWNER");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
         DmqlString string = new DmqlString();
         string.add("f");
         string.add(DmqlString.MATCH_ZERO_OR_ONE);
@@ -116,7 +116,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         assertEquals(list, sql);
 
         sql = parse("(OWNER=?oo)");
-        list = new DmqlStringList("OWNER");
+        list = new DmqlStringList("r_OWNER");
         string = new DmqlString();
         string.add(DmqlString.MATCH_ZERO_OR_ONE);
         string.add("oo");
@@ -124,7 +124,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         assertEquals(list, sql);
 
         sql = parse("(OWNER=fo?)");
-        list = new DmqlStringList("OWNER");
+        list = new DmqlStringList("r_OWNER");
         string = new DmqlString();
         string.add("fo");
         string.add(DmqlString.MATCH_ZERO_OR_ONE);
@@ -132,7 +132,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         assertEquals(list, sql);
 
         sql = parse("(OWNER=?)");
-        list = new DmqlStringList("OWNER");
+        list = new DmqlStringList("r_OWNER");
         string = new DmqlString();
         string.add(DmqlString.MATCH_ZERO_OR_ONE);
         list.add(string);
@@ -142,7 +142,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testStringList() throws ANTLRException
     {
         SqlConverter sql = parse("(OWNER=foo,f*,*foo*,f?o)");
-        DmqlStringList list = new DmqlStringList("OWNER");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
         DmqlString string = new DmqlString();
         string.add("foo");
         list.add(string);
@@ -266,10 +266,10 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testCompoundOr() throws ANTLRException
     {
         SqlConverter sql = parse("(AR=|BATV,GENVA)|(OWNER=foo)");
-        LookupList lookupList = new LookupList(LookupListType.OR, "AR");
+        LookupList lookupList = new LookupList(LookupListType.OR, "r_AR");
         lookupList.addLookup("BATV");
         lookupList.addLookup("GENVA");
-        DmqlStringList stringList = new DmqlStringList("OWNER");
+        DmqlStringList stringList = new DmqlStringList("r_OWNER");
         stringList.add(new DmqlString("foo"));
         OrClause orClause = new OrClause();
         orClause.add(lookupList);
@@ -282,10 +282,10 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testCompoundAnd() throws ANTLRException
     {
         SqlConverter sql = parse("(AR=|BATV,GENVA),(OWNER=foo)");
-        LookupList lookupList = new LookupList(LookupListType.OR, "AR");
+        LookupList lookupList = new LookupList(LookupListType.OR, "r_AR");
         lookupList.addLookup("BATV");
         lookupList.addLookup("GENVA");
-        DmqlStringList stringList = new DmqlStringList("OWNER");
+        DmqlStringList stringList = new DmqlStringList("r_OWNER");
         stringList.add(new DmqlString("foo"));
         AndClause andClause = new AndClause();
         andClause.add(lookupList);
