@@ -32,9 +32,11 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
             "<REProperties>\n" +
             "<ResidentialProperty>\n" +
             "<Listing>\n" +
+            "<StreetAddress>\n" +
             "<StreetNumber/>\n" +
             "<StreetName>Main St.</StreetName>\n" +
             "<PostalCode>12345</PostalCode>\n" +
+            "</StreetAddress>\n" +
             "</Listing>\n" +
             "</ResidentialProperty>\n" +
             "</REProperties>\n" +

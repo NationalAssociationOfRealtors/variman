@@ -43,11 +43,12 @@ public class ResidentialPropertyFormatter implements SearchResultsFormatter
             .beginContentOnNewLine();
         TagBuilder listing = new TagBuilder(out, "Listing")
             .beginContentOnNewLine();
-        TagBuilder.emptyTag(out, "StreetNumber");
-        TagBuilder.simpleTag(out, "StreetName",
-                             context.getResultString("StreetName"));
-        TagBuilder.simpleTag(out, "PostalCode",
-                             context.getResultString("PostalCode"));
+        new TagBuilder(out, "StreetAddress")
+            .beginContentOnNewLine()
+            .emptyTag("StreetNumber")
+            .simpleTag("StreetName", context.getResultString("StreetName"))
+            .simpleTag("PostalCode", context.getResultString("PostalCode"))
+            .close();
         listing.close();
         residentialProperty.close();
     }
