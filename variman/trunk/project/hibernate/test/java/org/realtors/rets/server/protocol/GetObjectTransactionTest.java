@@ -11,8 +11,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -25,7 +23,7 @@ public class GetObjectTransactionTest extends TestCase
 {
     public void testSingleJpeg() throws IOException, RetsServerException
     {
-        GetObjectTransaction transaction = createTransaction();
+        GetObjectTransaction transaction = createTransaction("abc123:1");
         TestResponse response = new TestResponse();
         transaction.execute(response);
         assertEquals("image/jpeg", response.getContentType());
@@ -131,7 +129,7 @@ public class GetObjectTransactionTest extends TestCase
 
     public void testSingleGif() throws IOException, RetsServerException
     {
-        GetObjectTransaction transaction = createTransaction();
+        GetObjectTransaction transaction = createTransaction("abc123:1");
         transaction.setImagePattern("%k-%i.gif");
         TestResponse response = new TestResponse();
         transaction.execute(response);
@@ -348,21 +346,17 @@ public class GetObjectTransactionTest extends TestCase
         assertTrue(Arrays.equals(expected, actual));
     }
 
-    public void testFindAllObjectDescriptors() throws RetsServerException
+    public void testFindObjectDescriptor() throws RetsServerException
     {
         GetObjectTransaction transaction =
-            createTransaction("abc125:*,abc126:1");
-        List expected = new ArrayList();
-        expected.add(new ObjectDescriptor(
+            new GetObjectTransaction("Property", "Photo");
+        setupTransaction(transaction);
+        ObjectDescriptor expected = new ObjectDescriptor(
             "abc126", 1, localUrl(JPEG_FILE_1),
-            "Beautiful frontal view of home."));
-        List actual = transaction.findAllObjectDescriptors();
+            "Beautiful frontal view of home.");
+        ObjectDescriptor actual =
+            transaction.findObjectDescriptor("abc126", 1);
         assertEquals(expected, actual);
-    }
-
-    private GetObjectTransaction createTransaction()
-    {
-        return createTransaction("abc123:1");
     }
 
     private GetObjectTransaction createTransaction(String id)
@@ -377,6 +371,12 @@ public class GetObjectTransactionTest extends TestCase
             new GetObjectParameters("Property", "Photo", id, useLocation);
         parameters.setUseLocation(useLocation);
         GetObjectTransaction transaction = new GetObjectTransaction(parameters);
+        setupTransaction(transaction);
+        return transaction;
+    }
+
+    private void setupTransaction(GetObjectTransaction transaction)
+    {
         // The file name will get stripped off, so all that's import is that it
         // exists.
         String imageDirectory = directoryOfResource(GIF_FILE);
@@ -384,7 +384,6 @@ public class GetObjectTransactionTest extends TestCase
         transaction.setImagePattern("%k-%i.jpg");
         transaction.setObjectSetPattern("%k.xml");
         transaction.setBaseLocationUrl(BASE_LOCATION_URL);
-        return transaction;
     }
 
     private String createLocationUrl(String key, String id)
