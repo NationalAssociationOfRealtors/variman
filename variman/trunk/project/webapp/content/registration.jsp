@@ -8,7 +8,9 @@
   <li><bean:write name="error"/></li>
  </html:messages>
 
- <html:form action="/registration">
+ <html:form action="/registration"
+            onsubmit="return validateCctRegistrationForm(this);">
+            
  <table>
   <tr><td>
   <bean:message key="registration.field.company"/></td><td>
@@ -60,4 +62,5 @@
   </td></tr>
   </table>
  </html:form>
+ <html:javascript formName="cctRegistrationForm"/>            
 </html:html>
