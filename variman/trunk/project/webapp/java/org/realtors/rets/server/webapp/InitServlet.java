@@ -262,7 +262,7 @@ public class InitServlet extends RetsServlet
                                       aClass.getTables());
             }
         }
-        List securityConstraints = mRetsConfig.getSecurityConstraints();
+        List securityConstraints = mRetsConfig.getAllGroupRules();
         for (int i = 0; i < securityConstraints.size(); i++)
         {
             GroupRules rules = (GroupRules) securityConstraints.get(i);

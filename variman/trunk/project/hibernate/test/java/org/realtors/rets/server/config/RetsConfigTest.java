@@ -165,7 +165,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertEquals(5, database.getMaxPsIdle());
         assertTrue(database.getShowSql());
 
-        List securityConstraints = retsConfig.getSecurityConstraints();
+        List securityConstraints = retsConfig.getAllGroupRules();
         assertEquals(2, securityConstraints.size());
 
         GroupRules groupRules = (GroupRules) securityConstraints.get(0);
