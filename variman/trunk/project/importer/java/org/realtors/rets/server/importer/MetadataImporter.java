@@ -23,6 +23,8 @@ import org.realtors.rets.client.Metadata;
 import org.realtors.rets.client.MetadataTable;
 import org.realtors.rets.client.RetsSession;
 
+import org.realtors.rets.server.metadata.AlignmentEnum;
+import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
 import org.realtors.rets.server.metadata.TableStandardNameEnum;
 import org.realtors.rets.server.metadata.MClass;
@@ -618,8 +620,24 @@ public class MetadataImporter
                         Integer.parseInt(md.getAttribute("MaximumLength")));
                     hTable.setDataType(
                         DataTypeEnum.fromString(md.getAttribute("DataType")));
-
-                    // todo: finish this
+                    hTable.setPrecision(
+                        Integer.parseInt(md.getAttribute("Precision")));
+                    hTable.setSearchable(
+                        Boolean.valueOf(
+                            md.getAttribute("Searchable")).booleanValue());
+                    hTable.setInterpretation(
+                        InterpretationEnum.fromString(
+                            md.getAttribute("Interpretation")));
+                    hTable.setAlignment(
+                        AlignmentEnum.fromString(
+                            md.getAttribute("Alignment")));
+                    hTable.setUseSeparator(
+                        Boolean.valueOf(
+                            md.getAttribute("UseSeparator")).booleanValue());
+                    // todo: pickup at editmask
+                    String editMasksJoined = md.getAttribute("EditMaskID");
+                    String editMasks[] =
+                        StringUtils.split(editMasksJoined,",");
                 }
             }
         }
@@ -638,5 +656,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.12 2003/07/01 21:56:39 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.13 2003/07/03 15:36:19 kgarner Exp $";
 }
