@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.MappingException;
 import net.sf.hibernate.Session;
@@ -21,14 +23,13 @@ import org.realtors.rets.client.Metadata;
 import org.realtors.rets.client.MetadataTable;
 import org.realtors.rets.client.RetsSession;
 
-import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.ObjectTypeEnum;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
-
+import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 
 public class MetadataImporter
 {
@@ -251,7 +252,9 @@ public class MetadataImporter
                                               md.getAttribute("ObjectType")));
                     hObject.setMimeType(md.getAttribute("MimeType"));
                     hObject.setVisibleName(md.getAttribute("VisibleName"));
-                    hObject.setDescription(md.getAttribute("Description"));
+                    hObject.setDescription(
+                        StringUtils.substring(
+                            md.getAttribute("Description"),0,63));
 
                     hSession.save(hObject);
                     hObjects.add(hObject);
@@ -276,5 +279,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.8 2003/06/27 20:49:54 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.9 2003/06/27 21:17:04 kgarner Exp $";
 }
