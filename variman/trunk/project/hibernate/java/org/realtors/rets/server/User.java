@@ -11,6 +11,7 @@
 package org.realtors.rets.server;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -197,6 +198,22 @@ public class User implements Serializable
         mBrokerCode = brokerCode;
     }
 
+    /**
+     * @hibernate.set table="rets_user_groups" lazy="true"
+     * @hibernate.collection-key column="user_id"
+     * @hibernate.collection-many-to-many column="group_id"
+     *   class="org.realtors.rets.server.Group"
+     */
+    protected Set getGroups()
+    {
+        return mGroups;
+    }
+
+    protected void setGroups(Set groups)
+    {
+        mGroups = groups;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -215,4 +232,5 @@ public class User implements Serializable
     private PasswordMethod mPasswordMethod;
     private String mAgentCode;
     private String mBrokerCode;
+    private Set mGroups;
 }
