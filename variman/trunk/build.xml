@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
-
-<!-- test checkins, sorry for the mess -->
-
-<project default = "build" basedir="." name="retsdb2">
+<project default = "build" basedir="." name="rex">
 
   <!-- set global properties for this build -->
-  <property name="project.name" value="retsdb2"/>
-  <property name="project.version" value="0.0.1"/>
+  <property name="project.name" value="rex"/>
+  <property name="project.version" value="1.0-beta1"/>
   <property name="project.string" value="${project.name}-${project.version}"/>
 
   <!-- This must be done before any other propertes -->
@@ -71,7 +68,7 @@
     <pathelement path="${commons-lang.jar}"/>
     <pathelement location="build/embedded/classes"/>
     <pathelement path="${hibernate.jar}"/>
-    <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
+    <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
     <fileset dir="${struts.lib}" includes="*.jar"/>
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
@@ -126,8 +123,6 @@
 
   <target name="build" description="Build all"
           depends="build-hibernate,build-webapp,build-importer,build-admin" />
-
-  <target name="dist" depends="" />
 
   <target name="build-hibernate" depends="prepare">
     <property name="src.antlr.dir"
@@ -241,7 +236,7 @@
 <!--       <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"/> -->
       <classpath>
         <path refid="hibernate.path" />
-        <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
+        <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
         <pathelement location="build/hibernate/jar"/>
         <pathelement location="${hibernate.jdbc.jar}"/>
         <fileset dir="${hibernate.lib}" includes="*.jar"/>
@@ -330,7 +325,7 @@
       </classpath>
     </javac>
 
-    <jar jarfile="build/rets-server/rets-server.jar"
+    <jar jarfile="build/rets-server/${project.name}.jar"
          basedir="build/embedded/classes"
          manifest="project/build/rets-server.manifest"/>
     <copy todir="build/rets-server/lib">
@@ -658,6 +653,35 @@
       <formatter type="plain"/>
       <test fork="yes" name="test.AllTests" outfile="build/tests/results"/>
     </junit>
+  </target>
+
+  <target name="dist" depends="dist-src,dist-bin"
+          description="Builds source and distribution"/>
+
+  <target name="dist-src" depends="prepare">
+    <tar destfile="dist/${project.string}-src.tar.gz" compression="gzip">
+      <tarfileset dir="${basedir}"
+                  prefix="${project.string}">
+        <excludesfile name="project/build/dist-excludes"/>
+      </tarfileset>
+    </tar>
+    <zip destfile="dist/${project.string}-src.zip">
+      <zipfileset dir="${basedir}"
+                  prefix="${project.string}">
+        <excludesfile name="project/build/dist-excludes"/>
+      </zipfileset>
+    </zip>
+  </target>
+
+  <target name="dist-bin" depends="build">
+    <tar destfile="dist/${project.name}-webapp-${project.version}.tar.gz"
+         compression="gzip">
+      <tarfileset dir="build/rets-server/webapp"
+                  prefix="${project.name}-webapp-${project.version}"/>
+    </tar>
+    <tar destfile="dist/${project.string}.tar.gz" compression="gzip">
+      <tarfileset dir="build/rets-server" prefix="${project.string}"/>
+    </tar>
   </target>
 
   <target name="dist-win" description="Builds a Windows binary distribution">
