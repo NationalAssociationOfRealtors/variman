@@ -89,6 +89,11 @@ public class UpdateHelp implements Serializable
         mResourceid = resourceid;
     }
 
+    public String getPath()
+    {
+        return mResourceid.getPath() + ":" + mUpdateHelpID;
+    }
+
     public String toString()
     {
         return mUpdateHelpID;
