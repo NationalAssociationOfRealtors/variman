@@ -66,6 +66,12 @@ public class Admin
         return sRexHome;
     }
 
+    public static void initSystemProperties()
+    {
+        findRexHome();
+        initDebugEnabled();
+    }
+
     public static void findRexHome()
     {
         sRexHome = System.getProperty("rex.home");
@@ -76,9 +82,26 @@ public class Admin
         }
     }
 
+    private static void initDebugEnabled()
+    {
+        if (System.getProperty("rex.debug") != null)
+        {
+            sDebugEnabled = true;
+        }
+        else
+        {
+            sDebugEnabled = false;
+        }
+    }
+
     public static String getWebAppRoot()
     {
         return sRexHome + File.separator + "webapp";
+    }
+
+    public static boolean isDebugEnabled()
+    {
+        return sDebugEnabled;
     }
 
     private static Configuration sHibernateConfiguration;
@@ -86,4 +109,5 @@ public class Admin
     private static RetsConfig sRetsConfig;
     private static AdminFrame sAdminFrame;
     private static String sRexHome;
+    private static boolean sDebugEnabled;
 }
