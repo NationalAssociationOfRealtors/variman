@@ -74,6 +74,8 @@ public abstract class DataGenBase
         session.close();
     }
 
+    //  TODO Add method to preload classes
+
     protected Map mClasses;
     protected SessionFactory mSessions;
     protected Map mTables;
