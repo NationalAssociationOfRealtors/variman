@@ -56,7 +56,8 @@ public class DataTypeEnum implements PersistentEnum
             case 7: return INT;
             case 8: return LONG;
             case 9: return DECIMAL;
-            default: throw new RuntimeException("Unknown DataType");
+            default:
+                throw new IllegalArgumentException("Unknown code: " + dataType);
         }
     }
 
@@ -75,17 +76,18 @@ public class DataTypeEnum implements PersistentEnum
     {
         switch (code)
         {
-            case 0: return "boolean";
-            case 1: return "character";
-            case 2: return "date";
-            case 3: return "datetime";
-            case 4: return "time";
-            case 5: return "tiny";
-            case 6: return "small";
-            case 7: return "int";
-            case 8: return "long";
-            case 9: return "decimal";
-            default: throw new RuntimeException("Unknown DataType");
+            case 0: return "Boolean";
+            case 1: return "Character";
+            case 2: return "Date";
+            case 3: return "DateTime";
+            case 4: return "Time";
+            case 5: return "Tiny";
+            case 6: return "Small";
+            case 7: return "Int";
+            case 8: return "Long";
+            case 9: return "Decimal";
+            default:
+                throw new IllegalArgumentException("Unknown code: " + code);
         }
     }
 

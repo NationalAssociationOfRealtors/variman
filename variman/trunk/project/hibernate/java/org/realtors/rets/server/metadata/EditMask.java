@@ -8,9 +8,19 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_editmask"
- */ 
+ */
 public class EditMask implements Serializable
 {
+    public EditMask(long id)
+    {
+        mId = new Long(id);
+    }
+
+    public EditMask()
+    {
+        mId = null;
+    }
+
     /**
      * Returns the ID.
      *
@@ -65,7 +75,7 @@ public class EditMask implements Serializable
 
     /**
      * @return a Resource object
-     * 
+     *
      * @hibernate.many-to-one
      */
     public Resource getResourceid()
@@ -85,9 +95,7 @@ public class EditMask implements Serializable
 
     public String toString()
     {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
+        return mEditMaskID;
     }
 
     public boolean equals(Object other)

@@ -38,7 +38,9 @@ public class AlignmentEnum implements PersistentEnum
             case 1: return RIGHT;
             case 2: return CENTER;
             case 3: return JUSTIFY;
-            default: throw new RuntimeException("Unknown Alignment");
+            default:
+                throw new IllegalArgumentException("Unknown Alignment: " +
+                                                   code);
         }
     }
 
@@ -56,11 +58,12 @@ public class AlignmentEnum implements PersistentEnum
     {
         switch (code)
         {
-            case 0: return "left";
-            case 1: return "right";
-            case 2: return "center";
-            case 3: return "justify";
-            default: throw new RuntimeException("Unknown Alignment");
+            case 0: return "Left";
+            case 1: return "Right";
+            case 2: return "Center";
+            case 3: return "Justify";
+            default:
+                throw new IllegalArgumentException("Unknown Alignment: " + code);
         }
     }
 

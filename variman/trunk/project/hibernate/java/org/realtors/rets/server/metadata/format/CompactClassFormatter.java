@@ -27,19 +27,20 @@ public class CompactClassFormatter extends ClassFormatter
 
     private void append(StringBuffer buffer, MClass clazz)
     {
-        buffer.append("<DATA>\t");
-        buffer.append(clazz.getClassName()).append("\t");
-        buffer.append(clazz.getStandardName()).append("\t");
-        buffer.append(clazz.getVisibleName()).append("\t");
-        buffer.append(DB_NAME).append("\t");
-        buffer.append(clazz.getDescription()).append("\t");
+        DataRowBuilder row = new DataRowBuilder(buffer);
+        row.begin();
+        row.append(clazz.getClassName());
+        row.append(clazz.getStandardName());
+        row.append(clazz.getVisibleName());
+        row.append(DB_NAME);
+        row.append(clazz.getDescription());
         // Table version and date
-        buffer.append(mVersion).append("\t");
-        buffer.append(format(mDate)).append("\t");
+        row.append(mVersion);
+        row.append(mDate);
         // Update version and date
-        buffer.append((mVersion)).append("\t");
-        buffer.append(format(mDate)).append("\t");
-        buffer.append("</DATA>\n");
+        row.append((mVersion));
+        row.append(mDate);
+        row.end();
     }
 
     private static final String[] sColumns = {

@@ -48,7 +48,8 @@ public class InterpretationEnum implements PersistentEnum
             case 3: return LOOKUPMULTI;
             case 4: return LOOKUPBITSTRING;
             case 5: return LOOKUPBITMASK;
-            default: throw new RuntimeException("Unknown Interpretation");
+            default:
+                throw new IllegalArgumentException("Unknown code: " + code);
         }
     }
 
@@ -66,13 +67,14 @@ public class InterpretationEnum implements PersistentEnum
     {
         switch (code)
         {
-            case 0: return "number";
-            case 1: return "currency";
-            case 2: return "lookup";
-            case 3: return "lookupmulti";
-            case 4: return "lookupbitstring";
-            case 5: return "lookupbitmask";
-            default: throw new RuntimeException("Unknown Interpretation");
+            case 0: return "Number";
+            case 1: return "Currency";
+            case 2: return "Lookup";
+            case 3: return "LookupMulti";
+            case 4: return "LookupBitstring";
+            case 5: return "LookupBitmask";
+            default:
+                throw new IllegalArgumentException("Unknown code: " + code);
         }
     }
 

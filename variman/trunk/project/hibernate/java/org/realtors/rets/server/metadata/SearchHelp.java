@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_searchhelp"
@@ -87,9 +86,7 @@ public class SearchHelp implements Serializable
 
     public String toString()
     {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
+        return mSearchHelpID;
     }
 
     public boolean equals(Object other)

@@ -15,7 +15,7 @@ public class CompactResourceFormatter
         buffer.append("Version=\"").append(mVersion).append("\" ");
         buffer.append("Date=\"").append(format(mDate)).append("\">\n");
         buffer.append("<COLUMNS>\t")
-            .append(StringUtils.join(sResourceColumns, "\t"))
+            .append(StringUtils.join(sColumns, "\t"))
             .append("\t</COLUMNS>\n");
         for (int i = 0; i < resources.length; i++)
         {
@@ -26,28 +26,28 @@ public class CompactResourceFormatter
         return buffer.toString();
     }
 
-    private String append(StringBuffer buffer, Resource resource)
+    private void append(StringBuffer buffer, Resource resource)
     {
-        buffer.append("<DATA>\t");
-        buffer.append(resource.getResourceID()).append("\t");
-        buffer.append(resource.getStandardName()).append("\t");
-        buffer.append(resource.getVisibleName()).append("\t");
-        buffer.append(resource.getDescription()).append("\t");
-        buffer.append(resource.getKeyField()).append("\t");
-        buffer.append(resource.getClasses().size()).append("\t");
+        DataRowBuilder row = new DataRowBuilder(buffer);
+        row.begin();
+        row.append(resource.getResourceID());
+        row.append(resource.getStandardName());
+        row.append(resource.getVisibleName());
+        row.append(resource.getDescription());
+        row.append(resource.getKeyField());
+        row.append(resource.getClasses().size());
         // There are 9 version/date pairs for the following tables: class,
         // object, search help, edit mask, lookup, update help, validation
         // expression, validation lookup, validation external.
         for (int i = 0; i < 9; i++)
         {
-            buffer.append(mVersion).append("\t");
-            buffer.append(format(mDate)).append("\t");
+            row.append(mVersion);
+            row.append(mDate);
         }
-        buffer.append("</DATA>\n");
-        return buffer.toString();
+        row.end();
     }
 
-    private static final String[] sResourceColumns = {
+    private static final String[] sColumns = {
         "ResourceID", "StandardName", "VisibleName", "Description", "KeyField",
         "ClassCount", "ClassVersion", "ClassDate", "ObjectVersion",
         "ObjectDate", "SearchHelpVersion", "SearchHelpDate", "EditMaskVersion",
