@@ -1,5 +1,5 @@
 /*
- * Rex RETS Server
+ * Variman RETS Server
  *
  * Author: Dave Dribin
  * Copyright (c) 2004, The National Association of REALTORS
@@ -1001,7 +1001,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.9 2004/08/19 22:22:43 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.10 2004/12/15 20:57:18 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;

@@ -1,5 +1,5 @@
 /*
- * Rex RETS Server
+ * Variman RETS Server
  *
  * Author: Dave Dribin
  * Copyright (c) 2004, The National Association of REALTORS
