@@ -22,10 +22,27 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     public void addLookup(String name, String[] values)
     {
-        addLookup(name, values, values);
+        addLookup(name, DmqlFieldType.LOOKUP, values, values);
     }
 
     public void addLookup(String name, String[] values, String[] shortValues)
+    {
+        addLookup(name, DmqlFieldType.LOOKUP, values, shortValues);
+    }
+
+    public void addLookupMulti(String name, String[] values)
+    {
+        addLookup(name, DmqlFieldType.LOOKUP_MULTI, values, values);
+    }
+
+    public void addLookupMulti(String name, String[] values,
+                               String[] shortValues)
+    {
+        addLookup(name, DmqlFieldType.LOOKUP_MULTI, values, shortValues);
+    }
+
+    private void addLookup(String name, DmqlFieldType fieldType,
+                           String[] values, String[] shortValues)
     {
         Map valueMap = new HashMap();
         for (int i = 0; i < values.length; i++)
@@ -33,7 +50,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
             valueMap.put(values[i], shortValues[i]);
         }
         mLookupShortValues.put(name, valueMap);
-        addType(name, PREFIX + name, DmqlFieldType.LOOKUP);
+        addType(name, PREFIX + name, fieldType);
     }
 
     public void addString(String fieldName)
