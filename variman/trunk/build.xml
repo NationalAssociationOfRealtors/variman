@@ -494,8 +494,7 @@
           file="${hibernate.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib">
       <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="commons-lang*.jar">
-      </fileset>
+               excludes="commons-lang*.jar"/>
     </copy>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jdbc.jar}"/>
@@ -522,7 +521,8 @@
       <fileset dir="${struts.lib}" includes="*.tld" />
     </copy>
     <copy todir="build/rets-server/webapp/WEB-INF/lib">
-      <fileset dir="${struts.lib}" includes="*.jar" />
+      <fileset dir="${struts.lib}" includes="*.jar"
+               excludes="commons-lang*.jar"/>
     </copy>
   </target>
 
