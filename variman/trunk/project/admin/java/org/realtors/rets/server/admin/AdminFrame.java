@@ -50,21 +50,29 @@ public class AdminFrame extends wxFrame
         databaseMenu.Append(CREATE_SCHEMA, "&Create Schema...",
                             "Create metadata schema");
 
+        wxMenu metadataMenu = new wxMenu();
+        metadataMenu.Append(wxNewId(), "Delete Selected Item...",
+                            "Delete selected metadata item");
+        metadataMenu.Append(wxNewId(), "Add Resource...");
+        metadataMenu.Append(wxNewId(), "Add Class...");
 
-        wxMenuBar menuBar = new wxMenuBar();
-        menuBar.Append(fileMenu, "&File");
-        menuBar.Append(databaseMenu, "&Database");
-        menuBar.Append(userMenu, "&User");
+        mMenuBar = new wxMenuBar();
+        mMenuBar.Append(fileMenu, "&File");
+        mMenuBar.Append(databaseMenu, "&Database");
+        mMenuBar.Append(userMenu, "&User");
+        mMenuBar.Append(metadataMenu, "&Metadata");
         if (Admin.isDebugEnabled())
         {
             wxMenu debugMenu = new wxMenu();
             debugMenu.Append(CREATE_DATA_SCHEMA, "Create Data Schema...");
             debugMenu.Append(CREATE_PROPERTIES, "Create Properties...");
-            menuBar.Append(debugMenu, "Debug");
+            mMenuBar.Append(debugMenu, "Debug");
             EVT_MENU(CREATE_DATA_SCHEMA, new OnCreateDataSchema());
             EVT_MENU(CREATE_PROPERTIES, new OnCreateProperties());
         }
-        SetMenuBar(menuBar);
+        SetMenuBar(mMenuBar);
+        mMenuBar.EnableTop(USERS_MENU, false);
+        mMenuBar.EnableTop(METADATA_MENU, false);
 
         initConfig();
 
@@ -194,13 +202,22 @@ public class AdminFrame extends wxFrame
         public void handleEvent(wxNotebookEvent event)
         {
             int selection = event.GetSelection();
-            if (selection == USERS_PAGE)
+            if (selection == DATABASE_PAGE)
+            {
+                mMenuBar.EnableTop(USERS_MENU, false);
+                mMenuBar.EnableTop(METADATA_MENU, false);
+            }
+            else if (selection == USERS_PAGE)
             {
                 mUsersPage.populateList();
+                mMenuBar.EnableTop(USERS_MENU, true);
+                mMenuBar.EnableTop(METADATA_MENU, false);
             }
             else if (selection == METADATA_PAGE)
             {
                 mMetadataPage.populateTree();
+                mMenuBar.EnableTop(USERS_MENU, false);
+                mMenuBar.EnableTop(METADATA_MENU, true);
             }
         }
     }
@@ -236,6 +253,10 @@ public class AdminFrame extends wxFrame
     private static final int CREATE_DATA_SCHEMA = wxNewId();
     private static final int CREATE_PROPERTIES = wxNewId();
 
+    private static final int USERS_MENU = 2;
+    private static final int METADATA_MENU = 3;
+
+    private static final int DATABASE_PAGE = 0;
     private static final int USERS_PAGE = 1;
     private static final int METADATA_PAGE = 2;
 
@@ -243,4 +264,5 @@ public class AdminFrame extends wxFrame
     private DatabasePage mDatabasePage;
     private UsersPage mUsersPage;
     private MetadataPanel mMetadataPage;
+    private wxMenuBar mMenuBar;
 }
