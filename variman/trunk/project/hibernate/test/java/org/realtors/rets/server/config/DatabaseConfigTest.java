@@ -21,11 +21,11 @@ public class DatabaseConfigTest extends TestCase
         DatabaseConfig config = new DatabaseConfig();
         config.setDatabaseType(DatabaseType.POSTGRESQL);
         config.setHostName("localhost");
-        config.setDatabaseName("rex_test");
+        config.setDatabaseName("db_test");
         assertEquals("org.postgresql.Driver", config.getDriver());
         assertEquals("net.sf.hibernate.dialect.PostgreSQLDialect",
                      config.getDialect());
-        assertEquals("jdbc:postgresql://localhost/rex_test",
+        assertEquals("jdbc:postgresql://localhost/db_test",
                      config.getUrl());
     }
 
@@ -34,7 +34,7 @@ public class DatabaseConfigTest extends TestCase
         DatabaseConfig config = new DatabaseConfig();
         config.setDatabaseType(DatabaseType.POSTGRESQL);
         config.setHostName("localhost");
-        config.setDatabaseName("rex_test");
+        config.setDatabaseName("db_test");
         config.setUsername("dave");
         config.setPassword("");
         config.setMaxActive(100);
@@ -48,7 +48,7 @@ public class DatabaseConfigTest extends TestCase
         Properties properties = config.createHibernateProperties();
         assertEquals("org.postgresql.Driver",
                      properties.getProperty(Environment.DRIVER));
-        assertEquals("jdbc:postgresql://localhost/rex_test",
+        assertEquals("jdbc:postgresql://localhost/db_test",
                      properties.getProperty(Environment.URL));
         assertEquals("dave", properties.getProperty(Environment.USER));
         assertEquals("", properties.getProperty(Environment.PASS));

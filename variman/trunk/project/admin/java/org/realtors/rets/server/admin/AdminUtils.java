@@ -36,8 +36,8 @@ public class AdminUtils
     public static void initConfig() throws RetsServerException
     {
         initAdminProperties();
-        File configFile = new File(Admin.getRexHome() +
-                                   "/webapp/WEB-INF/rex/rets-config.xml");
+        File configFile = new File(Admin.getHomeDirectory() +
+                                   "/webapp/WEB-INF/rets/rets-config.xml");
         Admin.setConfigFile(configFile.getAbsolutePath());
         if (configFile.exists())
         {
@@ -67,7 +67,7 @@ public class AdminUtils
         try
         {
             Admin.initProperties();
-            LOG.info("Rex Admin version " + Admin.getVersion());
+            LOG.info(Admin.ADMIN_NAME + " version " + Admin.getVersion());
             LOG.info("Build date " + Admin.getBuildDate());
             LOG.info("Java version " + SystemUtils.JAVA_VERSION);
             LOG.info(SystemUtils.JAVA_RUNTIME_NAME + ", version " +
@@ -90,7 +90,7 @@ public class AdminUtils
         RetsConfig retsConfig = Admin.getRetsConfig();
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         Configuration config = new Configuration()
-            .addJar("rex-hbm-xml.jar")
+            .addJar(Admin.PROJECT_NAME + "-hbm-xml.jar")
             .setProperties(retsConfig.createHibernateProperties());
         SessionFactory sessionFactory =
             config.buildSessionFactory();

@@ -58,35 +58,35 @@ public class Admin
         sRetsConfigChanged = retsConfigChanged;
     }
 
-    public static void setRexHome(String rexHome)
+    public static void setHomeDirectory(String homeDirectory)
     {
-        sRexHome = rexHome;
+        sHomeDirectory = homeDirectory;
     }
 
-    public static String getRexHome()
+    public static String getHomeDirectory()
     {
-        return sRexHome;
+        return sHomeDirectory;
     }
 
     public static void initSystemProperties()
     {
-        findRexHome();
+        findHomeDirectory();
         initDebugEnabled();
     }
 
-    public static void findRexHome()
+    public static void findHomeDirectory()
     {
-        sRexHome = System.getProperty("rex.home");
-        if (sRexHome == null)
+        sHomeDirectory = System.getProperty(PROJECT_NAME + ".home");
+        if (sHomeDirectory == null)
         {
-            sRexHome = System.getProperty("user.dir");
-            System.setProperty("rex.home", sRexHome);
+            sHomeDirectory = System.getProperty("user.dir");
+            System.setProperty(PROJECT_NAME + ".home", sHomeDirectory);
         }
     }
 
     private static void initDebugEnabled()
     {
-        if (System.getProperty("rex.debug") != null)
+        if (System.getProperty(PROJECT_NAME + ".debug") != null)
         {
             sDebugEnabled = true;
         }
@@ -98,7 +98,7 @@ public class Admin
 
     public static String getWebAppRoot()
     {
-        return sRexHome + File.separator + "webapp";
+        return sHomeDirectory + File.separator + "webapp";
     }
 
     public static boolean isDebugEnabled()
@@ -110,11 +110,12 @@ public class Admin
     {
         ClassLoader classLoader =
             Thread.currentThread().getContextClassLoader();
-        Properties rexProperties = new Properties();
-        rexProperties.load(
-            classLoader.getResourceAsStream("rex-admin.properties"));
-        sVersion = rexProperties.getProperty("version");
-        sBuildDate = rexProperties.getProperty("build-date");
+        Properties appProperties = new Properties();
+        appProperties.load(
+            classLoader.getResourceAsStream(
+                PROJECT_NAME + "-admin.properties"));
+        sVersion = appProperties.getProperty("version");
+        sBuildDate = appProperties.getProperty("build-date");
     }
 
     public static String getBuildDate()
@@ -132,11 +133,15 @@ public class Admin
         return (System.getProperty("mrj.version") != null);
     }
 
+    public static final String PROJECT_NAME = "variman";
+    public static final String ADMIN_NAME = "Variman Admin";
+    public static final String SERVER_NAME = "Variman";
+
     private static Configuration sHibernateConfiguration;
     private static String sConfigFile;
     private static RetsConfig sRetsConfig;
     private static boolean sRetsConfigChanged;
-    private static String sRexHome;
+    private static String sHomeDirectory;
     private static boolean sDebugEnabled;
     private static String sVersion;
     private static String sBuildDate;

@@ -32,11 +32,11 @@ public class Bootstrap
     private void callMain(String[] args)
         throws Exception
     {
-        initRexHome();
+        initHomeDirectory();
         List urlList = new ArrayList();
         addJars(urlList, "admin/lib");
         addJars(urlList, "webapp/WEB-INF/lib");
-        urlList.add(new File(mRexHome, "admin/classes/").toURL());
+        urlList.add(new File(mHomeDirectory, "admin/classes/").toURL());
         URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);
         URLClassLoader classLoader = new URLClassLoader(urls);
         Thread.currentThread().setContextClassLoader(classLoader);
@@ -47,20 +47,20 @@ public class Bootstrap
         method.invoke(null, paramValues);
     }
 
-    private void initRexHome()
+    private void initHomeDirectory()
     {
-        mRexHome = System.getProperty("rex.home");
-        if (mRexHome == null)
+        mHomeDirectory = System.getProperty("variman.home");
+        if (mHomeDirectory == null)
         {
-            mRexHome = System.getProperty("user.dir");
-            System.setProperty("rex.home", mRexHome);
+            mHomeDirectory = System.getProperty("user.dir");
+            System.setProperty("variman.home", mHomeDirectory);
         }
     }
 
     private void addJars(List urlList, String directory)
         throws MalformedURLException
     {
-        File libDir = new File(mRexHome, directory);
+        File libDir = new File(mHomeDirectory, directory);
         File[] jars = libDir.listFiles(new FilenameFilter()
         {
             public boolean accept(File dir, String name)
@@ -84,7 +84,7 @@ public class Bootstrap
         throws Exception
     {
         Bootstrap bootstrap = new Bootstrap();
-        String main = System.getProperty("rex.main");
+        String main = System.getProperty("app.main");
         if (main != null)
         {
             bootstrap.setMain(main);
@@ -93,6 +93,6 @@ public class Bootstrap
 
     }
 
-    private String mRexHome;
+    private String mHomeDirectory;
     private String mMain;
 }

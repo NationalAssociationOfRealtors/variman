@@ -23,7 +23,7 @@ public class AboutBox extends JDialog
         JPanel content = new JPanel();
         JLabel label = new JLabel(
             "<html><center>" +
-            "<h1>Rex Admin</h1>" +
+            "<h1>" + Admin.ADMIN_NAME + "</h1>" +
             "<p>Version " + version + " (" + buildDate + ")</p>" +
             "<p></p>" +
             "<p>Copyright &copy; 2004-2005,<br>" +

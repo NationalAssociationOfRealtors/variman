@@ -19,8 +19,8 @@ public class DatabaseTypeTest extends TestCase
         assertEquals("org.postgresql.Driver", type.getDriverClass());
         assertEquals("net.sf.hibernate.dialect.PostgreSQLDialect",
                      type.getDialectClass());
-        assertEquals("jdbc:postgresql://localhost/rex",
-                     type.getUrl("localhost", "rex"));
+        assertEquals("jdbc:postgresql://localhost/db_name",
+                     type.getUrl("localhost", "db_name"));
     }
 
     public void testSQLServerJSQLType()
@@ -32,8 +32,8 @@ public class DatabaseTypeTest extends TestCase
                      type.getDialectClass());
         assertEquals("jdbc:JSQLConnect://localhost" +
                      "/selectMethod=cursor" +
-                     "/database=rex",
-                     type.getUrl("localhost", "rex"));
+                     "/database=db_name",
+                     type.getUrl("localhost", "db_name"));
     }
 
     public void testSQLServerjTDSType()
@@ -43,8 +43,8 @@ public class DatabaseTypeTest extends TestCase
         assertEquals("net.sourceforge.jtds.jdbc.Driver", type.getDriverClass());
         assertEquals("net.sf.hibernate.dialect.SQLServerDialect",
                      type.getDialectClass());
-        assertEquals("jdbc:jtds:sqlserver://localhost/rex",
-                     type.getUrl("localhost", "rex"));
+        assertEquals("jdbc:jtds:sqlserver://localhost/db_name",
+                     type.getUrl("localhost", "db_name"));
     }
 
     public void testUnknowType()

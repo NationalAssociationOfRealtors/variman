@@ -51,13 +51,13 @@ public class EmbeddedTomcat
         mInitFailed = true;
     }
 
-    public void setRexHome(String path)
+    public void setHomeDirectory(String path)
     {
-        mRexHome = path;
-        mCatalinaHome = mRexHome + File.separator + "server";
+        mHomeDirectory = path;
+        mCatalinaHome = mHomeDirectory + File.separator + "server";
     }
 
-    public String getRexHome()
+    public String getHomeDirectory()
     {
         return mCatalinaHome;
     }
@@ -75,7 +75,7 @@ public class EmbeddedTomcat
         // Print all log statments to standard error
         mEmbedded.setDebug(0);
         FileLogger logger = new FileLogger();
-        logger.setDirectory(mRexHome + File.separator + "server" +
+        logger.setDirectory(mHomeDirectory + File.separator + "server" +
                             File.separator + "logs");
         mEmbedded.setLogger(logger);
 
@@ -105,13 +105,13 @@ public class EmbeddedTomcat
         throws ParserConfigurationException, SAXException, IOException
     {
         // Use standard DOM rather than RetsConfig to parse the XML file.
-        // Moving the Rex jar file into the Tomcat classpath messes up the
+        // Moving the Variman jar file into the Tomcat classpath messes up the
         // classloader, and then it cannot be used inside the webapp. I really
         // don't know what games Tomcat plays with classloaders, but it causes
         // all sorts of problems. In any case, we only need the port parameter,
         // so it's easy enough just to use DOM and grab that one XML tag.
         String configFile =
-            mRexHome + "/webapp/WEB-INF/rex/rets-config.xml";
+            mHomeDirectory + "/webapp/WEB-INF/rets/rets-config.xml";
         DocumentBuilder builder =
             DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = builder.parse(new File(configFile));
@@ -214,18 +214,18 @@ public class EmbeddedTomcat
     {
         try
         {
-            String rexHome = System.getProperty("rex.home");
-            if (rexHome == null)
+            String homeDirectory = System.getProperty("variman.home");
+            if (homeDirectory == null)
             {
-                rexHome = System.getProperty("user.dir");
-                System.setProperty("rex.home", rexHome);
+                homeDirectory = System.getProperty("user.dir");
+                System.setProperty("variman.home", homeDirectory);
             }
             EmbeddedTomcat tomcat = EmbeddedTomcat.getInstance();
-            tomcat.setRexHome(rexHome);
+            tomcat.setHomeDirectory(homeDirectory);
 
             tomcat.startTomcat();
 
-            URL url = new URL("file:" + rexHome + "/webapp");
+            URL url = new URL("file:" + homeDirectory + "/webapp");
             tomcat.registerWebapp("/", url);
             if (tomcat.initFailed())
             {
@@ -255,7 +255,7 @@ public class EmbeddedTomcat
         }
     }
 
-    private String mRexHome;
+    private String mHomeDirectory;
     private String mCatalinaHome;
     private Embedded mEmbedded;
     private Host mHost;

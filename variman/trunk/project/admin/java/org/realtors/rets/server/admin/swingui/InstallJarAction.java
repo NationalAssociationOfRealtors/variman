@@ -31,11 +31,12 @@ public class InstallJarAction extends AbstractAction
                 return;
             }
             File sourceJarFile = fileChooser.getSelectedFile();
-            String rexHome = Admin.getRexHome();
-            File libDirectory = new File(rexHome, "webapp/WEB-INF/lib");
+            String homeDirectory = Admin.getHomeDirectory();
+            File libDirectory = new File(homeDirectory, "webapp/WEB-INF/lib");
             IOUtils.copyFile(sourceJarFile, libDirectory);
             JOptionPane.showMessageDialog(
-                frame,"You must restart Rex Admin and Rex for\n" +
+                frame,"You must restart " + Admin.ADMIN_NAME + " and " +
+                      Admin.SERVER_NAME + " for\n" +
                       "them to recognize the new Jar file.", "Restart Warning",
                 JOptionPane.WARNING_MESSAGE);
         }

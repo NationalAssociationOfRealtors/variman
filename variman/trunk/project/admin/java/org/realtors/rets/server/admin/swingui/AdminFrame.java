@@ -33,7 +33,7 @@ public class AdminFrame extends JFrame
     {
         if (sInstance == null)
         {
-            sInstance = new AdminFrame("Rex Administration");
+            sInstance = new AdminFrame(Admin.ADMIN_NAME);
         }
         return sInstance;
     }
@@ -219,7 +219,7 @@ public class AdminFrame extends JFrame
     {
         public AboutAction()
         {
-            super("About Rex Admin");
+            super("About " + Admin.ADMIN_NAME);
         }
 
         public void actionPerformed(ActionEvent event)

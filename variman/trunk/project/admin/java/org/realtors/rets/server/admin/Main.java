@@ -50,7 +50,8 @@ public class Main
         ClassLoader contextClassLoader =
             Thread.currentThread().getContextClassLoader();
         DOMConfigurator.configure(
-            contextClassLoader.getResource("rex-admin-log4j.xml"));
+            contextClassLoader.getResource(
+                Admin.PROJECT_NAME + "-admin-log4j.xml"));
     }
 
     private static void cliMain(String[] args)

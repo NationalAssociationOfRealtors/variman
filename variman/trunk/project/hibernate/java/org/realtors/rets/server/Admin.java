@@ -28,7 +28,7 @@ public class Admin
     private void initHibernate() throws HibernateException
     {
         mCfg = new Configuration();
-        mCfg.addJar("rex-hbm-xml.jar");
+        mCfg.addJar("variman-hbm-xml.jar");
         mSessions = mCfg.buildSessionFactory();
     }
 

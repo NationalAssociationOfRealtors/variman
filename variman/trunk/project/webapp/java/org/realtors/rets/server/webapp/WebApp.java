@@ -117,11 +117,11 @@ public class WebApp
     {
         ClassLoader classLoader =
             Thread.currentThread().getContextClassLoader();
-        Properties rexProperties = new Properties();
-        rexProperties.load(
-            classLoader.getResourceAsStream("rex-webapp.properties"));
-        sVersion = rexProperties.getProperty("version");
-        sBuildDate = rexProperties.getProperty("build-date");
+        Properties properties = new Properties();
+        properties.load(
+            classLoader.getResourceAsStream(PROJECT_NAME + "-webapp.properties"));
+        sVersion = properties.getProperty("version");
+        sBuildDate = properties.getProperty("build-date");
     }
 
     public static String getVersion()
@@ -133,6 +133,9 @@ public class WebApp
     {
         return sBuildDate;
     }
+
+    public static final String PROJECT_NAME = "variman";
+    public static final String SERVER_NAME = "Variman";
 
     private static ServletContext sServletContext;
     private static MetadataManager sMetadataManager;

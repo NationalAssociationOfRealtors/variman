@@ -50,7 +50,7 @@ public class SwingMain
     {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-                           "Rex Admin");
+                           Admin.ADMIN_NAME);
         Admin.initSystemProperties();
 
         //Schedule a job for the event-dispatching thread:

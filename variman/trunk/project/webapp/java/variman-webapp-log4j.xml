@@ -3,7 +3,7 @@
 
 <log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
   <appender name="stdout" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="${rex.log.home}/rex_webapp.txt"/>
+    <param name="File" value="${variman.log.home}/variman_webapp.txt"/>
     <param name="MaxBackupIndex" value="5"/>
     <param name="MaxFileSize" value="1MB"/>
     <layout class="org.apache.log4j.PatternLayout">

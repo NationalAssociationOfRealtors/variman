@@ -9,10 +9,10 @@ public class MacUtils
     public static void registerApplicationListeners()
     {
         Application application = Application.getApplication();
-        application.addApplicationListener(new RexApplicationHandler());
+        application.addApplicationListener(new AdminApplicationHandler());
     }
 
-    private static class RexApplicationHandler extends ApplicationAdapter
+    private static class AdminApplicationHandler extends ApplicationAdapter
     {
         public void handleQuit(ApplicationEvent event)
         {

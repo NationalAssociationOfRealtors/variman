@@ -96,7 +96,7 @@ public class InitServlet extends RetsServlet
         try
         {
             WebApp.initProperties();
-            LOG.info("Rex version " + WebApp.getVersion());
+            LOG.info(WebApp.SERVER_NAME + " version " + WebApp.getVersion());
             LOG.info("Build date " + WebApp.getBuildDate());
             LOG.info("Java version " + SystemUtils.JAVA_VERSION);
             LOG.info(SystemUtils.JAVA_RUNTIME_NAME + ", version " +
@@ -133,40 +133,42 @@ public class InitServlet extends RetsServlet
      */
     private void initLog4J()
     {
-        initRexLogHome();
+        initLogHome();
         String log4jInitFile =
-            getContextInitParameter("log4j-init-file",
-                                    "WEB-INF/classes/rex-webapp-log4j.xml");
+            getContextInitParameter(
+                "log4j-init-file",
+                "WEB-INF/classes/"+ WebApp.PROJECT_NAME + "-webapp-log4j.xml");
         log4jInitFile = resolveFromConextRoot(log4jInitFile);
         WebApp.setLog4jFile(log4jInitFile);
         WebApp.loadLog4j();
     }
 
     /**
-     * Sets the <code>rex.log.home</code> system property so it can be used in
-     * the log4j config file.
+     * Sets the <code>variman.log.home</code> system property so it can be used
+     * in the log4j config file.
      */
-    private void initRexLogHome()
+    private void initLogHome()
     {
-        String rexLogHome =
-            getServletContext().getInitParameter("rex-log4j-home");
-        if (rexLogHome == null)
+        String prefix = WebApp.PROJECT_NAME;
+        String logHome =
+            getServletContext().getInitParameter(prefix + "-log4j-home");
+        if (logHome == null)
         {
-            rexLogHome = System.getProperty("rex.log.home");
-            if (rexLogHome == null)
+            logHome = System.getProperty(prefix + ".log.home");
+            if (logHome == null)
             {
-                rexLogHome = System.getProperty("rex.home");
-                if (rexLogHome == null)
+                logHome = System.getProperty(prefix + ".home");
+                if (logHome == null)
                 {
-                    rexLogHome = System.getProperty("user.dir");
+                    logHome = System.getProperty("user.dir");
                 }
                 else
                 {
-                    rexLogHome = rexLogHome + File.separator + "logs";
+                    logHome = logHome + File.separator + "logs";
                 }
             }
         }
-        System.setProperty("rex.log.home", rexLogHome);
+        System.setProperty(prefix + ".log.home", logHome);
     }
 
     private void initRetsConfiguration() throws ServletException
@@ -175,7 +177,7 @@ public class InitServlet extends RetsServlet
         {
             String configFile =
                 getContextInitParameter("rets-config-file",
-                                        "WEB-INF/rex/rets-config.xml");
+                                        "WEB-INF/rets/rets-config.xml");
             configFile = resolveFromConextRoot(configFile);
             mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
 
@@ -206,7 +208,7 @@ public class InitServlet extends RetsServlet
         {
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
-            cfg.addJar("rex-hbm-xml.jar");
+            cfg.addJar(WebApp.PROJECT_NAME + "-hbm-xml.jar");
             LOG.info("JDBC URL: " + mRetsConfig.getDatabase().getUrl());
             cfg.setProperties(mRetsConfig.createHibernateProperties());
             RetsServer.setSessions(cfg.buildSessionFactory());
