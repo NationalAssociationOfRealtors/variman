@@ -4,6 +4,9 @@ Version 2.1.6 - xxx
   * Added scroll bars to various lists in the admin tool.
   * Fixed SQL generation for string literals.
   * Honor default ordering.
+  * Implemented SQL generation for lookup multi fields.
+  * Add object set feature for flexible GetObject file naming using an
+    XML mapping file.
 
 Version 2.1.5 - 1 February 2005
 
