@@ -39,7 +39,7 @@ field_value [AST name]
     : {isLookupField(name.getText())}? lookup_list[name]
     | {isCharacterField(name.getText())}? string_list[name]
     | {isCharacterField(name.getText())}? STRING_LITERAL^
-    | number {#field_value = #([NUMBER], #field_value);}
+    | number {#field_value = #([NUMBER], name, #field_value);}
     | period {#field_value = #([PERIOD], #field_value);}
     | range_list[name]
     ;
