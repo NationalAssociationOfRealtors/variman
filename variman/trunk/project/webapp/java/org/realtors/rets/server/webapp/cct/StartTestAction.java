@@ -19,11 +19,14 @@ public class StartTestAction extends CctAction
         throws Exception
     {
         TestForm form = (TestForm) actionForm;
-        CertificationTestSuite suite = getSuite(request.getSession());
-        CertificationTest test = suite.getTest(form.getTestNumber());
-        LOG.debug("Starting test #" + form.getTestNumber() + ": " +
-                  test.getDescription());
-        test.start();
+        TestRunner testRunner = getTestRunner(request.getSession());
+        int testNo = form.getTestNumber();
+
+        LOG.debug("Starting test #" + testNo + ": " +
+                  testRunner.getDescription(testNo));
+
+        testRunner.startTestByNumber(testNo); 
+
         return mapping.findForward("home");
     }
 

@@ -19,11 +19,12 @@ public class StopTestAction extends CctAction
         throws Exception
     {
         TestForm form = (TestForm) actionForm;
-        CertificationTestSuite suite = getSuite(request.getSession());
-        CertificationTest test = suite.getTest(form.getTestNumber());
-        LOG.debug("Stopping test #" + form.getTestNumber() + ": " +
-                  test.getDescription());
-        test.stop();
+        TestRunner testRunner = getTestRunner(request.getSession());
+        int testNo = form.getTestNumber();
+        LOG.debug("Stopping test #" + testNo + ": " +
+                  testRunner.getDescription(testNo));
+        testRunner.stopRunningTest(testNo);
+
         return mapping.findForward("home");
     }
 
