@@ -177,6 +177,24 @@ public class MClass extends ServerMetadata implements Serializable
     }
 
     /**
+     * @return string with DbTable name
+     * 
+     * @hibernate.property
+     */
+    public String getDbTable()
+    {
+        return mDbTable;
+    }
+
+    /**
+     * @param string string containing table name
+     */
+    public void setDbTable(String string)
+    {
+        mDbTable = string;
+    }
+
+    /**
      * Returns the level of this metadata object.
      *
      * @return the level of this metadata object
@@ -272,6 +290,9 @@ public class MClass extends ServerMetadata implements Serializable
     private Set mUpdates;
 
     private String mLevel;
+    
+    private String mDbTable;
 
     public static final String TABLE = "CLASS";
+
 }
