@@ -30,12 +30,12 @@ public class  GetMetadataServlet extends RetsServlet
         mTransaction = new GetMetadataTransaction();
         if (USE_CACHE)
         {
-            mMetadataFetcher = new ServletMetadataFetcher();
+            mMetadataFetcher = new WebAppMetadataFetcher();
         }
         else
         {
             mMetadataFetcher =
-                new HibernateMetadataFetcher(InitServlet.getSessions());
+                new HibernateMetadataFetcher(WebApp.getSessions());
         }
     }
 
@@ -62,17 +62,6 @@ public class  GetMetadataServlet extends RetsServlet
             LOG.error("Caught", e);
             out.println("<RETS ReplyCode=\"20513\" " +
                         "ReplyText=\"Miscellaneous error\"/>\n");
-        }
-    }
-
-    /**
-     * Gets the metadata manager from the servlet request.
-     */
-    class ServletMetadataFetcher extends ManagerMetadataFetcher
-    {
-        protected MetadataManager getMetadataManager()
-        {
-            return GetMetadataServlet.this.getMetadataManager();
         }
     }
 
