@@ -27,10 +27,10 @@
           <var-value>5</var-value>
         </var>
       </field>
-      <field property="productname" depends="required">
+      <field property="productName" depends="required">
         <arg0 key="registration.field.productname"/>
       </field>
-      <field property="productversion" depends="required">
+      <field property="productVersion" depends="required">
         <arg0 key="registration.field.productversion"/>
       </field>
       <field property="company" depends="required">
@@ -39,8 +39,14 @@
       <field property="email" depends="required,email">
         <arg0 key="registration.field.e-mail"/>
       </field>
-      <field property="agentid" depends="required">
+      <field property="agentId" depends="required">
         <arg0 key="registration.field.agentid"/>
+      </field>
+      <field property="firstName" depends="required">
+        <arg0 key="registration.field.firstName"/>
+      </field>
+      <field property="lastName" depends="required">
+        <arg0 key="registration.field.lastName"/>
       </field>
     </form>
   </formset>

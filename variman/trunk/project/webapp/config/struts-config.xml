@@ -18,17 +18,21 @@
 
   <global-forwards>
     <forward name="registration" path="/registration.jsp"/>
-    <forward name="userPage" path="/userPage.jsp"/>
+    <forward name="userPage" path="/cct/index.jsp"/>
   </global-forwards>
 
   <action-mappings>
     <action path="/registration"
-            type="path.to.RegistrationAction"
+            type="org.realtors.rets.server.webapp.cct.RegistrationAction"
             name="registrationForm"
             scope="request"
-            validate="false"
+            validate="true"
             input="/registration.jsp">
+      <forward name="confirmPage" path="/confirmation.jsp"/>
     </action>
+
+    <action path="/confirmation"
+            type="org.realtors.rets.server.webapp.cct.ConfirmationAction"/>
   </action-mappings>
 
   <message-resources parameter="ApplicationResources"/>
