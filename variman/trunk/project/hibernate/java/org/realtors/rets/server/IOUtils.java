@@ -80,6 +80,17 @@ public class IOUtils
         return offset;
     }
 
+    public static byte[] readBytes(URL file)
+        throws IOException
+    {
+        return readBytes(new FileInputStream(file.getFile()));
+    }
+
+    public static byte[] readBytes(String fileName) throws IOException
+    {
+        return readBytes(new FileInputStream(fileName));
+    }
+
     /**
      * Reads the contents of an input stream into an array of bytes.
      *
@@ -330,6 +341,14 @@ public class IOUtils
         {
             destination.write(buffer, 0, bytesRead);
         }
+    }
+
+    public static void writeBytes(byte[] bytes, String fileName)
+        throws IOException
+    {
+        FileOutputStream outputStream = new FileOutputStream(fileName);
+        outputStream.write(bytes);
+        outputStream.close();
     }
 
     /**

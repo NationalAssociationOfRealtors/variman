@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.math.RandomUtils;
 
 import junit.framework.TestCase;
 
@@ -88,6 +90,14 @@ public class IOUtilsTest extends TestCase
         assertEquals("a\nb\nc\n", string);
     }
 
+    public void testReadBytes() throws IOException
+    {
+        URL file = getClass().getResource("foo.txt");
+        byte[] expected = new byte[]{'a', '\n', 'b', '\n', 'c', '\n'};
+        byte[] actual = IOUtils.readBytes(file);
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
     public void testReadLines() throws IOException
     {
         URL file = getClass().getResource("foo.txt");
@@ -106,6 +116,17 @@ public class IOUtilsTest extends TestCase
         String expected = "a\nb\nc\n" + System.currentTimeMillis() + "\n";
         IOUtils.writeString(expected, file);
         assertEquals(expected, IOUtils.readString(file));
+    }
+
+    public void testWriteBytes() throws IOException
+    {
+        String file = getClass().getResource("foo.txt").getFile();
+        file = StringUtils.replace(file, "foo.txt", "bar.txt");
+        byte[] expected = new byte[10];
+        Random random = new Random();
+        random.nextBytes(expected);
+        IOUtils.writeBytes(expected, file);
+        assertTrue(Arrays.equals(expected, IOUtils.readBytes(file)));
     }
 
     public void testListRecursive() throws IOException
