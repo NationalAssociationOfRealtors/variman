@@ -6,6 +6,7 @@ package org.realtors.rets.server.webapp.cct;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.realtors.rets.server.Util;
@@ -18,15 +19,6 @@ import org.apache.struts.validator.ValidatorForm;
  */
 public class RegistrationForm extends ValidatorForm
 {
-    /**
-     *
-     * @return
-     */
-    public String getAgentId()
-    {
-        return mAgentId;
-    }
-
     /**
      *
      * @return
@@ -131,17 +123,16 @@ public class RegistrationForm extends ValidatorForm
     public void reset(ActionMapping mapping, HttpServletRequest request)
     {
         mAcceptedLegalese = false;
-        mAgentId = "";
-        mCompany = "";
-        mEmail = "";
-        mFirstName = "";
-        mLastName = "";
-        mPassword = "";
-        mProductName = "";
-        mProductVersion = "";
-        mUserAgent = "";
-        mUsername = "";
-        mVerifyPassword = "";
+        mCompany = StringUtils.EMPTY;
+        mEmail = StringUtils.EMPTY;
+        mFirstName = StringUtils.EMPTY;
+        mLastName = StringUtils.EMPTY;
+        mPassword = StringUtils.EMPTY;
+        mProductName = StringUtils.EMPTY;
+        mProductVersion = StringUtils.EMPTY;
+        mUserAgent = StringUtils.EMPTY;
+        mUsername = StringUtils.EMPTY;
+        mVerifyPassword = StringUtils.EMPTY;
     }
 
     /**
@@ -151,15 +142,6 @@ public class RegistrationForm extends ValidatorForm
     public void setAcceptedLegalese(boolean b)
     {
         mAcceptedLegalese = b;
-    }
-
-    /**
-     *
-     * @param string
-     */
-    public void setAgentId(String string)
-    {
-        mAgentId = string;
     }
 
     /**
@@ -269,7 +251,6 @@ public class RegistrationForm extends ValidatorForm
     }
 
     private boolean mAcceptedLegalese;
-    private String mAgentId;
     private String mCompany;
     private String mEmail;
     private String mFirstName;

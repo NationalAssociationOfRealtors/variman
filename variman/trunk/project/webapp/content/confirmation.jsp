@@ -5,10 +5,6 @@
  <html:form action="/confirmation">
  <table>
   <tr><td>
-  <bean:message key="registration.field.agentId"/></td><td>
-  <bean:write name="cctRegistrationForm" property="agentId"/></td></tr>
-
-  <tr><td>
   <bean:message key="registration.field.company"/></td><td>
   <bean:write name="cctRegistrationForm" property="company"/></td></tr>
 

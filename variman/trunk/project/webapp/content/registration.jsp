@@ -11,10 +11,6 @@
  <html:form action="/registration">
  <table>
   <tr><td>
-  <bean:message key="registration.field.agentId"/></td><td>
-  <html:text property="agentId"/></td></tr>
-
-  <tr><td>
   <bean:message key="registration.field.company"/></td><td>
   <html:text property="company"/></td></tr>
 

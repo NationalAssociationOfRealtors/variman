@@ -57,7 +57,6 @@ public class ConfirmationAction extends Action
         
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(user);
-        userInfo.setAgentId(form.getAgentId());
         userInfo.setCompany(form.getCompany());
         userInfo.setEmail(form.getEmail());
         userInfo.setProductName(form.getProductName());

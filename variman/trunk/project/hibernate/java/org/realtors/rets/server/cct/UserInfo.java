@@ -15,14 +15,6 @@ import org.realtors.rets.server.Util;
 public class UserInfo
 {
     /**
-     * @hibernate.property length="80" not-null="true"
-     */
-    public String getAgentId()
-    {
-        return mAgentId;
-    }
-
-    /**
      * @hibernate.property length="80" not-null="true" 
      */
     public String getCompany()
@@ -77,15 +69,6 @@ public class UserInfo
     public String getUserAgent()
     {
         return mUserAgent;
-    }
-
-    /**
-     * 
-     * @param string
-     */
-    public void setAgentId(String string)
-    {
-        mAgentId = string;
     }
 
     /**
@@ -155,7 +138,6 @@ public class UserInfo
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
             .append("id", mId)
-            .append("AgentID", mAgentId)
             .append("Company", mCompany)
             .append("Email", mEmail)
             .append("ProductName", mProductName)
@@ -164,7 +146,6 @@ public class UserInfo
             .append("UserAgent", mUserAgent).toString();
     }
 
-    private String mAgentId;
     private String mCompany;
     private String mEmail;
     private Long mId;
