@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,15 +18,18 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import net.sf.hibernate.HibernateException;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
+
 import org.apache.log4j.Logger;
+
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Session;
+
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
@@ -41,14 +47,12 @@ public class CreateSchema extends RetsHelpers
      * 
      * @throws HibernateException if hibernate gets ticked
      */
-    public CreateSchema()
-        throws HibernateException
+    public CreateSchema() throws HibernateException
     {
         super();
         mLs = System.getProperty("line.separator");
         mTypeMappings = new HashMap();
         loadTypeMapping();
-        mFileName = null;
     }
 
     public String createTables()
@@ -59,13 +63,16 @@ public class CreateSchema extends RetsHelpers
         {
             MClass clazz = (MClass) i.next();
             Resource resource = clazz.getResource();
+
             StringBuffer tmp = new StringBuffer("rets_");
             tmp.append(resource.getResourceID()).append("_");
             tmp.append(clazz.getClassName());
             String sqlTableName = tmp.toString();
+
             sb.append("CREATE TABLE ").append(sqlTableName);
             sb.append(" (").append(mLs);
             sb.append("\tid INT8,").append(mLs);
+
             Set needsIndex = new HashSet();
             Iterator j = clazz.getTables().iterator();
             while (j.hasNext())
@@ -74,39 +81,40 @@ public class CreateSchema extends RetsHelpers
                 sb.append("\t").append(table.getDbName()).append(" ");
                 switch (table.getDataType().toInt())
                 {
-                    case 0:
+                    case 0 :
                         sb.append(mTypeMappings.get("boolean"));
                         break;
-                    case 1:
+                    case 1 :
                         sb.append(mTypeMappings.get("character")).append("(");
                         sb.append(table.getMaximumLength()).append(")");
                         break;
-                    case 2:
+                    case 2 :
                         sb.append(mTypeMappings.get("date"));
                         break;
-                    case 3:
+                    case 3 :
                         sb.append(mTypeMappings.get("datetime"));
                         break;
-                    case 4:
+                    case 4 :
                         sb.append(mTypeMappings.get("time"));
                         break;
-                    case 5:
+                    case 5 :
                         sb.append(mTypeMappings.get("tiny"));
                         break;
-                    case 6:
+                    case 6 :
                         sb.append(mTypeMappings.get("small"));
                         break;
-                    case 7:
+                    case 7 :
                         sb.append(mTypeMappings.get("int"));
                         break;
-                    case 8:
+                    case 8 :
                         sb.append(mTypeMappings.get("long"));
                         break;
-                    case 9:
+                    case 9 :
                         sb.append(mTypeMappings.get("decimal"));
                         break;
                 }
                 sb.append(",").append(mLs);
+
                 if (table.getIndex() > 0)
                 {
                     needsIndex.add(table);
@@ -114,6 +122,7 @@ public class CreateSchema extends RetsHelpers
             }
             sb.append("\tprimary key(id)").append(mLs);
             sb.append(");").append(mLs);
+
             j = needsIndex.iterator();
             while (j.hasNext())
             {
@@ -128,15 +137,6 @@ public class CreateSchema extends RetsHelpers
         return sb.toString();
     }
 
-    /**
-     * 
-     * @return
-     */
-    public String getFileName()
-    {
-        return mFileName;
-    }
-    
     private void loadTypeMapping()
     {
         Properties props = new Properties();
@@ -161,8 +161,7 @@ public class CreateSchema extends RetsHelpers
         mTypeMappings.put("date", props.getProperty("rets.db.date", "DATE"));
         mTypeMappings.put("datetime",
                           props.getProperty("rets.db.datetime", "TIMESTAMP"));
-        mTypeMappings.put("time",
-                          props.getProperty("rets.db.time", "TIME"));
+        mTypeMappings.put("time", props.getProperty("rets.db.time", "TIME"));
         mTypeMappings.put("tiny", props.getProperty("rets.db.tiny", "INT2"));
         mTypeMappings.put("small", props.getProperty("rets.db.small", "INT2"));
         mTypeMappings.put("int", props.getProperty("rets.db.int", "INT4"));
@@ -170,24 +169,64 @@ public class CreateSchema extends RetsHelpers
         mTypeMappings.put("decimal",
                           props.getProperty("rets.db.decimal", "NUMERIC"));
     }
-    
-    private void parseArgs(CommandLine cmd)
+
+    /**
+     * Write the schema out to the database.
+     * 
+     * @param schema the schema to put into the db
+     */
+    private void writeToDB(String schema)
+        throws HibernateException, SQLException
     {
-        if (cmd.hasOption('f'))
+        Session session = null;
+        Connection con = null;
+        try
         {
-            mFileName = cmd.getOptionValue('f', "schema.out");
+            session = mSessions.openSession();
+            con = session.connection();
+            Statement stmt = con.createStatement();
+            stmt.execute(schema);
+            con.commit();
+            session.close();
+        }
+        catch (HibernateException e)
+        {
+            if (con != null)
+            {
+                con.rollback();
+            }
+            if (session != null)
+            {
+                session.close();
+            }
+            throw e;
+        }
+        catch (SQLException e)
+        {
+            if (con != null)
+            {
+                con.rollback();
+            }
+            if (session != null)
+            {
+                session.close();
+            }
+            throw e;
         }
     }
-    
+
     private static Options getOptions()
     {
         Options ops = new Options();
         ops.addOption("f", "file", true, "output file");
+        ops.addOption("d", "database", false,
+                      "just create right into the database");
+        ops.addOption("v", "verbose", false, "spew to the screen anyway");
         return ops;
     }
-    
+
     public static void main(String[] args)
-        throws HibernateException, ParseException, IOException
+        throws ParseException, IOException, HibernateException, SQLException
     {
         Parser parser = new GnuParser();
         Options opts = getOptions();
@@ -202,17 +241,31 @@ public class CreateSchema extends RetsHelpers
             System.exit(1);
         }
         CreateSchema cs = new CreateSchema();
-        cs.parseArgs(cmdl);
-        
+
         cs.loadMetadata();
         String schema = cs.createTables();
-        if (cs.getFileName() != null)
+        if (cmdl.hasOption('f'))
         {
-            writeFile(cs.getFileName(), schema);
+            writeFile(cmdl.getOptionValue('f', "schema.out"), schema);
+            if (cmdl.hasOption('v'))
+            {
+                System.out.print(schema);
+            }
         }
         else
         {
-            System.out.print(schema);
+            if (cmdl.hasOption('d'))
+            {
+                cs.writeToDB(schema);
+                if (cmdl.hasOption('v'))
+                {
+                    System.out.print(schema);
+                }
+            }
+            else
+            {
+                System.out.print(schema);
+            }
         }
     }
 
@@ -223,9 +276,10 @@ public class CreateSchema extends RetsHelpers
     }
 
     /**
+     * Write the schema out to a file.
      * 
-     * @param string
-     * @param schema
+     * @param string the output filename
+     * @param schema the schema string
      */
     private static void writeFile(String fileName, String schema)
         throws IOException
@@ -235,7 +289,6 @@ public class CreateSchema extends RetsHelpers
         pw.close();
     }
 
-    private String mFileName;
     /** The Line Seperator */
     private String mLs;
     private Map mTypeMappings;
