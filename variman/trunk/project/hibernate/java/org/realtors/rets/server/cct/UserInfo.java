@@ -15,9 +15,9 @@ public class UserInfo
     /**
      * @hibernate.property length="80" not-null="true"
      */
-    public String getAgentID()
+    public String getAgentId()
     {
-        return mAgentID;
+        return mAgentId;
     }
 
     /**
@@ -81,9 +81,9 @@ public class UserInfo
      * 
      * @param string
      */
-    public void setAgentID(String string)
+    public void setAgentId(String string)
     {
-        mAgentID = string;
+        mAgentId = string;
     }
 
     /**
@@ -149,7 +149,7 @@ public class UserInfo
         mUserAgent = string;
     }
 
-    private String mAgentID;
+    private String mAgentId;
     private String mCompany;
     private String mEmail;
     private Long mId;
