@@ -13,9 +13,15 @@ public class RuleAddDialog extends JDialog
 {
     public RuleAddDialog()
     {
+        this("Add Rule", "Add Rule");
+    }
+
+    public RuleAddDialog(String title, String okButton)
+    {
+
         super(SwingUtils.getAdminFrame());
         setModal(true);
-        setTitle("Add Rule");
+        setTitle(title);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         JPanel content = new JPanel();
@@ -42,7 +48,7 @@ public class RuleAddDialog extends JDialog
 
         Box buttonBox = Box.createHorizontalBox();
         buttonBox.add(Box.createHorizontalGlue());
-        buttonBox.add(new JButton(new AddRuleButtonAction()));
+        buttonBox.add(new JButton(new AddRuleButtonAction(okButton)));
         buttonBox.add(Box.createHorizontalStrut(5));
         buttonBox.add(new JButton(new CancelButtonAction()));
         buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -62,7 +68,7 @@ public class RuleAddDialog extends JDialog
 
     public RuleDescription.Type getType()
     {
-        if (mRuleType.getSelectedIndex() == 0)
+        if (mRuleType.getSelectedIndex() == INCLUDE_INDEX)
         {
             return RuleDescription.INCLUDE;
         }
@@ -72,9 +78,16 @@ public class RuleAddDialog extends JDialog
         }
     }
 
-    public void setRuleDescription(RuleDescription ruleDescription)
+    public RuleDescription getRuleDescription()
     {
-        if (mRuleType.getSelectedIndex() == 0)
+        RuleDescription ruleDescription = new RuleDescription();
+        updateRuleDescription(ruleDescription);
+        return ruleDescription;
+    }
+
+    public void updateRuleDescription(RuleDescription ruleDescription)
+    {
+        if (mRuleType.getSelectedIndex() == INCLUDE_INDEX)
         {
             ruleDescription.setType(RuleDescription.INCLUDE);
         }
@@ -90,12 +103,29 @@ public class RuleAddDialog extends JDialog
         ruleDescription.setSystemNames(Arrays.asList(systemNames));
     }
 
+    public void setRuleDescription(RuleDescription ruleDescription)
+    {
+        if (ruleDescription.getType().equals(RuleDescription.INCLUDE))
+        {
+            mRuleType.setSelectedIndex(0);
+        }
+        else
+        {
+            mRuleType.setSelectedIndex(1);
+        }
+
+        mResourceName.setText(ruleDescription.getResource());
+        mClassName.setText(ruleDescription.getRetsClass());
+        String systemNames = StringUtils.join(
+            ruleDescription.getSystemNames().iterator(), " ");
+       mFields.setText(systemNames);
+    }
 
     private class AddRuleButtonAction extends AbstractAction
     {
-        public AddRuleButtonAction()
+        public AddRuleButtonAction(String buttonText)
         {
-            super("Add Rule");
+            super(buttonText);
         }
 
         public void actionPerformed(ActionEvent event)
@@ -150,6 +180,7 @@ public class RuleAddDialog extends JDialog
     }
 
     private static final int TEXT_WIDTH = 20;
+    private static final int INCLUDE_INDEX = 0;
     private JComboBox mRuleType;
     private JTextField mResourceName;
     private JTextField mClassName;
