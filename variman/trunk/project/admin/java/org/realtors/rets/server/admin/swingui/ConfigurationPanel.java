@@ -10,90 +10,141 @@ package org.realtors.rets.server.admin.swingui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+
+import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.DatabaseConfig;
+import org.realtors.rets.server.admin.Admin;
+import org.realtors.rets.server.IOUtils;
 
 public class ConfigurationPanel extends JPanel
 {
     public ConfigurationPanel()
     {
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
-
         setLayout(new BorderLayout());
-        JPanel label = new JPanel();
-        label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
-        JLabel tmp = new JLabel("RETS");
-        label.add(tmp);
-        label.add(Box.createRigidArea(new Dimension(5, 0)));
-        JPanel horizontalRule = new JPanel();
-        horizontalRule.setBorder(
-            BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
-        horizontalRule.setLayout(new BoxLayout(horizontalRule, BoxLayout.Y_AXIS));
-        horizontalRule.add(Box.createVerticalStrut(0));
-        label.add(horizontalRule);
 
-        panel2.add(label);
+        JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
-        JPanel retsConfig = new JPanel();
-//        retsConfig.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-        GridBagLayout gridbag = new GridBagLayout();
+        content.add(new HeaderPanel("RETS"));
+
+        TextValuePanel retsConfig = new TextValuePanel();
+        mPort = new JTextField(5);
+
+        // Not sure why the min size needs to be set, but if it's not, then the
+        // field will shrink when mMetadataDir has lots of text.  I'm not
+        // at all sure why the two fields are even linked, but whatever, this
+        // fixes it.
+        mPort.setMinimumSize(mPort.getPreferredSize());
+        retsConfig.addRow("Listening Port:", mPort, GridBagConstraints.NONE);
+
+        JPanel box = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        retsConfig.setLayout(gridbag);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0.0;
-        c.anchor = GridBagConstraints.CENTER;
-        c.insets = new Insets(5, 5, 5, 5);
-
-        JLabel jLabel = new JLabel("Listening Port:");
-//        jLabel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 0.0;
-//        gridbag.setConstraints(jLabel, c);
-        retsConfig.add(jLabel, c);
-
-        JTextField jTextField = new JTextField(10);
-        c.gridx = 1;
-        c.gridy = 0;
         c.weightx = 1.0;
-//        gridbag.setConstraints(jTextField, c);
-        retsConfig.add(jTextField, c);
-
-        jLabel = new JLabel("Metadatadatadata Directory:");
-        c.gridx = 0;
-        c.gridy = 1;
+        mMetadataDir = new JTextField("blah");
+        box.add(mMetadataDir, c);
         c.weightx = 0.0;
-//        gridbag.setConstraints(jLabel, c);
-        retsConfig.add(jLabel, c);
+        box.add(new JButton(new ChooseMetadataAction()), c);
+        retsConfig.addRow("Metadatata Directory:", box);
 
-        jTextField = new JTextField("c:\\blah");
-        c.gridx = 1;
-        c.gridy = 1;
-        c.weightx = 1.0;
-//        gridbag.setConstraints(jTextField, c);
-        retsConfig.add(jTextField, c);
+        retsConfig.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
+        content.add(retsConfig);
 
-        panel2.add(retsConfig);
-
-        panel2.add(new HeaderPanel("Database"));
+        content.add(new HeaderPanel("Database"));
 
         TextValuePanel tvp = new TextValuePanel();
-        tvp.addRow("Some Text:", new JTextField());
-        tvp.addRow("Blah:", new JTextField());
+
+        mDatabaseType = new JLabel();
+        tvp.addRow("Type:", mDatabaseType);
+
+        mHostName = new JLabel();
+        tvp.addRow("Host Name:", mHostName);
+
+        mDatabaseName = new JLabel();
+        tvp.addRow("Database Name:", mDatabaseName);
+
+        mUsername = new JLabel();
+        tvp.addRow("Username:", mUsername);
+
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
-        panel2.add(tvp);
+        content.add(tvp);
 
-//        Box labels = Box.createVerticalBox();
-//        Box values = Box.createVerticalBox();
-//        labels.add(new JLabel("Listening Port:"));
-//        values.add(new JTextField(10));
-//        labels.add(new JLabel("Metadata Directory:"));
-//        values.add(new JTextField("c:\\blah"));
-//        Box retsConfig = Box.createHorizontalBox();
-//        retsConfig.add(labels);
-//        retsConfig.add(values);
-//        add(retsConfig);
+        Box panel = Box.createHorizontalBox();
+        panel.add(new JButton(new EditPropertiesAction()));
+        panel.add(Box.createHorizontalGlue());
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 30, 5, 5));
+        content.add(panel);
 
-//        add(Box.createVerticalGlue());
-        add(panel2, BorderLayout.NORTH);
+        add(content, BorderLayout.NORTH);
+
+        updateLabels();
     }
+
+    private void updateLabels()
+    {
+        RetsConfig config = Admin.getRetsConfig();
+        DatabaseConfig dbConfig = config.getDatabase();
+        mDatabaseType.setText(dbConfig.getDatabaseType().getLongName());
+        mHostName.setText(dbConfig.getHostName());
+        mDatabaseName.setText(dbConfig.getDatabaseName());
+        mUsername.setText(dbConfig.getUsername());
+        mPort.setText("" + config.getPort());
+        String webappRoot = Admin.getWebAppRoot();
+        mMetadataDir.setText(IOUtils.resolve(webappRoot,
+                                              config.getMetadataDir()));
+    }
+
+    private class ChooseMetadataAction extends AbstractAction
+    {
+        public ChooseMetadataAction()
+        {
+            super("Choose...");
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            RetsConfig config = Admin.getRetsConfig();
+            String webappRoot = Admin.getWebAppRoot();
+            String metadataDir = config.getMetadataDir();
+            metadataDir = IOUtils.resolve(webappRoot, metadataDir);
+
+            JFileChooser dirDialog = new JFileChooser();
+            dirDialog.setSelectedFile(new File(metadataDir));
+            dirDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (dirDialog.showOpenDialog(ConfigurationPanel.this) !=
+                JFileChooser.APPROVE_OPTION)
+            {
+                return;
+            }
+
+            metadataDir = dirDialog.getSelectedFile().getPath();
+            metadataDir = IOUtils.relativize(webappRoot, metadataDir);
+            config.setMetadataDir(metadataDir);
+            updateLabels();
+        }
+    }
+
+    private class EditPropertiesAction extends AbstractAction
+    {
+        public EditPropertiesAction()
+        {
+            super("Edit...");
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            System.out.println("Eidt properties...");
+        }
+
+    }
+
+
+    private JTextField mPort;
+    private JTextField mMetadataDir;
+    private JLabel mDatabaseType;
+    private JLabel mHostName;
+    private JLabel mDatabaseName;
+    private JLabel mUsername;
 }
