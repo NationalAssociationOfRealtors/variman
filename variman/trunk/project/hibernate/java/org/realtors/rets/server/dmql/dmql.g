@@ -55,14 +55,6 @@ options
         mLexer = lexer;
     }
 
-    public void enterFieldCriteria() {
-        mLexer.setInFieldCriteria(true);
-    }
-
-    public void exitFieldCriteria() {
-        mLexer.setInFieldCriteria(false);
-    }
-
     public void print(String s) {
         // System.out.println(s);
     }
@@ -96,17 +88,26 @@ options
 }
 
 query returns [SqlConverter sql]
+    : sql=search_condition EOF
+    ;
+
+search_condition returns [SqlConverter sql]
     { sql = null; }
-//    : sql=query_element EOF!
-    : sql=and_clause (or and_clause)? EOF!
+    : sql=query_clause (or query_clause)*
     ;
 
-and_clause returns [SqlConverter sql]
-    : sql=not_clause (and not_clause)?
+query_clause returns [SqlConverter sql]
+    : sql=boolean_element (and boolean_element)*
     ;
 
-not_clause returns [SqlConverter sql]
+boolean_element returns [SqlConverter sql]
     : (not)? sql=query_element
+    ;
+
+query_element returns [SqlConverter sql]
+    { sql = null; }
+    : sql=field_criteria
+    | LPAREN search_condition RPAREN
     ;
 
 or
@@ -124,28 +125,17 @@ not
     | TILDE
     ;
 
-boolean_element
-    { SqlConverter sql = null; }
-    : (NOT)? sql=query_element
-    ;
-
-query_element returns [SqlConverter sql]
-    { sql = null; }
-    : sql=field_criteria
-//    | LPAREN query RPAREN
-    ;
-
 field_criteria returns [SqlConverter sql]
     {
         sql = null;
         String field;
     }
-    : LPAREN {enterFieldCriteria();} field=field_name EQUAL sql=field_value[field] RPAREN {exitFieldCriteria();}
+    : LPAREN field=field_name EQUAL sql=field_value[field] RPAREN
     ;
 
 field_name returns [String field]
-    { field = null; }
-    : t:TEXT {field=validateFieldName(t);}
+    { field = null; Token t;}
+    : t=text {field=validateFieldName(t);}
     ;
 
 field_value [String name] returns [SqlConverter sql]
@@ -217,7 +207,9 @@ lookups [LookupList list]
     ;
 
 lookup [LookupList list]
-    : t:TEXT {addLookup(list, t);}
+    {Token t;}
+    : t=text {addLookup(list, t);}
+    | n:NUMBER {addLookup(list, n);}
     ;
 
 string_list
@@ -237,15 +229,18 @@ string
     ;
 
 string_eq
-    : TEXT
+    { Token t; }
+    : t=text
     ;
 
 string_start
-    : TEXT STAR
+    { Token t; }
+    : t=text STAR
     ;
 
 string_contains
-    : STAR TEXT STAR
+    { Token t; }
+    : STAR t=text STAR
     ;
 
 // Need to split string_char into 2 separate rules, otherwise ANTLR
@@ -255,15 +250,24 @@ string_contains
 //     ;
 
 string_char1
-    : TEXT QUESTION (TEXT)?
+    { Token t; }
+    : t=text QUESTION (t=text)?
     ;
 
 string_char2
-    : QUESTION (TEXT)?
+    { Token t; }
+    : QUESTION (t=text)?
     ;
 
 string_literal
     : STRING_LITERAL
+    ;
+
+text returns [Token token]
+    : t:TEXT    {token=t;}
+    | o:OR      {token=o;}
+    | a:AND     {token=a;}
+    | n:NOT     {token=n;}
     ;
 
 class DmqlLexer extends Lexer;
@@ -340,6 +344,10 @@ protected
 NUMBER
     : (DIGIT)+ ('.' (DIGIT)*)* ;
 
+protected OR : "OR" ;
+protected AND : "AND" ;
+protected NOT : "NOT" ;
+
 // Since these all basically have overlapping patterns, we need to use
 // backtracking to try them in order.
 TEXT_OR_NUMBER_OR_PERIOD
@@ -347,15 +355,18 @@ TEXT_OR_NUMBER_OR_PERIOD
     | (DATE) => DATE {$setType(DATE);}
     | (TIME) => TIME {$setType(TIME);}
     | (NUMBER) => NUMBER {$setType(NUMBER);}
-    | {!isInFieldCriteria()}? "OR" {$setType(OR);}
-    | {!isInFieldCriteria()}? "AND" {$setType(AND);}
-    | {!isInFieldCriteria()}? "NOT" {$setType(NOT);}
+//     | {!isInFieldCriteria()}? OR {$setType(OR);}
+//     | {!isInFieldCriteria()}? AND {$setType(AND);}
+//     | {!isInFieldCriteria()}? NOT {$setType(NOT);}
+    | (OR) => OR {$setType(OR);}
+    | (AND) => AND {$setType(AND);}
+    | (NOT) => NOT {$setType(NOT);}
     | TEXT {$setType(TEXT);}
     ;
 
 STRING_LITERAL
     : '"'! (~'"')* ('"'! '"' (~'"')*)* '"'!;
 
-WS  :   (' ' | '\t' | '\n' | '\r')
+WS  :   (' ' | '\t' | '\n' {newline();} | '\r')
         { _ttype = Token.SKIP; }
     ;
