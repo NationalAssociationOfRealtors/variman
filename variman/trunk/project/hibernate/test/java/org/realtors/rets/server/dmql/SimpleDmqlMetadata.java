@@ -2,9 +2,10 @@
  */
 package org.realtors.rets.server.dmql;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
     {
         mFieldsToColumns = new HashMap();
         mColumnsToFields = new HashMap();
-        mLookups = new HashMap();
+        mLookupShortValues = new HashMap();
         mStrings = new HashSet();
         mNumerics = new HashSet();
         mTables = new HashMap();
@@ -24,13 +25,18 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     public void addLookup(String name, String[] values)
     {
-        Set valueSet = new HashSet();
+        addLookup(name, values, values);
+    }
+
+    public void addLookup(String name, String[] values, String[] shortValues)
+    {
+        Map valueMap = new HashMap();
         for (int i = 0; i < values.length; i++)
         {
-            valueSet.add(values[i]);
+            valueMap.put(values[i], shortValues[i]);
         }
         addColumnMapping(name, PREFIX + name);
-        mLookups.put(name, valueSet);
+        mLookupShortValues.put(name, valueMap);
     }
 
     public void addString(String fieldName)
@@ -83,13 +89,13 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     public boolean isLookupField(String lookupName)
     {
-        return mLookups.containsKey(lookupName);
+        return mLookupShortValues.containsKey(lookupName);
     }
 
     public boolean isValidLookupValue(String lookupName, String lookupValue)
     {
-        Set values = (Set) mLookups.get(lookupName);
-        return values.contains(lookupValue);
+        Map values = (Map) mLookupShortValues.get(lookupName);
+        return values.containsKey(lookupValue);
     }
 
     public String fieldToColumn(String fieldName)
@@ -108,9 +114,9 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
             lookupValue : null;
     }
 
-    public Collection getAllColumns()
+    public List getAllColumns()
     {
-        return mFieldsToColumns.keySet();
+        return new ArrayList(mFieldsToColumns.keySet());
     }
 
     public Table getTable(String fieldName)
@@ -118,8 +124,19 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         return (Table) mTables.get(fieldName);
     }
 
+    public String getLookupLongValue(String lookupName, String value)
+    {
+        return "Long " + getLookupShortValue(lookupName, value);
+    }
+
+    public String getLookupShortValue(String lookupName, String value)
+    {
+        Map values = (Map) mLookupShortValues.get(lookupName);
+        return (String) values.get(value);
+    }
+
     private static final String PREFIX = "r_";
-    private Map mLookups;
+    private Map mLookupShortValues;
     private Set mStrings;
     private Map mFieldsToColumns;
     private Map mColumnsToFields;
