@@ -7,6 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -91,10 +95,30 @@ public class DataRowBuilder
     {
         if (collection != null)
         {
-            mBuffer.append(StringUtils.join(collection.iterator(), ","));
+            List strings = toSortedStringList(collection);
+            mBuffer.append(StringUtils.join(strings.iterator(), ","));
         }
         mBuffer.append("\t");
         return this;
+    }
+
+    /**
+     * Takes the toString() of each element in the collection and puts the
+     * values into a list and the sorts the list.
+     *
+     * @param collection Collection to convert
+     * @return sorted list of toString value foreach item in collection
+     */
+    private List toSortedStringList(Collection collection)
+    {
+        List strings = new ArrayList(collection.size());
+        for (Iterator iterator = collection.iterator(); iterator.hasNext();)
+        {
+            Object o = iterator.next();
+            strings.add(o.toString());
+        }
+        Collections.sort(strings);
+        return strings;
     }
 
     private StringBuffer mBuffer;
