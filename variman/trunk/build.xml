@@ -137,7 +137,7 @@
     <pathconvert refid="hibernate.mapping.files"
                  property="hibernate.mappings" pathsep=" "/>
     <java classname="net.sf.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
-      <arg line="--output=build/schema/test.schema ${hibernate.mappings}"/>
+      <arg line="--output=build/schema/test.schema --format ${hibernate.mappings}"/>
       <jvmarg value="-Dhibernate.dialect=${hibernate.dialect}"/>
       <classpath>
         <path refid="lib.path"/>
