@@ -13,7 +13,8 @@
  <br>
  <table cellpadding="2" cellspacing="0" border="1" width="99%">
   <tr>
-   <th>Test description</th><th>Date run</th><th>Status</th><th>Messages</th><th>Start/Stop</th>
+   <th>Test description</th><th>Date run</th><th>Status</th>
+   <th>Messages</th><th>Start/Stop</th>
   </tr>
   <logic:iterate id="displayBean" name="cctDisplayBeans"
                  type="org.realtors.rets.server.webapp.cct.TestDisplayBean"
@@ -34,20 +35,20 @@
      </cct:evenoddtd>
      <cct:evenoddtd count="counter" width="10%">
       <logic:notPresent name="cctActiveTest">
-       <html:form action="/cct/start_test.do" method="GET" >
+       <html:form action="/cct/start_test" method="GET" >
         <html:submit>Start</html:submit>
         <html:hidden property="testNumber" value='<%=counter.toString()%>'/>
        </html:form>
       </logic:notPresent>
       <logic:present name="cctActiveTest">
        <logic:equal name="cctActiveTest" value="<%=counter.toString()%>" >
-        <html:form action="/cct/stop_test.do" method="GET" >
+        <html:form action="/cct/stop_test" method="GET" >
          <html:submit>Stop</html:submit>
          <html:hidden property="testNumber" value='<%=counter.toString()%>'/>
         </html:form>
        </logic:equal>
        <logic:notEqual name="cctActiveTest" value="<%= counter.toString() %>" >
-        <html:form action="/cct/start_test.do" method="GET" >
+        <html:form action="/cct/start_test" method="GET" >
          <html:submit disabled="true" >Start</html:submit>
          <html:hidden property="testNumber" value='<%=counter.toString()%>'/>
         </html:form>
@@ -57,5 +58,7 @@
     </tr>
   </logic:iterate>
   </table>
+  <html:link action="/cct/resetAllTests">Reset all the tests</html:link>
+  <br/>
   <html:link forward="logout">Logout</html:link>
 </html:html>
