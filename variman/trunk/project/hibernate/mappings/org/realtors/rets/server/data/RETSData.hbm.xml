@@ -73,6 +73,7 @@
       <element column="value" type="time"/>
     </map>
 
+    <!-- a map for the family int values (tiny, small, int, long) -->
     <map name="intValues" lazy="false">
       <key column="id"/>
       <index-many-to-many
@@ -81,6 +82,16 @@
       </index-many-to-many>
       <element column="value" type="long"/>
     </map>
-      
+
+    <!-- a map for arbitrary precision signed decimal numbers -->
+    <map name="decimalValues" lazy="false">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_decimalvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="big_decimal"/>
+    </map>
+            
   </class>
 </hibernate-mapping>
