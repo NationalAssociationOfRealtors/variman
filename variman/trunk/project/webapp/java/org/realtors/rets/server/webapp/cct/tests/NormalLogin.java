@@ -19,6 +19,7 @@ public class NormalLogin extends BaseCertificationTest
 
     public String[] getProcedure()
     {
+        final String PROCEDURE[] = { "Login.", "Logout." };
         return PROCEDURE;
     }
 
@@ -62,5 +63,4 @@ public class NormalLogin extends BaseCertificationTest
     }
     
     public static final String SESSION_ID = "NormalLogin";
-    private static final String PROCEDURE[] = { "Login.", "Logout." };
 }

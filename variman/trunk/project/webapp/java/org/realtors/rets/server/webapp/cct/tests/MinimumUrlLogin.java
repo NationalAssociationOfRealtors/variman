@@ -21,6 +21,7 @@ public class MinimumUrlLogin extends BaseCertificationTest
 
     public String[] getProcedure()
     {
+        final String[] PROCEDURE = { "Login.", "Logout." }; 
         return PROCEDURE;
     }
 
@@ -64,5 +65,4 @@ public class MinimumUrlLogin extends BaseCertificationTest
     }
 
     public static final String SESSION_ID = "MinimalUrlLogin";
-    private static final String[] PROCEDURE = { "Login.", "Logout." }; 
 }

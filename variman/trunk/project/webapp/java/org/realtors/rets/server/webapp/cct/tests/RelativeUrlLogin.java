@@ -24,6 +24,7 @@ public class RelativeUrlLogin extends BaseCertificationTest
 
     public String[] getProcedure()
     {
+        final String[] PROCEDURE = { "Login." , "Logout." };
         return PROCEDURE;
     }
 
@@ -66,5 +67,5 @@ public class RelativeUrlLogin extends BaseCertificationTest
     }
 
     public static final String SESSION_ID = "RelativeUrlLogin";
-    private static final String[] PROCEDURE = { "Login." , "Logout." };
+
 }

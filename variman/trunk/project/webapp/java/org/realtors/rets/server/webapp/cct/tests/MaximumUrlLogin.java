@@ -21,6 +21,7 @@ public class MaximumUrlLogin extends BaseCertificationTest
 
     public String[] getProcedure()
     {
+        final String[] PROCEDURE = { "Login.", "Logout" };
         return PROCEDURE;
     }
 
@@ -65,5 +66,4 @@ public class MaximumUrlLogin extends BaseCertificationTest
     }
 
     public static final String SESSION_ID = "MaximumUrlLogin";
-    private static final String[] PROCEDURE = { "Login.", "Logout" };
 }
