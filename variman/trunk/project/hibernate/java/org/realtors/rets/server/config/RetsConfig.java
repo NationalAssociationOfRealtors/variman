@@ -120,8 +120,9 @@ public class RetsConfig
         addChild(retsConfig, NONCE_INITIAL_TIMEOUT, mNonceInitialTimeout);
         addChild(retsConfig, NONCE_SUCCESS_TIMEOUT, mNonceSuccessTimeout);
         Element database = new Element(DATABASE);
-        addChild(database, DRIVER, mDatabase.getDriver());
-        addChild(database, URL, mDatabase.getUrl());
+        addChild(database, TYPE, mDatabase.getDatabaseType().getName());
+        addChild(database, HOST, mDatabase.getHostName());
+        addChild(database, NAME, mDatabase.getDatabaseName());
         addChild(database, USERNAME, mDatabase.getUsername());
         addChild(database, PASSWORD, mDatabase.getPassword());
         addChild(database, MAX_ACTIVE, mDatabase.getMaxActive());
@@ -191,8 +192,10 @@ public class RetsConfig
 
         element = element.getChild(DATABASE);
         DatabaseConfig database = new DatabaseConfig();
-        database.setDriver(getString(element, DRIVER));
-        database.setUrl(getString(element, URL));
+        database.setDatabaseType(
+            DatabaseType.getType(getString(element, TYPE)));
+        database.setHostName(getString(element, HOST));
+        database.setDatabaseName(getString(element, NAME));
         database.setUsername(getString(element, USERNAME));
         database.setPassword(getString(element, PASSWORD));
         database.setMaxActive(getInt(element, MAX_ACTIVE));
@@ -332,8 +335,9 @@ public class RetsConfig
     private static final String GET_OBJECT_ROOT = "get-object-root";
     private static final String NONCE_INITIAL_TIMEOUT = "nonce-initial-timeout";
     private static final String NONCE_SUCCESS_TIMEOUT = "nonce-success-timeout";
-    private static final String DRIVER = "driver";
-    private static final String URL = "url";
+    private static final String TYPE = "type";
+    private static final String HOST = "host";
+    private static final String NAME = "name";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String MAX_ACTIVE = "max-active";
