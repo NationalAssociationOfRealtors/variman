@@ -9,7 +9,6 @@ import java.io.File;
 import java.net.URL;
 import java.net.MalformedURLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import net.sf.hibernate.HibernateException;
