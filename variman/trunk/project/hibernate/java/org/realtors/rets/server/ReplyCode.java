@@ -33,6 +33,8 @@ public class ReplyCode extends ValuedEnum
         new ReplyCode("Invalid Type", 20501);
     public static final ReplyCode INVALID_IDENTIFIER =
         new ReplyCode("Invalid Identifier", 20502);
+    public static final ReplyCode DTD_UNAVAILABLE =
+        new ReplyCode("Requested DTD version unavailable", 20514);
     public static final ReplyCode MISC_ERROR =
         new ReplyCode("Miscellaneous Error", 20513);
 
