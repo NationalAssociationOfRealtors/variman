@@ -3,7 +3,6 @@
 package org.realtors.rets.server.metadata.format;
 
 import org.realtors.rets.server.metadata.Resource;
-import org.apache.commons.lang.StringUtils;
 
 public class CompactResourceFormatter
     extends ResourceFormatter
@@ -11,22 +10,22 @@ public class CompactResourceFormatter
     public String format(Resource[] resources)
     {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<METADATA-RESOURCE ");
-        buffer.append("Version=\"").append(mVersion).append("\" ");
-        buffer.append("Date=\"").append(format(mDate)).append("\">\n");
-        buffer.append("<COLUMNS>\t")
-            .append(StringUtils.join(sColumns, "\t"))
-            .append("\t</COLUMNS>\n");
+        TagBuilder tag = new TagBuilder(buffer);
+        tag.begin("METADATA-RESOURCE");
+        tag.appendAttribute("Version", mVersion);
+        tag.appendAttribute("Date", mDate);
+        tag.endAttributes();
+        tag.appendColumns(sColumns);
         for (int i = 0; i < resources.length; i++)
         {
             Resource resource = resources[i];
-            append(buffer, resource);
+            appendDataRow(buffer, resource);
         }
-        buffer.append("</METADATA-RESOURCE>\n");
+        tag.end();
         return buffer.toString();
     }
 
-    private void append(StringBuffer buffer, Resource resource)
+    private void appendDataRow(StringBuffer buffer, Resource resource)
     {
         DataRowBuilder row = new DataRowBuilder(buffer);
         row.begin();

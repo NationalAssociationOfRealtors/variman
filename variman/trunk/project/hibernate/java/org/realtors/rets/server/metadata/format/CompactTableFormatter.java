@@ -4,30 +4,29 @@ package org.realtors.rets.server.metadata.format;
 
 import org.realtors.rets.server.metadata.Table;
 
-import org.apache.commons.lang.StringUtils;
-
 public class CompactTableFormatter extends TableFormatter
 {
     public String format(Table[] tables)
     {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<METADATA-TABLE ");
-        buffer.append("Resource=\"").append(mResourceName).append("\" ");
-        buffer.append("Class=\"").append(mClassName).append("\" ");
-        buffer.append("Version=\"").append(mVersion).append("\" ");
-        buffer.append("Date=\"").append(format(mDate)).append("\">\n");
-        buffer.append("<COLUMNS>\t").append(StringUtils.join(sColumns, "\t"))
-            .append("\t</COLUMNS>\n");
+        TagBuilder tag = new TagBuilder(buffer);
+        tag.begin("METADATA-TABLE");
+        tag.appendAttribute("Resource", mResourceName);
+        tag.appendAttribute("Class", mClassName);
+        tag.appendAttribute("Version", mVersion);
+        tag.appendAttribute("Date", mDate);
+        tag.endAttributes();
+        tag.appendColumns(sColumns);
         for (int i = 0; i < tables.length; i++)
         {
             Table table = tables[i];
-            append(buffer, table);
+            appendDataRow(buffer, table);
         }
-        buffer.append("</METADATA-TABLE>\n");
+        tag.end();
         return buffer.toString();
     }
 
-    private void append(StringBuffer buffer, Table table)
+    private void appendDataRow(StringBuffer buffer, Table table)
     {
         DataRowBuilder row = new DataRowBuilder(buffer);
         row.begin();

@@ -2,7 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import org.realtors.rets.server.metadata.format.SystemFormatter;
 import org.realtors.rets.server.metadata.MSystem;
 
 public class CompactSystemFormatter
@@ -11,13 +10,11 @@ public class CompactSystemFormatter
     public String format(MSystem system)
     {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<METADATA-SYSTEM ");
-        buffer.append("Version=\"")
-            .append(system.getVersionString())
-            .append("\" ");
-        buffer.append("Date=\"")
-            .append(format(system.getDate()))
-            .append("\">\n");
+        TagBuilder tag = new TagBuilder(buffer);
+        tag.begin("METADATA-SYSTEM");
+        tag.appendAttribute("Version", system.getVersionString());
+        tag.appendAttribute("Date", system.getDate());
+        tag.endAttributes();
         buffer.append("<SYSTEM ");
         buffer.append("SystemID=\"")
             .append(system.getSystemID())
@@ -28,7 +25,7 @@ public class CompactSystemFormatter
         buffer.append("<COMMENTS>")
             .append(system.getComments())
             .append("</COMMENTS>\n");
-        buffer.append("</METADATA-SYSTEM>\n");
+        tag.end();
         return buffer.toString();
     }
 }

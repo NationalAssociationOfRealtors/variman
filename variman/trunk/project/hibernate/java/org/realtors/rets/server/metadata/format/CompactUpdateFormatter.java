@@ -4,30 +4,29 @@ package org.realtors.rets.server.metadata.format;
 
 import org.realtors.rets.server.metadata.Update;
 
-import org.apache.commons.lang.StringUtils;
-
 public class CompactUpdateFormatter extends UpdateFormatter
 {
     public String format(Update[] updates)
     {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<METADATA-UPDATE ");
-        buffer.append("Resource=\"").append(mResourceName).append("\" ");
-        buffer.append("Class=\"").append(mClassName).append("\" ");
-        buffer.append("Version=\"").append(mVersion).append("\" ");
-        buffer.append("Date=\"").append(format(mDate)).append("\">\n");
-        buffer.append("<COLUMNS>\t").append(StringUtils.join(sColumns, "\t"))
-            .append("\t</COLUMNS>\n");
+        TagBuilder tag = new TagBuilder(buffer);
+        tag.begin("METADATA-UPDATE");
+        tag.appendAttribute("Resource", mResourceName);
+        tag.appendAttribute("Class", mClassName);
+        tag.appendAttribute("Version", mVersion);
+        tag.appendAttribute("Date", mDate);
+        tag.endAttributes();
+        tag.appendColumns(sColumns);
         for (int i = 0; i < updates.length; i++)
         {
             Update update = updates[i];
-            appendRow(buffer, update);
+            appendDataRow(buffer, update);
         }
-        buffer.append("</METADATA-UPDATE>\n");
+        tag.end();
         return buffer.toString();
     }
 
-    private void appendRow(StringBuffer buffer, Update update)
+    private void appendDataRow(StringBuffer buffer, Update update)
     {
         DataRowBuilder row = new DataRowBuilder(buffer);
         row.begin();
