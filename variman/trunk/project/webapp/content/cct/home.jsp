@@ -14,7 +14,7 @@
  <table cellpadding="2" cellspacing="0" border="1" width="99%">
   <tr>
    <td>&nbsp;</td>
-   <th>Test name</th><th>Status</th><th>Show Log</th><th>Start/Stop</th>
+   <th>Test name</th><th>Date Run</th><th>Status</th><th>Show Log</th><th>Start/Stop</th>
   </tr>
   <logic:iterate id="displayBean" name="cctDisplayBeans"
                  type="org.realtors.rets.server.webapp.cct.TestDisplayBean"
@@ -23,8 +23,11 @@
      <cct:evenoddtd count="counter">
       <%= counter %></td>
      </cct:evenoddtd>
-     <cct:evenoddtd count="counter" >
+     <cct:evenoddtd count="counter">
       <bean:write name="displayBean" property="test.description" />
+     </cct:evenoddtd>
+     <cct:evenoddtd count="counter">
+      <bean:write name="displayBean" property="result.formattedDate"/>
      </cct:evenoddtd>
      <cct:teststatustd name="displayBean" />
      <cct:evenoddtd count="counter" >
