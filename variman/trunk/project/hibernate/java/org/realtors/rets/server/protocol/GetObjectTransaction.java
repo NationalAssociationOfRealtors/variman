@@ -51,6 +51,8 @@ public class GetObjectTransaction
             String file = fileBuffer.toString();
             response.setContentType(getContentType(file));
             response.setHeader("MIME-Version", "1.0");
+            response.setHeader("Content-ID", "12345");
+            response.setHeader("Object-ID", "" + objectId);
             IOUtils.copyStream(new FileInputStream(file),
                                response.getOutputStream());
         }
