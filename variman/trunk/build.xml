@@ -110,7 +110,7 @@
   <target name="build" depends="build-hibernate,build-webapp,build-importer"
           description="Build all"/>
 
-  <target name="dist" depends="generate-schema" />
+  <target name="dist" depends="" />
 
   <target name="build-hibernate" depends="prepare">
     <taskdef name="hibernatedoclet"
@@ -179,13 +179,7 @@
     </java>
   </target>
 
-  <target name="build-hibernate-old" depends="build-generated-code,build-xml">
-    <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
-         basedir="build/hibernate/final/classes"
-         excludes="hibernate.properties" index="true"/>
-  </target>
-
-  <target name="doc" depends="build-generated-code,prepare">
+  <target name="doc" depends="prepare">
     <javadoc packagenames="org.realtors.rets.*"
              destdir="build/doc/api"
              author="true"
@@ -406,57 +400,6 @@
     <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
          basedir="project/hibernate/mappings" index="true"/>
   </target>
-
-  <target name="mapping-files-check">
-    <uptodate property="generated.code.up.to.date">
-      <srcfiles dir="project/hibernate/mappings" includes="**/*.hbm.xml"/>
-      <mapper type="glob" from="*.hbm.xml" to="${basedir}/build/hibernate/generated/*.java"/>
-    </uptodate>
-  </target>
-
-  <target name="build-generated-code"
-          unless="generated.code.up.to.date"
-          depends="mapping-files-check, prepare">
-    <pathconvert refid="hibernate.mapping.files"
-                 property="hibernate.mappings" pathsep=" "/>
-    <java classname="net.sf.hibernate.tool.hbm2java.CodeGenerator"
-      fork="true">
-      <arg line="--output=build/hibernate/generated ${hibernate.mappings}"/>
-      <classpath>
-        <path refid="lib.path" />
-        <pathelement location="build/hibernate/final/classes" />
-      </classpath>
-    </java>
-    <javac srcdir="build/hibernate/generated"
-           destdir="build/hibernate/final/classes">
-      <classpath>
-        <path refid="lib.path"/>
-        <pathelement location="build/hibernate/final/classes" />
-      </classpath>
-    </javac>
-  </target>
-
-  <target name="generate-schema" depends="build-generated-code">
-<!--           description="generates the database schema"> -->
-    <taskdef name="schemaexport"
-             classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
-      <classpath>
-        <path refid="lib.path"/>
-        <pathelement path="build/hibernate/final/classes"/>
-      </classpath>
-    </taskdef>
-
-    <schemaexport properties="project/hibernate/config/hibernate.properties"
-                  quiet="${hibernate.schema.quiet}"
-                  text="${hibernate.schema.text.only}"
-                  drop="no" delimiter=";"
-                  output="build/hibernate/schema/schema-export.sql">
-      <fileset dir="project/hibernate/mappings">
-        <include name="**/*.hbm.xml"/>
-      </fileset>
-    </schemaexport>
-  </target>
-
 
   <target name="clean" description="Cleans all ant targets">
     <delete dir="build" />
