@@ -38,10 +38,10 @@ Administration
 ==============
 
 Rex comes both with a GUI and a command line administration tool.  The
-GUI tool is based on wx4j[1], and thus requires a special native
-library.  Currently only Linux i386 and Windows are supported.  All
-other platforms must use the command line utility.  To start the
-administration tool:
+GUI tool is Swing based, so it will run in any Java environment with a
+GUI.  Environments without a GUI, such as a server environment may use
+the command line tools, or use something like X-Windows port
+forwarding.  To start the administration tool:
 
   % cd <Rex installation directory>
   % java -jar rex-admin.jar
