@@ -67,6 +67,24 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("Success", results.getMessage());
     }
 
+    public void testCaseInsensitiveHeaders() throws IOException, SAXException
+    {
+        mTest.reset();
+        mTest.addRequiredHeader("Accept", "^\\*/\\*$");
+
+        mClient.getResponse(TEST_URL);
+        ValidationResults results = mTest.validate();
+        assertFalse(results.wasSuccessful());
+        assertEquals("test HTTP header [Accept] was null, expected ^\\*/\\*$",
+                     results.getMessage());
+
+        mClient.setHeaderField("accept", "*/*");
+        mClient.getResponse(TEST_URL);
+        results = mTest.validate();
+        assertTrue(results.wasSuccessful());
+        assertEquals("Success", results.getMessage());
+    }
+
     public static final String TEST_URL = "http://localhost/test";
 
     static class TestHandler extends BaseServletHandler
