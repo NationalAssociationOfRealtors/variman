@@ -10,7 +10,6 @@
  */
 package org.realtors.rets.server.metadata;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,12 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Comparator;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-
-import org.realtors.rets.server.dmql.DmqlParserMetadata;
 import org.realtors.rets.server.dmql.DmqlFieldType;
+import org.realtors.rets.server.dmql.DmqlParserMetadata;
 
 public class ServerDmqlMetadata implements DmqlParserMetadata
 {
