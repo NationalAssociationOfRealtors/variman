@@ -16,7 +16,7 @@ public class ObjectMother
     public static Resource createResource()
     {
         Resource resource = new Resource();
-        resource.setSystemid(createSystem());
+        resource.setSystem(createSystem());
         resource.setResourceID("Property");
         resource.updateLevel();
         return resource;
@@ -25,7 +25,7 @@ public class ObjectMother
     public static MClass createClass()
     {
         MClass clazz = new MClass();
-        clazz.setResourceid(createResource());
+        clazz.setResource(createResource());
         clazz.setClassName("RES");
         clazz.updateLevel();
         return clazz;
@@ -34,7 +34,7 @@ public class ObjectMother
     public static Table createTable()
     {
         Table table = new Table();
-        table.setClassid(createClass());
+        table.setMClass(createClass());
         table.setSystemName("E_SCHOOL");
         table.updateLevel();
         return table;
@@ -43,7 +43,7 @@ public class ObjectMother
     public static Update createUpdate()
     {
         Update update = new Update();
-        update.setClassid(createClass());
+        update.setMClass(createClass());
         update.setUpdateName("Change");
         update.updateLevel();
         return update;
@@ -52,7 +52,7 @@ public class ObjectMother
     public static UpdateType createUpdateType()
     {
         UpdateType updateType = new UpdateType();
-        updateType.setUpdateid(createUpdate());
+        updateType.setUpdate(createUpdate());
         updateType.updateLevel();
         return updateType;
     }
@@ -60,7 +60,7 @@ public class ObjectMother
     public static SearchHelp createSearchHelp()
     {
         SearchHelp searchHelp = new SearchHelp();
-        searchHelp.setResourceid(createResource());
+        searchHelp.setResource(createResource());
         searchHelp.updateLevel();
         return searchHelp;
     }
@@ -68,7 +68,7 @@ public class ObjectMother
     public static EditMask createEditMask()
     {
         EditMask editMask = new EditMask();
-        editMask.setResourceid(createResource());
+        editMask.setResource(createResource());
         editMask.updateLevel();
         return editMask;
     }
@@ -76,7 +76,7 @@ public class ObjectMother
     public static Lookup createLookup()
     {
         Lookup lookup = new Lookup();
-        lookup.setResourceid(createResource());
+        lookup.setResource(createResource());
         lookup.setLookupName("E_SCHOOL");
         lookup.updateLevel();
         return lookup;
@@ -85,7 +85,7 @@ public class ObjectMother
     public static LookupType createLookupType()
     {
         LookupType lookupType = new LookupType();
-        lookupType.setLookupid(createLookup());
+        lookupType.setLookup(createLookup());
         lookupType.updateLevel();
         return lookupType;
     }
@@ -93,7 +93,7 @@ public class ObjectMother
     public static ValidationLookup createValidationLookup()
     {
         ValidationLookup validationLookup = new ValidationLookup();
-        validationLookup.setResourceid(createResource());
+        validationLookup.setResource(createResource());
         validationLookup.setValidationLookupName("School");
         validationLookup.updateLevel();
         return validationLookup;
@@ -102,7 +102,7 @@ public class ObjectMother
     public static ValidationLookupType createValidationLookupType()
     {
         ValidationLookupType validationLookupType = new ValidationLookupType();
-        validationLookupType.setValidationLookupID(createValidationLookup());
+        validationLookupType.setValidationLookup(createValidationLookup());
         validationLookupType.updateLevel();
         return validationLookupType;
     }
@@ -110,7 +110,7 @@ public class ObjectMother
     public static ValidationExternal createValidationExternal()
     {
         ValidationExternal validationExternal = new ValidationExternal();
-        validationExternal.setResourceid(createResource());
+        validationExternal.setResource(createResource());
         validationExternal.setValidationExternalName("VET1");
         validationExternal.updateLevel();
         return validationExternal;
@@ -120,7 +120,7 @@ public class ObjectMother
     {
         ValidationExternalType validationExternalType =
             new ValidationExternalType();
-        validationExternalType.setValidationExternalID(
+        validationExternalType.setValidationExternal(
             createValidationExternal());
         validationExternalType.updateLevel();
         return validationExternalType;
@@ -129,7 +129,7 @@ public class ObjectMother
     public static ValidationExpression createValidationExpression()
     {
         ValidationExpression validationExpression = new ValidationExpression();
-        validationExpression.setResourceid(createResource());
+        validationExpression.setResource(createResource());
         validationExpression.updateLevel();
         return validationExpression;
     }

@@ -51,14 +51,14 @@ public class ForeignKey implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public MSystem getSystemid()
+    public MSystem getSystem()
     {
-        return mSystemid;
+        return mSystem;
     }
 
-    public void setSystemid(MSystem systemid)
+    public void setSystem(MSystem system)
     {
-        mSystemid = systemid;
+        mSystem = system;
     }
 
     /**
@@ -121,7 +121,7 @@ public class ForeignKey implements Serializable
     private String mForeignKeyID;
 
     /** nullable persistent field */
-    private MSystem mSystemid;
+    private MSystem mSystem;
 
     /** nullable persistent field */
     private Table mParentTable;

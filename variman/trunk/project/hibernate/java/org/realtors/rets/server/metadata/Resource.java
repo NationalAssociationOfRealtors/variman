@@ -133,14 +133,14 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public MSystem getSystemid()
+    public MSystem getSystem()
     {
-        return mSystemid;
+        return mSystem;
     }
 
-    public void setSystemid(MSystem systemid)
+    public void setSystem(MSystem system)
     {
-        mSystemid = systemid;
+        mSystem = system;
     }
 
     /**
@@ -333,7 +333,7 @@ public class Resource extends ServerMetadata implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mSystemid.getPath();
+        mLevel = mSystem.getPath();
     }
 
     public String getPath()
@@ -388,7 +388,7 @@ public class Resource extends ServerMetadata implements Serializable
     private String mKeyField;
 
     /** nullable persistent field */
-    private MSystem mSystemid;
+    private MSystem mSystem;
 
     /** persistent field */
     private Set mClasses;

@@ -87,14 +87,14 @@ public class Update implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public MClass getClassid()
+    public MClass getMClass()
     {
-        return mClassid;
+        return mMClass;
     }
 
-    public void setClassid(MClass classid)
+    public void setMClass(MClass MClass)
     {
-        mClassid = classid;
+        mMClass = MClass;
     }
 
     /**
@@ -135,7 +135,7 @@ public class Update implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mClassid.getPath();
+        mLevel = mMClass.getPath();
     }
 
     public String getPath()
@@ -179,7 +179,7 @@ public class Update implements Serializable
     private String mKeyField;
 
     /** nullable persistent field */
-    private MClass mClassid;
+    private MClass mMClass;
 
     /** persistent field */
     private Set mUpdateTypes;

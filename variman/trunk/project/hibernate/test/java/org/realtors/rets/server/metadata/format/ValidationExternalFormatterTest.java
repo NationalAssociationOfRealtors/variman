@@ -20,7 +20,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
         res.setClassName("RES");
         Resource property = new Resource(1);
         property.setResourceID("Property");
-        res.setResourceid(property);
+        res.setResource(property);
         validationExternal.setSearchClass(res);
 
         mValidationExternals = new ValidationExternal[] {validationExternal};

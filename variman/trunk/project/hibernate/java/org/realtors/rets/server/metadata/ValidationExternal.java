@@ -63,14 +63,14 @@ public class ValidationExternal implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public Resource getResourceid()
+    public Resource getResource()
     {
-        return mResourceid;
+        return mResource;
     }
 
-    public void setResourceid(Resource resourceid)
+    public void setResource(Resource resource)
     {
-        mResourceid = resourceid;
+        mResource = resource;
     }
 
     /**
@@ -80,7 +80,7 @@ public class ValidationExternal implements Serializable
      */
     public Resource getSearchResource()
     {
-        return mSearchClass.getResourceid();
+        return mSearchClass.getResource();
     }
 
     /**
@@ -137,7 +137,7 @@ public class ValidationExternal implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mResourceid.getPath();
+        mLevel = mResource.getPath();
     }
 
     public String getPath()
@@ -173,7 +173,7 @@ public class ValidationExternal implements Serializable
     private String mValidationExternalName;
 
     /** nullable persistent field */
-    private Resource mResourceid;
+    private Resource mResource;
 
     /** nullable persistent field */
     private MClass mSearchClass;

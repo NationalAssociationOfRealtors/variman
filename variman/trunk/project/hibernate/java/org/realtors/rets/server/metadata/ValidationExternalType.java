@@ -35,14 +35,14 @@ public class ValidationExternalType implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public ValidationExternal getValidationExternalID()
+    public ValidationExternal getValidationExternal()
     {
-        return mValidationExternalID;
+        return mValidationExternal;
     }
 
-    public void setValidationExternalID(ValidationExternal validationExternalID)
+    public void setValidationExternal(ValidationExternal validationExternal)
     {
-        mValidationExternalID = validationExternalID;
+        mValidationExternal = validationExternal;
     }
 
     /**
@@ -124,7 +124,7 @@ public class ValidationExternalType implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mValidationExternalID.getPath();
+        mLevel = mValidationExternal.getPath();
     }
 
     public String toString()
@@ -154,7 +154,7 @@ public class ValidationExternalType implements Serializable
     private Long mId;
 
     /** nullable persistent field */
-    private ValidationExternal mValidationExternalID;
+    private ValidationExternal mValidationExternal;
 
     /** persistent field */
     private Map mResultFields;

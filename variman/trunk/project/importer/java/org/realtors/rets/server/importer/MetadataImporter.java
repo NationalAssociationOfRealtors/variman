@@ -172,7 +172,7 @@ public class MetadataImporter
             Metadata md = (Metadata) i.next();
             Resource hResource = new Resource();
 
-            hResource.setSystemid(hSystem);
+            hResource.setSystem(hSystem);
             String resourceID = md.getAttribute("ResourceID");
             hResource.setResourceID(resourceID);
             hResource.setStandardName(ResourceStandardNameEnum.fromString(
@@ -210,7 +210,7 @@ public class MetadataImporter
                 Metadata md = (Metadata) j.next();
                 MClass hClass = new MClass();
 
-                hClass.setResourceid(resource);
+                hClass.setResource(resource);
                 String className = md.getAttribute("ClassName");
                 hClass.setClassName(className);
                 hClass.setStandardName(ClassStandardNameEnum.fromString(
@@ -250,7 +250,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     MObject hObject = new MObject();
 
-                    hObject.setResourceid(resource);
+                    hObject.setResource(resource);
 
                     hObject.setObjectType(ObjectTypeEnum.fromString(
                                               md.getAttribute("ObjectType")));
@@ -293,7 +293,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     SearchHelp hSearchHelp = new SearchHelp();
 
-                    hSearchHelp.setResourceid(resource);
+                    hSearchHelp.setResource(resource);
                     hSearchHelp.setSearchHelpID(
                         md.getAttribute("SearchHelpID"));
                     hSearchHelp.setValue(md.getAttribute("Value"));
@@ -331,7 +331,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     EditMask hEditMask = new EditMask();
 
-                    hEditMask.setResourceid(resource);
+                    hEditMask.setResource(resource);
                     hEditMask.setEditMaskID(md.getAttribute("EditMaskID"));
                     hEditMask.setValue(md.getAttribute("Value"));
 
@@ -367,7 +367,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     Lookup hLookup = new Lookup();
 
-                    hLookup.setResourceid(resource);
+                    hLookup.setResource(resource);
 
                     String lookupName = md.getAttribute("LookupName");
                     hLookup.setLookupName(lookupName);
@@ -414,7 +414,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     LookupType hLookupType = new LookupType();
 
-                    hLookupType.setLookupid(lookup);
+                    hLookupType.setLookup(lookup);
 
                     hLookupType.setLongValue(md.getAttribute("LongValue"));
                     hLookupType.setShortValue(md.getAttribute("ShortValue"));
@@ -491,7 +491,7 @@ public class MetadataImporter
                     ValidationExternal hValidationExternal =
                         new ValidationExternal();
 
-                    hValidationExternal.setResourceid(resource);
+                    hValidationExternal.setResource(resource);
 
                     hValidationExternal.setValidationExternalName(
                         md.getAttribute("ValidationExternalName"));
@@ -545,7 +545,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     ValidationExternalType vet = new ValidationExternalType();
 
-                    vet.setValidationExternalID(ve);
+                    vet.setValidationExternal(ve);
 
                     String joinedSearchField = md.getAttribute("SearchField");
                     String searchField[] =
@@ -620,7 +620,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     ValidationLookup hvl = new ValidationLookup();
 
-                    hvl.setResourceid(resource);
+                    hvl.setResource(resource);
 
                     hvl.setValidationLookupName(
                         md.getAttribute("ValidationLookupName"));
@@ -660,7 +660,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     Update hUpdate = new Update();
 
-                    hUpdate.setClassid(clazz);
+                    hUpdate.setMClass(clazz);
 
                     hUpdate.setUpdateName(md.getAttribute("UpdateName"));
                     hUpdate.setDescription(md.getAttribute("Description"));
@@ -698,13 +698,13 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     UpdateType updateType = new UpdateType();
 
-                    updateType.setUpdateid(update);
+                    updateType.setUpdate(update);
                     // todo: finish this method
                     String level = update.getLevel();
                     String systemName = md.getAttribute("SystemName");
                     String tablePath = level + ":" + systemName;
                     Table table = (Table) mTables.get(tablePath);
-                    updateType.setSystemName(table);
+                    updateType.setTable(table);
                     // Hack to get around metadata bug
                     if (table == null)
                     {
@@ -732,7 +732,7 @@ public class MetadataImporter
                         md.getAttribute("ValidationExpressionID"), ",");
                     Set valExpSet = new HashSet();
                     String resourcePath =
-                        update.getClassid().getResourceid().getPath();
+                        update.getMClass().getResource().getPath();
                     for (int c = 0; c < valExp.length; c++)
                     {
                         String vePath = resourcePath + ":" + valExp[c];
@@ -787,7 +787,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     ValidationLookupType vlt = new ValidationLookupType();
 
-                    vlt.setValidationLookupID(vl);
+                    vlt.setValidationLookup(vl);
                     vlt.setValidText(md.getAttribute("ValidText"));
                     vlt.setParent1Value(md.getAttribute("Parent1Value"));
                     vlt.setParent2Value(md.getAttribute("Parent2Value"));
@@ -824,7 +824,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     ValidationExpression ve = new ValidationExpression();
 
-                    ve.setResourceid(resource);
+                    ve.setResource(resource);
                     ve.setValidationExpressionID(
                         md.getAttribute("ValidationExpressionID"));
                     ve.setValidationExpressionType(
@@ -861,7 +861,7 @@ public class MetadataImporter
                 Metadata md = (Metadata) i.next();
                 ForeignKey hFk = new ForeignKey();
 
-                hFk.setSystemid(hSystem);
+                hFk.setSystem(hSystem);
 
                 hFk.setForeignKeyID(md.getAttribute("ForeignKeyID"));
                 String path[] = new String[3];
@@ -911,7 +911,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     Table hTable = new Table();
 
-                    hTable.setClassid(hClass);
+                    hTable.setMClass(hClass);
 
                     hTable.setSystemName(md.getAttribute("SystemName"));
 
@@ -943,7 +943,7 @@ public class MetadataImporter
                             md.getAttribute("UseSeparator")).booleanValue());
 
                     String editMasksJoined = md.getAttribute("EditMaskID");
-                    String resourcePath =  hClass.getResourceid().getPath();
+                    String resourcePath =  hClass.getResource().getPath();
                     String path = null;
                     Set hEditMasks = new HashSet();
                     if (editMasksJoined != null)
@@ -1064,5 +1064,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.22 2003/07/16 21:41:12 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.23 2003/07/17 20:00:33 dribin Exp $";
 }

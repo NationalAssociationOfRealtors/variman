@@ -373,14 +373,14 @@ public class Table implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public MClass getClassid()
+    public MClass getMClass()
     {
-        return mClassid;
+        return mMClass;
     }
 
-    public void setClassid(MClass classid)
+    public void setMClass(MClass MClass)
     {
-        mClassid = classid;
+        mMClass = MClass;
     }
 
     /**
@@ -454,7 +454,7 @@ public class Table implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mClassid.getPath();
+        mLevel = mMClass.getPath();
     }
 
     public String getPath()
@@ -549,7 +549,7 @@ public class Table implements Serializable
     private boolean mUnique;
 
     /** nullable persistent field */
-    private MClass mClassid;
+    private MClass mMClass;
 
     /** nullable persistent field */
     private Set mEditMasks;

@@ -24,8 +24,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         table.setSystemName("STATUS");
         
         UpdateType updateType = new UpdateType();
-        // updateType.setSystemName("STATUS");
-        updateType.setSystemName(table);
+        updateType.setTable(table);
         updateType.setSequence(12);
 
         Set attributes = new HashSet();

@@ -37,14 +37,14 @@ public class UpdateType implements Serializable
      *   not-null="true"
      *   index="updatetype_systemname_index"
      */
-    public Table getSystemName()
+    public Table getTable()
     {
-        return mSystemName;
+        return mTable;
     }
 
-    public void setSystemName(Table systemName)
+    public void setTable(Table table)
     {
-        mSystemName = systemName;
+        mTable = table;
     }
 
     /**
@@ -85,14 +85,14 @@ public class UpdateType implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public Update getUpdateid()
+    public Update getUpdate()
     {
-        return mUpdateid;
+        return mUpdate;
     }
 
-    public void setUpdateid(Update updateid)
+    public void setUpdate(Update update)
     {
-        mUpdateid = updateid;
+        mUpdate = update;
     }
 
     /**
@@ -202,7 +202,7 @@ public class UpdateType implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mUpdateid.getPath();
+        mLevel = mUpdate.getPath();
     }
 
     public String toString()
@@ -232,7 +232,7 @@ public class UpdateType implements Serializable
     private Long mId;
 
     /** nullable persistent field */
-    private Table mSystemName;
+    private Table mTable;
 
     /** nullable persistent field */
     private int mSequence;
@@ -241,7 +241,7 @@ public class UpdateType implements Serializable
     private String mDefault;
 
     /** nullable persistent field */
-    private Update mUpdateid;
+    private Update mUpdate;
 
     /** nullable persistent field */
     private UpdateHelp mUpdateHelp;

@@ -71,14 +71,14 @@ public class Lookup implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public Resource getResourceid()
+    public Resource getResource()
     {
-        return mResourceid;
+        return mResource;
     }
 
-    public void setResourceid(Resource resourceid)
+    public void setResource(Resource resource)
     {
-        mResourceid = resourceid;
+        mResource = resource;
     }
 
     /**
@@ -119,7 +119,7 @@ public class Lookup implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mResourceid.getPath();
+        mLevel = mResource.getPath();
     }
 
     public String getPath()
@@ -160,7 +160,7 @@ public class Lookup implements Serializable
     private String mVisibleName;
 
     /** nullable persistent field */
-    private Resource mResourceid;
+    private Resource mResource;
 
     /** persistent field */
     private Set mLookupTypes;

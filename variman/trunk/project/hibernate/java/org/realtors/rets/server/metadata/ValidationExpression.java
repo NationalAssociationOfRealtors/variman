@@ -95,14 +95,14 @@ public class ValidationExpression implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public Resource getResourceid()
+    public Resource getResource()
     {
-        return mResourceid;
+        return mResource;
     }
 
-    public void setResourceid(Resource resourceid)
+    public void setResource(Resource resource)
     {
-        mResourceid = resourceid;
+        mResource = resource;
     }
 
     /**
@@ -124,12 +124,12 @@ public class ValidationExpression implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mResourceid.getPath();
+        mLevel = mResource.getPath();
     }
 
     public String getPath()
     {
-        return mResourceid.getPath() + ":" + mValidationExpressionID;
+        return mResource.getPath() + ":" + mValidationExpressionID;
     }
 
     public String toString()
@@ -166,7 +166,7 @@ public class ValidationExpression implements Serializable
     private String mValue;
 
     /** nullable persistent field */
-    private Resource mResourceid;
+    private Resource mResource;
 
     private String mLevel;
 }

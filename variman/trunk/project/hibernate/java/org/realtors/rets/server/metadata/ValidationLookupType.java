@@ -81,14 +81,14 @@ public class ValidationLookupType implements Serializable
      *
      * @hibernate.many-to-one 
      */
-    public ValidationLookup getValidationLookupID()
+    public ValidationLookup getValidationLookup()
     {
-        return mValidationLookupID;
+        return mValidationLookup;
     }
 
-    public void setValidationLookupID(ValidationLookup validationLookupID)
+    public void setValidationLookup(ValidationLookup validationLookup)
     {
-        mValidationLookupID = validationLookupID;
+        mValidationLookup = validationLookup;
     }
 
     /**
@@ -110,7 +110,7 @@ public class ValidationLookupType implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mValidationLookupID.getPath();
+        mLevel = mValidationLookup.getPath();
     }
 
     public String toString()
@@ -149,7 +149,7 @@ public class ValidationLookupType implements Serializable
     private String mParent2Value;
 
     /** nullable persistent field */
-    private ValidationLookup mValidationLookupID;
+    private ValidationLookup mValidationLookup;
 
     private String mLevel;
 }

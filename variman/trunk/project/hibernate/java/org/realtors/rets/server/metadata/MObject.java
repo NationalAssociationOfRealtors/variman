@@ -101,14 +101,14 @@ public class MObject implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public Resource getResourceid()
+    public Resource getResource()
     {
-        return mResourceid;
+        return mResource;
     }
 
-    public void setResourceid(Resource resourceid)
+    public void setResource(Resource resource)
     {
-        mResourceid = resourceid;
+        mResource = resource;
     }
 
     public String toString()
@@ -150,5 +150,5 @@ public class MObject implements Serializable
     private String mDescription;
 
     /** nullable persistent field */
-    private org.realtors.rets.server.metadata.Resource mResourceid;
+    private Resource mResource;
 }

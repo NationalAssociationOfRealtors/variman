@@ -120,14 +120,14 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @hibernate.many-to-one
      */
-    public Resource getResourceid()
+    public Resource getResource()
     {
-        return mResourceid;
+        return mResource;
     }
 
-    public void setResourceid(Resource resourceid)
+    public void setResource(Resource resource)
     {
-        mResourceid = resourceid;
+        mResource = resource;
     }
 
     /**
@@ -187,7 +187,7 @@ public class MClass extends ServerMetadata implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mResourceid.getPath();
+        mLevel = mResource.getPath();
     }
 
     /**
@@ -237,7 +237,7 @@ public class MClass extends ServerMetadata implements Serializable
     private String mDescription;
 
     /** nullable persistent field */
-    private Resource mResourceid;
+    private Resource mResource;
 
     /** persistent field */
     private Set mTables;

@@ -81,14 +81,14 @@ public class LookupType implements Serializable
      *
      * @hibernate.many-to-one 
      */
-    public Lookup getLookupid()
+    public Lookup getLookup()
     {
-        return mLookupid;
+        return mLookup;
     }
 
-    public void setLookupid(Lookup lookupid)
+    public void setLookup(Lookup lookup)
     {
-        mLookupid = lookupid;
+        mLookup = lookup;
     }
 
     /**
@@ -110,7 +110,7 @@ public class LookupType implements Serializable
 
     public void updateLevel()
     {
-        mLevel = mLookupid.getPath();
+        mLevel = mLookup.getPath();
     }
 
     public String toString()
@@ -149,7 +149,7 @@ public class LookupType implements Serializable
     private String mValue;
 
     /** nullable persistent field */
-    private Lookup mLookupid;
+    private Lookup mLookup;
 
     private String mLevel;
 }
