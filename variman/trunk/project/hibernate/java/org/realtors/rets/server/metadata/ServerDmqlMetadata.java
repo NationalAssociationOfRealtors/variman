@@ -20,12 +20,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
+import org.realtors.rets.server.dmql.DmqlFieldType;
 
 public class ServerDmqlMetadata implements DmqlParserMetadata
 {
     private ServerDmqlMetadata()
     {
         mFields = new HashMap();
+        mFieldTypes = new HashMap();
         mFieldToColumn = new HashMap();
         mColumnToField = new HashMap();
         mLookupsDbMap = new HashMap();
@@ -52,6 +54,12 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         {
             Table table = (Table) i.next();
             String fieldName = getTableName(table,  standardNames);
+            if (fieldName == null)
+            {
+                // Skip tables that have no field name.  Technically, this
+                // should only happen for tables that haveno standard name.
+                continue;
+            }
             mFields.put(fieldName, table);
 
             if (table.getInterpretation() != InterpretationEnum.LOOKUPMULTI)
@@ -64,14 +72,21 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
             if (lookup != null)
             {
                 addLookups(fieldName, standardNames, lookup);
+                mFieldTypes.put(fieldName, DmqlFieldType.LOOKUP);
             }
             else if (isNumeric(table))
             {
                 mNumerics.add(fieldName);
+                mFieldTypes.put(fieldName, DmqlFieldType.NUMERIC);
+            }
+            else if (isTemporal(table))
+            {
+                mFieldTypes.put(fieldName, DmqlFieldType.TEMPORAL);
             }
             else
             {
                 mStrings.add(fieldName);
+                mFieldTypes.put(fieldName, DmqlFieldType.CHARACTER);
             }
         }
     }
@@ -93,11 +108,34 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
     }
 
+    private boolean isTemporal(Table table)
+    {
+        DataTypeEnum type = table.getDataType();
+        if (type.equals(DataTypeEnum.DATE) ||
+            type.equals(DataTypeEnum.DATETIME) ||
+            type.equals(DataTypeEnum.TIME))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private String getTableName(Table table, boolean standardNames)
     {
         if (standardNames)
         {
-            return table.getStandardName().getName();
+            TableStandardName standardName = table.getStandardName();
+            if (standardName != null)
+            {
+                return standardName.getName();
+            }
+            else
+            {
+                return null;
+            }
         }
         else
         {
@@ -145,19 +183,9 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         return mFields.containsKey(fieldName);
     }
 
-    public boolean isCharacterField(String fieldName)
+    public DmqlFieldType getFieldType(String fieldName)
     {
-        return mStrings.contains(fieldName);
-    }
-
-    public boolean isNumericField(String fieldName)
-    {
-        return mNumerics.contains(fieldName);
-    }
-
-    public boolean isLookupField(String lookupName)
-    {
-        return mLookupTypesMap.containsKey(lookupName);
+        return (DmqlFieldType) mFieldTypes.get(fieldName);
     }
 
     public boolean isValidLookupValue(String lookupName, String lookupValue)
@@ -232,6 +260,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
     private Map mFields;
+    private Map mFieldTypes;
     private Map mFieldToColumn;
     private Map mColumnToField;
     private Map mLookupsDbMap;
