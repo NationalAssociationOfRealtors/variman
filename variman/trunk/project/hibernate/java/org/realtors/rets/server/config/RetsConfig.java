@@ -24,6 +24,7 @@ import org.realtors.rets.server.Util;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -131,11 +132,18 @@ public class RetsConfig
         addChild(database, MAX_PS_ACTIVE, mDatabase.getMaxPsActive());
         addChild(database, MAX_PS_IDLE, mDatabase.getMaxPsIdle());
         addChild(database, MAX_PS_WAIT, mDatabase.getMaxPsWait());
+        addChild(database, SHOW_SQL, mDatabase.getShowSql());
         retsConfig.addContent(database);
 
         XMLOutputter xmlOutputter = new XMLOutputter("  ", true);
         xmlOutputter.setLineSeparator(SystemUtils.LINE_SEPARATOR);
         return xmlOutputter.outputString(new Document(retsConfig));
+    }
+
+    private Element addChild(Element element, String name, boolean bool)
+    {
+        return element.addContent(
+            new Element(name).setText(Boolean.toString(bool)));
     }
 
     private Element addChild(Element element, String name, int number)
@@ -204,9 +212,23 @@ public class RetsConfig
         database.setMaxPsActive(getInt(element, MAX_PS_ACTIVE));
         database.setMaxPsIdle(getInt(element, MAX_PS_IDLE));
         database.setMaxPsWait(getInt(element, MAX_PS_WAIT));
+        database.setShowSql(getBoolean(element, SHOW_SQL));
         config.setDatabase(database);
 
         return config;
+    }
+
+    private static boolean getBoolean(Element element, String name)
+    {
+        if (element == null)
+        {
+            return false;
+        }
+        else
+        {
+            String text = element.getChildTextTrim(name);
+            return BooleanUtils.toBoolean(text);
+        }
     }
 
     private static String getString(Element element, String name)
@@ -229,7 +251,8 @@ public class RetsConfig
         }
         else
         {
-            return NumberUtils.stringToInt(element.getChildTextTrim(name), -1);
+            String text = element.getChildTextTrim(name);
+            return NumberUtils.stringToInt(text, -1);
         }
     }
 
@@ -347,6 +370,7 @@ public class RetsConfig
     private static final String MAX_PS_IDLE = "max-ps-idle";
     private static final String MAX_PS_WAIT = "max-ps-wait";
     private static final String DATABASE = "database";
+    private static final String SHOW_SQL = "show-sql";
 
     private int mPort;
     private String mGetObjectRoot;
