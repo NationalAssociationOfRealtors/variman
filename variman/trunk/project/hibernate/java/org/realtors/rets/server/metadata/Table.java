@@ -35,7 +35,6 @@ public class Table implements Serializable
      * @hibernate.property
      * @hibernate.column name="systemName"
      *   not-null="true"
-     *   unique="true"
      *   index="table_system_name_index"
      *   length="32"
      */
