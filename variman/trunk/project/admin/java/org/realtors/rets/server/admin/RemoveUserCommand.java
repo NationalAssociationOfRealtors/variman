@@ -63,6 +63,7 @@ public class RemoveUserCommand extends wx
                              frame);
             }
             helper.commit();
+            frame.refreshUsers();
         }
         catch (HibernateException e)
         {
