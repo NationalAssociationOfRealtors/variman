@@ -90,6 +90,11 @@ public class RetsServlet extends HttpServlet implements Constants
         out.println("</RETS-RESPONSE></RETS>");
     }
 
+    /**
+     * Returns the metadata manager from the servlet context.
+     *
+     * @return the metadata manager.
+     */
     protected MetadataManager getMetadataManager()
     {
         ServletContext context = getServletContext();
