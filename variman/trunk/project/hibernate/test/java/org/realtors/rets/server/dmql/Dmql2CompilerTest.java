@@ -74,40 +74,29 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         assertInvalidParse("(AR=|A,S)");
     }
 
-    public void testStringEquals() throws ANTLRException
-    {
-        parse("(OWNER=foo)");
-    }
-
-    public void testStringStart() throws ANTLRException
-    {
-        parse("(OWNER=f*)");
-    }
-
-    public void testStringContains() throws ANTLRException
-    {
-        parse("(OWNER=*foo*)");
-    }
-
-    public void testStringChar() throws ANTLRException
-    {
-        parse("(OWNER=f?o)");
-        parse("(OWNER=?oo)");
-        parse("(OWNER=fo?)");
-        parse("(OWNER=?)");
-    }
-
-    public void testStringList() throws ANTLRException
-    {
-        parse("(OWNER=foo,f*,*foo*,f?o)");
-    }
-
     public void testStringLiteral() throws ANTLRException
     {
-        parse("(OWNER=\"\")");
-        parse("(OWNER=\"foo\")");
-        parse("(OWNER=\"Foo Bar\")");
-        parse("(OWNER=\"Vito \"\"The Don\"\" Corleone\")");
+        SqlConverter sql;
+
+        sql = parse("(OWNER=\"\")");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString(""));
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=\"foo\")");
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("foo"));
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=\"Foo Bar\")");
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("Foo Bar"));
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=\"Vito \"\"The Don\"\" Corleone\")");
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("Vito \"The Don\" Corleone"));
+        assertEquals(list, sql);
     }
 
     public void testNumber() throws ANTLRException
