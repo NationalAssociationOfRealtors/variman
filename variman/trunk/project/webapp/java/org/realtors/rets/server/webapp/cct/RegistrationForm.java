@@ -257,8 +257,13 @@ public class RegistrationForm extends ActionForm
         }
         if(StringUtils.isEmpty("email"))
         {
-            errors.add("agentid",
+            errors.add("email",
                        new ActionError("registration.email.empty"));
+        }
+        if (StringUtils.isEmpty("agentid"))
+        {
+            errors.add("agentid",
+                       new ActionError("registration.agentid.empty"));
         }
         
         return errors;
