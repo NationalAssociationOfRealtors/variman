@@ -432,4 +432,16 @@
     <delete dir="dist" />
   </target>
 
+  <target name="full-classpath" description="string of full classpath">
+    <path id="full-classpath">
+      <path refid="hibernate.path"/>
+      <path refid="lib.path"/>
+      <path refid="embedded.path"/>
+      <path refid="importer.path"/>
+      <path refid="webapp.path"/>
+    </path>
+    <property name="cp" refid="full-classpath"/>
+    <echo message="${cp}"/>
+  </target>
+
 </project>
