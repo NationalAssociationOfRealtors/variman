@@ -79,4 +79,8 @@
     <set-property property="pathnames"
                   value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
   </plug-in>
+
+  <plug-in className="org.realtors.rets.server.webapp.cct.CctConfigPlugIn">
+    <set-property property="testRunnerClass" value="DBTestRunner"/>
+  </plug-in>
 </struts-config>
