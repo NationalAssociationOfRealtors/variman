@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSData.hbm.xml,v 1.4 2003/05/28 21:32:11 kgarner Exp $ -->
+<!-- $Id: RETSData.hbm.xml,v 1.5 2003/05/29 21:50:50 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.data.RETSData" table="rets_data">
@@ -13,13 +13,13 @@
 
     <!-- The resource element -->
     <many-to-one name="resource" cascade="none"
-      class="org.nar.rets.metadata.hibernate.MetadataResourceElement">
+      class="org.nar.rets.metadata.newdb.MetadataResource">
       <column name="resource" index="rets_data_resource"/>
     </many-to-one>
 
     <!-- The class element -->
     <many-to-one name="clazz" cascade="none"
-      class="org.nar.rets.metadata.hibernate.MetadataClassElement">
+      class="org.nar.rets.metadata.newdb.MetadataClass">
       <column name="clazz" index="rets_data_clazz"/>
     </many-to-one>
 
@@ -27,7 +27,7 @@
     <map name="booleanValues" lazy="false" table="rets_data_booleanvalues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_boolvalue_key"/>
       </index-many-to-many>
       <element column="value" type="boolean"/>
@@ -37,7 +37,7 @@
     <map name="characterValues" lazy="false" table="rets_data_charactervalues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_charvalue_key"/>
       </index-many-to-many>
       <element column="value" type="string"/>
@@ -47,7 +47,7 @@
     <map name="dateValues" lazy="false" table="rets_data_datevalues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_datevalue_key"/>
       </index-many-to-many>
       <element column="value" type="date"/>
@@ -57,7 +57,7 @@
     <map name="dateTimeValues" lazy="false" table="rets_data_datetimevalues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_datetimevalue_key"/>
       </index-many-to-many>
       <element column="value" type="timestamp"/>
@@ -67,7 +67,7 @@
     <map name="timeValues" lazy="false" table="rets_data_timevalues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_timevalue_key"/>
       </index-many-to-many>
       <element column="value" type="time"/>
@@ -77,7 +77,7 @@
     <map name="intValues" lazy="false" table="rets_data_intvalues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_intvalue_key"/>
       </index-many-to-many>
       <element column="value" type="long"/>
@@ -87,7 +87,7 @@
     <map name="decimalValues" lazy="false" table="rets_data_decimalValues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_decimalvalue_key"/>
       </index-many-to-many>
       <element column="value" type="big_decimal"/>
@@ -96,7 +96,7 @@
     <map name="multiValues" lazy="false" table="rets_data_multiValues">
       <key column="id"/>
       <index-many-to-many
-        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        class="org.nar.rets.metadata.newdb.MetadataTable">
         <column name="key" index="rets_data_multivalue_key"/>
       </index-many-to-many>
       <many-to-many column="multi" class="org.nar.rets.data.RETSMultiSet"/>
