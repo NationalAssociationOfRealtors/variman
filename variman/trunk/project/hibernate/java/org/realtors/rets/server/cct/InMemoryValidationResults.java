@@ -1,6 +1,6 @@
 /*
  */
-package org.realtors.rets.server.webapp.cct;
+package org.realtors.rets.server.cct;
 
 public class ValidationResults
 {

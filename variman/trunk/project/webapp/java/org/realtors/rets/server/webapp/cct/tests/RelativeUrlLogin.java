@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.webapp.cct.tests;
 
+import org.realtors.rets.server.cct.ValidationResults;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
-import org.realtors.rets.server.webapp.cct.ValidationResults;
 import org.realtors.rets.server.webapp.cct.HandlerManager;
 import org.realtors.rets.server.webapp.cct.InvokeCount;
 import org.realtors.rets.server.webapp.cct.LoginHandler;

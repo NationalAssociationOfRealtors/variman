@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.realtors.rets.server.cct.*;
+
 public class LogoutHandler extends BaseServletHandler
 {
     public static final String NAME = "/logout";

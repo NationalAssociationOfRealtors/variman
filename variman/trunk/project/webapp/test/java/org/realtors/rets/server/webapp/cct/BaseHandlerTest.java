@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.realtors.rets.server.cct.ValidationResults;
+
 import com.meterware.servletunit.InvocationContext;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
