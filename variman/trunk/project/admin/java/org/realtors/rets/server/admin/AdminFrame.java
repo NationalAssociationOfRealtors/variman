@@ -8,41 +8,52 @@
 
 package org.realtors.rets.server.admin;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.DriverManager;
-import java.io.StringWriter;
+import java.beans.IntrospectionException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
+import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.cfg.Environment;
 import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
 
+import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.PasswordMethod;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.config.RetsConfig;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.wxwindows.wxBoxSizer;
+import org.wxwindows.wxCloseEvent;
+import org.wxwindows.wxCloseListener;
 import org.wxwindows.wxCommandEvent;
 import org.wxwindows.wxCommandListener;
+import org.wxwindows.wxDialog;
 import org.wxwindows.wxFrame;
 import org.wxwindows.wxJWorker;
 import org.wxwindows.wxMenu;
 import org.wxwindows.wxMenuBar;
+import org.wxwindows.wxNotebook;
+import org.wxwindows.wxPanel;
 import org.wxwindows.wxPoint;
 import org.wxwindows.wxSize;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
-import org.wxwindows.wxDialog;
+
+import org.xml.sax.SAXException;
 
 public class AdminFrame extends wxFrame
 {
@@ -73,6 +84,17 @@ public class AdminFrame extends wxFrame
         menuBar.Append(databaseMenu, "&Database");
         SetMenuBar(menuBar);
 
+        initConfig();
+
+        wxNotebook notebook = new wxNotebook(this, -1);
+
+        DatabasePage databasePage = new DatabasePage(notebook, mRetsConfig);
+        notebook.AddPage(databasePage, "Database");
+
+        wxPanel userPage = new wxPanel(notebook);
+        new wxStaticText(userPage, -1, "User Page");
+        notebook.AddPage(userPage, "Users");
+
         CreateStatusBar();
 
         EVT_MENU(QUIT, new OnQuit());
@@ -82,6 +104,28 @@ public class AdminFrame extends wxFrame
 
         EVT_MENU(ADD_USER, new OnAddUser());
         EVT_MENU(REMOVE_USER, new OnRemoveUser());
+        EVT_CLOSE(new OnClose());
+    }
+
+    private void initConfig()
+    {
+        try
+        {
+            mRetsConfig = RetsConfig.initFromXml(
+                getClass().getResourceAsStream("/rets-config.xml"));
+        }
+        catch (IntrospectionException e)
+        {
+            LOG.error("Caught exception", e);
+        }
+        catch (SAXException e)
+        {
+            LOG.error("Caught exception", e);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Caught exception", e);
+        }
     }
 
     public void initDatabase()
@@ -97,7 +141,8 @@ public class AdminFrame extends wxFrame
                 {
                     LOG.info("Initializing Hibernate configuration");
                     mCfg = new Configuration()
-                        .addJar("rex-hbm-xml.jar");
+                        .addJar("rex-hbm-xml.jar")
+                        .setProperties(mRetsConfig.createHibernateProperties());
                     mSessionFactory = mCfg.buildSessionFactory();
                     PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
                                                     PasswordMethod.RETS_REALM);
@@ -168,11 +213,12 @@ public class AdminFrame extends wxFrame
         try
         {
             AddUserDialog addUserDialog = new AddUserDialog(this);
-            if (addUserDialog.ShowModal() == wxID_CANCEL)
+            int response = addUserDialog.ShowModal();
+            addUserDialog.Destroy();
+            if (response == wxID_CANCEL)
             {
                 return;
             }
-            addUserDialog.Destroy();
 
             User user = new User();
             user.setFirstName(addUserDialog.getFirstName());
@@ -238,6 +284,29 @@ public class AdminFrame extends wxFrame
         public void handleEvent(wxCommandEvent event)
         {
             Close(true);
+        }
+    }
+
+    class OnClose implements wxCloseListener
+    {
+        public void handleEvent(wxCloseEvent event)
+        {
+            try
+            {
+                java.net.URL configFile =
+                    getClass().getResource("/rets-config.xml");
+                String xml = mRetsConfig.toXml();
+                IOUtils.writeString(configFile, xml);
+            }
+            catch (RetsServerException e)
+            {
+                LOG.error("Caught exception", e);
+            }
+            catch (IOException e)
+            {
+                LOG.error("Caught exception", e);
+            }
+            Destroy();
         }
     }
 
@@ -400,4 +469,5 @@ public class AdminFrame extends wxFrame
 
     private Configuration mCfg;
     private SessionFactory mSessionFactory;
+    private RetsConfig mRetsConfig;
 }
