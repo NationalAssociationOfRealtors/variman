@@ -7,6 +7,7 @@ class Dmql2Parser extends DmqlParser;
 
 options
 {
+    importVocab = DMQL;
     defaultErrorHandler = false;
 	k = 3;
     buildAST = true;
@@ -36,8 +37,8 @@ boolean_element
 
 field_value [AST name]
     : {isLookupField(name.getText())}? lookup_list[name]
-    | {isStringField(name.getText())}? string_list[name]
-    | {isStringField(name.getText())}? STRING_LITERAL^
+    | {isCharacterField(name.getText())}? string_list[name]
+    | {isCharacterField(name.getText())}? STRING_LITERAL^
     | number {#field_value = #([NUMBER], #field_value);}
     | period {#field_value = #([PERIOD], #field_value);}
     | range_list[name]
