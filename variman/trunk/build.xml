@@ -85,25 +85,7 @@
 <!--     </classpath> -->
 <!--   </taskdef> -->
 
-  <target name="build-properties-check">
-    <condition property="build.properties.uptodate">
-      <and>
-        <available file="build.properties" />
-        <available file="project/build.properties" />
-        <uptodate targetfile="build.properties">
-          <srcfiles dir="project" includes="build.properties" />
-        </uptodate>
-      </and>
-    </condition>
-  </target>
-
-  <target name="build-properties-up-to-date"
-          unless="build.properties.uptodate"
-          depends="build-properties-check">
-    <fail message="build.properties is out of date or missing." />
-  </target>
-
-  <target name="prepare" depends="build-properties-up-to-date">
+  <target name="prepare">
     <mkdir dir="build/hibernate/final/classes"/>
     <mkdir dir="build/hibernate/generated"/>
     <mkdir dir="build/hibernate/generated/org/realtors/rets/server/dmql"/>
