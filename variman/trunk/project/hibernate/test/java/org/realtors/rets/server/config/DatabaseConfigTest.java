@@ -30,7 +30,7 @@ public class DatabaseConfigTest extends TestCase
         config.setMaxPsWait(60000);
         config.setMaxPsIdle(5);
 
-        Properties properties = config.getHibernateProperties();
+        Properties properties = config.createHibernateProperties();
         assertEquals("org.postgresql.Driver",
                      properties.getProperty(Environment.DRIVER));
         assertEquals("jdbc:postgresql://localhost/rex_test",

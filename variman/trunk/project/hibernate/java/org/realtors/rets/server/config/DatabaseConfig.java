@@ -142,7 +142,7 @@ public class DatabaseConfig implements Serializable
      * @return Hibernate configuration properties.
      * @see net.sf.hibernate.cfg.Configuration#setProperties
      */
-    public Properties getHibernateProperties()
+    public Properties createHibernateProperties()
     {
         Properties properties = new Properties();
         properties.setProperty(Environment.DRIVER, mDriver);
