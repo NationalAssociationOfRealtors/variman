@@ -10,6 +10,7 @@
  */
 package org.realtors.rets.server;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 public class DigestA1Method extends PasswordMethod

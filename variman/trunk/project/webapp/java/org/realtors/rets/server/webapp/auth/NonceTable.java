@@ -15,10 +15,9 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.DigestUtils;
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
 /**

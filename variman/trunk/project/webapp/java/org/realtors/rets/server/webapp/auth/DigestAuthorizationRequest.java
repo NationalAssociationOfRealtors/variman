@@ -10,9 +10,8 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
-import org.realtors.rets.server.DigestUtils;
-
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 
 public class DigestAuthorizationRequest
