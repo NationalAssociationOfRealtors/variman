@@ -19,9 +19,11 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals("r_AR", metadata.fieldToColumn("AR"));
         assertEquals("r_STATUS", metadata.fieldToColumn("STATUS"));
         assertEquals("r_OWNER", metadata.fieldToColumn("OWNER"));
+        assertEquals("r_IF", metadata.fieldToColumn("IF"));
         assertEquals("AR", metadata.columnToField("r_AR"));
         assertEquals("STATUS", metadata.columnToField("r_STATUS"));
         assertEquals("OWNER", metadata.columnToField("r_OWNER"));
+        assertEquals("IF", metadata.columnToField("r_IF"));
         assertNull(metadata.fieldToColumn("Area"));
         assertNull(metadata.fieldToColumn("ListingStatus"));
         assertNull(metadata.fieldToColumn("Owner"));
@@ -37,6 +39,7 @@ public class ServerDmqlMetadataTest extends TestCase
         expectedColumns.add("r_OWNER");
         expectedColumns.add("r_LT");
         expectedColumns.add("r_AR");
+        expectedColumns.add("r_IF");
         assertEquals(expectedColumns, metadata.getAllColumns());
 
         // -----
@@ -46,6 +49,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidFieldName("STATUS"));
         assertTrue(metadata.isValidFieldName("OWNER"));
         assertTrue(metadata.isValidFieldName("LP"));
+        assertTrue(metadata.isValidFieldName("IF"));
         assertFalse(metadata.isValidFieldName("Area"));
         assertFalse(metadata.isValidFieldName("ListingStatus"));
         assertFalse(metadata.isValidFieldName("Owner"));
@@ -58,6 +62,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals(DmqlFieldType.CHARACTER, metadata.getFieldType("OWNER"));
         assertEquals(DmqlFieldType.LOOKUP, metadata.getFieldType("AR"));
         assertEquals(DmqlFieldType.LOOKUP, metadata.getFieldType("STATUS"));
+        assertEquals(DmqlFieldType.LOOKUP_MULTI, metadata.getFieldType("IF"));
         assertEquals(DmqlFieldType.NUMERIC, metadata.getFieldType("LP"));
         assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LD"));
         assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LDT"));
@@ -90,6 +95,10 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidLookupValue("STATUS", "P"));
         assertFalse(metadata.isValidLookupValue("STATUS", "Z"));
         assertNull(metadata.getFieldType("ListingStatus"));
+
+        assertTrue(metadata.isValidLookupValue("IF", "FP"));
+        assertTrue(metadata.isValidLookupValue("IF", "HEAT"));
+        assertTrue(metadata.isValidLookupValue("IF", "COOL"));
 
         // Check tables
         assertEquals(mOwner, metadata.getTable("OWNER"));
@@ -149,6 +158,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidFieldName("FOO"));
         assertFalse(metadata.isValidFieldName("HIDDEN"));
         assertFalse(metadata.isValidFieldName("r_HIDDEN"));
+        assertFalse(metadata.isValidFieldName("IF"));
 
         // Check types
         assertEquals(DmqlFieldType.CHARACTER, metadata.getFieldType("Owner"));
@@ -240,6 +250,22 @@ public class ServerDmqlMetadataTest extends TestCase
         lookupType.setValue("P");
         status.addLookupType(lookupType);
 
+        Lookup interiorFeatures = new Lookup(id++);
+        interiorFeatures.setLookupName("INT_FEATURES");
+        resource.addLookup(interiorFeatures);
+
+        lookupType = new LookupType(id++);
+        lookupType.setValue("FP");
+        interiorFeatures.addLookupType(lookupType);
+
+        lookupType = new LookupType(id++);
+        lookupType.setValue("HEAT");
+        interiorFeatures.addLookupType(lookupType);
+
+        lookupType = new LookupType(id++);
+        lookupType.setValue("COOL");
+        interiorFeatures.addLookupType(lookupType);
+
         mClazz = new MClass(id++);
         mClazz.setClassName("RES");
         mClazz.setDbTable("rets_Property_RES");
@@ -251,6 +277,7 @@ public class ServerDmqlMetadataTest extends TestCase
         mArea.setLookup(area);
         mArea.setDbName("r_AR");
         mArea.setDataType(DataTypeEnum.CHARACTER);
+        mArea.setInterpretation(InterpretationEnum.LOOKUP);
         // Don't set default...
         mClazz.addTable(mArea);
 
@@ -260,8 +287,17 @@ public class ServerDmqlMetadataTest extends TestCase
         mStatus.setLookup(status);
         mStatus.setDbName("r_STATUS");
         mStatus.setDataType(DataTypeEnum.CHARACTER);
+        mStatus.setInterpretation(InterpretationEnum.LOOKUP);
         mStatus.setDefault(3);
         mClazz.addTable(mStatus);
+
+        mInteriorFeatures = new Table(id++);
+        mInteriorFeatures.setSystemName("IF");
+        mInteriorFeatures.setDbName("r_IF");
+        mInteriorFeatures.setLookup(interiorFeatures);
+        mInteriorFeatures.setDataType(DataTypeEnum.CHARACTER);
+        mInteriorFeatures.setInterpretation(InterpretationEnum.LOOKUPMULTI);
+        mClazz.addTable(mInteriorFeatures);
 
         // Create a table w/o a lookup
         mOwner = new Table(id++);
@@ -319,4 +355,5 @@ public class ServerDmqlMetadataTest extends TestCase
     private Table mListTime;
     private Table mListDateTime;
     private Table mHiddenTable;
+    private Table mInteriorFeatures;
 }
