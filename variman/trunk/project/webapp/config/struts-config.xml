@@ -55,22 +55,27 @@
     <action path="/logout"
             type="org.realtors.rets.server.webapp.cct.LogoutAction"/>
             
-      <action path="/cct/index"
-              type="org.realtors.rets.server.webapp.cct.IndexAction">
-          <forward name="home" path="/cct/home.jsp" />
-      </action>
-      <action path="/cct/start_test"
-              name="cctTestForm"
-              validate="false"
-              type="org.realtors.rets.server.webapp.cct.StartTestAction">
-          <forward name="home" path="/cct/" redirect="true"/>
-      </action>
-      <action path="/cct/stop_test"
-              name="cctTestForm"
-              validate="false"
-              type="org.realtors.rets.server.webapp.cct.StopTestAction">
-          <forward name="home" path="/cct/" redirect="true"/>
-      </action>
+    <action path="/cct/index"
+            type="org.realtors.rets.server.webapp.cct.IndexAction">
+      <forward name="home" path="/cct/home.jsp" />
+    </action>
+
+    <action path="/cct/start_test"
+            name="cctTestForm"
+            validate="false"
+            type="org.realtors.rets.server.webapp.cct.StartTestAction">
+      <forward name="home" path="/cct/" redirect="true"/>
+    </action>
+
+    <action path="/cct/stop_test"
+            name="cctTestForm"
+            validate="false"
+            type="org.realtors.rets.server.webapp.cct.StopTestAction">
+      <forward name="home" path="/cct/" redirect="true"/>
+    </action>
+
+    <action path="/cct/resetAllTests"
+            type="org.realtors.rets.server.webapp.cct.ResetAllTestsAction"/>
   </action-mappings>
 
   <message-resources parameter="ApplicationResources"/>
