@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 public class GetObjectParameters extends TransactionParameters
 {
     public GetObjectParameters(Map parameterMap)
     {
         mResource = getParameter(parameterMap, "Resource");
+        LOG.debug("Resource:" + mResource);
         mType = getParameter(parameterMap, "Type");
+        LOG.debug("Type: " + mType);
         initID(getParameter(parameterMap, "ID"));
     }
 
@@ -27,6 +30,7 @@ public class GetObjectParameters extends TransactionParameters
 
     private void initID(String id)
     {
+        LOG.debug("ID: " + id);    
         mResourceSets = new ArrayList();
         ResourceSet resourceSet = new ResourceSet();
         // Split resource-set into resource-entity and object-id-list
@@ -101,6 +105,8 @@ public class GetObjectParameters extends TransactionParameters
         private List mObjectIds;
     }
 
+    private static final Logger LOG =
+        Logger.getLogger(GetObjectParameters.class);
     private String mType;
     private String mResource;
     private List mResourceSets;
