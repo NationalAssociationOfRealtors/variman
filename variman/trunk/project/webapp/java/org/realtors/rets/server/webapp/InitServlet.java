@@ -3,11 +3,14 @@
 package org.realtors.rets.server.webapp;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.beans.IntrospectionException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,12 +28,11 @@ import org.realtors.rets.server.webapp.auth.NonceTable;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 /**
  * @web.servlet name="init-servlet"
  *   load-on-startup="1"
- * @web.servlet-init-param name="log4j-init-file"
- *   value="WEB-INF/classes/log4j.lcf"
  */
 public class InitServlet extends RetsServlet
 {
@@ -52,6 +54,11 @@ public class InitServlet extends RetsServlet
         catch (ServletException e)
         {
             LOG.fatal("Caught", e);
+            Throwable rootCause = e.getRootCause();
+            if (rootCause != null)
+            {
+                LOG.fatal("Caused by", rootCause);
+            }
             throw e;
         }
         catch (RuntimeException e)
@@ -59,34 +66,35 @@ public class InitServlet extends RetsServlet
             LOG.fatal("Caught", e);
             throw e;
         }
+        catch (Error e)
+        {
+            LOG.fatal("Caught", e);
+            throw e;
+        }
     }
 
-    private void initRetsConfiguration()
+    private String getContextInitParameter(String name, String defaultValue)
     {
-        ServletContext context = getServletContext();
-        String localWebRoot = context.getRealPath("/");
-        String getObjectRoot = getInitParameter(context,
-                                                "rets-get-object-root",
-                                                localWebRoot);
-        WebApp.setGetObjectRoot(getObjectRoot);
-        LOG.debug("GetObject root: " + getObjectRoot);
-
-        String getObjectPattern = getInitParameter(context,
-                                                   "rets-get-object-pattern",
-                                                   "pictures/%k-%i.jpg");
-        WebApp.setGetObjectPattern(getObjectPattern);
-        LOG.debug("GetObject pattern: " + getObjectPattern);
-    }
-
-    private String getInitParameter(ServletContext context, String name,
-                                    String defaultValue)
-    {
-        String value = context.getInitParameter(name);
+        String value = getServletContext().getInitParameter(name);
         if (value == null)
         {
             value = defaultValue;
         }
         return value;
+    }
+
+    private String resolveFromConextRoot(String file) throws ServletException
+    {
+        try
+        {
+            // Resolve file, relative to the context root directory
+            URL prefix = new File(getServletContext().getRealPath("/")).toURL();
+            return new URL(prefix, file).getFile();
+        }
+        catch (MalformedURLException e)
+        {
+            throw new ServletException(e);
+        }
     }
 
     /**
@@ -97,25 +105,45 @@ public class InitServlet extends RetsServlet
      */
     private void initLog4J() throws ServletException
     {
+        String log4jInitFile =
+            getContextInitParameter("log4j-init-file",
+                                    "WEB-INF/classes/log4j.lcf");
+        log4jInitFile = resolveFromConextRoot(log4jInitFile);
+        WebApp.setLog4jFile(log4jInitFile);
+        WebApp.loadLog4j();
+    }
+
+    private void initRetsConfiguration() throws ServletException
+    {
         try
         {
-            URL prefix = new File(getServletContext().getRealPath("/")).toURL();
-            String file =
-                getServletContext().getInitParameter("log4j-init-file");
-            if (file == null)
-            {
-                file = getInitParameter("log4j-init-file");
-            }
+            String configFile =
+                getContextInitParameter("rets-config-file",
+                                        "WEB-INF/classes/rets-config.xml");
+            configFile = resolveFromConextRoot(configFile);
+            mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
+            LOG.debug(mRetsConfig);
 
-            if (file != null)
-            {
-                // Resolve file, relative to prefix
-                file = new URL(prefix, file).getFile();
-                WebApp.setLog4jFile(file);
-                WebApp.loadLog4j();
-            }
+            ServletContext context = getServletContext();
+            String getObjectRoot =
+                mRetsConfig.getGetObjectRoot(context.getRealPath("/"));
+            WebApp.setGetObjectRoot(getObjectRoot);
+            LOG.debug("GetObject root: " + getObjectRoot);
+
+            String getObjectPattern =
+                mRetsConfig.getGetObjectPattern("pictures/%k-%i.jpg");
+            WebApp.setGetObjectPattern(getObjectPattern);
+            LOG.debug("GetObject pattern: " + getObjectPattern);
         }
-        catch (MalformedURLException e)
+        catch (IntrospectionException e)
+        {
+            throw new ServletException(e);
+        }
+        catch (SAXException e)
+        {
+            throw new ServletException(e);
+        }
+        catch (IOException e)
         {
             throw new ServletException(e);
         }
@@ -183,43 +211,25 @@ public class InitServlet extends RetsServlet
     private void initNonceTable()
     {
         NonceTable nonceTable = new NonceTable();
-
-        ServletContext context = getServletContext();
-        String initialTimeout =
-            context.getInitParameter("nonce-initial-timeout");
-        if (initialTimeout != null)
+        int initialTimeout = mRetsConfig.getNonceInitialTimeout();
+        if (initialTimeout != -1)
         {
-            long timeout = stringToLong(initialTimeout,
-                                        NonceTable.DEFAULT_INITIAL_TIMEOUT);
-            nonceTable.setInitialTimeout(timeout * DateUtils.MILLIS_IN_MINUTE);
-            LOG.debug("Set initial nonce timeout to " + timeout + " minutes");
+            nonceTable.setInitialTimeout(
+                initialTimeout * DateUtils.MILLIS_IN_MINUTE);
+            LOG.debug("Set initial nonce timeout to " + initialTimeout +
+                      " minutes");
         }
 
-        String successTimeout =
-            context.getInitParameter("nonce-success-timeout");
-        if (successTimeout != null)
+        int successTimeout = mRetsConfig.getNonceSuccessTimeout();
+        if (successTimeout != -1)
         {
-            long timeout = stringToLong(successTimeout,
-                                        NonceTable.DEFAULT_SUCCESS_TIMEOUT);
-            nonceTable.setSuccessTimeout(timeout * DateUtils.MILLIS_IN_MINUTE);
-            LOG.debug("Set success nonce timeout to " + timeout + " minutes");
+            nonceTable.setSuccessTimeout(
+                successTimeout * DateUtils.MILLIS_IN_MINUTE);
+            LOG.debug("Set success nonce timeout to " + successTimeout +
+                      " minutes");
         }
         WebApp.setNonceTable(nonceTable);
         WebApp.setNonceReaper(new NonceReaper(nonceTable));
-    }
-
-    private static long stringToLong(String string, long defaultValue)
-    {
-        long value;
-        try
-        {
-            value = Long.parseLong(string);
-        }
-        catch (NumberFormatException e)
-        {
-            value = defaultValue;
-        }
-        return value;
     }
 
     public void destroy()
@@ -229,4 +239,5 @@ public class InitServlet extends RetsServlet
 
     private static final Logger LOG =
         Logger.getLogger(InitServlet.class);
+    private RetsConfig mRetsConfig;
 }
