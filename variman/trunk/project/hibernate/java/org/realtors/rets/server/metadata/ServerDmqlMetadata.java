@@ -10,10 +10,12 @@
  */
 package org.realtors.rets.server.metadata;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,7 +28,8 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         mFields = new HashMap();
         mFieldToColumn = new HashMap();
         mColumnToField = new HashMap();
-        mLookups = new HashMap();
+        mLookupsDbMap = new HashMap();
+        mLookupTypesMap = new HashMap();
         mStrings = new HashSet();
         mNumerics = new HashSet();
     }
@@ -105,28 +108,36 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private void addLookups(String fieldName, boolean standardNames,
                             Lookup lookup)
     {
-        Map values;
+        boolean generateDbValues;
+        Map dbValues;
         if (fieldName.equals("ListingStatus") && standardNames)
         {
-            values = LISTING_STATUS_VALUES;
+            dbValues = LISTING_STATUS_VALUES;
+            generateDbValues = false;
         }
         else
         {
-            values = getLookupValues(lookup);
+            dbValues = new HashMap();
+            generateDbValues = true;
         }
-        mLookups.put(fieldName, values);
-    }
 
-    private Map getLookupValues(Lookup lookup)
-    {
-        Map values = new HashMap();
+        HashMap lookupTypesMap = new HashMap();
         Set lookupTypes = lookup.getLookupTypes();
-        for (Iterator j = lookupTypes.iterator(); j.hasNext();)
+        for (Iterator iterator = lookupTypes.iterator(); iterator.hasNext();)
         {
-            LookupType lookupType = (LookupType) j.next();
-            values.put(lookupType.getValue(), lookupType.getValue());
+            LookupType lookupType = (LookupType) iterator.next();
+            String lookupValue = lookupType.getValue();
+            lookupTypesMap.put(lookupValue, lookupType);
+            if (generateDbValues)
+            {
+                // Assume lookups are stored in the database using the
+                // lookup value.
+                dbValues.put(lookupValue, lookupValue);
+            }
         }
-        return values;
+
+        mLookupsDbMap.put(fieldName, dbValues);
+        mLookupTypesMap.put(fieldName, lookupTypesMap);
     }
 
     public boolean isValidFieldName(String fieldName)
@@ -146,12 +157,12 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public boolean isLookupField(String lookupName)
     {
-        return mLookups.containsKey(lookupName);
+        return mLookupTypesMap.containsKey(lookupName);
     }
 
     public boolean isValidLookupValue(String lookupName, String lookupValue)
     {
-        Map values = (Map) mLookups.get(lookupName);
+        Map values = (Map) mLookupsDbMap.get(lookupName);
         return values.containsKey(lookupValue);
     }
 
@@ -165,14 +176,14 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         return (String) mColumnToField.get(columnName);
     }
 
-    public Collection getAllColumns()
+    public List getAllColumns()
     {
-        return mFieldToColumn.values();
+        return new ArrayList(mFieldToColumn.values());
     }
 
     public String getLookupDbValue(String lookupName, String lookupValue)
     {
-        Map values = (Map) mLookups.get(lookupName);
+        Map values = (Map) mLookupsDbMap.get(lookupName);
         if (values == null)
         {
             return null;
@@ -188,12 +199,43 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         return (Table) mFields.get(fieldName);
     }
 
+    public String getLookupShortValue(String lookupName, String value)
+    {
+        LookupType lookupType = findLookupType(lookupName, value);
+        if (lookupType == null)
+        {
+            return null;
+        }
+        return lookupType.getShortValue();
+    }
+
+    public String getLookupLongValue(String lookupName, String value)
+    {
+        LookupType lookupType = findLookupType(lookupName, value);
+        if (lookupType == null)
+        {
+            return null;
+        }
+        return lookupType.getLongValue();
+    }
+
+    private LookupType findLookupType(String lookupName, String value)
+    {
+        Map lookupTypes = (Map) mLookupTypesMap.get(lookupName);
+        if (lookupTypes == null)
+        {
+            return null;
+        }
+        return (LookupType) lookupTypes.get(value);
+    }
+
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
     private Map mFields;
     private Map mFieldToColumn;
     private Map mColumnToField;
-    private Map mLookups;
+    private Map mLookupsDbMap;
+    private Map mLookupTypesMap;
     private Set mStrings;
     private static final Map LISTING_STATUS_VALUES;
     private Set mNumerics;
