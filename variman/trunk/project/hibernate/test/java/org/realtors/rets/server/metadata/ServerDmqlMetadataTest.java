@@ -2,6 +2,9 @@
  */
 package org.realtors.rets.server.metadata;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 import org.realtors.rets.server.dmql.DmqlFieldType;
 
@@ -23,6 +26,18 @@ public class ServerDmqlMetadataTest extends TestCase
         assertNull(metadata.fieldToColumn("ListingStatus"));
         assertNull(metadata.fieldToColumn("Owner"));
         assertNull(metadata.fieldToColumn("FOO"));
+        assertNull(metadata.fieldToColumn("HIDDEN"));
+        assertNull(metadata.fieldToColumn("r_HIDDEN"));
+
+        // Check ordering of all fields
+        List expectedColumns = new ArrayList();
+        expectedColumns.add("r_LP");
+        expectedColumns.add("r_LD");
+        expectedColumns.add("r_STATUS");
+        expectedColumns.add("r_OWNER");
+        expectedColumns.add("r_LT");
+        expectedColumns.add("r_AR");
+        assertEquals(expectedColumns, metadata.getAllColumns());
 
         // -----
 
@@ -36,6 +51,8 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidFieldName("Owner"));
         assertFalse(metadata.isValidFieldName("ListingPrice"));
         assertFalse(metadata.isValidFieldName("FOO"));
+        assertFalse(metadata.isValidFieldName("HIDDEN"));
+        assertFalse(metadata.isValidFieldName("r_HIDDEN"));
 
         // Check types
         assertEquals(DmqlFieldType.CHARACTER, metadata.getFieldType("OWNER"));
@@ -97,6 +114,17 @@ public class ServerDmqlMetadataTest extends TestCase
         assertNull(metadata.fieldToColumn("STATUS"));
         assertNull(metadata.fieldToColumn("OWNER"));
         assertNull(metadata.fieldToColumn("FOO"));
+        assertNull(metadata.fieldToColumn("HIDDEN"));
+        assertNull(metadata.fieldToColumn("r_HIDDEN"));
+
+        // Check ordering of all fields
+        List expectedColumns = new ArrayList();
+        expectedColumns.add("r_LP");
+        expectedColumns.add("r_LD");
+        expectedColumns.add("r_STATUS");
+        expectedColumns.add("r_OWNER");
+        expectedColumns.add("r_AR");
+        assertEquals(expectedColumns, metadata.getAllColumns());
 
         // Check listing status uses lookup values from DTD
         assertEquals("P", metadata.getLookupDbValue("ListingStatus",
@@ -119,6 +147,8 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidFieldName("STATUS"));
         assertFalse(metadata.isValidFieldName("OWNER"));
         assertFalse(metadata.isValidFieldName("FOO"));
+        assertFalse(metadata.isValidFieldName("HIDDEN"));
+        assertFalse(metadata.isValidFieldName("r_HIDDEN"));
 
         // Check types
         assertEquals(DmqlFieldType.CHARACTER, metadata.getFieldType("Owner"));
@@ -221,6 +251,7 @@ public class ServerDmqlMetadataTest extends TestCase
         mArea.setLookup(area);
         mArea.setDbName("r_AR");
         mArea.setDataType(DataTypeEnum.CHARACTER);
+        // Don't set default...
         mClazz.addTable(mArea);
 
         mStatus = new Table(id++);
@@ -229,6 +260,7 @@ public class ServerDmqlMetadataTest extends TestCase
         mStatus.setLookup(status);
         mStatus.setDbName("r_STATUS");
         mStatus.setDataType(DataTypeEnum.CHARACTER);
+        mStatus.setDefault(3);
         mClazz.addTable(mStatus);
 
         // Create a table w/o a lookup
@@ -237,6 +269,7 @@ public class ServerDmqlMetadataTest extends TestCase
         mOwner.setStandardName(new TableStandardName("Owner"));
         mOwner.setDbName("r_OWNER");
         mOwner.setDataType(DataTypeEnum.CHARACTER);
+        mOwner.setDefault(4);
         mClazz.addTable(mOwner);
 
         mListingPrice = new Table(id++);
@@ -244,6 +277,7 @@ public class ServerDmqlMetadataTest extends TestCase
         mListingPrice.setStandardName(new TableStandardName("ListingPrice"));
         mListingPrice.setDbName("r_LP");
         mListingPrice.setDataType(DataTypeEnum.DECIMAL);
+        mListingPrice.setDefault(1);
         mClazz.addTable(mListingPrice);
 
         mListDate = new Table(id++);
@@ -251,19 +285,29 @@ public class ServerDmqlMetadataTest extends TestCase
         mListDate.setStandardName(new TableStandardName("ListDate"));
         mListDate.setDbName("r_LD");
         mListDate.setDataType(DataTypeEnum.DATE);
+        mListDate.setDefault(2);
         mClazz.addTable(mListDate);
 
         mListTime = new Table(id++);
         mListTime.setSystemName("LT");
         mListTime.setDbName("r_LT");
         mListTime.setDataType(DataTypeEnum.TIME);
+        mListTime.setDefault(5);
         mClazz.addTable(mListTime);
 
         mListDateTime = new Table(id++);
         mListDateTime.setSystemName("LDT");
         mListDateTime.setDbName("r_LDT");
         mListDateTime.setDataType(DataTypeEnum.DATETIME);
+        mListDateTime.setDefault(0);
         mClazz.addTable(mListDateTime);
+
+        mHiddenTable = new Table(id++);
+        mHiddenTable.setSystemName("HIDDEN");
+        mHiddenTable.setDbName("r_HIDDEN");
+        mHiddenTable.setDataType(DataTypeEnum.CHARACTER);
+        mHiddenTable.setDefault(-1);
+        mClazz.addTable(mHiddenTable);
     }
 
     private MClass mClazz = null;
@@ -274,4 +318,5 @@ public class ServerDmqlMetadataTest extends TestCase
     private Table mListDate;
     private Table mListTime;
     private Table mListDateTime;
+    private Table mHiddenTable;
 }
