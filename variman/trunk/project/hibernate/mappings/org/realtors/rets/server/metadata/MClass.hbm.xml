@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: MClass.hbm.xml,v 1.1 2003/05/29 21:51:59 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.metadata.newdb.MetadataClass"
+    table="rets_metadata_class">
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="className" type="string">
+      <column name="class_name" length="32"/>
+    </property>
+
+    <!-- should this remain a string, or make this an enum? -->
+    <property name="stardardName" type="string"/>
+
+    <property name="visibleName" type="string">
+      <column name="visible_name" length="32"/>
+    </property>
+
+    <property name="description" type="string">
+      <column name="description" length="64"/>
+    </property>
+
+    <property name="tableVersion" type="string">
+      <column name="table_version" length="11"/>
+    </property>
+
+    <property name="tableDate" type="date"/>
+
+    <property name="updateVersion" type="string">
+      <column name="update_version" length="11"/>
+    </property>
+
+    <property name="updateDate" type="date"/>
+
+<!--     <set name="tables" table="rets_metadata_class_table"> -->
+    <set name="tables">
+      <key column="id"/>
+      <one-to-many class="org.nar.rets.metadata.newdb.MetadataTable"/>
+    </set>
+
+  </class>
+</hibernate-mapping>
