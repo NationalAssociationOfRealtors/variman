@@ -1,6 +1,7 @@
 package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -377,16 +378,20 @@ public class Table implements Serializable
      *
      * @return
      *
-     * @hibernate.many-to-one
+     * @hibernate.set inverse="false"
+     *   table="rets_metadata_table_editmasks"
+     * @hibernate.collection-key column="id"
+     * @hibernate.collection-many-to-many column="editMask"
+     *   class="org.realtors.rets.server.metadata.EditMask"
      */
-    public EditMask getEditMask()
+    public Set getEditMasks()
     {
-        return mEditMask;
+        return mEditMasks;
     }
 
-    public void setEditMask(EditMask editMask)
+    public void setEditMask(Set editMasks)
     {
-        mEditMask = editMask;
+        mEditMasks = editMasks;
     }
 
     /**
@@ -511,7 +516,7 @@ public class Table implements Serializable
     private MClass mClassid;
 
     /** nullable persistent field */
-    private EditMask mEditMask;
+    private Set mEditMasks;
 
     /** nullable persistent field */
     private Lookup mLookup;
