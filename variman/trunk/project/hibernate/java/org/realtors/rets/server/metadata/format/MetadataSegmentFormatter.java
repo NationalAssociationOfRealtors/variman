@@ -24,6 +24,7 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.ForeignKey;
 
 public class MetadataSegmentFormatter
 {
@@ -57,6 +58,8 @@ public class MetadataSegmentFormatter
                              new CompactValidationExternalTypeFormatter());
             mFormmatters.put(ValidationExpression.class,
                              new CompactValidationExpressionFormatter());
+            mFormmatters.put(ForeignKey.class,
+                             new CompactForeignKeyFormatter());
         }
         else
         {
