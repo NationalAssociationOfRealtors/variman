@@ -161,8 +161,6 @@ public class EmbeddedTomcat
         // How many items are in the classpath?
         StringTokenizer tok =
             new StringTokenizer(classPath, File.pathSeparator);
-            
-        System.out.println("tok: " + tok.countTokens());
         if (tok.countTokens() > 1)
         {
             return classPath; 
