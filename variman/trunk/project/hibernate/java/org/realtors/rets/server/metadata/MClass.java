@@ -157,6 +157,13 @@ public class MClass extends ServerMetadata implements Serializable
         mTables = tables;
     }
 
+    public void addTable(Table table)
+    {
+        table.setMClass(this);
+        table.updateLevel();
+        mTables.add(table);
+    }
+
     /**
      *
      * @return a Set of Update objects
