@@ -18,18 +18,16 @@ A:hover {
   background-color: #6b9cff;
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
-  font-size: 1em;
   padding: 0.5em;
 }
 
 .hleft {
+  font-size: large;
   font-weight: bold;
-  float: left;
 }
 
 .hright {
   text-align: right;
-  display: block;
 }
 
 .hidden {
@@ -38,11 +36,9 @@ A:hover {
 
 .footer { 
   background-color: #6b9cff;
-#  border-top: 3px double #000;
-#  background-color: #9393ee;
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
-  font-size: 0.8em;
+  font-size: small;
   text-align: center;
   padding: 0.5em;
 }

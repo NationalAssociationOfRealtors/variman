@@ -24,3 +24,12 @@ The tar+gz binary version of Rex requires only a JRE or JDK, version
 
   % cd <Rex installation directory>
   % java -jar rex.jar
+
+Running Rex as a Web Application
+================================
+
+The web application version of Rex requires a JRE or JDK, version 1.4
+or higher and a servlet container, such as Tomcat, Resin, or WebLogic.
+Configure the "webapp" directory as a web application inside your
+servlet container.
+

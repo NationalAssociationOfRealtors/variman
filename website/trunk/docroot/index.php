@@ -7,8 +7,9 @@
 
     <p>
       Rex is a <a href="http://www.rets.org/">RETS</a> 1.0 and 1.5
-      compliant server.  Rex is developed under a BSD-style license at
-      the Center for REALTOR(R) Technology.
+      compliant server.  Rex is developed under a <a
+      href="LICENSE.TXT">BSD-style license</a> at the Center for
+      REALTOR(R) Technology.
     </p>
 
     <p>
@@ -38,7 +39,7 @@
 
     <h3>News</h3>
     <ul>
-      <li><b>XX Jan 2004</b>: Version 1.0 Beta 1 released.</li>
+      <li><b>19 Jan 2004</b>: Version 1.0 Beta 1 released.</li>
     </ul>
 
 <?php include("footer.php"); ?>
