@@ -31,6 +31,10 @@ public class DataGenerator extends DataGenBase
         mBCount = 0;
         mBrokers = new String[] { "Laffalot Realty", "Tex Mex Real Estate",
             "Yellow Armadillo Realty", "Retzilla Realty" };
+        mSCount = 0;
+        mStreets = new String[] { "Buckingham Dr.", "Main St.",
+            "Knoll Creek Dr.", "Randall Rd.", "Exeter Ct.", "Anderson Blvd.",
+            "Westminster Circle" };
 
         mDCount = 0;
         mDate = new Date[4];
@@ -67,55 +71,43 @@ public class DataGenerator extends DataGenBase
                 
                 Map dataElements = new HashMap();
                 
-                RetsDataElement dataElement =
-                createDataElement("Property:RES:LP", mRandom.nextInt(1000000));
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(
+                    session,
+                    dataElements,
+                    "Property:RES:LP",
+                    mRandom.nextInt(1000000));
                 
-                dataElement =
-                    createDataElement("Property:RES:BROKER", getNextBroker());
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements, "Property:RES:BROKER",
+                                  getNextBroker());
                 
-                dataElement =
-                    createDataElement("Property:RES:AGENT_ID", getNextAgent());
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements,
+                                  "Property:RES:AGENT_ID", getNextAgent());
                 
                 String tmp = Long.toHexString(mRandom.nextInt(100000));
-                dataElement = createDataElement("Property:RES:LN", tmp);
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements, "Property:RES:LN",
+                                  tmp);
                 
-                dataElement = createDataElement("Property:RES:ZIP_CODE",
-                mRandom.nextInt(99999));
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements,
+                                  "Property:RES:ZIP_CODE",
+                                  mRandom.nextInt(99999));
                 
-                dataElement = createDataElement("Property:RES:LD",
-                                                getNextDate());
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements, "Property:RES:LD",
+                                  getNextDate());
                 
-                dataElement = createDataElement("Property:RES:SQFT", 
-                                                mRandom.nextInt(7000));
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements, "Property:RES:SQFT",
+                                  mRandom.nextInt(7000));
                 
-                dataElement = createDataElement("Property:RES:E_SCHOOL",
-                                                getNextSchool());
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements,
+                                  "Property:RES:E_SCHOOL", getNextSchool());
 
-                dataElement = createDataElement("Property:RES:M_SCHOOL",
-                                                getNextSchool());
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements,
+                                  "Property:RES:M_SCHOOL", getNextSchool());
 
-                dataElement = createDataElement("Property:RES:H_SCHOOL",
-                                                getNextSchool());
-                dataElements.put(dataElement.getKey(), dataElement);
-                session.save(dataElement);
+                createDataElement(session, dataElements,
+                                  "Property:RES:H_SCHOOL", getNextSchool());
+                
+                createDataElement(session, dataElements,
+                                  "Property:RES:STNAME", getNextStreet());
 
                 retsData.setDataElements(dataElements);
                 session.saveOrUpdate(retsData);
@@ -144,13 +136,19 @@ public class DataGenerator extends DataGenBase
      * @param value the value to store
      * @return an initialized RetsDataElement
      */
-    private RetsDataElement createDataElement(String path, Date value)
+    private void createDataElement(
+        Session session,
+        Map dataElements,
+        String path,
+        Date value)
+        throws HibernateException
     {
         RetsDataElement rde = new RetsDataElement();
         Table key = (Table) mTables.get(path);
         rde.setKey(key);
         rde.setDateValue(value);
-        return rde;
+        dataElements.put(key, rde);
+        session.save(rde);
     }
 
     /**
@@ -160,13 +158,19 @@ public class DataGenerator extends DataGenBase
      * @param value the value to store
      * @return an initialized RetsDataElement
      */
-    private RetsDataElement createDataElement(String path, long value)
+    private void createDataElement(
+        Session session,
+        Map dataElements,
+        String path,
+        long value)
+        throws HibernateException
     {
         RetsDataElement rde = new RetsDataElement();
         Table key = (Table) mTables.get(path);
         rde.setKey(key);
         rde.setIntValue(new Long(value));
-        return rde;
+        dataElements.put(key, rde);
+        session.save(rde);
     }
 
     /**
@@ -176,13 +180,19 @@ public class DataGenerator extends DataGenBase
      * @param value the value to store
      * @return an initialized RetsDataElement
      */
-    private RetsDataElement createDataElement(String path, String value)
+    private void createDataElement(
+        Session session,
+        Map dataElements,
+        String path,
+        String value)
+        throws HibernateException
     {
         RetsDataElement rde = new RetsDataElement();
         Table key = (Table) mTables.get(path);
         rde.setKey(key);
         rde.setCharacterValue(value);
-        return rde;
+        dataElements.put(key, rde);
+        session.save(rde);
     }
 
     /**
@@ -215,6 +225,14 @@ public class DataGenerator extends DataGenBase
     private int getNextSchool()
     {
         return mESchools[mECount++ % mESchools.length];
+    }
+
+    /**
+     * @return a string with the street
+     */
+    private String getNextStreet()
+    {
+        return mStreets[mSCount++ % mStreets.length];
     }
     
     public static void main(String[] args) throws HibernateException
@@ -256,4 +274,6 @@ public class DataGenerator extends DataGenBase
     private int mHCount; 
     private int[] mHSchools;
     private Random mRandom;
+    private int mSCount;
+    private String[] mStreets;
 }
