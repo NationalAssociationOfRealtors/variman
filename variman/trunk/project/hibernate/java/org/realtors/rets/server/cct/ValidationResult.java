@@ -2,7 +2,9 @@
  */
 package org.realtors.rets.server.cct;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -80,7 +82,31 @@ public class ValidationResult
         return mStatus == StatusEnum.PASSED;
     }
 
+    public Date getDate()
+    {
+        return mDate;
+    }
+
+    public void setDate(Date date)
+    {
+        mDate = date;
+    }
+    
+    public String getFormattedDate()
+    {
+        String result = StringUtils.EMPTY;
+        
+        if (mDate != null)
+        {
+            DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+            result = df.format(mDate);
+        }
+        
+        return result;
+    }
+
     private List mMessages;
     private StatusEnum mStatus;
     private String mTestName;
+    private Date mDate;
 }

@@ -15,3 +15,6 @@
 
         <property name="testName" type="string" update="true"
                   insert="true" column="testName" />
+                  
+        <property name="date" type="date" update="true" insert="true"
+                  column="rdate"/>
