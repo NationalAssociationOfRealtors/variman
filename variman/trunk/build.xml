@@ -63,6 +63,7 @@
     <pathelement path="${hibernate.jar}"/>
     <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
     <fileset dir="${struts.lib}" includes="*.jar"/>
+    <pathelement path="${httpunit.jar}"/>
   </path>
 
   <path id="admin.path">
@@ -381,6 +382,10 @@
     <copy todir="build/rets-server/webapp/WEB-INF/classes">
       <fileset dir="project/webapp/java" includes="**/*" excludes="**/*.java"/>
     </copy>
+    <copy todir="build/webapp/test/classes">
+      <fileset dir="project/webapp/test/java" includes="**/*"
+               excludes="**/*.java"/>
+    </copy>
 
     <antcall target="build-webapp-webdoclet"/>
     <copy todir="build/rets-server/conf">
@@ -589,6 +594,7 @@
         <pathelement location="build/admin/classes"/>
         <pathelement location="build/admin/test/classes"/>
       </classpath>
+      <jvmarg value="-Dtest.webapp=${basedir}/build/rets-server/webapp"/>
 
       <formatter type="plain"/>
       <test fork="yes" name="test.AllTests" outfile="build/tests/results"/>
