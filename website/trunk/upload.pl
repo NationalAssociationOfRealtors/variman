@@ -61,7 +61,7 @@ my $remote_home = "/nar/www/sites/www.crt.realtors.org/www.crt.realtors.org/proj
 $command = 
     "rsync ${dry_run_option} -v -rltz -e \"ssh -x\" --delete " .
     "--exclude='*~' --exclude='CVS' --exclude='*.jar' " .
-    "--exclude='/documentation/api/' --exclude='/documentation/manual/' " .
+    "--exclude='/documentation/api/' " .
     "--exclude='/files/' " .
     "docroot/ ${opt_user}${remote_host}:${remote_home}/";
 
