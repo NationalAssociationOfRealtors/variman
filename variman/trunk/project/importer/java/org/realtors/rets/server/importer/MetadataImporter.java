@@ -1,6 +1,7 @@
 package org.realtors.rets.server.importer;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
+import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.Table;
@@ -59,36 +61,15 @@ public class MetadataImporter
     {
         initHibernate();
         mResources = new HashMap();
+        mClasses = new HashMap();
+        mDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
     }
 
     private void initHibernate()
         throws MappingException, HibernateException
     {
         Configuration cfg = new Configuration();
-        cfg.addClass(RETSData.class);
-        cfg.addClass(RETSDataElement.class);
-        cfg.addClass(RETSHistoryData.class);
-        cfg.addClass(RETSHistoryDataElement.class);
-        cfg.addClass(RETSHistoryMultiSet.class);
-        cfg.addClass(RETSMultiSet.class);
-        cfg.addClass(MClass.class);
-        cfg.addClass(EditMask.class);
-        cfg.addClass(ForeignKey.class);
-        cfg.addClass(Lookup.class);
-        cfg.addClass(LookupType.class);
-        cfg.addClass(MObject.class);
-        cfg.addClass(Resource.class);
-        cfg.addClass(SearchHelp.class);
-        cfg.addClass(MSystem.class);
-        cfg.addClass(Table.class);
-        cfg.addClass(Update.class);
-        cfg.addClass(UpdateHelp.class);
-        cfg.addClass(UpdateType.class);
-        cfg.addClass(ValidationExpression.class);
-        cfg.addClass(ValidationExternal.class);
-        cfg.addClass(ValidationExternalType.class);
-        cfg.addClass(ValidationLookup.class);
-        cfg.addClass(ValidationLookupType.class);
+        cfg.addJar("retsdb2-hbm-xml.jar");
         mSessions = cfg.buildSessionFactory();
     }
     
@@ -109,7 +90,8 @@ public class MetadataImporter
         Transaction tx = hSession.beginTransaction();
 
         MSystem hSystem = system(rSession, hSession);
-        Set hResources = resource(rSession, hSession, hSystem);
+        doResource(rSession, hSession, hSystem);
+        doClasses(rSession, hSession);
         
         tx.commit();
         hSession.close();
@@ -126,8 +108,8 @@ public class MetadataImporter
         return hSystem;
     }
 
-    private Set resource(RetsSession rSession, Session hSession,
-                         MSystem hSystem)
+    private void doResource(RetsSession rSession, Session hSession,
+                            MSystem hSystem)
         throws HibernateException,ParseException
     {
         MetadataTable tResource =
@@ -143,7 +125,6 @@ public class MetadataImporter
             Resource hResource = new Resource();
 
             hResource.setSystemid(hSystem);
-            // do more stuff
             resourceID = md.getAttribute("ResourceID");
             hResource.setResourceID(resourceID);
             hResource.setStandardName(ResourceStandardNameEnum.fromString(
@@ -153,52 +134,46 @@ public class MetadataImporter
             hResource.setKeyField(md.getAttribute("KeyField"));
             hResource.setClassVersion(md.getAttribute("ClassVersion"));
 
-            DateFormat dateFormat =
-                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-            
             hResource.setClassDate(
-                dateFormat.parse(md.getAttribute("ClassDate")));
-
+                mDateFormat.parse(md.getAttribute("ClassDate")));
 
             hResource.setObjectVersion(md.getAttribute("ObjectVersion"));
-            hResource.setObjectDate(dateFormat.parse(
-                md.getAttribute(md.getAttribute("ObjectDate"))));
+            hResource.setObjectDate(
+                mDateFormat.parse(md.getAttribute("ObjectDate")));
 
             hResource.setSearchHelpVersion(
                 md.getAttribute("SearchHelpVersion"));
             hResource.setSearchHelpDate(
-                dateFormat.parse(
-                    md.getAttribute(md.getAttribute("SearchHelpDate"))));
+                mDateFormat.parse(md.getAttribute("SearchHelpDate")));
                     
             hResource.setEditMaskVersion(md.getAttribute("EditMaskVersion"));
             hResource.setEditMaskDate(
-                dateFormat.parse(md.getAttribute("EditMaskDate")));
+                mDateFormat.parse(md.getAttribute("EditMaskDate")));
 
             hResource.setLookupVersion(md.getAttribute("LookupVersion"));
             hResource.setLookupDate(
-                dateFormat.parse(md.getAttribute("LookupDate")));
+                mDateFormat.parse(md.getAttribute("LookupDate")));
 
             hResource.setUpdateHelpVersion(
                 md.getAttribute("UpdateHelpVersion"));
             hResource.setUpdateHelpDate(
-                dateFormat.parse(md.getAttribute("UpdateHelpDate")));
+                mDateFormat.parse(md.getAttribute("UpdateHelpDate")));
 
             hResource.setValidationExpressionVersion(
                 md.getAttribute("ValidationExpressionVersion"));
             hResource.setValidationExpressionDate(
-                dateFormat.parse(md.getAttribute("ValidationExpressionDate")));
+                mDateFormat.parse(
+                    md.getAttribute("ValidationExpressionDate")));
 
             hResource.setValidationLookupVersion(
                 md.getAttribute("ValidationLookupVersion"));
             hResource.setValidationLookupDate(
-                dateFormat.parse(md.getAttribute("ValidationLookupDate")));
+                mDateFormat.parse(md.getAttribute("ValidationLookupDate")));
 
             hResource.setValidationExternalVersion(
                 md.getAttribute("ValidationExternalVersion"));
             hResource.setValidationExternalDate(
-                dateFormat.parse(md.getAttribute("ValidationExternalDate")));
-                
-            
+                mDateFormat.parse(md.getAttribute("ValidationExternalDate")));
                 
             hSession.save(hResource);
             hResources.add(hResource);
@@ -207,9 +182,54 @@ public class MetadataImporter
 
         hSystem.setResources(hResources);
         hSession.saveOrUpdate(hSystem);
+    }
 
-        // change this
-        return null;
+    public void doClasses(RetsSession rSession, Session hSession)
+        throws HibernateException,ParseException
+    {
+        MetadataTable tClass =
+            rSession.getMetadataTable(MetadataTable.CLASS);
+
+        String classID;
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hClasses = new HashSet();
+            List classes = tClass.getDataRows(resource.getResourceID());
+            Iterator j = classes.iterator();
+            while (j.hasNext())
+            {
+                Metadata md = (Metadata) j.next();
+                MClass hClass = new MClass();
+
+                hClass.setResourceid(resource);
+                String className = md.getAttribute("ClassName");
+                hClass.setClassName(className);
+                hClass.setStandardName(ClassStandardNameEnum.fromString(
+                                           md.getAttribute("StandardName")));
+                hClass.setVisibleName(md.getAttribute("VisibleName"));
+                hClass.setDescription(md.getAttribute("Description"));
+                hClass.setTableVersion(md.getAttribute("TableVersion"));
+                hClass.setTableDate(
+                    mDateFormat.parse(md.getAttribute("TableDate")));
+                hClass.setUpdateVersion(md.getAttribute("UpdateVersion"));
+                hClass.setUpdateDate(
+                    mDateFormat.parse(md.getAttribute("UpdateDate")));
+
+                hSession.save(hClass);
+                hClasses.add(hClass);
+                mClasses.put(className, hClass);
+            }
+
+            resource.setClasses(hClasses);
+            hSession.saveOrUpdate(resource);
+        }
+    }
+
+    public void doObjectes(RetsSession rSession, Session hSession)
+        throws HibernateException,ParseException
+    {
     }
 
     public static final void main(String args[])
@@ -221,7 +241,9 @@ public class MetadataImporter
 
     private SessionFactory mSessions;
     private Map mResources;
+    private Map mClasses;
+    private DateFormat mDateFormat;
     
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.5 2003/06/24 19:35:19 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.6 2003/06/26 17:54:01 kgarner Exp $";
 }
