@@ -4,8 +4,12 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * @hibernate.class table="rets_metadata_table_standard_name"
+ *   mutable="false"
  */
 public class TableStandardName implements Serializable
 {
@@ -43,6 +47,7 @@ public class TableStandardName implements Serializable
      *
      * @hibernate.property length="32"
      *   not-null="true"
+     *   unique="true"
      */
     public String getName()
     {
@@ -57,6 +62,25 @@ public class TableStandardName implements Serializable
     public String toString()
     {
         return mName;
+    }
+
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof Table))
+        {
+            return false;
+        }
+        TableStandardName other = (TableStandardName) object;
+        return new EqualsBuilder()
+            .append(mId, other.mId)
+            .isEquals();
+    }
+
+    public int hashCode()
+    {
+        return new HashCodeBuilder()
+            .append(mId)
+            .toHashCode();
     }
 
     private String mName;
