@@ -50,10 +50,7 @@ public class AddUserCommand extends wx
         }
         finally
         {
-            if (dialog != null)
-            {
-                dialog.Destroy();
-            }
+            Destroy(dialog);
         }
     }
 

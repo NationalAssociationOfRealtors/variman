@@ -163,7 +163,7 @@ public class DatabasePage extends wxPanel
             }
             finally
             {
-                destroy(dialog);
+                Destroy(dialog);
             }
         }
     }
@@ -194,16 +194,8 @@ public class DatabasePage extends wxPanel
             }
             finally
             {
-                destroy(dirDialog);
+                Destroy(dirDialog);
             }
-        }
-    }
-
-    private static void destroy(wxWindow window)
-    {
-        if (window != null)
-        {
-            window.Destroy();
         }
     }
 
