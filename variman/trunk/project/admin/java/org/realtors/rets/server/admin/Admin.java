@@ -127,6 +127,11 @@ public class Admin
         return sVersion;
     }
 
+    public static boolean isMacOS()
+    {
+        return (System.getProperty("mrj.version") != null);
+    }
+
     private static Configuration sHibernateConfiguration;
     private static String sConfigFile;
     private static RetsConfig sRetsConfig;

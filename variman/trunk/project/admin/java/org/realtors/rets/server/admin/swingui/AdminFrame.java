@@ -21,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
+
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.AdminUtils;
@@ -56,8 +57,11 @@ public class AdminFrame extends JFrame
 
         menu.add(new SaveAction());
         menu.add(new InstallJarAction());
-        menu.addSeparator();
-        menu.add(new QuitAction());
+        if (!Admin.isMacOS())
+        {
+            menu.addSeparator();
+            menu.add(new QuitAction());
+        }
 
         menu = new JMenu("Database");
         menuBar.add(menu);
@@ -90,9 +94,12 @@ public class AdminFrame extends JFrame
         mGroupMenu.add(mGroupsPanel.getRemoveGroupAciton());
         mGroupMenu.setEnabled(false);
 
-        menu = new JMenu("Help");
-        menuBar.add(menu);
-        menu.add(new AboutAction());
+        if (!Admin.isMacOS())
+        {
+            menu = new JMenu("Help");
+            menuBar.add(menu);
+            menu.add(new AboutAction());
+        }
 
         mStatusBar = new JLabel("Status bar");
         mStatusBar.setBorder(
@@ -101,6 +108,10 @@ public class AdminFrame extends JFrame
 
         setSize(640, 480);
         SwingUtils.centerOnScreen(this);
+        if  (Admin.isMacOS())
+        {
+            MacUtils.registerApplicationListeners();
+        }
     }
 
     private void initConfig()
@@ -134,7 +145,7 @@ public class AdminFrame extends JFrame
         }
     }
 
-    private void quit()
+    public boolean quit()
     {
         if (Admin.isRetsConfigChanged())
         {
@@ -144,7 +155,7 @@ public class AdminFrame extends JFrame
                 JOptionPane.QUESTION_MESSAGE);
             if (result == JOptionPane.CANCEL_OPTION)
             {
-                return;
+                return false;
             }
             if (result == JOptionPane.YES_OPTION)
             {
@@ -152,9 +163,16 @@ public class AdminFrame extends JFrame
             }
         }
 
-
         dispose();
         System.exit(0);
+        return true;
+    }
+
+    public void showAboutBox()
+    {
+        AboutBox dialog = new AboutBox(AdminFrame.this);
+        dialog.show();
+        dialog.dispose();
     }
 
     public void setStatusText(String text)
@@ -206,9 +224,7 @@ public class AdminFrame extends JFrame
 
         public void actionPerformed(ActionEvent event)
         {
-            AboutBox dialog = new AboutBox(AdminFrame.this);
-            dialog.show();
-            dialog.dispose();
+            showAboutBox();
         }
     }
 

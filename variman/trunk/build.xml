@@ -91,6 +91,7 @@
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${rets-client.jar}"/>
+    <pathelement path="${apple-eawt.jar}"/>
     <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </path>
 
@@ -675,7 +676,7 @@
     <copy todir="build/rets-server/admin/classes">
       <fileset dir="project/admin/java" includes="**/*" excludes="**/*.java"/>
     </copy>
-    <propertyfile file="build/admin/classes/rex-admin.properties">
+    <propertyfile file="build/rets-server/admin/classes/rex-admin.properties">
       <entry key="version" value="${project.version}" />
       <entry key="build-date" type="date" value="now" />
     </propertyfile>
