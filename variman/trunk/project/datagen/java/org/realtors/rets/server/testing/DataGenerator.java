@@ -3,32 +3,24 @@ package org.realtors.rets.server.testing;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.Transaction;
 
 import org.realtors.rets.server.data.RetsData;
 import org.realtors.rets.server.data.RetsDataElement;
 import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Transaction;
-import net.sf.hibernate.cfg.Configuration;
-
-public class DataGenerator
+public class DataGenerator extends DataGenBase
 {
     public DataGenerator() throws HibernateException
     {
-        initHibernate();
+        super();
         
-        mClasses = new HashMap();
-        mTables = new HashMap();
         mRandom = new Random(System.currentTimeMillis());
         mRandom.nextInt();
 
@@ -193,30 +185,6 @@ public class DataGenerator
         return rde;
     }
 
-    public void getData() throws HibernateException
-    {
-        Session session = mSessions.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query q =
-            session.createQuery(
-                "SELECT data"
-                    + "  FROM org.realtors.rets.server.data.RetsData data");
-
-        Iterator i = q.iterate();
-        while (i.hasNext())
-        {
-            RetsData element = (RetsData) i.next();
-            Map elements = element.getDataElements();
-            RetsDataElement rde =
-                (RetsDataElement) elements.get(
-                    (Table) mTables.get("Property:RES:LP"));
-        }
-
-        tx.commit();
-        session.close();
-    }
-
     /**
      * @return
      */
@@ -249,47 +217,6 @@ public class DataGenerator
         return mESchools[mECount++ % mESchools.length];
     }
     
-    private void initHibernate() throws HibernateException
-    {
-        Configuration cfg = new Configuration();
-        cfg.addJar("retsdb2-hbm-xml.jar");
-        mSessions = cfg.buildSessionFactory();
-    }
-
-    public void loadMetadata() throws HibernateException
-    {
-        Session session = mSessions.openSession();
-        Transaction tx = session.beginTransaction();
-        Query query = session.createQuery(
-                "SELECT system" +
-                "  FROM org.realtors.rets.server.metadata.MSystem system");
-        Iterator i = query.iterate();
-        while (i.hasNext())
-        {
-            MSystem system = (MSystem) i.next();
-            System.out.println("Got system" + system.getId());
-            Iterator j = system.getResources().iterator();
-            while (j.hasNext())
-            {
-                Resource res = (Resource) j.next();
-                Iterator k = res.getClasses().iterator();
-                while (k.hasNext())
-                {
-                    MClass clazz = (MClass) k.next();
-                    mClasses.put(clazz.getPath(), clazz);
-                    Iterator l = clazz.getTables().iterator();
-                    while (l.hasNext())
-                    {
-                        Table table = (Table) l.next();
-                        mTables.put(table.getPath(), table);
-                    }
-                }
-            }
-        }
-        tx.commit();
-        session.close();
-    }
-
     //  TODO: Add method to preload classes
 
     public static void main(String[] args) throws HibernateException
@@ -303,41 +230,27 @@ public class DataGenerator
         System.out.print(after - before);
         System.out.println("ms");
 
-        String tmp = System.getProperty("add.data");
-        if (tmp != null && tmp.equalsIgnoreCase("yes"))
+        before = System.currentTimeMillis();
+        String tmp = System.getProperty("prop.count");
+        if (tmp == null)
         {
-            before = System.currentTimeMillis();
-            tmp = System.getProperty("prop.count");
-            if (tmp == null)
-            {
-                dg.createData();
-            }
-            else
-            {
-                dg.createData(Integer.parseInt(tmp));
-            }
-            after = System.currentTimeMillis();
-            System.out.print("Time to create data:");
-            System.out.print(after - before);
-            System.out.println("ms");
+            dg.createData();
         }
+        else
+        {
+            dg.createData(Integer.parseInt(tmp));
+        }
+        after = System.currentTimeMillis();
+        System.out.print("Time to create data:");
+        System.out.print(after - before);
+        System.out.println("ms");
 
-        for (int i = 0; i < 10; i++)
-        {
-            before = System.currentTimeMillis();
-            dg.getData();
-            after = System.currentTimeMillis();
-            System.out.print("Time to read data:");
-            System.out.print(after - before);
-            System.out.println("ms");
-        }
     }
 
     private int mACount;
     private String[] mAgents;
     private int mBCount;
     private String[] mBrokers;
-    private Map mClasses;
     private Date[] mDate;
     private int mDCount;
     private int mECount;
@@ -345,6 +258,4 @@ public class DataGenerator
     private int mHCount; 
     private int[] mHSchools;
     private Random mRandom;
-    private SessionFactory mSessions;
-    private Map mTables;
 }
