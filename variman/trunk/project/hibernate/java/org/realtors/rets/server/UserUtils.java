@@ -13,6 +13,7 @@ import java.util.List;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
+import net.sf.hibernate.LockMode;
 
 import org.apache.log4j.Logger;
 
@@ -69,11 +70,13 @@ public class UserUtils
         try
         {
             Session session = helper.beginTransaction();
-            // Must load this object into this session, otherwise the User
-            // object from the statistics gets loaded. This causes two User
-            // objects with the same ID to be loaded into the same session,
-            // which pisses off Hibernate.
-            session.load(user, user.getId());
+            // Must reassociate this object with this session, otherwise the
+            // User object from the statistics gets loaded. This causes two
+            // User objects with the same ID to be loaded into the same
+            // session, which pisses off Hibernate.
+            LOG.debug("Reassociating user");
+            session.lock(user, LockMode.NONE);
+            LOG.debug("Getting accounting statistics");
             AccountingStatistics statistics =
                 AccountingStatisticsUtils.findByUser(user, helper);
             if (statistics != null)
