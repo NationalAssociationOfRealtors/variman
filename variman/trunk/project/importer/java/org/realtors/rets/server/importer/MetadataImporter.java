@@ -1,8 +1,5 @@
 package org.realtors.rets.server.importer;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +15,10 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Transaction;
 import net.sf.hibernate.cfg.Configuration;
+
+import org.apache.commons.lang.StringUtils;
+
+import org.apache.log4j.Logger;
 
 import org.realtors.rets.client.Metadata;
 import org.realtors.rets.client.MetadataTable;
@@ -42,6 +43,8 @@ import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.TableStandardName;
 import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
 import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExpression;
@@ -50,7 +53,8 @@ import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
-import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.server.metadata.ForeignKey;
+
 
 public class MetadataImporter
 {
@@ -69,8 +73,10 @@ public class MetadataImporter
         mLookups = new HashMap();
         mSearchHelps = new HashMap();
         mValidationExternals = new HashMap();
+        mValidationExpressions = new HashMap();
         mValidationLookups = new HashMap();
-        mDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+        mUpdates = new HashMap();
+        mUpdateHelps = new HashMap();
     }
 
     private void initHibernate()
@@ -114,8 +120,11 @@ public class MetadataImporter
             doUpdate(rSession, hSession);
             doTable(rSession, hSession);
             doValidationLookup(rSession, hSession);
+            doValidationLookupType(rSession, hSession);
             doValidationExternalType(rSession, hSession);
             doValidationExpression(rSession, hSession);
+            doUpdateType(rSession, hSession);
+            doForeignKey(rSession, hSession, hSystem);
 
             tx.commit();
             hSession.close();
@@ -149,7 +158,7 @@ public class MetadataImporter
 
     private void doResource(RetsSession rSession, Session hSession,
                             MSystem hSystem)
-        throws HibernateException,ParseException
+        throws HibernateException
     {
         MetadataTable tResource =
             rSession.getMetadataTable(MetadataTable.RESOURCE);
@@ -171,6 +180,8 @@ public class MetadataImporter
             hResource.setDescription(md.getAttribute("Description"));
             hResource.setKeyField(md.getAttribute("KeyField"));
 
+            hResource.updateLevel();
+            
             hSession.save(hResource);
             hResources.add(hResource);
             mResources.put(hResource.getPath(), hResource);
@@ -181,7 +192,7 @@ public class MetadataImporter
     }
 
     private void doClasses(RetsSession rSession, Session hSession)
-        throws HibernateException,ParseException
+        throws HibernateException
     {
         MetadataTable tClass =
             rSession.getMetadataTable(MetadataTable.CLASS);
@@ -206,6 +217,8 @@ public class MetadataImporter
                 hClass.setVisibleName(md.getAttribute("VisibleName"));
                 hClass.setDescription(md.getAttribute("Description"));
 
+                hClass.updateLevel();
+
                 hSession.save(hClass);
                 hClasses.add(hClass);
                 mClasses.put(hClass.getPath(), hClass);
@@ -217,7 +230,7 @@ public class MetadataImporter
     }
 
     private void doObjects(RetsSession rSession, Session hSession)
-        throws HibernateException,ParseException
+        throws HibernateException
     {
         MetadataTable tObject =
             rSession.getMetadataTable(MetadataTable.OBJECT);
@@ -245,6 +258,8 @@ public class MetadataImporter
                     hObject.setDescription(
                         StringUtils.substring(
                             md.getAttribute("Description"),0,63));
+
+                    // Should we have an updateLevel?
 
                     hSession.save(hObject);
                     hObjects.add(hObject);
@@ -282,6 +297,8 @@ public class MetadataImporter
                         md.getAttribute("SearchHelpID"));
                     hSearchHelp.setValue(md.getAttribute("Value"));
 
+                    hSearchHelp.updateLevel();
+
                     hSession.save(hSearchHelp);
                     hSearchHelps.add(hSearchHelp);
                     mSearchHelps.put(hSearchHelp.getPath(), hSearchHelp);
@@ -317,6 +334,8 @@ public class MetadataImporter
                     hEditMask.setEditMaskID(md.getAttribute("EditMaskID"));
                     hEditMask.setValue(md.getAttribute("Value"));
 
+                    hEditMask.updateLevel();
+                    
                     hSession.save(hEditMask);
                     hEditMasks.add(hEditMask);
                     mEditMasks.put(hEditMask.getPath(), hEditMask);
@@ -328,7 +347,7 @@ public class MetadataImporter
     }
 
     private void doLookup(RetsSession rSession, Session hSession)
-        throws HibernateException, ParseException
+        throws HibernateException
     {
         MetadataTable tLookup =
             rSession.getMetadataTable(MetadataTable.LOOKUP);
@@ -354,9 +373,9 @@ public class MetadataImporter
 
                     hLookup.setVisibleName(md.getAttribute("VisibleName"));
 
-                    doLookupTypes(hLookup, rSession, hSession);
-
+                    hLookup.updateLevel();
                     hSession.save(hLookup);
+                    doLookupTypes(hLookup, rSession, hSession);
                     hLookups.add(hLookup);
                     mLookups.put(hLookup.getPath(), hLookup);
                 }
@@ -399,6 +418,8 @@ public class MetadataImporter
                 hLookupType.setShortValue(md.getAttribute("ShortValue"));
                 hLookupType.setValue(md.getAttribute("Value"));
 
+                hLookupType.updateLevel();
+
                 hSession.save(hLookupType);
                 hLookupTypes.add(hLookupType);
             }
@@ -433,8 +454,11 @@ public class MetadataImporter
                         md.getAttribute("UpdateHelpID"));
                     hUpdateHelp.setValue(md.getAttribute("Value"));
 
+                    // Should we have an updateLevel?
+
                     hSession.save(hUpdateHelp);
                     hUpdateHelps.add(hUpdateHelp);
+                    mUpdateHelps.put(hUpdateHelp.getPath(), hUpdateHelp);
                 }
             }
             resource.setUpdateHelps(hUpdateHelps);
@@ -443,7 +467,7 @@ public class MetadataImporter
     }
 
     private void doValidationExternal(RetsSession rSession, Session hSession)
-        throws HibernateException,ParseException
+        throws HibernateException
     {
         MetadataTable tValidationExternals =
             rSession.getMetadataTable(MetadataTable.VALIDATION_EXTERNAL);
@@ -475,6 +499,8 @@ public class MetadataImporter
                     MClass clazz = (MClass) mClasses.get(path);
                     hValidationExternal.setSearchClass(clazz);
 
+                    hValidationExternal.updateLevel();
+
                     hSession.save(hValidationExternal);
                     hValidationExternals.add(hValidationExternal);
                     mValidationExternals.put(hValidationExternal.getPath(),
@@ -488,10 +514,7 @@ public class MetadataImporter
 
 
     /**
-     * Intended to be called by doValidationExternal.  Requires tables
-     * to be done, don't install yet.
-     *
-
+     * Intended to be called by doValidationExternal.
      *
      * @param rSession the rets session
      * @param hSession the hibernate session
@@ -557,6 +580,7 @@ public class MetadataImporter
                     }
                     vet.setResultFields(resultFieldMap);
 
+                    vet.updateLevel();
                     hSession.save(vet);
                 }
                 ve.setValidationExternalTypes(hValdationExternalTypes);
@@ -601,6 +625,8 @@ public class MetadataImporter
                     hvl.setParent1Field(md.getAttribute("Parent1Field"));
                     hvl.setParent2Field(md.getAttribute("Parent2Field"));
 
+                    hvl.updateLevel();
+
                     hSession.save(hvl);
                     hValidationLookups.add(hvl);
                     mValidationLookups.put(hvl.getPath(), hvl);
@@ -612,7 +638,7 @@ public class MetadataImporter
     }
 
     private void doUpdate(RetsSession rSession, Session hSession)
-        throws HibernateException, ParseException
+        throws HibernateException
     {
         MetadataTable tUpdates =
             rSession.getMetadataTable(MetadataTable.UPDATE);
@@ -637,12 +663,102 @@ public class MetadataImporter
                     hUpdate.setDescription(md.getAttribute("Description"));
                     hUpdate.setKeyField(md.getAttribute("KeyField"));
 
+                    hUpdate.updateLevel();
+
                     hSession.save(hUpdate);
                     hUpdates.add(hUpdate);
+                    mUpdates.put(hUpdate.getPath(), hUpdate);
                 }
             }
             clazz.setUpdates(hUpdates);
             hSession.saveOrUpdate(clazz);
+        }
+    }
+
+    public void doUpdateType(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tUpdateTypes =
+            rSession.getMetadataTable(MetadataTable.UPDATE_TYPE);
+
+        Iterator i = mUpdates.values().iterator();
+        while (i.hasNext())
+        {
+            Update update = (Update) i.next();
+            Set hUpdateTypes = new HashSet();
+            List updateTypes = tUpdateTypes.getDataRows(update.getPath());
+            if (updateTypes != null)
+            {
+                Iterator j = updateTypes.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    UpdateType updateType = new UpdateType();
+
+                    updateType.setUpdateid(update);
+                    // todo: finish this method
+                    String level = update.getLevel();
+                    String systemName = md.getAttribute("SystemName");
+                    String tablePath = level + ":" + systemName;
+                    Table table = (Table) mTables.get(tablePath);
+                    updateType.setSystemName(table);
+                    // Hack to get around metadata bug
+                    if (table == null)
+                    {
+                        continue;
+                    }
+                    
+                    updateType.setSequence(
+                        Integer.parseInt(md.getAttribute("Sequence")));
+
+                    String joinedAttributes = md.getAttribute("Attributes");
+                    String attributes[] =
+                        StringUtils.split(joinedAttributes, ",");
+                    Set attributeSet = new HashSet();
+                    for (int c = 0; c < attributes.length; c++)
+                    {
+                        attributeSet.add(UpdateTypeAttributeEnum.fromInt(
+                                             Integer.parseInt(attributes[c])));
+                    }
+                    updateType.setAttributes(attributeSet);
+
+                    updateType.setDefault(md.getAttribute("Default"));
+
+                    String valExp[] = StringUtils.split(
+                        md.getAttribute("ValidationExpressionID"), ",");
+                    Set valExpSet = new HashSet();
+                    String resourcePath =
+                        update.getClassid().getResourceid().getPath();
+                    for (int c = 0; c < valExp.length; c++)
+                    {
+                        String vePath = resourcePath + ":" + valExp[c];
+                        ValidationExpression ve = (ValidationExpression)
+                            mValidationExpressions.get(vePath);
+                        valExpSet.add(ve);
+                    }
+                    updateType.setValidationExpressions(valExpSet);
+
+                    String updateHelpPath = resourcePath + ":" +
+                        md.getAttribute("UpdateHelpID");
+                    updateType.setUpdateHelp(
+                        (UpdateHelp) mUpdateHelps.get(updateHelpPath));
+
+                    String vlPath = resourcePath + ":" +
+                        md.getAttribute("ValdiationLookupName");
+                    updateType.setValidationLookup(
+                        (ValidationLookup) mValidationLookups.get(vlPath));
+
+                    String vePath = resourcePath + ":" +
+                        md.getAttribute("ValdationExternalName");
+                    updateType.setValidationExternal(
+                        (ValidationExternal) mValidationExternals.get(vePath));
+
+                    hSession.save(updateType);
+                    hUpdateTypes.add(updateType);
+                }
+            }
+            update.setUpdateTypes(hUpdateTypes);
+            hSession.saveOrUpdate(update);
         }
     }
 
@@ -671,6 +787,8 @@ public class MetadataImporter
                     vlt.setValidText(md.getAttribute("ValidText"));
                     vlt.setParent1Value(md.getAttribute("Parent1Value"));
                     vlt.setParent2Value(md.getAttribute("Parent2Value"));
+
+                    vlt.updateLevel();
 
                     hSession.save(vlt);
                     hValdationLookupTypes.add(vlt);
@@ -704,19 +822,69 @@ public class MetadataImporter
 
                     ve.setResourceid(resource);
                     ve.setValidationExpressionID(
-                        md.getAttribute("ValdationExpressionID"));
+                        md.getAttribute("ValidationExpressionID"));
                     ve.setValidationExpressionType(
                         ValidationExpressionTypeEnum.fromString(
                             md.getAttribute("ValidationExpressionType")));
                     ve.setValue(md.getAttribute("value"));
 
+                    ve.updateLevel();
+
                     hSession.save(ve);
                     hValidationExpressions.add(ve);
+                    mValidationExpressions.put(ve.getPath(), ve);
                 }
             }
             resource.setValidationExpressions(hValidationExpressions);
             hSession.saveOrUpdate(resource);
         }
+    }
+
+    private void doForeignKey(RetsSession rSession, Session hSession,
+                              MSystem hSystem)
+        throws HibernateException
+    {
+        MetadataTable tForeignKeys =
+            rSession.getMetadataTable(MetadataTable.FOREIGN_KEYS);
+
+        Set hForeignKeys = new HashSet();
+        List foreignKeys = tForeignKeys.getDataRows("");
+        if (foreignKeys != null)
+        {
+            Iterator i = foreignKeys.iterator();
+            while (i.hasNext())
+            {
+                Metadata md = (Metadata) i.next();
+                ForeignKey hFk = new ForeignKey();
+
+                hFk.setSystemid(hSystem);
+
+                hFk.setForeignKeyID(md.getAttribute("ForeignKeyID"));
+                String path[] = new String[3];
+                path[0] = md.getAttribute("ParentResourceID");
+                path[1] = md.getAttribute("ParentClassID");
+                path[2] = md.getAttribute("ParentSystemName");
+                String tablePath = StringUtils.join(path, ":");
+                Table table = (Table) mTables.get(tablePath);
+                hFk.setParentTable(table);
+
+                path[0] = md.getAttribute("ChildResourceID");
+                path[1] = md.getAttribute("ChildClassID");
+                path[2] = md.getAttribute("ChildSystemName");
+                tablePath = StringUtils.join(path, ":");
+                table = (Table) mTables.get(tablePath);
+                hFk.setChildTable(table);
+                if (table == null)
+                {
+                    LOG.error("table is null for path: " + tablePath);
+                }
+
+                hSession.save(hFk);
+                hForeignKeys.add(hFk);
+            }
+        }
+        hSystem.setForeignKeys(hForeignKeys);
+        hSession.saveOrUpdate(hSystem);
     }
 
     private void doTable(RetsSession rSession, Session hSession)
@@ -742,7 +910,7 @@ public class MetadataImporter
                     hTable.setClassid(hClass);
 
                     hTable.setSystemName(md.getAttribute("SystemName"));
-                    // Todo: should lookup standard name in hibernate
+
                     String standardName = md.getAttribute("StandardName");
                     hTable.setStandardName(
                         lookupTableStandardName(standardName));
@@ -773,21 +941,26 @@ public class MetadataImporter
                     String editMasksJoined = md.getAttribute("EditMaskID");
                     String resourcePath =  hClass.getResourceid().getPath();
                     String path = null;
+                    Set hEditMasks = new HashSet();
                     if (editMasksJoined != null)
                     {
                         String editMasks[] =
                             StringUtils.split(editMasksJoined,",");
-                        Set hEditMasks = new HashSet();
+
                         for (int c = 0; c < editMasks.length; c++)
                         {
-                            Resource resource = hClass.getResourceid();
-                            path = resourcePath + ":" + editMasks[c];
+                            path = resourcePath + ":" +
+                                StringUtils.clean(editMasks[c]);
                             EditMask em = (EditMask) mEditMasks.get(path);
                             hEditMasks.add(em);
+                            if (em == null)
+                            {
+                                LOG.error("edit mask null for path: " + path);
+                            }
                         }
-                        hTable.setEditMasks(hEditMasks);
                     }
-
+                    hTable.setEditMasks(hEditMasks);
+                    
                     String lookupName = md.getAttribute("LookupName");
                     path = resourcePath + ":" + lookupName;
                     Lookup lookup = (Lookup) mLookups.get(path);
@@ -823,6 +996,8 @@ public class MetadataImporter
                     hTable.setUnique(
                         Boolean.valueOf(
                             md.getAttribute("Unique")).booleanValue());
+
+                    hTable.updateLevel();
 
                     hSession.save(hTable);
                     hTables.add(hTable);
@@ -877,9 +1052,13 @@ public class MetadataImporter
     private Map mLookups;
     private Map mSearchHelps;
     private Map mValidationExternals;
+    private Map mValidationExpressions;
     private Map mValidationLookups;
-    private DateFormat mDateFormat;
+    private Map mUpdates;
+    private Map mUpdateHelps;
+
+    private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.20 2003/07/15 21:41:25 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.21 2003/07/16 20:18:44 kgarner Exp $";
 }
