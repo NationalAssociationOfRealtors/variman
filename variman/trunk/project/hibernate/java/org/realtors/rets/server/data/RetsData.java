@@ -15,7 +15,7 @@ public class RetsData implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class RetsData implements Serializable
 
     /**
      *
-     * @return
+     * @return a MClass object
      *
      * @hibernate.many-to-one
      */
@@ -47,7 +47,7 @@ public class RetsData implements Serializable
 
     /**
      *
-     * @return
+     * @return a SortedMap of RetsDataElements
      */
     public SortedMap getDataElements()
     {

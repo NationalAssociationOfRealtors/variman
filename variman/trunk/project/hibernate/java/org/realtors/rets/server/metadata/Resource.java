@@ -16,7 +16,7 @@ public class Resource implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -32,7 +32,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="resourceID"
@@ -53,7 +53,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a ResourceStandardNameEnum
      *
      * @hibernate.property
      * @hibernate.column name="standardName"
@@ -73,7 +73,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -89,7 +89,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="64"
      */
@@ -105,7 +105,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -121,7 +121,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -137,7 +137,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="date"
      */
@@ -153,7 +153,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -169,7 +169,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="date"
      */
@@ -185,7 +185,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -201,7 +201,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="date"
      */
@@ -217,7 +217,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -233,7 +233,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date Object
      *
      * @hibernate.property type="date"
      */
@@ -249,7 +249,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -265,7 +265,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="date"
      */
@@ -281,7 +281,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -297,7 +297,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="date"
      */
@@ -313,7 +313,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -329,7 +329,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="date"
      */
@@ -345,7 +345,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -361,7 +361,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="date"
      */
@@ -377,7 +377,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -393,7 +393,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="date"
      */
@@ -409,7 +409,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a MSystem object
      *
      * @hibernate.many-to-one
      */
@@ -425,7 +425,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of MClass objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -444,7 +444,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of MObject objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -463,7 +463,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of SearchHelp objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -482,7 +482,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of EditMasks
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -501,7 +501,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of Lookup objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -520,7 +520,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of ValidationLookups
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -539,7 +539,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of ValidationExternals
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -558,7 +558,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of ValidationExpressions
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"
@@ -577,7 +577,7 @@ public class Resource implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of UpdateHelp objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="resourceid"

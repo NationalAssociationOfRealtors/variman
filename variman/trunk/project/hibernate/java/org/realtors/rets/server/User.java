@@ -17,7 +17,7 @@ public class User
 
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -38,7 +38,7 @@ public class User
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="80"
      *   not-null="true"
@@ -55,7 +55,7 @@ public class User
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property len="80"
      *   not-null="true"
@@ -72,7 +72,7 @@ public class User
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property unique="true"
      *   not-null="true"
@@ -90,7 +90,7 @@ public class User
 
     /**
      *
-     * @return
+     * @return a PasswordMethod object
      *
      * @hibernate.property
      *   type="org.realtors.rets.server.PasswordMethodType"

@@ -16,7 +16,7 @@ public class RetsHistoryDataElement implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -32,7 +32,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Boolean object
      *
      * @hibernate.property
      */
@@ -48,7 +48,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a String object
      *
      * @hibernate.property
      */
@@ -64,8 +64,8 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
-     *
+     * @return a date object
+     * 
      * @hibernate.property type="date"
      */
     public Date getDateValue()
@@ -80,7 +80,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="timestamp"
      */
@@ -96,7 +96,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="time"
      */
@@ -112,7 +112,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.property
      */
@@ -128,7 +128,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a BigDecimal object
      *
      * @hibernate.property type="big_decimal"
      */
@@ -144,7 +144,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a RetsHistoryData object
      *
      * @hibernate.many-to-one
      */
@@ -160,7 +160,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Table object
      *
      * @hibernate.many-to-one
      * @hibernate.column name="key"
@@ -180,7 +180,7 @@ public class RetsHistoryDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a RetsHistoryMultiSet object
      *
      * @hibernate.many-to-one
      */

@@ -16,7 +16,7 @@ public class RetsDataElement implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -32,7 +32,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Boolean object
      *
      * @hibernate.property
      */
@@ -48,7 +48,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      */
@@ -64,7 +64,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="date"
      */
@@ -80,7 +80,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="timestamp"
      */
@@ -96,7 +96,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="time"
      */
@@ -112,7 +112,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.property
      */
@@ -128,7 +128,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a BigDecimal Object
      *
      * @hibernate.property type="big_decimal"
      */
@@ -144,7 +144,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a RetsDataObject
      *
      * @hibernate.many-to-one
      */
@@ -160,7 +160,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a Table object
      *
      * @hibernate.many-to-one
      * @hibernate.column name="key"
@@ -180,7 +180,7 @@ public class RetsDataElement implements Serializable
 
     /**
      *
-     * @return
+     * @return a RetsMultiSet object
      *
      * @hibernate.many-to-one
      */

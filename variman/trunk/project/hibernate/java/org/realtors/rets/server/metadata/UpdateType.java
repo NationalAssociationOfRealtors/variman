@@ -14,7 +14,7 @@ public class UpdateType implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -30,7 +30,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="systemName"
@@ -51,7 +51,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property
      */
@@ -67,7 +67,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property column="r_default"
      */
@@ -83,7 +83,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return an Update object
      *
      * @hibernate.many-to-one
      */
@@ -99,7 +99,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return an UpdateHelp object
      *
      * @hibernate.many-to-one
      */
@@ -115,7 +115,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return a ValidationLookup object
      *
      * @hibernate.many-to-one
      */
@@ -131,7 +131,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return a ValidationExternal object
      *
      * @hibernate.many-to-one
      */
@@ -147,7 +147,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of UpdateTypeAttributeEnums
      *
      * @hibernate.set inverse="false"
      *   table="rets_metadata_updatetype_attributes"
@@ -167,7 +167,7 @@ public class UpdateType implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of ValidationExpressions
      *
      * @hibernate.set inverse="false"
      * @hibernate.collection-key column="id"

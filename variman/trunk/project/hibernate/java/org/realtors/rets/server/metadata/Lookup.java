@@ -15,7 +15,7 @@ public class Lookup implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class Lookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="lookup_name"
@@ -52,7 +52,7 @@ public class Lookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -68,7 +68,7 @@ public class Lookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -84,7 +84,7 @@ public class Lookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property column="rdate"
      *   type="date"
@@ -101,7 +101,7 @@ public class Lookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Resource object
      *
      * @hibernate.many-to-one
      */
@@ -117,7 +117,7 @@ public class Lookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of LookupType objects
      *
      * @hibernate.set
      * @hibernate.collection-key column="lookupid"

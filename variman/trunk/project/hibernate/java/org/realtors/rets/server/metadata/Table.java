@@ -14,7 +14,7 @@ public class Table implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -30,7 +30,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="systemName"
@@ -51,7 +51,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a TableStandardNameEnum
      *
      * @hibernate.property
      */
@@ -67,7 +67,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -83,7 +83,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="10"
      */
@@ -100,7 +100,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="24"
      */
@@ -136,7 +136,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a DataTypeEnum object
      *
      * @hibernate.property
      */
@@ -152,7 +152,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property
      */
@@ -168,7 +168,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a boolean
      *
      * @hibernate.property
      */
@@ -184,7 +184,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an InterpretationEnum object
      *
      * @hibernate.property
      */
@@ -200,7 +200,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an AlignmentEnum object
      *
      * @hibernate.property
      */
@@ -216,7 +216,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a boolean
      *
      * @hibernate.property
      */
@@ -232,7 +232,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property
      */
@@ -248,7 +248,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an UnitEnum object
      *
      * @hibernate.property
      */
@@ -264,7 +264,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property
      */
@@ -280,7 +280,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property
      */
@@ -296,7 +296,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property
      */
@@ -312,7 +312,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property column="r_default"
      */
@@ -328,7 +328,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an integer
      *
      * @hibernate.property
      */
@@ -344,7 +344,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a boolean
      *
      * @hibernate.property column="r_unique"
      */
@@ -360,7 +360,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return an MClass object
      *
      * @hibernate.many-to-one
      */
@@ -376,7 +376,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of EditMask objects
      *
      * @hibernate.set inverse="false"
      *   table="rets_metadata_table_editmasks"
@@ -396,7 +396,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a Lookup Object
      *
      * @hibernate.many-to-one
      */
@@ -412,7 +412,7 @@ public class Table implements Serializable
 
     /**
      *
-     * @return
+     * @return a SearchHelp object
      *
      * @hibernate.many-to-one
      */

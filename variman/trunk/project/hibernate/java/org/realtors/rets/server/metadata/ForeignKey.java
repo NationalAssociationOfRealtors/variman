@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class ForeignKey implements Serializable
 {
     /**
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -27,7 +27,7 @@ public class ForeignKey implements Serializable
     }
 
     /**
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="foreign_key_id"
@@ -47,7 +47,7 @@ public class ForeignKey implements Serializable
     }
 
     /**
-     * @return
+     * @return a MSystem object
      *
      * @hibernate.many-to-one
      */
@@ -62,7 +62,7 @@ public class ForeignKey implements Serializable
     }
 
     /**
-     * @return
+     * @return a Table object
      *
      * @hibernate.many-to-one
      */
@@ -77,7 +77,7 @@ public class ForeignKey implements Serializable
     }
 
     /**
-     * @return
+     * @return a Table object
      *
      * @hibernate.many-to-one
      */

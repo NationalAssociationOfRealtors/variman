@@ -15,7 +15,7 @@ public class RetsHistoryData implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class RetsHistoryData implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="date"
      */
@@ -47,7 +47,7 @@ public class RetsHistoryData implements Serializable
 
     /**
      *
-     * @return
+     * @return a RetsData object
      *
      * @hibernate.many-to-one
      */

@@ -14,7 +14,7 @@ public class RetsHistoryMultiSet implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -30,7 +30,7 @@ public class RetsHistoryMultiSet implements Serializable
 
     /**
      *
-     * @return
+     * @return a RetsHistoryDataElement
      *
      * @hibernate.many-to-one
      * @hibernate.column name="key"
@@ -50,7 +50,7 @@ public class RetsHistoryMultiSet implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of LookupTypes
      *
      * @hibernate.set inverse="false"
      *   table="rets_history_multi_data_set"

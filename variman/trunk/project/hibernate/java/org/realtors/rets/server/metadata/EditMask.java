@@ -29,7 +29,7 @@ public class EditMask implements Serializable
     }
 
     /**
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="edit_mask_id"
@@ -49,7 +49,7 @@ public class EditMask implements Serializable
     }
 
     /**
-     * @return
+     * @return a String
      *
      * @hibernate.property length="256"
      */
@@ -64,7 +64,7 @@ public class EditMask implements Serializable
     }
 
     /**
-     * @return
+     * @return a Resource object
      * 
      * @hibernate.many-to-one
      */

@@ -15,7 +15,7 @@ public class ValidationLookup implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="validationLookupName"
@@ -52,7 +52,7 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Table Object
      *
      * @hibernate.many-to-one
      */
@@ -68,7 +68,7 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Table Object
      *
      * @hibernate.many-to-one
      */
@@ -84,7 +84,7 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -100,7 +100,7 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property column="r_date"
      *   type="date"
@@ -117,7 +117,7 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Resouce object
      *
      * @hibernate.many-to-one
      */
@@ -133,7 +133,7 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of ValidationLookupTypes
      *
      * @hibernate.set inverse="false"
      * @hibernate.collection-key column="validationLookupID"

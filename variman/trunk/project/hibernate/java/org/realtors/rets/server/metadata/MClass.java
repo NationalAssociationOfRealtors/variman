@@ -15,7 +15,7 @@ public class MClass implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="class_name"
@@ -52,7 +52,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a ClassStandardNameEnum
      *
      * @hibernate.property
      * @hibernate.column name="standardName"
@@ -72,7 +72,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="visible_name"
@@ -93,7 +93,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="64"
      */
@@ -109,7 +109,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -125,7 +125,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="date"
      */
@@ -141,7 +141,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -157,7 +157,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date
      *
      * @hibernate.property type="date"
      */
@@ -173,7 +173,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a Resource object
      *
      * @hibernate.many-to-one
      */
@@ -189,7 +189,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of Table objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="classid"
@@ -208,7 +208,7 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of Update objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="classid"

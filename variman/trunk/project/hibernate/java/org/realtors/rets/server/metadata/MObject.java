@@ -13,7 +13,7 @@ public class MObject implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -29,7 +29,7 @@ public class MObject implements Serializable
 
     /**
      *
-     * @return
+     * @return an ObjectTypeEnum object
      *
      * @hibernate.property
      * @hibernate.column name="objectType"
@@ -49,7 +49,7 @@ public class MObject implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="24"
      */
@@ -65,7 +65,7 @@ public class MObject implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -81,7 +81,7 @@ public class MObject implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="64"
      */
@@ -97,7 +97,7 @@ public class MObject implements Serializable
 
     /**
      *
-     * @return
+     * @return a Resource object
      *
      * @hibernate.many-to-one
      */

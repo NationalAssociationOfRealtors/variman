@@ -15,7 +15,7 @@ public class ValidationExternal implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class ValidationExternal implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="validationExternalName"
@@ -68,7 +68,7 @@ public class ValidationExternal implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property column="r_date"
      *   type="date"
@@ -85,7 +85,7 @@ public class ValidationExternal implements Serializable
 
     /**
      *
-     * @return
+     * @return a Resource Object
      *
      * @hibernate.many-to-one
      */
@@ -111,7 +111,7 @@ public class ValidationExternal implements Serializable
 
     /**
      *
-     * @return
+     * @return a MClass object
      *
      * @hibernate.many-to-one
      */
@@ -127,7 +127,7 @@ public class ValidationExternal implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of ValidationExternalType objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="validationExternalID"

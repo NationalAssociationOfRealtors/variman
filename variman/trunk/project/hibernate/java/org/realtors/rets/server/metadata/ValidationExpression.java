@@ -13,7 +13,7 @@ public class ValidationExpression implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -29,7 +29,7 @@ public class ValidationExpression implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      * @hibernate.column name="validationExpressionID"
@@ -50,7 +50,7 @@ public class ValidationExpression implements Serializable
 
     /**
      *
-     * @return
+     * @return a ValidationExpressionTypeEnum
      *
      * @hibernate.property
      */
@@ -66,7 +66,7 @@ public class ValidationExpression implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      * @hibernate.property length="512"
      *
      */
@@ -82,7 +82,7 @@ public class ValidationExpression implements Serializable
 
     /**
      *
-     * @return
+     * @return a Resource object
      *
      * @hibernate.many-to-one 
      */

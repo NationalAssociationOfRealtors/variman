@@ -15,7 +15,7 @@ public class MSystem implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class MSystem implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="10"
      */
@@ -47,7 +47,7 @@ public class MSystem implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="64"
      */
@@ -63,7 +63,7 @@ public class MSystem implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property
      */
@@ -79,7 +79,7 @@ public class MSystem implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="11"
      */
@@ -95,7 +95,7 @@ public class MSystem implements Serializable
 
     /**
      *
-     * @return
+     * @return a Date object
      *
      * @hibernate.property type="date"
      */
@@ -111,7 +111,7 @@ public class MSystem implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of Resource objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="systemid"
@@ -130,7 +130,7 @@ public class MSystem implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of ForeignKey objects
      *
      * @hibernate.set inverse="true"
      * @hibernate.collection-key column="systemid"

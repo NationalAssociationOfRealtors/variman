@@ -20,7 +20,7 @@ public class AccountingStatistics
 
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      *   unsaved-value="null"
@@ -78,7 +78,7 @@ public class AccountingStatistics
 
     /**
      *
-     * @return
+     * @return a long
      *
      * @hibernate.property
      */
@@ -94,7 +94,7 @@ public class AccountingStatistics
 
     /**
      *
-     * @return
+     * @return a User object
      *
      * @hibernate.many-to-one column="userId"
      */

@@ -15,7 +15,7 @@ public class ValidationExternalType implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -31,7 +31,7 @@ public class ValidationExternalType implements Serializable
 
     /**
      *
-     * @return
+     * @return returns a ValdiationExternal object
      *
      * @hibernate.many-to-one
      */
@@ -68,7 +68,7 @@ public class ValidationExternalType implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of Table objects
      *
      * @hibernate.set inverse="false"
      *   table="rets_validationexternaltype_searchfield"
@@ -88,7 +88,7 @@ public class ValidationExternalType implements Serializable
 
     /**
      *
-     * @return
+     * @return a Set of Table objects
      *
      * @hibernate.set inverse="false"
      *   table="rets_validationexternaltype_displayfield"

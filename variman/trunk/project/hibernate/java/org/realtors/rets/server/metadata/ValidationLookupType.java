@@ -13,7 +13,7 @@ public class ValidationLookupType implements Serializable
 {
     /**
      *
-     * @return
+     * @return a Long object
      *
      * @hibernate.id generator-class="native"
      */
@@ -29,7 +29,7 @@ public class ValidationLookupType implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -45,7 +45,7 @@ public class ValidationLookupType implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -61,7 +61,7 @@ public class ValidationLookupType implements Serializable
 
     /**
      *
-     * @return
+     * @return a String
      *
      * @hibernate.property length="32"
      */
@@ -77,7 +77,7 @@ public class ValidationLookupType implements Serializable
 
     /**
      *
-     * @return
+     * @return a ValidationLookupType object
      *
      * @hibernate.many-to-one 
      */
