@@ -14,7 +14,8 @@ public class DigestAuthorizationRequestTest extends TestCase
             "uri=\"/rets/login\", qop=\"auth\", algorithm=\"MD5\", " +
             "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
             "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
-            "opaque=\"121d932ad13ff598b0df1d700e422812\"", "GET");
+            "opaque=\"121d932ad13ff598b0df1d700e422812\"",
+            "GET", "/rets/login");
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -39,7 +40,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
             "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
             "opaque=\"121d932ad13ff598b0df1d700e422812\", " +
-            "foo=\"bar\", xxx=yyy", "GET");
+            "foo=\"bar\", xxx=yyy", "GET", "/rets/login");
 
         assertTrue(request.verifyResponse("Schmoe"));
     }
@@ -54,7 +55,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "response=\"d7d4e90e15bdc2a43812f9e5383fac59\", " +
             "opaque=\"c54a061147901a1a1ddc55369a3439d8\", " +
             "algorithm=MD5, qop=auth, nc=00000001, " +
-            "cnonce=\"cbbaa5564d53563e\"", "GET");
+            "cnonce=\"cbbaa5564d53563e\"", "GET", "/rets/login");
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -77,7 +78,8 @@ public class DigestAuthorizationRequestTest extends TestCase
             "nonce=\"e023742615efa35fa18df72d750a4317\", uri=\"/rets/login\", " +
             "algorithm=MD5, qop=\"auth\", cnonce=\"NzgzMTA=\", " +
             "nc=00000001, response=\"b83db9c43d82e38380e24ecb03109d5d\", " +
-            "opaque=\"6055cb5ccdff7d130976dafffcd2e12c\"", "GET");
+            "opaque=\"6055cb5ccdff7d130976dafffcd2e12c\"",
+            "GET", "/rets/login");
 
         assertEquals("NzgzMTA=", request.getCnonce());
         assertTrue(request.verifyResponse("Schmoe"));
@@ -113,7 +115,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "opaque=\"27bc2a479bd8213202039dbc3ef5922b\", " +
             "uri=\"/rets/cct/login\", " +
             "response=\"2c69a66c69996c5041f52697e70906b8\", qop=\"auth\", " +
-            "cnonce=\"0a4f113b\", nc=\"00000001\"", "GET");
+            "cnonce=\"0a4f113b\", nc=\"00000001\"", "GET", "/rets/cct/login");
 
         assertEquals("showingtime2", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -191,7 +193,8 @@ public class DigestAuthorizationRequestTest extends TestCase
             "Digest username=\"Joe\", realm=\"RETS Server\", " +
             "nonce=\"e19ef455409e9663b384d837453c74fd\", " +
             "uri=\"/rets/login\", " +
-            "response=\"ddd25f230a426925b4a467e186718094\"", "GET");
+            "response=\"ddd25f230a426925b4a467e186718094\"",
+            "GET", "/rets/login");
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -210,7 +213,7 @@ public class DigestAuthorizationRequestTest extends TestCase
     public void testNullHeader()
     {
         DigestAuthorizationRequest request =
-            new DigestAuthorizationRequest(null, "GET");
+            new DigestAuthorizationRequest(null, "GET", "/rets/login");
         assertNull(request.getUsername());
 
         // Check correct response, but that verification still fails
@@ -224,7 +227,27 @@ public class DigestAuthorizationRequestTest extends TestCase
     {
         try
         {
-            new DigestAuthorizationRequest("Digest", "GET");
+            new DigestAuthorizationRequest("Digest", "GET", "/rets/login");
+            fail("Should have thrown exception");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Expected
+        }
+    }
+
+    public void testUriMismatch()
+    {
+        try
+        {
+            new DigestAuthorizationRequest(
+                "Digest username=\"Joe\", realm=\"RETS Server\", " +
+                "nonce=\"246e1b9f80fd87d67c6eceffbcf89941\", " +
+                "uri=\"/rets/login\", qop=\"auth\", algorithm=\"MD5\", " +
+                "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
+                "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
+                "opaque=\"121d932ad13ff598b0df1d700e422812\"",
+                "GET", "/foo");
             fail("Should have thrown exception");
         }
         catch (IllegalArgumentException e)
