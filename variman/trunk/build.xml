@@ -224,6 +224,7 @@
         <pathelement location="project/hibernate/java"/>
         <pathelement location="project/importer/java"/>
         <pathelement location="project/webapp/java"/>
+        <pathelement location="project/datagen/java"/>
       </sourcepath>
       <classpath>
         <path refid="hibernate.path"/>
