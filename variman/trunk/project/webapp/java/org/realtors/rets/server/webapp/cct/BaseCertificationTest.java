@@ -12,9 +12,9 @@ public abstract class BaseCertificationTest implements CertificationTest
 {
     public BaseCertificationTest()
     {
-        mValidationResults = null;
+        mValidationResult = null;
         mMessage = "";
-        mStatus = StatusEnum.NOTRUN;
+        mStatus = StatusEnum.NOT_RUN;
     }
 
     public String getMessage()
@@ -34,8 +34,8 @@ public abstract class BaseCertificationTest implements CertificationTest
 
     public void stop()
     {
-        mValidationResults = validate();
-        if (mValidationResults.wasSuccessful())
+        mValidationResult = validate();
+        if (mValidationResult.wasSuccessful())
         {
             mStatus = StatusEnum.PASSED;
         }
@@ -43,7 +43,15 @@ public abstract class BaseCertificationTest implements CertificationTest
         {
             mStatus = StatusEnum.FAILED;
         }
-        mMessage = mValidationResults.getMessage();
+        mMessage = mValidationResult.getMessage();
+    }
+
+    public ValidationResult validate()
+    {
+        ValidationResult result = new ValidationResult();
+        RetsHandlers handlers = getRetsHandlers();
+        handlers.validateAll(result);
+        return result;
     }
 
     public void cancel()
@@ -56,8 +64,15 @@ public abstract class BaseCertificationTest implements CertificationTest
         mTestContext = testContext;
     }
 
+    protected RetsHandlers getRetsHandlers()
+    {
+        RetsHandlers handlers =
+            HandlerManager.getInstance().getHandlers(mTestContext);
+        return handlers;
+    }
+
     protected StatusEnum mStatus;
-    private ValidationResult mValidationResults;
+    private ValidationResult mValidationResult;
     protected String mTestContext;
     private String mMessage;
 }
