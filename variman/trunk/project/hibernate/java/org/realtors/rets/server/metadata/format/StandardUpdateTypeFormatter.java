@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.Table;
 
 public class StandardUpdateTypeFormatter extends BaseStandardFormatter
 {
@@ -22,9 +23,11 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
                        String[] levels)
     {
         PrintWriter out = context.getWriter();
+        String resource = levels[RESOURCE_LEVEL];
+        String retsClass = levels[CLASS_LEVEL];
         TagBuilder metadata = new TagBuilder(out, "METADATA-UPDATE_TYPE")
-            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
-            .appendAttribute("Class", levels[CLASS_LEVEL])
+            .appendAttribute("Resource", resource)
+            .appendAttribute("Class", retsClass)
             .appendAttribute("Update", levels[UPDATE_LEVEL])
             .appendAttribute("Version", context.getVersion())
             .appendAttribute("Date", context.getDate())
@@ -33,11 +36,17 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
         for (Iterator i = updateTypes.iterator(); i.hasNext();)
         {
             UpdateType updateType = (UpdateType) i.next();
+            Table table = updateType.getTable();
+            if (!context.isAccessibleTable(table, resource, retsClass))
+            {
+                continue;
+            }
+
             TagBuilder tag = new TagBuilder(out, "UpdateField")
                 .beginContentOnNewLine();
 
             TagBuilder.simpleTag(out, "SystemName",
-                                 updateType.getTable().getSystemName());
+                                 table.getSystemName());
             TagBuilder.simpleTag(out, "Sequence", updateType.getSequence());
             TagBuilder.simpleTag(out, "Attributes", updateType.getAttributes());
             TagBuilder.simpleTag(out, "Default", updateType.getDefault());

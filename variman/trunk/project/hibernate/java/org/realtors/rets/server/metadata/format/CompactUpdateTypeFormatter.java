@@ -12,14 +12,37 @@ package org.realtors.rets.server.metadata.format;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.Table;
 
 public class CompactUpdateTypeFormatter extends MetadataFormatter
 {
+    private Collection filterInaccessible(FormatterContext context,
+                                                Collection updateTypes,
+                                                String[] levels)
+    {
+        String resource = levels[RESOURCE_LEVEL];
+        String retsClass = levels[CLASS_LEVEL];
+        List filteredUpdateTypes = new ArrayList();
+        for (Iterator iterator = updateTypes.iterator(); iterator.hasNext();)
+        {
+            UpdateType updateType = (UpdateType) iterator.next();
+            Table table = updateType.getTable();
+            if (context.isAccessibleTable(table, resource, retsClass))
+            {
+                filteredUpdateTypes.add(updateType);
+            }
+        }
+        return filteredUpdateTypes;
+    }
+
     public void format(FormatterContext context, Collection updateTypes,
                        String[] levels)
     {
+        updateTypes = filterInaccessible(context, updateTypes, levels);
         if (updateTypes.size() == 0)
         {
             return;

@@ -14,25 +14,31 @@ import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
 import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.protocol.TableGroupFilter;
+import org.realtors.rets.server.Group;
+import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.GroupRules;
 
 public class UpdateTypeFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    public UpdateTypeFormatterTest()
     {
-        List updateTypes = new ArrayList();
-        Table table = new Table(123);
-        table.setSystemName("STATUS");
+        HashSet allTables = new HashSet();
 
-        UpdateType updateType = new UpdateType();
-        updateType.setTable(table);
-        updateType.setSequence(12);
+        Table table = new Table(1);
+        table.setSystemName("STATUS");
+        allTables.add(table);
+
+        mStatusType = new UpdateType(1);
+        mStatusType.setTable(table);
+        mStatusType.setSequence(12);
 
         Set attributes = new HashSet();
         attributes.add(UpdateTypeAttributeEnum.INTERACTIVEVALIDATE);
         attributes.add(UpdateTypeAttributeEnum.REQUIRED);
-        updateType.setAttributes(attributes);
+        mStatusType.setAttributes(attributes);
 
-        updateType.setDefault("0");
+        mStatusType.setDefault("0");
 
         Set validationExpressions = new HashSet();
         ValidationExpression ve = new ValidationExpression(1);
@@ -41,22 +47,66 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         ve = new ValidationExpression(2);
         ve.setValidationExpressionID("VE2");
         validationExpressions.add(ve);
-        updateType.setValidationExpressions(validationExpressions);
+        mStatusType.setValidationExpressions(validationExpressions);
 
         UpdateHelp updateHelp = new UpdateHelp(1);
         updateHelp.setUpdateHelpID("UH1");
-        updateType.setUpdateHelp(updateHelp);
+        mStatusType.setUpdateHelp(updateHelp);
 
         ValidationLookup validationLookup = new ValidationLookup(1);
         validationLookup.setValidationLookupName("VL_NAME");
-        updateType.setValidationLookup(validationLookup);
+        mStatusType.setValidationLookup(validationLookup);
 
         ValidationExternal validationExternal = new ValidationExternal(1);
         validationExternal.setValidationExternalName("VE_NAME");
-        updateType.setValidationExternal(validationExternal);
+        mStatusType.setValidationExternal(validationExternal);
 
-        updateTypes.add(updateType);
+        table = new Table(2);
+        table.setSystemName("LIST_PRICE");
+        allTables.add(table);
+        mListPriceType = new UpdateType(2);
+        mListPriceType.setTable(table);
+        mListPriceType.setSequence(13);
+        mListPriceType.setAttributes(attributes);
+        mListPriceType.setDefault("0");
+        mListPriceType.setValidationExpressions(validationExpressions);
+        mListPriceType.setUpdateHelp(updateHelp);
+        mListPriceType.setValidationLookup(validationLookup);
+        mListPriceType.setValidationExternal(validationExternal);
+
+        mGroupFilter = new TableGroupFilter();
+        mGroupFilter.setTables("Property", "RES", allTables);
+
+        mNewspapers = new Group("Newspapers");
+        mGroups = new HashSet();
+        mGroups.add(mNewspapers);
+
+        RuleDescription ruleDescription = new RuleDescription(
+            RuleDescription.EXCLUDE);
+        ruleDescription.setResource("Property");
+        ruleDescription.setRetsClass("RES");
+        ruleDescription.addSystemName("LIST_PRICE");
+        GroupRules rules = new GroupRules(mNewspapers.getName());
+        rules.addRule(ruleDescription);
+        mGroupFilter.addRules(rules);
+    }
+
+    protected List getData()
+    {
+        List updateTypes = new ArrayList();
+        updateTypes.add(mStatusType);
+        updateTypes.add(mListPriceType);
         return updateTypes;
+    }
+
+    protected TableGroupFilter getGroupFilter()
+    {
+        return mGroupFilter;
+    }
+
+    protected Set getGroups()
+    {
+        return mGroups;
     }
 
     protected String[] getLevels()
@@ -119,4 +169,19 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
     {
         return getExpectedStandard();
     }
+
+    public void testCompactFormatIsEmptyIfAllTablesFiltered()
+    {
+        ArrayList data = new ArrayList();
+        data.add(mListPriceType);
+        String formatted = format(getCompactFormatter(), data,
+                                  getLevels(), FormatterContext.NOT_RECURSIVE);
+        assertLinesEqual("", formatted);
+    }
+
+    private UpdateType mStatusType;
+    private UpdateType mListPriceType;
+    private TableGroupFilter mGroupFilter;
+    private Group mNewspapers;
+    private HashSet mGroups;
 }
