@@ -214,6 +214,11 @@ public class MetadataImporter
                                            md.getAttribute("StandardName")));
                 hClass.setVisibleName(md.getAttribute("VisibleName"));
                 hClass.setDescription(md.getAttribute("Description"));
+                
+                StringBuffer tmp = new StringBuffer("rets_");
+                tmp.append(resource.getResourceID()).append("_");
+                tmp.append(hClass.getClassName());
+                hClass.setDbTable(tmp.toString());
 
                 hClass.updateLevel();
 
@@ -255,7 +260,7 @@ public class MetadataImporter
                     hObject.setVisibleName(md.getAttribute("VisibleName"));
                     hObject.setDescription(
                         StringUtils.substring(
-                            md.getAttribute("Description"),0,63));
+                            md.getAttribute("Description"),0,64));
 
                     // Should we have an updateLevel?
 
@@ -916,7 +921,10 @@ public class MetadataImporter
                     hTable.setLongName(md.getAttribute("LongName"));
 
                     hTable.setDbName(
-                        StringUtils.substring(md.getAttribute("DbName"),0,9));
+                        StringUtils.substring(
+                            "r_" + md.getAttribute("DbName"),0,10));
+                        
+                        
                     hTable.setShortName(md.getAttribute("ShortName"));
                     hTable.setMaximumLength(
                         Integer.parseInt(md.getAttribute("MaximumLength")));
@@ -1062,5 +1070,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.27 2003/07/30 20:20:52 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.28 2003/08/04 20:41:26 kgarner Exp $";
 }
