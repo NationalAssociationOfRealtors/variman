@@ -68,8 +68,12 @@ options
     }
 
     private EqualClause newEqualClause(String field, String value) {
+        return newEqualClause(field, new StringSqlConverter(value));
+    }
+
+    private EqualClause newEqualClause(String field, SqlConverter sql) {
         String column = mMetadata.fieldToColumn(field);
-        return new EqualClause(column, new StringSqlConverter(value));
+        return new EqualClause(column, sql);
     }
 
     private String fieldToColumn(String field) {
@@ -157,13 +161,17 @@ range [String field] returns [SqlConverter sql]
     ;
 
 range_component returns [SqlConverter sql]
-    : p:period  {sql = new StringSqlConverter(p.getText());}
+    : sql=period
     | n:NUMBER  {sql = new StringSqlConverter(n.getText());}
     | t:TEXT    {sql = new QuotedSqlConverter(t.getText());}
     ;
 
-period
-    : DATE | TODAY | DATETIME | NOW | TIME
+period returns [SqlConverter sql]
+    : d:DATE       {sql = new DateSqlConverter(d.getText());}
+    | t:TIME       {sql = new TimeSqlConverter(t.getText());}
+    | dt:DATETIME  {sql = new DateTimeSqlConverter(dt.getText());}
+    | TODAY        {sql = new DateSqlConverter();}
+    | NOW          {sql = new DateTimeSqlConverter();}
     ;
 
 string_literal returns [SqlConverter sql]
@@ -177,6 +185,6 @@ number_value returns [SqlConverter sql]
     ;
 
 period_value returns [SqlConverter sql]
-    { sql = null; }
-    : PERIOD
+    { sql = null; String f; SqlConverter p;}
+    : #(PERIOD f=field p=period) { sql = newEqualClause(f, p);}
     ;
