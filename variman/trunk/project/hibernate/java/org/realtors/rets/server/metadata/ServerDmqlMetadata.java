@@ -18,6 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Comparator;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 import org.realtors.rets.server.dmql.DmqlFieldType;
@@ -50,22 +53,36 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     private void init(Collection tables, boolean standardNames)
     {
+        DefaultColumnList defaultColumnList = new DefaultColumnList();
         for (Iterator i = tables.iterator(); i.hasNext();)
         {
             Table table = (Table) i.next();
+            String dbName = table.getDbName();
+            int defaultOrder = table.getDefault();
+            // Skip all that have default set to -1
+            if (defaultOrder == -1)
+            {
+                continue;
+            }
+
             String fieldName = getTableName(table,  standardNames);
             if (fieldName == null)
             {
                 // Skip tables that have no field name.  Technically, this
-                // should only happen for tables that haveno standard name.
+                // should only happen for tables that have no standard name.
                 continue;
             }
+
             mFields.put(fieldName, table);
+            if (defaultOrder > 0)
+            {
+                defaultColumnList.add(defaultOrder, dbName);
+            }
 
             if (table.getInterpretation() != InterpretationEnum.LOOKUPMULTI)
             {
-                mFieldToColumn.put(fieldName, table.getDbName());
-                mColumnToField.put(table.getDbName(), fieldName);
+                mFieldToColumn.put(fieldName, dbName);
+                mColumnToField.put(dbName, fieldName);
             }
 
             Lookup lookup = table.getLookup();
@@ -89,6 +106,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
                 mFieldTypes.put(fieldName, DmqlFieldType.CHARACTER);
             }
         }
+        mDefaultColumnNames = defaultColumnList.getColumnNames();
     }
 
     private boolean isNumeric(Table table)
@@ -206,7 +224,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public List getAllColumns()
     {
-        return new ArrayList(mFieldToColumn.values());
+        return mDefaultColumnNames;
     }
 
     public String getLookupDbValue(String lookupName, String lookupValue)
@@ -268,6 +286,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private Set mStrings;
     private static final Map LISTING_STATUS_VALUES;
     private Set mNumerics;
+    private List mDefaultColumnNames;
 
     static
     {
