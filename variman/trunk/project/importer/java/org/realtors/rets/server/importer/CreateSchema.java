@@ -114,6 +114,10 @@ public class CreateSchema extends RetsHelpers
                         sb.append(mTypeMappings.get("decimal"));
                         break;
                 }
+                if (table.isUnique())
+                {
+                    sb.append(" unique");
+                }
                 sb.append(",").append(mLs);
 
                 if (table.getIndex() > 0)
