@@ -10,9 +10,9 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @hibernate.class table="rets_cct_validationresults"
  */
-public class ValidationResults
+public class ValidationResult
 {
-    public ValidationResults()
+    public ValidationResult()
     {
         mStatus = StatusEnum.NOTRUN;
         mMessages = new ArrayList();

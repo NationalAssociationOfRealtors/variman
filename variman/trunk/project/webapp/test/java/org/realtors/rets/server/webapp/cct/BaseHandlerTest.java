@@ -5,7 +5,7 @@ package org.realtors.rets.server.webapp.cct;
 import java.io.IOException;
 import javax.servlet.ServletException;
 
-import org.realtors.rets.server.cct.ValidationResults;
+import org.realtors.rets.server.cct.ValidationResult;
 
 import com.meterware.servletunit.InvocationContext;
 import com.meterware.servletunit.ServletRunner;
@@ -33,7 +33,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.setGetInvokeCount(InvokeCount.ONE);
         String expected = InvokeCount.ONE.getName();
 
-        ValidationResults result = mTest.validate();
+        ValidationResult result = mTest.validate();
         assertFalse(result.wasSuccessful());
         assertEquals("test get invoke count was 0, expected " + expected,
                      result.getMessage());
@@ -57,7 +57,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.setGetInvokeCount(InvokeCount.ZERO);
         String expected = InvokeCount.ZERO.getName();
 
-        ValidationResults result = mTest.validate();
+        ValidationResult result = mTest.validate();
         assertTrue(result.wasSuccessful());
         assertEquals("Success", result.getMessage());
 
@@ -81,7 +81,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
         String expected = InvokeCount.ZERO_OR_ONE.getName();
 
-        ValidationResults result = mTest.validate();
+        ValidationResult result = mTest.validate();
         assertTrue(result.wasSuccessful());
         assertEquals("Success", result.getMessage());
 
@@ -103,7 +103,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.addRequiredHeader("Accept", "^\\*/\\*$");
 
         mClient.getResponse(TEST_URL);
-        ValidationResults results = mTest.validate();
+        ValidationResult results = mTest.validate();
         assertFalse(results.wasSuccessful());
         assertEquals("test HTTP header [Accept] was null, expected ^\\*/\\*$",
                      results.getMessage());
@@ -121,7 +121,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.addRequiredHeader("Accept", "^\\*/\\*$");
 
         mClient.getResponse(TEST_URL);
-        ValidationResults results = mTest.validate();
+        ValidationResult results = mTest.validate();
         assertFalse(results.wasSuccessful());
         assertEquals("test HTTP header [Accept] was null, expected ^\\*/\\*$",
                      results.getMessage());
@@ -139,7 +139,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.addCookie("RETS-Session-ID", "^testCookie$");
 
         mClient.getResponse(TEST_URL);
-        ValidationResults results = mTest.validate();
+        ValidationResult results = mTest.validate();
         assertFalse(results.wasSuccessful());
         assertEquals("test HTTP cookie [RETS-Session-ID] was null, expected " +
                      "^testCookie$", results.getMessage());

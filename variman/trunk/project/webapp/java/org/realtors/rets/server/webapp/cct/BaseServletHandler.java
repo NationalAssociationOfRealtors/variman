@@ -85,21 +85,21 @@ public abstract class BaseServletHandler implements ServletHandler
         mInvokeCount = invokeCount;
     }
 
-    public ValidationResults validate()
+    public ValidationResult validate()
     {
-        ValidationResults results = new ValidationResults();
+        ValidationResult results = new ValidationResult();
         validate(results);
         return results;
     }
 
-    public void validate(ValidationResults results)
+    public void validate(ValidationResult results)
     {
         validateInvokeCount(results);
         validateHeaders(results);
         validateCookies(results);
     }
 
-    private void validateInvokeCount(ValidationResults results)
+    private void validateInvokeCount(ValidationResult results)
     {
         boolean failed = false;
         if (mInvokeCount.equals(InvokeCount.ZERO) && !(mDoGetInvokeCount == 0))
@@ -128,7 +128,7 @@ public abstract class BaseServletHandler implements ServletHandler
         }
     }
 
-    private void validateHeaders(ValidationResults result)
+    private void validateHeaders(ValidationResult result)
     {
         Set names = mExpectedHeaders.keySet();
         for (Iterator iterator = names.iterator(); iterator.hasNext();)
@@ -147,7 +147,7 @@ public abstract class BaseServletHandler implements ServletHandler
         }
     }
 
-    private void validateCookies(ValidationResults results)
+    private void validateCookies(ValidationResult results)
     {
         Set names = mExpectedCookies.keySet();
         for (Iterator iterator = names.iterator(); iterator.hasNext();)

@@ -3,7 +3,7 @@
 package org.realtors.rets.server.webapp.cct.tests;
 
 import org.realtors.rets.server.cct.StatusEnum;
-import org.realtors.rets.server.cct.ValidationResults;
+import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
 import org.realtors.rets.server.webapp.cct.HandlerManager;
 import org.realtors.rets.server.webapp.cct.InvokeCount;
@@ -13,9 +13,9 @@ import org.realtors.rets.server.webapp.cct.LogoutHandler;
 
 public class RelativeUrlLogin extends BaseCertificationTest
 {
-    public ValidationResults validate()
+    public ValidationResult validate()
     {
-        ValidationResults results = new ValidationResults();
+        ValidationResult results = new ValidationResult();
         mLogin.validate(results);
         mAction.validate(results);
         mLogout.validate(results);

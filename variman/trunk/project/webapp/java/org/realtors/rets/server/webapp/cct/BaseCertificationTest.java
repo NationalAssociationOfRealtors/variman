@@ -3,7 +3,7 @@
 package org.realtors.rets.server.webapp.cct;
 
 import org.realtors.rets.server.cct.StatusEnum;
-import org.realtors.rets.server.cct.ValidationResults;
+import org.realtors.rets.server.cct.ValidationResult;
 
 /**
  * Subclasses must implement getDescription(), start(), and validate().
@@ -57,7 +57,7 @@ public abstract class BaseCertificationTest implements CertificationTest
     }
 
     protected StatusEnum mStatus;
-    private ValidationResults mValidationResults;
+    private ValidationResult mValidationResults;
     protected String mTestContext;
     private String mMessage;
 }

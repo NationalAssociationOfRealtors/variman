@@ -19,9 +19,9 @@ public interface ServletHandler
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException;
 
-    public void validate(ValidationResults results);
+    public void validate(ValidationResult results);
 
-    public ValidationResults validate();
+    public ValidationResult validate();
 
     public void setGetInvokeCount(InvokeCount callCount);
 }
