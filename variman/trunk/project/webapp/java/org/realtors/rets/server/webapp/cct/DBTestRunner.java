@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -18,8 +16,9 @@ import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.cct.DBValidationResult;
 import org.realtors.rets.server.cct.DBValidationResults;
 import org.realtors.rets.server.cct.ValidationResults;
-import org.realtors.rets.server.webapp.InitServlet;
 import org.realtors.rets.server.webapp.WebApp;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author kgarner

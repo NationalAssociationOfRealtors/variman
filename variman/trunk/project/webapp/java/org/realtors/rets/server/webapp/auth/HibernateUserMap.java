@@ -10,7 +10,6 @@ import net.sf.hibernate.Session;
 
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
-import org.realtors.rets.server.webapp.InitServlet;
 import org.realtors.rets.server.webapp.WebApp;
 
 import org.apache.log4j.Logger;
