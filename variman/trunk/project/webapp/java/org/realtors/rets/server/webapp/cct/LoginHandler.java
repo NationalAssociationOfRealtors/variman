@@ -21,6 +21,7 @@ import org.realtors.rets.server.RetsVersion;
 import org.realtors.rets.server.webapp.RetsServletRequest;
 import org.realtors.rets.server.webapp.RetsServletResponse;
 import org.realtors.rets.server.webapp.SessionFilter;
+import org.realtors.rets.server.webapp.ServletUtils;
 
 public class LoginHandler extends BaseServletHandler
 {
@@ -73,12 +74,7 @@ public class LoginHandler extends BaseServletHandler
     {
         SessionFilter.validateSession(request.getSession());
 
-        mContextPath = new StringBuffer();
-        mContextPath.append(request.getScheme()).append("://");
-        mContextPath.append(request.getServerName());
-        mContextPath.append(":").append(request.getServerPort());
-        mContextPath.append(request.getContextPath());
-
+        mContextPath = ServletUtils.getContextPath(request);
         Cookie cookie = new Cookie("RETS-Session-ID", mSessionId);
         cookie.setPath("/");
         response.addCookie(cookie);

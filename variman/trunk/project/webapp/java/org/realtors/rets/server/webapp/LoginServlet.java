@@ -34,11 +34,7 @@ public class LoginServlet extends RetsServlet
                           RetsServletResponse response)
         throws RetsServerException, IOException
     {
-        StringBuffer contextPath = new StringBuffer();
-        contextPath.append(request.getScheme()).append("://");
-        contextPath.append(request.getServerName());
-        contextPath.append(":").append(request.getServerPort());
-        contextPath.append(request.getContextPath());
+        StringBuffer contextPath = ServletUtils.getContextPath(request);
         LOG.debug("context=" + contextPath);
 
         HttpSession session = request.getSession();
