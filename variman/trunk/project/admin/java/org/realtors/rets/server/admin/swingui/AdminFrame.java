@@ -73,6 +73,7 @@ public class AdminFrame extends JFrame implements ActionListener
         mUserMenu.add(mUsersPanel.getAddUserAction());
         mUserMenu.add(mUsersPanel.getRemoveUserAction());
         mUserMenu.add(mUsersPanel.getChangePasswordAction());
+        mUserMenu.add(mUsersPanel.getEditUserAction());
         mUserMenu.setEnabled(false);
 
         mStatusBar = new JLabel("Status bar");
