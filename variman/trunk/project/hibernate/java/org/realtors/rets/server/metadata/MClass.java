@@ -109,70 +109,6 @@ public class MClass implements Serializable
 
     /**
      *
-     * @return a String
-     *
-     * @hibernate.property length="11"
-     */
-    public String getTableVersion()
-    {
-        return mTableVersion;
-    }
-
-    public void setTableVersion(String tableVersion)
-    {
-        mTableVersion = tableVersion;
-    }
-
-    /**
-     *
-     * @return a Date
-     *
-     * @hibernate.property type="date"
-     */
-    public Date getTableDate()
-    {
-        return mTableDate;
-    }
-
-    public void setTableDate(java.util.Date tableDate)
-    {
-        mTableDate = tableDate;
-    }
-
-    /**
-     *
-     * @return a String
-     *
-     * @hibernate.property length="11"
-     */
-    public String getUpdateVersion()
-    {
-        return mUpdateVersion;
-    }
-
-    public void setUpdateVersion(String updateVersion)
-    {
-        mUpdateVersion = updateVersion;
-    }
-
-    /**
-     *
-     * @return a Date
-     *
-     * @hibernate.property type="date"
-     */
-    public Date getUpdateDate()
-    {
-        return mUpdateDate;
-    }
-
-    public void setUpdateDate(java.util.Date updateDate)
-    {
-        mUpdateDate = updateDate;
-    }
-
-    /**
-     *
      * @return a Resource object
      *
      * @hibernate.many-to-one
@@ -273,18 +209,6 @@ public class MClass implements Serializable
 
     /** nullable persistent field */
     private String mDescription;
-
-    /** nullable persistent field */
-    private String mTableVersion;
-
-    /** nullable persistent field */
-    private java.util.Date mTableDate;
-
-    /** nullable persistent field */
-    private String mUpdateVersion;
-
-    /** nullable persistent field */
-    private java.util.Date mUpdateDate;
 
     /** nullable persistent field */
     private Resource mResourceid;

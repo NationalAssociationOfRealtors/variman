@@ -52,39 +52,6 @@ public class ValidationExternal implements Serializable
 
     /**
      *
-     * @return
-     *
-     * *@hibernate.property length="11"
-     */
-    public String getVersion()
-    {
-        return mVersion;
-    }
-
-    public void setVersion(String version)
-    {
-        mVersion = version;
-    }
-
-    /**
-     *
-     * @return a Date object
-     *
-     * @hibernate.property column="r_date"
-     *   type="date"
-     */
-    public Date getDate()
-    {
-        return mDate;
-    }
-
-    public void setDate(Date date)
-    {
-        mDate = date;
-    }
-
-    /**
-     *
      * @return a Resource Object
      *
      * @hibernate.many-to-one
@@ -177,12 +144,6 @@ public class ValidationExternal implements Serializable
 
     /** nullable persistent field */
     private String mValidationExternalName;
-
-    /** nullable persistent field */
-    private String mVersion;
-
-    /** nullable persistent field */
-    private Date mDate;
 
     /** nullable persistent field */
     private Resource mResourceid;

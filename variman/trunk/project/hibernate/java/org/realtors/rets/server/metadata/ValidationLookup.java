@@ -84,39 +84,6 @@ public class ValidationLookup implements Serializable
 
     /**
      *
-     * @return a String
-     *
-     * @hibernate.property length="11"
-     */
-    public String getVersion()
-    {
-        return version;
-    }
-
-    public void setVersion(String version)
-    {
-        this.version = version;
-    }
-
-    /**
-     *
-     * @return a Date object
-     *
-     * @hibernate.property column="r_date"
-     *   type="date"
-     */
-    public Date getDate()
-    {
-        return mDate;
-    }
-
-    public void setDate(Date date)
-    {
-        mDate = date;
-    }
-
-    /**
-     *
      * @return a Resouce object
      *
      * @hibernate.many-to-one
@@ -184,12 +151,6 @@ public class ValidationLookup implements Serializable
 
     /** nullable persistent field */
     private Table mParent2Field;
-
-    /** nullable persistent field */
-    private String version;
-
-    /** nullable persistent field */
-    private Date mDate;
 
     /** nullable persistent field */
     private Resource mResourceid;
