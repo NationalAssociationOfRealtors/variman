@@ -71,6 +71,7 @@ public class DataGenerator extends DataGenBase
                 );
                 // todo: LookupMulti EF needs to be added.
                 // todo: LookupMulti LIF needs to be added.
+                mCount += mRandom.nextInt(10);
                 ps.setInt(1, i);
                 ps.setInt(2, mRandom.nextInt(1000000));
 
