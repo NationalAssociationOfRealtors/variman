@@ -2,7 +2,8 @@
 			   ===============
 
 Rex is a RETS 1.0 and 1.5 compliant server. Rex is developed under an
-Open Source license at the Center for REALTOR(R) technology.
+Open Source license (see LICENSE.TXT) at the Center for REALTOR(R)
+technology.
 
 Running Rex on Windows
 ======================
@@ -33,3 +34,13 @@ or higher and a servlet container, such as Tomcat, Resin, or WebLogic.
 Configure the "webapp" directory as a web application inside your
 servlet container.
 
+Resources
+=========
+
+Rex Website:
+
+  http://www.crt.realtors.org/projects/rets/rex/
+
+Support mailing list:
+
+  http://www.crt.realtors.org/mailman/listinfo/rex-users
