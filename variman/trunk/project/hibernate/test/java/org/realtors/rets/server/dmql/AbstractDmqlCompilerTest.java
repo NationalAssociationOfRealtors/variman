@@ -247,5 +247,111 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         assertInvalidParse("(OWNER=xyz+)");
     }
 
+    public void testStringEquals() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=foo)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("foo"));
+        assertEquals(list, sql);
+    }
+
+    public void testStringEqualsDigitsOnly() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=12345)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("12345"));
+        assertEquals(list, sql);
+    }
+
+    public void testStringStart() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=f*)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        DmqlString string = new DmqlString();
+        string.add("f");
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+        assertEquals(list, sql);
+    }
+
+    public void testStringContains() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=*foo*)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        DmqlString string = new DmqlString();
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string.add("foo");
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+        assertEquals(list, sql);
+    }
+
+    public void testStringChar() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=f?o)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        DmqlString string = new DmqlString();
+        string.add("f");
+        string.add(DmqlString.MATCH_ZERO_OR_ONE);
+        string.add("o");
+        list.add(string);
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=?oo)");
+        list = new DmqlStringList("r_OWNER");
+        string = new DmqlString();
+        string.add(DmqlString.MATCH_ZERO_OR_ONE);
+        string.add("oo");
+        list.add(string);
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=fo?)");
+        list = new DmqlStringList("r_OWNER");
+        string = new DmqlString();
+        string.add("fo");
+        string.add(DmqlString.MATCH_ZERO_OR_ONE);
+        list.add(string);
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=?)");
+        list = new DmqlStringList("r_OWNER");
+        string = new DmqlString();
+        string.add(DmqlString.MATCH_ZERO_OR_ONE);
+        list.add(string);
+        assertEquals(list, sql);
+    }
+
+    public void testStringList() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=foo,f*,*foo*,f?o,50)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        DmqlString string = new DmqlString();
+        string.add("foo");
+        list.add(string);
+
+        string = new DmqlString();
+        string.add("f");
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+
+        string = new DmqlString();
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string.add("foo");
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+
+        string = new DmqlString();
+        string.add("f");
+        string.add(DmqlString.MATCH_ZERO_OR_ONE);
+        string.add("o");
+        list.add(string);
+
+        string = new DmqlString();
+        string.add("50");
+        list.add(string);
+
+        assertEquals(list, sql);
+    }
+
     protected SimpleDmqlMetadata mMetadata;
 }
