@@ -30,6 +30,7 @@ public class Resource extends ServerMetadata implements Serializable
         mSearchHelps = Collections.EMPTY_SET;
         mEditMasks  = Collections.EMPTY_SET;
         mLookups = Collections.EMPTY_SET;
+        mUpdateHelps = Collections.EMPTY_SET;
         mValidationLookups = Collections.EMPTY_SET;
         mValidationExternals = Collections.EMPTY_SET;
         mValidationExpressions = Collections.EMPTY_SET;
@@ -417,6 +418,17 @@ public class Resource extends ServerMetadata implements Serializable
     public void setUpdateHelps(Set updateHelps)
     {
         mUpdateHelps = updateHelps;
+    }
+
+    public void addUpdateHelp(UpdateHelp updateHelp)
+    {
+        if (mUpdateHelps == Collections.EMPTY_SET)
+        {
+            mUpdateHelps = new HashSet();
+        }
+        updateHelp.setResource(this);
+        updateHelp.updateLevel();
+        mUpdateHelps.add(updateHelp);
     }
 
     /**

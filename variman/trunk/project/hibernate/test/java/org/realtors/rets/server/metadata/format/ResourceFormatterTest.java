@@ -15,6 +15,7 @@ import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.metadata.UpdateHelp;
 
 public class ResourceFormatterTest extends FormatterTestCase
 {
@@ -34,6 +35,7 @@ public class ResourceFormatterTest extends FormatterTestCase
         resource.addSearchHelp(new SearchHelp(1));
         resource.addEditMask(new EditMask(1));
         resource.addLookup(new Lookup(1));
+        resource.addUpdateHelp(new UpdateHelp(1));
         resource.addValidationLookup(new ValidationLookup(1));
         resource.addValidationExternal(new ValidationExternal(1));
         resource.addValidationExpression(new ValidationExpression(1));
@@ -104,6 +106,7 @@ public class ResourceFormatterTest extends FormatterTestCase
             SearchHelp.TABLE + "\n" +
             EditMask.TABLE + "\n" +
             Lookup.TABLE + "\n" +
+            UpdateHelp.TABLE + "\n" +
             ValidationLookup.TABLE + "\n" +
             ValidationExternal.TABLE + "\n" +
             ValidationExpression.TABLE + "\n";
@@ -203,9 +206,10 @@ public class ResourceFormatterTest extends FormatterTestCase
             SearchHelp.TABLE + EOL +
             EditMask.TABLE + EOL +
             Lookup.TABLE + EOL +
+            UpdateHelp.TABLE + EOL +
             ValidationLookup.TABLE + EOL +
-            ValidationExternal.TABLE + EOL +
             ValidationExpression.TABLE + EOL +
+            ValidationExternal.TABLE + EOL +
             "</Resource>" + EOL +
             "</METADATA-RESOURCE>" + EOL,
             formatted);

@@ -27,6 +27,7 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.UpdateHelp;
 
 public class MetadataSegmentFormatter
 {
@@ -65,6 +66,8 @@ public class MetadataSegmentFormatter
                              new CompactSearchHelpFormatter());
             mFormmatters.put(EditMask.class, new CompactEditMaskFormatter());
             mFormmatters.put(Lookup.class, new CompactLookupFormatter());
+            mFormmatters.put(UpdateHelp.class,
+                             new CompactUpdateHelpFormatter());
             mFormmatters.put(LookupType.class,
                              new CompactLookupTypeFormatter());
             mFormmatters.put(ValidationLookup.class,

@@ -634,12 +634,12 @@ public class MetadataImporter extends MetadataHelpers
                     Metadata md = (Metadata) j.next();
                     UpdateHelp hUpdateHelp = new UpdateHelp();
 
-                    hUpdateHelp.setResourceid(resource);
+                    hUpdateHelp.setResource(resource);
                     hUpdateHelp.setUpdateHelpID(
                         md.getAttribute("UpdateHelpID"));
                     hUpdateHelp.setValue(md.getAttribute("Value"));
 
-                    // Should we have an updateLevel?
+                    hUpdateHelp.updateLevel();
 
                     hSession.save(hUpdateHelp);
                     hUpdateHelps.add(hUpdateHelp);
@@ -1192,7 +1192,7 @@ public class MetadataImporter extends MetadataHelpers
     private SessionFactory mSessions;
     private String mUsername;
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.35 2003/09/24 20:27:02 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.36 2003/10/09 15:33:43 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 

@@ -3,8 +3,6 @@
 package org.realtors.rets.server.metadata;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Utilize ObjectMother test pattern.
@@ -25,10 +23,7 @@ public class ObjectMother
         resource.setSystem(system);
         resource.setResourceID("Property");
         resource.updateLevel();
-
-        Set resources = new HashSet();
-        resources.add(resource);
-        system.setResources(resources);
+        system.addResource(resource);
         return resource;
     }
 
@@ -37,7 +32,6 @@ public class ObjectMother
         MClass clazz = new MClass();
         Resource resource = createResource();
         clazz.setClassName("RES");
-        resource.setClasses(new HashSet());
         resource.addClass(clazz);
         return clazz;
     }
@@ -47,7 +41,6 @@ public class ObjectMother
         Table table = new Table();
         MClass clazz = createClass();
         table.setSystemName("E_SCHOOL");
-        clazz.setTables(new HashSet());
         clazz.addTable(table);
         return table;
     }
@@ -59,6 +52,16 @@ public class ObjectMother
         update.setUpdateName("Change");
         update.updateLevel();
         return update;
+    }
+
+    public static UpdateHelp createUpdateHelp()
+    {
+        UpdateHelp updateHelp = new UpdateHelp();
+        updateHelp.setUpdateHelpID("1");
+        updateHelp.setValue("Enter the number in the following format");
+        Resource resource = createResource();
+        resource.addUpdateHelp(updateHelp);
+        return updateHelp;
     }
 
     public static UpdateType createUpdateType()
@@ -97,7 +100,6 @@ public class ObjectMother
         Resource resource = createResource();
         Lookup lookup = new Lookup();
         lookup.setLookupName("E_SCHOOL");
-        resource.setLookups(new HashSet());
         resource.addLookup(lookup);
         return lookup;
     }
@@ -107,7 +109,6 @@ public class ObjectMother
         Lookup lookup = createLookup();
         LookupType lookupType = new LookupType();
         lookupType.setValue("303");
-        lookup.setLookupTypes(new HashSet());
         lookup.addLookupType(lookupType);
         return lookupType;
     }

@@ -81,9 +81,10 @@ public class StandardResourceFormatter extends MetadataFormatter
                 context.format(resource.getSearchHelps(), path);
                 context.format(resource.getEditMasks(), path);
                 context.format(resource.getLookups(), path);
+                context.format(resource.getUpdateHelps(), path);
                 context.format(resource.getValidationLookups(), path);
-                context.format(resource.getValidationExternals(), path);
                 context.format(resource.getValidationExpressions(), path);
+                context.format(resource.getValidationExternals(), path);
             }
 
             resourceTag.close();

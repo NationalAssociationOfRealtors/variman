@@ -22,6 +22,7 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.UpdateHelp;
 
 import junit.framework.TestCase;
 
@@ -53,6 +54,8 @@ public class MetadataSegmentFormatterTest extends TestCase
                    CompactEditMaskFormatter);
         assertTrue(visitor.getFormatter(Lookup.class) instanceof
                    CompactLookupFormatter);
+        assertTrue(visitor.getFormatter(UpdateHelp.class) instanceof
+                   CompactUpdateHelpFormatter);
         assertTrue(visitor.getFormatter(LookupType.class) instanceof
                    CompactLookupTypeFormatter);
         assertTrue(visitor.getFormatter(ValidationLookup.class) instanceof

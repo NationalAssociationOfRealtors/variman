@@ -8,7 +8,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * @hibernate.class table="rets_metadata_updatehelp"
  */
-public class UpdateHelp implements Serializable
+public class UpdateHelp extends ServerMetadata implements Serializable
 {
     public UpdateHelp(long id)
     {
@@ -78,20 +78,49 @@ public class UpdateHelp implements Serializable
      * @return a Resource object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="resourceid"
+     *   not-null="true"
      */
-    public Resource getResourceid()
+    public Resource getResource()
     {
-        return mResourceid;
+        return mResource;
     }
 
-    public void setResourceid(Resource resourceid)
+    public void setResource(Resource resource)
     {
-        mResourceid = resourceid;
+        mResource = resource;
+    }
+
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mResource.getPath();
     }
 
     public String getPath()
     {
-        return mResourceid.getPath() + ":" + mUpdateHelpID;
+        return mLevel + ":" + mUpdateHelpID;
+    }
+
+    public String getTableName()
+    {
+        return TABLE;
     }
 
     public String toString()
@@ -128,5 +157,9 @@ public class UpdateHelp implements Serializable
     private String mValue;
 
     /** nullable persistent field */
-    private Resource mResourceid;
+    private Resource mResource;
+
+    private String mLevel;
+
+    public static final String TABLE = "UPDATE_HELP";
 }
