@@ -198,6 +198,12 @@ public class SearchFormatterContext
         }
         else
         {
+            // StringUtils.split returns null on a null string, not an
+            // empty array
+            if (value == null)
+            {
+                return null;
+            }
             String[] values = StringUtils.split(value, ",");
             StringBuffer shortValues = new StringBuffer();
             String separator = "";
