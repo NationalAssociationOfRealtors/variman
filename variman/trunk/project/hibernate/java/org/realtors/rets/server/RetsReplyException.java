@@ -2,19 +2,27 @@
  */
 package org.realtors.rets.server;
 
-import org.apache.commons.lang.exception.NestableException;
-
 /**
  * A class representing an error case that can be represented by a RETS reply
  * code.
  */
-public class RetsReplyException extends NestableException
+public class RetsReplyException extends RetsServerException
 {
     public RetsReplyException(int replyCode, String meaning)
     {
         super(meaning);
         mReplyCode = replyCode;
         mMeaning = meaning;
+    }
+
+    public RetsReplyException(ReplyCode replyCode)
+    {
+        this(replyCode.getValue(), replyCode.getName());
+    }
+
+    public RetsReplyException(ReplyCode replyCode, String meaning)
+    {
+        this(replyCode.getValue(), meaning);
     }
 
     public int getReplyCode()
