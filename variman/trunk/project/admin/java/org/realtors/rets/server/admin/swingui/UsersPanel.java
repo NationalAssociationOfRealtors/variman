@@ -34,7 +34,7 @@ public class UsersPanel extends JPanel
         mUserList = new JList();
         mUserList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mUserList.getSelectionModel().addListSelectionListener(
-            new OnSelectionChanged());
+            new OnUserSelectionChanged());
         mUserList.addMouseListener(new ListDoubleClickListener());
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -83,15 +83,20 @@ public class UsersPanel extends JPanel
 
         JPanel box = new JPanel(new BorderLayout());
         mGroupsList = new JList();
+        mGroupsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        mGroupsList.getSelectionModel().addListSelectionListener(
+            new OnGroupSelectionChanged());
         box.add(mGroupsList);
         box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         panel.add(box, BorderLayout.CENTER);
 
         Box buttonBox = Box.createHorizontalBox();
         buttonBox.add(Box.createHorizontalGlue());
-        buttonBox.add(new JButton(new AddGroupButtonAction(this)));
+        mAddGroupButtonAction = new AddGroupButtonAction(this);
+        buttonBox.add(new JButton(mAddGroupButtonAction));
         buttonBox.add(Box.createHorizontalStrut(5));
-        buttonBox.add(new JButton(new RemoveGroupButtonAction(this)));
+        mRemoveGroupButtonAction = new RemoveGroupButtonAction(this);
+        buttonBox.add(new JButton(mRemoveGroupButtonAction));
         buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(buttonBox, BorderLayout.SOUTH);
         return panel;
@@ -99,13 +104,7 @@ public class UsersPanel extends JPanel
 
     public User getSelectedUser()
     {
-        User user = null;
-        int selection = mUserList.getSelectedIndex();
-        if (selection != -1)
-        {
-            user = mUserListModel.getUserAt(selection);
-        }
-        return user;
+        return (User) mUserList.getSelectedValue();
     }
 
     public Group getSelectedGroup()
@@ -156,7 +155,8 @@ public class UsersPanel extends JPanel
             public void finished()
             {
                 List users = (List) get();
-                setUserListModel(new UserListModel(users));
+
+                mUserList.setModel(new ListListModel(users));
                 int newSelection = selection;
                 if (newSelection >= users.size())
                 {
@@ -169,18 +169,11 @@ public class UsersPanel extends JPanel
         worker.start();
     }
 
-    private void setUserListModel(UserListModel model)
-    {
-        mUserListModel = model;
-        mUserList.setModel(model);
-    }
-
     private void updateComponentsFromSelection()
     {
-        int selection = mUserList.getSelectedIndex();
-        if (selection != -1)
+        User user = getSelectedUser();
+        if (user != null)
         {
-            User user = mUserListModel.getUserAt(selection);
             setLabel(mFirstName, user.getFirstName());
             setLabel(mLastName, user.getLastName());
             setLabel(mUsername, user.getUsername());
@@ -189,17 +182,8 @@ public class UsersPanel extends JPanel
             mRemoveUserAction.setEnabled(true);
             mChangePasswordAction.setEnabled(true);
             mEditUserAction.setEnabled(true);
-            try
-            {
-                SortedSet groups = UserUtils.getGroups(user);
-                Group[] listData =
-                    (Group[]) groups.toArray(new Group[groups.size()]);
-                mGroupsList.setListData(listData);
-            }
-            catch (HibernateException e)
-            {
-                LOG.error("Caught", e);
-            }
+
+            updateGroupList(user);
         }
         else
         {
@@ -211,7 +195,39 @@ public class UsersPanel extends JPanel
             mRemoveUserAction.setEnabled(false);
             mChangePasswordAction.setEnabled(false);
             mEditUserAction.setEnabled(false);
+
+            mAddGroupButtonAction.setEnabled(false);
+            mRemoveGroupButtonAction.setEnabled(false);
             mGroupsList.setListData(new Object[0]);
+        }
+    }
+
+    private void updateGroupList(User user)
+    {
+        try
+        {
+            SortedSet groups = UserUtils.getGroups(user);
+            Group[] listData =
+                (Group[]) groups.toArray(new Group[groups.size()]);
+            mGroupsList.setListData(listData);
+            updateGroupButtons();
+        }
+        catch (HibernateException e)
+        {
+            LOG.error("Caught", e);
+        }
+    }
+
+    private void updateGroupButtons()
+    {
+        mAddGroupButtonAction.setEnabled(true);
+        if (mGroupsList.getSelectedIndex() != -1)
+        {
+            mRemoveGroupButtonAction.setEnabled(true);
+        }
+        else
+        {
+            mRemoveGroupButtonAction.setEnabled(false);
         }
     }
 
@@ -220,37 +236,19 @@ public class UsersPanel extends JPanel
         label.setText(text);
     }
 
-    private class UserListModel extends AbstractListModel
-    {
-        public UserListModel(List users)
-        {
-            mUsers = users;
-        }
-
-        public int getSize()
-        {
-            return mUsers.size();
-        }
-
-        public Object getElementAt(int i)
-        {
-            User user = (User) mUsers.get(i);
-            return user.getName() + " (" + user.getUsername() + ")";
-        }
-
-        public User getUserAt(int i)
-        {
-            return (User) mUsers.get(i);
-        }
-
-        List mUsers;
-    }
-
-    private class OnSelectionChanged implements ListSelectionListener
+    private class OnUserSelectionChanged implements ListSelectionListener
     {
         public void valueChanged(ListSelectionEvent event)
         {
             updateComponentsFromSelection();
+        }
+    }
+
+    private class OnGroupSelectionChanged implements ListSelectionListener
+    {
+        public void valueChanged(ListSelectionEvent event)
+        {
+            updateGroupButtons();
         }
     }
 
@@ -314,7 +312,6 @@ public class UsersPanel extends JPanel
                 {
                     return;
                 }
-                System.out.println("Group: " + group);
                 SortedSet groups = UserUtils.getGroups(user);
                 groups.add(group);
                 UserUtils.updateGroups(user, groups);
@@ -371,11 +368,12 @@ public class UsersPanel extends JPanel
     private JLabel mUsername;
     private JLabel mAgentCode;
     private JLabel mBrokerCode;
-    private UserListModel mUserListModel;
     private JPopupMenu mPopup;
     private AddUserAction mAddUserAction;
     private RemoveUserAction mRemoveUserAction;
     private ChangePasswordAction mChangePasswordAction;
     private EditUserAction mEditUserAction;
     private JList mGroupsList;
+    private AddGroupButtonAction mAddGroupButtonAction;
+    private RemoveGroupButtonAction mRemoveGroupButtonAction;
 }
