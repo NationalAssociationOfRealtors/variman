@@ -73,6 +73,7 @@ public class CreateSchema extends RetsHelpers
             sb.append(" NOT NULL,").append(mLs);
             
             boolean needsLookupMultiTable = false;
+            boolean firstDone = false;
 
             Set needsIndex = new HashSet();
             Iterator j = clazz.getTables().iterator();
@@ -86,6 +87,14 @@ public class CreateSchema extends RetsHelpers
                 }
                 else
                 {
+                    if (firstDone)
+                    {
+                        sb.append(",").append(mLs);
+                    }
+                    else
+                    {
+                        firstDone = true;
+                    }
                     sb.append("\t").append(table.getDbName()).append(" ");
                     switch (table.getDataType().toInt())
                     {
@@ -129,18 +138,6 @@ public class CreateSchema extends RetsHelpers
                     {
                         sb.append(" unique");
                     }
-                    //todo fix last item is multi problem
-                    // table def could end with comma if last item is
-                    // lookupmult.  Works with our dataset so this is low
-                    // priority to fix.
-                    if (j.hasNext())
-                    {
-                        sb.append(",").append(mLs);
-                    }
-                    else
-                    {
-                        sb.append(mLs);
-                    }
     
                     if (table.getIndex() > 0)
                     {
@@ -149,7 +146,7 @@ public class CreateSchema extends RetsHelpers
                 }
             }
             
-            sb.append(");").append(mLs);
+            sb.append(mLs).append(");").append(mLs);
             sb.append("alter table ").append(sqlTableName);
             sb.append(dialect.getAddPrimaryKeyConstraintString(
                       sqlTableName + "_pk_id"));
