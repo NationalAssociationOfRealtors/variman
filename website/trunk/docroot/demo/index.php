@@ -29,7 +29,7 @@
 
     <p>
       Dummy metadata and data have been loaded into the server.  For a
-      simple query, try: <code>(STATUS|=A)</code>.  If you do not have
+      simple query, try: <code>(LP=300000-)</code>.  If you do not have
       a RETS client, try out <a
       href="http://cart.sourceforge.net/">Cart</a>.
     </p>
