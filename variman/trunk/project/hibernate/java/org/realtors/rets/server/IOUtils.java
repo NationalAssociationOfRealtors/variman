@@ -440,16 +440,15 @@ public class IOUtils
 
     public static String resolve(String base, String file)
     {
-        try
-        {
-            URI baseUri = new URI("file", null, base, null);
-            URI resolvedUri = baseUri.resolve(file);
-            return resolvedUri.getPath();
-        }
-        catch (URISyntaxException e)
-        {
-            throw new IllegalArgumentException(e.getMessage());
-        }
+        return resolve(new File(base), new File(file)).getPath();
+    }
+
+    public static File resolve(File base, File file)
+    {
+        URI baseUri = base.toURI();
+        URI fileUri = file.toURI();
+        URI resolvedUri = baseUri.resolve(fileUri);
+        return new File(resolvedUri);
     }
 
     /**

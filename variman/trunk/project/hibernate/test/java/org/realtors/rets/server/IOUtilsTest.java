@@ -11,6 +11,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 
 public class IOUtilsTest extends TestCase
 {
@@ -112,18 +113,33 @@ public class IOUtilsTest extends TestCase
         assertEquals(expected, relative);
     }
 
-    public void testResolveString()
+    public void testResolveStrings()
     {
-        String base = "/root/directory/";
-        String subDir = "sub/directory";
-        String other = "/some/other/directory";
+        String base = SystemUtils.USER_DIR;
+        String subDir = new File("sub/directory").getPath();
+        String other = new File("/some/other/directory").getPath();
 
         String resolved = IOUtils.resolve(base, subDir);
-        String expected = "/root/directory/sub/directory";
+        String expected = new File(base, "sub/directory").getPath();
         assertEquals(expected, resolved);
 
         resolved = IOUtils.resolve(base, other);
-        expected = "/some/other/directory";
+        expected = other;
+        assertEquals(expected, resolved);
+    }
+
+    public void testResolveFiles()
+    {
+        File base = new File(SystemUtils.USER_DIR);
+        File subDir = new File("sub/directory");
+        File other = new File("/some/other/directory");
+
+        File resolved = IOUtils.resolve(base, subDir);
+        File expected = new File(base, "sub/directory");
+        assertEquals(expected, resolved);
+
+        resolved = IOUtils.resolve(base, other);
+        expected = other;
         assertEquals(expected, resolved);
     }
 }
