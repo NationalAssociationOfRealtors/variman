@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: MetadataUpdate.hbm.xml,v 1.1 2003/05/30 20:52:07 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.metadata.newdb.MetadataUpdate"
+    table="rets_metadata_update">
+
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="updateName" type="string">
+      <column name="update_name" length="24" not-null="true" unique="true"
+        index="update_update_name_index"/>
+    </property>
+
+    <property name="description" type="string">
+      <column name="description" length="64"/>
+    </property>
+
+    <property name="keyField" type="string">
+      <column name="key_field" length="32"/>
+    </property>
+
+    <property name="version" type="string">
+      <column name="version" length="11"/>
+    </property>
+
+    <property name="date" type="date">
+      <column name="r_date"/>
+    </property>
+
+    <set name="updateTypes">
+      <key column="id"/>
+      <one-to-many class="org.nar.rets.metadata.newdb.MetadataUpdateType"/>
+    </set>
+    
+  </class>
+</hibernate-mapping>
