@@ -13,6 +13,7 @@ import org.wxwindows.wxWindow;
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxTextCtrl;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
+import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.metadata.MClass;
 
 public class MClassPanel extends wxPanel
@@ -37,7 +38,7 @@ public class MClassPanel extends wxPanel
     public void updateFrom(MClass clazz)
     {
         mClassName.SetValue(clazz.getClassName());
-//        mStandardName.SetValue(clazz.getStandardName().toString());
+        AdminUtils.setValue(mStandardName, clazz.getStandardName());
         mVisibleName.SetValue(clazz.getVisibleName());
     }
 
