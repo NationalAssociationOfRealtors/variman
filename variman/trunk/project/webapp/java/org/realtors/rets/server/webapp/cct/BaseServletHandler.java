@@ -3,26 +3,28 @@
 package org.realtors.rets.server.webapp.cct;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
-import java.util.Enumeration;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.ServletException;
 
-import org.apache.log4j.Logger;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.cct.StatusEnum;
+import org.realtors.rets.server.cct.ValidationResult;
 
-import org.realtors.rets.server.cct.*;
-
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.log4j.Logger;
+import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.regex.Pattern;
+import org.apache.oro.text.regex.Perl5Compiler;
+import org.apache.oro.text.regex.Perl5Matcher;
 
 public abstract class BaseServletHandler implements ServletHandler
 {
@@ -33,6 +35,11 @@ public abstract class BaseServletHandler implements ServletHandler
         mExpectedCookies = new HashMap();
         mActualCookies = new HashMap();
         mActualParameters = new HashMap();
+    }
+
+    protected boolean isStandardXmlHandler()
+    {
+        return false;
     }
 
     public void reset()
@@ -49,11 +56,70 @@ public abstract class BaseServletHandler implements ServletHandler
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        mDoGetInvokeCount++;
-        copyHeaders(request);
-        copyCookies(request);
-        copyParameters(request);
-        LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
+        if (isStandardXmlHandler())
+        {
+            standardXmlTemplate(request, response);
+        }
+        else
+        {
+            mDoGetInvokeCount++;
+            copyHeaders(request);
+            copyCookies(request);
+            copyParameters(request);
+            LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
+        }
+    }
+
+    /**
+     * Template method for standard XML transactions. It takes care of any
+     * housekeeping needed for tests, as well as handles exceptions.
+     */
+    private void standardXmlTemplate(HttpServletRequest request,
+                                     HttpServletResponse response)
+        throws IOException
+    {
+        response.setContentType("text/xml");
+        PrintWriter out = response.getWriter();
+
+        try
+        {
+            copyHeaders(request);
+            copyCookies(request);
+            copyParameters(request);
+            doStandardXmlTransaction(request, out);
+            // Only increment invoke count after calling transaction. This
+            // ensures that any exceptions thrown cause the invoke count not
+            // to get incremented.
+            mDoGetInvokeCount++;
+            LOG.info(getName() + " invoked: " + mDoGetInvokeCount);
+        }
+        catch(RetsReplyException e)
+        {
+            // These are not necessarily errors, as bad input from the client
+            // could cause an exception
+            LOG.debug("Caught", e);
+            out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
+                        "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
+        }
+        catch(Exception e)
+        {
+            LOG.error("Caught", e);
+            out.println("<RETS ReplyCode=\"20513\" " +
+                        "ReplyText=\"Miscellaneous error\"/>\n");
+        }
+    }
+
+    protected void doStandardXmlTransaction(HttpServletRequest request,
+                                            PrintWriter out)
+        throws RetsReplyException
+    {
+        // Should be overridden
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException
+    {
+        doGet(request, response);
     }
 
     private void copyHeaders(HttpServletRequest request)
@@ -83,7 +149,7 @@ public abstract class BaseServletHandler implements ServletHandler
                                cookie.getValue());
         }
     }
-    
+
     private void copyParameters(HttpServletRequest request)
     {
         mActualParameters.clear();
@@ -176,7 +242,7 @@ public abstract class BaseServletHandler implements ServletHandler
             }
         }
     }
-    
+
     protected void validateParameters(ValidationResult result)
     {
     }
