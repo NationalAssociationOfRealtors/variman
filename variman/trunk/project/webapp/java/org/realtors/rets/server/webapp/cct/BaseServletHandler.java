@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
+import org.realtors.rets.server.webapp.RetsServletRequest;
+import org.realtors.rets.server.webapp.RetsServletResponse;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.log4j.Logger;
@@ -37,11 +39,6 @@ public abstract class BaseServletHandler implements ServletHandler
         mActualParameters = new HashMap();
     }
 
-    protected boolean isStandardXmlHandler()
-    {
-        return false;
-    }
-
     public void reset()
     {
         mExpectedHeaders.clear();
@@ -56,37 +53,30 @@ public abstract class BaseServletHandler implements ServletHandler
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
-        if (isStandardXmlHandler())
-        {
-            standardXmlTemplate(request, response);
-        }
-        else
-        {
-            mDoGetInvokeCount++;
-            copyHeaders(request);
-            copyCookies(request);
-            copyParameters(request);
-            LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
-        }
+        RetsServletRequest retsRequest = new RetsServletRequest(request);
+        RetsServletResponse retsResponse =
+            new RetsServletResponse(response);
+        serviceRetsTemplate(retsRequest, retsResponse);
     }
 
     /**
      * Template method for standard XML transactions. It takes care of any
      * housekeeping needed for tests, as well as handles exceptions.
      */
-    private void standardXmlTemplate(HttpServletRequest request,
-                                     HttpServletResponse response)
+    private void serviceRetsTemplate(RetsServletRequest request,
+                                     RetsServletResponse response)
         throws IOException
     {
-        response.setContentType("text/xml");
-        PrintWriter out = response.getWriter();
-
         try
         {
+            // Make copies of information for tests
             copyHeaders(request);
             copyCookies(request);
             copyParameters(request);
-            doStandardXmlTransaction(request, out);
+
+            response.setRetsVersionHeader(request.getRetsVersion());
+            serviceRets(request, response);
+
             // Only increment invoke count after calling transaction. This
             // ensures that any exceptions thrown cause the invoke count not
             // to get incremented.
@@ -98,20 +88,38 @@ public abstract class BaseServletHandler implements ServletHandler
             // These are not necessarily errors, as bad input from the client
             // could cause an exception
             LOG.debug("Caught", e);
-            out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
-                        "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
+            if (response.isXmlResponse())
+            {
+                PrintWriter out = response.getXmlWriter();
+                out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
+                            "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
+            }
+            else
+            {
+                response.setStatus(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
         catch(Exception e)
         {
             LOG.error("Caught", e);
-            out.println("<RETS ReplyCode=\"20513\" " +
-                        "ReplyText=\"Miscellaneous error\"/>\n");
+            if (response.isXmlResponse())
+            {
+                PrintWriter out = response.getXmlWriter();
+                out.println("<RETS ReplyCode=\"20513\" " +
+                            "ReplyText=\"Miscellaneous error\"/>\n");
+            }
+            else
+            {
+                response.setStatus(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
-    protected void doStandardXmlTransaction(HttpServletRequest request,
-                                            PrintWriter out)
-        throws RetsReplyException
+    protected void serviceRets(RetsServletRequest request,
+                               RetsServletResponse response)
+        throws RetsReplyException, IOException
     {
         // Should be overridden
     }
