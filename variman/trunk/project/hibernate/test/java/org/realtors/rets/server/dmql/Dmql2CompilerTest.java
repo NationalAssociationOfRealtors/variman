@@ -126,31 +126,35 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         parse("(OWNER=NOW)");
     }
 
-    public void testBetween() throws ANTLRException
+    public void testBetweenStrings() throws ANTLRException
     {
-        parse("(OWNER=1970-01-01-1980-01-01)");
-        parse("(OWNER=50-100)");
-        parse("(OWNER=abc-xyz)");
-        parse("(OWNER=1990-01-01-TODAY)");
-        parse("(OWNER=1990-01-01T05:06:07.000-NOW)");
+        SqlConverter sql = parse("(OWNER=abc-xyz)");
+        QuotedSqlConverter left = new QuotedSqlConverter("abc");
+        QuotedSqlConverter right = new QuotedSqlConverter("xyz");
+        BetweenClause between = new BetweenClause("r_OWNER", left, right);
+        OrClause or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
     }
 
-    public void testLess() throws ANTLRException
+    public void testLessThanString() throws ANTLRException
     {
-        parse("(OWNER=1970-01-01-)");
-        parse("(OWNER=50-)");
-        parse("(OWNER=xyz-)");
-        parse("(OWNER=TODAY-)");
-        parse("(OWNER=NOW-)");
+        SqlConverter sql = parse("(OWNER=xyz-)");
+        LessThanClause lessThan =
+            new LessThanClause("r_OWNER", new QuotedSqlConverter("xyz"));
+        OrClause or = new OrClause();
+        or.add(lessThan);
+        assertEquals(or, sql);
     }
 
-    public void testGreater() throws ANTLRException
+    public void testGreaterThanString() throws ANTLRException
     {
-        parse("(OWNER=1970-01-01+)");
-        parse("(OWNER=50+)");
-        parse("(OWNER=xyz+)");
-        parse("(OWNER=TODAY+)");
-        parse("(OWNER=NOW+)");
+        SqlConverter sql = parse("(OWNER=xyz+)");
+        GreaterThanClause greaterThan =
+            new GreaterThanClause("r_OWNER", new QuotedSqlConverter("xyz"));
+        OrClause or = new OrClause();
+        or.add(greaterThan);
+        assertEquals(or, sql);
     }
 
     public void testRangeList() throws ANTLRException
