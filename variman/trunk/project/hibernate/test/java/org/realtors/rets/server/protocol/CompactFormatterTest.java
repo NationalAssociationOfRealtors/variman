@@ -12,29 +12,49 @@ import org.realtors.rets.server.dmql.SimpleDmqlMetadata;
 
 public class CompactFormatterTest extends LinesEqualTestCase
 {
-    public void testFormat() throws RetsServerException
+    public void testCompactFormat() throws RetsServerException
     {
-        CompactFormatter formatter = new CompactFormatter();
+        assertLinesEqual(
+            "<DELIMITER value=\"09\"/>\n" +
+            "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\t</COLUMNS>\n" +
+            "<DATA>\tMain St.\t12345\t0\t</DATA>\n" +
+            "<DATA>\tMichigan Ave.\t60605\t1\t</DATA>\n",
+            format(CompactFormatter.NO_DECODING));
+    }
+
+    public void testCompactDecodedFormat() throws RetsServerException
+    {
+        assertLinesEqual(
+            "<DELIMITER value=\"09\"/>\n" +
+            "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\t</COLUMNS>\n" +
+            "<DATA>\tMain St.\t12345\tActive\t</DATA>\n" +
+            "<DATA>\tMichigan Ave.\t60605\tInactive\t</DATA>\n",
+            format(CompactFormatter.DECODE_TO_SHORT_VALUE));
+    }
+
+    private String format(CompactFormatter.LookupDecoding lookupDecoding)
+        throws RetsServerException
+    {
+        CompactFormatter formatter =
+            new CompactFormatter(lookupDecoding);
         MockResultSet results = new MockResultSet();
         results.setColumns(COLUMNS);
-        results.addRow(new String[] {"Main St.", "12345"});
-        results.addRow(new String[] {"Michigan Ave.", "60605"});
+        results.addRow(new String[] {"Main St.", "12345", "0"});
+        results.addRow(new String[] {"Michigan Ave.", "60605", "1"});
         SimpleDmqlMetadata metadata = new SimpleDmqlMetadata();
         metadata.addString("STNAME");
         metadata.addString("ZIP_CODE");
+        metadata.addLookup("STATUS", new String[]{"0", "1"},
+                           new String[]{"Active", "Inactive"});
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
-            new SearchFormatterContext(new PrintWriter(formatted), results,
-                                       Arrays.asList(COLUMNS), metadata);
+            new SearchFormatterContext(
+                new PrintWriter(formatted), results, Arrays.asList(COLUMNS),
+                metadata);
         formatter.formatResults(context);
-        assertLinesEqual(
-            "<DELIMITER value=\"09\"/>\n" +
-            "<COLUMNS>\tSTNAME\tZIP_CODE\t</COLUMNS>\n" +
-            "<DATA>\tMain St.\t12345\t</DATA>\n" +
-            "<DATA>\tMichigan Ave.\t60605\t</DATA>\n",
-            formatted.toString());
+        return formatted.toString();
     }
 
     public static final String[] COLUMNS =
-        new String[] {"r_STNAME", "r_ZIP_CODE"};
+        new String[] {"r_STNAME", "r_ZIP_CODE", "r_STATUS"};
 }
