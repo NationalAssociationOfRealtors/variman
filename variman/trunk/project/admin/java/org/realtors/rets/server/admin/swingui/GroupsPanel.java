@@ -42,6 +42,8 @@ public class GroupsPanel extends JPanel
         mPopup = new JPopupMenu();
         mAddGroupAction = new AddGroupAction();
         mPopup.add(mAddGroupAction);
+        mRemoveGroupAction = new RemoveGroupAction(this);
+        mPopup.add(mRemoveGroupAction);
 
         PopupListener popupListener = new PopupListener();
         mGroupList.addMouseListener(popupListener);
@@ -54,6 +56,11 @@ public class GroupsPanel extends JPanel
         return mAddGroupAction;
     }
 
+    public Action getRemoveGroupAciton()
+    {
+        return mRemoveGroupAction;
+    }
+
     private void updateComponentsFromSelection()
     {
         int selection = mGroupList.getSelectedIndex();
@@ -62,11 +69,13 @@ public class GroupsPanel extends JPanel
             Group group = (Group) mGroupListModel.getElementAt(selection);
             mName.setText(group.getName());
             mDescription.setText(group.getDescription());
+            mRemoveGroupAction.setEnabled(true);
         }
         else
         {
             mName.setText("");
             mDescription.setText("");
+            mRemoveGroupAction.setEnabled(false);
         }
     }
 
@@ -112,6 +121,10 @@ public class GroupsPanel extends JPanel
         mGroupList.setModel(model);
     }
 
+    public Group getSelectedGroup()
+    {
+        return (Group) mGroupList.getSelectedValue();
+    }
 
     private class OnSelectionChanged implements ListSelectionListener
     {
@@ -160,4 +173,5 @@ public class GroupsPanel extends JPanel
     private JLabel mDescription;
     private JPopupMenu mPopup;
     private ListListModel mGroupListModel;
+    private RemoveGroupAction mRemoveGroupAction;
 }
