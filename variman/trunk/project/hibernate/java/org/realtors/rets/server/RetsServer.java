@@ -11,6 +11,7 @@ package org.realtors.rets.server;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.HibernateException;
+import org.realtors.rets.server.protocol.TableGroupFilter;
 
 public class RetsServer
 {
@@ -38,6 +39,16 @@ public class RetsServer
     {
         return new SessionHelper(sSessions);
     }
+    public static void setTableGroupFilter(TableGroupFilter tableGroupFilter)
+    {
+        sTableGroupFilter = tableGroupFilter;
+    }
+
+    public static TableGroupFilter getTableGroupFilter()
+    {
+        return sTableGroupFilter;
+    }
 
     private static SessionFactory sSessions;
+    private static TableGroupFilter sTableGroupFilter;
 }
