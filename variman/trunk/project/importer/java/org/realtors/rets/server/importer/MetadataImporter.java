@@ -695,7 +695,6 @@ public class MetadataImporter
                     UpdateType updateType = new UpdateType();
 
                     updateType.setUpdate(update);
-                    // todo: finish this method
                     String level = update.getLevel();
                     String systemName = md.getAttribute("SystemName");
                     String tablePath = level + ":" + systemName;
@@ -1060,5 +1059,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.25 2003/07/23 15:05:53 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.26 2003/07/23 20:38:21 kgarner Exp $";
 }
