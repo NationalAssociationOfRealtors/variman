@@ -16,6 +16,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServerException;
@@ -25,6 +29,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -134,10 +140,49 @@ public class RetsConfig
         addChild(database, MAX_PS_WAIT, mDatabase.getMaxPsWait());
         addChild(database, SHOW_SQL, mDatabase.getShowSql());
         retsConfig.addContent(database);
+        retsConfig.addContent(getSecurityContraintsElement());
 
         XMLOutputter xmlOutputter = new XMLOutputter("  ", true);
         xmlOutputter.setLineSeparator(SystemUtils.LINE_SEPARATOR);
         return xmlOutputter.outputString(new Document(retsConfig));
+    }
+
+    private Element getSecurityContraintsElement()
+    {
+        Element securityContraints = new Element(SECURITY_CONSTRAINTS);
+        for (int i = 0; i < mSecurityConstraints.size(); i++)
+        {
+            GroupRules groupRules = (GroupRules) mSecurityConstraints.get(i);
+            Element groupRulesElement = new Element(GROUP_RULES);
+            groupRulesElement.setAttribute(GROUP, groupRules.getGroupName());
+            List rules = groupRules.getRules();
+            for (int j = 0; j < rules.size(); j++)
+            {
+                RuleDescription ruleDescription =
+                    (RuleDescription) rules.get(j);
+                Element ruleElement;
+                if (ruleDescription.getType() == RuleDescription.INCLUDE)
+                {
+                    ruleElement = new Element(INCLUDE_RULE);
+                }
+                else
+                {
+                    ruleElement = new Element(EXCLUDE_RULE);
+                }
+                ruleElement.setAttribute(RESOURCE,
+                                         ruleDescription.getResource());
+                ruleElement.setAttribute(CLASS,
+                                         ruleDescription.getRetsClass());
+                String systemNames = StringUtils.join(
+                    ruleDescription.getSystemNames().iterator(), " ");
+                Element systemNamesElement = new Element(SYSTEM_NAMES);
+                systemNamesElement.setText(systemNames);
+                ruleElement.addContent(systemNamesElement);
+                groupRulesElement.addContent(ruleElement);
+            }
+            securityContraints.addContent(groupRulesElement);
+        }
+        return securityContraints;
     }
 
     private Element addChild(Element element, String name, boolean bool)
@@ -198,7 +243,16 @@ public class RetsConfig
         config.mNonceInitialTimeout = getInt(element, NONCE_INITIAL_TIMEOUT);
         config.mNonceSuccessTimeout = getInt(element, NONCE_SUCCESS_TIMEOUT);
 
-        element = element.getChild(DATABASE);
+        elementToDatabaseConfig(element.getChild(DATABASE), config);
+        elementToSecurityConstraints(element.getChild(SECURITY_CONSTRAINTS),
+                                     config);
+
+        return config;
+    }
+
+    private static void elementToDatabaseConfig(Element element,
+                                                RetsConfig config)
+    {
         DatabaseConfig database = new DatabaseConfig();
         database.setDatabaseType(
             DatabaseType.getType(getString(element, TYPE)));
@@ -214,8 +268,55 @@ public class RetsConfig
         database.setMaxPsWait(getInt(element, MAX_PS_WAIT));
         database.setShowSql(getBoolean(element, SHOW_SQL));
         config.setDatabase(database);
+    }
 
-        return config;
+    private static void elementToSecurityConstraints(Element element,
+                                                     RetsConfig config)
+    {
+        if (element == null)
+        {
+            config.setSecurityConstraints(Collections.EMPTY_LIST);
+            return;
+        }
+        List securityConstraints = new ArrayList();
+        List children = element.getChildren(GROUP_RULES);
+        for (int i = 0; i < children.size(); i++)
+        {
+            Element child = (Element) children.get(i);
+            String groupName = child.getAttributeValue(GROUP);
+            GroupRules groupRules = new GroupRules(groupName);
+            List grandChildren = child.getChildren();
+            for (int j = 0; j < grandChildren.size(); j++)
+            {
+                Element grandChild = (Element) grandChildren.get(j);
+                RuleDescription ruleDescription = new RuleDescription();
+                if (grandChild.getName().equals(INCLUDE_RULE))
+                {
+                    ruleDescription.setType(RuleDescription.INCLUDE);
+                }
+                else if (grandChild.getName().equals(EXCLUDE_RULE))
+                {
+                    ruleDescription.setType(RuleDescription.EXCLUDE);
+                }
+                else
+                {
+                    LOG.warn("Unknown rule" + grandChild.toString());
+                    continue;
+                }
+                ruleDescription.setResource(
+                    grandChild.getAttributeValue(RESOURCE));
+                ruleDescription.setRetsClass(
+                    grandChild.getAttributeValue(CLASS));
+                String systemNamesText =
+                    grandChild.getChildTextNormalize(SYSTEM_NAMES);
+                String[] systemNamesArray =
+                    StringUtils.split(systemNamesText, " ");
+                ruleDescription.setSystemNames(Arrays.asList(systemNamesArray));
+                groupRules.addRule(ruleDescription);
+            }
+            securityConstraints.add(groupRules);
+        }
+        config.setSecurityConstraints(securityConstraints);
     }
 
     private static boolean getBoolean(Element element, String name)
@@ -352,6 +453,18 @@ public class RetsConfig
         return getDefault(mMetadataDir, defaultValue);
     }
 
+    public List getSecurityConstraints()
+    {
+        return mSecurityConstraints;
+    }
+
+    public void setSecurityConstraints(List securityConstraints)
+    {
+        mSecurityConstraints = securityConstraints;
+    }
+
+    private static final Logger LOG =
+        Logger.getLogger(RetsConfig.class);
     private static final String PORT = "port";
     private static final String METADATA_DIR = "metadata-dir";
     private static final String RETS_CONFIG = "rets-config";
@@ -372,6 +485,14 @@ public class RetsConfig
     private static final String MAX_PS_WAIT = "max-ps-wait";
     private static final String DATABASE = "database";
     private static final String SHOW_SQL = "show-sql";
+    private static final String SECURITY_CONSTRAINTS = "security-constraints";
+    private static final String GROUP_RULES = "group-rules";
+    private static final String GROUP = "group";
+    private static final String INCLUDE_RULE = "include-rule";
+    private static final String EXCLUDE_RULE = "exclude-rule";
+    private static final String RESOURCE = "resource";
+    private static final String CLASS = "class";
+    private static final String SYSTEM_NAMES = "system-names";
 
     private int mPort;
     private String mGetObjectRoot;
@@ -380,4 +501,5 @@ public class RetsConfig
     private int mNonceSuccessTimeout;
     private DatabaseConfig mDatabase;
     private String mMetadataDir;
+    private List mSecurityConstraints;
 }

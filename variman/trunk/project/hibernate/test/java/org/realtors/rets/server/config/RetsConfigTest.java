@@ -2,6 +2,9 @@
  */
 package org.realtors.rets.server.config;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.RetsServerException;
 
@@ -32,6 +35,29 @@ public class RetsConfigTest extends LinesEqualTestCase
         database.setMaxPsIdle(5);
         database.setShowSql(true);
         retsConfig.setDatabase(database);
+
+        List securityConstraints = new ArrayList();
+        GroupRules groupRules = new GroupRules("newspaper");
+        RuleDescription ruleDescription = new RuleDescription();
+        ruleDescription.setType(RuleDescription.INCLUDE);
+        ruleDescription.setResource("Property");
+        ruleDescription.setRetsClass("RES");
+        List systemNames = new ArrayList();
+        systemNames.add("LP");
+        systemNames.add("LN");
+        ruleDescription.setSystemNames(systemNames);
+        groupRules.addRule(ruleDescription);
+        ruleDescription = new RuleDescription();
+        ruleDescription.setType(RuleDescription.EXCLUDE);
+        ruleDescription.setResource("Property");
+        ruleDescription.setRetsClass("COM");
+        systemNames = new ArrayList();
+        systemNames.add("EF");
+        ruleDescription.setSystemNames(systemNames);
+        groupRules.addRule(ruleDescription);
+        securityConstraints.add(groupRules);
+        retsConfig.setSecurityConstraints(securityConstraints);
+
         String xml = retsConfig.toXml();
         assertLinesEqual(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -56,6 +82,16 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    <max-ps-wait>60000</max-ps-wait>\n" +
             "    <show-sql>true</show-sql>\n" +
             "  </database>\n" +
+            "  <security-constraints>\n" +
+            "    <group-rules group=\"newspaper\">\n" +
+            "      <include-rule resource=\"Property\" class=\"RES\">\n" +
+            "        <system-names>LP LN</system-names>\n" +
+            "      </include-rule>\n" +
+            "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
+            "        <system-names>EF</system-names>\n" +
+            "      </exclude-rule>\n" +
+            "    </group-rules>\n" +
+            "  </security-constraints>\n" +
             "</rets-config>\n" +
             "\n",
             xml
@@ -88,6 +124,21 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    <max-ps-idle>5</max-ps-idle>\n" +
             "    <show-sql>true</show-sql>\n" +
             "  </database>\n" +
+            "  <security-constraints>\n" +
+            "    <group-rules group=\"newspaper\">\n" +
+            "      <include-rule resource=\"Property\" class=\"RES\">\n" +
+            "        <system-names>LN LP\nEF</system-names>\n" +
+            "      </include-rule>\n" +
+            "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
+            "        <system-names>LN</system-names>\n" +
+            "      </exclude-rule>\n" +
+            "    </group-rules>\n" +
+            "    <group-rules group=\"agent\">\n" +
+            "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
+            "        <system-names>LN\nEF</system-names>\n" +
+            "      </exclude-rule>" +
+            "    </group-rules>\n" +
+            "  </security-constraints>\n" +
             "</rets-config>";
         RetsConfig retsConfig = RetsConfig.initFromXml(xml);
         assertEquals(7103, retsConfig.getPort());
@@ -113,6 +164,45 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertEquals(60000, database.getMaxPsWait());
         assertEquals(5, database.getMaxPsIdle());
         assertTrue(database.getShowSql());
+
+        List securityConstraints = retsConfig.getSecurityConstraints();
+        assertEquals(2, securityConstraints.size());
+
+        GroupRules groupRules = (GroupRules) securityConstraints.get(0);
+        assertEquals("newspaper", groupRules.getGroupName());
+        List rules = groupRules.getRules();
+        assertEquals(2, rules.size());
+        RuleDescription ruleDescription = (RuleDescription) rules.get(0);
+        assertEquals(RuleDescription.INCLUDE, ruleDescription.getType());
+        assertEquals("Property", ruleDescription.getResource());
+        assertEquals("RES", ruleDescription.getRetsClass());
+        List expected = new ArrayList();
+        expected.add("LN");
+        expected.add("LP");
+        expected.add("EF");
+        List systemNames = ruleDescription.getSystemNames();
+        assertEquals(expected, systemNames);
+
+        ruleDescription = (RuleDescription) rules.get(1);
+        assertEquals(RuleDescription.EXCLUDE, ruleDescription.getType());
+        assertEquals("Property", ruleDescription.getResource());
+        assertEquals("COM", ruleDescription.getRetsClass());
+        expected.clear();
+        expected.add("LN");
+        systemNames = ruleDescription.getSystemNames();
+        assertEquals(expected, systemNames);
+
+        groupRules = (GroupRules) securityConstraints.get(1);
+        assertEquals("agent", groupRules.getGroupName());
+        rules = groupRules.getRules();
+        assertEquals(1, rules.size());
+        ruleDescription = (RuleDescription) rules.get(0);
+        assertEquals(RuleDescription.EXCLUDE, ruleDescription.getType());
+        assertEquals("Property", ruleDescription.getResource());
+        assertEquals("COM", ruleDescription.getRetsClass());
+        expected.clear();
+        expected.add("LN");
+        expected.add("LF");
     }
 
     public void testFromXmlDefaults()
