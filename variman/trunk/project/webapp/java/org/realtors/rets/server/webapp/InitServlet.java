@@ -118,6 +118,7 @@ public class InitServlet extends RetsServlet
             {
                 system = (MSystem) results.get(0);
             }
+            helper.commit();
         }
         catch (HibernateException e)
         {
