@@ -103,8 +103,8 @@ public class DataRowBuilder
     }
 
     /**
-     * Takes the toString() of each element in the collection and puts the
-     * values into a list and the sorts the list.
+     * Takes toString() of each element in the collection and puts the values
+     * into a list and then sorts the list.
      *
      * @param collection Collection to convert
      * @return sorted list of toString value foreach item in collection
