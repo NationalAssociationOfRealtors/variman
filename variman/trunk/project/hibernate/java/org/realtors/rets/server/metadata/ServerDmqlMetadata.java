@@ -7,18 +7,33 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Collection;
 
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 
 public class ServerDmqlMetadata implements DmqlParserMetadata
 {
-    public ServerDmqlMetadata(MClass clazz, boolean standardNames)
+    private ServerDmqlMetadata()
     {
         mFields = new HashSet();
         mLookups = new HashMap();
         mStrings = new HashSet();
+    }
 
-        Set tables = clazz.getTables();
+    public ServerDmqlMetadata(MClass clazz, boolean standardNames)
+    {
+        this();
+        init(clazz.getTables(), standardNames);
+    }
+
+    public ServerDmqlMetadata(Collection tables, boolean standaredNames)
+    {
+        this();
+        init(tables, standaredNames);
+    }
+
+    private void init(Collection tables, boolean standardNames)
+    {
         for (Iterator i = tables.iterator(); i.hasNext();)
         {
             Table table = (Table) i.next();

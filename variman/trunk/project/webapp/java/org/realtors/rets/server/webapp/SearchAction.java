@@ -3,6 +3,7 @@
 package org.realtors.rets.server.webapp;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -14,8 +15,11 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.HibernateException;
 
 import org.realtors.rets.server.dmql.DmqlCompiler;
+import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.ServerDmqlMetadata;
+import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.RetsReplyException;
 
 import antlr.ANTLRException;
@@ -25,38 +29,9 @@ import org.apache.log4j.Logger;
 
 public class SearchAction
 {
-    public String getResourceId()
+    public SearchAction(SearchParameters parameters)
     {
-        return mResourceId;
-    }
-
-    public void setResourceId(String resourceId)
-    {
-        mResourceId = resourceId;
-    }
-
-    public String getClassName()
-    {
-        return mClassName;
-    }
-
-    public void setClassName(String className)
-    {
-        mClassName = className;
-    }
-
-    public String getQueryType()
-    {
-        return mQueryType;
-    }
-
-    public void setQueryType(String queryType) throws RetsReplyException
-    {
-        if (!queryType.equals("DMQL2"))
-        {
-            throw new RetsReplyException(20203, "Miscellaneous Search Error");
-        }
-        mQueryType = queryType;
+        mParameters = parameters;
     }
 
     public String getQuery()
@@ -69,36 +44,26 @@ public class SearchAction
         mQuery = query.trim();
     }
 
-    public String getFormat()
+    public String getSql(MetadataManager manager) throws ANTLRException
     {
-        return mFormat;
-    }
-
-    public void setFormat(String format)
-    {
-        mFormat = format;
-    }
-
-    public String getSql() throws ANTLRException
-    {
-        return DmqlCompiler.dmqlToSql(mQuery);
-    }
-
-    public String toString()
-    {
-        return new ToStringBuilder(this)
-            .append("resourceId", mResourceId)
-            .append("className", mClassName)
-            .append("queryType", mQueryType)
-            .append("query", mQuery)
-            .append("format", mFormat)
-            .toString();
+//        return DmqlCompiler.dmqlToSql(mQuery);
+        List classes = manager.find(Table.TABLE,
+                                    mParameters.getResourceId() + ":" +
+                                    mParameters.getClassName());
+        ServerDmqlMetadata metadata = new ServerDmqlMetadata(classes, false);
+        SqlConverter sqlConverter =
+            DmqlCompiler.parseDmql(mParameters.getQuery(), metadata);
+        StringWriter stringWriter = new StringWriter();
+        sqlConverter.toSql(new PrintWriter(stringWriter));
+        return  stringWriter.toString();
     }
 
     public void doSearch(PrintWriter out, MetadataManager manager)
         throws ANTLRException, HibernateException, SQLException
     {
-        List tables = manager.find(Table.TABLE, mResourceId + ":" + mClassName);
+        List tables = manager.find(Table.TABLE,
+                                   mParameters.getResourceId() +
+                                   ":" + mParameters.getClassName());
         List columns = new ArrayList();
         for (int i = 0; i < tables.size(); i++)
         {
@@ -114,10 +79,10 @@ public class SearchAction
         if (!mQuery.equals(""))
         {
             sql.append(" WHERE ");
-            sql.append(getSql());
+//            sql.append(getSql());
         }
         sql.append(";");
-            
+
         LOG.debug("SQL=" + sql.toString());
 
         Session session = null;
@@ -183,7 +148,7 @@ public class SearchAction
         }
         catch (SQLException e)
         {
-            LOG.error("Caugtht", e);
+            LOG.error("Caught", e);
         }
     }
 
@@ -204,15 +169,12 @@ public class SearchAction
 
     private String getSqlTable()
     {
-        return "rets_" + mResourceId.toLowerCase() + "_" +
-            mClassName.toLowerCase();
+        return "rets_" + mParameters.getResourceId().toLowerCase() + "_" +
+            mParameters.getClassName().toLowerCase();
     }
 
     private static final Logger LOG =
         Logger.getLogger(SearchAction.class);
-    private String mResourceId;
-    private String mClassName;
-    private String mQueryType;
     private String mQuery;
-    private String mFormat;
+    private SearchParameters mParameters;
 }

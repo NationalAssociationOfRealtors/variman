@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.realtors.rets.server.RetsReplyException;
 
+import antlr.ANTLRException;
 import org.apache.log4j.Logger;
 
 /**
@@ -29,14 +30,25 @@ public class SearchServlet extends RetsServlet
 
         try
         {
-            SearchAction search = new SearchAction();
-            search.setResourceId(request.getParameter("SearchType"));
-            search.setClassName(request.getParameter("Class"));
-            search.setQueryType(request.getParameter("QueryType"));
-            search.setQuery(request.getParameter("Query"));
-            search.setFormat(request.getParameter("Format"));
-            LOG.debug(search);
-            search.doSearch(out, getMetadataManager());
+            SearchParameters parameters =
+                new SearchParameters(request.getParameterMap());
+            LOG.debug(parameters);
+            SearchAction search = new SearchAction(parameters);
+//            search.setResourceId(request.getParameter("SearchType"));
+//            search.setClassName(request.getParameter("Class"));
+//            search.setQueryType(request.getParameter("QueryType"));
+//            search.setQuery(request.getParameter("Query"));
+//            search.setFormat(request.getParameter("Format"));
+//            search.doSearch(out, getMetadataManager());
+            LOG.debug(search.getSql(getMetadataManager()));
+            out.println("<RETS ReplyCode=\"20201\" " +
+                        "ReplyText=\"No Records Found\"/>");
+        }
+        catch (ANTLRException e)
+        {
+            LOG.error("Caught", e);
+            out.println("<RETS ReplyCode=\"20206\" ReplyText=\"" +
+                        e.toString() + "\"/>");
         }
         catch(RetsReplyException e)
         {
