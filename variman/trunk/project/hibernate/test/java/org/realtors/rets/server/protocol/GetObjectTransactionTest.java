@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import junit.framework.TestCase;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsReplyException;
@@ -28,6 +30,44 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("1.0", response.getHeader("MIME-Version"));
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
+        assertNull(response.getHeader("Location"));
+
+        byte[] expected =
+            IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_1));
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
+    public void testSingleJpegLocation()
+        throws IOException, RetsServerException
+    {
+        GetObjectTransaction transaction = createTransaction("abc123:1", true);
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("image/jpeg", response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertEquals("abc123", response.getHeader("Content-ID"));
+        assertEquals("1", response.getHeader("Object-ID"));
+        assertEquals(createLocationUrl("abc123", "1"),
+                     response.getHeader("Location"));
+
+        byte[] expected = ArrayUtils.EMPTY_BYTE_ARRAY;
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
+    public void testBlockedLocation()
+        throws IOException, RetsServerException
+    {
+        GetObjectTransaction transaction = createTransaction("abc123:1", true);
+        transaction.setBlockLocation(true);
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("image/jpeg", response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertEquals("abc123", response.getHeader("Content-ID"));
+        assertEquals("1", response.getHeader("Object-ID"));
+        assertNull(response.getHeader("Location"));
 
         byte[] expected =
             IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_1));
@@ -44,6 +84,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("1.0", response.getHeader("MIME-Version"));
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
+        assertNull(response.getHeader("Location"));
 
         byte[] expected =
             IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_1));
@@ -92,6 +133,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("1.0", response.getHeader("MIME-Version"));
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
+        assertNull(response.getHeader("Location"));
 
         byte[] expected =
             IOUtils.readBytes(getClass().getResourceAsStream(GIF_FILE));
@@ -111,6 +153,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("1.0", response.getHeader("MIME-Version"));
         assertNull(response.getHeader("Content-ID"));
         assertNull(response.getHeader("Object-ID"));
+        assertNull(response.getHeader("Location"));
 
         ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(expectedStream);
@@ -137,6 +180,51 @@ public class GetObjectTransactionTest extends TestCase
         out.writeBytes(CRLF);
         stream = getClass().getResourceAsStream(JPEG_FILE_3);
         IOUtils.copyStream(stream, out);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + "--" + CRLF);
+        out.flush();
+
+        byte[] expected = expectedStream.toByteArray();
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
+    public void testMultipartLocation() throws RetsServerException, IOException
+    {
+        GetObjectTransaction transaction =
+            createTransaction("abc123:*,abc124:*,abc125:*", true);
+        transaction.setBoundaryGenerator(new TestBoundaryGenerator());
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("multipart/parallel; boundary=\"" + BOUNDARY + "\"",
+                     response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertNull(response.getHeader("Content-ID"));
+        assertNull(response.getHeader("Object-ID"));
+        assertNull(response.getHeader("Location"));
+
+        ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(expectedStream);
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
+        out.writeBytes("Content-ID: abc123" + CRLF);
+        out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Location: " + createLocationUrl("abc123", "1") + CRLF);
+        out.writeBytes(CRLF);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
+        out.writeBytes("Content-ID: abc123" + CRLF);
+        out.writeBytes("Object-ID: 2" + CRLF);
+        out.writeBytes("Location: " + createLocationUrl("abc123", "2") + CRLF);
+        out.writeBytes(CRLF);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
+        out.writeBytes("Content-ID: abc124" + CRLF);
+        out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Location: " + createLocationUrl("abc124", "1") + CRLF);
+        out.writeBytes(CRLF);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + "--" + CRLF);
         out.flush();
@@ -185,16 +273,32 @@ public class GetObjectTransactionTest extends TestCase
 
     private GetObjectTransaction createTransaction(String id)
     {
+        return createTransaction(id, false);
+    }
+
+    private GetObjectTransaction createTransaction(String id,
+                                                   boolean useLocation)
+    {
         GetObjectParameters parameters =
-            new GetObjectParameters("Property", "Photo", id);
+            new GetObjectParameters("Property", "Photo", id, useLocation);
+        parameters.setUseLocation(useLocation);
         GetObjectTransaction transaction = new GetObjectTransaction(parameters);
         // The file name will get stripped off, so all that's import is that it
         // exists.
         String imageDirectory = directoryOfResource(GIF_FILE);
         transaction.setRootDirectory(imageDirectory);
         transaction.setPattern("%k-%i.jpg");
+        transaction.setBaseLocationUrl(BASE_LOCATION_URL);
         return transaction;
+    }
 
+    private String createLocationUrl(String key, String id)
+    {
+        StringBuffer location = new StringBuffer();
+        location.append(BASE_LOCATION_URL).append("Property/Photo/");
+        location.append(key).append("/");
+        location.append(id);
+        return location.toString();
     }
 
     private String directoryOfResource(String resourceName)
@@ -259,4 +363,6 @@ public class GetObjectTransactionTest extends TestCase
     public static final String JPEG_FILE_3 = "abc124-1.jpg";
     public static final String CRLF = "\r\n";
     private static final String BOUNDARY = "simple boundary";
+    private static final String BASE_LOCATION_URL =
+        "http://www.example.com/rets/images/";
 }

@@ -33,13 +33,26 @@ public class GetObjectParameters extends TransactionParameters
             id = getParameter(parameterMap, "Id");
         }
         initID(id);
+        initLocation(getParameter(parameterMap, "Location"));
     }
 
     public GetObjectParameters(String resource, String type, String id)
     {
+        this(resource, type, id, false);
+    }
+
+    public GetObjectParameters(String resource, String type, String id,
+                               boolean useLocation)
+    {
         mResource = resource;
         mType = type;
         initID(id);
+        mUseLocation = useLocation;
+    }
+
+    private void initLocation(String locationString)
+    {
+        mUseLocation = (locationString != null) && locationString.equals("1");
     }
 
     private void initID(String id)
@@ -109,6 +122,16 @@ public class GetObjectParameters extends TransactionParameters
         return mMultipartId;
     }
 
+    public boolean getUseLocation()
+    {
+        return mUseLocation;
+    }
+
+    public void setUseLocation(boolean useLocation)
+    {
+        mUseLocation = useLocation;
+    }
+
     private static class ResourceSet
     {
         public ResourceSet()
@@ -151,4 +174,5 @@ public class GetObjectParameters extends TransactionParameters
     private String mResource;
     private List mResourceSets;
     private boolean mMultipartId;
+    private boolean mUseLocation;
 }

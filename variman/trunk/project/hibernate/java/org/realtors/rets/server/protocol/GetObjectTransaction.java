@@ -33,6 +33,8 @@ public class GetObjectTransaction
         mParameters = parameters;
         mPatternContext = new GetObjectPatternContext();
         mBoundaryGenerator = DEFAULT_BOUNDARY_GENERATOR;
+        mBaseLocationUrl = "http://images.invalid/";
+        mBlockLocation = false;
     }
 
     public void setRootDirectory(String rootDirectory)
@@ -57,7 +59,7 @@ public class GetObjectTransaction
     {
         try
         {
-            List allFiles = findAllFiles();
+            List allFiles = findAllFileDescriptors();
             if (allFiles.size() == 0)
             {
                 throw new RetsReplyException(ReplyCode.NO_OBJECT_FOUND);
@@ -89,8 +91,15 @@ public class GetObjectTransaction
         response.setHeader("MIME-Version", "1.0");
         response.setHeader("Content-ID", fileDescriptor.objectKey);
         response.setHeader("Object-ID", "" + fileDescriptor.objectId);
-        IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
-                           response.getOutputStream());
+        if (useLocation())
+        {
+            response.setHeader("Location", getLocationUrl(fileDescriptor));
+        }
+        else
+        {
+            IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
+                               response.getOutputStream());
+        }
     }
 
     private void executeMultipart(GetObjectResponse response, List allFiles)
@@ -112,15 +121,24 @@ public class GetObjectTransaction
             out.writeBytes("Content-Type: " + getContentType(filePath) + CRLF);
             out.writeBytes("Content-ID: " + fileDescriptor.objectKey + CRLF);
             out.writeBytes("Object-ID: " + fileDescriptor.objectId + CRLF);
-            out.writeBytes(CRLF);
-            IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
-                               out);
+            if (useLocation())
+            {
+                out.writeBytes("Location: " + getLocationUrl(fileDescriptor) +
+                               CRLF);
+                out.writeBytes(CRLF);
+            }
+            else
+            {
+                out.writeBytes(CRLF);
+                IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
+                                   out);
+            }
         }
         out.writeBytes(CRLF + "--" + boundary + "--" + CRLF);
         out.close();
     }
 
-    private String getContentType(String file)
+    public String getContentType(String file)
     {
         if (file.endsWith(".gif"))
         {
@@ -138,7 +156,35 @@ public class GetObjectTransaction
         }
     }
 
-    private List /* FileDescriptor */ findAllFiles()
+    private boolean useLocation()
+    {
+        return (!mBlockLocation) && mParameters.getUseLocation();
+    }
+
+    private String getLocationUrl(FileDescriptor fileDescriptor)
+    {
+        StringBuffer location = new StringBuffer();
+        location.append(mBaseLocationUrl);
+        location.append(mParameters.getResource()).append("/");
+        location.append(mParameters.getType()).append("/");
+        location.append(fileDescriptor.objectKey).append("/");
+        location.append(fileDescriptor.objectId);
+        return location.toString();
+    }
+
+    public List /* File */ findAllFileObjects()
+    {
+        List allFiles = findAllFileDescriptors();
+        List fileObjects = new ArrayList(allFiles.size());
+        for (int i = 0; i < allFiles.size(); i++)
+        {
+            FileDescriptor descriptor = (FileDescriptor) allFiles.get(i);
+            fileObjects.add(descriptor.file);
+        }
+        return fileObjects;
+    }
+
+    private List /* FileDescriptor */ findAllFileDescriptors()
     {
         List files = new ArrayList();
         int numberOfResources = mParameters.numberOfResources();
@@ -200,6 +246,16 @@ public class GetObjectTransaction
         }
     }
 
+    public void setBaseLocationUrl(String baseLocationUrl)
+    {
+        mBaseLocationUrl = baseLocationUrl;
+    }
+
+    public void setBlockLocation(boolean blockLocation)
+    {
+        mBlockLocation = blockLocation;
+    }
+
     private static class FileDescriptor
     {
         public FileDescriptor(String objectKey, int objectId, File file)
@@ -232,5 +288,6 @@ public class GetObjectTransaction
     private GetObjectPatternContext mPatternContext;
     private GetObjectParameters mParameters;
     private MultipartBoundaryGenerator mBoundaryGenerator;
-    private boolean mUseMultipartResponse;
+    private String mBaseLocationUrl;
+    private boolean mBlockLocation;
 }

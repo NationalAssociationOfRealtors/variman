@@ -27,6 +27,7 @@ public class GetObjectParametersTest extends TestCase
         objectIds.add("1");
         assertEquals(objectIds, parameters.getObjectIdList(0));
         assertFalse(parameters.isMultipartId());
+        assertFalse(parameters.getUseLocation());
     }
 
     public void testComplexId()
@@ -50,6 +51,7 @@ public class GetObjectParametersTest extends TestCase
         objectIds.add("2");
         assertEquals(objectIds, parameters.getObjectIdList(1));
         assertTrue(parameters.isMultipartId());
+        assertFalse(parameters.getUseLocation());
     }
 
     public void testMultipartIdForStar()
@@ -72,6 +74,30 @@ public class GetObjectParametersTest extends TestCase
         });
         GetObjectParameters parameters = new GetObjectParameters(parameterMap);
         assertTrue(parameters.isMultipartId());
+    }
+
+    public void testLocationExplicitlyFalse()
+    {
+        Map parameterMap = parameterMap(new String[] {
+            "Type", "Photo",
+            "Resource", "Property",
+            "ID", "abc-123:1:2",
+            "Location", "0"
+        });
+        GetObjectParameters parameters = new GetObjectParameters(parameterMap);
+        assertFalse(parameters.getUseLocation());
+    }
+
+    public void testLocationExplicitlyTrue()
+    {
+        Map parameterMap = parameterMap(new String[] {
+            "Type", "Photo",
+            "Resource", "Property",
+            "ID", "abc-123:1:2",
+            "Location", "1"
+        });
+        GetObjectParameters parameters = new GetObjectParameters(parameterMap);
+        assertTrue(parameters.getUseLocation());
     }
 
     private Map parameterMap(String[] strings)
