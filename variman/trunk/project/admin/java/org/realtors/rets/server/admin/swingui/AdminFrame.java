@@ -122,7 +122,7 @@ public class AdminFrame extends JFrame
             retsConfig.setGetObjectPattern(
                 mConfigurationPanel.getImagePattern());
             retsConfig.toXml(Admin.getConfigFile());
-            mConfigurationPanel.setChanged(false);
+            Admin.setRetsConfigChanged(false);
         }
         catch (RetsServerException e)
         {
@@ -132,7 +132,7 @@ public class AdminFrame extends JFrame
 
     private void quit()
     {
-        if (mConfigurationPanel.isChanged())
+        if (Admin.isRetsConfigChanged())
         {
             int result = JOptionPane.showConfirmDialog(
                 this, "Save changes?", "Confirm Save",
