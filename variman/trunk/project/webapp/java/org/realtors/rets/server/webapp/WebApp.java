@@ -128,8 +128,8 @@ public class WebApp
         ClassLoader classLoader =
             Thread.currentThread().getContextClassLoader();
         Properties properties = new Properties();
-        properties.load(
-            classLoader.getResourceAsStream(PROJECT_NAME + "-webapp.properties"));
+        properties.load(classLoader.getResourceAsStream(
+            PROJECT_NAME + "-webapp.properties"));
         sVersion = properties.getProperty("version");
         sBuildDate = properties.getProperty("build-date");
     }
