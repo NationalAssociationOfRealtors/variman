@@ -1,0 +1,4 @@
+build
+dist
+build.properties
+.ant-targets-build.xml

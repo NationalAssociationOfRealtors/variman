@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+
+<project default = "build" basedir=".">
+
+  <!-- set global properties for this build -->
+  <property name="project.name" value="retsdb2"/>
+  <property name="project.version" value="0.0.1"/>
+  <property name="project.string"
+            value="${project.name}-${project.version}" />
+
+  <!-- This must be done before any other propertes -->
+  <property file="${basedir}/build.properties" />
+  <property file="${user.home}/.build.properties" />
+
+  <fileset id="hibernate.mapping.files" dir="project/mappings">
+    <include name="**/*.hbm.xml" />
+  </fileset>
+
+  <path id="lib.path">
+    <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${postgres.jar}"/>
+    <fileset dir="${hibernate.lib}" includes="*.jar"/>
+  </path>
+    
+
+  <!-- Add the checkstyle task -->
+<!--   <taskdef name="checkstyle" -->
+<!--            classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"> -->
+<!--     <classpath> -->
+<!--       <pathelement path="${checkstyle.jar}" /> -->
+<!--     </classpath> -->
+<!--   </taskdef> -->
+
+  <target name="build-properties-check">
+    <condition property="build.properties.uptodate">
+      <and>
+        <available file="build.properties" />
+        <available file="project/build.properties" />
+        <uptodate targetfile="build.properties">
+          <srcfiles dir="project" includes="build.properties" />
+        </uptodate>
+      </and>
+    </condition>
+  </target>
+
+  <target name="build-properties-up-to-date"
+          unless="build.properties.uptodate"
+          depends="build-properties-check">
+    <fail message="build.properties is out of date or missing." />
+  </target>
+
+  <target name="prepare" depends="build-properties-up-to-date">
+    <mkdir dir="build" />
+    <mkdir dir="build/final/classes"/>
+    <mkdir dir="build/final/lib"/>
+    <mkdir dir="build/generated"/>
+    <mkdir dir="build/schema"/>
+    <mkdir dir="dist" />
+  </target>
+
+  <target name="build" depends="build-test, prepare" />
+
+  <target name="dist" depends="generate-schema" />
+
+  <target name="build-test" depends="build-generated-code">
+    <depend srcDir="project/java" destDir="build/final/classes"
+            cache="build/final/depcache" closure="yes">
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement location="build/final/classes"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/java" destdir="build/final/classes"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement location="build/final/classes"/>
+      </classpath>
+    </javac>
+    <copy todir="build/final/classes"
+          file="project/config/hibernate.properties"/>
+    <copy todir="build/final/classes">
+      <fileset dir="project/mappings">
+        <include name="**/*.hbm.xml"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="mapping-files-check">
+    <uptodate property="generated.code.up.to.date">
+      <srcfiles dir="project/mappings" includes="**/*.hbm.xml"/>
+      <mapper type="glob" from="*.hbm.xml" to="${basedir}/build/generated/*.java"/>
+    </uptodate>
+  </target>
+  
+  <target name="build-generated-code"
+          unless="generated.code.up.to.date"
+          depends="mapping-files-check, prepare">
+    <pathconvert refid="hibernate.mapping.files"
+                 property="hibernate.mappings" pathsep=" "/>
+    <java classname="net.sf.hibernate.tool.hbm2java.CodeGenerator"
+      fork="true">
+      <arg line="--output=build/generated ${hibernate.mappings}"/>
+      <classpath refid="lib.path" />
+    </java>
+    <javac srcdir="build/generated" destdir="build/final/classes">
+      <classpath>
+        <path refid="lib.path"/>
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="generate-schema" depends="build-generated-code">
+    <pathconvert refid="hibernate.mapping.files"
+                 property="hibernate.mappings" pathsep=" "/>
+    <java classname="net.sf.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
+      <arg line="--output=build/schema/test.schema ${hibernate.mappings}"/>
+      <jvmarg value="-Dhibernate.dialect=${hibernate.dialect}"/>
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement path="build/final/classes"/>
+        <pathelement path="project/config"/>
+        <fileset dir="build/final/lib" includes="*.jar"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-add-data" depends="build">
+    <java classname="com.kgarner.quotes.QuoteAddData" fork="true">
+      <arg line=""/>
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement path="build/final/classes"/>
+        <fileset dir="build/final/lib" includes="*.jar"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-query" depends="build">
+    <java classname="com.kgarner.quotes.QuoteTest" fork="true">
+      <arg line=""/>
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement path="build/final/classes"/>
+        <fileset dir="build/final/lib" includes="*.jar"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test" depends="test-query"/>
+
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>
+  
+</project>

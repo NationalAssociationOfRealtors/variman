@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataUpdateHelpElement" table="e_update_help">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+  
+    <id column="id" name="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>
+    
+    <property column="update_help_id" name="updateHelpID" type="string"/>
+    <property column="value" name="value" type="string"/>
+
+  </class>
+  
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataValidationLookupTypeElement" table="e_validation_lookup_type">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+    <id name="id" column="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>  
+
+    <property column="valid_text" name="validText" type="string"/>
+    <property column="parent_1_value" name="parent1Value" type="string"/>
+    <property column="parent_2_value" name="parent2Value" type="string"/>
+
+  </class>
+  
+</hibernate-mapping>

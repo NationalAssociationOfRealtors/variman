@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataSystemLookup" table="m_system_lookup">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+  
+    <id column="id" name="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>
+    <discriminator column="type"/>
+    
+    <property column="rets_key" name="key" type="string"/>
+    <property column="value" name="value" type="string"/>
+
+    <subclass name="org.nar.rets.metadata.hibernate.MetadataSystemLookupDataType">
+      <property column="junk" name="junk" type="int"/>
+    </subclass>
+
+    <subclass name="org.nar.rets.metadata.hibernate.MetadataSystemLookupInterpretation">
+      <property column="junk" name="junk" type="int"/>
+    </subclass>
+
+    <subclass name="org.nar.rets.metadata.hibernate.MetadataSystemLookupAlignment">
+      <property column="junk" name="junk" type="int"/>
+    </subclass>
+
+    <subclass name="org.nar.rets.metadata.hibernate.MetadataSystemLookupUnits">
+      <property column="junk" name="junk" type="int"/>
+    </subclass>
+
+    <subclass name="org.nar.rets.metadata.hibernate.MetadataSystemLookupAttribute">
+      <property column="junk" name="junk" type="int"/>
+    </subclass>
+
+    <subclass name="org.nar.rets.metadata.hibernate.MetadataSystemLookupObjectType">
+      <property column="junk" name="junk" type="int"/>
+    </subclass>
+
+  </class>
+  
+</hibernate-mapping>
