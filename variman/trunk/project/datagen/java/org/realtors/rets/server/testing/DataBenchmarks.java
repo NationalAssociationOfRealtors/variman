@@ -7,16 +7,14 @@ package org.realtors.rets.server.testing;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 
-import org.realtors.rets.server.data.RetsData;
-import org.realtors.rets.server.data.RetsDataElement;
-import org.realtors.rets.server.metadata.Table;
+// import org.realtors.rets.server.metadata.Table;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -76,8 +74,8 @@ public class DataBenchmarks extends DataGenBase
                               "WHERE data.id in (" + ids + ")");
         for (int i = 0; i < l.size(); i++)
         {
-            RetsData element = (RetsData) l.get(i);
-            doSomething(element);
+//            RetsData element = (RetsData) l.get(i);
+//            doSomething(element);
         }
         tx.commit();
     }
@@ -109,21 +107,21 @@ public class DataBenchmarks extends DataGenBase
         Iterator i = q.iterate();
         while (i.hasNext())
         {
-            RetsData element = (RetsData) i.next();
-            doSomething(element);
+//            RetsData element = (RetsData) i.next();
+//            doSomething(element);
         }
 
         tx.commit();
         session.close();
     }
 
-    private void doSomething(RetsData element)
-    {
-        Map elements = element.getDataElements();
-        RetsDataElement rde =
-            (RetsDataElement) elements.get(
-                (Table) mTables.get("Property:RES:LP"));
-    }
+//    private void doSomething(RetsData element)
+//    {
+//        Map elements = element.getDataElements();
+//        RetsDataElement rde =
+//            (RetsDataElement) elements.get(
+//                (Table) mTables.get("Property:RES:LP"));
+//    }
 
     public static void main(String[] args) throws HibernateException
     {
