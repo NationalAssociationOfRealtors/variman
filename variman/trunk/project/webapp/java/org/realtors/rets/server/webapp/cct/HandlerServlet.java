@@ -31,7 +31,6 @@ public class HandlerServlet extends HttpServlet
             LOG.debug("Dispatching " + name + " to " +
                       handler.getClass().getName());
             handler.doGet(request, respsponse);
-            handler.validate();
         }
         else
         {
