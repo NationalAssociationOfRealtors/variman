@@ -8,6 +8,8 @@ import java.util.Arrays;
 
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.dmql.SimpleDmqlMetadata;
 
 public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
@@ -18,10 +20,15 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
             new ResidentialPropertyFormatter();
         MockResultSet results = new MockResultSet();
         results.setColumns(COLUMNS);
-        results.addRow(new String[] {"Main St.", "12345"});
+        results.addRow(new String[] {"Main St.", "12345", "1000"});
         SimpleDmqlMetadata metadata = new SimpleDmqlMetadata();
         metadata.addString("StreetName", "r_STNAME");
         metadata.addString("PostalCode", "r_ZIP_CODE");
+        metadata.addString("LivingArea", "r_SQFT");
+        Table table = new Table(1);
+        table.setUnits(UnitEnum.SQFT);
+        metadata.addTable("LivingArea", table);
+
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
             new SearchFormatterContext(new PrintWriter(formatted), results,
@@ -38,6 +45,9 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
             "<PostalCode>12345</PostalCode>\n" +
             "</StreetAddress>\n" +
             "</Listing>\n" +
+            "<LivingArea>\n" +
+            "<Area Units=\"SqFeet\">1000</Area>\n" +
+            "</LivingArea>\n" +
             "</ResidentialProperty>\n" +
             "</REProperties>\n" +
             "</REData>\n",
@@ -46,5 +56,5 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
     }
 
     public static final String[] COLUMNS =
-        new String[] {"r_STNAME", "r_ZIP_CODE"};
+        new String[] {"r_STNAME", "r_ZIP_CODE", "r_SQFT"};
 }
