@@ -8,6 +8,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_foreignkey"
+ * @hibernate.jcs-cache usage="read-write"
  */
 public class ForeignKey extends ServerMetadata implements Serializable
 {

@@ -11,6 +11,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_validationlookup"
+ * @hibernate.jcs-cache usage="read-write"
  */
 public class ValidationLookup extends ServerMetadata implements Serializable
 {
@@ -121,6 +122,7 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="validationlookupid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ValidationLookupType"
+     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getValidationLookupTypes()
     {

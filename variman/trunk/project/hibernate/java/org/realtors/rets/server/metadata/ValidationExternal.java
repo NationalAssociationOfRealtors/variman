@@ -11,6 +11,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_validationexternal"
+ * @hibernate.jcs-cache usage="read-write"
  */
 public class ValidationExternal extends ServerMetadata implements Serializable
 {
@@ -114,6 +115,7 @@ public class ValidationExternal extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="validationexternalid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ValidationExternalType"
+     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getValidationExternalTypes()
     {

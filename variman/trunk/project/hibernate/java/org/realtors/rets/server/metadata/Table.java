@@ -9,6 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_table"
+ * @hibernate.jcs-cache usage="read-write"
  */
 public class Table extends ServerMetadata implements Serializable
 {

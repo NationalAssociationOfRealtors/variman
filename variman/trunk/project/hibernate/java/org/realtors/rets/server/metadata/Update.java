@@ -12,6 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_update"
+ * @hibernate.jcs-cache usage="read-write"
  */
 public class Update extends ServerMetadata implements Serializable
 {
@@ -116,6 +117,7 @@ public class Update extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="updateid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.UpdateType"
+     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getUpdateTypes()
     {
