@@ -2,38 +2,38 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.Table;
 
-public class CompactTableFormatter extends TableFormatter
+public class CompactTableFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List tables)
+    public void format(FormatterContext context, Collection tables,
+                       String[] levels)
     {
         if (tables.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-TABLE");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Class", mClassName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < tables.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-TABLE")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("Class", levels[CLASS_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator iterator = tables.iterator(); iterator.hasNext();)
         {
-            Table table = (Table) tables.get(i);
-            appendDataRow(out, table);
+            Table table = (Table) iterator.next();
+            appendDataRow(context, table);
         }
-        tag.end();
+        tag.close();
     }
 
-    private void appendDataRow(PrintWriter out, Table table)
+    private void appendDataRow(FormatterContext context, Table table)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(table.getSystemName());
         row.append(table.getStandardName());

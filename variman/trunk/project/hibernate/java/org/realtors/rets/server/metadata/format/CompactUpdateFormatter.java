@@ -2,44 +2,54 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.Update;
 
-public class CompactUpdateFormatter extends UpdateFormatter
+public class CompactUpdateFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List updates)
+    public void format(FormatterContext context, Collection updates,
+                       String[] levels)
     {
         if (updates.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-UPDATE");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Class", mClassName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < updates.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-UPDATE")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("Class", levels[CLASS_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator iterator = updates.iterator(); iterator.hasNext();)
         {
-            Update update = (Update) updates.get(i);
-            appendDataRow(out, update);
+            Update update = (Update) iterator.next();
+            appendDataRow(context, update);
         }
-        tag.end();
+        tag.close();
+
+        if (context.isRecursive())
+        {
+            for (Iterator iterator = updates.iterator(); iterator.hasNext();)
+            {
+                Update update = (Update) iterator.next();
+                context.format(update.getUpdateTypes(),
+                               update.getPathAsArray());
+            }
+        }
     }
 
-    private void appendDataRow(PrintWriter out, Update update)
+    private void appendDataRow(FormatterContext context, Update update)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(update.getUpdateName());
         row.append(update.getDescription());
         row.append(update.getKeyField());
-        row.append(mVersion);
-        row.append(mDate);
+        row.append(context.getVersion());
+        row.append(context.getDate());
         row.end();
     }
 

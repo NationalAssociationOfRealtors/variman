@@ -2,42 +2,102 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.metadata.Resource;
 
 public class SystemFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mSystems = new ArrayList();
+        ArrayList systems = new ArrayList();
         MSystem system = new MSystem();
         system.setSystemID("CRT_RETS");
         system.setDescription("Center for REALTOR Technology");
         system.setComments("The reference implementation of a RETS Server");
         system.setVersion(100001);
         system.setDate(getDate());
-        mSystems.add(system);
+        system.addResource(new Resource(1));
+        systems.add(system);
+        return systems;
     }
 
-    public void testCompactFormatSystem()
+    protected String[] getLevels()
     {
-        SystemFormatter formatter = new CompactSystemFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mSystems);
-        assertEquals(
+        return new String[0];
+    }
+
+    protected MetadataFormatter getCompactFormatter()
+    {
+        return new CompactSystemFormatter();
+    }
+
+    private MetadataFormatter getStandardFormatter()
+    {
+        return new StandardSystemFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
             "<SYSTEM SystemID=\"CRT_RETS\" " +
             "SystemDescription=\"Center for REALTOR Technology\"/>\n" +
             "<COMMENTS>The reference implementation of a RETS Server" +
             "</COMMENTS>\n" +
-            "</METADATA-SYSTEM>\n",
-            formatted.toString());
+            "</METADATA-SYSTEM>\n";
     }
 
-    private List mSystems;
+    protected String getExpectedCompactRecursive()
+    {
+        return
+            "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
+            "Date=\"" + DATE + "\">\n" +
+            "<SYSTEM SystemID=\"CRT_RETS\" " +
+            "SystemDescription=\"Center for REALTOR Technology\"/>\n" +
+            "<COMMENTS>The reference implementation of a RETS Server" +
+            "</COMMENTS>\n" +
+            "</METADATA-SYSTEM>\n" +
+            Resource.TABLE + "\n";
+    }
+
+    public void testStandardFormat()
+    {
+        String formatted = format(getStandardFormatter(), getData(),
+                                  getLevels(), FormatterContext.NOT_RECURSIVE);
+        assertLinesEqual(
+            "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
+            "Date=\"" + DATE + "\">" + EOL +
+            "<System>" + EOL +
+            "<SystemID>CRT_RETS</SystemID>" + EOL +
+            "<SystemDescription>Center for REALTOR Technology" +
+            "</SystemDescription>" + EOL +
+            "<Comments>The reference implementation of a RETS Server" +
+            "</Comments>" + EOL +
+            "</System>" + EOL +
+            "</METADATA-SYSTEM>" + EOL,
+            formatted);
+    }
+
+    public void testStandardFormatRecursive()
+    {
+        String formatted = format(getStandardFormatter(), getData(),
+                                  getLevels(), FormatterContext.RECURSIVE);
+        assertLinesEqual(
+            "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
+            "Date=\"" + DATE + "\">" + EOL +
+            "<System>" + EOL +
+            "<SystemID>CRT_RETS</SystemID>" + EOL +
+            "<SystemDescription>Center for REALTOR Technology" +
+            "</SystemDescription>" + EOL +
+            "<Comments>The reference implementation of a RETS Server" +
+            "</Comments>" + EOL +
+            Resource.TABLE + EOL +
+            "</System>" + EOL +
+            "</METADATA-SYSTEM>" + EOL,
+            formatted);
+    }
 }

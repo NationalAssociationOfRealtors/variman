@@ -11,6 +11,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class MObject extends ServerMetadata implements Serializable
 {
+    public MObject()
+    {
+    }
+
+    public MObject(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
     /**
      *
      * @return a Long object
@@ -135,7 +145,7 @@ public class MObject extends ServerMetadata implements Serializable
         if (!(other instanceof MObject))
         {
             return false;
-        } 
+        }
         MObject castOther = (MObject) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -2,42 +2,43 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.SearchHelp;
 
-public class CompactSearchHelpFormatter extends SearchHelpFormatter
+public class CompactSearchHelpFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List searchHelps)
+    public void format(FormatterContext context, Collection searchHelps,
+                       String[] levels)
     {
         if (searchHelps.size() == 0)
         {
-            return; 
+            return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-SEARCH_HELP");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < searchHelps.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(),
+                                        "METADATA-SEARCH_HELP")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator iterator = searchHelps.iterator(); iterator.hasNext();)
         {
-            SearchHelp searchHelp = (SearchHelp) searchHelps.get(i);
-            appendDataRow(out, searchHelp);
+            SearchHelp searchHelp = (SearchHelp) iterator.next();
+            appendDataRow(context, searchHelp);
         }
-        tag.end();
+        tag.close();
     }
 
-    private void appendDataRow(PrintWriter out, SearchHelp searchHelp)
+    private void appendDataRow(FormatterContext context, SearchHelp searchHelp)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(searchHelp.getSearchHelpID());
         row.append(searchHelp.getValue());
         row.end();
-    }
+     }
 
     private static final String[] COLUMNS = new String[] {
         "SearchHelpID", "Value",

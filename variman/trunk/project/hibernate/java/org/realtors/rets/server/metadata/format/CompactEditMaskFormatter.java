@@ -2,37 +2,38 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.EditMask;
 
-public class CompactEditMaskFormatter extends EditMaskFormatter
+public class CompactEditMaskFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List editMasks)
+    public void format(FormatterContext context, Collection editMasks,
+                       String[] levels)
     {
         if (editMasks.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-EDITMASK");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < editMasks.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(),
+                                        "METADATA-EDITMASK")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator iterator = editMasks.iterator(); iterator.hasNext();)
         {
-            EditMask editMask = (EditMask) editMasks.get(i);
-            appendDataRow(out, editMask);
+            EditMask editMask = (EditMask) iterator.next();
+            appendDataRow(context, editMask);
         }
-        tag.end();
+        tag.close();
     }
 
-    private void appendDataRow(PrintWriter out, EditMask editMask)
+    private void appendDataRow(FormatterContext context, EditMask editMask)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(editMask.getEditMaskID());
         row.append(editMask.getValue());

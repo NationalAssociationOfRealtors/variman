@@ -11,6 +11,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ValidationLookupType extends ServerMetadata implements Serializable
 {
+    public ValidationLookupType()
+    {
+    }
+
+    public ValidationLookupType(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
     /**
      *
      * @return a Long object
@@ -81,7 +91,7 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
      *
      * @hibernate.many-to-one
      * @hibernate.column name="validationlookupid"
-     *   not-null="true" 
+     *   not-null="true"
      */
     public ValidationLookup getValidationLookup()
     {
@@ -132,7 +142,7 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
         if (!(other instanceof ValidationLookupType))
         {
             return false;
-        } 
+        }
         ValidationLookupType castOther = (ValidationLookupType) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

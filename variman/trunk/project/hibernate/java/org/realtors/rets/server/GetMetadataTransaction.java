@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
+import org.realtors.rets.server.metadata.format.FormatterContext;
 
 import org.apache.log4j.Logger;
 
@@ -29,27 +30,19 @@ public class GetMetadataTransaction extends RetsTransaction
     {
         List metadataObjects = fetcher.fetchMetadata(parameters.getType(),
                                                      parameters.getIds(),
-                                                     parameters.isRecursive());
+                                                     false);
 
         printOpenRetsSuccess(out);
-        formatOutput(out, metadataObjects, parameters.getFormat());
-        printCloseRets(out);
-    }
-
-    public void formatOutput(PrintWriter out, List metadataSegments,
-                              int format)
-    {
-        LOG.debug("Formatting " + metadataSegments.size() + " segments");
-        long start = System.currentTimeMillis();
         MetadataSegmentFormatter formatter =
-            new MetadataSegmentFormatter(out, format);
-        for (int i = 0; i < metadataSegments.size(); i++)
-        {
-            MetadataSegment metadataSegment =
-                (MetadataSegment) metadataSegments.get(i);
-            formatter.format(metadataSegment);
-        }
-        LOG.debug("Formatting done: " + (System.currentTimeMillis() - start));
+            new MetadataSegmentFormatter(parameters.getFormat());
+        MetadataSegment segment = (MetadataSegment) metadataObjects.get(0);
+        FormatterContext context =
+            new FormatterContext(segment.getVersion(), segment.getDate(),
+                                 parameters.isRecursive(), out, formatter);
+        LOG.debug("Formatting started");
+        context.format(segment.getDataList(), segment.getLevels());
+        LOG.debug("Formatting done");
+        printCloseRets(out);
     }
 
     private static final Logger LOG =

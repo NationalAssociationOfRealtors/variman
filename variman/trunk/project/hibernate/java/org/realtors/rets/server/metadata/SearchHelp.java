@@ -10,6 +10,16 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class SearchHelp extends ServerMetadata implements Serializable
 {
+    public SearchHelp()
+    {
+    }
+
+    public SearchHelp(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
     /**
      *
      * @return a Long object
@@ -69,7 +79,7 @@ public class SearchHelp extends ServerMetadata implements Serializable
      *
      * @hibernate.many-to-one
      * @hibernate.column name="resourceid"
-     *   not-null="true" 
+     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -123,7 +133,7 @@ public class SearchHelp extends ServerMetadata implements Serializable
         if (!(other instanceof SearchHelp))
         {
             return false;
-        } 
+        }
         SearchHelp castOther = (SearchHelp) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

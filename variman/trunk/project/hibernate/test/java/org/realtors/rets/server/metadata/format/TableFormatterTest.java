@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,9 +18,9 @@ import org.realtors.rets.server.metadata.UnitEnum;
 
 public class TableFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mTables = new ArrayList();
+        List tables = new ArrayList();
 
         Table table = new Table(1);
         table.setSystemName("E_SCHOOL");
@@ -59,7 +57,7 @@ public class TableFormatterTest extends FormatterTestCase
         table.setDefault(5);
         table.setRequired(6);
         table.setUnique(false);
-        mTables.add(table);
+        tables.add(table);
 
         table = new Table(2);
         table.setSystemName("AGENT_ID");
@@ -79,23 +77,23 @@ public class TableFormatterTest extends FormatterTestCase
         table.setDefault(5);
         table.setRequired(0);
         table.setUnique(false);
-        mTables.add(table);
+        tables.add(table);
+        return tables;
     }
 
-    private TableFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        TableFormatter formatter = new CompactTableFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[]{"Property", "MOB"});
-        return formatter;
+        return new String[] {"Property", "MOB"};
     }
 
-    public void testCompactFormatTable()
+    protected MetadataFormatter getCompactFormatter()
     {
-        TableFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mTables);
-        assertEquals(
+        return new CompactTableFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-TABLE Resource=\"Property\" Class=\"MOB\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
@@ -119,17 +117,35 @@ public class TableFormatterTest extends FormatterTestCase
             "\t0\t\t0\t" +
             "</DATA>\n" +
 
-            "</METADATA-TABLE>\n",
-            formatted.toString());
+            "</METADATA-TABLE>\n";
     }
 
-    public void testEmptyCompactFormatTable()
+    protected String getExpectedCompactRecursive()
     {
-        TableFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-TABLE Resource=\"Property\" Class=\"MOB\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-    private List mTables;
+            "<COLUMNS>\t" +
+            "SystemName\tStandardName\tLongName\tDBName\t" +
+            "ShortName\tMaximumLength\tDataType\tPrecision\tSearchable\t" +
+            "Interpretation\tAlignment\tUseSeparator\tEditMaskID\t" +
+            "LookupName\tMaxSelect\tUnits\tIndex\tMinimum\tMaximum\tDefault\t" +
+            "Required\tSearchHelpID\tUnique\t" +
+            "</COLUMNS>\n" +
+
+            "<DATA>\t" +
+            "E_SCHOOL\tElementarySchool\tElementary School\t" +
+            "E_SCHOOL\tElemSchool\t4\tInt\t0\t1\tLookup\tLeft\t0\tEM1,EM2\t" +
+            "E_SCHOOL\t1\tFeet\t2\t3\t4\t5\t6\t\t0\t" +
+            "</DATA>\n" +
+
+            "<DATA>\t" +
+            "AGENT_ID\tListAgentAgentID\tListing Agent ID\tAGENT_ID\t" +
+            "AgentID\t0\tCharacter\t0\t1\t\tLeft\t0\t\t\t0\t\t0\t0\t0\t5" +
+            "\t0\t\t0\t" +
+            "</DATA>\n" +
+
+            "</METADATA-TABLE>\n";
+    }
 }

@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,30 +9,30 @@ import org.realtors.rets.server.metadata.LookupType;
 
 public class LookupTypeFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mLookupTypes = new ArrayList();
+        List lookupTypes = new ArrayList();
         LookupType lookupType = new LookupType();
         lookupType.setLongValue("Aurora 306");
         lookupType.setShortValue("306");
         lookupType.setValue("306");
-        mLookupTypes.add(lookupType);
+        lookupTypes.add(lookupType);
+        return lookupTypes;
     }
 
-    private LookupTypeFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        LookupTypeFormatter formatter = new CompactLookupTypeFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[] {"Property", "E_SCHOOL"});
-        return formatter;
+        return new String[] {"Property", "E_SCHOOL"};
     }
 
-    public void testCompactFormatLookupType()
+    protected MetadataFormatter getCompactFormatter()
     {
-        LookupTypeFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted),  mLookupTypes);
-        assertEquals(
+        return new CompactLookupTypeFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-LOOKUP_TYPE Resource=\"Property\" Lookup=\"E_SCHOOL\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
@@ -42,17 +40,19 @@ public class LookupTypeFormatterTest extends FormatterTestCase
 
             "<DATA>\tAurora 306\t306\t306\t</DATA>\n" +
 
-            "</METADATA-LOOKUP_TYPE>\n",
-            formatted.toString());
+            "</METADATA-LOOKUP_TYPE>\n";
     }
 
-    public void testEmptyCompactFormat()
+    protected String getExpectedCompactRecursive()
     {
-        LookupTypeFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-LOOKUP_TYPE Resource=\"Property\" Lookup=\"E_SCHOOL\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-    protected List mLookupTypes;
+            "<COLUMNS>\tLongValue\tShortValue\tValue\t</COLUMNS>\n" +
+
+            "<DATA>\tAurora 306\t306\t306\t</DATA>\n" +
+
+            "</METADATA-LOOKUP_TYPE>\n";
+    }
 }

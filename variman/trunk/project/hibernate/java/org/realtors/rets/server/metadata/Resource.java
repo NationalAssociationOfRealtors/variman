@@ -3,6 +3,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -179,6 +180,10 @@ public class Resource extends ServerMetadata implements Serializable
 
     public void addClass(MClass clazz)
     {
+        if (mClasses == Collections.EMPTY_SET)
+        {
+            mClasses = new HashSet();
+        }
         clazz.setResource(this);
         clazz.updateLevel();
         mClasses.add(clazz);
@@ -203,6 +208,16 @@ public class Resource extends ServerMetadata implements Serializable
         mObjects = objects;
     }
 
+    public void addObject(MObject object)
+    {
+        if (mObjects == Collections.EMPTY_SET)
+        {
+            mObjects = new HashSet();
+        }
+        object.setResource(this);
+        mObjects.add(object);
+    }
+
     /**
      *
      * @return a Set of SearchHelp objects
@@ -222,6 +237,17 @@ public class Resource extends ServerMetadata implements Serializable
         mSearchHelps = searchHelps;
     }
 
+    public void addSearchHelp(SearchHelp searchHelp)
+    {
+        if (mSearchHelps == Collections.EMPTY_SET)
+        {
+            mSearchHelps = new HashSet();
+        }
+        searchHelp.setResource(this);
+        searchHelp.updateLevel();
+        mSearchHelps.add(searchHelp);
+    }
+
     /**
      *
      * @return a Set of EditMasks
@@ -239,6 +265,17 @@ public class Resource extends ServerMetadata implements Serializable
     public void setEditMasks(Set editMasks)
     {
         mEditMasks = editMasks;
+    }
+
+    public void addEditMask(EditMask editMask)
+    {
+        if (mEditMasks == Collections.EMPTY_SET)
+        {
+            mEditMasks = new HashSet();
+        }
+        editMask.setResource(this);
+        editMask.updateLevel();
+        mEditMasks.add(editMask);
     }
 
     /**
@@ -263,6 +300,10 @@ public class Resource extends ServerMetadata implements Serializable
 
     public void addLookup(Lookup lookup)
     {
+        if (mLookups == Collections.EMPTY_SET)
+        {
+            mLookups = new HashSet();
+        }
         lookup.setResource(this);
         lookup.updateLevel();
         mLookups.add(lookup);
@@ -287,6 +328,17 @@ public class Resource extends ServerMetadata implements Serializable
         mValidationLookups = validationLookups;
     }
 
+    public void addValidationLookup(ValidationLookup validationLookup)
+    {
+        if (mValidationLookups == Collections.EMPTY_SET)
+        {
+            mValidationLookups = new HashSet();
+        }
+        validationLookup.setResource(this);
+        validationLookup.updateLevel();
+        mValidationLookups.add(validationLookup);
+    }
+
     /**
      *
      * @return a Set of ValidationExternals
@@ -306,6 +358,17 @@ public class Resource extends ServerMetadata implements Serializable
         mValidationExternals = validationExternals;
     }
 
+    public void addValidationExternal(ValidationExternal validationExternal)
+    {
+        if (mValidationExternals == Collections.EMPTY_SET)
+        {
+            mValidationExternals = new HashSet();
+        }
+        validationExternal.setResource(this);
+        validationExternal.updateLevel();
+        mValidationExternals.add(validationExternal);
+    }
+
     /**
      *
      * @return a Set of ValidationExpressions
@@ -323,6 +386,18 @@ public class Resource extends ServerMetadata implements Serializable
     public void setValidationExpressions(Set validationExpressions)
     {
         mValidationExpressions = validationExpressions;
+    }
+
+    public void addValidationExpression(
+        ValidationExpression validationExpression)
+    {
+        if (mValidationExpressions == Collections.EMPTY_SET)
+        {
+            mValidationExpressions = new HashSet();
+        }
+        validationExpression.setResource(this);
+        validationExpression.updateLevel();
+        mValidationExpressions.add(validationExpression);
     }
 
     /**

@@ -3,11 +3,14 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.ForeignKey;
 import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MClass;
@@ -24,13 +27,29 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ForeignKey;
 
 public class MetadataSegmentFormatter
 {
     public MetadataSegmentFormatter(PrintWriter out, int format)
     {
         mOut = out;
+        initFormatters(format);
+    }
+
+    public MetadataSegmentFormatter(int format)
+    {
+        initFormatters(format);
+    }
+
+
+    /**
+     * Initializes the formatters map. This may be overridden by subclasses
+     * for specialized behavior.
+     *
+     * @param format
+     */
+    protected void initFormatters(int format)
+    {
         mFormmatters = new HashMap();
         if (format == MetadataFormatter.COMPACT)
         {
@@ -67,23 +86,50 @@ public class MetadataSegmentFormatter
         }
     }
 
-    public MetadataFormatter getFormatter(Class clazz)
+    protected MetadataFormatter getFormatter(Class clazz)
     {
         return (MetadataFormatter) mFormmatters.get(clazz);
+    }
+
+    public MetadataFormatter getFormatter(Collection metadataCollection)
+    {
+        Iterator i = metadataCollection.iterator();
+        if (i.hasNext())
+        {
+            return getFormatter(i.next().getClass());
+        }
+        else
+        {
+            return new NullMetadataFormatter();
+        }
+    }
+
+    protected MetadataFormatter getFormatter(List metadataList)
+    {
+        if (metadataList.size() > 0)
+        {
+            return getFormatter(metadataList.get(0).getClass());
+        }
+        else
+        {
+            return new NullMetadataFormatter();
+        }
     }
 
     public void format(MetadataSegment segment)
     {
         List dataList = segment.getDataList();
-        if (dataList.size() > 0)
+        MetadataFormatter formatter = getFormatter(dataList);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setLevels(segment.getLevels());
+        formatter.format(mOut, dataList);
+    }
+
+    static class NullMetadataFormatter extends MetadataFormatter
+    {
+        public void format(FormatterContext context, Collection data,
+                           String[] levels)
         {
-            // Use the first element as the type for *all* elements. This
-            // assumes that all elements are of the same type
-            MetadataFormatter formatter =
-                getFormatter(dataList.get(0).getClass());
-            formatter.setVersion(segment.getVersion(), segment.getDate());
-            formatter.setLevels(segment.getLevels());
-            formatter.format(mOut, segment.getDataList());
         }
     }
 

@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.ForeignKey;
 import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MClass;
@@ -21,7 +22,6 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ForeignKey;
 
 import junit.framework.TestCase;
 

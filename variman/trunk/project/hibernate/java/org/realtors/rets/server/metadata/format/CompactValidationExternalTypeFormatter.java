@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,36 +11,37 @@ import java.util.Set;
 
 import org.realtors.rets.server.metadata.ValidationExternalType;
 
-public class CompactValidationExternalTypeFormatter
-    extends ValidationExternalTypeFormatter
+public class CompactValidationExternalTypeFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List validationExternalTypes)
+    public void format(FormatterContext context,
+                       Collection validationExternalTypes, String[] levels)
     {
         if (validationExternalTypes.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-VALIDATION_EXTERNAL_TYPE");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("ValidationExternal", mValidationExternalName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < validationExternalTypes.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(),
+                                        "METADATA-VALIDATION_EXTERNAL_TYPE")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("ValidationExternal",
+                             levels[VALIDATION_EXTERNAL_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator i = validationExternalTypes.iterator(); i.hasNext();)
         {
             ValidationExternalType validationExternalType =
-                (ValidationExternalType) validationExternalTypes.get(i);
-            appendDataRow(out, validationExternalType);
+                (ValidationExternalType) i.next();
+            appendDataRow(context, validationExternalType);
         }
-        tag.end();
+        tag.close();
     }
 
-    private void appendDataRow(PrintWriter out,
+    private void appendDataRow(FormatterContext context,
                                ValidationExternalType validationExternalType)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(validationExternalType.getSearchField());
         row.append(validationExternalType.getDisplayField());

@@ -2,20 +2,19 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ValidationExternal;
+import org.realtors.rets.server.metadata.ValidationExternalType;
 
 public class ValidationExternalFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mValidationExternals = new ArrayList();
+        List validationExternals = new ArrayList();
         ValidationExternal validationExternal = new ValidationExternal();
         validationExternal.setValidationExternalName("VET1");
 
@@ -26,24 +25,25 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
         res.setResource(property);
         validationExternal.setSearchClass(res);
 
-        mValidationExternals.add(validationExternal);
+        validationExternal.addValidationExternalType(
+            new ValidationExternalType(1));
+        validationExternals.add(validationExternal);
+        return validationExternals;
     }
 
-    private ValidationExternalFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        ValidationExternalFormatter formatter =
-            new CompactValidationExternalFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[] {"Property"});
-        return formatter;
+        return new String[] {"Property"};
     }
 
-    public void testCompactFormatValidationExternal()
+    protected MetadataFormatter getCompactFormatter()
     {
-        ValidationExternalFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mValidationExternals);
-        assertEquals(
+        return new CompactValidationExternalFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
@@ -52,17 +52,22 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
 
             "<DATA>\tVET1\tProperty\tRES" + VERSION_DATE + "\t</DATA>\n" +
 
-            "</METADATA-VALIDATION_EXTERNAL>\n",
-            formatted.toString());
+            "</METADATA-VALIDATION_EXTERNAL>\n";
     }
 
-    public void testCompactFormat()
+    protected String getExpectedCompactRecursive()
     {
-        ValidationExternalFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-    private List mValidationExternals;
+            "<COLUMNS>\tValidationExternalName\tSearchResource\tSearchClass\t" +
+            "Version\tDate\t</COLUMNS>\n" +
+
+            "<DATA>\tVET1\tProperty\tRES" + VERSION_DATE + "\t</DATA>\n" +
+
+            "</METADATA-VALIDATION_EXTERNAL>\n" +
+
+            ValidationExternalType.TABLE + "\n";
+    }
 }

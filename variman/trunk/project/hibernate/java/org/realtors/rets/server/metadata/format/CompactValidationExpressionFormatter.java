@@ -2,47 +2,47 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.ValidationExpression;
 
-public class CompactValidationExpressionFormatter
-    extends ValidationExpressionFormatter
+public class CompactValidationExpressionFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List validationExpressions)
+    public void format(FormatterContext context,
+                       Collection validationExpressions, String[] levels)
     {
         if (validationExpressions.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
+        TagBuilder tag = new TagBuilder(context.getWriter());
         tag.begin("METADATA-VALIDATION_EXPRESSION");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
+        tag.appendAttribute("Resource", levels[RESOURCE_LEVEL]);
+        tag.appendAttribute("Version", context.getVersion());
+        tag.appendAttribute("Date", context.getDate());
         tag.endAttributes();
         tag.appendColumns(COLUMNS);
-        for (int i = 0; i < validationExpressions.size(); i++)
+        for (Iterator i = validationExpressions.iterator(); i.hasNext();)
         {
             ValidationExpression validationExpression =
-                (ValidationExpression) validationExpressions.get(i);
-            appendDataRow(out, validationExpression);
-            
+                (ValidationExpression) i.next();
+            appendDataRow(context, validationExpression);
+
         }
         tag.end();
     }
 
-    private void appendDataRow(PrintWriter out,
+    private void appendDataRow(FormatterContext context,
                                ValidationExpression validationExpression)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(validationExpression.getValidationExpressionID());
         row.append(validationExpression.getValidationExpressionType());
         row.append(validationExpression.getValue());
-        row.append(mVersion);
-        row.append(mDate);
+        row.append(context.getVersion());
+        row.append(context.getDate());
         row.end();
     }
 

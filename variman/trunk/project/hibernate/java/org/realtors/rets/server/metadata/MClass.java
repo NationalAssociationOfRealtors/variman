@@ -3,6 +3,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -159,6 +160,10 @@ public class MClass extends ServerMetadata implements Serializable
 
     public void addTable(Table table)
     {
+        if (mTables == Collections.EMPTY_SET)
+        {
+            mTables = new HashSet();
+        }
         table.setMClass(this);
         table.updateLevel();
         mTables.add(table);
@@ -181,6 +186,17 @@ public class MClass extends ServerMetadata implements Serializable
     public void setUpdates(Set updates)
     {
         mUpdates = updates;
+    }
+
+    public void addUpdate(Update update)
+    {
+        if (mUpdates == Collections.EMPTY_SET)
+        {
+            mUpdates = new HashSet();
+        }
+        update.setMClass(this);
+        update.updateLevel();
+        mUpdates.add(update);
     }
 
     /**

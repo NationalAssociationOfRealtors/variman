@@ -2,47 +2,59 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
+import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.ValidationExpression;
+import org.realtors.rets.server.metadata.ValidationExternal;
+import org.realtors.rets.server.metadata.ValidationLookup;
 
 public class ResourceFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mResources = new ArrayList();
+        ArrayList resources = new ArrayList();
         Resource resource = new Resource();
         resource.setResourceID("PropertyID");
         resource.setStandardName(ResourceStandardNameEnum.PROPERTY);
         resource.setVisibleName("Prop");
         resource.setDescription("Property Database");
         resource.setKeyField("LN");
-        HashSet classes = new HashSet();
-        classes.add(new MClass(1));
-        classes.add(new MClass(2));
-        resource.setClasses(classes);
-        mResources.add(resource);
+
+        resource.addClass(new MClass(1));
+        resource.addClass(new MClass(2));
+        resource.addObject(new MObject(1));
+        resource.addSearchHelp(new SearchHelp(1));
+        resource.addEditMask(new EditMask(1));
+        resource.addLookup(new Lookup(1));
+        resource.addValidationLookup(new ValidationLookup(1));
+        resource.addValidationExternal(new ValidationExternal(1));
+        resource.addValidationExpression(new ValidationExpression(1));
+
+        resources.add(resource);
+        return resources;
     }
 
-    private ResourceFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        ResourceFormatter formatter = new CompactResourceFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        return formatter;
+        return new String[0];
     }
 
-    public void testCompactFormatResource()
+    protected MetadataFormatter getCompactFormatter()
     {
-        ResourceFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mResources);
-        assertEquals(
+        return new CompactResourceFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
 
@@ -61,17 +73,141 @@ public class ResourceFormatterTest extends FormatterTestCase
             VERSION_DATE + VERSION_DATE + VERSION_DATE + VERSION_DATE +
             VERSION_DATE + "\t</DATA>\n" +
 
-            "</METADATA-RESOURCE>\n",
-            formatted.toString());
+            "</METADATA-RESOURCE>\n";
     }
 
-    public void testEmptyCompactFormatResource()
+    protected String getExpectedCompactRecursive()
     {
-        ResourceFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
+        return
+            "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
+            "Date=\"" + DATE + "\">\n" +
+
+            "<COLUMNS>\tResourceID\tStandardName\tVisibleName\tDescription\t" +
+            "KeyField\tClassCount\tClassVersion\tClassDate\tObjectVersion\t" +
+            "ObjectDate\tSearchHelpVersion\tSearchHelpDate\tEditMaskVersion\t" +
+            "EditMaskDate\tLookupVersion\tLookupDate\tUpdateHelpVersion\t" +
+            "UpdateHelpDate\tValidationExpressionVersion\t" +
+            "ValidationExpressionDate\tValidationLookupVersion\t" +
+            "ValidationLookupDate\tValidationExternalVersion\t" +
+            "ValidationExternalDate\t</COLUMNS>\n" +
+
+            "<DATA>\tPropertyID\tProperty\tProp\tProperty Database\t" +
+            "LN\t2" +
+            VERSION_DATE + VERSION_DATE + VERSION_DATE + VERSION_DATE +
+            VERSION_DATE + VERSION_DATE + VERSION_DATE + VERSION_DATE +
+            VERSION_DATE + "\t</DATA>\n" +
+
+            "</METADATA-RESOURCE>\n" +
+            MClass.TABLE + "\n" +
+            MClass.TABLE + "\n" +
+            MObject.TABLE + "\n" +
+            SearchHelp.TABLE + "\n" +
+            EditMask.TABLE + "\n" +
+            Lookup.TABLE + "\n" +
+            ValidationLookup.TABLE + "\n" +
+            ValidationExternal.TABLE + "\n" +
+            ValidationExpression.TABLE + "\n";
     }
 
-    private List mResources;
+    private MetadataFormatter getStandardFormatter()
+    {
+        return new StandardResourceFormatter();
+    }
+
+    public void testStandardFormat()
+    {
+        String formatted = format(getStandardFormatter(), getData(),
+                                  getLevels(), FormatterContext.NOT_RECURSIVE);
+        assertLinesEqual(
+            "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
+            "Date=\"" + DATE + "\">" + EOL +
+            "<Resource>" + EOL +
+            "<ResourceID>PropertyID</ResourceID>" + EOL +
+            "<StandardName>Property</StandardName>" + EOL +
+            "<VisibleName>Prop</VisibleName>" + EOL +
+            "<Description>Property Database</Description>" + EOL +
+            "<KeyField>LN</KeyField>" + EOL +
+            "<ClassCount>2</ClassCount>" + EOL +
+            "<ClassVersion>" + VERSION + "</ClassVersion>" + EOL +
+            "<ClassDate>" + DATE + "</ClassDate>" + EOL +
+
+            "<ObjectVersion>" + VERSION + "</ObjectVersion>" + EOL +
+            "<ObjectDate>" + DATE + "</ObjectDate>" + EOL +
+            "<SearchHelpVersion>" + VERSION + "</SearchHelpVersion>" + EOL +
+            "<SearchHelpDate>" + DATE + "</SearchHelpDate>" + EOL +
+            "<EditMaskVersion>" + VERSION + "</EditMaskVersion>" + EOL +
+            "<EditMaskDate>" + DATE + "</EditMaskDate>" + EOL +
+            "<LookupVersion>" + VERSION + "</LookupVersion>" + EOL +
+            "<LookupDate>" + DATE + "</LookupDate>" + EOL +
+            "<UpdateHelpVersion>" + VERSION + "</UpdateHelpVersion>" + EOL +
+            "<UpdateHelpDate>" + DATE + "</UpdateHelpDate>" + EOL +
+
+            "<ValidationExpressionVersion>" + VERSION +
+            "</ValidationExpressionVersion>" + EOL +
+            "<ValidationExpressionDate>" + DATE +
+            "</ValidationExpressionDate>" + EOL +
+            "<ValidationLookupVersion>" + VERSION +
+            "</ValidationLookupVersion>" + EOL +
+            "<ValidationLookupDate>" + DATE + "</ValidationLookupDate>" + EOL +
+            "<ValidationExternalVersion>" + VERSION +
+            "</ValidationExternalVersion>" + EOL +
+            "<ValidationExternalDate>" + DATE +
+            "</ValidationExternalDate>" + EOL +
+            "</Resource>" + EOL +
+            "</METADATA-RESOURCE>" + EOL,
+            formatted);
+    }
+
+    public void testStandardFormatRecursive()
+    {
+        String formatted = format(getStandardFormatter(), getData(),
+                                  getLevels(), FormatterContext.RECURSIVE);
+        assertLinesEqual(
+            "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
+            "Date=\"" + DATE + "\">" + EOL +
+            "<Resource>" + EOL +
+            "<ResourceID>PropertyID</ResourceID>" + EOL +
+            "<StandardName>Property</StandardName>" + EOL +
+            "<VisibleName>Prop</VisibleName>" + EOL +
+            "<Description>Property Database</Description>" + EOL +
+            "<KeyField>LN</KeyField>" + EOL +
+            "<ClassCount>2</ClassCount>" + EOL +
+            "<ClassVersion>" + VERSION + "</ClassVersion>" + EOL +
+            "<ClassDate>" + DATE + "</ClassDate>" + EOL +
+
+            "<ObjectVersion>" + VERSION + "</ObjectVersion>" + EOL +
+            "<ObjectDate>" + DATE + "</ObjectDate>" + EOL +
+            "<SearchHelpVersion>" + VERSION + "</SearchHelpVersion>" + EOL +
+            "<SearchHelpDate>" + DATE + "</SearchHelpDate>" + EOL +
+            "<EditMaskVersion>" + VERSION + "</EditMaskVersion>" + EOL +
+            "<EditMaskDate>" + DATE + "</EditMaskDate>" + EOL +
+            "<LookupVersion>" + VERSION + "</LookupVersion>" + EOL +
+            "<LookupDate>" + DATE + "</LookupDate>" + EOL +
+            "<UpdateHelpVersion>" + VERSION + "</UpdateHelpVersion>" + EOL +
+            "<UpdateHelpDate>" + DATE + "</UpdateHelpDate>" + EOL +
+
+            "<ValidationExpressionVersion>" + VERSION +
+            "</ValidationExpressionVersion>" + EOL +
+            "<ValidationExpressionDate>" + DATE +
+            "</ValidationExpressionDate>" + EOL +
+            "<ValidationLookupVersion>" + VERSION +
+            "</ValidationLookupVersion>" + EOL +
+            "<ValidationLookupDate>" + DATE + "</ValidationLookupDate>" + EOL +
+            "<ValidationExternalVersion>" + VERSION +
+            "</ValidationExternalVersion>" + EOL +
+            "<ValidationExternalDate>" + DATE +
+            "</ValidationExternalDate>" + EOL +
+            MClass.TABLE + EOL +
+            MClass.TABLE + EOL +
+            MObject.TABLE + EOL +
+            SearchHelp.TABLE + EOL +
+            EditMask.TABLE + EOL +
+            Lookup.TABLE + EOL +
+            ValidationLookup.TABLE + EOL +
+            ValidationExternal.TABLE + EOL +
+            ValidationExpression.TABLE + EOL +
+            "</Resource>" + EOL +
+            "</METADATA-RESOURCE>" + EOL,
+            formatted);
+    }
 }

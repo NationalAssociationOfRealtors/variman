@@ -2,39 +2,39 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateType;
 
 public class UpdateFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mUpdates = new ArrayList();
+        List updates = new ArrayList();
         Update update = new Update();
         update.setUpdateName("Add");
         update.setDescription("Add a new Residential Listing");
         update.setKeyField("key");
-        mUpdates.add(update);
+        update.addUpdateType(new UpdateType(1));
+        updates.add(update);
+        return updates;
     }
 
-    private UpdateFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        UpdateFormatter formatter = new CompactUpdateFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[]{"Property", "RES"});
-        return formatter;
+        return new String[] {"Property", "RES"};
     }
 
-    public void testCompactFormatUpdate()
+    protected MetadataFormatter getCompactFormatter()
     {
-        UpdateFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mUpdates);
-        assertEquals(
+        return new CompactUpdateFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
@@ -44,17 +44,22 @@ public class UpdateFormatterTest extends FormatterTestCase
             "<DATA>\tAdd\tAdd a new Residential Listing\tkey" + VERSION_DATE +
             "\t</DATA>\n" +
 
-            "</METADATA-UPDATE>\n",
-            formatted.toString());
+            "</METADATA-UPDATE>\n";
     }
 
-    public void testEmptyCompactFormatUpdate()
+    protected String getExpectedCompactRecursive()
     {
-        UpdateFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-    private List mUpdates;
+            "<COLUMNS>\tUpdateName\tDescription\tKeyField\tVersion\tDate\t" +
+            "</COLUMNS>\n" +
+
+            "<DATA>\tAdd\tAdd a new Residential Listing\tkey" + VERSION_DATE +
+            "\t</DATA>\n" +
+
+            "</METADATA-UPDATE>\n" +
+            UpdateType.TABLE + "\n";
+    }
 }

@@ -2,37 +2,37 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.MObject;
 
-public class CompactObjectFormatter extends ObjectFormatter
+public class CompactObjectFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List objects)
+    public void format(FormatterContext context, Collection objects,
+                       String[] levels)
     {
         if (objects.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-OBJECT");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < objects.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-OBJECT")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator iterator = objects.iterator(); iterator.hasNext();)
         {
-            MObject object = (MObject) objects.get(i);
-            appendDataRow(out, object);
+            MObject object = (MObject) iterator.next();
+            appendDataRow(context, object);
         }
-        tag.end();
+        tag.close();
     }
 
-    private void appendDataRow(PrintWriter out, MObject object)
+    private void appendDataRow(FormatterContext context, MObject object)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(object.getObjectType());
         row.append(object.getMimeType());

@@ -2,38 +2,39 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.LookupType;
 
-public class CompactLookupTypeFormatter extends LookupTypeFormatter
+public class CompactLookupTypeFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List lookupTypes)
+    public void format(FormatterContext context, Collection lookupTypes,
+                       String[] levels)
     {
         if (lookupTypes.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-LOOKUP_TYPE");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Lookup", mLookupName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < lookupTypes.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(),
+                                        "METADATA-LOOKUP_TYPE")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("Lookup", levels[LOOKUP_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator i = lookupTypes.iterator(); i.hasNext();)
         {
-            LookupType lookupType = (LookupType) lookupTypes.get(i);
-            appendDataRow(out, lookupType);
+            LookupType lookupType = (LookupType) i.next();
+            appendDataRow(context, lookupType);
         }
-        tag.end();
+        tag.close();
     }
 
-    private void appendDataRow(PrintWriter out, LookupType lookupType)
+    private void appendDataRow(FormatterContext context, LookupType lookupType)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(lookupType.getLongValue());
         row.append(lookupType.getShortValue());

@@ -127,12 +127,16 @@ public class GetMetadataParameters
         {
             return MetadataFormatter.COMPACT;
         }
-        
+
         formatString = formatString.toUpperCase();
         if (formatString.equals("COMPACT"))
         {
             return MetadataFormatter.COMPACT;
         }
+//        else if (formatString.equals("STANDARD-XML"))
+//        {
+//            return MetadataFormatter.STANDARD;
+//        }
         else
         {
             throw new IllegalArgumentException("Unknown formatString: " +

@@ -2,40 +2,39 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.metadata.ValidationLookupType;
 
 public class ValidationLookupFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mValidationLookups = new ArrayList();
+        List validationLookups = new ArrayList();
         ValidationLookup validationLookup = new ValidationLookup();
         validationLookup.setValidationLookupName("School");
         validationLookup.setParent1Field("Area");
         validationLookup.setParent2Field("Subarea");
-        mValidationLookups.add(validationLookup);
+        validationLookup.addValidationLookupType(new ValidationLookupType(1));
+        validationLookups.add(validationLookup);
+        return validationLookups;
     }
 
-    private ValidationLookupFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        ValidationLookupFormatter formatter =
-            new CompactValidationLookupFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[] {"Property"});
-        return formatter;
+        return new String[] {"Property"};
     }
 
-    public void testCompactFormatValidationLookup()
+    protected MetadataFormatter getCompactFormatter()
     {
-        ValidationLookupFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mValidationLookups);
-        assertEquals(
+        return new CompactValidationLookupFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return 
             "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
@@ -44,17 +43,22 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
 
             "<DATA>\tSchool\tArea\tSubarea" + VERSION_DATE + "\t</DATA>\n" +
 
-            "</METADATA-VALIDATION_LOOKUP>\n",
-            formatted.toString());
+            "</METADATA-VALIDATION_LOOKUP>\n";
     }
 
-    public void testEmptyCompactFormat()
+    protected String getExpectedCompactRecursive()
     {
-        ValidationLookupFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-    protected List mValidationLookups;
+            "<COLUMNS>\tValidationLookupName\tParent1Field\tParent2Field\t" +
+            "Version\tDate\t</COLUMNS>\n" +
+
+            "<DATA>\tSchool\tArea\tSubarea" + VERSION_DATE + "\t</DATA>\n" +
+
+            "</METADATA-VALIDATION_LOOKUP>\n" +
+
+            ValidationLookupType.TABLE + "\n";
+    }
 }

@@ -7,38 +7,44 @@ import java.util.Collection;
 
 import org.realtors.rets.server.metadata.MSystem;
 
-public class CompactSystemFormatter extends MetadataFormatter
+public class StandardSystemFormatter extends MetadataFormatter
 {
     public void format(FormatterContext context, Collection systems,
                        String[] levels)
     {
-        if (systems.size() == 0)
-        {
-            return;
-        }
         PrintWriter out = context.getWriter();
         // Get first element
         MSystem system = (MSystem) systems.iterator().next();
-        TagBuilder tag = new TagBuilder(out, "METADATA-SYSTEM")
+        TagBuilder metadataSystem = new TagBuilder(out, "METADATA-SYSTEM")
             .appendAttribute("Version", system.getVersionString())
             .appendAttribute("Date", system.getDate())
             .beginContentOnNewLine();
 
-        new TagBuilder(out, "SYSTEM")
-            .appendAttribute("SystemID", system.getSystemID())
-            .appendAttribute("SystemDescription", system.getDescription())
+        TagBuilder systemTag = new TagBuilder(out, "System")
+            .beginContentOnNewLine();
+
+        new TagBuilder(out, "SystemID")
+            .beginContent()
+            .print(system.getSystemID())
             .close();
 
-        new TagBuilder(out, "COMMENTS")
+        new TagBuilder(out, "SystemDescription")
+            .beginContent()
+            .print(system.getDescription())
+            .close();
+
+        new TagBuilder(out, "Comments")
             .beginContent()
             .print(system.getComments())
             .close();
-        tag.end();
 
         if (context.isRecursive())
         {
             context.format(system.getResources(),
                            system.getPathAsArray());
         }
+
+        systemTag.close();
+        metadataSystem.close();
     }
 }

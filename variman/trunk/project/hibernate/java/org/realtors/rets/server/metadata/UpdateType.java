@@ -12,6 +12,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class UpdateType extends ServerMetadata implements Serializable
 {
+    public UpdateType()
+    {
+    }
+
+    public UpdateType(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
     /**
      *
      * @return a Long object
@@ -224,7 +234,7 @@ public class UpdateType extends ServerMetadata implements Serializable
         if (!(other instanceof UpdateType))
         {
             return false;
-        } 
+        }
         UpdateType castOther = (UpdateType) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -144,9 +145,25 @@ public class MSystem extends ServerMetadata implements Serializable
         return mResources;
     }
 
+    public Resource[] getResourcesAsArray()
+    {
+        return (Resource[]) mResources.toArray(new Resource[0]);
+    }
+
     public void setResources(Set resources)
     {
         mResources = resources;
+    }
+
+    public void addResource(Resource resource)
+    {
+        if (mResources == Collections.EMPTY_SET)
+        {
+            mResources = new HashSet();
+        }
+        resource.setSystem(this);
+        resource.updateLevel();
+        mResources.add(resource);
     }
 
     /**

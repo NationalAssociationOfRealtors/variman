@@ -2,36 +2,55 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.Resource;
 
-public class CompactResourceFormatter extends ResourceFormatter
+public class CompactResourceFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List resources)
+    public void format(FormatterContext context, Collection resources,
+                       String[] levels)
     {
         if (resources.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-RESOURCE");
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < resources.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(),
+                                        "METADATA-RESOURCE")
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator iterator = resources.iterator(); iterator.hasNext();)
         {
-            Resource resource = (Resource) resources.get(i);
-            appendDataRow(out, resource);
+            Resource resource = (Resource) iterator.next();
+            appendDataRow(context, resource);
         }
-        tag.end();
+        tag.close();
+
+        if (context.isRecursive())
+        {
+            for (Iterator i = resources.iterator(); i.hasNext();)
+            {
+                Resource resource = (Resource) i.next();
+                String[] path = resource.getPathAsArray();
+                context.format(resource.getClasses(), path);
+                context.format(resource.getObjects(), path);
+                context.format(resource.getSearchHelps(), path);
+                context.format(resource.getEditMasks(), path);
+                context.format(resource.getLookups(), path);
+                context.format(resource.getValidationLookups(), path);
+                context.format(resource.getValidationExternals(), path);
+                context.format(resource.getValidationExpressions(), path);
+            }
+        }
     }
 
-    private void appendDataRow(PrintWriter out, Resource resource)
+    private void appendDataRow(FormatterContext context, Resource resource)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(resource.getResourceID());
         row.append(resource.getStandardName());
@@ -42,10 +61,12 @@ public class CompactResourceFormatter extends ResourceFormatter
         // There are 9 version/date pairs for the following tables: class,
         // object, search help, edit mask, lookup, update help, validation
         // expression, validation lookup, validation external.
+        String version = context.getVersion();
+        Date date = context.getDate();
         for (int i = 0; i < 9; i++)
         {
-            row.append(mVersion);
-            row.append(mDate);
+            row.append(version);
+            row.append(date);
         }
         row.end();
     }

@@ -15,6 +15,16 @@ public class ValidationExternalType
     extends ServerMetadata
     implements Serializable
 {
+    public ValidationExternalType()
+    {
+    }
+
+    public ValidationExternalType(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
     /**
      *
      * @return a Long object
@@ -148,7 +158,7 @@ public class ValidationExternalType
         if (!(other instanceof ValidationExternalType))
         {
             return false;
-        } 
+        }
         ValidationExternalType castOther = (ValidationExternalType) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -3,6 +3,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,12 @@ public class Update extends ServerMetadata implements Serializable
     {
         mId = null;
         mUpdateTypes = Collections.EMPTY_SET;
+    }
+
+    public Update(long id)
+    {
+        this();
+        mId = new Long(id);
     }
 
     /**
@@ -127,6 +134,17 @@ public class Update extends ServerMetadata implements Serializable
         mUpdateTypes = updateTypes;
     }
 
+    public void addUpdateType(UpdateType updateType)
+    {
+        if (mUpdateTypes == Collections.EMPTY_SET)
+        {
+            mUpdateTypes = new HashSet();
+        }
+        updateType.setUpdate(this);
+        updateType.updateLevel();
+        mUpdateTypes.add(updateType);
+    }
+
     /**
      * Returns the hierarchy level for this metadata object.
      *
@@ -178,7 +196,7 @@ public class Update extends ServerMetadata implements Serializable
         if (!(other instanceof Update))
         {
             return false;
-        } 
+        }
         Update castOther = (Update) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -2,37 +2,50 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.MClass;
 
-public class CompactClassFormatter extends ClassFormatter
+public class CompactClassFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List classes)
+    public void format(FormatterContext context, Collection classes,
+                       String[] levels)
     {
         if (classes.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-CLASS");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < classes.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-CLASS")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator iterator = classes.iterator(); iterator.hasNext();)
         {
-            MClass clazz = (MClass) classes.get(i);
-            appendDataRow(out, clazz);
+            MClass clazz = (MClass) iterator.next();
+            appendDataRow(context, clazz);
+
         }
-        tag.end();
+        tag.close();
+
+        if (context.isRecursive())
+        {
+            for (Iterator iterator = classes.iterator(); iterator.hasNext();)
+            {
+                MClass clazz = (MClass) iterator.next();
+                String[] path = clazz.getPathAsArray();
+                context.format(clazz.getTables(), path);
+                context.format(clazz.getUpdates(), path);
+
+            }
+        }
     }
 
-    private void appendDataRow(PrintWriter out, MClass clazz)
+    private void appendDataRow(FormatterContext context, MClass clazz)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(clazz.getClassName());
         row.append(clazz.getStandardName());
@@ -40,11 +53,11 @@ public class CompactClassFormatter extends ClassFormatter
         row.append(DB_NAME);
         row.append(clazz.getDescription());
         // Table version and date
-        row.append(mVersion);
-        row.append(mDate);
+        row.append(context.getVersion());
+        row.append(context.getDate());
         // Update version and date
-        row.append((mVersion));
-        row.append(mDate);
+        row.append(context.getVersion());
+        row.append(context.getDate());
         row.end();
     }
 

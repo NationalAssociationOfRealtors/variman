@@ -72,6 +72,12 @@
     <pathelement path="${antlr.jar}"/>
   </path>
 
+  <path id="webapp.test.path">
+    <path refid="webapp.path"/>
+    <pathelement location="build/hibernate/test/classes"/>
+    <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+  </path>
+
   <path id="admin.path">
     <pathelement path="${jdom.jar}"/>
   </path>
@@ -385,8 +391,7 @@
             destDir="build/webapp/test/classes"
             cache="build/depcache" closure="yes">
       <classpath>
-        <path refid="webapp.path"/>
-        <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+        <path refid="webapp.test.path"/>
       </classpath>
     </depend>
     <javac target="${compile.vmtarget}" srcdir="project/webapp/test/java"
@@ -394,8 +399,7 @@
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
-        <path refid="webapp.path"/>
-        <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+        <path refid="webapp.test.path"/>
       </classpath>
     </javac>
 

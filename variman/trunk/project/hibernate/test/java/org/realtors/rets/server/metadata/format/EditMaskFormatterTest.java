@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,29 +9,29 @@ import org.realtors.rets.server.metadata.EditMask;
 
 public class EditMaskFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mEditMasks = new ArrayList();
+        List editMasks = new ArrayList();
         EditMask editMask = new EditMask();
         editMask.setEditMaskID("LN_EDITMASK");
         editMask.setValue("[0-9]{4,8}");
-        mEditMasks.add(editMask);
+        editMasks.add(editMask);
+        return editMasks;
     }
 
-    private EditMaskFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        EditMaskFormatter formatter = new CompactEditMaskFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[] {"Property"});
-        return formatter;
+        return new String[] {"Property"};
     }
 
-    public void testCompactFormatEditMask()
+    protected MetadataFormatter getCompactFormatter()
     {
-        EditMaskFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mEditMasks);
-        assertEquals(
+        return new CompactEditMaskFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-EDITMASK Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
@@ -41,18 +39,19 @@ public class EditMaskFormatterTest extends FormatterTestCase
 
             "<DATA>\tLN_EDITMASK\t[0-9]{4,8}\t</DATA>\n" +
 
-            "</METADATA-EDITMASK>\n",
-
-            formatted.toString());
+            "</METADATA-EDITMASK>\n";
     }
 
-    public void testEmptyCompactFormatEditMask()
+    protected String getExpectedCompactRecursive()
     {
-        EditMaskFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-EDITMASK Resource=\"Property\" Version=\"" + VERSION +
+            "\" Date=\"" + DATE + "\">\n" +
 
-    private List mEditMasks;
+            "<COLUMNS>\tEditMaskID\tValue\t</COLUMNS>\n" +
+
+            "<DATA>\tLN_EDITMASK\t[0-9]{4,8}\t</DATA>\n" +
+
+            "</METADATA-EDITMASK>\n";
+    }
 }

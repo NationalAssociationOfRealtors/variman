@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,31 +10,31 @@ import org.realtors.rets.server.metadata.ObjectTypeEnum;
 
 public class ObjectFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mObjects = new ArrayList();
+        List objects = new ArrayList();
         MObject object = new MObject();
         object.setObjectType(ObjectTypeEnum.THUMBNAIL);
         object.setMimeType("image/jpeg");
         object.setVisibleName("Small Photos");
         object.setDescription("A lower-resolution image");
-        mObjects.add(object);
+        objects.add(object);
+        return objects;
     }
 
-    private ObjectFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        ObjectFormatter formatter = new CompactObjectFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[] {"Property"});
-        return formatter;
+        return new String[] {"Property"};
     }
 
-    public void testCompactFormatObject()
+    protected MetadataFormatter getCompactFormatter()
     {
-        ObjectFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mObjects);
-        assertEquals(
+        return new CompactObjectFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-OBJECT Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
@@ -46,17 +44,21 @@ public class ObjectFormatterTest extends FormatterTestCase
             "<DATA>\tThumbnail\timage/jpeg\tSmall Photos\t" +
             "A lower-resolution image\t</DATA>\n" +
 
-            "</METADATA-OBJECT>\n",
-            formatted.toString());
+            "</METADATA-OBJECT>\n";
     }
 
-    public void testEmptyCompactFormatObject()
+    protected String getExpectedCompactRecursive()
     {
-        ObjectFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-OBJECT Resource=\"Property\" Version=\"" + VERSION +
+            "\" Date=\"" + DATE + "\">\n" +
 
-    private List mObjects;
+            "<COLUMNS>\tObjectType\tMimeType\tVisibleName\tDescription\t" +
+            "</COLUMNS>\n" +
+
+            "<DATA>\tThumbnail\timage/jpeg\tSmall Photos\t" +
+            "A lower-resolution image\t</DATA>\n" +
+
+            "</METADATA-OBJECT>\n";
+    }
 }

@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,32 +10,31 @@ import org.realtors.rets.server.metadata.ValidationExpressionTypeEnum;
 
 public class ValidationExpressionFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mValidationExpressions = new ArrayList();
+        List validationExpressions = new ArrayList();
         ValidationExpression validationExpression = new ValidationExpression();
         validationExpression.setValidationExpressionID("LD_DATE");
         validationExpression.setValidationExpressionType(
             ValidationExpressionTypeEnum.SET);
         validationExpression.setValue("LD=.TODAY.");
-        mValidationExpressions.add(validationExpression);
+        validationExpressions.add(validationExpression);
+        return validationExpressions;
     }
 
-    private ValidationExpressionFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        ValidationExpressionFormatter formatter =
-            new CompactValidationExpressionFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[] {"Property"});
-        return formatter;
+        return new String[] {"Property"};
     }
 
-    public void testCompactFormatValidationExpression()
+    protected MetadataFormatter getCompactFormatter()
     {
-        ValidationExpressionFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mValidationExpressions);
-        assertEquals(
+        return new CompactValidationExpressionFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-VALIDATION_EXPRESSION Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
@@ -46,17 +43,20 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
 
             "<DATA>\tLD_DATE\tSET\tLD=.TODAY." + VERSION_DATE + "\t</DATA>\n" +
 
-            "</METADATA-VALIDATION_EXPRESSION>\n",
-            formatted.toString());
+            "</METADATA-VALIDATION_EXPRESSION>\n";
     }
 
-    public void testEmptyCompactFormat()
+    protected String getExpectedCompactRecursive()
     {
-        ValidationExpressionFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-VALIDATION_EXPRESSION Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-    private List mValidationExpressions;
+            "<COLUMNS>\tValidationExpressionID\tValidationExpressionType\t" +
+            "Value\tVersion\tDate\t</COLUMNS>\n" +
+
+            "<DATA>\tLD_DATE\tSET\tLD=.TODAY." + VERSION_DATE + "\t</DATA>\n" +
+
+            "</METADATA-VALIDATION_EXPRESSION>\n";
+    }
 }

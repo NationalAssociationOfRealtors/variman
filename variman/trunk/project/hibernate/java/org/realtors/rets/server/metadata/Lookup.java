@@ -3,6 +3,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -119,6 +120,10 @@ public class Lookup extends ServerMetadata implements Serializable
 
     public void addLookupType(LookupType lookupType)
     {
+        if (mLookupTypes == Collections.EMPTY_SET)
+        {
+            mLookupTypes = new HashSet();
+        }
         lookupType.setLookup(this);
         lookupType.updateLevel();
         mLookupTypes.add(lookupType);

@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,13 +17,13 @@ import org.realtors.rets.server.metadata.ValidationLookup;
 
 public class UpdateTypeFormatterTest extends FormatterTestCase
 {
-    protected void setUp()
+    protected List getData()
     {
-        mUpdateTypes = new ArrayList();
+        List updateTypes = new ArrayList();
         Table table = new Table();
         table.setId(new Long(123));
         table.setSystemName("STATUS");
-        
+
         UpdateType updateType = new UpdateType();
         updateType.setTable(table);
         updateType.setSequence(12);
@@ -58,23 +56,23 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         validationExternal.setValidationExternalName("VE_NAME");
         updateType.setValidationExternal(validationExternal);
 
-        mUpdateTypes.add(updateType);
+        updateTypes.add(updateType);
+        return updateTypes;
     }
 
-    private UpdateTypeFormatter getCompactFormatter()
+    protected String[] getLevels()
     {
-        UpdateTypeFormatter formatter = new CompactUpdateTypeFormatter();
-        formatter.setVersion("1.00.001", getDate());
-        formatter.setLevels(new String[] {"Property", "RES", "Change"});
-        return formatter;
+        return new String[] {"Property", "RES", "Change"};
     }
 
-    public void testCompactFormatUpdateType()
+    protected MetadataFormatter getCompactFormatter()
     {
-        UpdateTypeFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mUpdateTypes);
-        assertEquals(
+        return new CompactUpdateTypeFormatter();
+    }
+
+    protected String getExpectedCompact()
+    {
+        return
             "<METADATA-UPDATE_TYPE Resource=\"Property\" Class=\"RES\" " +
             "Update=\"Change\" Version=\"" + VERSION + "\" Date=\"" + DATE +
             "\">\n" +
@@ -86,18 +84,23 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
             "<DATA>\tSTATUS\t12\t2,4\t0\tVE1,VE2\tUH1\tVL_NAME\tVE_NAME\t" +
             "</DATA>\n" +
 
-            "</METADATA-UPDATE_TYPE>\n",
-
-            formatted.toString());
+            "</METADATA-UPDATE_TYPE>\n";
     }
 
-    public void testEmptyCompactFormatUpdateType()
+    protected String getExpectedCompactRecursive()
     {
-        UpdateTypeFormatter formatter = getCompactFormatter();
-        StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), new ArrayList());
-        assertEquals("", formatted.toString());
-    }
+        return
+            "<METADATA-UPDATE_TYPE Resource=\"Property\" Class=\"RES\" " +
+            "Update=\"Change\" Version=\"" + VERSION + "\" Date=\"" + DATE +
+            "\">\n" +
 
-    private List mUpdateTypes;
+            "<COLUMNS>\tSystemName\tSequence\tAttributes\tDefault\t" +
+            "ValidationExpressionID\tUpdateHelpID\tValidationLookupName\t" +
+            "ValidationExternalName\t</COLUMNS>\n" +
+
+            "<DATA>\tSTATUS\t12\t2,4\t0\tVE1,VE2\tUH1\tVL_NAME\tVE_NAME\t" +
+            "</DATA>\n" +
+
+            "</METADATA-UPDATE_TYPE>\n";
+    }
 }

@@ -3,6 +3,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -130,6 +131,18 @@ public class ValidationLookup extends ServerMetadata implements Serializable
     public void setValidationLookupTypes(Set validationLookupTypes)
     {
         mValidationLookupTypes = validationLookupTypes;
+    }
+
+    public void addValidationLookupType(
+        ValidationLookupType validationLookupType)
+    {
+        if (mValidationLookupTypes == Collections.EMPTY_SET)
+        {
+            mValidationLookupTypes = new HashSet();
+        }
+        validationLookupType.setValidationLookup(this);
+        validationLookupType.updateLevel();
+        mValidationLookupTypes.add(validationLookupType);
     }
 
     /**

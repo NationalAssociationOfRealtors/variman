@@ -2,41 +2,42 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
-public class CompactValidationLookupTypeFormatter
-    extends ValidationLookupTypeFormatter
+public class CompactValidationLookupTypeFormatter extends MetadataFormatter
 {
-    public void format(PrintWriter out, List validationLookupTypes)
+    public void format(FormatterContext context,
+                       Collection validationLookupTypes, String[] levels)
     {
         if (validationLookupTypes.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(out);
-        tag.begin("METADATA-VALIDATION_LOOKUP_TYPE");
-        tag.appendAttribute("Resource", mResourceName);
-        tag.appendAttribute("ValidationLookup", mValidationLookupName);
-        tag.appendAttribute("Version", mVersion);
-        tag.appendAttribute("Date", mDate);
-        tag.endAttributes();
-        tag.appendColumns(COLUMNS);
-        for (int i = 0; i < validationLookupTypes.size(); i++)
+        TagBuilder tag = new TagBuilder(context.getWriter(),
+                                        "METADATA-VALIDATION_LOOKUP_TYPE")
+            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
+            .appendAttribute("ValidationLookup",
+                             levels[VALIDATION_LOOKUP_LEVEL])
+            .appendAttribute("Version", context.getVersion())
+            .appendAttribute("Date", context.getDate())
+            .beginContentOnNewLine()
+            .appendColumns(COLUMNS);
+        for (Iterator i = validationLookupTypes.iterator(); i.hasNext();)
         {
             ValidationLookupType validationLookupType =
-                (ValidationLookupType) validationLookupTypes.get(i);
-            appendDataRow(out, validationLookupType);
+                (ValidationLookupType) i.next();
+            appendDataRow(context, validationLookupType);
         }
-        tag.end();
+        tag.close();
     }
 
-    private void appendDataRow(PrintWriter out,
+    private void appendDataRow(FormatterContext context,
                                ValidationLookupType validationLookupType)
     {
-        DataRowBuilder row = new DataRowBuilder(out);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(validationLookupType.getValidText());
         row.append(validationLookupType.getParent1Value());

@@ -2,12 +2,12 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
 
 public class CompactForeignKeyFormatter extends ForeignKeyFormatter
 {
-    public void format(PrintWriter out, List systems)
+    public void format(FormatterContext context, Collection data,
+                       String[] levels)
     {
     }
 }

@@ -3,6 +3,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -123,6 +124,18 @@ public class ValidationExternal extends ServerMetadata implements Serializable
     public void setValidationExternalTypes(Set validationExternalTypes)
     {
         mValidationExternalTypes = validationExternalTypes;
+    }
+
+    public void addValidationExternalType(
+        ValidationExternalType validationExternalType)
+    {
+        if (mValidationExternalTypes == Collections.EMPTY_SET)
+        {
+            mValidationExternalTypes = new HashSet();
+        }
+        validationExternalType.setValidationExternal(this);
+        validationExternalType.updateLevel();
+        mValidationExternalTypes.add(validationExternalType);
     }
 
     /**
