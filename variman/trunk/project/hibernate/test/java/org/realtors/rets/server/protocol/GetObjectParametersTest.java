@@ -28,6 +28,28 @@ public class GetObjectParametersTest extends TestCase
         assertEquals(objectIds, parameters.getObjectIdList(0));
     }
 
+    public void testComplexId()
+    {
+        Map parameterMap = parameterMap(new String[] {
+            "Type", "Photo",
+            "Resource", "Property",
+            "ID", "04000638:*,0400181:1:2"
+        });
+        GetObjectParameters parameters = new GetObjectParameters(parameterMap);
+        assertEquals("Photo", parameters.getType());
+        assertEquals("Property", parameters.getResource());
+        assertEquals(2, parameters.numberOfResources());
+        assertEquals("04000638", parameters.getResourceEntity(0));
+        List objectIds = new ArrayList();
+        objectIds.add("*");
+        assertEquals(objectIds, parameters.getObjectIdList(0));
+        assertEquals("0400181", parameters.getResourceEntity(1));
+        objectIds.clear();
+        objectIds.add("1");
+        objectIds.add("2");
+        assertEquals(objectIds, parameters.getObjectIdList(1));
+    }
+
     private Map parameterMap(String[] strings)
     {
         HashMap parameters = new HashMap();
