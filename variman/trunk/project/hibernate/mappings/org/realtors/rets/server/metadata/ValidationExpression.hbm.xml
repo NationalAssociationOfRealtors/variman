@@ -3,11 +3,11 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ValidationExpression.hbm.xml,v 1.3 2003/06/12 20:55:45 kgarner Exp $ -->
+<!-- $Id: ValidationExpression.hbm.xml,v 1.4 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.realtors.rets.server.metadata.MetadataValidationExpression"
+  <class name="org.realtors.rets.server.metadata.ValidationExpression"
          table="rets_metadata_validationexpression">
 
     <id name="id" type="long">
@@ -15,7 +15,7 @@
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.Resource"/>
 
     <property name="validationExpressionID" type="string">
       <column name="validation_expression_id" length="32" unique="true"

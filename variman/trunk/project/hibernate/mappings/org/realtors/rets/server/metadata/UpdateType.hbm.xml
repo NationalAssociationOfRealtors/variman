@@ -3,10 +3,10 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: UpdateType.hbm.xml,v 1.5 2003/06/12 20:55:45 kgarner Exp $ -->
+<!-- $Id: UpdateType.hbm.xml,v 1.6 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.realtors.rets.server.metadata.MetadataUpdateType"
+  <class name="org.realtors.rets.server.metadata.UpdateType"
          table="rets_metadata_updatetype">
 
     <id name="id" type="long">
@@ -14,7 +14,7 @@
     </id>
 
     <many-to-one name="updateid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataUpdate"/>
+                 class="org.realtors.rets.server.metadata.Update"/>
 
     <property name="systemName" type="string">
       <column name="system_name" length="32" not-null="true" unique="true"
@@ -37,17 +37,17 @@
          table="rets_metadata_updatetype_validationexpressions">
       <key column="id"/>
       <one-to-many
-       class="org.realtors.rets.server.metadata.MetadataValidationExpression"/>
+       class="org.realtors.rets.server.metadata.ValidationExpression"/>
     </set>
 
     <many-to-one name="updateHelp" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataUpdateHelp"/>
+                 class="org.realtors.rets.server.metadata.UpdateHelp"/>
 
     <many-to-one name="validationLookup" cascade="none"
-           class="org.realtors.rets.server.metadata.MetadataValidationLookup"/>
+           class="org.realtors.rets.server.metadata.ValidationLookup"/>
     
     <many-to-one name="validationExternal" cascade="none"
-         class="org.realtors.rets.server.metadata.MetadataValidationExternal"/>
+         class="org.realtors.rets.server.metadata.ValidationExternal"/>
     
   </class>
 </hibernate-mapping>

@@ -3,17 +3,17 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Table.hbm.xml,v 1.8 2003/06/12 20:55:45 kgarner Exp $ -->
+<!-- $Id: Table.hbm.xml,v 1.9 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.realtors.rets.server.metadata.MetadataTable"
+  <class name="org.realtors.rets.server.metadata.Table"
          table="rets_metadata_table">
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="classid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataClass"/>
+                 class="org.realtors.rets.server.metadata.Class"/>
 
     <property name="systemName" type="string">
       <column name="system_name" length="32" not-null="true" unique="true"
@@ -51,10 +51,10 @@
     <property name="useSeparator" type="boolean"/>
 
     <many-to-one name="editMask" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataEditMask"/>
+                 class="org.realtors.rets.server.metadata.EditMask"/>
 
     <many-to-one name="lookup" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataLookup"/>
+                 class="org.realtors.rets.server.metadata.Lookup"/>
 
     <property name="maxSelect" type="int"/>
 
@@ -71,7 +71,7 @@
     <property name="required" type="int"/>
 
     <many-to-one name="searchHelp" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataSearchHelp"/>
+                 class="org.realtors.rets.server.metadata.SearchHelp"/>
 
     <property name="unique" column="r_unique" type="boolean"/>
     

@@ -3,10 +3,10 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MSystem.hbm.xml,v 1.4 2003/06/12 20:55:45 kgarner Exp $ -->
+<!-- $Id: MSystem.hbm.xml,v 1.5 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.realtors.rets.server.metadata.MetadataSystem"
+  <class name="org.realtors.rets.server.metadata.System"
          table="rets_metadata_system">
     <id name="id" type="long">
       <generator class="hilo"/>
@@ -30,13 +30,13 @@
 
     <set name="resources" inverse="true">
       <key column="systemid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.MetadataResource"/>
+      <one-to-many class="org.realtors.rets.server.metadata.Resource"/>
     </set>
 
     <set name="foreignKeys" inverse="true">
       <key column="systemid"/>
       <one-to-many
-                 class="org.realtors.rets.server.metadata.MetadataForeignKey"/>
+                 class="org.realtors.rets.server.metadata.ForeignKey"/>
     </set>
     
   </class>

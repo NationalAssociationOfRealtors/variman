@@ -3,10 +3,10 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Object.hbm.xml,v 1.6 2003/06/18 14:48:33 kgarner Exp $ -->
+<!-- $Id: Object.hbm.xml,v 1.7 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.realtors.rets.server.metadata.MetadataObject"
+  <class name="org.realtors.rets.server.metadata.Object"
          table="rets_metadata_object">
 
     <id name="id" type="long">
@@ -14,7 +14,7 @@
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.Resource"/>
 
     <property name="objectType"
               type="org.realtors.rets.server.metadata.ObjectTypeEnum">

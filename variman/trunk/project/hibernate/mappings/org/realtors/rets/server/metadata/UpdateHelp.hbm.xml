@@ -3,11 +3,11 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: UpdateHelp.hbm.xml,v 1.3 2003/06/12 20:55:45 kgarner Exp $ -->
+<!-- $Id: UpdateHelp.hbm.xml,v 1.4 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.realtors.rets.server.metadata.MetadataUpdateHelp"
+  <class name="org.realtors.rets.server.metadata.UpdateHelp"
          table="rets_metadata_updatehelp">
 
     <id name="id" type="long">
@@ -15,7 +15,7 @@
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.Resource"/>
 
     <property name="updateHelpID" type="string">
       <column name="update_help_id" length="32" not-null="true" unique="true"

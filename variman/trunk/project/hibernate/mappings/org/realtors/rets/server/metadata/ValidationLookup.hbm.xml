@@ -3,11 +3,11 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ValidationLookup.hbm.xml,v 1.4 2003/06/12 20:55:45 kgarner Exp $ -->
+<!-- $Id: ValidationLookup.hbm.xml,v 1.5 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.realtors.rets.server.metadata.MetadataValidationLookup"
+  <class name="org.realtors.rets.server.metadata.ValidationLookup"
          table="rets_metadata_validationlookup">
 
     <id name="id" type="long">
@@ -15,7 +15,7 @@
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.Resource"/>
 
     <property name="validationLookupName" type="string">
       <column name="validation_lookup_name" length="32" unique="true"
@@ -43,7 +43,7 @@
     <set name="validationLookupTypes">
       <key column="validationLookupID"/>
       <one-to-many
-       class="org.realtors.rets.server.metadata.MetadataValidationLookupType"/>
+       class="org.realtors.rets.server.metadata.ValidationLookupType"/>
     </set>
 
   </class>

@@ -3,17 +3,17 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Resource.hbm.xml,v 1.6 2003/06/12 20:55:44 kgarner Exp $ -->
+<!-- $Id: Resource.hbm.xml,v 1.7 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.realtors.rets.server.metadata.MetadataResource"
+  <class name="org.realtors.rets.server.metadata.Resource"
          table="rets_metadata_resource">
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="systemid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataSystem"/>
+                 class="org.realtors.rets.server.metadata.System"/>
 
     <property name="resourceID" type="string">
       <column name="resource_id" length="32" not-null="true" unique="true"
@@ -96,52 +96,52 @@
 
     <set name="classes" inverse="true">
       <key column="resourceid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.MetadataClass"/>
+      <one-to-many class="org.realtors.rets.server.metadata.Class"/>
     </set>
 
     <set name="objects" inverse="true">
       <key column="resourceid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.MetadataObject"/>
+      <one-to-many class="org.realtors.rets.server.metadata.Object"/>
     </set>
 
     <set name="searchHelps" inverse="true">
       <key column="resourceid"/>
       <one-to-many
-                 class="org.realtors.rets.server.metadata.MetadataSearchHelp"/>
+                 class="org.realtors.rets.server.metadata.SearchHelp"/>
     </set>
 
     <set name="editMasks" inverse="true">
       <key column="resourceid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.MetadataEditMask"/>
+      <one-to-many class="org.realtors.rets.server.metadata.EditMask"/>
     </set>
 
     <set name="lookups" inverse="true">
       <key column="resourceid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.MetadataLookup"/>
+      <one-to-many class="org.realtors.rets.server.metadata.Lookup"/>
     </set>
 
     <set name="validationLookups" inverse="true">
       <key column="resourceid"/>
       <one-to-many
-           class="org.realtors.rets.server.metadata.MetadataValidationLookup"/>
+           class="org.realtors.rets.server.metadata.ValidationLookup"/>
     </set>
 
     <set name="validationExternals" inverse="true">
       <key column="resourceid"/>
       <one-to-many
-         class="org.realtors.rets.server.metadata.MetadataValidationExternal"/>
+         class="org.realtors.rets.server.metadata.ValidationExternal"/>
     </set>
 
     <set name="validationExpressions" inverse="true">
       <key column="resourceid"/>
       <one-to-many
-       class="org.realtors.rets.server.metadata.MetadataValidationExpression"/>
+       class="org.realtors.rets.server.metadata.ValidationExpression"/>
     </set>
 
     <set name="updateHelps" inverse="true">
       <key column="resourceid"/>
       <one-to-many
-                 class="org.realtors.rets.server.metadata.MetadataUpdateHelp"/>
+                 class="org.realtors.rets.server.metadata.UpdateHelp"/>
     </set>
 
   </class>

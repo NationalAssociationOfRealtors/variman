@@ -3,11 +3,11 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ForeignKey.hbm.xml,v 1.4 2003/06/12 20:55:44 kgarner Exp $ -->
+<!-- $Id: ForeignKey.hbm.xml,v 1.5 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.realtors.rets.server.metadata.MetadataForeignKey"
+  <class name="org.realtors.rets.server.metadata.ForeignKey"
          table="rets_metadata_foreignkey">
 
     <id name="id" type="long">
@@ -15,7 +15,7 @@
     </id>
 
     <many-to-one name="systemid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataSystem"/>
+                 class="org.realtors.rets.server.metadata.System"/>
 
     <property name="foreignKeyID" type="string">
       <column name="foreign_key_id" length="32" not-null="true" unique="true"
@@ -23,10 +23,10 @@
     </property>
 
     <many-to-one name="parentTable" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataTable"/>
+                 class="org.realtors.rets.server.metadata.Table"/>
 
     <many-to-one name="childTable" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataTable"/>
+                 class="org.realtors.rets.server.metadata.Table"/>
 
   </class>
 </hibernate-mapping>

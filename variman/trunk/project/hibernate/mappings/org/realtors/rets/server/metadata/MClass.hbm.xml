@@ -3,17 +3,17 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MClass.hbm.xml,v 1.5 2003/06/12 20:55:44 kgarner Exp $ -->
+<!-- $Id: MClass.hbm.xml,v 1.6 2003/06/19 20:20:52 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.realtors.rets.server.metadata.MetadataClass"
+  <class name="org.realtors.rets.server.metadata.Class"
          table="rets_metadata_class">
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-                 class="org.realtors.rets.server.metadata.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.Resource"/>
 
     <property name="className" type="string">
       <column name="class_name" length="32" not-null="true" unique="true"
@@ -48,12 +48,12 @@
 
     <set name="tables" inverse="true">
       <key column="classid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.MetadataTable"/>
+      <one-to-many class="org.realtors.rets.server.metadata.Table"/>
     </set>
 
     <set name="updates" inverse="true">
       <key column="classid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.MetadataUpdate"/>
+      <one-to-many class="org.realtors.rets.server.metadata.Update"/>
     </set>
 
   </class>
