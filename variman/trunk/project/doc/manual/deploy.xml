@@ -1,0 +1,124 @@
+<section id="deploy">
+  <title>Deploying Rex</title>
+  <para>
+    This chapter describes how to configure and run Rex.
+  </para>
+
+  <section>
+    <title>First Time Configuration</title>
+    <para>
+      Before running Rex for the first time, there are a few steps you
+      need to take.  Rex requires access to a database.  Currently,
+      Rex supports PostgreSQL <xref linkend="bib-postgres"/> and
+      Microsft SQL Server.  This database is where RETS data is
+      stored, as well as Rex specific information.  Rex requires
+      read/write access to the database, as well as the ability to
+      create new tables.
+    </para>
+
+    <section>
+      <title>PostgreSQL Setup</title>
+      <para>
+        PostgreSQL must be configured to accept TCP/IP connections, as
+        this is how the JDBC driver connects.  This is done adding the
+        following setting in <filename>postgresql.conf</filename>:
+      </para>
+      <programlisting>tcpip_socket = true
+</programlisting>
+      <para>
+        You may also have to edit <filename>pg_hba.conf</filename> to
+        make network connections permissible.  See the documentation
+        in that file for details.
+      </para>
+      <para>
+        It is probably a good idea to create a user other than the
+        default <literal>postgres</literal> superuser.  This user must
+        have read and write access, and permissions to create new
+        tables in the database used by Rex.
+      </para>
+      <para>
+        The JDBC driver for Postgres version 7.4.x is included with
+        the distribution.
+      </para>
+    </section>
+      
+    <section>
+      <title>Microsoft SQL Server Setup</title>
+      <para>
+        First, either choose an existing database, or create a new
+        database for use with Rex.  Then, create a new user that has
+        the following role memberships:
+      </para>
+      <itemizedlist>
+        <listitem><literal>public</literal></listitem>
+        <listitem><literal>db_owner</literal></listitem>
+        <listitem><literal>db_datareader</literal></listitem>
+        <listitem><literal>db_datawriter</literal></listitem>
+      </itemizedlist>
+      <para>
+        There are currently no free or Open Source SQL Server JDBC
+        drivers, so none is included with Rex.  The one that Microsoft
+        offers is buggy and does not work with Rex.  The only
+        supported driver is the commercial JSQLConnect driver from
+        JNetDirect <xref linkend="bib-jnetdirect"/>.
+      </para>
+    </section>
+
+    <section>
+      <title>Installing a JDBC Driver</title>
+      <para>
+        The easiest way to install your JDBC driver is to use the
+        Administration Tool.  Choose the Install Jar command from the
+        File menu.  You must then restart the Administration Tool
+        and/or Rex to use the new JDBC driver.
+      </para>
+    </section>
+
+    <section>
+      <title>Configuring Database Properties</title>
+      <para>
+        From the Configuration tab of the Administration Tool, the
+        current database properties are listed.  You will have change
+        these to suit your environment.  Click on the Edit button, to
+        bring up the Database Properties dialog, as in <xref
+        linkend="fig-db"/>.  You should use the Test Connection button
+        to make sure that the properties are entered correctly.  If
+        the test fails, then neither the Administration Tool nor Rex
+        will be able to access your database.
+      </para>
+      <figure id="fig-db">
+        <title>Database Properties Window</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="db.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <para>
+      <itemizedlist>
+        <listitem>
+          Install the JDBC driver.
+        </listitem>
+        <listitem>
+          Configure REX to connect to the database.
+        </listitem>
+      </itemizedlist>
+    </para>
+  </section>
+
+  <section>
+    <title>Configuring Rex using the GUI Tool</title>
+    <para>
+      
+    </para>
+  </section>
+</section>
+
+<!--
+Local Variables:
+mode: xml
+sgml-parent-document: ("manual.xml" "" "section")
+End:
+-->
