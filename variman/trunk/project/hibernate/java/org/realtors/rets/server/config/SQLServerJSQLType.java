@@ -37,9 +37,9 @@ public class SQLServerJSQLType extends DatabaseType
     }
 
     /**
-     * Returns a Postgres JDBC URL.  Postgres URLs take the form:
+     * Returns a JSQL JDBC URL.  JSQL URLs take the form:
      *
-     *   jdbc:JSQLConnect://[hostName]/database=[databaseName]
+     *   jdbc:JSQLConnect://[hostName]/selectMethod=cursor/database=[databaseName]
      *
      * @param hostName Host name of database server
      * @param databaseName Name of database instance
@@ -50,6 +50,7 @@ public class SQLServerJSQLType extends DatabaseType
         StringBuffer url = new StringBuffer();
         url.append("jdbc:JSQLConnect://");
         url.append(hostName);
+        url.append("/selectMethod=cursor");
         url.append("/database=").append(databaseName);
         return url.toString();
     }
