@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.nar.rets.data.RETSMultiSet" table="rets_multi_data">
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <many-to-one name="parent" cascade="none"
+      class="org.nar.rets.data.RETSData">
+      <column name="parent" index="rets_multi_data_parent"/>
+    </many-to-one>
+
+    <set name="values" table="rets_multi_data_set">
+      <key column="id"/>
+      <element column="value" type="string"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -6,9 +6,7 @@
 <hibernate-mapping>
   <class name="org.nar.rets.data.RETSData" table="rets_data">
     <id name="id" type="long">
-      <generator class="sequence">
-        <param name="sequence">rets_data_sequence</param>
-      </generator>
+      <generator class="hilo"/>
     </id>
 
     <!-- The resource element -->
@@ -24,7 +22,7 @@
     </many-to-one>
 
     <!-- a map of bool values -->
-    <map name="booleanValues" lazy="false">
+    <map name="booleanValues" lazy="false" table="rets_data_booleanvalues">
       <key column="id"/>
       <index-many-to-many
         class="org.nar.rets.metadata.hibernate.MetadataTableElement">
@@ -34,7 +32,7 @@
     </map>
 
     <!-- a map of char/string values -->
-    <map name="characterValues" lazy="false">
+    <map name="characterValues" lazy="false" table="rets_data_charactervalues">
       <key column="id"/>
       <index-many-to-many
         class="org.nar.rets.metadata.hibernate.MetadataTableElement">
@@ -44,7 +42,7 @@
     </map>
 
     <!-- a map of date values -->
-    <map name="dateValues" lazy="false">
+    <map name="dateValues" lazy="false" table="rets_data_datevalues">
       <key column="id"/>
       <index-many-to-many
         class="org.nar.rets.metadata.hibernate.MetadataTableElement">
@@ -54,7 +52,7 @@
     </map>
 
     <!-- a map of date values -->
-    <map name="dateTimeValues" lazy="false">
+    <map name="dateTimeValues" lazy="false" table="rets_data_datetimevalues">
       <key column="id"/>
       <index-many-to-many
         class="org.nar.rets.metadata.hibernate.MetadataTableElement">
@@ -64,7 +62,7 @@
     </map>
 
     <!-- a map of time values -->
-    <map name="timeValues" lazy="false">
+    <map name="timeValues" lazy="false" table="rets_data_timevalues">
       <key column="id"/>
       <index-many-to-many
         class="org.nar.rets.metadata.hibernate.MetadataTableElement">
@@ -74,7 +72,7 @@
     </map>
 
     <!-- a map for the family int values (tiny, small, int, long) -->
-    <map name="intValues" lazy="false">
+    <map name="intValues" lazy="false" table="rets_data_intvalues">
       <key column="id"/>
       <index-many-to-many
         class="org.nar.rets.metadata.hibernate.MetadataTableElement">
@@ -84,7 +82,7 @@
     </map>
 
     <!-- a map for arbitrary precision signed decimal numbers -->
-    <map name="decimalValues" lazy="false">
+    <map name="decimalValues" lazy="false" table="rets_data_decimalValues">
       <key column="id"/>
       <index-many-to-many
         class="org.nar.rets.metadata.hibernate.MetadataTableElement">
@@ -92,6 +90,15 @@
       </index-many-to-many>
       <element column="value" type="big_decimal"/>
     </map>
-            
+
+    <map name="multiValues" lazy="false" table="rets_data_multiValues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_multivalue_key"/>
+      </index-many-to-many>
+      <many-to-many column="multi" class="org.nar.rets.data.RETSMultiSet"/>
+    </map>
+      
   </class>
 </hibernate-mapping>
