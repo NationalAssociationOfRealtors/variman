@@ -50,6 +50,7 @@
 
   <path id="datagen.path">
 <!--     <pathelement location="${rets-client.jar}"/> -->
+    <pathelement location="${commons-cli.jar}"/>
     <pathelement path="build/hibernate/classes"/>
   </path>
 
