@@ -438,6 +438,7 @@
     <copy file="${commons-logging.jar}" todir="build/datagen/lib"/>
     <copy file="${log4j.jar}" todir="build/datagen/lib"/>
     <copy file="${jdom.jar}" todir="build/datagen/lib"/>
+    <copy file="${commons-cli.jar}" todir="build/datagen/lib"/>
     <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
           todir="build/datagen/lib"/>
     <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
