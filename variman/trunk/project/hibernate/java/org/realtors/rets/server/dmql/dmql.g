@@ -42,7 +42,9 @@ tokens
     }
 
     private boolean isLookupField(String fieldName) {
-        return (mMetadata.getFieldType(fieldName) == DmqlFieldType.LOOKUP);
+        return ((mMetadata.getFieldType(fieldName) == DmqlFieldType.LOOKUP)
+                || (mMetadata.getFieldType(fieldName) ==
+                    DmqlFieldType.LOOKUP_MULTI));
     }
 
     private boolean isCharacterField(String fieldName) {
@@ -200,7 +202,7 @@ lookup_list [AST name]
     ;
 
 lookup_or [AST name]
-    : p:PIPE! l1:lookups[name]
+    : PIPE! l1:lookups[name]
         {#lookup_or = #([LOOKUP_OR, "|"], name, l1);}
     // This is the "implied" OR
     |! l2:lookup[name]
@@ -208,12 +210,12 @@ lookup_or [AST name]
     ;
 
 lookup_and [AST name]
-    : p:PLUS! {#p.setType(LOOKUP_AND);} l:lookups[name]
+    : PLUS! l:lookups[name]
         {#lookup_and = #([LOOKUP_AND, "+"], name, l);}
     ;
 
 lookup_not [AST name]
-    : t:TILDE! {#t.setType(LOOKUP_NOT);} l:lookups[name]
+    : TILDE! l:lookups[name]
         {#lookup_not = #([LOOKUP_NOT, "~"], name, l);}
     ;
 
