@@ -430,6 +430,10 @@ public class IOUtils
 
     public static File resolve(File base, File file)
     {
+        if (!file.isAbsolute())
+        {
+            file = new File(base, file.getPath());
+        }
         URI baseUri = base.toURI();
         URI fileUri = file.toURI();
         URI resolvedUri = baseUri.resolve(fileUri);
