@@ -4,6 +4,12 @@
 <%@ taglib uri="/WEB-INF/tld/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
 <html:html>
+
+ <html:messages header="registration.error.header"
+                footer="registration.error.footer" id="error">
+  <li><bean:write name="error"/></li>
+ </html:messages>
+
  <html:form action="/registration">
  <table>
   <tr><td>
