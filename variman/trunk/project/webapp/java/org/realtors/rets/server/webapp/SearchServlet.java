@@ -4,15 +4,10 @@ package org.realtors.rets.server.webapp;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.hibernate.Session;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +23,7 @@ public class SearchServlet extends RetsServlet
     {
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
+        LOG.debug("Buffer size: " + response.getBufferSize());
 
         try
         {

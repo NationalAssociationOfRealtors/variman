@@ -65,7 +65,7 @@ public class SearchAction
 
     public void setQuery(String query)
     {
-        mQuery = query;
+        mQuery = query.trim();
     }
 
     public String getFormat()
@@ -110,10 +110,13 @@ public class SearchAction
         sql.append(StringUtils.join(columns.iterator(), ", "));
         sql.append(" FROM ");
         sql.append(getSqlTable());
-        sql.append(" WHERE ");
-        sql.append(getSql());
+        if (!mQuery.equals(""))
+        {
+            sql.append(" WHERE ");
+            sql.append(getSql());
+        }
         sql.append(";");
-
+            
         LOG.debug("SQL=" + sql.toString());
 
         Session session = null;
@@ -200,7 +203,8 @@ public class SearchAction
 
     private String getSqlTable()
     {
-        return "rets_" + mResourceId.toLowerCase() + "_" + mClassName.toLowerCase();
+        return "rets_" + mResourceId.toLowerCase() + "_" +
+            mClassName.toLowerCase();
     }
 
     private static final Logger LOG =

@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.dmql;
 
-import junit.framework.TestCase;
 import antlr.ANTLRException;
+import junit.framework.TestCase;
 
 public class DmqlCompilerTest extends TestCase
 {

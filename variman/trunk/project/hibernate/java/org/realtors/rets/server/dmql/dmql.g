@@ -2,7 +2,7 @@ header {
 package org.realtors.rets.server.dmql;
 }
 
-class DmqlParser extends Parser;
+class OldDmqlParser extends Parser;
 
 options
 {

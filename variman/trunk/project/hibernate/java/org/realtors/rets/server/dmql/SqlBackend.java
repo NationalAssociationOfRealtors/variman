@@ -2,16 +2,7 @@ package org.realtors.rets.server.dmql;
 
 public class SqlBackend extends AbstractBackend implements DmtVisitor
 {
-
-    private boolean first_field;
-    private int mode;
-    private String sql, curr_field;
-
-    private static final int AND = 0;
-    private static final int OR = 1;
-    private static final int NOT = 2;
-
-    public String compile(DmtAST ast)
+   public String compile(DmtAST ast)
     {
         sql = "";
         ast.accept(this);
@@ -215,5 +206,11 @@ public class SqlBackend extends AbstractBackend implements DmtVisitor
         mode = NOT;
     }
 
-}
+    private static final int AND = 0;
+    private static final int OR = 1;
+    private static final int NOT = 2;
 
+    private boolean first_field;
+    private int mode;
+    private String sql, curr_field;
+ }
