@@ -13,10 +13,10 @@
   </appender>
 
   <logger name="org.realtors.rets.server">
-    <!--
     <level value="info"/>
-    -->
+    <!--
     <level value="debug"/>
+    -->
   </logger>
 
   <root>
