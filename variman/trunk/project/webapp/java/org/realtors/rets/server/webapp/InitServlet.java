@@ -49,7 +49,7 @@ public class InitServlet extends RetsServlet
             initHibernate();
             initMetadata();
             initNonceTable();
-            LOG.debug("Init servlet completed successfully");
+            LOG.info("Init servlet completed successfully");
         }
         catch (ServletException e)
         {
@@ -155,7 +155,7 @@ public class InitServlet extends RetsServlet
         {
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
-            cfg.addJar("retsdb2-hbm-xml.jar");
+            cfg.addJar("rex-hbm-xml.jar");
             WebApp.setSessions(cfg.buildSessionFactory());
         }
         catch (HibernateException e)
