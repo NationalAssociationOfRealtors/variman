@@ -101,18 +101,29 @@ public abstract class BaseServletHandler implements ServletHandler
 
     private void validateInvokeCount(ValidationResults results)
     {
-        if (mInvokeCount.equals(InvokeCount.ONE) && !(mDoGetInvokeCount == 1))
+        boolean failed = false;
+        if (mInvokeCount.equals(InvokeCount.ZERO) && !(mDoGetInvokeCount == 0))
+        {
+            failed = true;
+        }
+        else if (mInvokeCount.equals(InvokeCount.ONE) &&
+                 !(mDoGetInvokeCount == 1))
+        {
+            failed = true;
+        }
+
+        else if (mInvokeCount.equals(InvokeCount.ZERO_OR_ONE) &&
+                 !((mDoGetInvokeCount == 0) || (mDoGetInvokeCount == 1)))
+        {
+            failed = true;
+        }
+
+        if (failed)
         {
             String message = getName() + " get invoke count was " +
                 mDoGetInvokeCount + ", expected " + mInvokeCount.getName();
             results.addFailure(message);
             LOG.debug("Failed: " + message);
-        }
-
-        if (mInvokeCount.equals(InvokeCount.ZERO_OR_ONE) &&
-            !((mDoGetInvokeCount == 0) || (mDoGetInvokeCount == 1)))
-        {
-            // Todo: LoginHandler.validate: log error
         }
     }
 
