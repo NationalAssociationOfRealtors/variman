@@ -155,6 +155,25 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("", result.getMessage());
     }
 
+    public void testCaseInsensitiveCookie() throws SAXException, IOException
+    {
+        mTest.reset();
+        mTest.addCookie("RETS-Session-ID", "^testCookie$");
+        mTest.setGetInvokeCount(InvokeCount.ANY);
+
+        mClient.getResponse(TEST_URL);
+        ValidationResult result = mTest.validate();
+        assertFalse(result.wasSuccessful());
+        assertEquals("test HTTP cookie [RETS-Session-ID] was null, expected " +
+                     "^testCookie$", result.getMessage());
+
+        mClient.addCookie("rets-session-id", "testCookie");
+        mClient.getResponse(TEST_URL);
+        result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("", result.getMessage());
+    }
+
     public void testHeadersWithZeroInvokeCount()
     {
         mTest.reset();
