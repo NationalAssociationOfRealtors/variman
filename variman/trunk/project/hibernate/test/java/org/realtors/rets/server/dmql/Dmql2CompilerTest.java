@@ -112,9 +112,26 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testNumber() throws ANTLRException
     {
-        parse("(LP=5)");
-        parse("(LP=5.)");
-        parse("(LP=5.0)");
+        SqlConverter sql = parse("(LP=5)");
+        EqualClause equal =
+            new EqualClause("r_LP", new StringSqlConverter("5"));
+        assertEquals(equal, sql);
+
+        sql = parse("(LP=5.)");
+        equal = new EqualClause("r_LP", new StringSqlConverter("5."));
+        assertEquals(equal, sql);
+
+        sql = parse("(LP=5.0)");
+        equal = new EqualClause("r_LP", new StringSqlConverter("5.0"));
+        assertEquals(equal, sql);
+
+        sql = parse("(LP=5-10)");
+        StringSqlConverter left = new StringSqlConverter("5");
+        StringSqlConverter right = new StringSqlConverter("10");
+        BetweenClause between = new BetweenClause("r_LP", left, right);
+        OrClause or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
     }
 
     public void testPeriod() throws ANTLRException
