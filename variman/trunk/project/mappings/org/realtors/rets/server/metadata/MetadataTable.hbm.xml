@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataTable.hbm.xml,v 1.1 2003/05/29 21:52:48 kgarner Exp $ -->
+<!-- $Id: MetadataTable.hbm.xml,v 1.2 2003/05/30 18:46:45 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataTable"
@@ -44,7 +44,31 @@
 
     <property name="useSeparator" type="boolean"/>
 
-    <!-- edit mask is next -->
+    <!-- the following are commented out until metadata class is created -->
+<!--     <many-to-one name="editMask" cascade="none" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataEditMask"/> -->
 
+<!--     <many-to-one name="lookup" cascade="none" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataLookup"/> -->
+
+    <property name="maxSelect" type="int"/>
+
+    <property name="units" type="org.nar.rets.metadata.newdb.UnitEnum"/>
+
+    <property name="index" type="int"/>
+
+    <property name="minimum" type="int"/>
+
+    <property name="maximum" type="int"/>
+
+    <property name="Default" column="r_default" type="int"/>
+
+    <property name="required" type="int"/>
+
+<!--     <property name="searchHelp" casecade="none" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataSearchHelp"/> -->
+
+    <property name="unique" column="r_unique" type="boolean"/>
+      
   </class>
 </hibernate-mapping>
