@@ -1,19 +1,19 @@
 <section id="deploy">
-  <title>Deploying Rex</title>
+  <title>Deploying &name;</title>
   <para>
-    This chapter describes how to configure and run Rex.
+    This chapter describes how to configure and run &name;.
   </para>
 
   <section>
     <title>First Time Configuration</title>
     <para>
-      Before running Rex for the first time, there are a few steps you
-      need to take.  Rex requires access to a database.  Currently,
-      Rex supports PostgreSQL <xref linkend="bib-postgres"/> and
-      Microsft SQL Server.  This database is where RETS data is
-      stored, as well as Rex specific information.  Rex requires
-      read/write access to the database, as well as the ability to
-      create new tables.
+      Before running &name; for the first time, there are a few steps
+      you need to take.  &name; requires access to a database.
+      Currently, &name; supports PostgreSQL <xref
+      linkend="bib-postgres"/> and Microsft SQL Server.  This database
+      is where RETS data is stored, as well as &name; specific
+      information.  &name; requires read/write access to the database,
+      as well as the ability to create new tables.
     </para>
 
     <section>
@@ -34,7 +34,7 @@
         It is probably a good idea to create a user other than the
         default <literal>postgres</literal> superuser.  This user must
         have read and write access, and permissions to create new
-        tables in the database used by Rex.
+        tables in the database used by &name;.
       </para>
       <para>
         The JDBC driver for Postgres version 7.4.x is included with
@@ -46,8 +46,8 @@
       <title>Microsoft SQL Server Setup</title>
       <para>
         First, either choose an existing database, or create a new
-        database for use with Rex.  Then, create a new user that has
-        the following role memberships:
+        database for use with &name;.  Then, create a new user that
+        has the following role memberships:
       </para>
       <itemizedlist>
         <listitem><literal>public</literal></listitem>
@@ -57,10 +57,10 @@
       </itemizedlist>
       <para>
         There are currently no free or Open Source SQL Server JDBC
-        drivers, so none is included with Rex.  The one that Microsoft
-        offers is buggy and does not work with Rex.  The only
-        supported driver is the commercial JSQLConnect driver from
-        JNetDirect <xref linkend="bib-jnetdirect"/>.
+        drivers, so none is included with &name;.  The one that
+        Microsoft offers is buggy and does not work with &name;.  The
+        only supported driver is the commercial JSQLConnect driver
+        from JNetDirect <xref linkend="bib-jnetdirect"/>.
       </para>
     </section>
 
@@ -70,7 +70,7 @@
         The easiest way to install your JDBC driver is to use the
         Administration Tool.  Choose the Install Jar command from the
         File menu.  You must then restart the Administration Tool
-        and/or Rex to use the new JDBC driver.
+        and/or &name; to use the new JDBC driver.
       </para>
     </section>
 
@@ -83,8 +83,8 @@
         bring up the Database Properties dialog, as in <xref
         linkend="fig-db"/>.  You should use the Test Connection button
         to make sure that the properties are entered correctly.  If
-        the test fails, then neither the Administration Tool nor Rex
-        will be able to access your database.
+        the test fails, then neither the Administration Tool nor
+        &name; will be able to access your database.
       </para>
       <figure id="fig-db">
         <title>Database Properties Window</title>
@@ -99,10 +99,10 @@
     <section>
       <title>Creating the Schema</title>
       <para>
-        Rex needs tables for it's own use, such as user information.
-        Before you create users and groups, you need to create these
-        tables by chosing the Create Schema command from the Database
-        menu.
+        &name; needs tables for it's own use, such as user
+        information.  Before you create users and groups, you need to
+        create these tables by chosing the Create Schema command from
+        the Database menu.
       </para>
     </section>
   </section> <!-- First Time -->
@@ -111,7 +111,7 @@
     <title>Configuring RETS Parameters</title>
     <para>
       From the main Configuration panel, as seen in <xref
-                                                       linkend="fig-config"/>, you can configure various RETS
+      linkend="fig-config"/>, you can configure various RETS
       parameters.
     </para>
     <figure id="fig-config">
@@ -123,14 +123,14 @@
       </mediaobject>
     </figure>
     <para>
-      The Listening Port is the TCP port number that the Rex server
+      The Listening Port is the TCP port number that the &name; server
       listens on.  6103 is the standard, well-known port number for
       RETS.  The Metadata Directory points to the root directory of
       the metadata hierarchy.  Configuring metadata is explained in
       <xref linkend="deploy-metadata"/>.  The Image Root and Image
-      Pattern parameters are used to allow Rex to serve up images for
-      the GetObject transaction.  The Image Root is a directory where
-      the images are located.  The Image Pattern is a percent
+      Pattern parameters are used to allow &name; to serve up images
+      for the GetObject transaction.  The Image Root is a directory
+      where the images are located.  The Image Pattern is a percent
       substitution pattern that describes the format of the actual
       file names.  The possible patterns and their substitutions are
       listed in <xref linkend="tab-image-pattern"/>.
@@ -164,27 +164,27 @@
 
     <para>
       For example, if you have pictures
-      in <filename>/home/rex/pictures/</filename>.  The key is used as
-      the base file name, with each image given a number.  Say there
-      are three pictures for the property
+      in <filename>/home/variman/pictures/</filename>.  The key is
+      used as the base file name, with each image given a number.  Say
+      there are three pictures for the property
       ID <literal>LN1001</literal>, the full paths for these pictures
       are:
       <itemizedlist>
         <listitem>
-          <literal>/home/rex/pictures/LN1001_1.jpg</literal>
+          <literal>/home/variman/pictures/LN1001_1.jpg</literal>
         </listitem>
         <listitem>
-          <literal>/home/rex/pictures/LN1001_2.jpg</literal>
+          <literal>/home/variman/pictures/LN1001_2.jpg</literal>
         </listitem>
         <listitem>
-          <literal>/home/rex/pictures/LN1001_3.jpg</literal>
+          <literal>/home/variman/pictures/LN1001_3.jpg</literal>
         </listitem>
       </itemizedlist>
       The, you could set the Image Root
-      to <filename>/home/rex/pictures</filename> and the Image Pattern
-      to <literal>%k_%i.jpg</literal>.  The <literal>%k</literal> gets
-      replaced with the object ID, and the <literal>%i</literal> gets
-      replaced with the image number.
+      to <filename>/home/variman/pictures</filename> and the Image
+      Pattern to <literal>%k_%i.jpg</literal>.
+      The <literal>%k</literal> gets replaced with the object ID, and
+      the <literal>%i</literal> gets replaced with the image number.
     </para>
     <para>
       The <literal>%k</literal> percent pattern may be proceeded by a
@@ -199,13 +199,13 @@
       would be at the following paths:
       <itemizedlist>
         <listitem>
-          <literal>/home/rex/pictures/01/LN1001_1.jpg</literal>
+          <literal>/home/variman/pictures/01/LN1001_1.jpg</literal>
         </listitem>
         <listitem>
-          <literal>/home/rex/pictures/02/LN1002_1.jpg</literal>
+          <literal>/home/variman/pictures/02/LN1002_1.jpg</literal>
         </listitem>
         <listitem>
-          <literal>/home/rex/pictures/01/LN1101_1.jpg</literal>
+          <literal>/home/variman/pictures/01/LN1101_1.jpg</literal>
         </listitem>
       </itemizedlist>
     </para>
@@ -216,9 +216,9 @@
     <title>Users</title>
     <para>
       Users are managed through the Users Tab as seen in <xref
-                                                            linkend="fig-users"/>.  Users may be created, removed, and
-      edited from the User menu or contextual menu.  Users may also
-      be added and removed from groups.
+      linkend="fig-users"/>.  Users may be created, removed, and
+      edited from the User menu or contextual menu.  Users may also be
+      added and removed from groups.
     </para>
 
     <figure id="fig-users">
@@ -277,7 +277,7 @@
       database to RETS names.  The metadata is stored as compact
       format metadata, split into multiple files.  For more
       information on compact metadata format, see RETS specification.
-      A sample set of metadata is provided on the Rex website, and
+      A sample set of metadata is provided on the &name; website, and
       should be used as a starting point.
     </para>
   </section>

@@ -1,9 +1,9 @@
 <section id="introduction">
   <title>Introduction</title>
   <para>
-    Rex is a RETS <xref linkend="bib-rets"/> 1.0 and 1.5 compliant
-    server. Rex is developed under a BSD-style license at the Center
-    for REALTOR(R) Technology <xref linkend="bib-crt"/>.
+    &name; is a RETS <xref linkend="bib-rets"/> 1.0 and 1.5 compliant
+    server. &name; is developed under a BSD-style license at the
+    Center for REALTOR(R) Technology <xref linkend="bib-crt"/>.
   </para>
 </section>
 
