@@ -1,0 +1,13 @@
+body { background-color: white; color: black;
+       font-family: verdana,arial,helvetica,sans-serif }
+td   { background-color: white; color: black;
+       font-family: verdana,arial,helvetica,sans-serif }
+td.pass { background-color: #7fff7f; }
+td.fail { background-color: #ff7f7f; }
+td.active { background-color: #ffff7f; }
+td.unknown { background-color: #7f7fff; }
+td.even { background-color: #cccccc; }
+td.odd { background-color: #ffffff; }
+a:link    { color: #cc0000; text-decoration: none }
+a:active  { color: #ff0000; text-decoration: none }
+a:visited { color: #333333; text-decoration: none }
