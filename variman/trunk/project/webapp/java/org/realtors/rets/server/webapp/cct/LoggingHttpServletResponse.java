@@ -47,5 +47,11 @@ public class LoggingHttpServletResponse extends HttpServletResponseWrapper
         return new PrintWriter(new LoggingWriter(super.getWriter(), mLog));
     }
 
+    public void reset()
+    {
+        mLog.debug("[Reset]\n");
+        super.reset();
+    }
+
     private Logger mLog;
 }
