@@ -48,11 +48,6 @@ public class DataGenerator extends DataGenBase
         mDate[mDCount++] = new Date();
     }
 
-    private void createData() throws HibernateException
-    {
-        createData(10);
-    }
-
     private void createData(int props) throws HibernateException
     {
         Session session = null;
@@ -247,15 +242,8 @@ public class DataGenerator extends DataGenBase
         System.out.println("ms");
 
         before = System.currentTimeMillis();
-        String tmp = System.getProperty("prop.count");
-        if (tmp == null)
-        {
-            dg.createData();
-        }
-        else
-        {
-            dg.createData(Integer.parseInt(tmp));
-        }
+        String tmp = System.getProperty("prop.count", "10");
+        dg.createData(Integer.parseInt(tmp));
         after = System.currentTimeMillis();
         System.out.print("Time to create data:");
         System.out.print(after - before);
