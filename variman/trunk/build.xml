@@ -20,9 +20,11 @@
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${jdbc.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
+    <pathelement path="${hibernatetools.jar}"/>
+    <pathelement path="${jdom.jar}"/>
+    <pathelement path="${servlet.jar}"/>
   </path>
     
-
   <!-- Add the checkstyle task -->
 <!--   <taskdef name="checkstyle" -->
 <!--            classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"> -->
@@ -50,37 +52,50 @@
   </target>
 
   <target name="prepare" depends="build-properties-up-to-date">
-    <mkdir dir="build" />
-    <mkdir dir="build/final/classes"/>
-    <mkdir dir="build/final/lib"/>
-    <mkdir dir="build/generated"/>
-    <mkdir dir="build/schema"/>
+    <mkdir dir="build/hibernate/final/classes"/>
+    <mkdir dir="build/hibernate/generated"/>
+    <mkdir dir="build/hibernate/schema"/>
+    <mkdir dir="build/hibernate/jar"/>
+    <mkdir dir="build/webapp/root/WEB-INF/classes"/>
+    <mkdir dir="build/webapp/root/WEB-INF/lib"/>
     <mkdir dir="dist" />
   </target>
 
-  <target name="build" depends="build-test, prepare" />
+  <target name="build" depends="build-hibernate, prepare" />
 
   <target name="dist" depends="generate-schema" />
 
-  <target name="build-test" depends="build-generated-code">
-    <depend srcDir="project/java/misc" destDir="build/final/classes"
-            cache="build/final/depcache" closure="yes">
+  <target name="build-hibernate" depends="build-generated-code,build-xml">
+    <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
+         basedir="build/hibernate/final/classes" index="true"/>
+  </target>
+
+  <target name="build-webapp" depends="build-hibernate">
+    <depend srcDir="project/java/servlet"
+            destDir="build/webapp/root/WEB-INF/classes"
+            cache="build/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
-        <pathelement location="build/final/classes"/>
       </classpath>
     </depend>
-    <javac srcdir="project/java/misc" destdir="build/final/classes"
+    <javac srcdir="project/java/servlet"
+           destdir="build/webapp/root/WEB-INF/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
         <path refid="lib.path"/>
-        <pathelement location="build/final/classes"/>
       </classpath>
     </javac>
-    <copy todir="build/final/classes"
+
+
+    <copy todir="build/webapp/root/WEB-INF/lib"
+          file="build/hibernate/jar/${project.name}-hibernate.jar"/>
+  </target>
+
+  <target name="build-xml" depends="prepare">
+    <copy todir="build/hibernate/final/classes"
           file="project/config/hibernate.properties"/>
-    <copy todir="build/final/classes">
+    <copy todir="build/hibernate/final/classes">
       <fileset dir="project/mappings">
         <include name="**/*.hbm.xml"/>
       </fileset>
@@ -90,7 +105,7 @@
   <target name="mapping-files-check">
     <uptodate property="generated.code.up.to.date">
       <srcfiles dir="project/mappings" includes="**/*.hbm.xml"/>
-      <mapper type="glob" from="*.hbm.xml" to="${basedir}/build/generated/*.java"/>
+      <mapper type="glob" from="*.hbm.xml" to="${basedir}/build/hibernate/generated/*.java"/>
     </uptodate>
   </target>
   
@@ -101,30 +116,31 @@
                  property="hibernate.mappings" pathsep=" "/>
     <java classname="net.sf.hibernate.tool.hbm2java.CodeGenerator"
       fork="true">
-      <arg line="--output=build/generated ${hibernate.mappings}"/>
+      <arg line="--output=build/hibernate/generated ${hibernate.mappings}"/>
       <classpath>
         <path refid="lib.path" />
-        <pathelement location="build/final/classes" />
+        <pathelement location="build/hibernate/final/classes" />
       </classpath>
     </java>
-    <javac srcdir="build/generated" destdir="build/final/classes">
+    <javac srcdir="build/hibernate/generated"
+           destdir="build/hibernate/final/classes">
       <classpath>
         <path refid="lib.path"/>
-        <pathelement location="build/final/classes" />
+        <pathelement location="build/hibernate/final/classes" />
       </classpath>
     </javac>
   </target>
 
   <target name="compile-hibernate-enum-code" depends="prepare">
-        <depend srcDir="project/java/enums"
-            destDir="build/final/classes"
-            cache="build/final/depcache" closure="yes">
+    <depend srcDir="project/java/enums"
+            destDir="build/hibernate/final/classes"
+            cache="build/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
       </classpath>
     </depend>
     <javac srcdir="project/java/enums"
-           destdir="build/final/classes"
+           destdir="build/hibernate/final/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -137,40 +153,16 @@
     <pathconvert refid="hibernate.mapping.files"
                  property="hibernate.mappings" pathsep=" "/>
     <java classname="net.sf.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
-      <arg line="--output=build/schema/test.schema --format ${hibernate.mappings}"/>
+      <arg line="--output=build/hibernate/schema/test.schema --format ${hibernate.mappings}"/>
       <jvmarg value="-Dhibernate.dialect=${hibernate.dialect}"/>
       <classpath>
         <path refid="lib.path"/>
-        <pathelement path="build/final/classes"/>
+        <pathelement path="build/hibernate/final/classes"/>
         <pathelement path="project/config"/>
         <fileset dir="build/final/lib" includes="*.jar"/>
       </classpath>
     </java>
   </target>
-
-  <target name="test-add-data" depends="build">
-    <java classname="com.kgarner.quotes.QuoteAddData" fork="true">
-      <arg line=""/>
-      <classpath>
-        <path refid="lib.path"/>
-        <pathelement path="build/final/classes"/>
-        <fileset dir="build/final/lib" includes="*.jar"/>
-      </classpath>
-    </java>
-  </target>
-
-  <target name="test-query" depends="build">
-    <java classname="com.kgarner.quotes.QuoteTest" fork="true">
-      <arg line=""/>
-      <classpath>
-        <path refid="lib.path"/>
-        <pathelement path="build/final/classes"/>
-        <fileset dir="build/final/lib" includes="*.jar"/>
-      </classpath>
-    </java>
-  </target>
-
-  <target name="test" depends="test-query"/>
 
   <target name="clean">
     <delete dir="build" />
