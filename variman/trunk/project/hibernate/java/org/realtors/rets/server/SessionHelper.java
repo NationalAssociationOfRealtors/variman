@@ -16,6 +16,7 @@ import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Query;
 
 import org.apache.log4j.Logger;
 
@@ -42,6 +43,12 @@ public class SessionHelper
         mSession = mFactory.openSession();
         mTx = mSession.beginTransaction();
         return mSession;
+    }
+
+    public Query createQuery(String queryString) throws HibernateException
+    {
+        LOG.debug("createQuery");
+        return beginSession().createQuery(queryString);
     }
 
     public void commit() throws HibernateException
