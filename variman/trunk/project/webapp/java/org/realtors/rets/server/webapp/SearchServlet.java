@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.SearchParameters;
 import org.realtors.rets.server.SearchTransaction;
+import org.realtors.rets.server.RetsVersion;
 
 import antlr.ANTLRException;
 import org.apache.log4j.Logger;
@@ -33,7 +34,8 @@ public class SearchServlet extends RetsServlet
         try
         {
             SearchParameters parameters =
-                new SearchParameters(request.getParameterMap());
+                new SearchParameters(request.getParameterMap(),
+                                     RetsVersion.RETS_1_0);
             LOG.debug(parameters);
             SearchTransaction search = new SearchTransaction(parameters);
 //            search.setResourceId(request.getParameter("SearchType"));

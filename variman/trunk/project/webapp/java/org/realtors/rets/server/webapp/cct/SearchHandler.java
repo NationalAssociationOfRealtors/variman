@@ -30,7 +30,8 @@ public class SearchHandler extends BaseServletHandler
         {
             PrintWriter out = response.getXmlWriter();
             SearchParameters parameters =
-                new SearchParameters(request.getParameterMap());
+                new SearchParameters(request.getParameterMap(),
+                                     request.getRetsVersion());
             LOG.debug(parameters);
             SearchTransaction search = new SearchTransaction(parameters);
             LOG.debug(search.getSql(WebApp.getMetadataManager()));
