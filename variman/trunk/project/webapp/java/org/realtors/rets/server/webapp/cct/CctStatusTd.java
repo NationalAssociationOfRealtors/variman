@@ -5,6 +5,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import org.realtors.rets.server.cct.StatusEnum;
+
 import org.apache.struts.util.RequestUtils;
 
 /**
@@ -66,22 +68,22 @@ public class CctStatusTd extends TagSupport
         {
             String message;
             String tdclass;
-            if (test.getStatus() == CertificationTest.PASSED)
+            if (test.getStatus() == StatusEnum.PASSED)
             {
                 tdclass = "pass";
                 message = "Test Passed";
             }
-            else if (test.getStatus() == CertificationTest.FAILED)
+            else if (test.getStatus() == StatusEnum.FAILED)
             {
                 tdclass = "fail";
                 message = "Test Failed";
             }
-            else if (test.getStatus() == CertificationTest.RUNNING)
+            else if (test.getStatus() == StatusEnum.RUNNING)
             {
                 tdclass = "active";
                 message = "Test Running";
             }
-            else if (test.getStatus() == CertificationTest.NOTRUN)
+            else if (test.getStatus() == StatusEnum.NOTRUN)
             {
                 tdclass = "unknown";
                 message = "Test not yet run";

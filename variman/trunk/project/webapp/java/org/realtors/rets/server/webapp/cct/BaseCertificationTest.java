@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.webapp.cct;
 
-import org.realtors.rets.server.cct.*;
-import org.realtors.rets.server.cct.*;
+import org.realtors.rets.server.cct.StatusEnum;
+import org.realtors.rets.server.cct.ValidationResults;
 
 /**
  * Subclasses must implement getDescription(), start(), and validate().
@@ -14,7 +14,7 @@ public abstract class BaseCertificationTest implements CertificationTest
     {
         mValidationResults = null;
         mMessage = "";
-        mStatus = NOTRUN;
+        mStatus = StatusEnum.NOTRUN;
     }
 
     public String getMessage()
@@ -22,7 +22,7 @@ public abstract class BaseCertificationTest implements CertificationTest
         return mMessage;
     }
 
-    public Status getStatus()
+    public StatusEnum getStatus()
     {
         return mStatus;
     }
@@ -37,11 +37,11 @@ public abstract class BaseCertificationTest implements CertificationTest
         mValidationResults = validate();
         if (mValidationResults.wasSuccessful())
         {
-            mStatus = PASSED;
+            mStatus = StatusEnum.PASSED;
         }
         else
         {
-            mStatus = FAILED;
+            mStatus = StatusEnum.FAILED;
         }
         mMessage = mValidationResults.getMessage();
     }
@@ -50,7 +50,7 @@ public abstract class BaseCertificationTest implements CertificationTest
 
     public void cancel()
     {
-        mStatus = FAILED;
+        mStatus = StatusEnum.FAILED;
     }
 
     public void init(String testContext)
@@ -58,7 +58,7 @@ public abstract class BaseCertificationTest implements CertificationTest
         mTestContext = testContext;
     }
 
-    protected Status mStatus;
+    protected StatusEnum mStatus;
     private ValidationResults mValidationResults;
     protected String mTestContext;
     private String mMessage;

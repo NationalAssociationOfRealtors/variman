@@ -10,6 +10,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.realtors.rets.server.cct.StatusEnum;
+
 /**
  * Created by IntelliJ IDEA.
  * User: dbt
@@ -32,7 +34,7 @@ public class IndexAction extends CctAction
         while (iter.hasNext())
         {
             CertificationTest test = (CertificationTest) iter.next();
-            if (test.getStatus() == CertificationTest.RUNNING)
+            if (test.getStatus() == StatusEnum.RUNNING)
             {
                 request.setAttribute("cctActiveTest", new Integer(i));
             }

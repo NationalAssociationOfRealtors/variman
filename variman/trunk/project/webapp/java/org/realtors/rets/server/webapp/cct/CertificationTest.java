@@ -2,7 +2,7 @@
  */
 package org.realtors.rets.server.webapp.cct;
 
-import org.apache.commons.lang.enum.Enum;
+import org.realtors.rets.server.cct.StatusEnum;
 
 public interface CertificationTest
 {
@@ -14,24 +14,11 @@ public interface CertificationTest
 
     public String getMessage();
 
-    public Status getStatus();
+    public StatusEnum getStatus();
 
     public void start();
 
     public void stop();
 
     public void cancel();
-
-    static class Status extends Enum
-    {
-        protected Status(String status)
-        {
-            super(status);
-        }
-    }
-
-    public static final Status PASSED = new Status("passed");
-    public static final Status FAILED = new Status("failed");
-    public static final Status RUNNING = new Status("running");
-    public static final Status NOTRUN = new Status("not-run");
 }

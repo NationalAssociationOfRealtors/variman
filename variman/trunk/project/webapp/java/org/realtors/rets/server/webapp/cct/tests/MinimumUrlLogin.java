@@ -2,6 +2,7 @@
  */
 package org.realtors.rets.server.webapp.cct.tests;
 
+import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResults;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
 import org.realtors.rets.server.webapp.cct.HandlerManager;
@@ -52,7 +53,7 @@ public class MinimumUrlLogin extends BaseCertificationTest
         mLogout.reset();
         mLogout.setGetInvokeCount(InvokeCount.ZERO);
 
-        mStatus = RUNNING;
+        mStatus = StatusEnum.RUNNING;
     }
 
     private LoginHandler mLogin;

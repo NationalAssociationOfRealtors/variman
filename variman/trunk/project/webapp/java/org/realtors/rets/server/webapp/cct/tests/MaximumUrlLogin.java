@@ -2,6 +2,7 @@
  */
 package org.realtors.rets.server.webapp.cct.tests;
 
+import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResults;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
 import org.realtors.rets.server.webapp.cct.HandlerManager;
@@ -56,7 +57,7 @@ public class MaximumUrlLogin extends BaseCertificationTest
         mLogout.addStandardHeaders();
         mLogout.addStandardCookies(SESSION_ID);
 
-        mStatus = RUNNING;
+        mStatus = StatusEnum.RUNNING;
     }
 
     private LoginHandler mLogin;
