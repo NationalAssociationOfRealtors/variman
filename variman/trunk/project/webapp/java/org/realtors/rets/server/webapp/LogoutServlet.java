@@ -41,7 +41,7 @@ public class LogoutServlet extends RetsServlet
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
         printOpenRets(out, 0, "Operation Successful");
-        out.println("Connect time = " + stats.getSessionTime());
+        out.println("ConnectTime = " + stats.getSessionTime());
         out.println("Billing = " + stats.getSessionBalanceFormatted());
         out.println("SignOffMessage = Goodbye");
         printCloseRets(out);
