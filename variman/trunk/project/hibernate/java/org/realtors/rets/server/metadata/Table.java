@@ -478,7 +478,10 @@ public class Table extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof Table)) return false;
+        if (!(other instanceof Table))
+        {
+            return false;
+        } 
         Table castOther = (Table) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

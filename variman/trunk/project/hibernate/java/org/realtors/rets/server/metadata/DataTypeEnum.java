@@ -40,7 +40,10 @@ public class DataTypeEnum implements PersistentEnum
         this.mDataType = dataType;
     }
 
-    public int toInt() { return mDataType; }
+    public int toInt()
+    {
+        return mDataType;
+    }
 
     public static DataTypeEnum fromInt(int dataType)
     {

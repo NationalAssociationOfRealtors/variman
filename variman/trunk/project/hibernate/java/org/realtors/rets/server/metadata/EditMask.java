@@ -129,7 +129,10 @@ public class EditMask extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof EditMask)) return false;
+        if (!(other instanceof EditMask))
+        {
+            return false;
+        } 
         EditMask castOther = (EditMask) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

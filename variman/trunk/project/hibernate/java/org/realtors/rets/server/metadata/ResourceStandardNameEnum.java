@@ -47,7 +47,10 @@ public class ResourceStandardNameEnum implements PersistentEnum
         this.mCode = code;
     }
 
-    public int toInt() { return mCode; }
+    public int toInt()
+    {
+        return mCode;
+    }
 
     public static ResourceStandardNameEnum fromInt(int code)
     {

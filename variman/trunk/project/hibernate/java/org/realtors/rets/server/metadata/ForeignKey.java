@@ -110,7 +110,10 @@ public class ForeignKey extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof ForeignKey)) return false;
+        if (!(other instanceof ForeignKey))
+        {
+            return false;
+        } 
         ForeignKey castOther = (ForeignKey) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

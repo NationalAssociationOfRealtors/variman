@@ -28,7 +28,10 @@ public class AlignmentEnum implements PersistentEnum
         this.mCode = code;
     }
 
-    public int toInt() { return mCode; }
+    public int toInt()
+    {
+        return mCode;
+    }
 
     public static AlignmentEnum fromInt(int code)
     {
@@ -63,7 +66,8 @@ public class AlignmentEnum implements PersistentEnum
             case 2: return "Center";
             case 3: return "Justify";
             default:
-                throw new IllegalArgumentException("Unknown Alignment: " + code);
+                throw new IllegalArgumentException("Unknown Alignment: " +
+                                                   code);
         }
     }
 

@@ -34,7 +34,10 @@ public class ObjectTypeEnum implements PersistentEnum
         this.mCode = code;
     }
 
-    public int toInt() { return mCode; }
+    public int toInt()
+    {
+        return mCode;
+    }
 
     public static ObjectTypeEnum fromInt(int code)
     {

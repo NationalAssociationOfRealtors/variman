@@ -159,7 +159,10 @@ public class Lookup extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof Lookup)) return false;
+        if (!(other instanceof Lookup))
+        {
+            return false;
+        } 
         Lookup castOther = (Lookup) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -19,7 +19,10 @@ public class TableStandardNameEnum implements PersistentEnum
         this.mCode = code;
     }
 
-    public int toInt() { return mCode; }
+    public int toInt()
+    {
+        return mCode;
+    }
 
     public static TableStandardNameEnum fromInt(int code)
     {

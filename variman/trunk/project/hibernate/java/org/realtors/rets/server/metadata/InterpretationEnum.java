@@ -36,7 +36,10 @@ public class InterpretationEnum implements PersistentEnum
         this.mCode = code;
     }
 
-    public int toInt() { return mCode; }
+    public int toInt()
+    {
+        return mCode;
+    }
 
     public static InterpretationEnum fromInt(int code)
     {

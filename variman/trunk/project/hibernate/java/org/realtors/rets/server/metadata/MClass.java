@@ -251,7 +251,10 @@ public class MClass extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof MClass)) return false;
+        if (!(other instanceof MClass))
+        {
+            return false;
+        } 
         MClass castOther = (MClass) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -395,7 +395,10 @@ public class Resource extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof Resource)) return false;
+        if (!(other instanceof Resource))
+        {
+            return false;
+        } 
         Resource castOther = (Resource) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

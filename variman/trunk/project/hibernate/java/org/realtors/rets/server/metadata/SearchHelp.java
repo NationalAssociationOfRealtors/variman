@@ -120,7 +120,10 @@ public class SearchHelp extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof SearchHelp)) return false;
+        if (!(other instanceof SearchHelp))
+        {
+            return false;
+        } 
         SearchHelp castOther = (SearchHelp) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -32,7 +32,10 @@ public class UnitEnum implements PersistentEnum
         this.mCode = code;
     }
 
-    public int toInt() { return mCode; }
+    public int toInt()
+    {
+        return mCode;
+    }
 
     public static UnitEnum fromInt(int code)
     {
