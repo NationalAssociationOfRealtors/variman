@@ -7,27 +7,24 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.Query;
 
 import org.realtors.rets.server.SessionHelper;
-import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataSegment;
-import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ServerMetadata;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
+import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -122,29 +119,16 @@ public class  GetMetadataServlet extends RetsServlet
         // Always need system to get version and date
         LOG.debug("Getting system");
         MSystem system = findSystem();
-        LOG.debug("Got system");
         String version = system.getVersionString();
         Date date = system.getDate();
         List metadataResults = new ArrayList();
-        String level = StringUtils.join(levels, ":");
 
-        if (type.equals("METADATA-SYSTEM"))
+        MetadataFinder finder =
+            (MetadataFinder) sMetadataFinders.get(type);
+        if (finder != null)
         {
-            assertLength(levels, 0);
-            List metadata = findMetadata("from MSystem", null);
-            metadataResults.add(new MetadataSegment(metadata, levels, "",
-                                                    null));
-
-            if (recursive)
-            {
-                recurseChildren(metadata, metadataResults, version, date);
-            }
-        }
-        else if (type.equals("METADATA-CLASS"))
-        {
-            assertLength(levels, 1);
-            List metadata = findMetadata("from MClass as metadata " +
-                                     "where metadata.level = :level", level);
+            LOG.debug("Using finder for type: " + type);
+            List metadata = finder.findMetadata(levels);
             metadataResults.add(new MetadataSegment(metadata, levels, version,
                                                     date));
             if (recursive)
@@ -152,34 +136,10 @@ public class  GetMetadataServlet extends RetsServlet
                 recurseChildren(metadata,  metadataResults, version, date);
             }
         }
-        else if (type.equals("METADAT-RESOURCE"))
-        {
-            assertLength(levels, 0);
-            Resource[] resources = findResources();
-            metadataResults.add(new MetadataSegment(resources, levels, version, date));
-        }
-        else if (type.equals("METADATA-CLASS"))
-        {
-            assertLength(levels, 1);
-            MClass[] classes = findClasses(level);
-            metadataResults.add(classes);
-            for (int i = 0; i < classes.length; i++)
-            {
-                MClass aClass = classes[i];
-                System.out.println("Class: " + aClass.getClassName());
-            }
-        }
-        else if (type.equals("METADATA-TABLE"))
-        {
-            assertLength(levels, 2);
-            Table[] tables = findTables(level);
-            metadataResults.add(tables);
-
-        }
         else
         {
-            LOG.warn("Recieved query for unknown metadataResults type: " + type +
-                     ", level=" + level);
+            LOG.warn("Recieved query for unknown metadataResults type: " +
+                     type + ", level=" + StringUtils.join(levels, ":"));
         }
         return metadataResults;
     }
@@ -200,14 +160,6 @@ public class  GetMetadataServlet extends RetsServlet
                 recurseChildren(Arrays.asList(child), metadataResults,
                                 version, date);
             }
-        }
-    }
-    private void assertLength(String[] array, int length)
-        throws IllegalArgumentException
-    {
-        if (array.length != length)
-        {
-            throw new IllegalArgumentException("Bad levels: " + array);
         }
     }
 
@@ -242,107 +194,45 @@ public class  GetMetadataServlet extends RetsServlet
         return system;
     }
 
-    private List findMetadata(String hql, String level)
-    {
-        SessionHelper helper = InitServlet.createHelper();
-        List metadata = null;
-        try
-        {
-            Session session = helper.beginTransaction();
-            Query query = session.createQuery(hql);
-            if (level != null)
-            {
-                query.setString("level", level);
-            }
-            metadata = query.list();
-        }
-        catch (HibernateException e)
-        {
-            LOG.warn("Caught", e);
-            helper.rollback(LOG);
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-        return metadata;
-    }
-
-    private Resource[] findResources()
-    {
-        SessionHelper helper = InitServlet.createHelper();
-        Resource[] resources = null;
-        try
-        {
-            Session session = helper.beginTransaction();
-            List results = session.find("from Resource");
-            resources = (Resource[])
-                results.toArray(new Resource[results.size()]);
-            helper.commit();
-        }
-        catch (HibernateException e)
-        {
-            LOG.warn("Caught", e);
-            helper.rollback(LOG);
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-        return resources;
-    }
-
-    private MClass[] findClasses(String resourceName)
-    {
-        SessionHelper helper = InitServlet.createHelper();
-        MClass[] classes = null;
-        try
-        {
-            Session session = helper.beginTransaction();
-            List results = session.find(" from MClass as clazz " +
-                                        "where clazz.level=?", resourceName,
-                                        Hibernate.STRING);
-            classes = (MClass[]) results.toArray(new MClass[results.size()]);
-            helper.commit();
-        }
-        catch (HibernateException e)
-        {
-            LOG.warn("Caught", e);
-            helper.rollback(LOG);
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-        return classes;
-    }
-
-    private Table[] findTables(String level)
-    {
-        SessionHelper helper = InitServlet.createHelper();
-        Table[] tables = null;
-        try
-        {
-            Session session = helper.beginTransaction();
-            List results = session.find(" from Table as table " +
-                                        "where class.level=?", level,
-                                        Hibernate.STRING);
-            tables = (Table[]) results.toArray(new Table[results.size()]);
-            helper.commit();
-        }
-        catch (HibernateException e)
-        {
-            LOG.warn("Caught", e);
-            helper.rollback(LOG);
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-        return tables;
-    }
-
     private static final Logger LOG =
         Logger.getLogger(GetMetadataServlet.class);
     public static final String COMPACT_FORMAT = "COMPACT";
+    private static Map sMetadataFinders;
+
+    static
+    {
+        sMetadataFinders = new HashMap();
+        sMetadataFinders.put("METADATA-SYSTEM",
+                              new MetadataFinder("MSystem", 0));
+        sMetadataFinders.put("METADATA-RESOURCE",
+                              new MetadataFinder("Resource", 0));
+        sMetadataFinders.put("METADATA-CLASS",
+                              new MetadataFinder("MClass", 1));
+        sMetadataFinders.put("METADATA-TABLE",
+                             new MetadataFinder("Table", 2));
+        sMetadataFinders.put("METADATA-UPDATE",
+                             new MetadataFinder("Update", 2));
+        sMetadataFinders.put("METADATA-UPDATE_TYPE",
+                             new MetadataFinder("UpdateType", 3));
+        sMetadataFinders.put("METADATA-OBJECT",
+                             new MetadataFinder("MObject", 1));
+        sMetadataFinders.put("METADATA-SEARCH_HELP",
+                             new MetadataFinder("SearchHelp", 1));
+        sMetadataFinders.put("METADATA-EDIT_MASK",
+                             new MetadataFinder("EditMask", 1));
+        sMetadataFinders.put("METADATA-LOOKUP",
+                             new MetadataFinder("Lookup", 1));
+        sMetadataFinders.put("METADATA-LOOKUP_TYPE",
+                             new MetadataFinder("LookupType", 2));
+        sMetadataFinders.put("METADATA-VALIDATION_LOOKUP",
+                             new MetadataFinder("ValidationLookup", 1));
+        sMetadataFinders.put("METADATA-VALIDATION_LOOKUP_TYPE",
+                             new MetadataFinder("ValidatoinLookupType", 2));
+        sMetadataFinders.put("METADATA-VALIDATION_EXTERNAL",
+                             new MetadataFinder("ValidationExternal", 1));
+        sMetadataFinders.put("METADATA-VALIDATION_EXTERNAL_TYPE",
+                             new MetadataFinder("ValidationExternalType", 2));
+        sMetadataFinders.put("METADATA-VALIDATION_EXPRESSION",
+                             new MetadataFinder("ValidationExpression", 1));
+    }
 }
