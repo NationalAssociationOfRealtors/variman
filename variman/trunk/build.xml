@@ -16,6 +16,11 @@
     <include name="**/*.hbm.xml" />
   </fileset>
 
+  <!-- The following properties may be overriden by the user -->
+  <property name="compile.optimize" value="off"/>
+  <property name="compile.debug" value="on"/>
+  <property name="compile.deprecation" value="off"/>
+
   <path id="lib.path">
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${jdbc.jar}"/>
@@ -24,7 +29,7 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${servlet.jar}"/>
   </path>
-    
+
   <path id="embedded.path">
     <fileset dir="${tomcat.home}/server/lib" includes="*.jar"/>
   </path>
@@ -125,6 +130,8 @@
         <include name="tomcat-http11.jar"/>
         <include name="commons-logging.jar"/>
         <include name="commons-beanutils.jar"/>
+        <include name="servlets-common.jar"/>
+        <include name="servlets-default.jar"/>
       </fileset>
     </copy>
   </target>
@@ -149,8 +156,15 @@
       </classpath>
     </javac>
 
+    <copy todir="build/rets-server/webapp">
+      <fileset dir="project/webapp/content" includes="**/*"/>
+    </copy>
+
     <copy file="project/webapp/config/web.xml"
           todir="build/rets-server/webapp/WEB-INF"/>
+    <copy todir="build/rets-server/conf">
+      <fileset dir="project/embedded/config" includes="*"/>
+    </copy>
     <copy file="project/webapp/config/tomcat-users.xml"
           todir="build/rets-server/conf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
@@ -217,7 +231,7 @@
       <mapper type="glob" from="*.hbm.xml" to="${basedir}/build/hibernate/generated/*.java"/>
     </uptodate>
   </target>
-  
+
   <target name="build-generated-code"
           unless="generated.code.up.to.date"
           depends="mapping-files-check, compile-hibernate-enum-code, prepare">
@@ -271,11 +285,11 @@
       </classpath>
     </java>
   </target>
-  
 
-  <target name="clean">
+
+  <target name="clean" description="Cleans all ant targets">
     <delete dir="build" />
     <delete dir="dist" />
   </target>
-  
+
 </project>
