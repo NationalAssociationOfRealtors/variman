@@ -7,10 +7,6 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.realtors.rets.server.GetMetadataParameters;
 import org.realtors.rets.server.GetMetadataTransaction;
 import org.realtors.rets.server.ManagerMetadataFetcher;
@@ -19,9 +15,9 @@ import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.webapp.RetsServletRequest;
+import org.realtors.rets.server.webapp.RetsServletResponse;
 import org.realtors.rets.server.webapp.WebApp;
-
-import org.apache.log4j.Logger;
 
 public class GetMetadataHandler extends BaseServletHandler
 {
@@ -55,31 +51,14 @@ public class GetMetadataHandler extends BaseServletHandler
         return NAME;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
+    protected void serviceRets(RetsServletRequest request,
+                               RetsServletResponse response)
+        throws RetsReplyException, IOException
     {
-        super.doGet(request, response);
-        addRetsVersion(response);
-        response.setContentType("text/xml");
-        PrintWriter out = response.getWriter();
-
-        try
-        {
-            GetMetadataParameters parameters =
-                new GetMetadataParameters(request.getParameterMap());
-            mTransaction.execute(out, parameters, mMetadataFetcher);
-        }
-        catch(RetsReplyException e)
-        {
-            out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
-                        "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
-        }
-        catch(Exception e)
-        {
-            LOG.error("Caught", e);
-            out.println("<RETS ReplyCode=\"20513\" " +
-                        "ReplyText=\"Miscellaneous error\"/>\n");
-        }
+        PrintWriter out = response.getXmlWriter();
+        GetMetadataParameters parameters =
+            new GetMetadataParameters(request.getParameterMap());
+        mTransaction.execute(out, parameters, mMetadataFetcher);
     }
 
     /**
@@ -155,8 +134,6 @@ public class GetMetadataHandler extends BaseServletHandler
 
     private static Set sMetadataTypes = null;
     public static final String NAME = "/getMetadata";
-    private static final Logger LOG =
-        Logger.getLogger(GetMetadataHandler.class);
     private GetMetadataTransaction mTransaction;
     private MetadataFetcher mMetadataFetcher;
 }

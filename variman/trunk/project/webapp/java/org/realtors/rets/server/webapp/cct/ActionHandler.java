@@ -5,9 +5,9 @@ package org.realtors.rets.server.webapp.cct;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.webapp.RetsServletRequest;
+import org.realtors.rets.server.webapp.RetsServletResponse;
 
 public class ActionHandler extends BaseServletHandler
 {
@@ -18,11 +18,10 @@ public class ActionHandler extends BaseServletHandler
         return NAME;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
+    protected void serviceRets(RetsServletRequest request,
+                               RetsServletResponse response)
+        throws RetsReplyException, IOException
     {
-        super.doGet(request, response);
-        addRetsVersion(response);
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         out.println("Welcome to the RETS Compliance Tester from the Center " +

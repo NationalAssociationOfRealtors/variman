@@ -2,13 +2,14 @@
  */
 package org.realtors.rets.server.webapp.cct;
 
+import java.io.IOException;
 import java.io.PrintWriter;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.SearchParameters;
 import org.realtors.rets.server.SearchTransaction;
+import org.realtors.rets.server.webapp.RetsServletRequest;
+import org.realtors.rets.server.webapp.RetsServletResponse;
 import org.realtors.rets.server.webapp.WebApp;
 
 import antlr.ANTLRException;
@@ -21,17 +22,13 @@ public class SearchHandler extends BaseServletHandler
         return NAME;
     }
 
-    protected boolean isStandardXmlHandler()
-    {
-        return true;
-    }
-
-    protected void doStandardXmlTransaction(HttpServletRequest request,
-                                            PrintWriter out)
-        throws RetsReplyException
+    protected void serviceRets(RetsServletRequest request,
+                               RetsServletResponse response)
+        throws RetsReplyException, IOException
     {
         try
         {
+            PrintWriter out = response.getXmlWriter();
             SearchParameters parameters =
                 new SearchParameters(request.getParameterMap());
             LOG.debug(parameters);
