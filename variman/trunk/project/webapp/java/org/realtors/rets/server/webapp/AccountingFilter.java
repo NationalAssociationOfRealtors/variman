@@ -14,10 +14,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 
 import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
@@ -54,7 +58,8 @@ public class AccountingFilter implements Filter, Constants
         long responseDuration = System.currentTimeMillis() - startTime;
         statistics.addSessionTime(responseDuration);
         LOG.debug("Response duration: " + responseDuration);
-        LOG.debug("Accumalated time: "+ statistics.getSessionAccumalatedTime());
+        LOG.debug("Accumalated time: "+ statistics.getSessionTime());
+        saveStatistics(statistics);
         MDC.remove("uri");
     }
 
@@ -68,45 +73,78 @@ public class AccountingFilter implements Filter, Constants
             (AccountingStatistics) session.getAttribute(ACCOUNTING_KEY);
         if (statistics == null)
         {
-            statistics = createStatistics();
+            User user = (User)
+                session.getAttribute(AuthenticationFilter.AUTHORIZED_USER_KEY);
+            statistics = createStatistics(user);
             session.setAttribute(ACCOUNTING_KEY, statistics);
         }
         return statistics;
     }
 
-    private AccountingStatistics createStatistics()
+    private AccountingStatistics createStatistics(User user)
     {
         AccountingStatistics statistics = null;
-//        Session session = null;
-//        try
-//        {
-//            session = InitServlet.openSession();
-//            List results = session.find(
-//                "  FROM AccountingStatistics acc" +
-//                " WHERE acc.user.");
-//            if (results.size() == 1)
-//            {
-//                statistics = (AccountingStatistics) results.get(0);
-//            }
-//        }
-//        catch (HibernateException e)
-//        {
-//            LOG.warn("Exception", e);
-//        }
-//        finally
-//        {
-//            try
-//            {
-//                session.close();
-//            }
-//            catch (HibernateException e)
-//            {
-//                LOG.warn("Couldn not close session", e);
-//            }
-//        }
-        LOG.debug("Creating new accounting statistics");
-        statistics = new AccountingStatistics();
+        SessionHelper helper = new SessionHelper(InitServlet.getSessions(),
+                                                 LOG);
+        try
+        {
+            Session session = helper.beginTransaction();
+            List results = session.find(
+                "  FROM AccountingStatistics stats" +
+                " WHERE stats.user = ?",
+                user, Hibernate.entity(User.class));
+            if (results.size() == 1)
+            {
+                LOG.debug("Found existing statistics");
+                statistics = (AccountingStatistics) results.get(0);
+            }
+            else if (results.size() == 0)
+            {
+                LOG.debug("Creating new statistics");
+                statistics = new AccountingStatistics();
+                statistics.setUser(user);
+                session.save(statistics);
+            }
+            helper.commit();
+        }
+        catch (HibernateException e)
+        {
+            helper.loggedRollback();
+            statistics = null;
+        }
+        finally
+        {
+            helper.loggedClose();
+        }
+
+        if (statistics == null)
+        {
+            LOG.warn("Could not create persistent statistics, " +
+                     "creating transient object");
+            statistics = new AccountingStatistics();
+        }
         return statistics;
+    }
+
+    private void saveStatistics(AccountingStatistics statistics)
+    {
+        SessionHelper helper = new SessionHelper(InitServlet.getSessions(),
+                                                 LOG);
+        try
+        {
+            LOG.debug("Saving statistics");
+            Session session = helper.beginTransaction();
+            session.saveOrUpdate(statistics);
+            helper.commit();
+        }
+        catch (HibernateException e)
+        {
+            helper.loggedRollback();
+        }
+        finally
+        {
+            helper.loggedClose();
+        }
     }
 
     private static final Logger LOG =

@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server;
 
+import java.text.NumberFormat;
+
 /**
  * @hibernate.class table="rets_accounting"
  */
@@ -9,7 +11,11 @@ public class AccountingStatistics
 {
     public AccountingStatistics()
     {
+        mTotalTime = 0;
         startSession();
+        mFormatter = NumberFormat.getInstance();
+        mFormatter.setMaximumFractionDigits(2);
+        mFormatter.setMinimumFractionDigits(2);
     }
 
     /**
@@ -17,6 +23,7 @@ public class AccountingStatistics
      * @return
      *
      * @hibernate.id generator-class="native"
+     *   unsaved-value="null"
      */
     public Long getId()
     {
@@ -35,7 +42,7 @@ public class AccountingStatistics
     public void startSession()
     {
         mSessionStartTime = System.currentTimeMillis();
-        mSessionAccumalatedTime = 0;
+        mSessionTime = 0;
     }
 
     /**
@@ -45,18 +52,28 @@ public class AccountingStatistics
      */
     public void addSessionTime(long time)
     {
-        mSessionAccumalatedTime += time;
+        mSessionTime += time;
         mTotalTime += time;
     }
 
-    public long getSessionAccumalatedTime()
+    public long getSessionTime()
     {
-        return mSessionAccumalatedTime;
+        return mSessionTime;
     }
 
     public long getSessionDuration()
     {
         return System.currentTimeMillis() - mSessionStartTime;
+    }
+
+    public double getSessionBalance()
+    {
+        return mSessionTime * CHARGE_PER_SECOND;
+    }
+
+    public String getSessionBalanceFormatted()
+    {
+        return mFormatter.format(getSessionBalance());
     }
 
     /**
@@ -91,9 +108,21 @@ public class AccountingStatistics
         mUser = user;
     }
 
+    public String getTotalBalanceFormatted()
+    {
+        return mFormatter.format(getTotalBalance());
+    }
+
+    private double getTotalBalance()
+    {
+        return mTotalTime * CHARGE_PER_SECOND;
+    }
+
+    public static final double CHARGE_PER_SECOND = 0.007;
     private Long mId;
     private long mSessionStartTime;
-    private long mSessionAccumalatedTime;
+    private long mSessionTime;
     private long mTotalTime;
     private User mUser;
+    private NumberFormat mFormatter;
 }

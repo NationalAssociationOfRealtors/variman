@@ -7,7 +7,6 @@ import java.util.List;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Transaction;
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
 
@@ -30,15 +29,15 @@ public class Admin
         new SchemaExport(mCfg).create(true, true);
     }
 
-    public void doIt()
+    public void doIt() throws HibernateException
     {
+        SessionHelper helper = new SessionHelper(mSessions);
         try
         {
-            Session session = mSessions.openSession();
+            Session session = helper.beginTransaction();
             List users = session.find("from User u where u.username = 'Joe'");
             if (users.size() == 0)
             {
-                Transaction tx = session.beginTransaction();
                 User joe = new User();
                 joe.setFirstName("Joe T.");
                 joe.setLastName("Schmoe");
@@ -46,13 +45,11 @@ public class Admin
                 joe.changePassword("Schmoe");
                 Long id = (Long) session.save(joe);
                 System.out.println("New id: " + id);
-                tx.commit();
             }
 
             users = session.find("from User u where u.username = 'aphex'");
             if (users.size() == 0)
             {
-                Transaction tx = session.beginTransaction();
                 User aphex = new User();
                 aphex.setFirstName("Aphex");
                 aphex.setLastName("Twin");
@@ -60,10 +57,6 @@ public class Admin
                 aphex.changePassword("warp");
                 Long id = (Long) session.save(aphex);
                 System.out.println("New id: " + id);
-                tx.commit();
-//
-//                session.close();
-//                session = mSessions.openSession();
             }
 
             users = session.find("from User");
@@ -72,10 +65,15 @@ public class Admin
                 User user = (User) users.get(i);
                 System.out.println(user);
             }
+            helper.commit();
         }
         catch (HibernateException e)
         {
-            e.printStackTrace();
+            helper.loggedRollback();
+        }
+        finally
+        {
+            helper.loggedClose();
         }
     }
 
