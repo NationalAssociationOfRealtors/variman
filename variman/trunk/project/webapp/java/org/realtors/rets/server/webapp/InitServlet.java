@@ -29,6 +29,7 @@ import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
@@ -144,15 +145,11 @@ public class InitServlet extends RetsServlet
             WebApp.setGetObjectPattern(getObjectPattern);
             LOG.debug("GetObject pattern: " + getObjectPattern);
         }
-        catch (IntrospectionException e)
-        {
-            throw new ServletException(e);
-        }
-        catch (SAXException e)
-        {
-            throw new ServletException(e);
-        }
         catch (IOException e)
+        {
+            throw new ServletException(e);
+        }
+        catch (RetsServerException e)
         {
             throw new ServletException(e);
         }
