@@ -4,6 +4,8 @@ package org.realtors.rets.server.webapp;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -25,6 +27,10 @@ public class SessionFilter implements Filter
 {
     public void init(FilterConfig filterConfig) throws ServletException
     {
+        mLoginPaths = new HashSet();
+        mLoginPaths.add(Paths.LOGIN);
+        mLoginPaths.add(Paths.CCT_LOGIN);
+        mLoginPaths.add(Paths.CCT_ALT_LOGIN);
     }
 
     public void doFilter(ServletRequest servletRequest,
@@ -56,12 +62,13 @@ public class SessionFilter implements Filter
         // Someone tries to hit one of the other URLs without a valid session
         //
         // Anything else is fine, and we let it go.
-        if (contextUrl.equals(Paths.LOGIN) && isSessionValid)
+        boolean isLoginPath = isLoginPath(contextUrl);
+        if (isLoginPath && isSessionValid)
         {
             LOG.debug("Logging in while session is valid, sending response");
             sendAdditionalLoginNotPermitted(response);
         }
-        else if (!contextUrl.equals(Paths.LOGIN) && !isSessionValid)
+        else if (!isLoginPath && !isSessionValid)
         {
             LOG.debug("Invalid session, sending response");
             sendInvalidSession(response);
@@ -71,6 +78,11 @@ public class SessionFilter implements Filter
             LOG.debug("Session state is expected, continuing");
             filterChain.doFilter(servletRequest, servletResponse);
         }
+    }
+
+    private boolean isLoginPath(String path)
+    {
+        return mLoginPaths.contains(path);
     }
 
     private void sendAdditionalLoginNotPermitted(HttpServletResponse response)
@@ -120,4 +132,5 @@ public class SessionFilter implements Filter
     private static final Logger LOG =
         Logger.getLogger(SessionFilter.class);
     public static final String SESSION_VALID_KEY = "is_session_valid";
+    private Set mLoginPaths;
 }
