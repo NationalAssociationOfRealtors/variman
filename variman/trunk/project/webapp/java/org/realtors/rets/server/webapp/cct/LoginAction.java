@@ -63,7 +63,8 @@ public class LoginAction extends CctAction
         session.setAttribute(USERINFO_KEY, userInfo);
         session.setAttribute(USER_KEY, user);
 
-        TestRunner testRunner = new TestRunner(user.getUsername());
+        TestRunner testRunner =
+            TestRunnerFactory.getTestRunner(user.getUsername());
         session.setAttribute(TESTRUNNER_KEY, testRunner);
         
         return new RedirectingActionForward(form.getDone());        
