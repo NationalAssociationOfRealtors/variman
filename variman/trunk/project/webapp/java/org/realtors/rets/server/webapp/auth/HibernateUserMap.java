@@ -18,6 +18,7 @@ import net.sf.hibernate.Session;
 
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.webapp.WebApp;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,7 @@ import org.apache.log4j.Logger;
 public class HibernateUserMap implements UserMap
 {
     public User findUser(String username)
+        throws RetsServerException
     {
         if (username == null)
         {
@@ -55,7 +57,7 @@ public class HibernateUserMap implements UserMap
         }
         catch (HibernateException e)
         {
-            LOG.warn("Exception", e);
+            throw new RetsServerException(e);
         }
         finally
         {
