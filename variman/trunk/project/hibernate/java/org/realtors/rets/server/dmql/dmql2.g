@@ -34,13 +34,13 @@ boolean_element
     | query_element
     ;
 
-field_value [AST ast_name]
-    : {isLookupField(ast_name.getText())}? lookup_list[ast_name]
-    | {isStringField(ast_name.getText())}? string_list[ast_name]
-    | {isStringField(ast_name.getText())}? STRING_LITERAL^
+field_value [AST name]
+    : {isLookupField(name.getText())}? lookup_list[name]
+    | {isStringField(name.getText())}? string_list[name]
+    | {isStringField(name.getText())}? STRING_LITERAL^
     | number {#field_value = #([NUMBER], #field_value);}
     | period {#field_value = #([PERIOD], #field_value);}
-    | range_list[ast_name]
+    | range_list[name]
     ;
 
 between
