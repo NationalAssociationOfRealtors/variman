@@ -19,17 +19,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.SortedSet;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import antlr.ANTLRException;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.RetsUtils;
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.UserUtils;
 import org.realtors.rets.server.dmql.DmqlCompiler;
 import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.metadata.MClass;
@@ -57,7 +62,8 @@ public class SearchTransaction
         MClass aClass = (MClass) manager.findByPath(
             MClass.TABLE,
             mParameters.getResourceId() + ":" + mParameters.getClassName());
-        mMetadata = new ServerDmqlMetadata(aClass,
+        Collection tables = getTables(aClass);
+        mMetadata = new ServerDmqlMetadata(tables,
                                            mParameters.isStandardNames());
         mFromClause = aClass.getDbTable();
         generateWhereClause();
@@ -76,6 +82,24 @@ public class SearchTransaction
             {
                 printData(out);
             }
+        }
+    }
+
+    private Collection getTables(MClass aClass)
+        throws RetsServerException
+    {
+        try
+        {
+            User user = mParameters.getUser();
+            SortedSet groups = UserUtils.getGroups(user);
+            TableGroupFilter groupFilter = RetsServer.getTableGroupFilter();
+            String resourceName = aClass.getResource().getResourceID();
+            String className = aClass.getClassName();
+            return groupFilter.findTables(groups, resourceName, className);
+        }
+        catch (HibernateException e)
+        {
+            throw new RetsServerException(e);
         }
     }
 
