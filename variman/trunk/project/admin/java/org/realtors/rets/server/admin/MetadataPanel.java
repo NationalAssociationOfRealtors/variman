@@ -166,7 +166,10 @@ public class MetadataPanel extends wxPanel
 
         public Object visit(Table table)
         {
-            return "T: " + table.getLongName();
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("T: ").append(table.getLongName());
+            buffer.append(" (").append(table.getSystemName()).append(")");
+            return buffer.toString();
         }
 
         public Object visit(Update update)
@@ -176,7 +179,11 @@ public class MetadataPanel extends wxPanel
 
         public Object visit(UpdateType updateType)
         {
-            return "UT: " + updateType.getTable().getLongName();
+            StringBuffer buffer = new StringBuffer();
+            Table table = updateType.getTable();
+            buffer.append("UT: ").append(table.getLongName());
+            buffer.append(" (").append(table.getSystemName()).append(")");
+            return buffer.toString();
         }
 
         public Object visit(MObject object)
@@ -186,7 +193,10 @@ public class MetadataPanel extends wxPanel
 
         public Object visit(Lookup lookup)
         {
-            return "L: " + lookup.getVisibleName();
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("L: ").append(lookup.getVisibleName());
+            buffer.append(" (").append(lookup.getLookupName()).append(")");
+            return buffer.toString();
         }
 
         public Object visit(LookupType lookupType)
@@ -245,6 +255,5 @@ public class MetadataPanel extends wxPanel
     private static final int METADATA_TREE = wxNewId();
     private wxTreeCtrl mTree;
     private NodeTextVisitor mNodeTextVisitor;
-    private wxWindow mCurrentDetailPanel;
     private DetailPanel mDetailPanel;
 }
