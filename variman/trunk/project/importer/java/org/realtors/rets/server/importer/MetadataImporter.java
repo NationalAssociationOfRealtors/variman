@@ -1,5 +1,8 @@
 package org.realtors.rets.server.importer;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+
 import java.util.List;
 import java.util.Set;
 import java.util.Iterator;
@@ -30,6 +33,7 @@ import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.Table;
@@ -123,7 +127,7 @@ public class MetadataImporter
 
     private Set resource(RetsSession rSession, Session hSession,
                          MSystem hSystem)
-        throws HibernateException
+        throws HibernateException,ParseException
     {
         MetadataTable tResource =
             rSession.getMetadataTable(MetadataTable.RESOURCE);
@@ -138,6 +142,18 @@ public class MetadataImporter
 
             hResource.setSystemid(hSystem);
             // do more stuff
+            hResource.setResourceID(md.getAttribute("ResouceID"));
+            hResource.setStandardName(ResourceStandardNameEnum.fromString(
+                                          md.getAttribute("StandardName")));
+            hResource.setVisibleName(md.getAttribute("VisibleName"));
+            hResource.setDescription(md.getAttribute("Description"));
+            hResource.setKeyField(md.getAttribute("KeyField"));
+            hResource.setClassVersion(md.getAttribute("ClassVersion"));
+
+            DateFormat dateFormat = DateFormat.getDateInstance();
+            hResource.setClassDate(
+                dateFormat.parse(md.getAttribute("ClassDate")));
+                                     
 
             hSession.save(hResource);
             hResources.add(hResource);
@@ -159,5 +175,5 @@ public class MetadataImporter
     private SessionFactory mSessions;
     
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.3 2003/06/20 21:51:22 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.4 2003/06/23 21:52:02 kgarner Exp $";
 }
