@@ -9,10 +9,9 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
 
-import org.realtors.rets.server.User;
 import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.User;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
@@ -97,9 +96,6 @@ public class RetsServlet extends HttpServlet implements Constants
      */
     protected MetadataManager getMetadataManager()
     {
-        ServletContext context = getServletContext();
-        return (MetadataManager) context.getAttribute(MANAGER_KEY);
+        return WebApp.getMetadataManager();
     }
-
-    public static final String MANAGER_KEY = "METADATA_MANAGER";
 }
