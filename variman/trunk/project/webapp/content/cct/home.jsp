@@ -13,7 +13,7 @@
  <br>
  <table cellpadding="2" cellspacing="0" border="1" width="99%">
   <tr>
-   <th>Test description</th><th>Status</th><th>Messages</th><th>Start/Stop</th>
+   <th>Test description</th><th>Date run</th><th>Status</th><th>Messages</th><th>Start/Stop</th>
   </tr>
   <logic:iterate id="displayBean" name="cctDisplayBeans"
                  type="org.realtors.rets.server.webapp.cct.TestDisplayBean"
