@@ -16,6 +16,15 @@ import org.apache.log4j.Logger;
 
 public class GetMetadataTransaction
 {
+    public GetMetadataTransaction(PrintWriter out,
+                                  GetMetadataParameters parameters,
+                                  MetadataFetcher fetcher)
+    {
+        mOut = out;
+        mParameters = parameters;
+        mFetcher = fetcher;
+    }
+
     /**
      * Gets metadata and formats it. Only throws an exception if an error
      * occured while getting metadata. This guarantees the print writer is
@@ -29,21 +38,45 @@ public class GetMetadataTransaction
      */
     public void execute(PrintWriter out, GetMetadataParameters parameters,
                         MetadataFetcher fetcher)
-        throws RetsReplyException
+        throws RetsServerException
     {
-//        MetadataSegment segment = fetcher.fetchMetadata(parameters.getType(),
-//                                                        parameters.getIds());
-        List segments = fetcher.fetchAllMetadata(parameters.getType(),
-                                                 parameters.getIds());
+        // Fetch metadata before starting to print, so any exceptions can be
+        // handled and reported to the user better.
+        List segments = fetcher.fetchMetadata(parameters.getType(),
+                                              parameters.getIds());
 
-        RetsUtils.printXmlHeader(out);
-        RetsUtils.printOpenRetsSuccess(out);
-        if (parameters.getFormat() == MetadataFormatter.STANDARD)
+        printHeaders();
+        printMetadata(segments);
+        printFooters();
+    }
+
+    public void execute()
+        throws RetsServerException
+    {
+        // Fetch metadata before starting to print, so any exceptions can be
+        // handled and reported to the user better.
+        List segments = mFetcher.fetchMetadata(mParameters.getType(),
+                                               mParameters.getIds());
+
+        printHeaders();
+        printMetadata(segments);
+        printFooters();
+    }
+
+    private void printHeaders()
+    {
+        RetsUtils.printXmlHeader(mOut);
+        RetsUtils.printOpenRetsSuccess(mOut);
+        if (mParameters.getFormat() == MetadataFormatter.STANDARD)
         {
-            out.println("<METADATA>");
+            mOut.println("<METADATA>");
         }
+    }
+
+    private void printMetadata(List segments)
+    {
         FormatterLookup lookup =
-            new ClassFormatterLookup(parameters.getFormat());
+            new ClassFormatterLookup(mParameters.getFormat());
         StopWatch stopWatch = new StopWatch();
         LOG.debug("Formatting started");
         stopWatch.start();
@@ -52,19 +85,25 @@ public class GetMetadataTransaction
             MetadataSegment segment = (MetadataSegment) segments.get(i);
             FormatterContext context =
                 new FormatterContext(segment.getVersion(), segment.getDate(),
-                                     parameters.isRecursive(), out, lookup);
+                                     mParameters.isRecursive(), mOut, lookup);
             context.format(segment.getDataList(), segment.getLevels());
         }
-//        context.format(segment.getDataList(), segment.getLevels());
         stopWatch.stop();
         LOG.debug("Formatting done: " + stopWatch.getTime());
-        if (parameters.getFormat() == MetadataFormatter.STANDARD)
+    }
+
+    private void printFooters()
+    {
+        if (mParameters.getFormat() == MetadataFormatter.STANDARD)
         {
-            out.println("</METADATA>");
+            mOut.println("</METADATA>");
         }
-        RetsUtils.printCloseRets(out);
+        RetsUtils.printCloseRets(mOut);
     }
 
     private static final Logger LOG =
         Logger.getLogger(GetMetadataTransaction.class);
+    private PrintWriter mOut;
+    private GetMetadataParameters mParameters;
+    private MetadataFetcher mFetcher;
 }
