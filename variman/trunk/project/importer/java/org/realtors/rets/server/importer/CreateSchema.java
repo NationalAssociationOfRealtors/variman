@@ -77,6 +77,7 @@ public class CreateSchema extends RetsHelpers
             Iterator j = clazz.getTables().iterator();
             while (j.hasNext())
             {
+                // todo: Do right thing for LookupMultis
                 Table table = (Table) j.next();
                 sb.append("\t").append(table.getDbName()).append(" ");
                 switch (table.getDataType().toInt())
