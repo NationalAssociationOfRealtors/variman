@@ -93,6 +93,21 @@ public class TestRunner
             result.reset();
         }
     }
+    
+    public boolean passedAllTests()
+    {
+        Iterator i = mSuite.getTests();
+        while (i.hasNext())
+        {
+            CertificationTest test = (CertificationTest) i.next();
+            ValidationResult result = mResults.getResultByName(test.getName());
+            if (result.getStatus() != StatusEnum.PASSED)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      *
