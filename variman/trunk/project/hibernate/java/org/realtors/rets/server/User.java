@@ -57,7 +57,7 @@ public class User
      *
      * @return a String
      *
-     * @hibernate.property len="80"
+     * @hibernate.property length="80"
      *   not-null="true"
      */
     public String getLastName()
