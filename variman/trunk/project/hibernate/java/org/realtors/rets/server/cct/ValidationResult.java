@@ -28,7 +28,7 @@ public class ValidationResult
     {
         return StringUtils.join(mMessages.iterator(), ",");
     }
-    
+
     public List getMessages()
     {
         return mMessages;
@@ -52,7 +52,7 @@ public class ValidationResult
     public void reset()
     {
         mMessages = new ArrayList();
-        mStatus = StatusEnum.PASSED;
+        mStatus = StatusEnum.NOT_RUN;
     }
 
     public void setMessage(String message)
