@@ -6,16 +6,13 @@ package org.realtors.rets.server.importer;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
+import java.sql.Types;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
@@ -29,6 +26,7 @@ import org.apache.log4j.Logger;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
+import net.sf.hibernate.dialect.Dialect;
 
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
@@ -51,12 +49,14 @@ public class CreateSchema extends RetsHelpers
     {
         super();
         mLs = System.getProperty("line.separator");
-        mTypeMappings = new HashMap();
-        loadTypeMapping();
     }
 
     public String createTables()
+        throws InstantiationException, IllegalAccessException,
+               ClassNotFoundException, HibernateException
     {
+        Dialect dialect = (Dialect)
+            getClass().getClassLoader().loadClass(mDialectClass).newInstance();
         Iterator i = mClasses.values().iterator();
         StringBuffer sb = new StringBuffer();
         while (i.hasNext())
@@ -64,16 +64,12 @@ public class CreateSchema extends RetsHelpers
             MClass clazz = (MClass) i.next();
             Resource resource = clazz.getResource();
 
-//            StringBuffer tmp = new StringBuffer("rets_");
-//            tmp.append(resource.getResourceID()).append("_");
-//            tmp.append(clazz.getClassName());
-//            String sqlTableName = tmp.toString();
-
             String sqlTableName = clazz.getDbTable();
 
             sb.append("CREATE TABLE ").append(sqlTableName);
             sb.append(" (").append(mLs);
-            sb.append("\tid INT8,").append(mLs);
+            sb.append("\tid ").append(dialect.getTypeName(Types.BIGINT));
+            sb.append(" NOT NULL,").append(mLs);
 
             Set needsIndex = new HashSet();
             Iterator j = clazz.getTables().iterator();
@@ -85,50 +81,59 @@ public class CreateSchema extends RetsHelpers
                 switch (table.getDataType().toInt())
                 {
                     case 0 :
-                        sb.append(mTypeMappings.get("boolean"));
+                        sb.append(dialect.getTypeName(Types.BOOLEAN));
                         break;
                     case 1 :
-                        sb.append(mTypeMappings.get("character")).append("(");
-                        sb.append(table.getMaximumLength()).append(")");
+                        sb.append(
+                            dialect.getTypeName(Types.VARCHAR,
+                                                table.getMaximumLength()));
                         break;
                     case 2 :
-                        sb.append(mTypeMappings.get("date"));
+                        sb.append(dialect.getTypeName(Types.DATE));
                         break;
                     case 3 :
-                        sb.append(mTypeMappings.get("datetime"));
+                        sb.append(dialect.getTypeName(Types.TIMESTAMP));
                         break;
                     case 4 :
-                        sb.append(mTypeMappings.get("time"));
+                        sb.append(dialect.getTypeName(Types.TIME));
                         break;
                     case 5 :
-                        sb.append(mTypeMappings.get("tiny"));
+                        sb.append(dialect.getTypeName(Types.TINYINT));
                         break;
                     case 6 :
-                        sb.append(mTypeMappings.get("small"));
+                        sb.append(dialect.getTypeName(Types.SMALLINT));
                         break;
                     case 7 :
-                        sb.append(mTypeMappings.get("int"));
+                        sb.append(dialect.getTypeName(Types.INTEGER));
                         break;
                     case 8 :
-                        sb.append(mTypeMappings.get("long"));
+                        sb.append(dialect.getTypeName(Types.BIGINT));
                         break;
                     case 9 :
-                        sb.append(mTypeMappings.get("decimal"));
+                        /* Not sure if this should be DECIMAL or NUMERIC */
+                        //sb.append(dialect.getTypeName(Types.DECIMAL));
+                        sb.append(dialect.getTypeName(Types.NUMERIC));
                         break;
                 }
-                if (table.isUnique())
+                
+                if (table.isUnique() && dialect.supportsUnique())
                 {
                     sb.append(" unique");
                 }
-                sb.append(",").append(mLs);
+                if (i.hasNext())
+                {
+                    sb.append(",").append(mLs);
+                }
 
                 if (table.getIndex() > 0)
                 {
                     needsIndex.add(table);
                 }
             }
-            sb.append("\tprimary key(id)").append(mLs);
             sb.append(");").append(mLs);
+            sb.append("alter table ").append(sqlTableName);
+            sb.append(dialect.getAddPrimaryKeyConstraintString("pk_id"));
+            sb.append("(id);").append(mLs);
 
             j = needsIndex.iterator();
             while (j.hasNext())
@@ -144,37 +149,13 @@ public class CreateSchema extends RetsHelpers
         return sb.toString();
     }
 
-    private void loadTypeMapping()
+    /**
+     * Sets the name of the dialect class to use.
+     * @param string
+     */
+    public void setDialectClass(String string)
     {
-        Properties props = new Properties();
-        try
-        {
-            InputStream is =
-                getClass().getResourceAsStream("retstypemappings.properties");
-            if (is != null)
-            {
-                props.load(is);
-            }
-        }
-        catch (IOException e)
-        {
-            LOG.warn("Error loading retstypemappings.properties", e);
-        }
-
-        mTypeMappings.put("boolean",
-                          props.getProperty("rets.db.boolean", "BOOL"));
-        mTypeMappings.put("character",
-                          props.getProperty("rets.db.character", "VARCHAR"));
-        mTypeMappings.put("date", props.getProperty("rets.db.date", "DATE"));
-        mTypeMappings.put("datetime",
-                          props.getProperty("rets.db.datetime", "TIMESTAMP"));
-        mTypeMappings.put("time", props.getProperty("rets.db.time", "TIME"));
-        mTypeMappings.put("tiny", props.getProperty("rets.db.tiny", "INT2"));
-        mTypeMappings.put("small", props.getProperty("rets.db.small", "INT2"));
-        mTypeMappings.put("int", props.getProperty("rets.db.int", "INT4"));
-        mTypeMappings.put("long", props.getProperty("rets.db.long", "INT8"));
-        mTypeMappings.put("decimal",
-                          props.getProperty("rets.db.decimal", "NUMERIC"));
+        mDialectClass = string;
     }
 
     /**
@@ -225,15 +206,18 @@ public class CreateSchema extends RetsHelpers
     private static Options getOptions()
     {
         Options ops = new Options();
-        ops.addOption("f", "file", true, "output file");
         ops.addOption("d", "database", false,
                       "just create right into the database");
+        ops.addOption("D", "dialect", true, "The dialect class to use");
+        ops.addOption("f", "file", true, "output file");
         ops.addOption("v", "verbose", false, "spew to the screen anyway");
         return ops;
     }
 
     public static void main(String[] args)
-        throws ParseException, IOException, HibernateException, SQLException
+        throws ParseException, IOException, HibernateException, SQLException,
+               InstantiationException, IllegalAccessException,
+               ClassNotFoundException
     {
         Parser parser = new GnuParser();
         Options opts = getOptions();
@@ -248,6 +232,9 @@ public class CreateSchema extends RetsHelpers
             System.exit(1);
         }
         CreateSchema cs = new CreateSchema();
+        
+        cs.setDialectClass(cmdl.getOptionValue('D',
+            "net.sf.hibernate.dialect.PostgreSQLDialect"));
 
         cs.loadMetadata();
         String schema = cs.createTables();
@@ -289,9 +276,8 @@ public class CreateSchema extends RetsHelpers
         pw.close();
     }
 
+    private String mDialectClass;
     /** The Line Seperator */
     private String mLs;
-    private Map mTypeMappings;
     private static Logger LOG = Logger.getLogger(CreateSchema.class);
-
 }
