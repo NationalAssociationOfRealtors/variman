@@ -14,7 +14,9 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
@@ -24,8 +26,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,6 +36,50 @@ import java.util.List;
  */
 public class IOUtils
 {
+    /**
+     * Reads the input stream, blocking until the byte buffer is full
+     * or the end of the stream is reached.ch
+     *
+     * @param input input stream to read from
+     * @param buffer buffer to fill
+     * @return the number of bytes read into the buffer
+     * @throws IOException
+     */
+    public static int fillByteBuffer(InputStream input, byte[] buffer)
+        throws IOException
+    {
+        return fillByteBuffer(input, buffer, buffer.length);
+    }
+
+    /**
+     * Reads the input stream, blocking until the specified number of bytes is
+     * read or the end of the stream is reached.
+     *
+     * @param input input stream to read from
+     * @param buffer buffer to fill
+     * @param length the number of bytes to read into the buffer
+     * @return the number of bytes read into the buffer
+     * @throws IOException
+     */
+    public static int fillByteBuffer(InputStream input, byte[] buffer,
+                                     int length)
+        throws IOException
+    {
+        int offset = 0;
+        int bytesLeft = length;
+        while (bytesLeft > 0)
+        {
+            int bytesRead = input.read(buffer, offset, bytesLeft);
+            if (bytesRead == -1)
+            {
+                break;
+            }
+            offset += bytesRead;
+            bytesLeft -= bytesRead;
+        }
+        return offset;
+    }
+
     /**
      * Reads the contents of an input stream into an array of bytes.
      *
