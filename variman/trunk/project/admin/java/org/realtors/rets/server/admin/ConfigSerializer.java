@@ -1,0 +1,46 @@
+/*
+ * Created on Aug 6, 2003
+ *
+ */
+package org.realtors.rets.server.admin;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+
+/**
+ * @author kgarner
+ */
+public class ConfigSerializer
+{
+    public static void toXML(ConfigOptions opts, Writer writer)
+        throws IOException
+    {
+        Element rootElement = new Element("Retzilla-Config");
+        Document doc = new Document(rootElement,null);
+        
+        List list = new ArrayList();
+
+        Element element = new Element("hostname");
+        element.setText(opts.getHostname());
+        list.add(element);
+        
+        element = new Element("port");
+        element.setText(Integer.toString(opts.getPort()));
+        list.add(element);
+        
+        element = new Element("timeout");
+        element.setText(Integer.toString(opts.getSessionTimeout()));
+        list.add(element);
+
+        rootElement.setContent(list);
+        
+        XMLOutputter out = new XMLOutputter("  ", true, "ISO-8859-1");
+        out.output(doc, writer);
+    }
+}
