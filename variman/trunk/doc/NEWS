@@ -1,3 +1,7 @@
+Version 2.1.5 - 1 February 2005
+
+  * Fixed SQL generation for date fields.
+
 Version 2.1.4 - 21 January 2005
 
   * COMPACT-DECODED decodes lookups to short value.
