@@ -11,7 +11,7 @@
  Welcome, <bean:write name="cctUser" property="firstName" />
  <bean:write name="cctUser" property="lastName" />
  <br>
- <table cellpadding="2" cellspacing="0" border="0" width="99%">
+ <table cellpadding="2" cellspacing="0" border="1" width="99%">
   <tr>
    <td>&nbsp;</td>
    <th>Test name</th><th>Status</th><th>Show Log</th><th>Start/Stop</th>
