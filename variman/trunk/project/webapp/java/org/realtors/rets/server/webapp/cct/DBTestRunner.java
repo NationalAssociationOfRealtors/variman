@@ -19,6 +19,7 @@ import org.realtors.rets.server.cct.DBValidationResult;
 import org.realtors.rets.server.cct.DBValidationResults;
 import org.realtors.rets.server.cct.ValidationResults;
 import org.realtors.rets.server.webapp.InitServlet;
+import org.realtors.rets.server.webapp.WebApp;
 
 /**
  * @author kgarner
@@ -41,12 +42,10 @@ public class DBTestRunner extends TestRunner
     private static void restoreResults(String context,
                                        ValidationResults results)
     {
-        SessionHelper sessionHelper = InitServlet.createHelper();
-        Session session = null;
-        
+        SessionHelper sessionHelper = WebApp.createHelper();
         try
         {
-            session = sessionHelper.beginSession();
+            Session session = sessionHelper.beginSession();
             Iterator i = session.iterate(
                 "SELECT results" +
                 "  FROM DBValidationResult results" +
@@ -86,11 +85,10 @@ public class DBTestRunner extends TestRunner
     
     private static void saveResult(DBValidationResult result)
     {
-        SessionHelper sessionHelper = InitServlet.createHelper();
-        Session session = null;
+        SessionHelper sessionHelper = WebApp.createHelper();
         try
         {
-            session = sessionHelper.beginTransaction();
+            Session session = sessionHelper.beginTransaction();
             session.saveOrUpdate(result);
             sessionHelper.commit();
         }
@@ -107,11 +105,10 @@ public class DBTestRunner extends TestRunner
     
     private static void saveResults(List results)
     {
-        SessionHelper sessionHelper = InitServlet.createHelper();
-        Session session = null;
+        SessionHelper sessionHelper = WebApp.createHelper();
         try
         {
-            session = sessionHelper.beginTransaction();
+            Session session = sessionHelper.beginTransaction();
             Iterator i = results.iterator();
             while (i.hasNext())
             {
