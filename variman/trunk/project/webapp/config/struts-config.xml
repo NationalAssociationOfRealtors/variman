@@ -7,7 +7,7 @@
 
   <form-beans>
     <form-bean name="registrationForm"
-               type="path.to.reg.form"/>
+               type="org.realtors.rets.server.webapp.cct.RegistrationForm"/>
   </form-beans>
 
   <global-excpetions>
@@ -32,5 +32,11 @@
   </action-mappings>
 
   <message-resources parameter="ApplicationResources"/>
+
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+    <set-property property="pathnames"
+                  value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
+  </plug-in>
+
 
 </struts-config>

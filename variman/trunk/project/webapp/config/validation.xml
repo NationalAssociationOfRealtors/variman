@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE form-validation PUBLIC
+  "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.0/
+/EN"
+  "http://jakarta.apache.org/commons/dtds/validator_1_0.dtd">
+
+<form-validation>
+  <formset>
+    <form name="registrationForm">
+      <field property="username" depends="required,minlength">
+        <arg0 key="registration.field.username"/>
+        <arg1 name="minlength" key="{$var:minlength}" resource="false"/>
+        <var>
+          <var-name>minlength</var-name>
+          <var-value>3</var-value>
+        </var>
+      </field>
+      <field property="password" depends="required,minlength,identical">
+        <arg0 key="registration.field.password"/>
+        <arg1 name="minlength" key="{$var:minlength}" resource="false"/>
+        <var>
+          <var-name>secondProperty</var-name>
+          <var-value>verifyPassword</var-value>
+        </var>
+        <var>
+          <var-name>minlength</var-name>
+          <var-value>5</var-value>
+        </var>
+      </field>
+      <field property="productname" depends="required">
+        <arg0 key="registration.field.productname"/>
+      </field>
+      <field property="productversion" depends="required">
+        <arg0 key="registration.field.productversion"/>
+      </field>
+      <field property="company" depends="required">
+        <arg0 key="registration.field.company"/>
+      </field>
+      <field property="email" depends="required,email">
+        <arg0 key="registration.field.e-mail"/>
+      </field>
+      <field property="agentid" depends="required">
+        <arg0 key="registration.field.agentid"/>
+      </field>
+    </form>
+  </formset>
+</form-validation>

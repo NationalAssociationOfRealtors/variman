@@ -6,17 +6,13 @@ package org.realtors.rets.server.webapp.cct;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.ValidatorActionForm;
 
 /**
  * @author kgarner
  */
-public class RegistrationForm extends ActionForm
+public class RegistrationForm extends ValidatorActionForm
 {
     /**
      * 
@@ -213,60 +209,6 @@ public class RegistrationForm extends ActionForm
     public void setVerifyPassword(String string)
     {
         mVerifyPassword = string;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.struts.action.ActionForm#validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
-     */
-    public ActionErrors validate(ActionMapping mapping,
-                                 HttpServletRequest request)
-    {
-        ActionErrors errors = new ActionErrors();
-        if (StringUtils.isEmpty(mUsername))
-        {
-            errors.add("username",
-                       new ActionError("registration.username.empty"));
-        }
-        if (StringUtils.isEmpty(mPassword))
-        {
-            errors.add("password",
-                       new ActionError("registration.password.empty"));
-        }
-        else
-        {
-            if (!mPassword.equals(mVerifyPassword))
-            {
-                errors.add("password",
-                new ActionError("registration.password.unequal"));
-            }
-        }
-        if (StringUtils.isEmpty(mProductName))
-        {
-            errors.add("productname",
-                       new ActionError("registration.productname.empty"));
-        }
-        if (StringUtils.isEmpty(mProductVersion))
-        {
-            errors.add("productversion",
-                       new ActionError("registration.productversion.empty"));
-        }
-        if (StringUtils.isEmpty(mCompany))
-        {
-            errors.add("company",
-                       new ActionError("registration.company.empty"));
-        }
-        if(StringUtils.isEmpty("email"))
-        {
-            errors.add("email",
-                       new ActionError("registration.email.empty"));
-        }
-        if (StringUtils.isEmpty("agentid"))
-        {
-            errors.add("agentid",
-                       new ActionError("registration.agentid.empty"));
-        }
-        
-        return errors;
     }
     
     private String mAgentID;
