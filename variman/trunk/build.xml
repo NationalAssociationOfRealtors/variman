@@ -140,9 +140,9 @@
 
   <target name="build-hibernate" depends="prepare">
     <property name="src.antlr.dir"
-              value="project/hibernate/java/org/realtors/rets/server/dmql"/>
+              value="${basedir}/project/hibernate/java/org/realtors/rets/server/dmql"/>
     <property name="build.antlr.dir"
-              value="build/hibernate/generated/org/realtors/rets/server/dmql"/>
+              value="${basedir}/build/hibernate/generated/org/realtors/rets/server/dmql"/>
     <antlr dir="${src.antlr.dir}"
            target="${src.antlr.dir}/dmql.g"
            outputdirectory="${build.antlr.dir}"
@@ -153,7 +153,7 @@
     </antlr>
     <antlr dir="${src.antlr.dir}"
            target="${src.antlr.dir}/dmql2.g"
-           glib="dmql.g"
+           glib="${src.antlr.dir}/dmql.g"
            outputdirectory="${build.antlr.dir}"
            traceParser="yes">
       <classpath>
@@ -162,7 +162,7 @@
     </antlr>
     <antlr dir="${src.antlr.dir}"
            target="${src.antlr.dir}/dmql-tree.g"
-           glib="dmql.g"
+           glib="${src.antlr.dir}/dmql.g"
            outputdirectory="${build.antlr.dir}"
            traceParser="yes">
       <classpath>
