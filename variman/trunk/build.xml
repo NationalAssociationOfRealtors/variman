@@ -300,6 +300,9 @@
         <include name="naming-common.jar"/>
         <include name="naming-resources.jar"/>
         <include name="commons-collections.jar"/>
+        <include name="jasper-compiler.jar"/>
+        <include name="jasper-runtime.jar"/>
+        <include name="ant.jar"/>
       </fileset>
     </copy>
     <copy todir="build/rets-server/lib">
@@ -315,6 +318,10 @@
         <include name="servlets-default.jar"/>
       </fileset>
     </copy>
+    <!-- We must fix this eventually -->
+    <copy todir="build/rets-server/lib"
+          file="${java.home}/../lib/tools.jar"/>
+
     <copy tofile="build/rets-server/lib/log4j.jar" file="${log4j.jar}"/>
   </target>
 
@@ -403,6 +410,8 @@
           file="project/hibernate/config/cache.ccf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${commons-lang.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${log4j.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib">

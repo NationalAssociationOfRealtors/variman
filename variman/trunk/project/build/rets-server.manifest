@@ -15,3 +15,7 @@ Class-Path: bootstrap.jar
   servlets-default.jar
   log4j.jar
   hibernate2.jar
+  jasper-compiler.jar
+  jasper-runtime.jar
+  ant.jar
+  tools.jar
