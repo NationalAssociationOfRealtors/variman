@@ -19,6 +19,8 @@
   <property name="compile.optimize" value="off"/>
   <property name="compile.debug" value="on"/>
   <property name="compile.deprecation" value="off"/>
+  <property name="hibernate.schema.text.only" value="yes"/>
+  <property name="hibernate.schema.quiet" value="yes"/>
 
   <path id="lib.path">
     <pathelement path="${hibernate.jar}"/>
@@ -373,7 +375,8 @@
     </taskdef>
 
     <schemaexport properties="project/hibernate/config/hibernate.properties"
-                  quiet="no" text="${hibernate.schema.text.only}"
+                  quiet="${hibernate.schema.quiet}"
+                  text="${hibernate.schema.text.only}"
                   drop="no" delimiter=";"
                   output="build/hibernate/schema/schema-export.sql">
       <fileset dir="project/hibernate/mappings">
