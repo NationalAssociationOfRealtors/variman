@@ -133,6 +133,4 @@ public class AdminUtils
 
     private static final Logger LOG =
         Logger.getLogger(AdminUtils.class);
-    private static String sVersion;
-    private static String sBuildDate;
 }
