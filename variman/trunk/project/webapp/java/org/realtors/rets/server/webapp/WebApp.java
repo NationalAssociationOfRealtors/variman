@@ -10,6 +10,9 @@
  */
 package org.realtors.rets.server.webapp;
 
+import java.util.Properties;
+import java.io.IOException;
+
 import javax.servlet.ServletContext;
 
 import org.realtors.rets.server.RetsServer;
@@ -110,6 +113,27 @@ public class WebApp
         return sReaper;
     }
 
+    public static void initProperties() throws IOException
+    {
+        ClassLoader classLoader =
+            Thread.currentThread().getContextClassLoader();
+        Properties rexProperties = new Properties();
+        rexProperties.load(
+            classLoader.getResourceAsStream("rex-webapp.properties"));
+        sVersion = rexProperties.getProperty("version");
+        sBuildDate = rexProperties.getProperty("build-date");
+    }
+
+    public static String getVersion()
+    {
+        return sVersion;
+    }
+
+    public static String getBuildDate()
+    {
+        return sBuildDate;
+    }
+
     private static ServletContext sServletContext;
     private static MetadataManager sMetadataManager;
     private static String sLog4jFile;
@@ -117,4 +141,6 @@ public class WebApp
     private static String sGetObjectPattern;
     private static NonceTable sNonceTable;
     private static NonceReaper sReaper;
+    private static String sVersion;
+    private static String sBuildDate;
 }

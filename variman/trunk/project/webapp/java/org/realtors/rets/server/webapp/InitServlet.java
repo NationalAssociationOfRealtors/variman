@@ -13,6 +13,9 @@ package org.realtors.rets.server.webapp;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -20,15 +23,18 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Session;
 import net.sf.hibernate.cfg.Configuration;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MClass;
@@ -52,6 +58,7 @@ public class InitServlet extends RetsServlet
         try
         {
             LOG.info("Running init servlet");
+            initWebAppProperties();
             WebApp.setServletContext(getServletContext());
             PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
                                             PasswordMethod.RETS_REALM);
@@ -81,6 +88,27 @@ public class InitServlet extends RetsServlet
         {
             LOG.fatal("Caught", e);
             throw e;
+        }
+    }
+
+    private void initWebAppProperties() throws ServletException
+    {
+        try
+        {
+            WebApp.initProperties();
+            LOG.info("Rex version " + WebApp.getVersion());
+            LOG.info("Build date " + WebApp.getBuildDate());
+            LOG.info("Java version " + SystemUtils.JAVA_VERSION);
+            LOG.info(SystemUtils.JAVA_RUNTIME_NAME + ", version " +
+                     SystemUtils.JAVA_RUNTIME_VERSION);
+            LOG.info(SystemUtils.JAVA_VM_NAME + ", version " +
+                     SystemUtils.JAVA_VM_VERSION);
+            LOG.info(SystemUtils.OS_NAME + ", version " +
+                     SystemUtils.OS_VERSION);
+        }
+        catch (IOException e)
+        {
+            throw new ServletException(e);
         }
     }
 
@@ -150,7 +178,6 @@ public class InitServlet extends RetsServlet
                                         "WEB-INF/rex/rets-config.xml");
             configFile = resolveFromConextRoot(configFile);
             mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
-            LOG.debug(mRetsConfig);
 
             ServletContext context = getServletContext();
             String getObjectRoot =
@@ -180,13 +207,43 @@ public class InitServlet extends RetsServlet
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
             cfg.addJar("rex-hbm-xml.jar");
+            LOG.info("DB URL: " + mRetsConfig.getDatabase().getUrl());
             cfg.setProperties(mRetsConfig.createHibernateProperties());
             RetsServer.setSessions(cfg.buildSessionFactory());
+            logDatabaseInfo();
         }
         catch (HibernateException e)
         {
             throw new ServletException("Could not initialize hibernate", e);
         }
+    }
+
+    private void logDatabaseInfo() throws ServletException
+    {
+        SessionHelper helper = RetsServer.createHelper();
+        try
+        {
+            Session session = helper.beginSession();
+            Connection connection = session.connection();
+            DatabaseMetaData metaData = connection.getMetaData();
+            LOG.info("JDBC Driver info: " + metaData.getDriverName() +
+                     " version " + metaData.getDriverVersion());
+            LOG.info("JDBC DB info: " + metaData.getDatabaseProductName() +
+                     " version " + metaData.getDatabaseProductVersion());
+        }
+        catch (SQLException e)
+        {
+            throw new ServletException("Caught", e);
+        }
+        catch (HibernateException e)
+        {
+            throw new ServletException("Caught", e);
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+
     }
 
     private void initMetadata() throws ServletException

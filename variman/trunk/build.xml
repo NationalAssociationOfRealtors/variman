@@ -497,6 +497,10 @@
       <fileset dir="project/webapp/test/java" includes="**/*"
                excludes="**/*.java"/>
     </copy>
+    <propertyfile file="build/rets-server/webapp/WEB-INF/classes/rex-webapp.properties">
+      <entry key="version" value="${project.version}" />
+      <entry key="build-date" type="date" value="now" />
+    </propertyfile>
 
     <antcall target="build-webapp-webdoclet"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
