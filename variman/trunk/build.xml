@@ -53,6 +53,7 @@
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${log4j.jar}"/>
+    <pathelement path="${jdom.jar}"/>
   </path>
 
   <path id="datagen.path">
