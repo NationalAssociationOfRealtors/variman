@@ -29,6 +29,11 @@ public class BaseHandlerTest extends LocalTestCase
         servlet.setHandler(mTest);
     }
 
+    private WebResponse getResponse() throws SAXException, IOException
+    {
+        return mClient.getResponse(TEST_URL);
+    }
+
     public void testValidateOneInvokeCount() throws IOException, SAXException
     {
         mTest.reset();
@@ -197,7 +202,7 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("", result.getMessage());
     }
 
-    public void testNotRetsVersion() throws IOException, SAXException
+    public void testRetsVersion() throws IOException, SAXException
     {
         mClient.setHeaderField("RETS-Version", null);
         WebResponse response = mClient.getResponse(TEST_URL);
@@ -212,18 +217,65 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("RETS/1.5", response.getHeaderField("RETS-Version"));
     }
 
-    public static final String TEST_URL = "http://localhost/test";
-
-    static class TestHandler extends BaseServletHandler
+    public void testResponseXmlWriter() throws SAXException, IOException
     {
-        public static final String NAME = "test";
-
-        public String getName()
-        {
-            return NAME;
-        }
+        mTest.setResponseMode(TestHandler.XML_WRITER);
+        WebResponse response = getResponse();
+        assertEquals("text/xml", response.getContentType());
     }
 
+    public void testResponseXmlWriterException()
+        throws SAXException, IOException
+    {
+        mTest.setResponseMode(TestHandler.XML_WRITER);
+        mTest.setExceptionMode(TestHandler.RETS_EXCEPTION);
+        WebResponse response = getResponse();
+        assertEquals("text/xml", response.getContentType());
+        assertEquals("<RETS ReplyCode=\"10\" ReplyText=\"Error\"/>\n",
+                     response.getText());
+    }
+
+    public void testResponseXmlWriterRTException()
+        throws SAXException, IOException
+    {
+        mTest.setResponseMode(TestHandler.XML_WRITER);
+        mTest.setExceptionMode(TestHandler.RUNTIME_EXCEPTION);
+        WebResponse response = getResponse();
+        assertEquals("text/xml", response.getContentType());
+        assertEquals("<RETS ReplyCode=\"20513\" " +
+                     "ReplyText=\"Miscellaneous error\"/>\n",
+                     response.getText());
+    }
+
+    public void testResponseWriter() throws SAXException, IOException
+    {
+        mTest.setResponseMode(TestHandler.WRITER);
+        WebResponse response = getResponse();
+        assertEquals("text/xml", response.getContentType());
+    }
+
+    public void testResponseWriterException() throws SAXException, IOException
+    {
+        mTest.setResponseMode(TestHandler.WRITER);
+        mTest.setExceptionMode(TestHandler.RETS_EXCEPTION);
+        WebResponse response = getResponse();
+        assertEquals("text/xml", response.getContentType());
+        assertEquals("<RETS ReplyCode=\"10\" ReplyText=\"Error\"/>\n",
+                     response.getText());
+    }
+
+    public void testResponseWriterRTException() throws SAXException, IOException
+    {
+        mTest.setResponseMode(TestHandler.WRITER);
+        mTest.setExceptionMode(TestHandler.RUNTIME_EXCEPTION);
+        WebResponse response = getResponse();
+        assertEquals("text/xml", response.getContentType());
+        assertEquals("<RETS ReplyCode=\"20513\" " +
+                     "ReplyText=\"Miscellaneous error\"/>\n",
+                     response.getText());
+    }
+
+    public static final String TEST_URL = "http://localhost/test";
     private ServletUnitClient mClient;
     private TestHandler mTest;
 }
