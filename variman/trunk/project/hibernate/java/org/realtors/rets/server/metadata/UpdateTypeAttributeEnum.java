@@ -32,8 +32,14 @@ public class UpdateTypeAttributeEnum implements PersistentEnum
             case 4: return INTERACTIVEVALIDATE;
             case 5: return CLEARONCLONING;
             default:
-                throw new RuntimeException("Unkonwn Update Type Attribute");
+                throw new IllegalArgumentException(
+                    "Unkonwn Update Type Attribute: " + code);
         }
+    }
+
+    public String toString()
+    {
+        return "" + mCode;
     }
 
     private final int mCode;
