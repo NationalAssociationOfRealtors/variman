@@ -127,13 +127,13 @@
       listens on.  6103 is the standard, well-known port number for
       RETS.  The Metadata Directory points to the root directory of
       the metadata hierarchy.  Configuring metadata is explained in
-      ###.  The Image Root and Image Pattern parameters are used to
-      allow Rex to serve up images for the GetObject transaction.
-      The Image Root is a directory where the images are located.
-      The Image Pattern is a percent substitution pattern that
-      describes the format of the actual file names.  The possible
-      patterns and their substitutions are listed in <xref
-                                                        linkend="tab-image-pattern"/>.
+      <xref linkend="deploy-metadata"/>.  The Image Root and Image
+      Pattern parameters are used to allow Rex to serve up images for
+      the GetObject transaction.  The Image Root is a directory where
+      the images are located.  The Image Pattern is a percent
+      substitution pattern that describes the format of the actual
+      file names.  The possible patterns and their substitutions are
+      listed in <xref linkend="tab-image-pattern"/>.
     </para>
 
     <table frame="all" id="tab-image-pattern">
@@ -255,7 +255,9 @@
       rules includes on the fields listed.  Exclude rules includes all
       fields except the ones listed.  An example rule is shown in
       <xref linkend="fig-rule"/>.  The individual fields are listed
-      with spaces between them.
+      with spaces between them.  If a user is a member of multiple
+      groups, then the fields allowed to be seen are a union of the
+      fields of each group's set of fields.
     </para>
 
     <figure id="fig-rule">
@@ -267,6 +269,18 @@
       </mediaobject>
     </figure>
   </section> <!-- Groups -->
+
+  <section id="deploy-metadata">
+    <title>Configuring Metadata</title>
+    <para>
+      Metadata describes how to map property data in your relational
+      database to RETS names.  The metadata is stored as compact
+      format metadata, split into multiple files.  For more
+      information on compact metadata format, see RETS specification.
+      A sample set of metadata is provided on the Rex website, and
+      should be used as a starting point.
+    </para>
+  </section>
 </section> <!-- deploy -->
 
 <!--
