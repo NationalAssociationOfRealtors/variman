@@ -62,7 +62,14 @@ public class ClassStandardNameEnum implements PersistentEnum
 
     public static ClassStandardNameEnum fromString(String value)
     {
-        return (ClassStandardNameEnum) mStringMap.get(value.toLowerCase());
+        if (value == null)
+        {
+            return null;
+        }
+        else
+        {
+            return (ClassStandardNameEnum) mStringMap.get(value.toLowerCase());
+        }
     }
 
     public String toString()
