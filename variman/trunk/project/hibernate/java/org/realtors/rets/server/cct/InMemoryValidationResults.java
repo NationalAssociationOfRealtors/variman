@@ -24,10 +24,15 @@ public class InMemoryValidationResults implements ValidationResults
         {
             result = new ValidationResult();
             result.setTestName(name);
-            mResults.put(name, result);
+            addResult(result);
         }
 
         return result;
+    }
+    
+    public void addResult(ValidationResult result)
+    {
+        mResults.put(result.getTestName(), result);
     }
     
     private Map mResults;
