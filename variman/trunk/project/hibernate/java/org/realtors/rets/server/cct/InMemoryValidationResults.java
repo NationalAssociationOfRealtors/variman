@@ -5,6 +5,7 @@
 package org.realtors.rets.server.cct;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -33,6 +34,11 @@ public class InMemoryValidationResults implements ValidationResults
     public void addResult(ValidationResult result)
     {
         mResults.put(result.getTestName(), result);
+    }
+
+    public Iterator iterator()
+    {
+        return mResults.values().iterator();    
     }
     
     private Map mResults;

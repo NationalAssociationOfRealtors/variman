@@ -5,6 +5,7 @@
 package org.realtors.rets.server.cct;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -49,9 +50,14 @@ public class DBValidationResults implements ValidationResults
      * 
      * @param string
      */
-    public void setContext(String string)
+    public void setContext(String context)
     {
-        mContext = string;
+        mContext = context;
+    }
+
+    public Iterator iterator()
+    {
+        return mResults.values().iterator();
     }
 
     private Map mResults;
