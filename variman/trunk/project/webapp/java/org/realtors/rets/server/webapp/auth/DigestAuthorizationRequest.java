@@ -244,13 +244,18 @@ public class DigestAuthorizationRequest
 
     public boolean verifyResponse()
     {
+        if (mPassword == null)
+        {
+            LOG.debug("Null password always fails");
+            return false;
+        }
         String a1 = Util.md5(mUsername + ":" + mRealm + ":" + mPassword);
         String a2 = Util.md5(mMethod + ":" + mUri);
         String expectedResponse =
             Util.md5(a1 + ":" + mNonce + ":" + mNonceCount +
                      ":" + mCnonce + ":" + mQop + ":" + a2);
-        LOG.debug("Expected response:" + expectedResponse);
-        LOG.debug("Actual response: " + mResponse);
+        LOG.debug("Expected response: " + expectedResponse);
+        LOG.debug("Actual response:   " + mResponse);
         return (expectedResponse.equals(mResponse));
     }
 
