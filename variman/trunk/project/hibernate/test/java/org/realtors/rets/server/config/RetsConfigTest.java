@@ -16,6 +16,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         retsConfig.setNonceInitialTimeout(5);
         retsConfig.setNonceSuccessTimeout(10);
         retsConfig.setPort(7103);
+        retsConfig.setMetadataDir("WEB-INF/rex/metadata");
 
         DatabaseConfig database = new DatabaseConfig();
         database.setDriver("org.postgresql.Driver");
@@ -34,6 +35,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<rets-config>\n" +
             "  <port>7103</port>\n" +
+            "  <metadata-dir>WEB-INF/rex/metadata</metadata-dir>\n" +
             "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
@@ -63,6 +65,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "<?xml version='1.0' ?>\n" +
             "<rets-config>\n" +
             "  <port>7103</port>\n" +
+            "  <metadata-dir>WEB-INF/rex/metadata</metadata-dir>\n" +
             "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
@@ -82,6 +85,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "</rets-config>";
         RetsConfig retsConfig = RetsConfig.initFromXml(xml);
         assertEquals(7103, retsConfig.getPort());
+        assertEquals("WEB-INF/rex/metadata", retsConfig.getMetadataDir());
         assertEquals("%k-%i.jpg", retsConfig.getGetObjectPattern());
         assertEquals("/tmp/pictures", retsConfig.getGetObjectRoot());
         assertEquals(5, retsConfig.getNonceInitialTimeout());
