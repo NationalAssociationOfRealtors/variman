@@ -151,7 +151,12 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
     public String getLookupShortValue(String lookupName, String value)
     {
         Map values = (Map) mLookupShortValues.get(lookupName);
-        return (String) values.get(value);
+        String shortValue = (String) values.get(value);
+        if (shortValue == null)
+        {
+            shortValue = value;
+        }
+        return shortValue;
     }
 
     private static final String PREFIX = "r_";
