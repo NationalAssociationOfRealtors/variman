@@ -10,18 +10,17 @@ package org.realtors.rets.server.admin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Properties;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 
 import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Session;
+import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
