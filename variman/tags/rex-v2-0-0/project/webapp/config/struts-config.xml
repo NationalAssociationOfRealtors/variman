@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+
+  <form-beans>
+    <form-bean name="cctRegistrationForm"
+               type="org.realtors.rets.server.webapp.cct.RegistrationForm"/>
+    <form-bean name="cctConfirmationForm"
+               type="org.realtors.rets.server.webapp.cct.NullForm"/>
+    <form-bean name="cctLoginForm"
+               type="org.realtors.rets.server.webapp.cct.LoginForm"/>
+    <form-bean name="cctTestForm"
+               type="org.realtors.rets.server.webapp.cct.TestForm"/>
+  </form-beans>
+
+  <global-exceptions>
+<!--     <exception type="java.lang.Exception" -->
+<!--                key="general.exception" -->
+<!--                path="/some/jsp/file"/> -->
+  </global-exceptions>
+
+  <global-forwards>
+    <forward name="registration" path="/registration.jsp"/>
+    <forward name="userPage" path="/cct/index.jsp" redirect="true"/>
+    <forward name="adminPage" path="/cct/adminIndex.do"/>
+    <forward name="logout" path="/logout.do" />
+  </global-forwards>
+
+  <action-mappings>
+    <action path="/registration"
+            type="org.realtors.rets.server.webapp.cct.RegistrationAction"
+            name="cctRegistrationForm"
+            scope="session"
+            validate="true"
+            input="/registration.jsp">
+      <forward name="confirmPage" path="/confirmation.jsp"/>
+    </action>
+
+    <action path="/confirmation"
+            name="cctConfirmationForm"
+            scope="request"
+            validate="false"
+            input="/registration.jsp"
+            type="org.realtors.rets.server.webapp.cct.ConfirmationAction"/>
+
+    <action path="/login"
+            name="cctLoginForm"
+            scope="request"
+            validate="true"
+            input="/login.jsp"
+            type="org.realtors.rets.server.webapp.cct.LoginAction"/>
+
+    <action path="/logout"
+            type="org.realtors.rets.server.webapp.cct.LogoutAction"/>
+            
+    <action path="/cct/index"
+            type="org.realtors.rets.server.webapp.cct.IndexAction">
+      <forward name="home" path="/cct/home.jsp" />
+    </action>
+
+    <action path="/cct/start_test"
+            name="cctTestForm"
+            validate="false"
+            roles="cctClientTester"
+            type="org.realtors.rets.server.webapp.cct.StartTestAction">
+      <forward name="home" path="/cct/" redirect="true"/>
+      <forward name="showProcedure" path="/cct/showTestProcedure.do"/>
+    </action>
+
+    <action path="/cct/stop_test"
+            name="cctTestForm"
+            validate="false"
+            roles="cctClientTester"
+            type="org.realtors.rets.server.webapp.cct.StopTestAction">
+      <forward name="home" path="/cct/" redirect="true"/>
+      <forward name="showProcedure" path="/cct/showTestProcedure.do"/>
+    </action>
+
+    <action path="/cct/resetAllTests" roles="cctClientTester"
+            type="org.realtors.rets.server.webapp.cct.ResetAllTestsAction"/>
+
+    <action path="/cct/showTestProcedure"
+            type="org.realtors.rets.server.webapp.cct.ShowProcedureAction">
+      <forward name="showProcedure" path="/cct/showProcedure.jsp"/>
+    </action>
+
+    <action path="/cct/adminIndex"
+            type="org.realtors.rets.server.webapp.cct.AdminIndexAction"
+            roles="cctAdminView">
+      <forward name="adminIndex" path="/cct/adminIndex.jsp"/>
+    </action>
+
+    <action path="/cct/adminUserView"
+            type="org.realtors.rets.server.webapp.cct.AdminUserViewAction"
+            roles="cctAdminView">
+      <forward name="adminUserView" path="/cct/adminUserView.jsp"/>
+    </action>
+  </action-mappings>
+
+  <controller processorClass="org.realtors.rets.server.webapp.cct.CctRequestProcessor"/>
+
+  <message-resources parameter="ApplicationResources"/>
+
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+    <set-property property="pathnames"
+                  value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
+  </plug-in>
+
+  <plug-in className="org.realtors.rets.server.webapp.cct.CctConfigPlugIn">
+    <set-property property="testRunnerClass" value="DBTestRunner"/>
+  </plug-in>
+</struts-config>

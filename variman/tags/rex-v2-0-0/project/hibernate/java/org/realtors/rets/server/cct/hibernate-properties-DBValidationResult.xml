@@ -1,0 +1,20 @@
+        <list name="messages" table="rets_cct_vr_messages"
+              lazy="false" inverse="false" cascade="none" >
+
+              <key column="result_id" />
+
+              <index column="message_index" />
+
+              <element column="message" type="string" not-null="false"
+                       unique="false" />
+
+        </list>
+
+        <property name="status" type="org.realtors.rets.server.cct.StatusEnum"
+                  update="true" insert="true" column="status" />
+
+        <property name="testName" type="string" update="true"
+                  insert="true" column="testName" />
+                  
+        <property name="date" type="date" update="true" insert="true"
+                  column="rdate"/>
