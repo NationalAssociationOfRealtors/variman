@@ -19,16 +19,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class DatabaseConfig implements Serializable
 {
-    public String getDriver()
-    {
-        return mDriver;
-    }
-
-    public void setDriver(String driver)
-    {
-        mDriver = driver;
-    }
-
     public int getMaxActive()
     {
         return mMaxActive;
@@ -89,24 +79,49 @@ public class DatabaseConfig implements Serializable
         mMaxWait = maxWait;
     }
 
-    public String getPassword()
+    public DatabaseType getDatabaseType()
     {
-        return mPassword;
+        return mDatabaseType;
     }
 
-    public void setPassword(String password)
+    public void setDatabaseType(DatabaseType databaseType)
     {
-        mPassword = password;
+        mDatabaseType = databaseType;
+    }
+
+    public String getHostName()
+    {
+        return mHostName;
+    }
+
+    public void setHostName(String hostName)
+    {
+        mHostName = hostName;
+    }
+
+    public String getDatabaseName()
+    {
+        return mDatabaseName;
+    }
+
+    public void setDatabaseName(String databaseName)
+    {
+        mDatabaseName = databaseName;
+    }
+
+    public String getDriver()
+    {
+        return mDatabaseType.getDriverClass();
+    }
+
+    public String getDialect()
+    {
+        return mDatabaseType.getDialectClass();
     }
 
     public String getUrl()
     {
-        return mUrl;
-    }
-
-    public void setUrl(String url)
-    {
-        mUrl = url;
+        return mDatabaseType.getUrl(mHostName, mDatabaseName);
     }
 
     public String getUsername()
@@ -119,11 +134,22 @@ public class DatabaseConfig implements Serializable
         mUsername = username;
     }
 
+    public String getPassword()
+    {
+        return mPassword;
+    }
+
+    public void setPassword(String password)
+    {
+        mPassword = password;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
-            .append("driver", mDriver)
-            .append("url", mUrl)
+            .append("type", mDatabaseType)
+            .append("host name", mHostName)
+            .append("database name", mDatabaseName)
             .append("username", mUsername)
             .append("password", mPassword)
             .append("max active", mMaxActive)
@@ -145,12 +171,14 @@ public class DatabaseConfig implements Serializable
     public Properties createHibernateProperties()
     {
         Properties properties = new Properties();
-        properties.setProperty(Environment.DRIVER, mDriver);
-        properties.setProperty(Environment.URL, mUrl);
+        properties.setProperty(Environment.DRIVER,
+                               mDatabaseType.getDriverClass());
+        properties.setProperty(Environment.URL,
+                               mDatabaseType.getUrl(mHostName, mDatabaseName));
         properties.setProperty(Environment.USER, mUsername);
         properties.setProperty(Environment.PASS, mPassword);
         properties.setProperty(Environment.DIALECT,
-                               "net.sf.hibernate.dialect.PostgreSQLDialect");
+                               mDatabaseType.getDialectClass());
         properties.setProperty(Environment.SHOW_SQL, "false");
 
         properties.setProperty(Environment.DBCP_MAXACTIVE,
@@ -171,8 +199,9 @@ public class DatabaseConfig implements Serializable
         return properties;
     }
 
-    private String mDriver;
-    private String mUrl;
+    private DatabaseType mDatabaseType;
+    private String mHostName;
+    private String mDatabaseName;
     private String mUsername;
     private String mPassword;
     private int mMaxActive;
