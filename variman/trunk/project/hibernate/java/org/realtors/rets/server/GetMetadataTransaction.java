@@ -12,15 +12,17 @@ package org.realtors.rets.server;
 
 import java.io.PrintWriter;
 import java.util.List;
-
-import org.realtors.rets.server.metadata.MetadataSegment;
-import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
-import org.realtors.rets.server.metadata.format.FormatterContext;
-import org.realtors.rets.server.metadata.format.FormatterLookup;
-import org.realtors.rets.server.metadata.format.MetadataFormatter;
+import java.util.SortedSet;
 
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
+
+import org.realtors.rets.server.metadata.MetadataSegment;
+import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
+import org.realtors.rets.server.metadata.format.FormatterLookup;
+import org.realtors.rets.server.metadata.format.MetadataFormatter;
+import org.realtors.rets.server.metadata.format.MutableFormatterContext;
+import net.sf.hibernate.HibernateException;
 
 public class GetMetadataTransaction
 {
@@ -81,23 +83,37 @@ public class GetMetadataTransaction
         }
     }
 
-    private void printMetadata(List segments)
+    private void printMetadata(List segments) throws RetsServerException
     {
-        FormatterLookup lookup =
-            new ClassFormatterLookup(mParameters.getFormat());
-        StopWatch stopWatch = new StopWatch();
-        LOG.debug("Formatting started");
-        stopWatch.start();
-        for (int i = 0; i < segments.size(); i++)
+        try
         {
-            MetadataSegment segment = (MetadataSegment) segments.get(i);
-            FormatterContext context =
-                new FormatterContext(segment.getVersion(), segment.getDate(),
-                                     mParameters.isRecursive(), mOut, lookup);
-            context.format(segment.getDataList(), segment.getLevels());
+            FormatterLookup lookup =
+                new ClassFormatterLookup(mParameters.getFormat());
+            StopWatch stopWatch = new StopWatch();
+            LOG.debug("Formatting started");
+            stopWatch.start();
+            MutableFormatterContext context = new MutableFormatterContext();
+            context.setRecursive(mParameters.isRecursive());
+            context.setWriter(mOut);
+            context.setLookup(lookup);
+            User user = mParameters.getUser();
+            SortedSet groups = UserUtils.getGroups(user);
+            context.setTableFilter(RetsServer.getTableGroupFilter(),
+                                   groups);
+            for (int i = 0; i < segments.size(); i++)
+            {
+                MetadataSegment segment = (MetadataSegment) segments.get(i);
+                context.setVersion(segment.getVersion());
+                context.setDate(segment.getDate());
+                context.format(segment.getDataList(), segment.getLevels());
+            }
+            stopWatch.stop();
+            LOG.debug("Formatting done: " + stopWatch.getTime());
         }
-        stopWatch.stop();
-        LOG.debug("Formatting done: " + stopWatch.getTime());
+        catch (HibernateException e)
+        {
+            throw new RetsServerException(e);
+        }
     }
 
     private void printFooters()
