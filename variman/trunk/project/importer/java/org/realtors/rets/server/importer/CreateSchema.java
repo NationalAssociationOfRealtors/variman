@@ -25,6 +25,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
 
 /**
@@ -57,8 +58,12 @@ public class CreateSchema extends RetsHelpers
         while (i.hasNext())
         {
             MClass clazz = (MClass) i.next();
-            String className = clazz.getClassName();
-            sb.append("CREATE TABLE ").append(className);
+            Resource resource = clazz.getResource();
+            StringBuffer tmp = new StringBuffer("rets_");
+            tmp.append(resource.getResourceID()).append("_");
+            tmp.append(clazz.getClassName());
+            String sqlTableName = tmp.toString();
+            sb.append("CREATE TABLE ").append(sqlTableName);
             sb.append(" (").append(mLs);
             sb.append("\tid INT8,").append(mLs);
             Set needsIndex = new HashSet();
@@ -102,7 +107,7 @@ public class CreateSchema extends RetsHelpers
                         break;
                 }
                 sb.append(",").append(mLs);
-                if (table.isSearchable())
+                if (table.getIndex() > 0)
                 {
                     needsIndex.add(table);
                 }
@@ -114,8 +119,8 @@ public class CreateSchema extends RetsHelpers
             {
                 Table table = (Table) j.next();
                 String dbName = table.getDbName();
-                sb.append("create index ").append(className).append("_");
-                sb.append(dbName).append("_index on ").append(className);
+                sb.append("create index ").append(sqlTableName).append("_");
+                sb.append(dbName).append("_index on ").append(sqlTableName);
                 sb.append("(").append(dbName).append(");").append(mLs);
             }
         }
