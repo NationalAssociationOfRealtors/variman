@@ -44,9 +44,9 @@ public class AddUserAction extends AbstractAction
 
             HibernateUtils.save(user);
             AdminFrame frame = SwingUtils.getAdminFrame();
-            frame.setStatusText("User " + user.getName() + " added");
+            frame.setStatusText("User " + user + " added");
             frame.refreshUsers();
-            LOG.debug("New user: " + user);
+            LOG.debug("New user: " + user.dump());
         }
         catch (HibernateException e)
         {
