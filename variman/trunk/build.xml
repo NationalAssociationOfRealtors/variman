@@ -84,6 +84,11 @@
 
   <path id="admin.path">
     <pathelement path="${jdom.jar}"/>
+    <pathelement path="${wx4j.jar}"/>
+    <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${log4j.jar}"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </path>
 
   <path id="xdoclet.path">
@@ -116,6 +121,8 @@
     <mkdir dir="build/rets-server/webapp/WEB-INF/tld"/>
     <mkdir dir="build/webapp/test/classes"/>
     <mkdir dir="build/admin/classes"/>
+    <mkdir dir="build/admin/lib"/>
+    <mkdir dir="build/admin/bin"/>
     <mkdir dir="build/admin/test/classes"/>
     <mkdir dir="build/tests"/>
     <mkdir dir="dist" />
@@ -630,6 +637,29 @@
         <pathelement location="build/admin/classes"/>
       </classpath>
     </javac>
+
+    <copy file="project/admin/shell/rex" todir="build/admin/bin"/>
+    <chmod file="build/admin/bin/rex" perm="ugo+rx"/>
+    <copy file="${wx4j.jar}" todir="build/admin/lib"/>
+    <copy file="${wx4j.lib}" todir="build/admin/lib"/>
+    <copy file="${log4j.jar}" todir="build/admin/lib"/>
+    <copy file="${commons-lang.jar}" todir="build/admin/lib"/>
+    <copy file="project/hibernate/config/hibernate.properties"
+          todir="build/admin/classes"/>
+    <copy todir="build/admin/lib" file="${hibernate.jdbc.jar}"/>
+    <copy file="${hibernate.jar}" todir="build/admin/lib"/>
+    <copy todir="build/admin/lib">
+      <fileset dir="${hibernate.lib}" includes="*.jar"
+               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar,
+                         commons-lang.jar" />
+    </copy>
+    <copy todir="build/admin/classes">
+      <fileset dir="project/admin/java" includes="**/*" excludes="**/*.java"/>
+    </copy>
+    <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
+          todir="build/admin/lib"/>
+    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
+          todir="build/admin/classes"/>
   </target>
 
   <target name="build-full" description="Full build from clean"
