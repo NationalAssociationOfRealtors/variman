@@ -4,19 +4,19 @@
     This chapter describes how to configure and run &name;.
   </para>
 
-  <section>
+  <section id="first-time">
     <title>First Time Configuration</title>
     <para>
       Before running &name; for the first time, there are a few steps
       you need to take.  &name; requires access to a database.
       Currently, &name; supports PostgreSQL <xref
-      linkend="bib-postgres"/> and Microsft SQL Server.  This database
+      linkend="bib-postgres"/> and Microsoft SQL Server.  This database
       is where RETS data is stored, as well as &name; specific
       information.  &name; requires read/write access to the database,
       as well as the ability to create new tables.
     </para>
 
-    <section>
+    <section id="postgres">
       <title>PostgreSQL Setup</title>
       <para>
         PostgreSQL must be configured to accept TCP/IP connections, as
@@ -42,7 +42,7 @@
       </para>
     </section>
       
-    <section>
+    <section id="ms-sql-server">
       <title>Microsoft SQL Server Setup</title>
       <para>
         First, either choose an existing database, or create a new
@@ -58,13 +58,13 @@
       <para>
         The Open Source jTDS <xref linkend="bib-jtds"/> driver is
         included with &name;.  The only other supported driver is the
-        commrecial JSQLConnect driver from JNetDirect <xref
+        commercial JSQLConnect driver from JNetDirect <xref
         linkend="bib-jnetdirect"/>.  The driver that Microsoft offers
         is buggy and does not work with &name;.
       </para>
     </section>
 
-    <section>
+    <section id="jdbc">
       <title>Installing a JDBC Driver</title>
       <para>
         The easiest way to install your JDBC driver is to use the
@@ -74,7 +74,7 @@
       </para>
     </section>
 
-    <section>
+    <section id="db-properties">
       <title>Configuring Database Properties</title>
       <para>
         From the Configuration tab of the Administration Tool, the
@@ -96,18 +96,18 @@
       </figure>
     </section>
 
-    <section>
+    <section id="schema">
       <title>Creating the Schema</title>
       <para>
         &name; needs tables for it's own use, such as user
         information.  Before you create users and groups, you need to
-        create these tables by chosing the Create Schema command from
+        create these tables by choosing the Create Schema command from
         the Database menu.
       </para>
     </section>
   </section> <!-- First Time -->
 
-  <section>
+  <section id="rets">
     <title>Configuring RETS Parameters</title>
     <para>
       From the main Configuration panel, as seen in <xref
@@ -212,7 +212,7 @@
     
   </section>
 
-  <section>
+  <section id="users">
     <title>Users</title>
     <para>
       Users are managed through the Users Tab as seen in <xref
@@ -231,10 +231,10 @@
     </figure>
   </section>
 
-  <section>
+  <section id="groups">
     <title>Groups</title>
     <para>
-      Groups are manged through the Groups Tab as seen in <xref
+      Groups are managed through the Groups Tab as seen in <xref
       linkend="fig-groups"/>. Groups may be created and removed from
       the Group menu or contextual menu.
     </para>
@@ -249,25 +249,73 @@
     </figure>
 
     <para>
-      Group rules allow access to fields to be restricted for members
-      of this group.  Rules are written for a particular resource and
-      class.  There two types of rules: include and exlude.  Include
-      rules includes on the fields listed.  Exclude rules includes all
-      fields except the ones listed.  An example rule is shown in
-      <xref linkend="fig-rule"/>.  The individual fields are listed
-      with spaces between them.  If a user is a member of multiple
-      groups, then the fields allowed to be seen are a union of the
-      fields of each group's set of fields.
+      Groups can be given rules to restrict access to data for members
+      of this group.  There are two types of rules: filter rules and
+      condition rules, which are described below.
     </para>
 
-    <figure id="fig-rule">
-      <title>Rule Dialog</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="rule.png"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    <section id="filter-rules">
+      <title>Filter Rules</title>
+
+      <para>
+        Filter rules allow RETS system names to be filtered out.  If
+        none of a users's groups contain any rules, then they have
+        access to all system names provided in the metadata.  Rules
+        are written for a particular resource and class.  There two
+        types of filter rules: include and exclude.  Include rules
+        includes only the fields listed.  Exclude rules includes all
+        fields except the ones listed.  An example rule is shown in
+        <xref linkend="fig-filter-rule"/>.  The individual fields are
+        listed with spaces between them.  If a user is a member of
+        multiple groups, then the fields allowed to be seen are a
+        union of the fields of each group's set of fields.
+      </para>
+
+      <figure id="fig-filter-rule">
+        <title>Filter Rule Dialog</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="filter_rule.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section> <!-- Filter Rules -->
+
+    <section id="condition-rules">
+      <title>Condition Rules</title>
+
+      <para>
+        Condition rules allows the generated SQL to be modified and
+        given extra conditions.  For example, there may be a column in
+        the database called <code>idx_viewable</code> with values
+        of <code>Y</code> or <code>N</code>, which determines whether
+        or not this row should be visible to IDX users.  To make only
+        the rows which are viewable for IDX available, you would use
+        the SQL constraint <code>idx_viewable = 'Y'</code>, as shown
+        in <xref linkend="fig-condition-rule"/>.  This gets appended
+        on to the <code>WHERE</code> clause of the generated SQL using
+        an <code>AND</code> statement.  If a user is a member of
+        multiple groups that have condition rules, each SQL constraint
+        is appended to the <code>WHERE</code> clause in a
+        separate <code>AND</code> statement.  So one group could
+        restrict access to rows that are IDX viewable, while another
+        could restrict based on price.  Condition rules are also tied
+        to a specific resource and class.  The SQL constraint must use
+        the SQL column names, not RETS system names.  This allows some
+        powerful behavior, because it could use columns in the
+        database that are not mapped to RETS system names.
+      </para>
+
+      <figure id="fig-condition-rule">
+        <title>Filter Rule Dialog</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="condition_rule.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section> <!-- Condition Rules -->
+
   </section> <!-- Groups -->
 
   <section id="deploy-metadata">
