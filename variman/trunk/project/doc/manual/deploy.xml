@@ -235,8 +235,10 @@
     <title>Groups</title>
     <para>
       Groups are managed through the Groups Tab as seen in <xref
-      linkend="fig-groups"/>. Groups may be created and removed from
-      the Group menu or contextual menu.
+      linkend="fig-groups"/>. Groups may be created, edited, and
+      removed from the Group menu or contextual menu.  The main
+      purpose of groups is to restrict data in a number of ways,
+      described below.
     </para>
 
     <figure id="fig-groups">
@@ -249,10 +251,21 @@
     </figure>
 
     <para>
-      Groups can be given rules to restrict access to data for members
-      of this group.  There are two types of rules: filter rules and
-      condition rules, which are described below.
     </para>
+
+    <section id="record-limits">
+      <title>Record Limits</title>
+
+      <para>
+        A record limit may be set on a per-group basis.  Members of
+        groups with a limit will only be able to retrieve that many
+        records per query, even if more records match the search
+        critera.  This limit always overrides any user supplied limit.
+        A record limit of 0 means that users of this group have no
+        limit.  If a user is a member of multiple groups with record
+        limits, the lowest limit is taken.
+      </para>
+    </section>
 
     <section id="filter-rules">
       <title>Filter Rules</title>
