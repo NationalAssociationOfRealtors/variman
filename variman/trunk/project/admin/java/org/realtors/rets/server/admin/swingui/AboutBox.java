@@ -18,12 +18,13 @@ public class AboutBox extends JDialog
         setSize(50, 50);
 
         String version = Admin.getVersion();
+        String buildDate = Admin.getBuildDate();
 
         JPanel content = new JPanel();
         JLabel label = new JLabel(
             "<html><center>" +
             "<h1>Rex Admin</h1>" +
-            "<p>Version " + version + "</p>" +
+            "<p>Version " + version + " (" + buildDate + ")</p>" +
             "<p></p>" +
             "<p>Copyright &copy; 2004-2005,<br>" +
             "The Center for REALTOR&reg; Technology</p>" +
