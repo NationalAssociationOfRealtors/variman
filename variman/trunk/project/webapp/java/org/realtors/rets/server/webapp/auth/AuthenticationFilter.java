@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+/**
+ * @web.filter name="authentication-filter"
+ *   description="Performs digest authentication"
+ * @web.filter-init-param name="password-map"
+ *   value="org.realtors.rets.server.webapp.auth.AuthenticationFilter"
+ */
 public class AuthenticationFilter implements Filter, PasswordMap
 {
     public void init(FilterConfig filterConfig) throws ServletException

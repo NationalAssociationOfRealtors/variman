@@ -10,6 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @web.servlet name="get-metadata-servlet"
+ * @web.servlet-mapping  url-pattern="/rets/getMetadata"
+ */
 public class GetMetadataServlet extends RetsServlet
 {
     protected void doGet(HttpServletRequest request,

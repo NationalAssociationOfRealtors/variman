@@ -13,6 +13,9 @@ import javax.servlet.http.HttpSession;
  * Date: Jun 18, 2003
  * Time: 1:01:58 PM
  * To change this template use Options | File Templates.
+ *
+ * @web.servlet name="logout-servlet"
+ * @web.servlet-mapping url-pattern="/rets/logout"
  */
 public class LogoutServlet extends RetsServlet
 {

@@ -16,6 +16,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
+/**
+ * @web.filter name="accounting-filter"
+ *   description="Keeps track of usage statistics for accounting"
+ */
 public class AccountingFilter implements Filter, Constants
 {
     public void init(FilterConfig filterConfig) throws ServletException

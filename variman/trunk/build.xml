@@ -44,6 +44,14 @@
     <pathelement location="build/embedded/classes"/>
   </path>
 
+  <path id="xdoclet.path">
+    <pathelement path="${ant.home}/lib/ant.jar" />
+    <fileset dir="${xdoclet.lib}" includes="commons-*.jar"/>
+    <pathelement location="${xdoclet.jar}"/>
+    <pathelement location="${servlet.jar}"/>
+    <pathelement location="${xjavadoc.jar}"/>
+  </path>
+
   <!-- Add the checkstyle task -->
 <!--   <taskdef name="checkstyle" -->
 <!--            classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"> -->
@@ -175,6 +183,26 @@
     <copy tofile="build/rets-server/lib/log4j.jar" file="${log4j.jar}"/>
   </target>
 
+  <target name="build-webapp-webdoclet">
+    <taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask">
+      <classpath>
+        <path refid="xdoclet.path"/>
+        <path location="${xdoclet.web.jar}"/>
+      </classpath>
+    </taskdef>
+    <webdoclet destdir="build/webapp/generated" verbose="false">
+      <fileset dir="project/webapp/java"/>
+
+      <deploymentdescriptor servletspec="2.3"
+                            destdir="build/rets-server/webapp/WEB-INF"
+                            sessiontimeout="30"
+                            mergedir="project/webapp/config/web-merge"
+                            displayname="CRT RETS Server"
+                            description="CRT RETS Server">
+      </deploymentdescriptor>
+    </webdoclet>
+  </target>
+
   <target name="build-webapp" depends="build-hibernate,build-embedded"
           description="Build webapp">
     <depend srcDir="project/webapp/java"
@@ -219,8 +247,7 @@
       <fileset dir="project/webapp/java" includes="**/*" excludes="**/*.java"/>
     </copy>
 
-    <copy file="project/webapp/config/web.xml"
-          todir="build/rets-server/webapp/WEB-INF"/>
+    <antcall target="build-webapp-webdoclet"/>
     <copy todir="build/rets-server/conf">
       <fileset dir="project/embedded/config" includes="*"/>
     </copy>

@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.realtors.rets.server.webapp.auth.DigestAuthenticateResponse;
 import org.realtors.rets.server.webapp.RetsServlet;
 
+/**
+ * @web.servlet name="reset-servlet"
+ * @web.servlet-mapping url-pattern="/reset"
+ */
 public class ResetServlet extends RetsServlet
 {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

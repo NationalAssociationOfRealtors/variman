@@ -14,8 +14,8 @@ import org.apache.log4j.Logger;
  * Performs all necessary one-time initializations for the web
  * application.
  *
- * @web:servlet name="login-servlet"
- * @web:servlet-mapping url-pattern="/login"
+ * @web.servlet name="login-servlet"
+ * @web.servlet-mapping url-pattern="/rets/login"
  */
 public class LoginServlet extends RetsServlet
 {
