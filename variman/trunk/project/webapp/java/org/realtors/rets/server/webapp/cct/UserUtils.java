@@ -90,6 +90,30 @@ public class UserUtils
         }
         return userInfo;
     }
+    
+    public List getAllUserInfos()
+    {
+        SessionHelper helper = InitServlet.createHelper();
+        List userInfos = null;
+        try
+        {
+            Session session = helper.beginSession();
+            userInfos = session.find(
+                "SELECT userInfo" +
+                "  FROM UserInfo userInfo"); // +
+ //               "ORDER BY userInfo.user.username");
+        }
+        catch (HibernateException e)
+        {
+            LOG.error("Can't get userInfos", e);
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+        
+        return userInfos;
+    }
 
     private static final Logger LOG = Logger.getLogger(UserUtils.class);
 }
