@@ -7,64 +7,68 @@
   <description>CRT RETS Server</description>
 
   <filter>
-    <filter-name>Authentication Filter</filter-name>
+    <filter-name>authentication-filter</filter-name>
     <filter-class>org.realtors.rets.server.webapp.auth.AuthenticationFilter</filter-class>
+    <init-param>
+      <param-name>password-map</param-name>
+      <param-value>org.realtors.rets.server.webapp.auth.AuthenticationFilter</param-value>
+    </init-param>
   </filter>
 
   <filter>
-    <filter-name>Accounting Filter</filter-name>
+    <filter-name>accounting-filter</filter-name>
     <filter-class>org.realtors.rets.server.webapp.AccountingFilter</filter-class>
   </filter>
 
   <filter-mapping>
-    <filter-name>Authentication Filter</filter-name>
+    <filter-name>authentication-filter</filter-name>
     <url-pattern>/rets/*</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
-    <filter-name>Accounting Filter</filter-name>
+    <filter-name>accounting-filter</filter-name>
     <url-pattern>/rets/*</url-pattern>
   </filter-mapping>
 
   <servlet>
-    <servlet-name>Stop Servlet</servlet-name>
+    <servlet-name>stop-servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.StopServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>Login Servlet</servlet-name>
+    <servlet-name>login-servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.LoginServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>Logout Servlet</servlet-name>
+    <servlet-name>logout-servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.LogoutServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>GetMetadata Servlet</servlet-name>
+    <servlet-name>get-metadata-servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.GetMetadataServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>Reset Servlet</servlet-name>
+    <servlet-name>reset-servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.auth.ResetServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>Stop Servlet</servlet-name>
+    <servlet-name>stop-servlet</servlet-name>
     <url-pattern>/rets/stop</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Login Servlet</servlet-name>
+    <servlet-name>login-servlet</servlet-name>
     <url-pattern>/rets/login</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Logout Servlet</servlet-name>
+    <servlet-name>logout-servlet</servlet-name>
     <url-pattern>/rets/logout</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>GetMetadata Servlet</servlet-name>
+    <servlet-name>get-metadata-servlet</servlet-name>
     <url-pattern>/rets/getMetadata</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Reset Servlet</servlet-name>
+    <servlet-name>reset-servlet</servlet-name>
     <url-pattern>/reset</url-pattern>
   </servlet-mapping>
 
