@@ -56,6 +56,16 @@ public class ListListModel extends AbstractListModel
         return mFormatter.format(mList.get(i));
     }
 
+    public Object getListElementAt(int i)
+    {
+        return mList.get(i);
+    }
+
+    public Object getSelectedListElement(JList list)
+    {
+        return getListElementAt(list.getSelectedIndex());
+    }
+
     public void setFormatter(ListElementFormatter formatter)
     {
         mFormatter = formatter;
