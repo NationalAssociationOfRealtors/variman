@@ -42,11 +42,11 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/cct/action" + EOL +
-            "Login = http://localhost:0/rets/cct/login" + EOL +
-            "Logout = http://localhost:0/rets/cct/logout" + EOL +
-            "Search = http://localhost:0/rets/search" + EOL +
-            "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
+            "Action = " + ABS_ACTION + EOL +
+            "Login = " + ABS_LOGIN + EOL +
+            "Logout = " + ABS_LOGOUT + EOL +
+            "Search = " + ABS_SEARCH + EOL +
+            "GetMetadata = "+ ABS_METADATA + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
         assertLinesEqual(expected, response.getText());
@@ -65,9 +65,9 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Login = http://localhost:0/rets/cct/login" + EOL +
-            "Search = http://localhost:0/rets/search" + EOL +
-            "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
+            "Login = " + ABS_LOGIN + EOL +
+            "Search = " + ABS_SEARCH + EOL +
+            "GetMetadata = " + ABS_METADATA + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
         assertLinesEqual(expected, response.getText());
@@ -86,15 +86,15 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/cct/action" + EOL +
-            "ChangePassword = http://localhost:0/rets/changePassword" + EOL +
-            "GetObject = http://localhost:0/rets/getObject" + EOL +
-            "Login = http://localhost:0/rets/cct/login" + EOL +
-            "LoginComplete = http://localhost:0/rets/loginComplete" + EOL +
-            "Logout = http://localhost:0/rets/cct/logout" + EOL +
-            "Search = http://localhost:0/rets/search" + EOL +
-            "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
-            "Update = http://localhost:0/rets/update" + EOL +
+            "Action = " + ABS_ACTION + EOL +
+            "ChangePassword = " + ABS_PASSWORD + EOL +
+            "GetObject = " + ABS_GET_OBJECT + EOL +
+            "Login = " + ABS_LOGIN + EOL +
+            "LoginComplete = " + ABS_LOGIN_COMPLETE + EOL +
+            "Logout = " + ABS_LOGOUT + EOL +
+            "Search = " + ABS_SEARCH + EOL +
+            "GetMetadata = " + ABS_METADATA  + EOL +
+            "Update = " + ABS_UPDATE + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
         assertLinesEqual(expected, response.getText());
@@ -119,7 +119,7 @@ public class LoginHandlerTest
             "Login = http://localhost:0/rets/cct/login" + EOL +
             "Logout = /rets/cct/logout" + EOL +
             "Search = /rets/search" + EOL +
-            "GetMetadata = /rets/getMetadata" + EOL +
+            "GetMetadata = /rets/cct/getMetadata" + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
         assertLinesEqual(expected, response.getText());
@@ -138,11 +138,11 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/cct/actionAlt" + EOL +
-            "Login = http://localhost:0/rets/cct/login" + EOL +
-            "Logout = http://localhost:0/rets/cct/logout" + EOL +
-            "Search = http://localhost:0/rets/search" + EOL +
-            "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
+            "Action = " + ABS_ACTION_ALT + EOL +
+            "Login = " + ABS_LOGIN + EOL +
+            "Logout = " + ABS_LOGOUT + EOL +
+            "Search = " + ABS_SEARCH + EOL +
+            "GetMetadata = " + ABS_METADATA + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
         assertLinesEqual(expected, response.getText());
@@ -161,11 +161,11 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/cct/action" + EOL +
-            "Login = http://localhost:0/rets/cct/loginAlt" + EOL +
-            "Logout = http://localhost:0/rets/cct/logout" + EOL +
-            "Search = http://localhost:0/rets/search" + EOL +
-            "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
+            "Action = " + ABS_ACTION + EOL +
+            "Login = " + ABS_LOGIN_ALT + EOL +
+            "Logout = " + ABS_LOGOUT + EOL +
+            "Search = " + ABS_SEARCH + EOL +
+            "GetMetadata = " + ABS_METADATA + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
         assertLinesEqual(expected, response.getText());
@@ -173,6 +173,18 @@ public class LoginHandlerTest
 
     public static final String EOL = "\r\n";
     public static final String LOGIN_URL = "http://localhost/rets/cct/login";
+    public static final String ABS = "http://localhost:0/rets/";
+    public static final String ABS_ACTION = ABS + "cct/action";
+    public static final String ABS_ACTION_ALT = ABS + "cct/actionAlt";
+    public static final String ABS_PASSWORD = ABS + "changePassword";
+    public static final String ABS_GET_OBJECT = ABS + "getObject";
+    public static final String ABS_LOGIN = ABS + "cct/login";
+    public static final String ABS_LOGIN_ALT = ABS + "cct/loginAlt";
+    public static final String ABS_LOGIN_COMPLETE = ABS + "loginComplete";
+    public static final String ABS_LOGOUT = ABS + "cct/logout";
+    public static final String ABS_SEARCH = ABS + "search";
+    public static final String ABS_METADATA = ABS + "cct/getMetadata";
+    public static final String ABS_UPDATE = ABS + "update";
     private ServletUnitClient mClient;
     private LoginHandler mLogin;
 }
