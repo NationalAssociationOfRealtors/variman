@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.realtors.rets.server.tomcat.EmbeddedTomcat;
 
 /**
- * @web.servlet name="stop-servlet"
- * @web.servlet-mapping url-pattern="/stop"
+ * web.servlet name="stop-servlet"
+ * web.servlet-mapping url-pattern="/stop"
  */
 public class StopServlet extends HttpServlet
 {
