@@ -8,10 +8,11 @@
 
 package org.realtors.rets.server;
 
+import java.util.List;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.Hibernate;
 
 import org.apache.log4j.Logger;
 
@@ -44,16 +45,44 @@ public class UserUtils
         SessionHelper helper = RetsServer.createSessionHelper();
         try
         {
-            Query query = helper.createQuery(
-                " FROM User as user " +
-                "WHERE user.username = :username");
-            query.setString("username", username);
-            return (User) query.uniqueResult();
+            return findByUsername(username, helper);
         }
         finally
         {
             helper.close(LOG);
         }
+    }
+
+    public static User findByUsername(String username, SessionHelper helper)
+        throws HibernateException
+    {
+        Query query = helper.createQuery(
+            " FROM User user " +
+            "WHERE user.username = :username");
+        query.setString("username", username);
+        return (User) query.uniqueResult();
+    }
+
+    public static List findAll() throws HibernateException
+    {
+        SessionHelper helper = RetsServer.createSessionHelper();
+        try
+        {
+            return findAll(helper);
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+    }
+
+    public static List findAll(SessionHelper helper) throws HibernateException
+    {
+        Query query = helper.createQuery(
+            "SELECT user " +
+            "  FROM User user " +
+            "ORDER BY user.lastName, user.firstName");
+        return query.list();
     }
 
     public static void delete(User user) throws HibernateException
@@ -63,12 +92,16 @@ public class UserUtils
         {
             Session session = helper.beginTransaction();
             // Must load this object into this session, otherwise the User
-            // object from gets loaded. This causes two User objects with the
-            // same ID to be loaded, which pisses off Hibernate.
+            // object from the statistics gets loaded. This causes two User
+            // objects with the same ID to be loaded into the same session,
+            // which pisses off Hibernate.
             session.load(user, user.getId());
-            session.delete(" FROM AccountingStatistics as stats " +
-                           "WHERE stats.user.id = ?",
-                           user.getId(), Hibernate.LONG);
+            AccountingStatistics statistics =
+                AccountingStatisticsUtils.findByUser(user, helper);
+            if (statistics != null)
+            {
+                session.delete(statistics);
+            }
             session.delete(user);
             helper.commit();
         }
