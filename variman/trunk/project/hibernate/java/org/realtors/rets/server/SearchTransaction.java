@@ -27,7 +27,7 @@ import antlr.ANTLRException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-public class SearchTransaction extends RetsTransaction
+public class SearchTransaction
 {
     public SearchTransaction(SearchParameters parameters)
     {
@@ -88,7 +88,7 @@ public class SearchTransaction extends RetsTransaction
     {
         if (!mExecuteSql)
         {
-            printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
+            RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
             return;
         }
 
@@ -101,7 +101,7 @@ public class SearchTransaction extends RetsTransaction
             Connection connection = session.connection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql.toString());
-            printOpenRetsSuccess(out);
+            RetsUtils.printOpenRetsSuccess(out);
             out.println("<DELIMITER value=\"09\"/>");
             out.print("<COLUMNS>\t");
             out.print(StringUtils.join(fields.iterator(), "\t"));
@@ -117,7 +117,7 @@ public class SearchTransaction extends RetsTransaction
                 out.println("\t</DATA>");
                 rowCount++;
             }
-            printCloseRets(out);
+            RetsUtils.printCloseRets(out);
             LOG.debug("Row count: " + rowCount);
         }
         catch (HibernateException e)

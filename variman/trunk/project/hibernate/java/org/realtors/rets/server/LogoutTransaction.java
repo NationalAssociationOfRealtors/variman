@@ -6,19 +6,19 @@ import java.io.PrintWriter;
 
 import org.apache.log4j.Logger;
 
-public class LogoutTransaction extends RetsTransaction
+public class LogoutTransaction
 {
     public void execute(PrintWriter out, AccountingStatistics stats)
     {
         LOG.debug("Duration: " + stats.getSessionDuration());
 
-        printOpenRetsSuccess(out);
-        printOpenRetsResponse(out);
+        RetsUtils.printOpenRetsSuccess(out);
+        RetsUtils.printOpenRetsResponse(out);
         out.println("ConnectTime = " + stats.getSessionTime());
         out.println("Billing = " + stats.getSessionBalanceFormatted());
         out.println("SignOffMessage = Goodbye");
-        printCloseRetsResponse(out);
-        printCloseRets(out);
+        RetsUtils.printCloseRetsResponse(out);
+        RetsUtils.printCloseRets(out);
     }
 
     private static final Logger LOG =
