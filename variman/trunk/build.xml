@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project default = "build" basedir=".">
+<project default = "build" basedir="." name="retsdb2">
 
   <!-- set global properties for this build -->
   <property name="project.name" value="retsdb2"/>
@@ -69,7 +69,8 @@
     <mkdir dir="dist" />
   </target>
 
-  <target name="build" depends="build-hibernate, prepare" />
+  <target name="build" depends="build-hibernate, prepare"
+          description="Build all"/>
 
   <target name="dist" depends="generate-schema" />
 
@@ -125,7 +126,8 @@
     </copy>
   </target>
 
-  <target name="build-webapp" depends="build-hibernate,build-embedded">
+  <target name="build-webapp" depends="build-hibernate,build-embedded"
+          description="Build webapp">
     <depend srcDir="project/webapp/java"
             destDir="build/rets-server/webapp/WEB-INF/classes"
             cache="build/depcache" closure="yes">
