@@ -11,11 +11,8 @@ package org.realtors.rets.server.admin;
 import java.io.File;
 
 import net.sf.hibernate.cfg.Configuration;
-import net.sf.hibernate.SessionFactory;
 
 import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.SessionHelper;
-import org.realtors.rets.server.IOUtils;
 
 public class Admin
 {
@@ -27,16 +24,6 @@ public class Admin
     public static Configuration getHibernateConfiguration()
     {
         return sHibernateConfiguration;
-    }
-
-    public static SessionFactory getSessionFactory()
-    {
-        return sSessionFactory;
-    }
-
-    public static void setSessionFactory(SessionFactory sessionFactory)
-    {
-        sSessionFactory = sessionFactory;
     }
 
     public static void setConfigFile(String configFile)
@@ -69,11 +56,6 @@ public class Admin
         sAdminFrame = adminFrame;
     }
 
-    public static SessionHelper createSessionHelper()
-    {
-        return new SessionHelper(sSessionFactory);
-    }
-
     public static void setRexHome(String rexHome)
     {
         sRexHome = rexHome;
@@ -94,13 +76,12 @@ public class Admin
         }
     }
 
-    public static String getWebappRoot()
+    public static String getWebAppRoot()
     {
         return sRexHome + File.separator + "webapp";
     }
 
     private static Configuration sHibernateConfiguration;
-    private static SessionFactory sSessionFactory;
     private static String sConfigFile;
     private static RetsConfig sRetsConfig;
     private static AdminFrame sAdminFrame;
