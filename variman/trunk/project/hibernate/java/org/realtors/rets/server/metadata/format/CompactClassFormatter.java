@@ -21,7 +21,7 @@ public class CompactClassFormatter extends ClassFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < classes.size(); i++)
         {
             MClass clazz = (MClass) classes.get(i);
@@ -48,7 +48,7 @@ public class CompactClassFormatter extends ClassFormatter
         row.end();
     }
 
-    private static final String[] sColumns = {
+    private static final String[] COLUMNS = {
         "ClassName", "StandardName", "VisibleName", "DBName", "Description",
         "TableVersion", "TableDate", "UpdateVersion", "UpdateDate",
     };

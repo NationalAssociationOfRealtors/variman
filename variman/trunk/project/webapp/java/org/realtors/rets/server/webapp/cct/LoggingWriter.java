@@ -24,7 +24,7 @@ public class LoggingWriter extends FilterWriter
 
     public void write(String str, int off, int len) throws IOException
     {
-        mLog.debug(str.substring(off, off+len));
+        mLog.debug(str.substring(off, off + len));
         super.write(str, off, len);
     }
 

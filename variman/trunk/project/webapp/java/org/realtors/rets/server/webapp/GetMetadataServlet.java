@@ -52,12 +52,12 @@ public class  GetMetadataServlet extends RetsServlet
                 new GetMetadataParameters(request.getParameterMap());
             mTransaction.execute(out, parameters, mMetadataFetcher);
         }
-        catch(RetsReplyException e)
+        catch (RetsReplyException e)
         {
             out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
                         "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
             out.println("<RETS ReplyCode=\"20513\" " +

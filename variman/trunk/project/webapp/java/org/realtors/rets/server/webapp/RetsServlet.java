@@ -25,6 +25,7 @@ public class RetsServlet extends HttpServlet implements Constants
         }
         catch (InterruptedException e)
         {
+            // Ignored
         }
     }
 

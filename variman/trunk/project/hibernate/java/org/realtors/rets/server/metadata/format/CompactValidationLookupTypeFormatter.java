@@ -23,7 +23,7 @@ public class CompactValidationLookupTypeFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < validationLookupTypes.size(); i++)
         {
             ValidationLookupType validationLookupType =
@@ -44,7 +44,7 @@ public class CompactValidationLookupTypeFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "ValidText", "Parent1Value", "Parent2Value",
     };
 }

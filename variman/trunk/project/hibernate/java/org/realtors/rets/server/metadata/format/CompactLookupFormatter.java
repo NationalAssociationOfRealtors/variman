@@ -21,7 +21,7 @@ public class CompactLookupFormatter extends LookupFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < lookups.size(); i++)
         {
             Lookup lookup = (Lookup) lookups.get(i);
@@ -41,7 +41,7 @@ public class CompactLookupFormatter extends LookupFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "LookupName", "VisibleName", "Version", "Date",
     };
 }

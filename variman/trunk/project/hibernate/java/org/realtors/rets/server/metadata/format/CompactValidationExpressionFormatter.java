@@ -22,7 +22,7 @@ public class CompactValidationExpressionFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < validationExpressions.size(); i++)
         {
             ValidationExpression validationExpression =
@@ -46,7 +46,7 @@ public class CompactValidationExpressionFormatter
         row.end();
     }
 
-    private static final String[] sColumns = {
+    private static final String[] COLUMNS = {
         "ValidationExpressionID", "ValidationExpressionType", "Value",
         "Version", "Date",
     };

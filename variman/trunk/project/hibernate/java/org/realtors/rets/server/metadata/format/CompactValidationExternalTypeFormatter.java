@@ -27,7 +27,7 @@ public class CompactValidationExternalTypeFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < validationExternalTypes.size(); i++)
         {
             ValidationExternalType validationExternalType =
@@ -63,7 +63,7 @@ public class CompactValidationExternalTypeFormatter
         return keyValues;
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "SearchField", "DisplayField", "ResultFields",
     };
 }

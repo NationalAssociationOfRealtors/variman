@@ -22,7 +22,7 @@ public class CompactTableFormatter extends TableFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < tables.size(); i++)
         {
             Table table = (Table) tables.get(i);
@@ -68,7 +68,7 @@ public class CompactTableFormatter extends TableFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "SystemName", "StandardName", "LongName", "DBName", "ShortName",
         "MaximumLength", "DataType", "Precision", "Searchable",
         "Interpretation", "Alignment", "UseSeparator", "EditMaskID",

@@ -97,7 +97,7 @@ public abstract class BaseServletHandler implements ServletHandler
             mDoGetInvokeCount++;
             LOG.info(getName() + " invoked: " + mDoGetInvokeCount);
         }
-        catch(RetsReplyException e)
+        catch (RetsReplyException e)
         {
             if (response.isCommitted())
             {
@@ -126,7 +126,7 @@ public abstract class BaseServletHandler implements ServletHandler
                 }
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
             if (!response.isCommitted())
@@ -279,7 +279,7 @@ public abstract class BaseServletHandler implements ServletHandler
             String regexp = (String) expected.get(name);
             if ((value == null) || !matches(value, regexp))
             {
-                String message = getName() + " HTTP " + content +" [" + name +
+                String message = getName() + " HTTP " + content + " [" + name +
                     "] was " + value + ", expected " + regexp;
                 result.setStatus(StatusEnum.FAILED);
                 result.addMessage(message);

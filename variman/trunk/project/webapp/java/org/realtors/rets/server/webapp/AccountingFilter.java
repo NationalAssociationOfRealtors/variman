@@ -58,7 +58,7 @@ public class AccountingFilter implements Filter, Constants
         long responseDuration = System.currentTimeMillis() - startTime;
         statistics.addSessionTime(responseDuration);
         LOG.debug("Response duration: " + responseDuration);
-        LOG.debug("Accumalated time: "+ statistics.getSessionTime());
+        LOG.debug("Accumalated time: " + statistics.getSessionTime());
         saveStatistics(statistics);
         MDC.remove("uri");
     }

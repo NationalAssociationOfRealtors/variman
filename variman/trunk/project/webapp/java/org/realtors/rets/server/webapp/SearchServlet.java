@@ -54,12 +54,12 @@ public class SearchServlet extends RetsServlet
             out.println("<RETS ReplyCode=\"20206\" ReplyText=\"" +
                         e.toString() + "\"/>");
         }
-        catch(RetsReplyException e)
+        catch (RetsReplyException e)
         {
             out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
                         "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
             out.println("<RETS ReplyCode=\"20513\" " +

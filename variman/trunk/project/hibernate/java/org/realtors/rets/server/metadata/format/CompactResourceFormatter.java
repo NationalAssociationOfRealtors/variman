@@ -20,7 +20,7 @@ public class CompactResourceFormatter extends ResourceFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < resources.size(); i++)
         {
             Resource resource = (Resource) resources.get(i);
@@ -50,7 +50,7 @@ public class CompactResourceFormatter extends ResourceFormatter
         row.end();
     }
 
-    private static final String[] sColumns = {
+    private static final String[] COLUMNS = {
         "ResourceID", "StandardName", "VisibleName", "Description", "KeyField",
         "ClassCount", "ClassVersion", "ClassDate", "ObjectVersion",
         "ObjectDate", "SearchHelpVersion", "SearchHelpDate", "EditMaskVersion",

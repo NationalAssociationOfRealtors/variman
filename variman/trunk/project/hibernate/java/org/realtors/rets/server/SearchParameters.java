@@ -4,9 +4,6 @@ package org.realtors.rets.server;
 
 import java.util.Map;
 
-import org.realtors.rets.server.RetsReplyException;
-import org.realtors.rets.server.Util;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class SearchParameters

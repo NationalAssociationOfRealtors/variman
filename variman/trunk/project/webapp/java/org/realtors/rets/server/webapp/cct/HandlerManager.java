@@ -23,7 +23,7 @@ public class HandlerManager
 
     public RetsHandlers getHandlers(String context)
     {
-        synchronized(this)
+        synchronized (this)
         {
             RetsHandlers handlers = (RetsHandlers) mHandlers.get(context);
             if (handlers == null)

@@ -21,7 +21,7 @@ public class CompactEditMaskFormatter extends EditMaskFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < editMasks.size(); i++)
         {
             EditMask editMask = (EditMask) editMasks.get(i);
@@ -39,7 +39,7 @@ public class CompactEditMaskFormatter extends EditMaskFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "EditMaskID", "Value",
     };
 }

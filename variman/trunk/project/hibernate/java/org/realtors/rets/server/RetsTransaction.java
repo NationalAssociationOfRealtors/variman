@@ -11,7 +11,8 @@ public class RetsTransaction
         printOpenRets(out, 0, "Operation Successful");
     }
 
-    protected void printOpenRets(PrintWriter out, int replyCode, String replyText)
+    protected void printOpenRets(PrintWriter out, int replyCode,
+                                 String replyText)
     {
         out.println("<RETS ReplyCode=\"" + replyCode + "\" " +
                     "ReplyText=\"" + replyText + "\">");

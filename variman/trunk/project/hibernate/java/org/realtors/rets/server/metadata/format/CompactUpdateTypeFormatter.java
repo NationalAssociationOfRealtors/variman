@@ -23,7 +23,7 @@ public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < updateTypes.size(); i++)
         {
             UpdateType updateType = (UpdateType) updateTypes.get(i);
@@ -47,7 +47,7 @@ public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "SystemName", "Sequence", "Attributes", "Default",
         "ValidationExpressionID", "UpdateHelpID", "ValidationLookupName",
         "ValidationExternalName",

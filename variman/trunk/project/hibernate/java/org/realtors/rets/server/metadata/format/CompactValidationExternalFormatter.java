@@ -22,7 +22,7 @@ public class CompactValidationExternalFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < validationExternals.size(); i++)
         {
             ValidationExternal validationExternal =
@@ -45,7 +45,7 @@ public class CompactValidationExternalFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "ValidationExternalName", "SearchResource", "SearchClass", "Version",
         "Date",
     };

@@ -22,7 +22,7 @@ public class CompactUpdateFormatter extends UpdateFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < updates.size(); i++)
         {
             Update update = (Update) updates.get(i);
@@ -43,7 +43,7 @@ public class CompactUpdateFormatter extends UpdateFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "UpdateName", "Description", "KeyField", "Version", "Date",
     };
 }

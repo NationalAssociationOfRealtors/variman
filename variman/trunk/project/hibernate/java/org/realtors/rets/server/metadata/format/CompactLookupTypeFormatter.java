@@ -22,7 +22,7 @@ public class CompactLookupTypeFormatter extends LookupTypeFormatter
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();
-        tag.appendColumns(sColumns);
+        tag.appendColumns(COLUMNS);
         for (int i = 0; i < lookupTypes.size(); i++)
         {
             LookupType lookupType = (LookupType) lookupTypes.get(i);
@@ -41,7 +41,7 @@ public class CompactLookupTypeFormatter extends LookupTypeFormatter
         row.end();
     }
 
-    private static final String[] sColumns = new String[] {
+    private static final String[] COLUMNS = new String[] {
         "LongValue", "ShortValue", "Value",
     };
 }

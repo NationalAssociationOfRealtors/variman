@@ -38,7 +38,7 @@ public class HashUtils
         {
             msb = ((int) bytes[i] & 0x000000FF) / 16;
             lsb = ((int) bytes[i] & 0x000000FF) % 16;
-            hex.append(sHexChars[msb]).append(sHexChars[lsb]);
+            hex.append(HEX_CHARS[msb]).append(HEX_CHARS[lsb]);
         }
         return hex.toString();
     }
@@ -60,7 +60,7 @@ public class HashUtils
     }
 
     private static MessageDigest mMd5Digest = null;
-    private static final char[] sHexChars = {
+    private static final char[] HEX_CHARS = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'a', 'b', 'c', 'd', 'e', 'f'
     };
