@@ -100,7 +100,7 @@ public class RetsServlet extends HttpServlet implements Constants
                 }
             }
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
             LOG.error("Caught", e);
             if (!response.isCommitted())
