@@ -9,8 +9,8 @@ public class GroupRules
     public GroupRules(String groupName)
     {
         mGroupName = groupName;
-        mRules = new ArrayList();
-        mReadOnlyRules = Collections.unmodifiableList(mRules);
+        mFilterRules = new ArrayList();
+        mReadOnlyFilterRules = Collections.unmodifiableList(mFilterRules);
         mConditionRules = new ArrayList();
         mReadOnlyConditionRules = Collections.unmodifiableList(mConditionRules);
     }
@@ -20,19 +20,19 @@ public class GroupRules
         return mGroupName;
     }
 
-    public List /* RuleDescription */ getRules()
+    public List /* FilterRule */ getFilterRules()
     {
-        return mReadOnlyRules;
+        return mReadOnlyFilterRules;
     }
 
-    public void addRule(RuleDescription ruleDescription)
+    public void addFilterRule(FilterRule filterRule)
     {
-        mRules.add(ruleDescription);
+        mFilterRules.add(filterRule);
     }
 
-    public void removeRule(RuleDescription ruleDescription)
+    public void removeRule(FilterRule filterRule)
     {
-        mRules.remove(ruleDescription);
+        mFilterRules.remove(filterRule);
     }
 
     public List /* ConditionRule */ getConditionRules()
@@ -46,8 +46,8 @@ public class GroupRules
     }
 
     private String mGroupName;
-    private List mRules;
-    private List mReadOnlyRules;
+    private List mFilterRules;
+    private List mReadOnlyFilterRules;
     private List mConditionRules;
     private List mReadOnlyConditionRules;
 }

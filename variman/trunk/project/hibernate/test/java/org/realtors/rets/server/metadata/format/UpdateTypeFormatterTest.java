@@ -16,7 +16,7 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 import org.realtors.rets.server.Group;
-import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.GroupRules;
 
 public class UpdateTypeFormatterTest extends FormatterTestCase
@@ -81,13 +81,13 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         mGroups = new HashSet();
         mGroups.add(mNewspapers);
 
-        RuleDescription ruleDescription = new RuleDescription(
-            RuleDescription.EXCLUDE);
-        ruleDescription.setResource("Property");
-        ruleDescription.setRetsClass("RES");
-        ruleDescription.addSystemName("LIST_PRICE");
+        FilterRule filterRule = new FilterRule(
+            FilterRule.EXCLUDE);
+        filterRule.setResource("Property");
+        filterRule.setRetsClass("RES");
+        filterRule.addSystemName("LIST_PRICE");
         GroupRules rules = new GroupRules(mNewspapers.getName());
-        rules.addRule(ruleDescription);
+        rules.addFilterRule(filterRule);
         mGroupFilter.addRules(rules);
     }
 

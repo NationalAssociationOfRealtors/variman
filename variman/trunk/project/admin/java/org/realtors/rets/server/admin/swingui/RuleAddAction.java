@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
-import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.admin.Admin;
 
@@ -25,9 +25,9 @@ public class RuleAddAction extends AbstractAction
             return;
         }
 
-        RuleDescription ruleDescription = dialog.getRuleDescription();
+        FilterRule filterRule = dialog.getFilterRule();
         GroupRules rules = mGroupsPanel.getGroupRules();
-        rules.addRule(ruleDescription);
+        rules.addFilterRule(filterRule);
         Admin.setRetsConfigChanged(true);
         mGroupsPanel.populateList();
     }

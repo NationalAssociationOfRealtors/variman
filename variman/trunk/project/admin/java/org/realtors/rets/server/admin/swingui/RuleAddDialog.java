@@ -7,7 +7,7 @@ import javax.swing.*;
 
 import org.apache.commons.lang.StringUtils;
 
-import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.FilterRule;
 
 public class RuleAddDialog extends JDialog
 {
@@ -66,46 +66,46 @@ public class RuleAddDialog extends JDialog
         return mResponse;
     }
 
-    public RuleDescription.Type getType()
+    public FilterRule.Type getType()
     {
         if (mRuleType.getSelectedIndex() == INCLUDE_INDEX)
         {
-            return RuleDescription.INCLUDE;
+            return FilterRule.INCLUDE;
         }
         else
         {
-            return RuleDescription.EXCLUDE;
+            return FilterRule.EXCLUDE;
         }
     }
 
-    public RuleDescription getRuleDescription()
+    public FilterRule getFilterRule()
     {
-        RuleDescription ruleDescription = new RuleDescription();
-        updateRuleDescription(ruleDescription);
-        return ruleDescription;
+        FilterRule filterRule = new FilterRule();
+        updateFilterRule(filterRule);
+        return filterRule;
     }
 
-    public void updateRuleDescription(RuleDescription ruleDescription)
+    public void updateFilterRule(FilterRule filterRule)
     {
         if (mRuleType.getSelectedIndex() == INCLUDE_INDEX)
         {
-            ruleDescription.setType(RuleDescription.INCLUDE);
+            filterRule.setType(FilterRule.INCLUDE);
         }
         else
         {
-            ruleDescription.setType(RuleDescription.EXCLUDE);
+            filterRule.setType(FilterRule.EXCLUDE);
         }
 
-        ruleDescription.setResource(mResourceName.getText());
-        ruleDescription.setRetsClass(mClassName.getText());
+        filterRule.setResource(mResourceName.getText());
+        filterRule.setRetsClass(mClassName.getText());
 
         String[] systemNames = StringUtils.split(mFields.getText());
-        ruleDescription.setSystemNames(Arrays.asList(systemNames));
+        filterRule.setSystemNames(Arrays.asList(systemNames));
     }
 
-    public void setRuleDescription(RuleDescription ruleDescription)
+    public void setFilterRule(FilterRule filterRule)
     {
-        if (ruleDescription.getType().equals(RuleDescription.INCLUDE))
+        if (filterRule.getType().equals(FilterRule.INCLUDE))
         {
             mRuleType.setSelectedIndex(0);
         }
@@ -114,10 +114,10 @@ public class RuleAddDialog extends JDialog
             mRuleType.setSelectedIndex(1);
         }
 
-        mResourceName.setText(ruleDescription.getResource());
-        mClassName.setText(ruleDescription.getRetsClass());
+        mResourceName.setText(filterRule.getResource());
+        mClassName.setText(filterRule.getRetsClass());
         String systemNames = StringUtils.join(
-            ruleDescription.getSystemNames().iterator(), " ");
+            filterRule.getSystemNames().iterator(), " ");
        mFields.setText(systemNames);
     }
 

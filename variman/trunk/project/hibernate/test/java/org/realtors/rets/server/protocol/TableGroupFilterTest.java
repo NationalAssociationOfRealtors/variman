@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 import org.realtors.rets.server.Group;
-import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.ObjectMother;
@@ -32,23 +32,23 @@ public class TableGroupFilterTest extends TestCase
         mAgent = new Group("mAgent");
         mBroker = new Group("mBroker");
 
-        RuleDescription ruleDescription = new RuleDescription(
-            RuleDescription.INCLUDE);
-        ruleDescription.setResource("Property");
-        ruleDescription.setRetsClass("RES");
-        ruleDescription.addSystemName("ListingNumber");
-        ruleDescription.addSystemName("ListingPrice");
+        FilterRule filterRule = new FilterRule(
+            FilterRule.INCLUDE);
+        filterRule.setResource("Property");
+        filterRule.setRetsClass("RES");
+        filterRule.addSystemName("ListingNumber");
+        filterRule.addSystemName("ListingPrice");
         GroupRules rules = new GroupRules(mNewspaper.getName());
-        rules.addRule(ruleDescription);
+        rules.addFilterRule(filterRule);
         mGroupFilter.addRules(rules);
 
-        ruleDescription = new RuleDescription(RuleDescription.EXCLUDE);
-        ruleDescription.setResource("Property");
-        ruleDescription.setRetsClass("RES");
-        ruleDescription.addSystemName("ListingPrice");
-        ruleDescription.addSystemName("AssociationFee");
+        filterRule = new FilterRule(FilterRule.EXCLUDE);
+        filterRule.setResource("Property");
+        filterRule.setRetsClass("RES");
+        filterRule.addSystemName("ListingPrice");
+        filterRule.addSystemName("AssociationFee");
         rules = new GroupRules(mAgent.getName());
-        rules.addRule(ruleDescription);
+        rules.addFilterRule(filterRule);
         mGroupFilter.addRules(rules);
     }
 
@@ -108,42 +108,42 @@ public class TableGroupFilterTest extends TestCase
 
     public void testAddUnknownResource()
     {
-        RuleDescription ruleDescription = new RuleDescription(
-            RuleDescription.INCLUDE);
-        ruleDescription.setResource("UNKNOWN");
-        ruleDescription.setRetsClass("RES");
-        ruleDescription.addSystemName("ListingNumber");
-        ruleDescription.addSystemName("ListingPrice");
+        FilterRule filterRule = new FilterRule(
+            FilterRule.INCLUDE);
+        filterRule.setResource("UNKNOWN");
+        filterRule.setRetsClass("RES");
+        filterRule.addSystemName("ListingNumber");
+        filterRule.addSystemName("ListingPrice");
         GroupRules rules = new GroupRules(mNewspaper.getName());
-        rules.addRule(ruleDescription);
+        rules.addFilterRule(filterRule);
         // Make sure no exception is thrown
         mGroupFilter.addRules(rules);
     }
 
     public void testAddUnknownClass()
     {
-        RuleDescription ruleDescription = new RuleDescription(
-            RuleDescription.INCLUDE);
-        ruleDescription.setResource("Property");
-        ruleDescription.setRetsClass("UNKNOWN");
-        ruleDescription.addSystemName("ListingNumber");
-        ruleDescription.addSystemName("ListingPrice");
+        FilterRule filterRule = new FilterRule(
+            FilterRule.INCLUDE);
+        filterRule.setResource("Property");
+        filterRule.setRetsClass("UNKNOWN");
+        filterRule.addSystemName("ListingNumber");
+        filterRule.addSystemName("ListingPrice");
         GroupRules rules = new GroupRules(mNewspaper.getName());
-        rules.addRule(ruleDescription);
+        rules.addFilterRule(filterRule);
         // Make sure no exception is thrown
         mGroupFilter.addRules(rules);
     }
 
     public void testAddUnknownGroup()
     {
-        RuleDescription ruleDescription = new RuleDescription(
-            RuleDescription.INCLUDE);
-        ruleDescription.setResource("Property");
-        ruleDescription.setRetsClass("RES");
-        ruleDescription.addSystemName("ListingNumber");
-        ruleDescription.addSystemName("ListingPrice");
+        FilterRule filterRule = new FilterRule(
+            FilterRule.INCLUDE);
+        filterRule.setResource("Property");
+        filterRule.setRetsClass("RES");
+        filterRule.addSystemName("ListingNumber");
+        filterRule.addSystemName("ListingPrice");
         GroupRules rules = new GroupRules("UNKNOWN");
-        rules.addRule(ruleDescription);
+        rules.addFilterRule(filterRule);
         // Make sure no exception is thrown
         mGroupFilter.addRules(rules);
     }

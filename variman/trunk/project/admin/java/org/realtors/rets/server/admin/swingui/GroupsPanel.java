@@ -20,7 +20,7 @@ import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.SecurityConstraints;
 
 public class GroupsPanel extends JPanel
@@ -108,10 +108,10 @@ public class GroupsPanel extends JPanel
         return mGroupRules;
     }
 
-    public RuleDescription getSelectedRule()
+    public FilterRule getSelectedRule()
     {
         Object elementAt = mRulesListModel.getSelectedListElement(mRulesList);
-        return (RuleDescription) elementAt;
+        return (FilterRule) elementAt;
     }
 
     private void updateComponentsFromSelection()
@@ -141,15 +141,15 @@ public class GroupsPanel extends JPanel
     private void updateRulesList(Group group)
     {
         RetsConfig retsConfig = Admin.getRetsConfig();
-        List ruleDescriptions = Collections.EMPTY_LIST;
+        List filterRules = Collections.EMPTY_LIST;
         SecurityConstraints securityConstraints =
             retsConfig.getSecurityConstraints();
         mGroupRules = securityConstraints.getRulesForGroup(group.getName());
         if (mGroupRules != null)
         {
-            ruleDescriptions = mGroupRules.getRules();
+            filterRules = mGroupRules.getFilterRules();
         }
-        mRulesListModel.setList(ruleDescriptions);
+        mRulesListModel.setList(filterRules);
         mRulesList.clearSelection();
         updateRulesButtons();
     }
@@ -255,18 +255,18 @@ public class GroupsPanel extends JPanel
         }
     }
 
-    private static class RuleDescriptionFormatter
+    private static class FilterRuleFormatter
         implements ListElementFormatter
     {
         public Object format(Object object)
         {
-            RuleDescription description = (RuleDescription) object;
+            FilterRule rule = (FilterRule) object;
             StringBuffer buffer = new StringBuffer();
 
             buffer.append("In ");
-            buffer.append(description.getResource()).append(":")
-                .append(description.getRetsClass());
-            if (description.getType() == RuleDescription.INCLUDE)
+            buffer.append(rule.getResource()).append(":")
+                .append(rule.getRetsClass());
+            if (rule.getType() == FilterRule.INCLUDE)
             {
                 buffer.append(" include ");
             }
@@ -274,7 +274,7 @@ public class GroupsPanel extends JPanel
             {
                 buffer.append(" exclude ");
             }
-            Iterator systemNames = description.getSystemNames().iterator();
+            Iterator systemNames = rule.getSystemNames().iterator();
             buffer.append(StringUtils.join(systemNames, ", "));
             return buffer.toString();
         }
@@ -298,7 +298,7 @@ public class GroupsPanel extends JPanel
 
         public void actionPerformed(ActionEvent event)
         {
-            RuleDescription rule = mGroupsPanel.getSelectedRule();
+            FilterRule rule = mGroupsPanel.getSelectedRule();
             if (rule == null)
             {
                 LOG.warn("Attempt to remove null rule");
@@ -333,15 +333,15 @@ public class GroupsPanel extends JPanel
         {
             RuleAddDialog dialog = new RuleAddDialog("Update Rule",
                                                      "Update Rule");
-            RuleDescription ruleDescription = mGroupsPanel.getSelectedRule();
-            dialog.setRuleDescription(ruleDescription);
+            FilterRule filterRule = mGroupsPanel.getSelectedRule();
+            dialog.setFilterRule(filterRule);
             dialog.show();
             if (dialog.getResponse() != JOptionPane.OK_OPTION)
             {
                 return;
             }
 
-            dialog.updateRuleDescription(ruleDescription);
+            dialog.updateFilterRule(filterRule);
             Admin.setRetsConfigChanged(true);
             mGroupsPanel.populateList();
         }
@@ -352,7 +352,7 @@ public class GroupsPanel extends JPanel
     private static final Logger LOG =
         Logger.getLogger(GroupsPanel.class);
     private static final ListElementFormatter RULE_FORMATTER =
-            new RuleDescriptionFormatter();
+            new FilterRuleFormatter();
 
     private AddGroupAction mAddGroupAction;
     private JList mGroupList;

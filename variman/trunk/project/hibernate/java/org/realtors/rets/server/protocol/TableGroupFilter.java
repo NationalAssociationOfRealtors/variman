@@ -10,7 +10,7 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.config.GroupRules;
-import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.metadata.Table;
 
@@ -54,26 +54,26 @@ public class TableGroupFilter
 
     public void addRules(GroupRules rules)
     {
-        List allRules = rules.getRules();
+        List filterRules = rules.getFilterRules();
         String groupName = rules.getGroupName();
-        for (int i = 0; i < allRules.size(); i++)
+        for (int i = 0; i < filterRules.size(); i++)
         {
-            RuleDescription ruleDescription = (RuleDescription) allRules.get(i);
-            String tableKey = ruleDescription.getResource() + ":" +
-                              ruleDescription.getRetsClass();
+            FilterRule filterRule = (FilterRule) filterRules.get(i);
+            String tableKey = filterRule.getResource() + ":" +
+                              filterRule.getRetsClass();
             String rulesKey = groupName + ":" + tableKey;
             Set tables = (Set) mAllTables.get(tableKey);
             if (tables == null)
             {
                 LOG.warn("No tables found for " + tableKey +
-                         ".  Skipping rule " + ruleDescription);
+                         ".  Skipping rule " + filterRule);
                 continue;
             }
             Set filteredTables = new HashSet();
             for (Iterator iterator = tables.iterator(); iterator.hasNext();)
             {
                 Table table = (Table) iterator.next();
-                if (ruleDescription.includeSystemName(table.getSystemName()))
+                if (filterRule.includeSystemName(table.getSystemName()))
                 {
                     filteredTables.add(table);
                 }
