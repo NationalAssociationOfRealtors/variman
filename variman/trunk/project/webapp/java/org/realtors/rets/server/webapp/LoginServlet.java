@@ -53,11 +53,11 @@ public class LoginServlet extends RetsServlet
         {
             RetsUtils.printOpenRetsResponse(out);
         }
-        out.println("Broker = B123, BO987");
+        out.println("Broker = " + user.getBrokerCode());
         out.println("MemberName = " + user.getName());
         out.println("MetadataVersion = 1.0.000");
         out.println("MinMetadataVersion = 1.00.000");
-        out.println("User = A123,5678,1,A123");
+        out.println("User = " + user.getUsername() + ",NULL,NULL,NULL");
         out.println("Login = " + contextPath + Paths.LOGIN);
         out.println("Logout = " + contextPath + Paths.LOGOUT);
         out.println("Search = " + contextPath + Paths.SEARCH);
