@@ -16,6 +16,8 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
                             new String[]{"A", "O", "S", "U", "C", "W", "P"});
         mMetadata.addLookup("OR",
                             new String[]{"OR", "AND", "NOT", "TODAY", "NOW"});
+        mMetadata.addLookupMulti("IF",
+                                 new String[]{"FP", "HEAT", "COOL"});
         mMetadata.addString("AND");
         mMetadata.addString("NOT");
 
@@ -121,11 +123,6 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         assertEquals(or, sql);
     }
 
-    public void testBetweenStrings() throws ANTLRException
-    {
-        assertInvalidParse("(OWNER=abc-xyz)");
-    }
-
     public void testLessThanNumber() throws ANTLRException
     {
         SqlConverter sql = parse("(LP=50-)");
@@ -178,11 +175,6 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         OrClause or = new OrClause();
         or.add(lessThan);
         assertEquals(or, sql);
-    }
-
-    public void testLessThanString() throws ANTLRException
-    {
-        assertInvalidParse("(OWNER=xyz-)");
     }
 
     public void testGreaterThanNumber() throws ANTLRException
@@ -240,11 +232,6 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         OrClause or = new OrClause();
         or.add(greaterThan);
         assertEquals(or, sql);
-    }
-
-    public void testGreaterThanString() throws ANTLRException
-    {
-        assertInvalidParse("(OWNER=xyz+)");
     }
 
     public void testStringEquals() throws ANTLRException
@@ -351,6 +338,86 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         list.add(string);
 
         assertEquals(list, sql);
+    }
+
+    public void testLookupOr() throws ANTLRException
+    {
+        SqlConverter sql = parse("(AR=|GENVA,BATV)");
+        LookupList lookup = new LookupList(LookupListType.OR, "r_AR");
+        lookup.addLookup("GENVA");
+        lookup.addLookup("BATV");
+        assertEquals(lookup, sql);
+    }
+
+    public void testImpliedLookupOr() throws ANTLRException
+    {
+        SqlConverter sql = parse("(STATUS=A)");
+        LookupList lookup = new LookupList(LookupListType.OR, "r_STATUS");
+        lookup.addLookup("A");
+        assertEquals(lookup, sql);
+    }
+
+    public void testImpliedLookupOrError() throws ANTLRException
+    {
+        assertInvalidParse("(AR=GENVA,BATV)");
+    }
+
+    public void testLookupAnd() throws ANTLRException
+    {
+        SqlConverter sql = parse("(STATUS=+A,S)");
+        LookupList lookup = new LookupList(LookupListType.AND, "r_STATUS");
+        lookup.addLookup("A");
+        lookup.addLookup("S");
+        assertEquals(lookup, sql);
+    }
+
+    public void testLookupNot() throws ANTLRException
+    {
+        SqlConverter sql = parse("(STATUS=~A,S)");
+        LookupList lookup = new LookupList(LookupListType.NOT, "r_STATUS");
+        lookup.addLookup("A");
+        lookup.addLookup("S");
+        assertEquals(lookup, sql);
+    }
+
+    public void testLookupMultiOr() throws ANTLRException
+    {
+        SqlConverter sql = parse("(IF=|FP,COOL)");
+        LookupList lookup = new LookupList(LookupListType.OR, "r_IF");
+        lookup.setLookupMulti(true);
+        lookup.addLookup("FP");
+        lookup.addLookup("COOL");
+        assertEquals(lookup, sql);
+    }
+
+    public void testLookupMultiAnd() throws ANTLRException
+    {
+        SqlConverter sql = parse("(IF=+FP,COOL)");
+        LookupList lookup = new LookupList(LookupListType.AND, "r_IF");
+        lookup.setLookupMulti(true);
+        lookup.addLookup("FP");
+        lookup.addLookup("COOL");
+        assertEquals(lookup, sql);
+    }
+
+    public void testLookupMultiNot() throws ANTLRException
+    {
+        SqlConverter sql = parse("(IF=~FP,COOL)");
+        LookupList lookup = new LookupList(LookupListType.NOT, "r_IF");
+        lookup.setLookupMulti(true);
+        lookup.addLookup("FP");
+        lookup.addLookup("COOL");
+        assertEquals(lookup, sql);
+    }
+
+    public void testInvalidLookupName() throws ANTLRException
+    {
+        assertInvalidParse("(XX=|A,S)");
+    }
+
+    public void testInvalidLookupValue() throws ANTLRException
+    {
+        assertInvalidParse("(AR=|A,S)");
     }
 
     protected SimpleDmqlMetadata mMetadata;
