@@ -11,3 +11,5 @@ Class-Path: bootstrap.jar
   tomcat-coyote.jar
   tomcat-http11.jar
   tomcat-util.jar
+  servlets-common.jar
+  servlets-default.jar
