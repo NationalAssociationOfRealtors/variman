@@ -10,7 +10,7 @@
  */
 package org.realtors.rets.server.dmql;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.Table;
 
@@ -62,13 +62,17 @@ public interface DmqlParserMetadata
      */
     public boolean isNumericField(String fieldName);
 
+    public String getLookupLongValue(String lookupName, String value);
+
+    public String getLookupShortValue(String lookupName, String value);
+
     public String getLookupDbValue(String lookupName, String lookupValue);
 
     public String fieldToColumn(String fieldName);
 
     public String columnToField(String columnName);
 
-    public Collection getAllColumns();
+    public List getAllColumns();
 
     public Table getTable(String fieldName);
 }
