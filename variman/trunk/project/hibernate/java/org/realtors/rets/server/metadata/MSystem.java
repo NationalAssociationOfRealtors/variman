@@ -205,7 +205,10 @@ public class MSystem extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof MSystem)) return false;
+        if (!(other instanceof MSystem))
+        {
+            return false;
+        } 
         MSystem castOther = (MSystem) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())

@@ -132,7 +132,10 @@ public class MObject extends ServerMetadata implements Serializable
 
     public boolean equals(Object other)
     {
-        if (!(other instanceof MObject)) return false;
+        if (!(other instanceof MObject))
+        {
+            return false;
+        } 
         MObject castOther = (MObject) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())
