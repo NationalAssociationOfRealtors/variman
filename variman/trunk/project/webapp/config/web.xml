@@ -6,23 +6,48 @@
   <display-name>CRT RETS Server</display-name>
   <description>CRT RETS Server</description>
 
-  <servlet>
-    <servlet-name>stop-servlet</servlet-name>
-    <servlet-class>org.realtors.rets.server.webapp.StopServlet</servlet-class>
-  </servlet>
+  <filter>
+    <filter-name>Accounting Filter</filter-name>
+    <filter-class>org.realtors.rets.server.webapp.AccountingFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>Accounting Filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
 
   <servlet>
-    <servlet-name>login-servlet</servlet-name>
+    <servlet-name>Stop Servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.StopServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Login Servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.LoginServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Logout Servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetMetadata Servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.GetMetadataServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>stop-servlet</servlet-name>
+    <servlet-name>Stop Servlet</servlet-name>
     <url-pattern>/rets/stop</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>login-servlet</servlet-name>
+    <servlet-name>Login Servlet</servlet-name>
     <url-pattern>/rets/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Logout Servlet</servlet-name>
+    <url-pattern>/rets/logout</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetMetadata Servlet</servlet-name>
+    <url-pattern>/rets/getMetadata</url-pattern>
   </servlet-mapping>
 
   <session-config>
