@@ -28,6 +28,10 @@ public class DigestAuthorizationRequestTest extends TestCase
         assertEquals("f151926f19d2566706621616d29f257c", request.getCnonce());
         assertEquals("4ac947bd0b23ca972a5f1d5d794b13a6", request.getResponse());
         assertEquals("121d932ad13ff598b0df1d700e422812", request.getOpaque());
+
+        request.setMethod("GET");
+        request.setPassword("Schmoe");
+        assertTrue(request.verifyResponse());
     }
 
     public void testRequestHeaderNoQuotes()
@@ -52,6 +56,10 @@ public class DigestAuthorizationRequestTest extends TestCase
         assertEquals("cbbaa5564d53563e", request.getCnonce());
         assertEquals("d7d4e90e15bdc2a43812f9e5383fac59", request.getResponse());
         assertEquals("c54a061147901a1a1ddc55369a3439d8", request.getOpaque());
+
+        request.setMethod("GET");
+        request.setPassword("Schmoe");
+        assertTrue(request.verifyResponse());
     }
 
     public void testEqualsInKeyValue()
@@ -63,6 +71,10 @@ public class DigestAuthorizationRequestTest extends TestCase
             "nc=00000001, response=\"b83db9c43d82e38380e24ecb03109d5d\", " +
             "opaque=\"6055cb5ccdff7d130976dafffcd2e12c\"");
         assertEquals("NzgzMTA=", request.getCnonce());
+
+        request.setMethod("GET");
+        request.setPassword("Schmoe");
+        assertTrue(request.verifyResponse());
     }
 
     public void testValidResponse() throws NoSuchAlgorithmException
@@ -80,5 +92,22 @@ public class DigestAuthorizationRequestTest extends TestCase
         request.setNonceCount("00000001");
         request.setResponse("4ac947bd0b23ca972a5f1d5d794b13a6");
         assertTrue(request.verifyResponse());
+    }
+
+    public void testNullPassword() throws NoSuchAlgorithmException
+    {
+        DigestAuthorizationRequest request = new DigestAuthorizationRequest();
+        request.setUsername("Joe");
+        request.setRealm("RETS Server");
+        request.setMethod("GET");
+        request.setUri("/rets/login");
+        request.setQop("auth");
+        request.setNonce("246e1b9f80fd87d67c6eceffbcf89941");
+        request.setOpaque("121d932ad13ff598b0df1d700e422812");
+        request.setCnonce("f151926f19d2566706621616d29f257c");
+        request.setNonceCount("00000001");
+        // Response if password is interpreted as "null"
+        request.setResponse("16620f100bad0abee21864791b2ff1e5");
+        assertFalse(request.verifyResponse());
     }
 }
