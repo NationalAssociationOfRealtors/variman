@@ -78,8 +78,30 @@ public class WebApp
         return sSessions.openSession();
     }
 
+    public static void setGetObjectRoot(String getObjectRoot)
+    {
+        sGetObjectRoot = getObjectRoot;
+    }
+
+    public static String getGetObjectRoot()
+    {
+        return sGetObjectRoot;
+    }
+
+    public static void setGetObjectPattern(String getObjectPattern)
+    {
+        sGetObjectPattern = getObjectPattern;
+    }
+
+    public static String getGetObjectPattern()
+    {
+        return sGetObjectPattern;
+    }
+
     private static ServletContext sServletContext;
     private static MetadataManager sMetadataManager;
     private static SessionFactory sSessions;
     private static String sLog4jFile;
+    private static String sGetObjectRoot;
+    private static String sGetObjectPattern;
 }
