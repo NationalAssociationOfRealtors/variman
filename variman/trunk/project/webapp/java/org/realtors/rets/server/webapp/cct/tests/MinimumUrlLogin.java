@@ -42,9 +42,7 @@ public class MinimumUrlLogin extends BaseCertificationTest
         mLogin.setCapabilityUrlLevel(CapabilityUrlLevel.MINIMAL);
         mLogin.setSessionId(SESSION_ID);
         mLogin.setGetInvokeCount(InvokeCount.ONE);
-        mLogin.addRequiredHeader("Accept", "^\\*/\\*$");
-        mLogin.addRequiredHeader("User-Agent", ".*");
-        mLogin.addRequiredHeader("RETS-Version", ".*");
+        mLogin.addStandardHeaders();
 
         mAction = actionManager.getActionHandler();
         mAction.reset();

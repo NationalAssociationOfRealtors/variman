@@ -40,25 +40,20 @@ public class RelativeUrlLogin extends BaseCertificationTest
         mLogin.setRelativeUrls(true);
         mLogin.setSessionId(SESSION_ID);
         mLogin.setGetInvokeCount(InvokeCount.ONE);
-        mLogin.addRequiredHeader("Accept", "^\\*/\\*$");
-        mLogin.addRequiredHeader("User-Agent", ".*");
-        mLogin.addRequiredHeader("RETS-Version", ".*");
+        mLogin.addStandardHeaders();
 
         mAction = actionManager.getActionHandler();
         mAction.reset();
         mAction.setGetInvokeCount(InvokeCount.ONE);
-        mAction.addRequiredHeader("Accept", "^\\*/\\*$");
-        mAction.addRequiredHeader("User-Agent", ".*");
-        mAction.addRequiredHeader("RETS-Version", ".*");
-        mAction.addCookie("RETS-Session-ID", "^" + SESSION_ID + "$");
+        mAction.addStandardHeaders();
+        mAction.addStandardCookies(SESSION_ID);
 
         mLogout = actionManager.getLogoutHandler();
         mLogout.reset();
         mLogout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
-        mLogout.addRequiredHeader("Accept", "^\\*/\\*$");
-        mLogout.addRequiredHeader("User-Agent", ".*");
-        mLogout.addRequiredHeader("RETS-Version", ".*");
-        mLogout.addCookie("RETS-Session-ID", "^" + SESSION_ID + "$");
+        mLogout.addStandardHeaders();
+        mLogout.addStandardCookies(SESSION_ID);
+
         mStatus = RUNNING;
     }
 

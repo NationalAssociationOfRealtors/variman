@@ -189,6 +189,19 @@ public abstract class BaseServletHandler implements ServletHandler
         mExpectedCookies.put(name, value);
     }
 
+    public void addStandardHeaders()
+    {
+        addRequiredHeader("Accept", "^\\*/\\*$");
+        addRequiredHeader("User-Agent", ".*");
+        addRequiredHeader("RETS-Version", ".*");
+    }
+
+    public void addStandardCookies(String sessionId)
+    {
+        addCookie("JSESSIONID", ".*");
+        addCookie("RETS-Session-ID", "^" + sessionId + "$");
+    }
+
     private static final Logger LOG =
         Logger.getLogger(BaseServletHandler.class);
     private Map mExpectedHeaders;
