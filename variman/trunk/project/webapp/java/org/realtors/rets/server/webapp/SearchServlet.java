@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.SearchParameters;
 import org.realtors.rets.server.SearchTransaction;
+import org.realtors.rets.server.RetsServer;
 
 import org.apache.log4j.Logger;
 
@@ -35,7 +36,8 @@ public class SearchServlet extends RetsServlet
                                  request.getRetsVersion());
         LOG.debug(parameters);
         SearchTransaction search = new SearchTransaction(parameters);
-        search.execute(out, WebApp.getMetadataManager(), WebApp.getSessions());
+        search.execute(out, WebApp.getMetadataManager(),
+                       RetsServer.getSessions());
     }
 
     private static final Logger LOG =

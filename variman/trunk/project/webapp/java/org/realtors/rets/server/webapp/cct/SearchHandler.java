@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.SearchParameters;
 import org.realtors.rets.server.SearchTransaction;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.webapp.RetsServletRequest;
 import org.realtors.rets.server.webapp.RetsServletResponse;
 import org.realtors.rets.server.webapp.WebApp;
@@ -40,7 +41,8 @@ public class SearchHandler extends BaseServletHandler
         LOG.debug(parameters);
         SearchTransaction search = new SearchTransaction(parameters);
         search.setExecuteQuery(false);
-        search.execute(out, WebApp.getMetadataManager(), WebApp.getSessions());
+        search.execute(out, WebApp.getMetadataManager(),
+                       RetsServer.getSessions());
     }
 
     public static final String NAME = "/search";

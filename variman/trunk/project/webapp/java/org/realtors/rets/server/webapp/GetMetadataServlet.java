@@ -20,6 +20,7 @@ import org.realtors.rets.server.GetMetadataTransaction;
 import org.realtors.rets.server.HibernateMetadataFetcher;
 import org.realtors.rets.server.MetadataFetcher;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.RetsServer;
 
 /**
  * @web.servlet name="get-metadata-servlet"
@@ -36,7 +37,7 @@ public class  GetMetadataServlet extends RetsServlet
         else
         {
             mMetadataFetcher =
-                new HibernateMetadataFetcher(WebApp.getSessions());
+                new HibernateMetadataFetcher(RetsServer.getSessions());
         }
     }
 
