@@ -46,6 +46,11 @@
     <pathelement path="build/hibernate/classes"/>
   </path>
 
+  <path id="datagen.path">
+<!--     <pathelement location="${rets-client.jar}"/> -->
+    <pathelement path="build/hibernate/classes"/>
+  </path>
+
   <path id="webapp.path">
     <pathelement path="${servlet.jar}"/>
     <pathelement path="${log4j.jar}"/>
@@ -101,6 +106,9 @@
     <mkdir dir="build/importer/classes"/>
     <mkdir dir="build/importer/lib"/>
     <mkdir dir="build/importer/bin"/>
+    <mkdir dir="build/datagen/classes"/>
+    <mkdir dir="build/datagen/lib"/>
+    <mkdir dir="build/datagen/bin"/>
     <mkdir dir="build/rets-server/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
@@ -157,8 +165,6 @@
          basedir="build/hibernate/xdoclet" index="true"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
-    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
-          todir="build/importer/classes"/>
   </target>
 
   <target name="build-hibernate-xschema" depends="build-hibernate"
@@ -394,6 +400,50 @@
           file="${hibernate.jdbc.jar}"/>
   </target>
 
+  <target name="build-datagen" depends="build-hibernate"
+          description="Builds generates dummy data for testing">
+    <depend srcDir="project/datagen/java"
+            destDir="build/datagen/classes"
+            cache="build/datagen/depcache" closure="yes">
+      <classpath>
+        <path refid="lib.path"/>
+        <path refid="datagen.path"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/datagen/java"
+           destdir="build/datagen/classes"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="lib.path"/>
+        <path refid="datagen.path"/>
+      </classpath>
+    </javac>
+
+    <copy file="project/datagen/shell/runDatagen"
+          todir="build/datagen/bin"/>
+    <chmod file="build/datagen/bin/runDatagen" perm="ugo+rx"/>
+    <copy file="${commons-lang.jar}" todir="build/datagen/lib"/>
+    <copy file="${commons-logging.jar}" todir="build/datagen/lib"/>
+    <copy file="${log4j.jar}" todir="build/datagen/lib"/>
+    <copy file="${jdom.jar}" todir="build/datagen/lib"/>
+    <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
+          todir="build/datagen/lib"/>
+    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
+          todir="build/datagen/classes"/>
+
+    <!-- this copies the hibernate stuff we need -->
+    <copy todir="build/datagen/lib">
+      <fileset dir="${hibernate.lib}" includes="*.jar"
+               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar" />
+    </copy>
+    <copy todir="build/datagen/lib"
+          file="${hibernate.jar}"/>
+    <copy todir="build/datagen/classes"
+          file="project/hibernate/config/hibernate.properties"/>
+    <copy todir="build/datagen/lib" file="${hibernate.jdbc.jar}"/>
+  </target>
+  
   <target name="build-importer" depends="build-hibernate"
           description="Builds the data and metadata importers">
     <depend srcDir="project/importer/java"
@@ -421,11 +471,12 @@
     <copy file="${commons-lang.jar}" todir="build/importer/lib"/>
     <copy file="${httpclient.jar}" todir="build/importer/lib"/>
     <copy file="${commons-logging.jar}" todir="build/importer/lib"/>
-    <copy file="${rets-client.jar}" todir="build/importer/lib"/>
     <copy file="${log4j.jar}" todir="build/importer/lib"/>
     <copy file="${jdom.jar}" todir="build/importer/lib"/>
     <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
           todir="build/importer/lib"/>
+    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
+          todir="build/importer/classes"/>
 
     <!-- this copies the hibernate stuff we need -->
     <copy todir="build/importer/lib">
