@@ -1,6 +1,7 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.util.List;
+import java.util.Collections;
 
 import javax.swing.*;
 
@@ -11,9 +12,38 @@ import javax.swing.*;
  */
 public class ListListModel extends AbstractListModel
 {
+    public ListListModel()
+    {
+        this(Collections.EMPTY_LIST);
+    }
+
     public ListListModel(List list)
     {
         mList = list;
+        mFormatter = NULL_FORMATTER;
+    }
+
+    public void setList(List newList)
+    {
+        mList = newList;
+        List oldList = mList;
+        int changed;
+        if (newList.size() > oldList.size())
+        {
+            fireIntervalAdded(this, oldList.size(), newList.size());
+            changed =  oldList.size();
+        }
+        else if (newList.size() < oldList.size())
+        {
+            fireIntervalRemoved(this, newList.size(), oldList.size());
+            changed = newList.size();
+        }
+        else
+        {
+            // New list is the same size
+            changed = newList.size();
+        }
+        fireContentsChanged(this, 0, changed);
     }
 
     public int getSize()
@@ -23,8 +53,25 @@ public class ListListModel extends AbstractListModel
 
     public Object getElementAt(int i)
     {
-        return mList.get(i);
+        return mFormatter.format(mList.get(i));
     }
 
+    public void setFormatter(ListElementFormatter formatter)
+    {
+        mFormatter = formatter;
+    }
+
+    private static class NullFormatter implements ListElementFormatter
+    {
+        public Object format(Object object)
+        {
+            return object;
+        }
+    }
+
+    public static final ListElementFormatter NULL_FORMATTER =
+        new NullFormatter();
+
     List mList;
+    ListElementFormatter mFormatter;
 }
