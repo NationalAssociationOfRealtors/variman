@@ -23,8 +23,7 @@ import org.realtors.rets.server.webapp.auth.UserMap;
  */
 public class RegistrationAction extends Action
 {
-
-    /* (non-Javadoc)
+    /**
      * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public ActionForward execute(ActionMapping mapping,
@@ -62,30 +61,6 @@ public class RegistrationAction extends Action
             saveErrors(request, errors);
             return new ActionForward(mapping.getInput());
         }
-
-
-//        request.setAttribute("registrationForm", form);
-//        user = new User();
-//        user.setUsername(username);
-//        user.setFirstName(form.getFirstName());
-//        user.setLastName(form.getLastName());
-//        user.setPassword(form.getPassword());
-//
-//        UserInfo userInfo = new UserInfo();
-//        userInfo.setUser(user);
-//        userInfo.setAgentId(form.getAgentId());
-//        userInfo.setCompany(form.getCompany());
-//        userInfo.setEmail(form.getEmail());
-//        userInfo.setProductName(form.getProductName());
-//        userInfo.setProductVersion(form.getProductVersion());
-//        userInfo.setUserAgent(form.getUserAgent());
-//
-//        HttpSession session = request.getSession();
-//        session.setAttribute("registrationForm", form);        
-//        session.setAttribute("regUser", user);
-//        session.setAttribute("regUserInfo", userInfo);
-//        request.setAttribute("RegUser", user);
-//        request.setAttribute("RegUserInfo", userInfo);
 
         return mapping.findForward("confirmPage");
     }
