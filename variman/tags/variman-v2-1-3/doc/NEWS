@@ -1,0 +1,23 @@
+Version 2.1.3 - 14 January 2005
+
+  * Metadata gets filtered according to group filtering rules.
+  * Added condition rules to filter based on arbitry SQL conditions.
+
+Version 2.1.2 - 20 December 2004
+
+  * Renamed to Variman.
+
+Version 2.1.1 - 12 November 2004
+
+  * Location support in GetObject.
+  * Update multipart GetObject behavior to reflect 1.7.
+  * Fix DMQL parsing error for numbers.
+
+Version 2.1.0 - 12 October 2004
+
+  * Groups support.
+  * Support for larger data sets on  SQLServer.
+  * Full GetObject support (including multipart).
+  * Improved stability.
+  * New reference manual.
+  * Improved administration tool.

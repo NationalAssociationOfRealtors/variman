@@ -1,0 +1,339 @@
+<section id="deploy">
+  <title>Deploying &name;</title>
+  <para>
+    This chapter describes how to configure and run &name;.
+  </para>
+
+  <section id="first-time">
+    <title>First Time Configuration</title>
+    <para>
+      Before running &name; for the first time, there are a few steps
+      you need to take.  &name; requires access to a database.
+      Currently, &name; supports PostgreSQL <xref
+      linkend="bib-postgres"/> and Microsoft SQL Server.  This database
+      is where RETS data is stored, as well as &name; specific
+      information.  &name; requires read/write access to the database,
+      as well as the ability to create new tables.
+    </para>
+
+    <section id="postgres">
+      <title>PostgreSQL Setup</title>
+      <para>
+        PostgreSQL must be configured to accept TCP/IP connections, as
+        this is how the JDBC driver connects.  This is done adding the
+        following setting in <filename>postgresql.conf</filename>:
+      </para>
+      <programlisting>tcpip_socket = true
+</programlisting>
+      <para>
+        You may also have to edit <filename>pg_hba.conf</filename> to
+        make network connections permissible.  See the documentation
+        in that file for details.
+      </para>
+      <para>
+        It is probably a good idea to create a user other than the
+        default <literal>postgres</literal> superuser.  This user must
+        have read and write access, and permissions to create new
+        tables in the database used by &name;.
+      </para>
+      <para>
+        The JDBC driver for Postgres version 7.4.x is included with
+        the distribution.
+      </para>
+    </section>
+      
+    <section id="ms-sql-server">
+      <title>Microsoft SQL Server Setup</title>
+      <para>
+        First, either choose an existing database, or create a new
+        database for use with &name;.  Then, create a new user that
+        has the following role memberships:
+      </para>
+      <itemizedlist>
+        <listitem><literal>public</literal></listitem>
+        <listitem><literal>db_owner</literal></listitem>
+        <listitem><literal>db_datareader</literal></listitem>
+        <listitem><literal>db_datawriter</literal></listitem>
+      </itemizedlist>
+      <para>
+        The Open Source jTDS <xref linkend="bib-jtds"/> driver is
+        included with &name;.  The only other supported driver is the
+        commercial JSQLConnect driver from JNetDirect <xref
+        linkend="bib-jnetdirect"/>.  The driver that Microsoft offers
+        is buggy and does not work with &name;.
+      </para>
+    </section>
+
+    <section id="jdbc">
+      <title>Installing a JDBC Driver</title>
+      <para>
+        The easiest way to install your JDBC driver is to use the
+        Administration Tool.  Choose the Install Jar command from the
+        File menu.  You must then restart the Administration Tool
+        and/or &name; to use the new JDBC driver.
+      </para>
+    </section>
+
+    <section id="db-properties">
+      <title>Configuring Database Properties</title>
+      <para>
+        From the Configuration tab of the Administration Tool, the
+        current database properties are listed.  You will have change
+        these to suit your environment.  Click on the Edit button, to
+        bring up the Database Properties dialog, as in <xref
+        linkend="fig-db"/>.  You should use the Test Connection button
+        to make sure that the properties are entered correctly.  If
+        the test fails, then neither the Administration Tool nor
+        &name; will be able to access your database.
+      </para>
+      <figure id="fig-db">
+        <title>Database Properties Window</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="db.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="schema">
+      <title>Creating the Schema</title>
+      <para>
+        &name; needs tables for it's own use, such as user
+        information.  Before you create users and groups, you need to
+        create these tables by choosing the Create Schema command from
+        the Database menu.
+      </para>
+    </section>
+  </section> <!-- First Time -->
+
+  <section id="rets">
+    <title>Configuring RETS Parameters</title>
+    <para>
+      From the main Configuration panel, as seen in <xref
+      linkend="fig-config"/>, you can configure various RETS
+      parameters.
+    </para>
+    <figure id="fig-config">
+      <title>Configuration Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="config.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    <para>
+      The Listening Port is the TCP port number that the &name; server
+      listens on.  6103 is the standard, well-known port number for
+      RETS.  The Metadata Directory points to the root directory of
+      the metadata hierarchy.  Configuring metadata is explained in
+      <xref linkend="deploy-metadata"/>.  The Image Root and Image
+      Pattern parameters are used to allow &name; to serve up images
+      for the GetObject transaction.  The Image Root is a directory
+      where the images are located.  The Image Pattern is a percent
+      substitution pattern that describes the format of the actual
+      file names.  The possible patterns and their substitutions are
+      listed in <xref linkend="tab-image-pattern"/>.
+    </para>
+
+    <table frame="all" id="tab-image-pattern">
+      <title>Image Patterns</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Pattern</entry>
+            <entry>Substitution</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>%k</entry>
+            <entry>Object Key</entry>
+          </row>
+          <row>
+            <entry>%i</entry>
+            <entry>Object Index</entry>
+          </row>
+          <row>
+            <entry>%I</entry>
+            <entry>Object Index, or empty if index is 0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>
+      For example, if you have pictures
+      in <filename>/home/variman/pictures/</filename>.  The key is
+      used as the base file name, with each image given a number.  Say
+      there are three pictures for the property
+      ID <literal>LN1001</literal>, the full paths for these pictures
+      are:
+      <itemizedlist>
+        <listitem>
+          <literal>/home/variman/pictures/LN1001_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/variman/pictures/LN1001_2.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/variman/pictures/LN1001_3.jpg</literal>
+        </listitem>
+      </itemizedlist>
+      The, you could set the Image Root
+      to <filename>/home/variman/pictures</filename> and the Image
+      Pattern to <literal>%k_%i.jpg</literal>.
+      The <literal>%k</literal> gets replaced with the object ID, and
+      the <literal>%i</literal> gets replaced with the image number.
+    </para>
+    <para>
+      The <literal>%k</literal> percent pattern may be proceeded by a
+      number modifier that truncates the number of characters used
+      during substitution.  This allows files to be split up into
+      multiple directories for large installations.  If the number is
+      positive, the characters are taken from the front, where if the
+      number is negative, the characters are taken from the end. So,
+      with a pattern of <literal>%-2k/%k_%i.jpg</literal>, the first
+      picture
+      for <literal>LN1001</literal>, <literal>LN1002</literal>, <literal>LN1101</literal>
+      would be at the following paths:
+      <itemizedlist>
+        <listitem>
+          <literal>/home/variman/pictures/01/LN1001_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/variman/pictures/02/LN1002_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/variman/pictures/01/LN1101_1.jpg</literal>
+        </listitem>
+      </itemizedlist>
+    </para>
+    
+  </section>
+
+  <section id="users">
+    <title>Users</title>
+    <para>
+      Users are managed through the Users Tab as seen in <xref
+      linkend="fig-users"/>.  Users may be created, removed, and
+      edited from the User menu or contextual menu.  Users may also be
+      added and removed from groups.
+    </para>
+
+    <figure id="fig-users">
+      <title>Users Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="users.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section id="groups">
+    <title>Groups</title>
+    <para>
+      Groups are managed through the Groups Tab as seen in <xref
+      linkend="fig-groups"/>. Groups may be created and removed from
+      the Group menu or contextual menu.
+    </para>
+
+    <figure id="fig-groups">
+      <title>Groups Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="groups.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      Groups can be given rules to restrict access to data for members
+      of this group.  There are two types of rules: filter rules and
+      condition rules, which are described below.
+    </para>
+
+    <section id="filter-rules">
+      <title>Filter Rules</title>
+
+      <para>
+        Filter rules allow RETS system names to be filtered out.  If
+        none of a users's groups contain any rules, then they have
+        access to all system names provided in the metadata.  Rules
+        are written for a particular resource and class.  There two
+        types of filter rules: include and exclude.  Include rules
+        includes only the fields listed.  Exclude rules includes all
+        fields except the ones listed.  An example rule is shown in
+        <xref linkend="fig-filter-rule"/>.  The individual fields are
+        listed with spaces between them.  If a user is a member of
+        multiple groups, then the fields allowed to be seen are a
+        union of the fields of each group's set of fields.
+      </para>
+
+      <figure id="fig-filter-rule">
+        <title>Filter Rule Dialog</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="filter_rule.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section> <!-- Filter Rules -->
+
+    <section id="condition-rules">
+      <title>Condition Rules</title>
+
+      <para>
+        Condition rules allows the generated SQL to be modified and
+        given extra conditions.  For example, there may be a column in
+        the database called <code>idx_viewable</code> with values
+        of <code>Y</code> or <code>N</code>, which determines whether
+        or not this row should be visible to IDX users.  To make only
+        the rows which are viewable for IDX available, you would use
+        the SQL constraint <code>idx_viewable = 'Y'</code>, as shown
+        in <xref linkend="fig-condition-rule"/>.  This gets appended
+        on to the <code>WHERE</code> clause of the generated SQL using
+        an <code>AND</code> statement.  If a user is a member of
+        multiple groups that have condition rules, each SQL constraint
+        is appended to the <code>WHERE</code> clause in a
+        separate <code>AND</code> statement.  So one group could
+        restrict access to rows that are IDX viewable, while another
+        could restrict based on price.  Condition rules are also tied
+        to a specific resource and class.  The SQL constraint must use
+        the SQL column names, not RETS system names.  This allows some
+        powerful behavior, because it could use columns in the
+        database that are not mapped to RETS system names.
+      </para>
+
+      <figure id="fig-condition-rule">
+        <title>Condition Rule Dialog</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="condition_rule.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section> <!-- Condition Rules -->
+
+  </section> <!-- Groups -->
+
+  <section id="deploy-metadata">
+    <title>Configuring Metadata</title>
+    <para>
+      Metadata describes how to map property data in your relational
+      database to RETS names.  The metadata is stored as compact
+      format metadata, split into multiple files.  For more
+      information on compact metadata format, see RETS specification.
+      A sample set of metadata is provided on the &name; website, and
+      should be used as a starting point.
+    </para>
+  </section>
+</section> <!-- deploy -->
+
+<!--
+Local Variables:
+mode: xml
+sgml-parent-document: ("manual.xml" "" "section")
+End:
+-->
