@@ -14,4 +14,4 @@ do
     CLASSPATH=$i:$CLASSPATH
 done
 
-java -cp $CLASSPATH -Dprop.count="500" org.realtors.rets.server.testing.DataGenerator $*
+java -cp $CLASSPATH org.realtors.rets.server.testing.DataGenerator $*
