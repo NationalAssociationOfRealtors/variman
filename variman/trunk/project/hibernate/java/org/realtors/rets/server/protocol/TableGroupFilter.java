@@ -93,11 +93,11 @@ public class TableGroupFilter
         Logger.getLogger(TableGroupFilter.class);
 
     /** Contains all tables for a given resource and class. */
-    private Map /* String, Table */ mAllTables;
+    private Map /* String, Set <Table> */ mAllTables;
 
     /**
-     * Contains a filterd list of tables for a givern resource, class, and
+     * Contains a filterd list of tables for a given resource, class, and
      * group.
      */
-    private Map /* String, Table */ mRules;
+    private Map /* String, Set <Table> */ mRules;
 }
