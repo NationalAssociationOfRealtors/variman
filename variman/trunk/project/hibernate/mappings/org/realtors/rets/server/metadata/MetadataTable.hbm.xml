@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataTable.hbm.xml,v 1.6 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: MetadataTable.hbm.xml,v 1.7 2003/06/09 18:07:30 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataTable"
@@ -49,7 +49,6 @@
 
     <property name="useSeparator" type="boolean"/>
 
-    <!-- the following are commented out until metadata class is created -->
     <many-to-one name="editMask" cascade="none"
       class="org.nar.rets.metadata.newdb.MetadataEditMask"/>
 
