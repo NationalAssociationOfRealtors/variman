@@ -57,7 +57,8 @@ public class MetadataPanel extends wxPanel
         super(parent);
         wxBoxSizer box = new wxBoxSizer(wxVERTICAL);
         wxSplitterWindow splitter = new wxSplitterWindow(this, -1);
-        mTree = new wxTreeCtrl(splitter, METADATA_TREE);
+        mTree = new wxTreeCtrl(splitter, METADATA_TREE, wxDefaultPosition,
+                               wxDefaultSize, wxTR_DEFAULT_STYLE);
 
         wxPanel detailPanel = new wxPanel(splitter);
         mDetailSizer = new wxBoxSizer(wxVERTICAL);
