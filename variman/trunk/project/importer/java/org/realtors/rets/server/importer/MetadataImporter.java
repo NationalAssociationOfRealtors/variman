@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-
+import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.MappingException;
 import net.sf.hibernate.Session;
@@ -24,26 +23,29 @@ import org.realtors.rets.client.Metadata;
 import org.realtors.rets.client.MetadataTable;
 import org.realtors.rets.client.RetsSession;
 
+import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.metadata.AlignmentEnum;
-import org.realtors.rets.server.metadata.UnitEnum;
-import org.realtors.rets.server.metadata.InterpretationEnum;
+import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
-import org.realtors.rets.server.metadata.TableStandardNameEnum;
+import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.InterpretationEnum;
+import org.realtors.rets.server.metadata.Lookup;
+import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.ObjectTypeEnum;
 import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.TableStandardName;
+import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.metadata.Update;
 import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
-import org.realtors.rets.server.metadata.ClassStandardNameEnum;
+
+import org.apache.commons.lang.StringUtils;
 
 public class MetadataImporter
 {
@@ -130,8 +132,7 @@ public class MetadataImporter
         MetadataTable tSystem =
             rSession.getMetadataTable(MetadataTable.SYSTEM);
         MSystem hSystem = new MSystem();
-//        hSystem.setVersion(10101);
-        // Todo: DLD fix system version
+        hSystem.setVersion(10101);
         hSystem.setDate(Calendar.getInstance().getTime());
 
         hSession.save(hSystem);
@@ -573,9 +574,10 @@ public class MetadataImporter
                     hTable.setClassid(hClass);
 
                     hTable.setSystemName(md.getAttribute("SystemName"));
+                    // Todo: should lookup standard name in hibernate
+                    String standardName = md.getAttribute("StandardName");
                     hTable.setStandardName(
-                        TableStandardNameEnum.fromString(
-                            md.getAttribute("StandardName")));
+                        lookupTableStandardName(standardName));
                     hTable.setLongName(md.getAttribute("LongName"));
 
                     hTable.setDbName(
@@ -665,6 +667,34 @@ public class MetadataImporter
         }
     }
 
+    private TableStandardName lookupTableStandardName(String standardName)
+    {
+        TableStandardName name = null;
+        SessionHelper helper = new SessionHelper(mSessions);
+        try
+        {
+            Session session = helper.beginTransaction();
+            List results = session.find(
+                "SELECT name" +
+                "  FROM TableStandardName name" +
+                " WHERE name.name = ?",
+                standardName, Hibernate.STRING);
+            if (results.size() == 1)
+            {
+                name = (TableStandardName) results.get(1);
+            }
+        }
+        catch (HibernateException e)
+        {
+            helper.rollback(System.err);
+        }
+        finally
+        {
+            helper.close(System.err);
+        }
+        return name;
+    }
+
     public static final void main(String args[])
         throws Exception
     {
@@ -683,5 +713,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.18 2003/07/09 16:43:47 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.19 2003/07/10 15:34:21 dribin Exp $";
 }
