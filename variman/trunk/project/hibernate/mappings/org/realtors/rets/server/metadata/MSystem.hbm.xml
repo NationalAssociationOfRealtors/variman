@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: MSystem.hbm.xml,v 1.1 2003/05/28 21:32:52 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.metadata.newdb.MetadataSystem"
+    table="rets_metadata_system">
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="systemID" type="string">
+      <column name="system_id" length="10"/>
+    </property>
+
+    <property name="description" type="string">
+      <column name="description" length="64"/>
+    </property>
+
+    <property name="comments" type="string"/>
+
+    <property name="version" type="string">
+      <column name="version" length="11"/>
+    </property>
+    
+    <property name="date" type="date"/>
+
+    <set name="resources" table="rets_metadata_system_resource">
+      <key column="id"/>
+      <one-to-many class="org.nar.rets.metadata.newdb.MetadataResource"/>
+    </set>
+       
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: MetadataResource.hbm.xml,v 1.1 2003/05/28 21:32:52 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.metadata.newdb.MetadataResource"
+    table="rets_metadata_resource">
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="resourceID" type="string">
+      <column name="resource_id" length="32"/>
+    </property>
+
+    <property name="standardName" type="string">
+      <column name="standard_name" length="32"/>
+    </property>
+
+    <property name="visibleName" type="string">
+      <column name="visible_name" length="32"/>
+    </property>
+
+    <property name="description" type="string">
+      <column name="description" length="64"/>
+    </property>
+
+    <property name="keyField" type="string">
+      <column name="key_field" length="32"/>
+    </property>
+
+  </class>
+</hibernate-mapping>
+    
