@@ -25,6 +25,12 @@ public abstract class ClassFormatter extends MetadataFormatter
         }
     }
 
-    public abstract String format(MClass[] classes, String resource,
-                                  String version, Date date);
+    public void setResource(String resource)
+    {
+        mResource = resource;
+    }
+
+    public abstract String format(MClass[] classes);
+
+    protected String mResource;
 }

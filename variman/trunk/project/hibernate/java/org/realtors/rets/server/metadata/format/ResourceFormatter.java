@@ -2,10 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.Date;
-
-import org.realtors.rets.server.metadata.format.MetadataFormatter;
-import org.realtors.rets.server.metadata.format.CompactResourceFormatter;
 import org.realtors.rets.server.metadata.Resource;
 
 public abstract class ResourceFormatter extends MetadataFormatter
@@ -27,6 +23,5 @@ public abstract class ResourceFormatter extends MetadataFormatter
         }
     }
 
-    public abstract String format(Resource[] resources, String version,
-                                  Date date);
+    public abstract String format(Resource[] resources);
 }

@@ -29,5 +29,13 @@ public class MetadataFormatter
         return formatter.format(date);
     }
 
+    public void setVersion(String version, Date date)
+    {
+        mVersion = version;
+        mDate = date;
+    }
+
     private static int sDefaultFormat = COMPACT;
+    protected String mVersion;
+    protected Date mDate;
 }

@@ -63,7 +63,7 @@ public class ClassStandardNameEnum implements PersistentEnum
     {
         switch (code)
         {
-            case 0: return "Residential-Property";
+            case 0: return "ResidentialProperty";
             case 1: return "LotsAndLand";
             case 2: return "CommonInterest";
             case 3: return "MultiFamily";

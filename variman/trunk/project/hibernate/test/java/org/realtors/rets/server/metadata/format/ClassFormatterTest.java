@@ -21,12 +21,22 @@ public class ClassFormatterTest extends FormatterTestCase
     {
         ClassFormatter formatter =
             ClassFormatter.getInstance(MetadataFormatter.COMPACT);
-        String formatted = formatter.format(mClasses, "Property", "1.00.001",
-                                            getDate());
-//        assertEquals(
-//            "<METADATA-CLASS Version=\"" + VERSION + "\"",
-//            formatted
-//        );
+        formatter.setVersion("1.00.001", getDate());
+        formatter.setResource("Property");
+        String formatted = formatter.format(mClasses);
+        assertEquals(
+            "<METADATA-CLASS Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" " +
+            "Date=\"" + DATE + "\">\n" +
+            "<COLUMNS>\tClassName\tStandardName\tVisibleName\tDBName\t" +
+            "Description\tTableVersion\tTableDate\tUpdateVersion\t" +
+            "UpdateDate\t</COLUMNS>\n" +
+            "<DATA>\tRES\tResidentialProperty\tSingle Family\t\t" +
+            "Single Family Residential" + VERSION_DATE + VERSION_DATE +
+            "\t</DATA>\n" +
+            "</METADATA-CLASS>\n",
+            formatted
+        );
     }
 
     private MClass[] mClasses;

@@ -10,36 +10,25 @@ import org.apache.commons.lang.StringUtils;
 public class CompactResourceFormatter
     extends ResourceFormatter
 {
-    public String format(Resource[] resources, String version, Date date)
+    public String format(Resource[] resources)
     {
         StringBuffer buffer = new StringBuffer();
         buffer.append("<METADATA-RESOURCE ");
-        buffer.append("Version=\"").append(version).append("\" ");
-        buffer.append("Date=\"").append(format(date)).append("\">\n");
+        buffer.append("Version=\"").append(mVersion).append("\" ");
+        buffer.append("Date=\"").append(format(mDate)).append("\">\n");
         buffer.append("<COLUMNS>\t")
             .append(StringUtils.join(sResourceColumns, "\t"))
             .append("\t</COLUMNS>\n");
         for (int i = 0; i < resources.length; i++)
         {
             Resource resource = resources[i];
-            buffer.append(format(resource, version, date));
+            buffer.append(format(resource, mVersion, mDate));
         }
         buffer.append("</METADATA-RESOURCE>\n");
         return buffer.toString();
     }
 
-    private static final String[] sResourceColumns = {
-        "ResourceID", "StandardName", "VisibleName", "Description", "KeyField",
-        "ClassCount", "ClassVersion", "ClassDate", "ObjectVersion",
-        "ObjectDate", "SearchHelpVersion", "SearchHelpDate", "EditMaskVersion",
-        "EditMaskDate", "LookupVersion", "LookupDate", "UpdateHelpVersion",
-        "UpdateHelpDate", "ValidationExpressionVersion",
-        "ValidationExpressionDate", "ValidationLookupVersion",
-        "ValidationLookupDate", "ValidationExternalVersion",
-        "ValidationExternalDate"
-    };
-
-    public String format(Resource resource, String version, Date date)
+    private String format(Resource resource, String version, Date date)
     {
         StringBuffer buffer = new StringBuffer();
         buffer.append("<DATA>\t");
@@ -60,4 +49,15 @@ public class CompactResourceFormatter
         buffer.append("</DATA>\n");
         return buffer.toString();
     }
+
+    private static final String[] sResourceColumns = {
+        "ResourceID", "StandardName", "VisibleName", "Description", "KeyField",
+        "ClassCount", "ClassVersion", "ClassDate", "ObjectVersion",
+        "ObjectDate", "SearchHelpVersion", "SearchHelpDate", "EditMaskVersion",
+        "EditMaskDate", "LookupVersion", "LookupDate", "UpdateHelpVersion",
+        "UpdateHelpDate", "ValidationExpressionVersion",
+        "ValidationExpressionDate", "ValidationLookupVersion",
+        "ValidationLookupDate", "ValidationExternalVersion",
+        "ValidationExternalDate"
+    };
 }

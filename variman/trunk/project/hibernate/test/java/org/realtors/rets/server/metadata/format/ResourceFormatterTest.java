@@ -29,7 +29,8 @@ public class ResourceFormatterTest extends FormatterTestCase
     {
         ResourceFormatter formatter =
             ResourceFormatter.getInstance(MetadataFormatter.COMPACT);
-        String formatted = formatter.format(mResources, "1.00.001", getDate());
+        formatter.setVersion("1.00.001", getDate());
+        String formatted = formatter.format(mResources);
         assertEquals(
             "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
