@@ -44,10 +44,6 @@ tokens
         mMetadata = metadata;
     }
 
-    public void setDmqlLexer(DmqlLexer lexer) {
-        mLexer = lexer;
-    }
-
     public void traceIn(String text) throws TokenStreamException {
         if (mTrace) super.traceIn(text);
     }
@@ -68,7 +64,6 @@ tokens
     
     private boolean mTrace = false;
     private DmqlParserMetadata mMetadata;
-    private DmqlLexer mLexer;
 }
 
 query
@@ -352,33 +347,42 @@ options
         mTrace = trace;
     }
 
+    public void setMetadata(DmqlParserMetadata metadata) {
+        mMetadata = metadata;
+    }
+
     private LookupList newLookupOr(String field, List lookups) {
-        LookupList list = new LookupList(LookupListType.OR, field);
-        addLookups(list, lookups);
+        LookupList list = new LookupList(LookupListType.OR,
+                                         mMetadata.fieldToColumn(field));
+        addLookups(list, field, lookups);
         return list;
     }
 
     private LookupList newLookupAnd(String field, List lookups) {
-        LookupList list = new LookupList(LookupListType.AND, field);
-        addLookups(list, lookups);
+        LookupList list = new LookupList(LookupListType.AND,
+                                         mMetadata.fieldToColumn(field));
+        addLookups(list, field, lookups);
         return list;
     }
 
     private LookupList newLookupNot(String field, List lookups) {
-        LookupList list = new LookupList(LookupListType.NOT, field);
-        addLookups(list, lookups);
+        LookupList list = new LookupList(LookupListType.NOT,
+                                         mMetadata.fieldToColumn(field));
+        addLookups(list, field, lookups);
         return list;
     }
 
-    private void addLookups(LookupList list, List lookups) {
+    private void addLookups(LookupList list, String field, List lookups) {
         for (int i = 0; i < lookups.size(); i++) {
             String lookup = (String) lookups.get(i);
-            list.addLookup(lookup);
+            String dbValue = mMetadata.getLookupDbValue(field, lookup);
+            list.addLookup(dbValue);
         }
     }
 
     private DmqlStringList newStringList(String field, List strings) {
-        DmqlStringList list = new DmqlStringList(field);
+        String column = mMetadata.fieldToColumn(field);
+        DmqlStringList list = new DmqlStringList(column);
         for (int i = 0; i < strings.size(); i++) {
             DmqlString string = (DmqlString) strings.get(i);
             list.add(string);
@@ -387,6 +391,7 @@ options
     }
 
     private boolean mTrace = false;
+    private DmqlParserMetadata mMetadata;
 }
 
 query returns [SqlConverter sql]
