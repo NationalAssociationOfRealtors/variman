@@ -49,9 +49,18 @@ public class RegistrationForm extends ValidatorActionForm
      * 
      * @return
      */
-    public String getFullName()
+    public String getFirstName()
     {
-        return mFullName;
+        return mFirstName;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public String getLastName()
+    {
+        return mLastName;
     }
 
     /**
@@ -116,7 +125,8 @@ public class RegistrationForm extends ValidatorActionForm
         mAgentID = "";
         mCompany = "";
         mEmail = "";
-        mFullName = "";
+        mFirstName = "";
+        mLastName = "";
         mPassword = "";
         mProductName = "";
         mProductVersion = "";
@@ -156,9 +166,18 @@ public class RegistrationForm extends ValidatorActionForm
      * 
      * @param string
      */
-    public void setFullName(String string)
+    public void setFirstName(String string)
     {
-        mFullName = string;
+        mFirstName = string;
+    }
+
+    /**
+     * 
+     * @param string
+     */
+    public void setLastName(String string)
+    {
+        mLastName = string;
     }
 
     /**
@@ -214,15 +233,16 @@ public class RegistrationForm extends ValidatorActionForm
     {
         mVerifyPassword = string;
     }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
-
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
             .append("username", mUserAgent)
-            .append("fullName", mFullName)
+            .append("firstName", mFirstName)
+            .append("lastName", mLastName)
             .append("company", mCompany)
             .append("email", mEmail)
             .append("userAgent", mUserAgent)
@@ -232,12 +252,12 @@ public class RegistrationForm extends ValidatorActionForm
     private String mAgentID;
     private String mCompany;
     private String mEmail;
-    private String mFullName;
+    private String mFirstName;
+    private String mLastName;
     private String mPassword;
     private String mProductName;
     private String mProductVersion;
     private String mUserAgent;
     private String mUsername;
     private String mVerifyPassword;
-
 }
