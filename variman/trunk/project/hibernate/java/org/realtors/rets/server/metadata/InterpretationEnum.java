@@ -1,7 +1,7 @@
 package org.realtors.rets.server.metadata;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.hibernate.PersistentEnum;
 

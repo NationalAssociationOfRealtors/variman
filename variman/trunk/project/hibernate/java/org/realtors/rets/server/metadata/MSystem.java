@@ -1,9 +1,9 @@
 package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Set;
-import java.text.MessageFormat;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
