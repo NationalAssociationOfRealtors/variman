@@ -20,6 +20,13 @@ public class SessionHelper
         mTx = null;
     }
 
+    public Session beginSession() throws HibernateException
+    {
+        mSession = mFactory.openSession();
+        mTx = null;
+        return mSession;
+    }
+
     public Session beginTransaction() throws HibernateException
     {
         mSession = mFactory.openSession();
