@@ -22,7 +22,7 @@ public class RetsReplyException extends RetsServerException
 
     public RetsReplyException(ReplyCode replyCode, String meaning)
     {
-        this(replyCode.getValue(), meaning);
+        this(replyCode.getValue(), replyCode.getName() + ": " + meaning);
     }
 
     public int getReplyCode()
