@@ -295,34 +295,52 @@ public class RetsConfig
             for (int j = 0; j < grandChildren.size(); j++)
             {
                 Element grandChild = (Element) grandChildren.get(j);
-                RuleDescription ruleDescription = new RuleDescription();
-                if (grandChild.getName().equals(INCLUDE_RULE))
+                String ruleName = grandChild.getName();
+                if (ruleName.equals(INCLUDE_RULE))
                 {
-                    ruleDescription.setType(RuleDescription.INCLUDE);
+                    addFilterRule(groupRules, RuleDescription.INCLUDE,
+                                  grandChild);
                 }
-                else if (grandChild.getName().equals(EXCLUDE_RULE))
+                else if (ruleName.equals(EXCLUDE_RULE))
                 {
-                    ruleDescription.setType(RuleDescription.EXCLUDE);
+                    addFilterRule(groupRules, RuleDescription.EXCLUDE,
+                                  grandChild);
+                }
+                else if (ruleName.equals(CONDITION_RULE))
+                {
+                    addConditionRule(groupRules, grandChild);
                 }
                 else
                 {
                     LOG.warn("Unknown rule" + grandChild.toString());
                     continue;
                 }
-                ruleDescription.setResource(
-                    grandChild.getAttributeValue(RESOURCE));
-                ruleDescription.setRetsClass(
-                    grandChild.getAttributeValue(CLASS));
-                String systemNamesText =
-                    grandChild.getChildTextNormalize(SYSTEM_NAMES);
-                String[] systemNamesArray =
-                    StringUtils.split(systemNamesText, " ");
-                ruleDescription.setSystemNames(Arrays.asList(systemNamesArray));
-                groupRules.addRule(ruleDescription);
             }
             securityConstraints.add(groupRules);
         }
         config.setSecurityConstraints(securityConstraints);
+    }
+
+    private static void addFilterRule(GroupRules groupRules,
+                                      RuleDescription.Type ruleType,
+                                      Element element)
+    {
+        RuleDescription rule = new RuleDescription(ruleType);
+        rule.setResource(element.getAttributeValue(RESOURCE));
+        rule.setRetsClass(element.getAttributeValue(CLASS));
+        String systemNamesText = element.getChildTextNormalize(SYSTEM_NAMES);
+        String[] systemNamesArray = StringUtils.split(systemNamesText, " ");
+        rule.setSystemNames(Arrays.asList(systemNamesArray));
+        groupRules.addRule(rule);
+    }
+
+    private static void addConditionRule(GroupRules groupRules, Element element)
+    {
+        ConditionRule rule = new ConditionRule();
+        rule.setResource(element.getAttributeValue(RESOURCE));
+        rule.setRetsClass(element.getAttributeValue(CLASS));
+        rule.setSqlConstraint(element.getChildTextNormalize(SQL_CONSTRAINT));
+        groupRules.addConditionRule(rule);
     }
 
     private static boolean getBoolean(Element element, String name)
@@ -514,6 +532,8 @@ public class RetsConfig
     private static final String RESOURCE = "resource";
     private static final String CLASS = "class";
     private static final String SYSTEM_NAMES = "system-names";
+    private static final String CONDITION_RULE = "condition-rule";
+    private static final String SQL_CONSTRAINT = "sql-constraint";
 
     private int mPort;
     private String mGetObjectRoot;
