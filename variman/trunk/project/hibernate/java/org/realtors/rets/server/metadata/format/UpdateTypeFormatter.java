@@ -15,7 +15,7 @@ public abstract class UpdateTypeFormatter extends MetadataFormatter
     {
         if (format == COMPACT)
         {
-            return new CompactUpdateTypeFormater();
+            return new CompactUpdateTypeFormatter();
         }
         else
         {

@@ -4,7 +4,7 @@ package org.realtors.rets.server.metadata.format;
 
 import org.realtors.rets.server.metadata.UpdateType;
 
-public class CompactUpdateTypeFormater extends UpdateTypeFormatter
+public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
 {
     public String format(UpdateType[] updateTypes)
     {
