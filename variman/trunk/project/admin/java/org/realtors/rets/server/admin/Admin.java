@@ -8,6 +8,8 @@
 
 package org.realtors.rets.server.admin;
 
+import java.io.File;
+
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.SessionFactory;
 
@@ -94,7 +96,7 @@ public class Admin
 
     public static String getWebappRoot()
     {
-        return sRexHome + "/webapp";
+        return sRexHome + File.separator + "webapp";
     }
 
     private static Configuration sHibernateConfiguration;
