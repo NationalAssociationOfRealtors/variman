@@ -767,7 +767,7 @@
     </zip>
   </target>
 
-  <target name="dist-bin" depends="build">
+  <target name="dist-bin" depends="build, doc-manual">
     <!-- Embedded -->
     <tar destfile="dist/${project.string}.tar.gz" compression="gzip">
       <tarfileset dir="build/rets-server" prefix="${project.string}">
@@ -792,7 +792,8 @@
     </zip>
   </target>
 
-  <target name="dist-win" description="Builds a Windows binary distribution">
+  <target name="dist-win" description="Builds a Windows binary distribution"
+          depends="build, doc-manual">
     <copy file="project/build/rex.iss" todir="build">
       <filterset>
         <filter token="VERSION" value="${project.version}"/>
