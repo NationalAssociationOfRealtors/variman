@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.webapp.WebApp;
 
 import org.apache.log4j.Logger;
@@ -83,11 +84,11 @@ public class AuthenticationFilter implements Filter, UserMap
             return;
         }
 
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response =
+            (HttpServletResponse) servletResponse;
         try
         {
-            HttpServletRequest request = (HttpServletRequest) servletRequest;
-            HttpServletResponse response =
-                (HttpServletResponse) servletResponse;
             doAuthentication(filterChain, request, response);
         }
         catch (ServletException e)
@@ -95,10 +96,10 @@ public class AuthenticationFilter implements Filter, UserMap
             LOG.error("Caught", e);
             throw e;
         }
-        catch (RuntimeException e)
+        catch (Throwable e)
         {
             LOG.error("Caught", e);
-            throw e;
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         finally
         {
@@ -110,7 +111,7 @@ public class AuthenticationFilter implements Filter, UserMap
     private void doAuthentication(FilterChain filterChain,
                                   HttpServletRequest request,
                                   HttpServletResponse response)
-        throws IOException, ServletException
+        throws IOException, ServletException, RetsServerException
     {
         MDC.put("addr", request.getRemoteAddr());
         String uri = request.getRequestURI();
@@ -163,6 +164,7 @@ public class AuthenticationFilter implements Filter, UserMap
 
     private boolean verifyResponse(DigestAuthorizationRequest request,
                                    HttpSession session)
+        throws RetsServerException
     {
         User athorizedUser = findAuthorizedUser(request);
         if (athorizedUser != null)
@@ -178,6 +180,7 @@ public class AuthenticationFilter implements Filter, UserMap
     }
 
     private User findAuthorizedUser(DigestAuthorizationRequest request)
+        throws RetsServerException
     {
         User user = mUserMap.findUser(request.getUsername());
         if (user != null)
