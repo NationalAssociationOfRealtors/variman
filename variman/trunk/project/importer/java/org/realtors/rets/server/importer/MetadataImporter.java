@@ -105,7 +105,7 @@ public class MetadataImporter
             doValidationExternal(rSession, hSession);
             doUpdate(rSession, hSession);
             doTable(rSession, hSession);
-            
+
             tx.commit();
             hSession.close();
         }
@@ -338,14 +338,14 @@ public class MetadataImporter
                     Lookup hLookup = new Lookup();
 
                     hLookup.setResourceid(resource);
-                    
+
                     String lookupName = md.getAttribute("LookupName");
                     hLookup.setLookupName(lookupName);
-                    
+
                     hLookup.setVisibleName(md.getAttribute("VisibleName"));
 
                     doLookupTypes(hLookup, rSession, hSession);
-                    
+
                     hSession.save(hLookup);
                     hLookups.add(hLookup);
                     mLookups.put(hLookup.getPath(), hLookup);
@@ -362,7 +362,7 @@ public class MetadataImporter
      * @param hLookup the Lookup object to get the types for
      * @param rSession the rets session
      * @param hSession the hibernate session
-     * @exception HibernateExcepion if an error occurs
+     * @exception HibernateException if an error occurs
      */
     private void doLookupTypes(Lookup hLookup, RetsSession rSession,
                                Session hSession)
@@ -464,7 +464,7 @@ public class MetadataImporter
                         md.getAttribute("SearchClass");
                     MClass clazz = (MClass) mClasses.get(path);
                     hValidationExternal.setSearchClass(clazz);
-                    
+
                     hSession.save(hValidationExternal);
                     hValidationExternals.add(hValidationExternal);
                     mValidationExternals.put(hValidationExternal.getPath(),
@@ -478,14 +478,13 @@ public class MetadataImporter
         }
     }
 
-    
+
     /**
      * Intended to be called by doValidationExternal.  Requires tables
      * to be done, don't install yet.
      *
 
      *
-     * @param parent the parent ValidationExternal
      * @param rSession the rets session
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
@@ -683,5 +682,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.16 2003/07/08 21:09:14 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.17 2003/07/08 21:23:07 dribin Exp $";
 }
