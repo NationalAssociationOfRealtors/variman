@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
@@ -138,7 +137,7 @@ public class InitServlet extends RetsServlet
         {
             LOG.warn("Caught", e);
             helper.rollback(LOG);
-            throw new ServletException("Caught", e);
+            throw new ServletException(e);
         }
         finally
         {
