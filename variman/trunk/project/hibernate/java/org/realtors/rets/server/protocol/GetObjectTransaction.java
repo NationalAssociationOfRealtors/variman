@@ -15,9 +15,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.IOUtils;
@@ -55,9 +57,9 @@ public class GetObjectTransaction
         mRootDirectory = rootDirectory;
     }
 
-    public void setImagePattern(String imagePattern)
+    public void setPhotoPattern(String photoPattern)
     {
-        mImagePattern = imagePattern;
+        mPhotoPattern = photoPattern;
     }
 
     public void setBoundaryGenerator(
@@ -218,9 +220,48 @@ public class GetObjectTransaction
         return objectSet.findObject(mType, objectId);
     }
 
+    /**
+     * Get the correct object set for this resource entity.  First, check
+     * for an XML object set.  If that does not exist, try an image
+     * pattern object set.  If no image pattern was set, then return
+     * a null object set that always returns no object descriptors.
+     *
+     * @param resourceEntity
+     * @return
+     * @throws RetsServerException
+     */
     private ObjectSet getObjectSet(String resourceEntity)
         throws RetsServerException
     {
+        ObjectSet objectSet = getXmlObjectSet(resourceEntity);
+        if (objectSet == null)
+        {
+            objectSet = getPatternObjectSet(resourceEntity);
+            if (objectSet == null)
+            {
+                objectSet = NULL_OBJECT_SET;
+            }
+        }
+        return objectSet;
+    }
+
+    /**
+     * Return an XmlObjectSet if, and only if, the object set pattern is
+     * not blank and the resulting XML file actually exists.
+     *
+     * @param resourceEntity
+     * @return
+     * @throws RetsServerException
+     */
+    private ObjectSet getXmlObjectSet(String resourceEntity)
+        throws RetsServerException
+    {
+        if (StringUtils.isBlank(mObjectSetPattern) ||
+            StringUtils.isBlank(mRootDirectory))
+        {
+            return null;
+        }
+
         GetObjectPatternParser patternParser =
             new GetObjectPatternParser(mObjectSetPattern);
         GetObjectPatternFormatter formatter = patternParser.parse();
@@ -232,13 +273,26 @@ public class GetObjectTransaction
         File xmlObjectFile = new File(buffer.toString());
         if (xmlObjectFile.exists())
         {
+            LOG.debug("Using object set file: " + xmlObjectFile);
             return new XmlObjectSet(xmlObjectFile);
         }
         else
         {
-            return new PatternObjectSet(mRootDirectory, mImagePattern,
-                                        resourceEntity);
+            LOG.debug("Object set file does not exist: " + xmlObjectFile);
+            return null;
         }
+    }
+
+    private ObjectSet getPatternObjectSet(String resourceEntity)
+    {
+        if (StringUtils.isBlank(mPhotoPattern) ||
+            StringUtils.isBlank(mRootDirectory))
+        {
+            return null;
+        }
+
+        return new PatternObjectSet(mRootDirectory, mPhotoPattern,
+                                    resourceEntity);
     }
 
     public void setBaseLocationUrl(String baseLocationUrl)
@@ -264,17 +318,34 @@ public class GetObjectTransaction
         }
     }
 
+    private static class NullObjectset implements ObjectSet
+    {
+
+        public List findAllObjects(String type) throws RetsServerException
+        {
+            return Collections.EMPTY_LIST;
+        }
+
+        public ObjectDescriptor findObject(String type, int objectId)
+            throws RetsServerException
+        {
+            return null;
+        }
+    }
+
     private static final Logger LOG =
         Logger.getLogger(GetObjectTransaction.class);
     private static final String CRLF = "\r\n";
     public static final MultipartBoundaryGenerator DEFAULT_BOUNDARY_GENERATOR =
         new BoundaryGenerator();
+    private static final ObjectSet NULL_OBJECT_SET = new NullObjectset();
+
     private String mRootDirectory;
     private GetObjectParameters mParameters;
     private MultipartBoundaryGenerator mBoundaryGenerator;
     private String mBaseLocationUrl;
     private boolean mBlockLocation;
-    private String mImagePattern;
+    private String mPhotoPattern;
     private String mObjectSetPattern;
     private String mResource;
     private String mType;
