@@ -28,9 +28,15 @@ options
         mMetadata = metadata;
     }
 
+    private boolean isLookupMulti(String fieldName) {
+        return (mMetadata.getFieldType(fieldName) ==
+                DmqlFieldType.LOOKUP_MULTI);
+    }
+
     private LookupList newLookupOr(String field, List lookups) {
         LookupList list = new LookupList(LookupListType.OR,
                                          mMetadata.fieldToColumn(field));
+        list.setLookupMulti(isLookupMulti(field));
         addLookups(list, field, lookups);
         return list;
     }
@@ -38,6 +44,7 @@ options
     private LookupList newLookupAnd(String field, List lookups) {
         LookupList list = new LookupList(LookupListType.AND,
                                          mMetadata.fieldToColumn(field));
+        list.setLookupMulti(isLookupMulti(field));
         addLookups(list, field, lookups);
         return list;
     }
@@ -45,6 +52,7 @@ options
     private LookupList newLookupNot(String field, List lookups) {
         LookupList list = new LookupList(LookupListType.NOT,
                                          mMetadata.fieldToColumn(field));
+        list.setLookupMulti(isLookupMulti(field));
         addLookups(list, field, lookups);
         return list;
     }
