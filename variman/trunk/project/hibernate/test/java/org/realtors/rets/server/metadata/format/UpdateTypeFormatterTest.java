@@ -65,9 +65,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
     {
         UpdateTypeFormatter formatter = UpdateTypeFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        formatter.setResourceName("Property");
-        formatter.setClassName("RES");
-        formatter.setUpdateName("Change");
+        formatter.setLevels(new String[] {"Property", "RES", "Change"});
         return formatter;
     }
 

@@ -21,12 +21,12 @@ public abstract class ValidationLookupFormatter extends MetadataFormatter
         }
     }
 
-    public void setResourceName(String resourceName)
-    {
-        mResourceName = resourceName;
-    }
-
     public abstract void format(PrintWriter out, List validationLookups);
+
+    public void setLevels(String[] levels)
+    {
+        mResourceName = levels[0];
+    }
 
     protected String mResourceName;
 }

@@ -25,8 +25,7 @@ public class UpdateFormatterTest extends FormatterTestCase
     {
         UpdateFormatter formatter = UpdateFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        formatter.setClassName("RES");
-        formatter.setResourceName("Property");
+        formatter.setLevels(new String[]{"Property", "RES"});
         return formatter;
     }
 

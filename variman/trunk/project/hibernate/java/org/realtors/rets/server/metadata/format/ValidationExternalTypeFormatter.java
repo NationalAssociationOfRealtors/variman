@@ -21,17 +21,13 @@ public abstract class ValidationExternalTypeFormatter extends MetadataFormatter
         }
     }
 
-    public void setResourceName(String resourceName)
-    {
-        mResourceName = resourceName;
-    }
-
-    public void setValidationExternalName(String validationExternalName)
-    {
-        mValidationExternalName = validationExternalName;
-    }
-
     public abstract void format(PrintWriter out, List validationExternalTypes);
+
+    public void setLevels(String[] levels)
+    {
+        mResourceName = levels[0];
+        mValidationExternalName = levels[1];
+    }
 
     protected String mResourceName;
     protected String mValidationExternalName;

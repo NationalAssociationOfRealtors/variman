@@ -25,8 +25,7 @@ public class LookupTypeFormatterTest extends FormatterTestCase
     {
         LookupTypeFormatter formatter = LookupTypeFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        formatter.setLookupName("E_SCHOOL");
-        formatter.setResourceName("Property");
+        formatter.setLevels(new String[] {"Property", "E_SCHOOL"});
         return formatter;
     }
 

@@ -44,8 +44,7 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
         ValidationExternalTypeFormatter formatter =
             ValidationExternalTypeFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        formatter.setResourceName("Property");
-        formatter.setValidationExternalName("VET1");
+        formatter.setLevels(new String[] {"Property", "VET1"});
         return formatter;
     }
 

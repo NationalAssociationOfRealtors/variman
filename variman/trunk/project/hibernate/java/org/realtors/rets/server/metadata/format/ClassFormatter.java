@@ -26,12 +26,12 @@ public abstract class ClassFormatter extends MetadataFormatter
         }
     }
 
-    public void setResourceName(String resource)
-    {
-        mResource = resource;
-    }
-
     public abstract void format(PrintWriter out, List classesList);
 
-    protected String mResource;
+    public void setLevels(String[] levels)
+    {
+        mResourceName = levels[0];
+    }
+
+    protected String mResourceName;
 }

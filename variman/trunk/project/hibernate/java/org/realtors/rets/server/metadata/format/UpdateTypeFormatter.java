@@ -26,22 +26,14 @@ public abstract class UpdateTypeFormatter extends MetadataFormatter
         }
     }
 
-    public void setResourceName(String resourceName)
-    {
-        mResourceName = resourceName;
-    }
-
-    public void setClassName(String className)
-    {
-        mClassName = className;
-    }
-
-    public void setUpdateName(String updateName)
-    {
-        mUpdateName = updateName;
-    }
-
     public abstract void format(PrintWriter out, List updateTypes);
+
+    public void setLevels(String[] levels)
+    {
+        mResourceName = levels[0];
+        mClassName = levels[1];
+        mUpdateName = levels[2];
+    }
 
     protected String mResourceName;
     protected String mClassName;

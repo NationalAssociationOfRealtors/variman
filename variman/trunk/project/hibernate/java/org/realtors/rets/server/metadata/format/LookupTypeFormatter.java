@@ -21,17 +21,13 @@ public abstract class LookupTypeFormatter extends MetadataFormatter
         }
     }
 
-    public void setLookupName(String lookupName)
-    {
-        mLookupName = lookupName;
-    }
-
-    public void setResourceName(String resourceName)
-    {
-        mResourceName = resourceName;
-    }
-
     public abstract void format(PrintWriter out, List lookupTypes);
+
+    public void setLevels(String[] levels)
+    {
+        mResourceName = levels[0];
+        mLookupName = levels[1];
+    }
 
     protected String mLookupName;
     protected String mResourceName;

@@ -25,6 +25,4 @@ public abstract class SystemFormatter extends MetadataFormatter
             throw new IllegalArgumentException("Unknown format: " + format);
         }
     }
-
-    public abstract void format(PrintWriter out, List systems);
 }

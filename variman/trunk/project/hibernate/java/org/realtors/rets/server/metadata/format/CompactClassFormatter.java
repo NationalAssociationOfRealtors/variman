@@ -17,7 +17,7 @@ public class CompactClassFormatter extends ClassFormatter
         }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-CLASS");
-        tag.appendAttribute("Resource", mResource);
+        tag.appendAttribute("Resource", mResourceName);
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
         tag.endAttributes();

@@ -24,7 +24,7 @@ public class EditMaskFormatterTest extends FormatterTestCase
     {
         EditMaskFormatter formatter = EditMaskFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        formatter.setResourceName("Property");
+        formatter.setLevels(new String[] {"Property"});
         return formatter;
     }
 

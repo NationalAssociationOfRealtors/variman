@@ -21,17 +21,13 @@ abstract public class ValidationLookupTypeFormatter extends MetadataFormatter
         }
     }
 
-    public void setValidationLookupName(String validationLookupName)
-    {
-        mValidationLookupName = validationLookupName;
-    }
-
-    public void setResourceName(String resourceName)
-    {
-        mResourceName = resourceName;
-    }
-
     public abstract void format(PrintWriter out, List validationLookupTypes);
+
+    public void setLevels(String[] levels)
+    {
+        mResourceName = levels[0];
+        mValidationLookupName = levels[1];
+    }
 
     protected String mValidationLookupName;
     protected String mResourceName;

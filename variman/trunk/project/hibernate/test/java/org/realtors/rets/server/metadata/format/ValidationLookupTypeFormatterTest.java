@@ -26,8 +26,7 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
         ValidationLookupTypeFormatter formatter =
             ValidationLookupTypeFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        formatter.setValidationLookupName("School");
-        formatter.setResourceName("Property");
+        formatter.setLevels(new String[] {"Property", "School"});
         return formatter;
     }
     
