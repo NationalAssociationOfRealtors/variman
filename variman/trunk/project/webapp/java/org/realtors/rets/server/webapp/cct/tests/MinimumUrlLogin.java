@@ -31,7 +31,6 @@ public class MinimumUrlLogin extends BaseCertificationTest
 
     public void start()
     {
-        super.start();
         RetsHandlers handlers = getRetsHandlers();
         handlers.resetAll();
 
@@ -54,6 +53,14 @@ public class MinimumUrlLogin extends BaseCertificationTest
         LogoutHandler logout = handlers.getLogoutHandler();
         logout.reset();
         logout.setGetInvokeCount(InvokeCount.ZERO);
+    }
+    
+    public void stop()
+    {
+    }
+    
+    public void cancel()
+    {
     }
 
     public static final String SESSION_ID = "MinimalUrlLogin";

@@ -29,7 +29,6 @@ public class RelativeUrlLogin extends BaseCertificationTest
 
     public void start()
     {
-        super.start();
         RetsHandlers handlers = getRetsHandlers();
         handlers.resetAll();
 
@@ -56,6 +55,14 @@ public class RelativeUrlLogin extends BaseCertificationTest
         logout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
         logout.addStandardHeaders();
         logout.addStandardCookies(SESSION_ID);
+    }
+    
+    public void stop()
+    {
+    }
+    
+    public void cancel()
+    {
     }
 
     public static final String SESSION_ID = "RelativeUrlLogin";
