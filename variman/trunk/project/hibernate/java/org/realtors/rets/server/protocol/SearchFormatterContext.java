@@ -13,7 +13,9 @@ package org.realtors.rets.server.protocol;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 
@@ -29,6 +31,10 @@ import org.realtors.rets.server.dmql.DmqlParserMetadata;
  *
  * It also contains methods that help deal with the limit on the number of rows
  * to format.
+ *
+ * Many methods take a column index which is zero-based.  Remember that
+ * a <code>ResultSet</code> uses one-based column indexes.  If you use
+ * the methods on this class, you do not have to deal with this.
  */
 public class SearchFormatterContext
 {
@@ -46,15 +52,31 @@ public class SearchFormatterContext
     {
         mWriter = writer;
         mResultSet = resultSet;
-        mColumns = columns;
+        mColumns = new ArrayList(columns);
         mMetadata = metadata;
         mRowCount = 0;
         mLimit = Integer.MAX_VALUE;
     }
 
-    public Collection getColumns()
+    public List getColumns()
     {
         return mColumns;
+    }
+
+    public int getNumberOfColumns()
+    {
+        return mColumns.size();
+    }
+
+    /**
+     * Return the column name at the column index.
+     *
+     * @param columnIndex  column index
+     * @return column name
+     */
+    public String getColumn(int columnIndex)
+    {
+        return (String) mColumns.get(columnIndex);
     }
 
     public DmqlParserMetadata getMetadata()
@@ -130,12 +152,76 @@ public class SearchFormatterContext
         return mResultSet.getString(column);
     }
 
+    /**
+     * Returns a String from the ResultSet using a <b>zero-based</b>
+     * column index.  If you deal with the result set directly, remember
+     * that columns are 1-based.
+     *
+     * @param columnIndex zero-based column index
+     * @return a String from the ResultSet.
+     * @throws SQLException
+     */
+    public String getResultString(int columnIndex)
+        throws SQLException
+    {
+        return mResultSet.getString(columnIndex + 1);
+    }
+
+    /**
+     * Get the short value for a lookup at the specified clolum.
+     *
+     * @param columnIndex 1-based column index
+     * @param value lookup value
+     * @return short value of the lookup
+     */
+    public String getLookupShortValue(int columnIndex, String value)
+    {
+        return getLookupShortValue(getColumn(columnIndex), value);
+    }
+
+    /**
+     * Get the short value for a lookup at the specified clolum.
+     *
+     * @param column column name
+     * @param value lookup value
+     * @return short value of the lookup
+     */
+    public String getLookupShortValue(String column, String value)
+    {
+        String lookupName = mMetadata.columnToField(column);
+        return mMetadata.getLookupShortValue(lookupName, value);
+    }
+
+    /**
+     * Checks if the column at the specified column index is a lookup.
+     *
+     * @param columnIndex 1-based column index
+     * @return <code>true</code> if the column is a lookup
+     */
+    public boolean isColumnALookup(int columnIndex)
+    {
+        String column = (String) mColumns.get(columnIndex);
+        return isColumnALookup(column);
+    }
+
+    /**
+     * Checks if the column at the specified 1-based column index is a lookup.
+     *
+     * @param column column name
+     * @return <code>true</code> if the column is a lookup
+     */
+    public boolean isColumnALookup(String column)
+    {
+        String field = mMetadata.columnToField(column);
+        return mMetadata.isLookupField(field);
+    }
+
     /** The writer to print to. */
     private PrintWriter mWriter;
     /** The results of the database query. */
     private ResultSet mResultSet;
     /** The column names used in the SELECT statement. */
-    private Collection /* String */ mColumns;
+    private List /* String */ mColumns;
     /** The RETS metadata. */
     private DmqlParserMetadata mMetadata;
     /** The number of rows processed. */
