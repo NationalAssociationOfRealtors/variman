@@ -9,7 +9,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * @hibernate.class table="rets_metadata_class"
  */
-public class MClass implements Serializable
+public class MClass extends ServerMetadata implements Serializable
 {
     public MClass()
     {

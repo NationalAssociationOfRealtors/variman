@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @hibernate.class table="rets_metadata_system"
  */
-public class MSystem implements Serializable
+public class MSystem extends ServerMetadata implements Serializable
 {
     /**
      *
