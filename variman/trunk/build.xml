@@ -762,7 +762,9 @@
   <target name="dist-linux" depends="build">
     <!-- Embedded -->
     <tar destfile="dist/${project.string}-linux.tar.gz" compression="gzip">
-      <tarfileset dir="build/rets-server" prefix="${project.string}"/>
+      <tarfileset dir="build/rets-server" prefix="${project.string}">
+        <excludesfile name="project/build/dist-linux-excludes"/>
+      </tarfileset>
     </tar>
   </target>
 
