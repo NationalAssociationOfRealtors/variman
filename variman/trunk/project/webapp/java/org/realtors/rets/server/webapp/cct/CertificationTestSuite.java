@@ -8,6 +8,8 @@ import java.util.Iterator;
 
 import org.realtors.rets.server.webapp.cct.tests.NormalLogin;
 import org.realtors.rets.server.webapp.cct.tests.RelativeUrlLogin;
+import org.realtors.rets.server.webapp.cct.tests.MinimumUrlLogin;
+import org.realtors.rets.server.webapp.cct.tests.MaximumUrlLogin;
 
 public class CertificationTestSuite
 {
@@ -16,6 +18,8 @@ public class CertificationTestSuite
         mTests = new ArrayList();
         mTests.add(new NormalLogin());
         mTests.add(new RelativeUrlLogin());
+        mTests.add(new MinimumUrlLogin());
+        mTests.add(new MaximumUrlLogin());
 
         for (int i = 0; i < mTests.size(); i++)
         {
