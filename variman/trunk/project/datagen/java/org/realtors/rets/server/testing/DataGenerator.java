@@ -157,7 +157,7 @@ public class DataGenerator extends DataGenBase
             
             con.commit();
         }
-        catch(HibernateException e)
+        catch (HibernateException e)
         {
             if (con != null)
             {

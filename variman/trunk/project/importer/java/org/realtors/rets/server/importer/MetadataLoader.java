@@ -287,7 +287,7 @@ public class MetadataLoader extends MetadataHelpers
                     hObject.setVisibleName(md.getAttribute("VisibleName"));
                     hObject.setDescription(
                         StringUtils.substring(
-                            md.getAttribute("Description"),0,64));
+                            md.getAttribute("Description"), 0, 64));
 
                     hObjects.add(hObject);
                 }
@@ -401,9 +401,9 @@ public class MetadataLoader extends MetadataHelpers
                     hTable.setLongName(md.getAttribute("LongName"));
 
                     String tmp = md.getAttribute("DbName");
-                    if(tmp.startsWith("r_"))
+                    if (tmp.startsWith("r_"))
                     {
-                        hTable.setDbName(StringUtils.substring(tmp,0,10));
+                        hTable.setDbName(StringUtils.substring(tmp, 0, 10));
                     }
                     else
                     {
@@ -436,7 +436,7 @@ public class MetadataLoader extends MetadataHelpers
                     if (editMasksJoined != null)
                     {
                         String editMasks[] =
-                            StringUtils.split(editMasksJoined,",");
+                            StringUtils.split(editMasksJoined, ",");
 
                         for (int c = 0; c < editMasks.length; c++)
                         {
@@ -924,7 +924,7 @@ public class MetadataLoader extends MetadataHelpers
 
     private MSystem mSystem;
     private static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.3 2003/08/25 17:25:53 kgarner Exp $";
+        "$Id: MetadataLoader.java,v 1.4 2003/08/28 21:24:04 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
 }

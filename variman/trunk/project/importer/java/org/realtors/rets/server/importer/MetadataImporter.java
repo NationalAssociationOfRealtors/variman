@@ -342,7 +342,7 @@ public class MetadataImporter extends MetadataHelpers
                     hObject.setVisibleName(md.getAttribute("VisibleName"));
                     hObject.setDescription(
                         StringUtils.substring(
-                            md.getAttribute("Description"),0,64));
+                            md.getAttribute("Description"), 0, 64));
 
                     // Should we have an updateLevel?
 
@@ -467,9 +467,9 @@ public class MetadataImporter extends MetadataHelpers
                     hTable.setLongName(md.getAttribute("LongName"));
 
                     String tmp = md.getAttribute("DbName");
-                    if(tmp.startsWith("r_"))
+                    if (tmp.startsWith("r_"))
                     {
-                        hTable.setDbName(StringUtils.substring(tmp,0,10));
+                        hTable.setDbName(StringUtils.substring(tmp, 0, 10));
                     }
                     else
                     {
@@ -502,7 +502,7 @@ public class MetadataImporter extends MetadataHelpers
                     if (editMasksJoined != null)
                     {
                         String editMasks[] =
-                            StringUtils.split(editMasksJoined,",");
+                            StringUtils.split(editMasksJoined, ",");
 
                         for (int c = 0; c < editMasks.length; c++)
                         {
@@ -1173,7 +1173,7 @@ public class MetadataImporter extends MetadataHelpers
     private SessionFactory mSessions;
     private String mUsername;
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.32 2003/08/25 17:25:53 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.33 2003/08/28 21:24:04 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 

@@ -101,8 +101,8 @@ public class DataBenchmarks extends DataGenBase
 
         Query q =
             session.createQuery(
-                "SELECT data"
-                    + "  FROM org.realtors.rets.server.data.RetsData data");
+                "SELECT data" +
+                "  FROM org.realtors.rets.server.data.RetsData data");
 
         Iterator i = q.iterate();
         while (i.hasNext())
@@ -125,7 +125,7 @@ public class DataBenchmarks extends DataGenBase
 
     public static void main(String[] args) throws HibernateException
     {
-        DataBenchmarks db= new DataBenchmarks();
+        DataBenchmarks db = new DataBenchmarks();
         db.loadMetadata();
         
         long min = Long.MAX_VALUE;
