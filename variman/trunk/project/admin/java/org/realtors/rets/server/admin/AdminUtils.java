@@ -51,7 +51,7 @@ public class AdminUtils
             String defaultDirectory = SystemUtils.USER_DIR + File.separator;
             retsConfig.setMetadataDir(defaultDirectory + "metadata");
             retsConfig.setGetObjectRoot(defaultDirectory + "pictures");
-            retsConfig.setGetObjectPattern("%k-%i.jpg");
+            retsConfig.setPhotoPattern("%k-%i.jpg");
             DatabaseConfig databaseConfig = new DatabaseConfig();
             databaseConfig.setDatabaseType(DatabaseType.POSTGRESQL);
             databaseConfig.setHostName("localhost");
