@@ -34,7 +34,7 @@ public class AuthenticationFilter implements Filter, UserMap
     public void init(FilterConfig filterConfig) throws ServletException
     {
         instantiateUserMap(filterConfig.getInitParameter("user-map"));
-        LOG.info("Using user map: " + mUserMap.getClass().getName());
+        LOG.debug("Using user map: " + mUserMap.getClass().getName());
     }
 
     private void instantiateUserMap(String userMapName)
