@@ -29,7 +29,7 @@ public class BaseHandlerTest extends LocalTestCase
         servlet.setHandler(mTest);
     }
 
-    public void testValidateInvokeCountIsOne() throws IOException, SAXException
+    public void testValidateOneInvokeCount() throws IOException, SAXException
     {
         mTest.reset();
         mTest.setGetInvokeCount(InvokeCount.ONE);
@@ -39,6 +39,53 @@ public class BaseHandlerTest extends LocalTestCase
         assertFalse(result.wasSuccessful());
         assertEquals("test get invoke count was 0, expected " + expected,
                      result.getMessage());
+
+        mClient.getResponse(TEST_URL);
+        result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("Success", result.getMessage());
+
+        mClient.getResponse(TEST_URL);
+        result = mTest.validate();
+        assertFalse(result.wasSuccessful());
+        assertEquals("test get invoke count was 2, expected " + expected,
+                     result.getMessage());
+    }
+
+    public void testValidatateZeroInvokeCount()
+        throws IOException, SAXException
+    {
+        mTest.reset();
+        mTest.setGetInvokeCount(InvokeCount.ZERO);
+        String expected = InvokeCount.ZERO.getName();
+
+        ValidationResults result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("Success", result.getMessage());
+
+        mClient.getResponse(TEST_URL);
+        result = mTest.validate();
+        assertFalse(result.wasSuccessful());
+        assertEquals("test get invoke count was 1, expected " + expected,
+                     result.getMessage());
+
+        mClient.getResponse(TEST_URL);
+        result = mTest.validate();
+        assertFalse(result.wasSuccessful());
+        assertEquals("test get invoke count was 2, expected " + expected,
+                     result.getMessage());
+    }
+
+    public void testValidatateZeroOrOneInvokeCount()
+        throws IOException, SAXException
+    {
+        mTest.reset();
+        mTest.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
+        String expected = InvokeCount.ZERO_OR_ONE.getName();
+
+        ValidationResults result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("Success", result.getMessage());
 
         mClient.getResponse(TEST_URL);
         result = mTest.validate();
