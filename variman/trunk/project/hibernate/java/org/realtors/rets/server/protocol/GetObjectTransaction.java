@@ -183,15 +183,18 @@ public class GetObjectTransaction
         StringBuffer fileBuffer = new StringBuffer(mRootDirectory);
         fileBuffer.append(File.separator);
         mPatternFormatter.format(fileBuffer, mPatternContext);
-        File file = new File(fileBuffer.toString());
+        String filePath = fileBuffer.toString();
+        File file = new File(filePath);
         if (file.exists())
         {
+            LOG.debug("File " + filePath + " exists");
             files.add(new FileDescriptor(resourceEntity, objectId,
                                          file));
             return true;
         }
         else
         {
+            LOG.debug("File " + filePath + " does not exist");
             return false;
         }
     }
