@@ -13,3 +13,4 @@ Class-Path: bootstrap.jar
   tomcat-util.jar
   servlets-common.jar
   servlets-default.jar
+  log4j.jar
