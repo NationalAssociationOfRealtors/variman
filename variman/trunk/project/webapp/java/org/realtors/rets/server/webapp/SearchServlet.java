@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.hibernate.Session;
 
-import org.realtors.rets.server.dmql.DmqlCompiler;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -40,18 +38,7 @@ public class SearchServlet extends RetsServlet
             search.setQuery(request.getParameter("Query"));
             search.setFormat(request.getParameter("Format"));
             LOG.debug(search);
-            String sql = search.getSql();
-            LOG.debug("SQL=" + sql);
-
-//            Session session = InitServlet.openSession();
-//            Connection connection = session.connection();
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery(sql);
-//            while (resultSet.next())
-//            {
-//                LOG.debug(resultSet.getString(1));
-//            }
-//            connection.close();
+            search.doSearch(out, getMetadataManager());
         }
         catch(RetsReplyException e)
         {
