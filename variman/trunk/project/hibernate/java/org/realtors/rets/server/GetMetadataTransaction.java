@@ -8,11 +8,12 @@ import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
 import org.realtors.rets.server.metadata.format.FormatterContext;
 import org.realtors.rets.server.metadata.format.FormatterLookup;
+import org.realtors.rets.server.metadata.format.MetadataFormatter;
 
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
 
-public class GetMetadataTransaction extends RetsTransaction
+public class GetMetadataTransaction
 {
     /**
      * Gets metadata and formats it. Only throws an exception if an error
@@ -32,7 +33,11 @@ public class GetMetadataTransaction extends RetsTransaction
         MetadataSegment segment = fetcher.fetchMetadata(parameters.getType(),
                                                         parameters.getIds());
 
-        printOpenRetsSuccess(out);
+        RetsUtils.printOpenRetsSuccess(out);
+        if (parameters.getFormat() == MetadataFormatter.STANDARD)
+        {
+            out.println("<METADATA>");
+        }
         FormatterLookup lookup =
             new ClassFormatterLookup(parameters.getFormat());
         FormatterContext context =
@@ -44,7 +49,11 @@ public class GetMetadataTransaction extends RetsTransaction
         context.format(segment.getDataList(), segment.getLevels());
         stopWatch.stop();
         LOG.debug("Formatting done: " + stopWatch.getTime());
-        printCloseRets(out);
+        if (parameters.getFormat() == MetadataFormatter.STANDARD)
+        {
+            out.println("</METADATA>");
+        }
+        RetsUtils.printCloseRets(out);
     }
 
     private static final Logger LOG =
