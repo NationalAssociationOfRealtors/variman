@@ -8,7 +8,7 @@ public class RetsUtils
 {
     public static void printOpenRetsSuccess(PrintWriter out)
     {
-        printOpenRets(out, 0, "Operation Successful");
+        printOpenRets(out, ReplyCode.SUCCESSFUL);
     }
 
     public static void printOpenRets(PrintWriter out, int replyCode,
