@@ -13,36 +13,50 @@ options
 }
 
 {
-    public void checkFieldType(String fieldName) {
-        if (mMetadata.isValidLookupName(fieldName)) {
-            mLastLookupName = fieldName;
+    public String validateFieldName(Token t)
+        throws SemanticException
+    {
+        String fieldName = t.getText();
+        if (mMetadata.isValidFieldName(fieldName)) {
+            return fieldName;
         }
         else {
-            mLastLookupName = null;
+            throw newSemanticException("Unknown field name: " + fieldName, t);
         }
     }
 
-    public void addLookup(LookupList list, String lookupValue)
-        throws RecognitionException
+    public boolean isLookup(String fieldName) {
+        return mMetadata.isValidLookupName(fieldName);
+    }
+
+    public boolean isStringList(String fieldName) {
+        return mMetadata.isValidStringName(fieldName);
+    }
+
+    public void addLookup(LookupList list, Token t)
+        throws SemanticException
     {
-        if (mMetadata.isValidLookupValue(mLastLookupName, lookupValue)) {
+        String lookupName = list.getField();
+        String lookupValue = t.getText();
+        if (mMetadata.isValidLookupValue(lookupName, lookupValue)) {
             list.addLookup(lookupValue);
         }
         else {
-            throw new SemanticException("No such lookup value [" +
-                                        mLastLookupName + "]: " + lookupValue);
+            throw newSemanticException("No such lookup value [" +
+                                       lookupName + "]: " + lookupValue, t);
         }
-    }
-
-    public boolean lastWasLookup() {
-        return (mLastLookupName != null);
     }
 
     public void setMetadata(DmqlParserMetadata metadata) {
         mMetadata = metadata;
     }
 
-    private String mLastLookupName = null;
+    private SemanticException newSemanticException(String message, Token t)
+    {
+        return new SemanticException(message, t.getFilename(), t.getLine(),
+                                     t.getColumn());
+    }
+
     private DmqlParserMetadata mMetadata;
 }
 
@@ -72,18 +86,18 @@ field_criteria returns [SqlConverter sql]
         sql = null;
         String field;
     }
-    : LPAREN field=field_name {checkFieldType(field);} EQUAL sql=field_value[field] RPAREN
+    : LPAREN field=field_name EQUAL sql=field_value[field] RPAREN
     ;
 
 field_name returns [String field]
     { field = null; }
-    : t:TEXT {field=t.getText();}
+    : t:TEXT {field=validateFieldName(t);}
     ;
 
 field_value [String name] returns [SqlConverter sql]
     { sql = null; }
-    : {lastWasLookup()}? sql=lookup_list[name]
-//    | string_list
+    : {isLookup(name)}? sql=lookup_list[name]
+    | {isStringList(name)}? string_list
     ;
 
 lookup_list [String name] returns [SqlConverter sql]
@@ -93,39 +107,28 @@ lookup_list [String name] returns [SqlConverter sql]
     | sql=lookup_not[name]
     ;
 
-simple_lookup returns [List lookups]
-    { String l; lookups = new ArrayList(); }
-    : l=lookup {lookups.add(l);}
-    ;
-
 lookup_or [String name] returns [SqlConverter sql]
-    { LookupList ll = new LookupList(LookupListType.OR, name); sql = ll; }
-    : PIPE lookups[ll]
-    | single_lookup[ll]
+    { LookupList list = new LookupList(LookupListType.OR, name); sql = list; }
+    : PIPE lookups[list]
+    // This is the "implied" OR
+    | lookup[list]
     ;
 lookup_and [String name] returns [SqlConverter sql]
-    { LookupList ll = new LookupList(LookupListType.AND, name); sql = ll; }
-    : PLUS lookups[ll]
+    { LookupList list = new LookupList(LookupListType.AND, name); sql = list; }
+    : PLUS lookups[list]
     ;
 
 lookup_not [String name] returns [SqlConverter sql]
-    { LookupList ll = new LookupList(LookupListType.NOT, name); sql = ll; }
-    : TILDE lookups[ll]
+    { LookupList list = new LookupList(LookupListType.NOT, name); sql = list; }
+    : TILDE lookups[list]
     ;
 
 lookups [LookupList list]
-    { String l; }
-    : l=lookup {addLookup(list, l);} (COMMA l=lookup {addLookup(list, l);})*
+    : lookup[list] (COMMA lookup[list])*
     ;
 
-single_lookup [LookupList list]
-    { String l; }
-    : l=lookup {addLookup(list, l);}
-    ;
-
-lookup returns [String lookup]
-    { lookup = null; }
-    : t:TEXT {lookup = t.getText();}
+lookup [LookupList list]
+    : t:TEXT {addLookup(list, t);}
     ;
 
 string_list
@@ -140,11 +143,11 @@ string
     ;
 
 string_eq
-    : t:TEXT {System.out.println("string_eq: " + t.getText());}
+    : t:TEXT
     ;
 
 string_start
-    : STAR TEXT
+    : TEXT STAR
     ;
 
 string_contains
@@ -152,7 +155,7 @@ string_contains
     ;
 
 string_char
-    : TEXT QUESTION string_char
+    : TEXT QUESTION TEXT
     ;
 
 class DmqlLexer extends Lexer;
