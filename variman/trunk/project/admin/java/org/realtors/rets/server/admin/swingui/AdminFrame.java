@@ -8,20 +8,21 @@
 
 package org.realtors.rets.server.admin.swingui;
 
-import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+import org.apache.log4j.Logger;
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.admin.AdminUtils;
 
 public class AdminFrame extends JFrame implements ActionListener
 {
     public AdminFrame(String title)
     {
         super(title);
+        initConfig();
+
         addWindowListener(new OnClose());
         Container content = getContentPane();
 
@@ -33,15 +34,15 @@ public class AdminFrame extends JFrame implements ActionListener
         JMenu menu = new JMenu("File");
         menuBar.add(menu);
 
+        int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+
         JMenuItem item = new JMenuItem("Save", KeyEvent.VK_S);
-        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-                                                   KeyEvent.CTRL_MASK));
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, mask));
         menu.add(item);
         menu.addSeparator();
 
         item = new JMenuItem("Quit", KeyEvent.VK_Q);
-        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-                                                   KeyEvent.CTRL_MASK));
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, mask));
         item.addActionListener(new OnQuit());
         menu.add(item);
         setJMenuBar(menuBar);
@@ -52,6 +53,18 @@ public class AdminFrame extends JFrame implements ActionListener
         content.add(mTabbedPane, BorderLayout.CENTER);
 
         setSize(640, 480);
+    }
+
+    private void initConfig()
+    {
+        try
+        {
+            AdminUtils.initConfig();
+        }
+        catch (RetsServerException e)
+        {
+            LOG.error("Caught exception", e);
+        }
     }
 
     public void quit()
@@ -94,6 +107,9 @@ public class AdminFrame extends JFrame implements ActionListener
         int dotIndex = classString.lastIndexOf(".");
         return classString.substring(dotIndex+1);
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(AdminFrame.class);
 
     private JTabbedPane mTabbedPane;
 }
