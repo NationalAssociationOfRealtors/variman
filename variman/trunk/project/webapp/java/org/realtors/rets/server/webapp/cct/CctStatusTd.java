@@ -6,7 +6,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import org.realtors.rets.server.cct.StatusEnum;
-
+import org.realtors.rets.server.cct.ValidationResult;
 import org.apache.struts.util.RequestUtils;
 
 /**
@@ -62,28 +62,29 @@ public class CctStatusTd extends TagSupport
     public int doStartTag() throws JspException
     {
         JspWriter out = pageContext.getOut();
-        CertificationTest test =
-            (CertificationTest) RequestUtils.lookup(pageContext, mName, mScope);
+        TestDisplayBean displayBean =
+            (TestDisplayBean) RequestUtils.lookup(pageContext, mName, mScope);
         try
         {
             String message;
             String tdclass;
-            if (test.getStatus() == StatusEnum.PASSED)
+            ValidationResult result = displayBean.getResult(); 
+            if (result.getStatus() == StatusEnum.PASSED)
             {
                 tdclass = "pass";
                 message = "Test Passed";
             }
-            else if (test.getStatus() == StatusEnum.FAILED)
+            else if (result.getStatus() == StatusEnum.FAILED)
             {
                 tdclass = "fail";
                 message = "Test Failed";
             }
-            else if (test.getStatus() == StatusEnum.RUNNING)
+            else if (result.getStatus() == StatusEnum.RUNNING)
             {
                 tdclass = "active";
                 message = "Test Running";
             }
-            else if (test.getStatus() == StatusEnum.NOT_RUN)
+            else if (result.getStatus() == StatusEnum.NOT_RUN)
             {
                 tdclass = "unknown";
                 message = "Test not yet run";
@@ -91,7 +92,7 @@ public class CctStatusTd extends TagSupport
             else
             {
                 tdclass = "unknown";
-                message = test.getStatus().getName();
+                message = result.getStatus().getName();
             }
             out.write("<td class=\"");
             out.write(tdclass);
