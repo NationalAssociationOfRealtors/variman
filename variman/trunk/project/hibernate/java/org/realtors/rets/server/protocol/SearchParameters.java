@@ -20,10 +20,17 @@ import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsVersion;
 import org.realtors.rets.server.Util;
+import org.realtors.rets.server.User;
 
 public class SearchParameters
 {
     public SearchParameters(Map parameterMap, RetsVersion version)
+        throws RetsReplyException
+    {
+        this(parameterMap, version, null);
+    }
+
+    public SearchParameters(Map parameterMap, RetsVersion version, User user)
         throws RetsReplyException
     {
         mResourceId = getParameter(parameterMap, "SearchType");
@@ -36,6 +43,7 @@ public class SearchParameters
         initLimit(getParameter(parameterMap, "Limit"));
         initOffset(getParameter(parameterMap, "Offset"));
         initCount(getParameter(parameterMap, "Count"));
+        mUser = user;
     }
 
     private void initCount(String count)
@@ -192,6 +200,11 @@ public class SearchParameters
         return ((mCount == NO_COUNT) || (mCount == COUNT_AND_DATA));
     }
 
+    public User getUser()
+    {
+        return mUser;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -200,6 +213,7 @@ public class SearchParameters
             .append("queryType", mQueryType)
             .append("query", mQuery)
             .append("format", mFormat)
+            .append("user", mUser)
             .toString();
     }
 
@@ -232,4 +246,5 @@ public class SearchParameters
     private int mLimit;
     private int mOffset;
     private Count mCount;
+    private User mUser;
 }
