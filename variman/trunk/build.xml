@@ -195,15 +195,16 @@
             packageListLoc="${javadoc.1.3.local}"/>
       <sourcepath>
         <pathelement location="project/embedded/java"/>
-        <pathelement location="project/hibernate/java/enums"/>
+        <pathelement location="project/hibernate/java"/>
         <pathelement location="project/importer/java"/>
         <pathelement location="project/webapp/java"/>
-        <pathelement location="build/hibernate/generated"/>
       </sourcepath>
       <classpath>
+        <path refid="hibernate.path"/>
         <path refid="lib.path"/>
         <path refid="embedded.path"/>
         <path refid="importer.path"/>
+        <path refid="webapp.path"/>
       </classpath>
     </javadoc>
   </target>
