@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +29,8 @@ import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.MetadataLoader;
+import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
 
@@ -97,27 +95,16 @@ public class InitServlet extends RetsServlet
         return value;
     }
 
-    private String resolveFromConextRoot(String file) throws ServletException
+    private String resolveFromConextRoot(String file)
     {
-        try
-        {
-            // Resolve file, relative to the context root directory
-            URL prefix = new File(getServletContext().getRealPath("/")).toURL();
-            return new URL(prefix, file).getFile();
-        }
-        catch (MalformedURLException e)
-        {
-            throw new ServletException(e);
-        }
+        return IOUtils.resolve(getServletContext().getRealPath("/"), file);
     }
 
     /**
      * Initialize log4j. First, the application's context is checked for the
      * file name, and then the servlet context is checked.
-     *
-     * @throws ServletException
      */
-    private void initLog4J() throws ServletException
+    private void initLog4J()
     {
         String log4jInitFile =
             getContextInitParameter("log4j-init-file",
@@ -133,7 +120,7 @@ public class InitServlet extends RetsServlet
         {
             String configFile =
                 getContextInitParameter("rets-config-file",
-                                        "WEB-INF/classes/rets-config.xml");
+                                        "WEB-INF/rex/rets-config.xml");
             configFile = resolveFromConextRoot(configFile);
             mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
             LOG.debug(mRetsConfig);
@@ -190,10 +177,9 @@ public class InitServlet extends RetsServlet
     {
         try
         {
-            String metadataDir =
-                getContextInitParameter("rets-metadata-dir",
-                                        "WEB-INF/rex/metadata");
+            String metadataDir = mRetsConfig.getMetadataDir();
             metadataDir = resolveFromConextRoot(metadataDir);
+            LOG.info("Reading metadata from: " + metadataDir);
             MetadataLoader loader = new MetadataLoader();
             List files = IOUtils.listFilesRecursive(
                 new File(metadataDir), new MetadataFileFilter());
