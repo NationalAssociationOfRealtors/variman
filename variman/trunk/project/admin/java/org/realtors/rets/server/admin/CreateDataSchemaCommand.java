@@ -19,11 +19,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.dialect.Dialect;
-
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
@@ -34,11 +35,7 @@ import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
 
-import org.apache.log4j.Logger;
-
-import org.wxwindows.wx;
-
-public class CreateDataSchemaCommand extends wx
+public class CreateDataSchemaCommand
 {
     public CreateDataSchemaCommand()
     {
