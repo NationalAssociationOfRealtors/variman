@@ -29,6 +29,7 @@ public class AdminUtils
         Admin.setConfigFile(configFile.getAbsolutePath());
         Admin.setRetsConfig(
             RetsConfig.initFromXmlFile(Admin.getConfigFile()));
+        Admin.setRetsConfigChanged(false);
     }
 
     public static void initDatabase() throws HibernateException
