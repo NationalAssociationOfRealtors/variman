@@ -10,7 +10,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @hibernate.class table="rets_metadata_lookup"
  */
-public class Lookup implements Serializable
+public class Lookup extends ServerMetadata implements Serializable
 {
     /**
      *

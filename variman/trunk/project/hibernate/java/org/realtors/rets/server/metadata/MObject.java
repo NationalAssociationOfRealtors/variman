@@ -9,7 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @hibernate.class table="rets_metadata_object"
  */
-public class MObject implements Serializable
+public class MObject extends ServerMetadata implements Serializable
 {
     /**
      *

@@ -8,7 +8,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 /**
  * @hibernate.class table="rets_metadata_searchhelp"
  */
-public class SearchHelp implements Serializable
+public class SearchHelp extends ServerMetadata implements Serializable
 {
     /**
      *

@@ -10,7 +10,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @hibernate.class table="rets_metadata_updatetype"
  */
-public class UpdateType implements Serializable
+public class UpdateType extends ServerMetadata implements Serializable
 {
     /**
      *
