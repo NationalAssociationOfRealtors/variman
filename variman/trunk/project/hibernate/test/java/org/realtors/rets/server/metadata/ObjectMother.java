@@ -22,6 +22,7 @@ public class ObjectMother
         MSystem system = createSystem();
         resource.setSystem(system);
         resource.setResourceID("Property");
+        resource.setStandardName(ResourceStandardNameEnum.PROPERTY);
         resource.updateLevel();
         system.addResource(resource);
         return resource;
@@ -30,6 +31,7 @@ public class ObjectMother
     public static MClass createClass()
     {
         MClass clazz = new MClass("RES");
+        clazz.setStandardName(ClassStandardNameEnum.RESIDENTIAL);
         Resource resource = createResource();
         resource.addClass(clazz);
         return clazz;
