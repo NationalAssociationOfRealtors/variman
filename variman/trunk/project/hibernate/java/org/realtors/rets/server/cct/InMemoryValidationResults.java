@@ -10,9 +10,9 @@ import java.util.Map;
 /**
  * @author kgarner
  */
-public class ValidationResults
+public class InMemoryValidationResults
 {
-    public ValidationResults()
+    public InMemoryValidationResults()
     {
         mResults = new HashMap();
     }
