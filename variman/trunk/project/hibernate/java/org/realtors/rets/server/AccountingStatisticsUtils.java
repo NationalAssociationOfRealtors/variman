@@ -16,48 +16,6 @@ import org.apache.log4j.Logger;
 
 public class AccountingStatisticsUtils
 {
-    public static void save(AccountingStatistics statistics)
-        throws HibernateException
-    {
-        SessionHelper helper = RetsServer.createSessionHelper();
-        try
-        {
-            Session session = helper.beginTransaction();
-            session.save(statistics);
-            helper.commit();
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-    }
-
-    public static void update(AccountingStatistics statistics)
-        throws HibernateException
-    {
-        SessionHelper helper = RetsServer.createSessionHelper();
-        try
-        {
-            Session session = helper.beginTransaction();
-            session.update(statistics);
-            helper.commit();
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-    }
-
     public static AccountingStatistics findByUser(User user)
         throws HibernateException
     {
