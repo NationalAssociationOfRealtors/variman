@@ -112,7 +112,7 @@ public class ConfigurationPanel extends JPanel
         // It's important to set this flag at the end of the constructor, as
         // events may trigger false changes during various setup during
         // construction.
-        mChanged = false;
+        Admin.setRetsConfigChanged(false);
     }
 
     private void updateLabels()
@@ -124,16 +124,6 @@ public class ConfigurationPanel extends JPanel
         mDatabaseName.setText(dbConfig.getDatabaseName());
         mUsername.setText(dbConfig.getUsername());
         mPort.setText("" + config.getPort());
-    }
-
-    public boolean isChanged()
-    {
-        return mChanged;
-    }
-
-    public void setChanged(boolean changed)
-    {
-        mChanged = changed;
     }
 
     public int getPort()
@@ -182,7 +172,7 @@ public class ConfigurationPanel extends JPanel
             metadataDir = dirDialog.getSelectedFile().getPath();
             metadataDir = IOUtils.relativize(webappRoot, metadataDir);
             mMetadataDir.setText(metadataDir);
-            mChanged = true;
+            Admin.setRetsConfigChanged(true);
         }
     }
 
@@ -267,7 +257,7 @@ public class ConfigurationPanel extends JPanel
 
         private void updateEdited()
         {
-            mChanged = true;
+            Admin.setRetsConfigChanged(true);
         }
     }
 
@@ -279,5 +269,4 @@ public class ConfigurationPanel extends JPanel
     private JLabel mUsername;
     private JTextField mImageRootDir;
     private JTextField mImagePattern;
-    private boolean mChanged;
 }
