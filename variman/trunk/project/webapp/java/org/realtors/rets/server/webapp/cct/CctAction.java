@@ -52,6 +52,11 @@ public abstract class CctAction extends Action
         return UTILS.getUserInfo(user.getUsername());
     }
 
+    protected CertificationTestSuite getSuite(HttpSession session)
+    {
+        return (CertificationTestSuite) session.getAttribute(TESTSUITE_KEY);
+    }
+
     public static final String USER_KEY = "user";
     public static final String USERINFO_KEY = "userInfo";
     public static final String TESTSUITE_KEY = "suite";
