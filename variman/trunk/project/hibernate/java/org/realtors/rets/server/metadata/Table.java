@@ -380,9 +380,9 @@ public class Table extends ServerMetadata implements Serializable
         return mMClass;
     }
 
-    public void setMClass(MClass MClass)
+    public void setMClass(MClass iMClass)
     {
-        mMClass = MClass;
+        mMClass = iMClass;
     }
 
     /**

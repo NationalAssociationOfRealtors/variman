@@ -46,11 +46,11 @@ public class DataGenerator extends DataGenBase
 
         mDate = new Date[4];
         Calendar cal = Calendar.getInstance();
-        cal.set(2003,6,10);
+        cal.set(2003, 6, 10);
         mDate[mCount++] = new Date(cal.getTime().getTime());
-        cal.set(2003,6,22);
+        cal.set(2003, 6, 22);
         mDate[mCount++] = new Date(cal.getTime().getTime());
-        cal.set(2002,11,5);
+        cal.set(2002, 11, 5);
         mDate[mCount++] = new Date(cal.getTime().getTime());
         mDate[mCount++] = new Date(new java.util.Date().getTime());
     }
