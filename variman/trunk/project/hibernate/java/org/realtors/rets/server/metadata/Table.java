@@ -465,6 +465,11 @@ public class Table extends ServerMetadata implements Serializable
         return mLevel + ":" + mSystemName;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -564,4 +569,6 @@ public class Table extends ServerMetadata implements Serializable
     private SearchHelp mSearchHelp;
 
     private String mLevel;
+
+    public static final String TABLE = "TABLE";
 }

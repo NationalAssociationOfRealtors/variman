@@ -146,7 +146,7 @@ public class MetadataSegmentVisitorTest extends TestCase
     {
         mVisitor.setExpectedValidationExternalTypeCalls(1);
         MetadataSegment segment =
-            createSegment(ObjectMother.createValidationExternlType());
+            createSegment(ObjectMother.createValidationExternalType());
         mVisitor.dispatch(segment);
         mVisitor.verify();
     }

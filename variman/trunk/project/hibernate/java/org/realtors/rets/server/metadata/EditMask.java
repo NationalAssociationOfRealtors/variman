@@ -118,6 +118,11 @@ public class EditMask extends ServerMetadata implements Serializable
         return mLevel + ":" + mEditMaskID;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return mEditMaskID;
@@ -152,4 +157,6 @@ public class EditMask extends ServerMetadata implements Serializable
     private Resource mResource;
 
     private String mLevel;
+
+    public static final String TABLE = "EDIT_MASK";
 }

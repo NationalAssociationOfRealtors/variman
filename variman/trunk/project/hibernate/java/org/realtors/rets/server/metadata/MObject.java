@@ -114,6 +114,16 @@ public class MObject extends ServerMetadata implements Serializable
         mResource = resource;
     }
 
+    public String getLevel()
+    {
+        return mResource.getPath();
+    }
+
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -154,4 +164,6 @@ public class MObject extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private Resource mResource;
+
+    public static final String TABLE = "OBJECT";
 }

@@ -19,4 +19,11 @@ public class UpdateTypeTest extends TestCase
         List children = ObjectMother.createUpdateType().getChildren();
         assertEquals(0, children.size());
     }
+
+    public void testTableName()
+    {
+        assertEquals("UPDATE_TYPE", UpdateType.TABLE);
+        ServerMetadata updateType = ObjectMother.createUpdateType();
+        assertEquals(UpdateType.TABLE, updateType.getTableName());
+    }
 }

@@ -109,6 +109,11 @@ public class SearchHelp extends ServerMetadata implements Serializable
         return mLevel + ":" + mSearchHelpID;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return mSearchHelpID;
@@ -143,4 +148,6 @@ public class SearchHelp extends ServerMetadata implements Serializable
     private Resource mResource;
 
     private String mLevel;
+
+    public static final String TABLE = "SEARCH_HELP";
 }

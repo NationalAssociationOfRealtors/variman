@@ -147,6 +147,11 @@ public class Lookup extends ServerMetadata implements Serializable
         return children;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -186,4 +191,6 @@ public class Lookup extends ServerMetadata implements Serializable
     private Set mLookupTypes;
 
     private String mLevel;
+
+    public static final String TABLE = "LOOKUP";
 }

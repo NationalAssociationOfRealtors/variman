@@ -19,4 +19,11 @@ public class SearchHelpTest extends TestCase
         List children = ObjectMother.createSearchHelp().getChildren();
         assertEquals(0, children.size());
     }
+
+    public void testTableName()
+    {
+        assertEquals("SEARCH_HELP", SearchHelp.TABLE);
+        ServerMetadata searchHelp = ObjectMother.createSearchHelp();
+        assertEquals(SearchHelp.TABLE, searchHelp.getTableName());
+    }
 }

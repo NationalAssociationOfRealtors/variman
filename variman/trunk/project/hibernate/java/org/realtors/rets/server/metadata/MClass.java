@@ -224,6 +224,11 @@ public class MClass extends ServerMetadata implements Serializable
         return super.getRetsId();
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return mClassName;
@@ -270,4 +275,6 @@ public class MClass extends ServerMetadata implements Serializable
     private Set mUpdates;
 
     private String mLevel;
+
+    public static final String TABLE = "CLASS";
 }

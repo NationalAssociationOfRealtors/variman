@@ -19,4 +19,11 @@ public class TableTest extends TestCase
         List children = ObjectMother.createTable().getChildren();
         assertEquals(0, children.size());
     }
+
+    public void testTableName()
+    {
+        assertEquals("TABLE", Table.TABLE);
+        ServerMetadata table = ObjectMother.createTable();
+        assertEquals(Table.TABLE, table.getTableName());
+    }
 }

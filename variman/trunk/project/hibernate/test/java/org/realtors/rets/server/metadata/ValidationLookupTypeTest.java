@@ -20,4 +20,13 @@ public class ValidationLookupTypeTest extends TestCase
         List children = ObjectMother.createValidationLookupType().getChildren();
         assertEquals(0, children.size());
     }
+
+    public void testTableName()
+    {
+        assertEquals("VALIDATION_LOOKUP_TYPE", ValidationLookupType.TABLE);
+        ServerMetadata validationLookupType =
+            ObjectMother.createValidationLookupType();
+        assertEquals(ValidationLookupType.TABLE,
+                     validationLookupType.getTableName());
+    }
 }

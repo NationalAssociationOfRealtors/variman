@@ -208,6 +208,11 @@ public class UpdateType extends ServerMetadata implements Serializable
         mLevel = mUpdate.getPath();
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -262,4 +267,6 @@ public class UpdateType extends ServerMetadata implements Serializable
     private Set mValidationExpressions;
 
     private String mLevel;
+
+    public static final String TABLE = "UPDATE_TYPE";
 }

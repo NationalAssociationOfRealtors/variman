@@ -132,6 +132,11 @@ public class ValidationExternalType
         mLevel = mValidationExternal.getPath();
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -171,4 +176,6 @@ public class ValidationExternalType
     private Set mDisplayField;
 
     private String mLevel;
+
+    public static final String TABLE = "VALIDATION_EXTERNAL_TYPE";
 }

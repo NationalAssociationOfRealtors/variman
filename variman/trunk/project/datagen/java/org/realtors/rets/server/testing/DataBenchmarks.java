@@ -4,17 +4,21 @@
  */
 package org.realtors.rets.server.testing;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-
-import org.realtors.rets.server.data.RetsData;
-import org.realtors.rets.server.data.RetsDataElement;
-import org.realtors.rets.server.metadata.Table;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
+
+import org.realtors.rets.server.data.RetsData;
+import org.realtors.rets.server.data.RetsDataElement;
+import org.realtors.rets.server.metadata.Table;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author kgarner
@@ -35,6 +39,68 @@ public class DataBenchmarks extends DataGenBase
         Session session = mSessions.openSession();
         Transaction tx = session.beginTransaction();
 
+        Iterator i = session.iterate("SELECT data.id" +
+                                     "  FROM RetsData data");
+
+        int count = 0;
+        int batchCount = 0;
+        List idList = new ArrayList();
+        while (i.hasNext())
+        {
+            Long id = (Long) i.next();
+            idList.add(id);
+            count++;
+            if (count == 100)
+            {
+                long start = System.currentTimeMillis();
+                getFromIds(session, idList);
+                System.out.println("Get ids: " +
+                                   (System.currentTimeMillis() - start));
+                count = 0;
+                idList.clear();
+                batchCount++;
+            }
+        }
+        System.out.println("Batch count = " + batchCount);
+
+        tx.commit();
+        session.close();
+    }
+
+    private void getFromIds(Session session, List idList)
+        throws HibernateException
+    {
+        String ids = StringUtils.join(idList.iterator(), ", ");
+        Transaction tx = session.beginTransaction();
+        List l = session.find("SELECT data FROM RetsData data " +
+                              "WHERE data.id in (" + ids + ")");
+        for (int i = 0; i < l.size(); i++)
+        {
+            RetsData element = (RetsData) l.get(i);
+            doSomething(element);
+        }
+        tx.commit();
+    }
+
+    public void getData3() throws HibernateException
+    {
+        Session session = mSessions.openSession();
+        Transaction tx = session.beginTransaction();
+
+        long start = System.currentTimeMillis();
+        List l = session.find("SELECT data" +
+                                  "  FROM RetsData data");
+        System.out.println("Time: " + (System.currentTimeMillis() - start));
+
+        tx.commit();
+        session.close();
+    }
+
+    public void getData2() throws HibernateException
+    {
+        Session session = mSessions.openSession();
+        Transaction tx = session.beginTransaction();
+
         Query q =
             session.createQuery(
                 "SELECT data"
@@ -44,14 +110,19 @@ public class DataBenchmarks extends DataGenBase
         while (i.hasNext())
         {
             RetsData element = (RetsData) i.next();
-            Map elements = element.getDataElements();
-            RetsDataElement rde =
-                (RetsDataElement) elements.get(
-                    (Table) mTables.get("Property:RES:LP"));
+            doSomething(element);
         }
 
         tx.commit();
         session.close();
+    }
+
+    private void doSomething(RetsData element)
+    {
+        Map elements = element.getDataElements();
+        RetsDataElement rde =
+            (RetsDataElement) elements.get(
+                (Table) mTables.get("Property:RES:LP"));
     }
 
     public static void main(String[] args) throws HibernateException

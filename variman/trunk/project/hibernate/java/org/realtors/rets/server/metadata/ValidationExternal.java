@@ -162,6 +162,11 @@ public class ValidationExternal extends ServerMetadata implements Serializable
         return children;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return mValidationExternalName;
@@ -199,4 +204,6 @@ public class ValidationExternal extends ServerMetadata implements Serializable
     private Set mValidationExternalTypes;
 
     private String mLevel;
+
+    public static final String TABLE = "VALIDATION_EXTERNAL";
 }

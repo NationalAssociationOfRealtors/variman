@@ -20,4 +20,13 @@ public class ValidationExpressionTest extends TestCase
         List children = ObjectMother.createValidationExpression().getChildren();
         assertEquals(0, children.size());
     }
+
+    public void testTableName()
+    {
+        assertEquals("VALIDATION_EXPRESSION", ValidationExpression.TABLE);
+        ServerMetadata validationExpression =
+            ObjectMother.createValidationExpression();
+        assertEquals(ValidationExpression.TABLE, 
+                     validationExpression.getTableName());
+    }
 }

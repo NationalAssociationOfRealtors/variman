@@ -116,6 +116,11 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
         mLevel = mValidationLookup.getPath();
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -155,4 +160,6 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
     private ValidationLookup mValidationLookup;
 
     private String mLevel;
+
+    public static final String TABLE = "VALIDATION_LOOKUP_TYPE";
 }

@@ -116,6 +116,11 @@ public class LookupType extends ServerMetadata implements Serializable
         mLevel = mLookup.getPath();
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -155,4 +160,6 @@ public class LookupType extends ServerMetadata implements Serializable
     private Lookup mLookup;
 
     private String mLevel;
+
+    public static final String TABLE = "LOOKUP_TYPE";
 }

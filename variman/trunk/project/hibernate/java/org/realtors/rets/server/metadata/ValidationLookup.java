@@ -169,6 +169,11 @@ public class ValidationLookup extends ServerMetadata implements Serializable
         return children;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return mValidationLookupName;
@@ -209,4 +214,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
     private Set mValidationLookupTypes;
 
     private String mLevel;
+
+    public static final String TABLE = "VALIDATION_LOOKUP";
 }

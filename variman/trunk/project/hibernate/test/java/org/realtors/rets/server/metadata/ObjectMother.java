@@ -2,6 +2,9 @@
  */
 package org.realtors.rets.server.metadata;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Utilize ObjectMother test pattern.
  */
@@ -16,27 +19,42 @@ public class ObjectMother
     public static Resource createResource()
     {
         Resource resource = new Resource();
-        resource.setSystem(createSystem());
+        MSystem system = createSystem();
+        resource.setSystem(system);
         resource.setResourceID("Property");
         resource.updateLevel();
+
+        Set resources = new HashSet();
+        resources.add(resource);
+        system.setResources(resources);
         return resource;
     }
 
     public static MClass createClass()
     {
         MClass clazz = new MClass();
-        clazz.setResource(createResource());
+        Resource resource = createResource();
+        clazz.setResource(resource);
         clazz.setClassName("RES");
         clazz.updateLevel();
+
+        Set classes = new HashSet();
+        classes.add(clazz);
+        resource.setClasses(classes);
         return clazz;
     }
 
     public static Table createTable()
     {
         Table table = new Table();
-        table.setMClass(createClass());
+        MClass clazz = createClass();
+        table.setMClass(clazz);
         table.setSystemName("E_SCHOOL");
         table.updateLevel();
+
+        Set tables = new HashSet();
+        tables.add(table);
+        clazz.setTables(tables);
         return table;
     }
 
@@ -123,7 +141,7 @@ public class ObjectMother
         return validationExternal;
     }
 
-    public static ValidationExternalType createValidationExternlType()
+    public static ValidationExternalType createValidationExternalType()
     {
         ValidationExternalType validationExternalType =
             new ValidationExternalType();

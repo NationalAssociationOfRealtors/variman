@@ -189,6 +189,16 @@ public class MSystem extends ServerMetadata implements Serializable
         return null;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
+    public String getLevel()
+    {
+        return "";
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -235,4 +245,6 @@ public class MSystem extends ServerMetadata implements Serializable
 
     /** persistent field */
     private Set mForeignKeys;
+
+    public static final String TABLE = "SYSTEM";
 }

@@ -393,6 +393,11 @@ public class Resource extends ServerMetadata implements Serializable
         return mResourceID;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return mResourceID;
@@ -463,4 +468,6 @@ public class Resource extends ServerMetadata implements Serializable
     private Set mUpdateHelps;
 
     private String mLevel;
+
+    public static final String TABLE = "RESOURCE";
 }

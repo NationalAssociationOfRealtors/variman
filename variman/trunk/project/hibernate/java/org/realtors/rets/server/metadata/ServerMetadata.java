@@ -28,4 +28,8 @@ public abstract class ServerMetadata
     {
         return "";
     }
+
+    public abstract String getTableName();
+
+    public abstract String getLevel();
 }

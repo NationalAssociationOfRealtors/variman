@@ -21,4 +21,13 @@ public class ValidationExternalTest extends TestCase
         assertEquals(1, children.size());
         assertTrue(children.get(0) instanceof ValidationExternalType[]);
     }
+
+    public void testTableName()
+    {
+        assertEquals("VALIDATION_EXTERNAL", ValidationExternal.TABLE);
+        ServerMetadata validationExternal =
+            ObjectMother.createValidationExternal();
+        assertEquals(ValidationExternal.TABLE,
+                     validationExternal.getTableName());
+    }
 }

@@ -135,6 +135,11 @@ public class ValidationExpression extends ServerMetadata implements Serializable
         return mResource.getPath() + ":" + mValidationExpressionID;
     }
 
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
     public String toString()
     {
         return mValidationExpressionID;
@@ -172,4 +177,6 @@ public class ValidationExpression extends ServerMetadata implements Serializable
     private Resource mResource;
 
     private String mLevel;
+
+    public static final String TABLE = "VALIDATION_EXPRESSION";
 }

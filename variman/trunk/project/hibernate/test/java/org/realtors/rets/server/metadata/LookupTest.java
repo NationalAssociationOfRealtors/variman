@@ -20,4 +20,11 @@ public class LookupTest extends TestCase
         assertEquals(1, children.size());
         assertTrue(children.get(0) instanceof LookupType[]);
     }
+
+    public void testTableName()
+    {
+        assertEquals("LOOKUP", Lookup.TABLE);
+        ServerMetadata lookup = ObjectMother.createLookup();
+        assertEquals(Lookup.TABLE, lookup.getTableName());
+    }
 }

@@ -21,4 +21,11 @@ public class MClassTest extends TestCase
         assertTrue(children.get(0) instanceof Table[]);
         assertTrue(children.get(1) instanceof Update[]);
     }
+
+    public void testTableName()
+    {
+        assertEquals("CLASS", MClass.TABLE);
+        ServerMetadata clazz = ObjectMother.createClass();
+        assertEquals(MClass.TABLE, clazz.getTableName());
+    }
 }

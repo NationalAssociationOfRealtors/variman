@@ -23,6 +23,7 @@ import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.ServerMetadata;
+import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
 import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
 
@@ -120,6 +121,7 @@ public class  GetMetadataServlet extends RetsServlet
                               int format)
     {
         LOG.debug("Formatting " + metadataSegments.size() + " segments");
+        long start = System.currentTimeMillis();
         MetadataSegmentFormatter formatter =
             new MetadataSegmentFormatter(out, format);
         for (int i = 0; i < metadataSegments.size(); i++)
@@ -128,24 +130,25 @@ public class  GetMetadataServlet extends RetsServlet
                 (MetadataSegment) metadataSegments.get(i);
             formatter.format(metadataSegment);
         }
+        LOG.debug("Formatting done: " + (System.currentTimeMillis() - start));
     }
 
     private List getMetadata(String type, String[] levels, boolean recursive)
         throws RetsReplyException
     {
         // Always need system to get version and date
-        LOG.debug("Getting system");
-        MSystem system = findSystem();
-        String version = system.getVersionString();
-        Date date = system.getDate();
+//        MSystem system = findSystem();
+//        String version = system.getVersionString();
+//        Date date = system.getDate();
+        String version = "1.00.001";
+        Date date = new Date();
         List metadataResults = new ArrayList();
 
-        MetadataFinder finder =
-            (MetadataFinder) sMetadataFinders.get(type);
-        if (finder != null)
+        if (type.startsWith("METADATA-"))
         {
-            LOG.debug("Using finder for type: " + type);
-            List metadata = finder.findMetadata(levels);
+            type = type.substring("METADATA-".length());
+            MetadataManager manager = getMetadataManager();
+            List metadata = manager.find(type, StringUtils.join(levels, ":"));
             metadataResults.add(new MetadataSegment(metadata, levels, version,
                                                     date));
             if (recursive)
@@ -161,6 +164,42 @@ public class  GetMetadataServlet extends RetsServlet
         }
         return metadataResults;
     }
+
+    private List getMetadata2(String type, String[] levels, boolean recursive)
+        throws RetsReplyException
+    {
+        // Always need system to get version and date
+//        MSystem system = findSystem();
+//        String version = system.getVersionString();
+//        Date date = system.getDate();
+        String version = "1.00.001";
+        Date date = new Date();
+        List metadataResults = new ArrayList();
+
+        MetadataFinder finder =
+            (MetadataFinder) sMetadataFinders.get(type);
+        if (finder != null)
+        {
+            LOG.debug("Using finder for type: " + type);
+            long start = System.currentTimeMillis();
+            List metadata = finder.findMetadata(levels);
+            LOG.debug("End finder: " + (System.currentTimeMillis() - start));
+            metadataResults.add(new MetadataSegment(metadata, levels, version,
+                                                    date));
+            if (recursive)
+            {
+                recurseChildren(metadata,  metadataResults, version, date);
+            }
+        }
+        else
+        {
+            LOG.warn("Recieved query for unknown metadataResults type: " +
+                     type + ", level=" + StringUtils.join(levels, ":"));
+            throw new RetsReplyException(20501, "Invalid Type");
+        }
+        return metadataResults;
+    }
+
 
     private void recurseChildren(List parents, List metadataResults,
                                  String version, Date date)

@@ -92,6 +92,16 @@ public class ForeignKey extends ServerMetadata implements Serializable
         mChildTable = childTable;
     }
 
+    public String getTableName()
+    {
+        return null;
+    }
+
+    public String getLevel()
+    {
+        return "";
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)

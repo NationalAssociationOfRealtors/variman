@@ -19,4 +19,11 @@ public class EditMaskTest extends TestCase
         List children = ObjectMother.createEditMask().getChildren();
         assertEquals(0, children.size());
     }
+
+    public void testTableName()
+    {
+        assertEquals("EDIT_MASK", EditMask.TABLE);
+        ServerMetadata editMask = ObjectMother.createEditMask();
+        assertEquals(EditMask.TABLE, editMask.getTableName());
+    }
 }

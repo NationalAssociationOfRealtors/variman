@@ -30,4 +30,11 @@ public class ResourceTest extends TestCase
         // This ensures we've checked all elements
         assertEquals(8, i);
     }
+
+    public void testTableName()
+    {
+        assertEquals("RESOURCE", Resource.TABLE);
+        ServerMetadata resource = ObjectMother.createResource();
+        assertEquals(Resource.TABLE, resource.getTableName());
+    }
 }
