@@ -1,9 +1,6 @@
 package org.realtors.rets.server.dmql;
 
 import java.io.StringReader;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
 
 import antlr.ANTLRException;
 
