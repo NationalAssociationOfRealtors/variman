@@ -91,7 +91,8 @@ public class AdminFrame extends JFrame
         mGroupMenu = new JMenu("Group");
         menuBar.add(mGroupMenu);
         mGroupMenu.add(mGroupsPanel.getAddGroupAction());
-        mGroupMenu.add(mGroupsPanel.getRemoveGroupAciton());
+        mGroupMenu.add(mGroupsPanel.getRemoveGroupAction());
+        mGroupMenu.add(mGroupsPanel.getEditGroupAction());
         mGroupMenu.setEnabled(false);
 
         if (!Admin.isMacOS())
