@@ -524,6 +524,7 @@
   <target name="test" description="Run all unit tests" depends="build">
     <junit printsummary="yes" haltonfailure="yes">
       <classpath>
+        <path refid="lib.path"/>
         <pathelement path="${java.class.path}"/>
         <path refid="hibernate.path"/>
         <pathelement path="${servlet.jar}"/>
@@ -533,6 +534,9 @@
         <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
         <pathelement location="build/hibernate/test/classes"/>
         <pathelement location="build/webapp/test/classes"/>
+        <pathelement location="build/admin/classes"/>
+        <pathelement location="build/admin/test/classes"/>
+        <!-- Keith -->
       </classpath>
 
       <formatter type="plain"/>
