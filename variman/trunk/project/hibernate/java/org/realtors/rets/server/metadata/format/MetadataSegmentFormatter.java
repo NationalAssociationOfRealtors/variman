@@ -49,17 +49,14 @@ public class MetadataSegmentFormatter
                              new CompactLookupTypeFormatter());
             mFormmatters.put(ValidationLookup.class,
                              new CompactValidationLookupFormatter());
-            mFormmatters.put(
-                ValidationLookupType.class,
-                new CompactValidationLookupTypeFormatter());
+            mFormmatters.put(ValidationLookupType.class,
+                             new CompactValidationLookupTypeFormatter());
             mFormmatters.put(ValidationExternal.class,
                              new CompactValidationExternalFormatter());
-            mFormmatters.put(
-                ValidationExternalType.class,
-                new CompactValidationExternalTypeFormatter());
-            mFormmatters.put(
-                ValidationExpression.class,
-                new CompactValidationExpressionFormatter());
+            mFormmatters.put(ValidationExternalType.class,
+                             new CompactValidationExternalTypeFormatter());
+            mFormmatters.put(ValidationExpression.class,
+                             new CompactValidationExpressionFormatter());
         }
         else
         {
