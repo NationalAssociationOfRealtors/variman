@@ -67,6 +67,11 @@ options
         return list;
     }
 
+    private EqualClause newEqualClause(String field, String value) {
+        String column = mMetadata.fieldToColumn(field);
+        return new EqualClause(column, new StringSqlConverter(value));
+    }
+
     private String fieldToColumn(String field) {
         return mMetadata.fieldToColumn(field);
     }
@@ -167,8 +172,8 @@ string_literal returns [SqlConverter sql]
     ;
 
 number_value returns [SqlConverter sql]
-    { sql = null; }
-    : NUMBER
+    { String f; }
+    : #(NUMBER f=field n:NUMBER) { sql = newEqualClause(f, n.getText());}
     ;
 
 period_value returns [SqlConverter sql]
