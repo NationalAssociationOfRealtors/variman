@@ -1,9 +1,9 @@
 /*
  */
-package org.realtors.rets.server.webapp;
+package org.realtors.rets.server.config;
 
-import java.io.IOException;
 import java.beans.IntrospectionException;
+import java.io.IOException;
 
 import org.realtors.rets.server.LinesEqualTestCase;
 
@@ -42,12 +42,37 @@ public class RetsConfigTest extends LinesEqualTestCase
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
             "  <nonce-success-timeout>10</nonce-success-timeout>\n" +
+            "  <database>\n" +
+            "    <driver>org.postgresql.Driver</driver>\n" +
+            "    <url>jdbc:postgresql://localhost/rex_test</url>\n" +
+            "    <username>dave</username>\n" +
+            "    <password/>" +
+            "    <max-active>100</max-active>\n" +
+            "    <max-wait>120000</max-wait>\n" +
+            "    <max-idle>10</max-idle>\n" +
+            "    <max-ps-active>50</max-ps-active>\n" +
+            "    <max-ps-wait>60000</max-ps-wait>\n" +
+            "    <max-ps-idle>5</max-ps-idle>\n" +
+            "  </database>\n" +
             "</rets-config>";
         RetsConfig retsConfig = RetsConfig.initFromXml(xml);
         assertEquals("%k-%i.jpg", retsConfig.getGetObjectPattern());
         assertEquals("/tmp/pictures", retsConfig.getGetObjectRoot());
         assertEquals(5, retsConfig.getNonceInitialTimeout());
         assertEquals(10, retsConfig.getNonceSuccessTimeout());
+
+        DatabaseConfig database = retsConfig.getDatabase();
+        assertEquals("org.postgresql.Driver", database.getDriver());
+        assertEquals("jdbc:postgresql://localhost/rex_test",
+                     database.getUrl());
+        assertEquals("dave", database.getUsername());
+        assertEquals("", database.getPassword());
+        assertEquals(100, database.getMaxActive());
+        assertEquals(120000, database.getMaxWait());
+        assertEquals(10, database.getMaxIdle());
+        assertEquals(50, database.getMaxPsActive());
+        assertEquals(60000, database.getMaxPsWait());
+        assertEquals(5, database.getMaxPsIdle());
     }
 
     public void testFromXmlDefaults()

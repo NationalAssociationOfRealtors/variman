@@ -8,22 +8,24 @@
 
 /*
  */
-package org.realtors.rets.server.webapp;
+package org.realtors.rets.server.config;
 
-import java.io.StringWriter;
+import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.InputStream;
-import java.beans.IntrospectionException;
+import java.io.StringWriter;
+import java.util.Properties;
 
 import org.realtors.rets.server.Util;
+import org.realtors.rets.server.RetsServerException;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.betwixt.io.BeanWriter;
-import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.betwixt.XMLIntrospector;
+import org.apache.commons.betwixt.io.BeanReader;
+import org.apache.commons.betwixt.io.BeanWriter;
 import org.apache.commons.betwixt.strategy.HyphenatedNameMapper;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.xml.sax.SAXException;
 
 public class RetsConfig
@@ -74,6 +76,16 @@ public class RetsConfig
         mNonceSuccessTimeout = nonceSuccessTimeout;
     }
 
+    public DatabaseConfig getDatabase()
+    {
+        return mDatabase;
+    }
+
+    public void setDatabase(DatabaseConfig database)
+    {
+        mDatabase = database;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -81,27 +93,43 @@ public class RetsConfig
             .append("GetObject pattern", mGetObjectPattern)
             .append("nonce initial timeout", mNonceInitialTimeout)
             .append("nonce success timeout", mNonceSuccessTimeout)
+            .append(mDatabase)
             .toString();
     }
 
     public String toXml()
-        throws IOException, SAXException, IntrospectionException
+        throws RetsServerException
     {
-        StringWriter xml = new StringWriter();
+        try
+        {
+            StringWriter xml = new StringWriter();
 
-        // Betwixt just writes out the bean as a fragment So if we want
-        // well-formed xml, we need to add the prolog
-        xml.write("<?xml version='1.0' ?>");
+            // Betwixt just writes out the bean as a fragment So if we want
+            // well-formed xml, we need to add the prolog
+            xml.write("<?xml version='1.0' ?>");
 
-        BeanWriter beanWriter = new BeanWriter(xml);
-        beanWriter.setWriteIDs(false);
-        beanWriter.enablePrettyPrint();
-        XMLIntrospector introspector = beanWriter.getXMLIntrospector();
-        introspector.setAttributesForPrimitives(false);
-        introspector.setElementNameMapper(new HyphenatedNameMapper());
+            BeanWriter beanWriter = new BeanWriter(xml);
+            beanWriter.setWriteIDs(false);
+            beanWriter.enablePrettyPrint();
+            XMLIntrospector introspector = beanWriter.getXMLIntrospector();
+            introspector.setAttributesForPrimitives(false);
+            introspector.setElementNameMapper(new HyphenatedNameMapper());
 
-        beanWriter.write(this);
-        return xml.toString();
+            beanWriter.write(this);
+            return xml.toString();
+        }
+        catch (IOException e)
+        {
+            throw new RetsServerException(e);
+        }
+        catch (SAXException e)
+        {
+            throw new RetsServerException(e);
+        }
+        catch (IntrospectionException e)
+        {
+            throw new RetsServerException(e);
+        }
     }
 
     public static RetsConfig initFromXml(String xml)
@@ -200,8 +228,14 @@ public class RetsConfig
         }
     }
 
+    public Properties createHibernateProperties()
+    {
+        return mDatabase.getHibernateProperties();
+    }
+
     private String mGetObjectRoot;
     private String mGetObjectPattern;
     private int mNonceInitialTimeout;
     private int mNonceSuccessTimeout;
+    private DatabaseConfig mDatabase;
 }
