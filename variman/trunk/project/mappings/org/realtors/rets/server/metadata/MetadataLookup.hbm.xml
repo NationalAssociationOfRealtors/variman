@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: MetadataLookup.hbm.xml,v 1.1 2003/06/02 21:48:13 kgarner Exp $ -->
+
+<hibernate-mapping>
+
+  <class name="org.nar.rets.metadata.newdb.MetadataLookup"
+    table="rets_metadata_lookup">
+
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="lookupName" type="string">
+      <column name="lookup_name" length="32" unique="true" not-null="true"
+        index="rets_metadata_lookup_lookupname_index"/>
+    </property>
+
+    <property name="visibleName" type="string">
+      <column name="visible_name" length="32"/>
+    </property>
+
+    <property name="version" type="string">
+      <column name="version" length="11"/>
+    </property>
+
+    <property name="date" type="date">
+      <column name="rdate"/>
+    </property>
+
+    <set name="lookupTypes">
+      <key column="id"/>
+      <one-to-many class="org.nar.rets.metadata.newdb.MetadataLookupType"/>
+    </set>
+
+  </class>
+</hibernate-mapping>
