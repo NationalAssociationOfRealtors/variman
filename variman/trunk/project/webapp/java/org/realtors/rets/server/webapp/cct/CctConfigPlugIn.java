@@ -40,7 +40,7 @@ public class CctConfigPlugIn implements PlugIn
     public void init(ActionServlet servlet, ModuleConfig config)
         throws ServletException
     {
-        LOG.info("Setting TestRunnerClass to " + mTestRunnerClass);
+        LOG.debug("Setting TestRunnerClass to " + mTestRunnerClass);
         TestRunnerFactory.setTestRunnerClass(mTestRunnerClass);
     }
 
