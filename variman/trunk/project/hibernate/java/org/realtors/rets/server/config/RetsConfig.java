@@ -34,8 +34,19 @@ public class RetsConfig
 {
     public RetsConfig()
     {
+        mPort = 6103;
         mNonceInitialTimeout = -1;
         mNonceSuccessTimeout = -1;
+    }
+
+    public int getPort()
+    {
+        return mPort;
+    }
+
+    public void setPort(int port)
+    {
+        mPort = port;
     }
 
     public String getGetObjectRoot()
@@ -102,6 +113,7 @@ public class RetsConfig
     public String toXml() throws RetsServerException
     {
         Element retsConfig = new Element(RETS_CONFIG);
+        addChild(retsConfig, PORT, mPort);
         addChild(retsConfig,  GET_OBJECT_PATTERN, mGetObjectPattern);
         addChild(retsConfig, GET_OBJECT_ROOT, mGetObjectRoot);
         addChild(retsConfig, NONCE_INITIAL_TIMEOUT, mNonceInitialTimeout);
@@ -169,6 +181,7 @@ public class RetsConfig
     private static RetsConfig elementToConfig(Element element)
     {
         RetsConfig config = new RetsConfig();
+        config.mPort = getInt(element,  PORT);
         config.mGetObjectPattern = getString(element,  GET_OBJECT_PATTERN);
         config.mGetObjectRoot = getString(element, GET_OBJECT_ROOT);
         config.mNonceInitialTimeout = getInt(element, NONCE_INITIAL_TIMEOUT);
@@ -300,6 +313,7 @@ public class RetsConfig
         return mDatabase.createHibernateProperties();
     }
 
+    private static final String PORT = "port";
     private static final String RETS_CONFIG = "rets-config";
     private static final String GET_OBJECT_PATTERN = "get-object-pattern";
     private static final String GET_OBJECT_ROOT = "get-object-root";
@@ -316,6 +330,8 @@ public class RetsConfig
     private static final String MAX_PS_IDLE = "max-ps-idle";
     private static final String MAX_PS_WAIT = "max-ps-wait";
     private static final String DATABASE = "database";
+
+    private int mPort;
     private String mGetObjectRoot;
     private String mGetObjectPattern;
     private int mNonceInitialTimeout;
