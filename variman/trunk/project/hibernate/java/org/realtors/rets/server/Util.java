@@ -26,4 +26,16 @@ public class Util
         style.setUseIdentityHashCode(false);
         SHORT_STYLE = style;
     }
+
+    public static String toString(boolean bool)
+    {
+        if (bool)
+        {
+            return "true";
+        }
+        else
+        {
+            return "false";
+        }
+    }
 }
