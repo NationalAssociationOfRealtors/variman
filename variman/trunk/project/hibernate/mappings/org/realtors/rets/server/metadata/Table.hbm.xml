@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: Table.hbm.xml,v 1.1 2003/05/29 21:52:48 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.metadata.newdb.MetadataTable"
+    table="rets_metadata_table">
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="systemName" type="string">
+      <column name="system_name" length="32"/>
+    </property>
+
+    <property name="standardName" type="string"/>
+
+    <property name="longName" type="string">
+      <column name="long_name" length="32"/>
+    </property>
+
+    <property name="DBName" type="string">
+      <column name="dbname" length="10"/>
+    </property>
+
+    <property name="shortName" type="string">
+      <column name="short_name" length="24"/>
+    </property>
+
+    <property name="dataType" type="org.nar.rets.metadata.newdb.DataTypeEnum"/>
+
+    <property name="precision" type="int"/>
+
+    <property name="searchable" type="boolean"/>
+
+    <property name="interpretation"
+      type="org.nar.rets.metadata.newdb.InterpretationEnum"/>
+
+    <property name="alignment"
+      type="org.nar.rets.metadata.newdb.AlignmentEnum"/>
+
+    <property name="useSeparator" type="boolean"/>
+
+    <!-- edit mask is next -->
+
+  </class>
+</hibernate-mapping>
