@@ -4,8 +4,6 @@ package org.realtors.rets.server;
 
 import java.util.List;
 
-import org.realtors.rets.server.metadata.MetadataSegment;
-
 public interface MetadataFetcher
 {
     /**
@@ -17,6 +15,6 @@ public interface MetadataFetcher
      * @return A list of MetadataSegment objects
      * @throws RetsServerException if an error occurs
      */
-    public List fetchAllMetadata(String type, String[] levels)
+    public List fetchMetadata(String type, String[] levels)
         throws RetsServerException;
 }
