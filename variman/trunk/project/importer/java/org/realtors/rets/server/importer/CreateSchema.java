@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import net.sf.hibernate.HibernateException;
 
@@ -26,15 +28,23 @@ import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Table;
 
 /**
+ * Creates a database schema based on the metadata currently in the database.
+ * Currently optimized for postgres, but should be fairly portable.
+ * 
  * @author kgarner
  */
 public class CreateSchema extends RetsHelpers
 {
+    /**
+     * Constructor that inits hibernate and loads the type mappings.
+     * 
+     * @throws HibernateException if hibernate gets ticked
+     */
     public CreateSchema()
         throws HibernateException
     {
         super();
-        mLineSeperator = System.getProperty("line.separator");
+        mLs = System.getProperty("line.separator");
         mTypeMappings = new HashMap();
         loadTypeMapping();
         mFileName = null;
@@ -47,9 +57,11 @@ public class CreateSchema extends RetsHelpers
         while (i.hasNext())
         {
             MClass clazz = (MClass) i.next();
-            sb.append("CREATE TABLE ").append(clazz.getClassName());
-            sb.append(" (").append(mLineSeperator);
-            sb.append("\tid INT8,").append(mLineSeperator);
+            String className = clazz.getClassName();
+            sb.append("CREATE TABLE ").append(className);
+            sb.append(" (").append(mLs);
+            sb.append("\tid INT8,").append(mLs);
+            Set needsIndex = new HashSet();
             Iterator j = clazz.getTables().iterator();
             while (j.hasNext())
             {
@@ -89,17 +101,28 @@ public class CreateSchema extends RetsHelpers
                         sb.append(mTypeMappings.get("decimal"));
                         break;
                 }
-                if (j.hasNext())
+                sb.append(",").append(mLs);
+                if (table.isSearchable())
                 {
-                    sb.append(",");
+                    needsIndex.add(table);
                 }
-                sb.append(mLineSeperator);
             }
-            sb.append(");").append(mLineSeperator);
+            sb.append("\tprimary key(id)").append(mLs);
+            sb.append(");").append(mLs);
+            j = needsIndex.iterator();
+            while (j.hasNext())
+            {
+                Table table = (Table) j.next();
+                String dbName = table.getDbName();
+                sb.append("create index ").append(className).append("_");
+                sb.append(dbName).append("_index on ").append(className);
+                sb.append("(").append(dbName).append(");").append(mLs);
+            }
         }
 
         return sb.toString();
     }
+
     /**
      * 
      * @return
@@ -208,7 +231,8 @@ public class CreateSchema extends RetsHelpers
     }
 
     private String mFileName;
-    private String mLineSeperator;
+    /** The Line Seperator */
+    private String mLs;
     private Map mTypeMappings;
     private static Logger LOG = Logger.getLogger(CreateSchema.class);
 
