@@ -64,7 +64,15 @@ public class MockResultSet extends NullResultSet
         // Make it zero-based
         columnIndex--;
         List currentRow = getCurrentRow();
-        return currentRow.get(columnIndex).toString();
+        Object object = currentRow.get(columnIndex);
+        if (object != null)
+        {
+            return object.toString();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private List mRows;
