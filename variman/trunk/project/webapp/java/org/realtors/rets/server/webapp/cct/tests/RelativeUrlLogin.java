@@ -3,29 +3,19 @@
 package org.realtors.rets.server.webapp.cct.tests;
 
 import org.realtors.rets.server.cct.StatusEnum;
-import org.realtors.rets.server.cct.ValidationResult;
+import org.realtors.rets.server.webapp.cct.ActionHandler;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
-import org.realtors.rets.server.webapp.cct.HandlerManager;
+import org.realtors.rets.server.webapp.cct.GetMetadataHandler;
 import org.realtors.rets.server.webapp.cct.InvokeCount;
 import org.realtors.rets.server.webapp.cct.LoginHandler;
-import org.realtors.rets.server.webapp.cct.ActionHandler;
 import org.realtors.rets.server.webapp.cct.LogoutHandler;
+import org.realtors.rets.server.webapp.cct.RetsHandlers;
 
 public class RelativeUrlLogin extends BaseCertificationTest
 {
-    
     public String getName()
     {
         return RelativeUrlLogin.class.getName();
-    }
-    
-    public ValidationResult validate()
-    {
-        ValidationResult results = new ValidationResult();
-        mLogin.validate(results);
-        mAction.validate(results);
-        mLogout.validate(results);
-        return results;
     }
 
     public String getDescription()
@@ -41,31 +31,35 @@ public class RelativeUrlLogin extends BaseCertificationTest
     public void start()
     {
         super.start();
-        HandlerManager actionManager = HandlerManager.getInstance();
-        mLogin = actionManager.getLoginHandler(mTestContext);
-        mLogin.reset();
-        mLogin.setRelativeUrls(true);
-        mLogin.setSessionId(SESSION_ID);
-        mLogin.setGetInvokeCount(InvokeCount.ONE);
-        mLogin.addStandardHeaders();
+        RetsHandlers handlers = getRetsHandlers();
+        handlers.resetAll();
 
-        mAction = actionManager.getActionHandler();
-        mAction.reset();
-        mAction.setGetInvokeCount(InvokeCount.ONE);
-        mAction.addStandardHeaders();
-        mAction.addStandardCookies(SESSION_ID);
+        LoginHandler login = handlers.getLoginHandler();
+        login.reset();
+        login.setRelativeUrls(true);
+        login.setSessionId(SESSION_ID);
+        login.setGetInvokeCount(InvokeCount.ONE);
+        login.addStandardHeaders();
 
-        mLogout = actionManager.getLogoutHandler();
-        mLogout.reset();
-        mLogout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
-        mLogout.addStandardHeaders();
-        mLogout.addStandardCookies(SESSION_ID);
+        ActionHandler action = handlers.getActionHandler();
+        action.reset();
+        action.setGetInvokeCount(InvokeCount.ONE);
+        action.addStandardHeaders();
+        action.addStandardCookies(SESSION_ID);
+
+        GetMetadataHandler metadata = handlers.getGetMetadataHandler();
+        metadata.setGetInvokeCount(InvokeCount.ANY);
+        metadata.addStandardHeaders();
+        metadata.addStandardCookies(SESSION_ID);
+
+        LogoutHandler logout = handlers.getLogoutHandler();
+        logout.reset();
+        logout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
+        logout.addStandardHeaders();
+        logout.addStandardCookies(SESSION_ID);
 
         mStatus = StatusEnum.RUNNING;
     }
 
-    private LoginHandler mLogin;
-    private ActionHandler mAction;
-    private LogoutHandler mLogout;
     public static final String SESSION_ID = "RelativeUrlLogin";
 }
