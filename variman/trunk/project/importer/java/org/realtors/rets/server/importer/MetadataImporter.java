@@ -920,10 +920,16 @@ public class MetadataImporter
                         lookupTableStandardName(standardName));
                     hTable.setLongName(md.getAttribute("LongName"));
 
-                    hTable.setDbName(
-                        StringUtils.substring(
-                            "r_" + md.getAttribute("DbName"),0,10));
-                        
+                    String tmp = md.getAttribute("DbName");
+                    if(tmp.startsWith("r_"))
+                    {
+                        hTable.setDbName(StringUtils.substring(tmp,0,10));
+                    }
+                    else
+                    {
+                        hTable.setDbName(
+                            StringUtils.substring("r_" + tmp, 0, 10));
+                    }                        
                         
                     hTable.setShortName(md.getAttribute("ShortName"));
                     hTable.setMaximumLength(
@@ -1070,5 +1076,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.28 2003/08/04 20:41:26 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.29 2003/08/12 20:45:47 kgarner Exp $";
 }
