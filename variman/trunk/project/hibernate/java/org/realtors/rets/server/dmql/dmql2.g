@@ -43,15 +43,32 @@ field_value [AST name]
     | range_list[name]
     ;
 
-between
-    : ((period) => period | number | text) m:MINUS^ {#m.setType(BETWEEN);}
-        ((period) => period | number | text)
+between [AST name]
+    : {isNumericField(name.getText())}? between_number
+    | (period) => between_period
+    | between_text
     ;
 
-less
-    : ((period) => period | number | text) m:MINUS^ {#m.setType(LESS);}
+between_text
+    : text m:MINUS^ {#m.setType(BETWEEN);} text
     ;
 
-greater
-    : ((period) => period | number | text) p:PLUS^ {#p.setType(GREATER);}
+less [AST name]
+    : {isNumericField(name.getText())}? less_number
+    | (period) => less_period
+    | less_text
+    ;
+
+less_text
+    : text m:MINUS^ {#m.setType(LESS);}
+    ;
+
+greater [AST name]
+    : {isNumericField(name.getText())}? greater_number
+    | (period) => greater_period
+    | greater_text
+    ;
+
+greater_text
+    : text p:PLUS^ {#p.setType(GREATER);}
     ;

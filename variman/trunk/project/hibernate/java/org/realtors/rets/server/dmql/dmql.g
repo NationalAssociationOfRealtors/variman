@@ -38,6 +38,10 @@ tokens
         return mMetadata.isValidStringName(fieldName);
     }
 
+    private boolean isNumericField(String fieldName) {
+        return mMetadata.isNumericField(fieldName);
+    }
+
     private void assertValidLookupValue(AST field, Token t)
         throws SemanticException
     {
@@ -109,30 +113,57 @@ field_value [AST name]
     ;
 
 range_list [AST name]
-    : range (COMMA! range)*
+    : range[name] (COMMA! range[name])*
         {#range_list = #([RANGE_LIST], name, #range_list);}
     ;
 
-range
-    : between
-    | less
-    | greater
+range [AST name]
+    : between[name]
+    | less[name]
+    | greater[name]
     ;
 
-between
-    : (period | number) m:MINUS^ {#m.setType(BETWEEN);} (period | number)
+between [AST name]
+    : between_period
+    | between_number
     ;
 
-less
-    : (period | number) m:MINUS^ {#m.setType(LESS);}
+between_period
+    : period m:MINUS^ {#m.setType(BETWEEN);} period
     ;
 
-greater
-    : (period | number) p:PLUS^ {#p.setType(GREATER);}
+between_number
+    : number m:MINUS^ {#m.setType(BETWEEN);} number
+    ;
+
+less [AST name]
+    : less_period
+    | less_number;
+
+less_period
+    : period m:MINUS^ {#m.setType(LESS);}
+    ;
+
+less_number
+    : number m:MINUS^ {#m.setType(LESS);}
+    ;
+
+greater [AST name]
+    : greater_period
+    | greater_number
+    ;
+
+greater_period
+    : period p:PLUS^ {#p.setType(GREATER);}
+    ;
+
+greater_number
+    : number p:PLUS^ {#p.setType(GREATER);}
     ;
 
 number
     : NUMBER
+    | i:INT {#i.setType(NUMBER);}
     ;
 
 period
@@ -183,6 +214,7 @@ lookup [AST name]
     { Token t; }
     : t=t:text_token {assertValidLookupValue(name,t); #t.setType(LOOKUP);}
     | n:NUMBER       {assertValidLookupValue(name,n); #n.setType(LOOKUP);}
+//    | i:INT          {assertValidLookupValue(name,i); #i.setType(LOOKUP);}
     ;
 
 string_list [AST name]
@@ -241,6 +273,7 @@ text_token returns [Token t]
     | not:NOT       {t=not;     #not.setType(TEXT);}
     | today:TODAY   {t=today;   #today.setType(TEXT);}
     | now:NOW       {t=now;     #now.setType(TEXT);}
+    | integer:INT   {t=integer; #integer.setType(TEXT);}
     ;
 
 class DmqlLexer extends Lexer;
@@ -309,6 +342,10 @@ protected
 NUMBER
     : (DIGIT)+ ('.' (DIGIT)*)* ;
 
+protected
+INT
+    : (DIGIT)+ ('.' (DIGIT)*)* ;
+
 protected OR : "OR" ;
 protected AND : "AND" ;
 protected NOT : "NOT" ;
@@ -321,12 +358,13 @@ TEXT_OR_NUMBER_OR_PERIOD
     : (YMD 'T') => DATETIME {$setType(DATETIME);}
     | (DATE) => DATE {$setType(DATE);}
     | (TIME) => TIME {$setType(TIME);}
-    | (NUMBER) => NUMBER {$setType(NUMBER);}
     | (OR) => OR {$setType(OR);}
     | (AND) => AND {$setType(AND);}
     | (NOT) => NOT {$setType(NOT);}
     | (TODAY) => TODAY {$setType(TODAY);}
     | (NOW) => NOW {$setType(NOW);}
+    | (INT) => INT {$setType(INT);}
+    | (NUMBER) => NUMBER {$setType(NUMBER);}
     | TEXT {$setType(TEXT);}
     ;
 
