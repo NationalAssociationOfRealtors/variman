@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.AdminUtils;
 
-public class AdminFrame extends JFrame implements ActionListener
+public class AdminFrame extends JFrame
 {
     public static AdminFrame getInstance()
     {
@@ -42,17 +42,12 @@ public class AdminFrame extends JFrame implements ActionListener
         JMenu menu = new JMenu("File");
         menuBar.add(menu);
 
-        int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+       mMenuShortcutKeyMask =
+           Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-        JMenuItem item = new JMenuItem("Save", KeyEvent.VK_S);
-        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, mask));
-        menu.add(item);
+        menu.add(new SaveAction());
         menu.addSeparator();
-
-        item = new JMenuItem("Quit", KeyEvent.VK_Q);
-        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, mask));
-        item.addActionListener(new OnQuit());
-        menu.add(item);
+        menu.add(new QuitAction());
 
         menu = new JMenu("Database");
         menuBar.add(menu);
@@ -121,23 +116,37 @@ public class AdminFrame extends JFrame implements ActionListener
         }
     }
 
-    private class OnQuit implements ActionListener
+    private class SaveAction extends AbstractAction
     {
+        public SaveAction()
+        {
+            super("Save");
+            putValue(ACCELERATOR_KEY,
+                     KeyStroke.getKeyStroke(KeyEvent.VK_S,
+                                            mMenuShortcutKeyMask));
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            System.out.println("Save...");
+        }
+
+    }
+
+    private class QuitAction extends AbstractAction
+    {
+        public QuitAction()
+        {
+            super("Quit");
+            putValue(ACCELERATOR_KEY,
+                     KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+                                            mMenuShortcutKeyMask))            ;
+        }
+
         public void actionPerformed(ActionEvent e)
         {
             quit();
         }
-    }
-
-    public void actionPerformed(ActionEvent e)
-    {
-        JMenuItem source = (JMenuItem)(e.getSource());
-        String newline = "\n";
-        String s = "Action event detected."
-                   + newline
-                   + "    Event source: " + source.getText()
-                   + " (an instance of " + getClassName(source) + ")";
-        System.out.println(s);
     }
 
     // Returns just the class name -- no package info.
@@ -175,4 +184,5 @@ public class AdminFrame extends JFrame implements ActionListener
     private JLabel mStatusBar;
     private UsersPanel mUsersPanel;
     private JMenu mUserMenu;
+    private int mMenuShortcutKeyMask;
 }
