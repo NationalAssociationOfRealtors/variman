@@ -44,7 +44,12 @@ import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.metadata.Update;
 import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.ValidationExternal;
-
+import org.realtors.rets.server.metadata.ValidationExpression;
+import org.realtors.rets.server.metadata.ValidationExpressionTypeEnum;
+import org.realtors.rets.server.metadata.ValidationExternalType;
+import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 import org.apache.commons.lang.StringUtils;
 
 public class MetadataImporter
@@ -64,6 +69,7 @@ public class MetadataImporter
         mLookups = new HashMap();
         mSearchHelps = new HashMap();
         mValidationExternals = new HashMap();
+        mValidationLookups = new HashMap();
         mDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
     }
 
@@ -107,6 +113,9 @@ public class MetadataImporter
             doValidationExternal(rSession, hSession);
             doUpdate(rSession, hSession);
             doTable(rSession, hSession);
+            doValidationLookup(rSession, hSession);
+            doValidationExternalType(rSession, hSession);
+            doValidationExpression(rSession, hSession);
 
             tx.commit();
             hSession.close();
@@ -134,7 +143,6 @@ public class MetadataImporter
         MSystem hSystem = new MSystem();
         hSystem.setVersion(10101);
         hSystem.setDate(Calendar.getInstance().getTime());
-
         hSession.save(hSystem);
         return hSystem;
     }
@@ -471,8 +479,6 @@ public class MetadataImporter
                     hValidationExternals.add(hValidationExternal);
                     mValidationExternals.put(hValidationExternal.getPath(),
                                              hValidationExternal);
-//                     doValidationExternalType(hValidationExternal, rSession,
-//                                              hSession);
                 }
             }
             resource.setValidationExternals(hValidationExternals);
@@ -501,8 +507,61 @@ public class MetadataImporter
         Iterator i = mValidationExternals.values().iterator();
         while (i.hasNext())
         {
+            ValidationExternal ve = (ValidationExternal) i.next();
+            Set hValdationExternalTypes = new HashSet();
+            List validationExternalTypes =
+                tValidationExternalTypes.getDataRows(ve.getPath());
+            if (validationExternalTypes != null)
+            {
+                Iterator j = validationExternalTypes.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    ValidationExternalType vet = new ValidationExternalType();
+
+                    vet.setValidationExternalID(ve);
+
+                    String joinedSearchField = md.getAttribute("SearchField");
+                    String searchField[] =
+                        StringUtils.split(joinedSearchField, ",");
+                    Set searchFieldSet = new HashSet();
+                    for (int c = 0; c < searchField.length; c++)
+                    {
+                        searchFieldSet.add(StringUtils.clean(searchField[c]));
+                    }
+                    vet.setSearchField(searchFieldSet);
+
+                    String joinedDisplayField =
+                        md.getAttribute("DisplayField");
+                    String displayFields[] =
+                        StringUtils.split(joinedDisplayField, ",");
+                    Set displayFieldSet = new HashSet();
+                    for (int c = 0; c < displayFields.length; c++)
+                    {
+                        displayFieldSet.add(
+                            StringUtils.clean(displayFields[c]));
+                    }
+                    vet.setDisplayField(displayFieldSet);
+
+                    String joinedResultField =
+                        md.getAttribute("ResultFields");
+                    String resultFields[] =
+                        StringUtils.split(joinedResultField, ",");
+                    Map resultFieldMap = new HashMap();
+                    for (int c = 0; c < resultFields.length; c++)
+                    {
+                        String split[] =
+                            StringUtils.split(resultFields[c], "=", 2);
+                        resultFieldMap.put(StringUtils.clean(split[0]),
+                                           StringUtils.clean(split[1]));
+                    }
+                    vet.setResultFields(resultFieldMap);
+
+                    hSession.save(vet);
+                }
+                ve.setValidationExternalTypes(hValdationExternalTypes);
+            }
         }
-        // todo: Fill in doValidationExternalType
     }
 
     /**
@@ -510,10 +569,46 @@ public class MetadataImporter
      *
      * @param rSession the rets session
      * @param hSession the hibernate session
+     * @exception HibernateException if an error occurs
      */
     private void doValidationLookup(RetsSession rSession, Session hSession)
+        throws HibernateException
     {
-        //todo: Fill in doValidationLookup
+        MetadataTable tValidationLookups =
+            rSession.getMetadataTable(MetadataTable.VALIDATION_LOOKUP);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hValidationLookups = new HashSet();
+            String resourcePath = resource.getPath();
+            List validationLookups =
+                tValidationLookups.getDataRows(resourcePath);
+            if (validationLookups != null)
+            {
+                Iterator j = validationLookups.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    ValidationLookup hvl = new ValidationLookup();
+
+                    hvl.setResourceid(resource);
+
+                    hvl.setValidationLookupName(
+                        md.getAttribute("ValidationLookupName"));
+
+                    hvl.setParent1Field(md.getAttribute("Parent1Field"));
+                    hvl.setParent2Field(md.getAttribute("Parent2Field"));
+
+                    hSession.save(hvl);
+                    hValidationLookups.add(hvl);
+                    mValidationLookups.put(hvl.getPath(), hvl);
+                }
+                resource.setValidationLookups(hValidationLookups);
+                hSession.saveOrUpdate(resource);
+            }
+        }
     }
 
     private void doUpdate(RetsSession rSession, Session hSession)
@@ -548,6 +643,79 @@ public class MetadataImporter
             }
             clazz.setUpdates(hUpdates);
             hSession.saveOrUpdate(clazz);
+        }
+    }
+
+    private void doValidationLookupType(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tValidationLookupTypes =
+            rSession.getMetadataTable(MetadataTable.VALIDATION_LOOKUP_TYPE);
+
+        Iterator i = mValidationLookups.values().iterator();
+        while (i.hasNext())
+        {
+            ValidationLookup vl = (ValidationLookup) i.next();
+            Set hValdationLookupTypes = new HashSet();
+            List validationLookupTypes =
+                tValidationLookupTypes.getDataRows(vl.getPath());
+            if (validationLookupTypes != null)
+            {
+                Iterator j = validationLookupTypes.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    ValidationLookupType vlt = new ValidationLookupType();
+
+                    vlt.setValidationLookupID(vl);
+                    vlt.setValidText(md.getAttribute("ValidText"));
+                    vlt.setParent1Value(md.getAttribute("Parent1Value"));
+                    vlt.setParent2Value(md.getAttribute("Parent2Value"));
+
+                    hSession.save(vlt);
+                    hValdationLookupTypes.add(vlt);
+                }
+            }
+            vl.setValidationLookupTypes(hValdationLookupTypes);
+            hSession.saveOrUpdate(vl);
+        }
+    }
+
+    private void doValidationExpression(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tValidationExpressions =
+            rSession.getMetadataTable(MetadataTable.VALIDATION_EXPRESSION);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hValidationExpressions = new HashSet();
+            List validationExpressions =
+                tValidationExpressions.getDataRows(resource.getPath());
+            if (validationExpressions != null)
+            {
+                Iterator j = validationExpressions.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    ValidationExpression ve = new ValidationExpression();
+
+                    ve.setResourceid(resource);
+                    ve.setValidationExpressionID(
+                        md.getAttribute("ValdationExpressionID"));
+                    ve.setValidationExpressionType(
+                        ValidationExpressionTypeEnum.fromString(
+                            md.getAttribute("ValidationExpressionType")));
+                    ve.setValue(md.getAttribute("value"));
+
+                    hSession.save(ve);
+                    hValidationExpressions.add(ve);
+                }
+            }
+            resource.setValidationExpressions(hValidationExpressions);
+            hSession.saveOrUpdate(resource);
         }
     }
 
@@ -646,7 +814,6 @@ public class MetadataImporter
                     hTable.setRequired(
                         Integer.parseInt(md.getAttribute("Required")));
 
-                    // todo: search help
                     String searchHelpID = md.getAttribute("SearchHelpID");
                     path = resourcePath + ":" + searchHelpID;
                     SearchHelp searchHelp =
@@ -710,8 +877,9 @@ public class MetadataImporter
     private Map mLookups;
     private Map mSearchHelps;
     private Map mValidationExternals;
+    private Map mValidationLookups;
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.19 2003/07/10 15:34:21 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.20 2003/07/15 21:41:25 kgarner Exp $";
 }
