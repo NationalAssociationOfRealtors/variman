@@ -796,6 +796,10 @@
 
   <target name="dist-win" description="Builds a Windows binary distribution"
           depends="build, doc-manual">
+    <antcall target="dist-win-iss" />
+  </target>
+
+  <target name="dist-win-iss">
     <copy file="project/build/${project.name}.iss" todir="build">
       <filterset>
         <filter token="VERSION" value="${project.version}"/>
@@ -810,6 +814,7 @@
       <arg line="${basedir}/build/${project.name}.iss"/>
     </exec>
   </target>
+
 
   <target name="clean" description="Cleans all ant targets">
     <delete dir="build" />
