@@ -105,6 +105,7 @@
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
     <mkdir dir="build/webapp/test/classes"/>
+    <mkdir dir="build/tests"/>
     <mkdir dir="dist" />
   </target>
 
@@ -140,11 +141,11 @@
         <pathelement location="build/hibernate/classes"/>
       </classpath>
     </javac>
-    <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false"
-                     mergedir="project/hibernate/java">
-      <fileset dir="project/hibernate/java" includes="**/*.java"/>
-      <hibernate version="2.0"/>
-    </hibernatedoclet>
+<!--     <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false" -->
+<!--                      mergedir="project/hibernate/java"> -->
+<!--       <fileset dir="project/hibernate/java" includes="**/*.java"/> -->
+<!--       <hibernate version="2.0"/> -->
+<!--     </hibernatedoclet> -->
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
          basedir="build/hibernate/classes"
          excludes="hibernate.properties" index="true"/>
@@ -441,13 +442,29 @@
          basedir="project/hibernate/mappings" index="true"/>
   </target>
 
-  <target name="test" description="Run all unit tests">
+  <target name="test" description="Run all unit tests" depends="build">
     <pathconvert pathsep="\n" property="tests">
       <path>
         <fileset dir="project/hibernate/test/java" includes="**/*Test.java"/>
       </path>
     </pathconvert>
-    <echo message="${tests}"/>
+    <junit printsummary="yes" haltonfailure="yes">
+      <classpath>
+        <pathelement path="${java.class.path}"/>
+        <path refid="hibernate.path"/>
+        <pathelement path="${servlet.jar}"/>
+        <pathelement path="${log4j.jar}"/>
+        <pathelement path="${commons-lang.jar}"/>
+        <pathelement location="build/hibernate/classes"/>
+        <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+        <pathelement location="build/hibernate/test/classes"/>
+        <pathelement location="build/webapp/test/classes"/>
+      </classpath>
+
+      <formatter type="plain"/>
+      <test fork="yes" name="test.AllTests"
+             outfile="build/tests/results.txt"/>
+    </junit>
   </target>
 
   <target name="clean" description="Cleans all ant targets">
