@@ -21,7 +21,7 @@ public class HeaderPanel extends JPanel
 
         JPanel horizontalRule = new JPanel();
         horizontalRule.setBorder(
-            BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
+            BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK));
         // This trick creates a zero height panel.  The resulting output is
         // just the top and botom borders butt right up against each other
         // forming a solid horizontal line.
