@@ -3,11 +3,9 @@
       $tmpl_location = "Home";
       include("header.php");
 ?>
-<!--
     <div class="logo">
     <img src="variman_logo.gif" alt="Variman Logo">
     </div>
--->
 
     <div class="body">
     <h3>Introduction</h3>
