@@ -558,18 +558,7 @@ public class MetadataLoader
                 hTable.setStandardName(tsn);
 
                 hTable.setLongName(in.getLongName());
-
-                String tmp = in.getDBName().toLowerCase();
-                if (tmp.startsWith("r_"))
-                {
-                    hTable.setDbName(StringUtils.substring(tmp, 0, 10));
-                }
-                else
-                {
-                    hTable.setDbName(
-                            StringUtils.substring("r_" + tmp, 0, 10));
-                }
-
+                hTable.setDbName(in.getDBName());
                 hTable.setShortName(in.getShortName());
                 hTable.setMaximumLength(in.getMaximumLength());
                 hTable.setDataType(DataTypeEnum.fromString(in.getDataType()));
@@ -1004,7 +993,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.5 2004/04/13 22:12:58 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.6 2004/04/15 16:49:45 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
