@@ -2,11 +2,26 @@ package org.realtors.rets.server;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.CompareToBuilder;
+
 /**
  * @hibernate.class table="rets_group"
  */
-public class Group implements Serializable
+public class Group implements Serializable, Comparable
 {
+    public Group(String name)
+    {
+        mName = name;
+    }
+
+    protected Group()
+    {
+        // Empty
+    }
+
     /**
      * Returns the group ID.
      *
@@ -14,12 +29,12 @@ public class Group implements Serializable
      *
      * @hibernate.id generator-class="native"
      */
-    public Long getId()
+    protected Long getId()
     {
         return mId;
     }
 
-    public void setId(Long id)
+    protected void setId(Long id)
     {
         mId = id;
     }
@@ -38,7 +53,7 @@ public class Group implements Serializable
         return mName;
     }
 
-    public void setName(String name)
+    protected void setName(String name)
     {
         mName = name;
     }
@@ -58,6 +73,47 @@ public class Group implements Serializable
     public void setDescription(String description)
     {
         mDescription = description;
+    }
+
+    public String toString()
+    {
+        return mName;
+    }
+
+    public String dump()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append("id", mId)
+            .append("name", mName)
+            .append("description", mDescription)
+            .toString();
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof Group))
+        {
+            return false;
+        }
+        Group rhs = (Group) obj;
+        return new EqualsBuilder()
+            .append(mName, rhs.mName)
+            .isEquals();
+    }
+
+    public int hashCode()
+    {
+        return new HashCodeBuilder()
+            .append(mName)
+            .toHashCode();
+    }
+
+    public int compareTo(Object obj)
+    {
+        Group rhs = (Group) obj;
+        return new CompareToBuilder()
+            .append(mName, rhs.mName)
+            .toComparison();
     }
 
     private Long mId;
