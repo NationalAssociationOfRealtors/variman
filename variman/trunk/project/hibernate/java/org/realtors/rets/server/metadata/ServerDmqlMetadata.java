@@ -26,10 +26,10 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         init(clazz.getTables(), standardNames);
     }
 
-    public ServerDmqlMetadata(Collection tables, boolean standaredNames)
+    public ServerDmqlMetadata(Collection tables, boolean standardNames)
     {
         this();
-        init(tables, standaredNames);
+        init(tables, standardNames);
     }
 
     private void init(Collection tables, boolean standardNames)
