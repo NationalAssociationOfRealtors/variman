@@ -116,6 +116,14 @@ public class RegistrationForm extends ValidatorActionForm
     {
         return mVerifyPassword;
     }
+    /**
+     * 
+     * @return
+     */
+    public boolean isAcceptedLegalese()
+    {
+        return mAcceptedLegalese;
+    }
 
     /* (non-Javadoc)
      * @see org.apache.struts.action.ActionForm#reset(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
@@ -133,6 +141,15 @@ public class RegistrationForm extends ValidatorActionForm
         mUserAgent = "";
         mUsername = "";
         mVerifyPassword = "";
+    }
+
+    /**
+     * 
+     * @param b
+     */
+    public void setAcceptedLegalese(boolean b)
+    {
+        mAcceptedLegalese = b;
     }
 
     /**
@@ -246,10 +263,11 @@ public class RegistrationForm extends ValidatorActionForm
             .append("company", mCompany)
             .append("email", mEmail)
             .append("userAgent", mUserAgent)
+            .append("acceptedLegalese", mAcceptedLegalese)
             .toString();
     }
-    
-    // todo update validation for fullname->(first,last) change
+
+    private boolean mAcceptedLegalese;
     private String mAgentID;
     private String mCompany;
     private String mEmail;
