@@ -47,6 +47,7 @@ public class AddUserCommand extends wx
             session.save(user);
             helper.commit();
             frame.SetStatusText("User " + user.getName() + " added");
+            frame.refreshUsers();
             LOG.debug("New user: " + user);
         }
         catch (HibernateException e)
