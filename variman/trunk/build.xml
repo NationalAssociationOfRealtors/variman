@@ -22,9 +22,9 @@
 
   <path id="lib.path">
     <pathelement path="${hibernate.jar}"/>
-    <pathelement path="${jdbc.jar}"/>
+    <pathelement path="${hibernate.jdbc.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
-    <pathelement path="${hibernatetools.jar}"/>
+    <pathelement path="${hibernate-ext.tools.jar}"/>
     <pathelement path="${jdom.jar}"/>
   </path>
 
@@ -87,7 +87,7 @@
     <mkdir dir="dist" />
   </target>
 
-  <target name="build" depends="build-hibernate, prepare"
+  <target name="build" depends="build-hibernate,build-webapp,build-importer"
           description="Build all"/>
 
   <target name="dist" depends="generate-schema" />
@@ -280,7 +280,7 @@
 <!--           file="code/hibernate/config/hibernate.properties.dist"/> -->
 
     <!-- Oh yeah, the jdbc driver would be nice. -->
-    <copy todir="build/importer/lib" file="${jdbc.jar}"/>
+    <copy todir="build/importer/lib" file="${hibernate.jdbc.jar}"/>
   </target>
 
   <target name="build-xml" depends="prepare">
