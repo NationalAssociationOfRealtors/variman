@@ -100,6 +100,16 @@ public class ValidationExternal implements Serializable
     }
 
     /**
+     * Returns the search resource. Will be drived from SearchClass.
+     *
+     * @return a Resource.
+     */
+    public Resource getSearchResource()
+    {
+        return mSearchClass.getResourceid();
+    }
+
+    /**
      *
      * @return
      *
