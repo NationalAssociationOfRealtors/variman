@@ -39,7 +39,6 @@ public class CompactObjectFormatter extends ObjectFormatter
         row.append(object.getVisibleName());
         row.append(object.getDescription());
         row.end();
-        System.out.println("");
     }
 
     private static final String[] sColumns = new String[] {

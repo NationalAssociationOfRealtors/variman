@@ -26,7 +26,7 @@ import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ServerMetadata;
 import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.format.FormattingVisitor;
+import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
 
 import org.apache.commons.lang.StringUtils;
@@ -106,13 +106,14 @@ public class  GetMetadataServlet extends RetsServlet
     private void formatOutput(PrintWriter out, List metadataSegments,
                               int format)
     {
-        LOG.info("Formatting " + metadataSegments.size() + " segments");
-        FormattingVisitor visitor = new FormattingVisitor(out, format);
+        LOG.debug("Formatting " + metadataSegments.size() + " segments");
+        MetadataSegmentFormatter formatter =
+            new MetadataSegmentFormatter(out, format);
         for (int i = 0; i < metadataSegments.size(); i++)
         {
             MetadataSegment metadataSegment =
                 (MetadataSegment) metadataSegments.get(i);
-            visitor.format(metadataSegment);
+            formatter.format(metadataSegment);
         }
     }
 
@@ -130,14 +131,25 @@ public class  GetMetadataServlet extends RetsServlet
         if (type.equals("METADATA-SYSTEM"))
         {
             assertLength(levels, 0);
-            List systemList = findMetadata("from MSystem", null);
-            metadataResults.add(new MetadataSegment(
-                new MSystem[] {(MSystem) systemList.get(0)},
-                levels, "", null));
+            List metadata = findMetadata("from MSystem", null);
+            metadataResults.add(new MetadataSegment(metadata, levels, "",
+                                                    null));
 
             if (recursive)
             {
-                recurseChildren(systemList, metadataResults, version, date);
+                recurseChildren(metadata, metadataResults, version, date);
+            }
+        }
+        else if (type.equals("METADATA-CLASS"))
+        {
+            assertLength(levels, 1);
+            List metadata = findMetadata("from MClass as metadata " +
+                                     "where metadata.level = :level", level);
+            metadataResults.add(new MetadataSegment(metadata, levels, version,
+                                                    date));
+            if (recursive)
+            {
+                recurseChildren(metadata,  metadataResults, version, date);
             }
         }
         else if (type.equals("METADAT-RESOURCE"))

@@ -25,9 +25,9 @@ import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
-public class FormattingVisitor
+public class MetadataSegmentFormatter
 {
-    public FormattingVisitor(PrintWriter out, int format)
+    public MetadataSegmentFormatter(PrintWriter out, int format)
     {
         mOut = out;
         mFormmatters = new HashMap();

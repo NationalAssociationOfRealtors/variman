@@ -24,13 +24,13 @@ import org.realtors.rets.server.metadata.ValidationLookupType;
 
 import junit.framework.TestCase;
 
-public class FormattingVisitorTest extends TestCase
+public class MetadataSegmentFormatterTest extends TestCase
 {
     public void testCompactFormatters()
     {
         StringWriter formatted = new StringWriter();
-        FormattingVisitor visitor =
-            new FormattingVisitor(new PrintWriter(formatted),
+        MetadataSegmentFormatter visitor =
+            new MetadataSegmentFormatter(new PrintWriter(formatted),
                                   MetadataFormatter.COMPACT);
         assertTrue(visitor.getFormatter(MSystem.class) instanceof
                    CompactSystemFormatter);
