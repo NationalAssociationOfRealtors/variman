@@ -34,24 +34,12 @@ public abstract class BaseCertificationTest implements CertificationTest
 
     public void stop()
     {
-        mValidationResult = validate();
-        if (mValidationResult.wasSuccessful())
-        {
-            mStatus = StatusEnum.PASSED;
-        }
-        else
-        {
-            mStatus = StatusEnum.FAILED;
-        }
-        mMessage = mValidationResult.getMessage();
     }
 
-    public ValidationResult validate()
+    public void validate(ValidationResult result)
     {
-        ValidationResult result = new ValidationResult();
         RetsHandlers handlers = getRetsHandlers();
         handlers.validateAll(result);
-        return result;
     }
 
     public void cancel()
