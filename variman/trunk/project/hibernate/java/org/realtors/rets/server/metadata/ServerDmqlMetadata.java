@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import org.realtors.rets.server.dmql.DmqlFieldType;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 
@@ -75,17 +77,18 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
                 defaultColumnList.add(defaultOrder, dbName);
             }
 
-            if (table.getInterpretation() != InterpretationEnum.LOOKUPMULTI)
-            {
-                mFieldToColumn.put(fieldName, dbName);
-                mColumnToField.put(dbName, fieldName);
-            }
+            mFieldToColumn.put(fieldName, dbName);
+            mColumnToField.put(dbName, fieldName);
 
-            Lookup lookup = table.getLookup();
-            if (lookup != null)
+            if (isLookup(table))
             {
-                addLookups(fieldName, standardNames, lookup);
+                addLookups(fieldName, standardNames, table.getLookup());
                 mFieldTypes.put(fieldName, DmqlFieldType.LOOKUP);
+            }
+            else if (isLookupMulti(table))
+            {
+                addLookups(fieldName, standardNames, table.getLookup());
+                mFieldTypes.put(fieldName, DmqlFieldType.LOOKUP_MULTI);
             }
             else if (isNumeric(table))
             {
@@ -103,6 +106,29 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
             }
         }
         mDefaultColumnNames = defaultColumnList.getColumnNames();
+    }
+
+    private boolean isLookup(Table table)
+    {
+        InterpretationEnum interpretation = table.getInterpretation();
+        return ((interpretation != null) &&
+                (interpretation.equals(InterpretationEnum.LOOKUP)));
+    }
+
+    private boolean isLookupMulti(Table table)
+    {
+        InterpretationEnum interpretation = table.getInterpretation();
+        if ((interpretation != null) &&
+                (interpretation.equals(InterpretationEnum.LOOKUPMULTI)))
+        {
+            if (table.getLookup() == null)
+            {
+                LOG.error("Lookup is null for table: " + table.getPath());
+                return false;
+            }
+            return true;
+        };
+        return false;
     }
 
     private boolean isNumeric(Table table)
@@ -270,6 +296,9 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
         return (LookupType) lookupTypes.get(value);
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(ServerDmqlMetadata.class);
 
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
