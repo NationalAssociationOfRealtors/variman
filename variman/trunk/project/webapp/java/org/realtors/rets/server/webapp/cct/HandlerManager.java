@@ -19,44 +19,20 @@ public class HandlerManager
     private HandlerManager()
     {
         mHandlers = new HashMap();
-        mHandlers.put(LoginHandler.NAME, new LoginHandler());
-        mHandlers.put(ActionHandler.NAME, new ActionHandler());
-        mHandlers.put(LogoutHandler.NAME, new LogoutHandler());
     }
 
-    public LoginHandler getLoginHandler()
+    public RetsHandlers getHandlers(String context)
     {
-        return (LoginHandler) mHandlers.get(LoginHandler.NAME);
-    }
-
-    public ActionHandler getActionHandler()
-    {
-        return (ActionHandler) mHandlers.get(ActionHandler.NAME);
-    }
-
-    public LogoutHandler getLogoutHandler()
-    {
-        return (LogoutHandler) mHandlers.get(LogoutHandler.NAME);
-    }
-
-    public void addServletHandler(String name, Class aClass)
-    {
-        mHandlers.put(name, aClass);
-    }
-
-    public void addServletHandler(String name, ServletHandler handler)
-    {
-        mHandlers.put(name, handler);
-    }
-
-    public ServletHandler getServletHandler(String name)
-    {
-        return (ServletHandler) mHandlers.get(name);
-    }
-
-    public LoginHandler getLoginHandler(String testContext)
-    {
-        return getLoginHandler();
+        synchronized(this)
+        {
+            RetsHandlers handlers = (RetsHandlers) mHandlers.get(context);
+            if (handlers == null)
+            {
+                handlers = new RetsHandlers();
+                mHandlers.put(context, handlers);
+            }
+            return handlers;
+        }
     }
 
     private Map mHandlers;
