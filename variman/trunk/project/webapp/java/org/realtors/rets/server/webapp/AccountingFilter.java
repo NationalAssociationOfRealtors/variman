@@ -29,6 +29,7 @@ import org.realtors.rets.server.AccountingStatisticsUtils;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.HibernateUtils;
 import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
 import org.apache.log4j.Logger;
@@ -132,7 +133,7 @@ public class AccountingFilter implements Filter, Constants
         try
         {
             LOG.debug("Saving statistics");
-            AccountingStatisticsUtils.update(statistics);
+            HibernateUtils.update(statistics);
         }
         catch (HibernateException e)
         {
