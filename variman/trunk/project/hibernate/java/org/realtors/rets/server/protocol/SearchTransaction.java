@@ -112,7 +112,7 @@ public class SearchTransaction
     private void printData(PrintWriter out)
         throws RetsServerException
     {
-        Collection columns = getColumns(mMetadata);
+        List columns = getColumns(mMetadata);
         String sql = generateSql(StringUtils.join(columns.iterator(), ","));
         LOG.debug("SQL: " + sql);
         executeSql(sql, out, columns);
@@ -170,7 +170,7 @@ public class SearchTransaction
         }
     }
 
-    private Collection getColumns(ServerDmqlMetadata metadata)
+    private List getColumns(ServerDmqlMetadata metadata)
         throws RetsReplyException
     {
         String[] fields = mParameters.getSelect();
@@ -244,7 +244,7 @@ public class SearchTransaction
         RetsUtils.printCloseRets(out);
     }
 
-    private void executeSql(String sql, PrintWriter out, Collection columns)
+    private void executeSql(String sql, PrintWriter out, List columns)
         throws RetsServerException
     {
         Session session = null;
@@ -275,7 +275,7 @@ public class SearchTransaction
         }
     }
 
-    private void printResults(PrintWriter out, Collection columns,
+    private void printResults(PrintWriter out, List columns,
                                      ResultSet resultSet)
         throws RetsServerException
     {
@@ -292,17 +292,31 @@ public class SearchTransaction
         RetsUtils.printCloseRets(out);
     }
 
-    private SearchResultsFormatter getFormatter()
+    private SearchResultsFormatter getFormatter() throws RetsServerException
     {
         SearchResultsFormatter formatter;
-        if (mParameters.getFormat().equals("STANDARD-XML"))
+        SearchFormat searchFormat =
+            SearchFormat.getEnum(mParameters.getFormat());
+        if (searchFormat == SearchFormat.STANDARD_XML)
         {
             formatter = new ResidentialPropertyFormatter();
         }
+        else if (searchFormat == SearchFormat.COMPACT_DECODED)
+        {
+            formatter =
+                new CompactFormatter(CompactFormatter.DECODE_TO_SHORT_VALUE);
+        }
+        else if (searchFormat == SearchFormat.COMPACT)
+        {
+            formatter =
+                new CompactFormatter(CompactFormatter.NO_DECODING);
+        }
         else
         {
-            formatter = new CompactFormatter();
+            throw new RetsServerException("Unknown format: " +
+                                          mParameters.getFormat());
         }
+
         return formatter;
     }
 
