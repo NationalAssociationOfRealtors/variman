@@ -917,8 +917,8 @@ public class MetadataLoader extends MetadataHelpers
     }
 
     private MSystem mSystem;
-    private static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.8 2003/10/09 15:33:43 dribin Exp $";
+    public static final String CVSID =
+        "$Id: MetadataLoader.java,v 1.9 2003/12/04 20:42:36 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
 }
