@@ -21,6 +21,8 @@ import org.realtors.rets.client.MetadataTables;
 import org.realtors.rets.client.RetsException;
 import org.realtors.rets.client.RetsSession;
 
+import org.realtors.rets.server.metadata.TableStandardName;
+
 /**
  * @author kgarner
  */
@@ -40,6 +42,7 @@ public abstract class MetadataHelpers
         mValidationLookups = new HashMap();
         mUpdates = new HashMap();
         mUpdateHelps = new HashMap();
+        mTableStandardNames = new HashMap();
         mMetadataTables =
            MetadataTableBuilder.buildFromXml(
                RetsSession.getResource(RetsSession.METADATA_TABLES));
@@ -97,6 +100,11 @@ public abstract class MetadataHelpers
         }
     }
 
+    protected TableStandardName lookupTableStandardName(String standardName)
+    {
+        return (TableStandardName) mTableStandardNames.get(standardName);
+    }
+
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
 
     protected MetadataTables mMetadataTables;
@@ -122,4 +130,6 @@ public abstract class MetadataHelpers
     protected Map mValidationExternals;
 
     protected Map mValidationLookups;
+    
+    protected Map mTableStandardNames;
 }

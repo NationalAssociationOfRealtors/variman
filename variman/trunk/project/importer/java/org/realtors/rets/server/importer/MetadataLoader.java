@@ -392,8 +392,18 @@ public class MetadataLoader extends MetadataHelpers
                     hTable.setSystemName(md.getAttribute("SystemName"));
 
                     String standardName = md.getAttribute("StandardName");
-                    hTable.setStandardName(
-                        lookupTableStandardName(standardName));
+                    TableStandardName tsn =
+                        lookupTableStandardName(standardName);
+                    if (tsn == null)
+                    {
+                        if (!standardName.equals(""))
+                        {
+                            tsn = new TableStandardName(standardName);
+                            mTableStandardNames.put(standardName, tsn);
+                        }
+                    }
+                    hTable.setStandardName(tsn);
+
                     hTable.setLongName(md.getAttribute("LongName"));
 
                     String tmp = md.getAttribute("DbName");
@@ -874,11 +884,6 @@ public class MetadataLoader extends MetadataHelpers
         }
     }
     
-    private TableStandardName lookupTableStandardName(String standardName)
-    {
-        return new TableStandardName(standardName);    
-    }
-
     /**
      * Reads a metadata defintion in XML from the InputStream and returns
      * the head MSystem object.
@@ -913,7 +918,7 @@ public class MetadataLoader extends MetadataHelpers
 
     private MSystem mSystem;
     private static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.6 2003/09/04 21:06:45 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.7 2003/09/24 20:27:02 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
 }

@@ -462,8 +462,19 @@ public class MetadataImporter extends MetadataHelpers
                     hTable.setSystemName(md.getAttribute("SystemName"));
 
                     String standardName = md.getAttribute("StandardName");
-                    hTable.setStandardName(
-                        lookupTableStandardName(standardName));
+                    TableStandardName tsn = 
+                        lookupTableStandardName(standardName);
+                    if (tsn == null)
+                    {
+                        if (!standardName.equals(""))
+                        {
+                            tsn = new TableStandardName(standardName);
+                            mTableStandardNames.put(standardName, tsn);
+                            hSession.save(tsn);
+                        }
+                    }
+                    hTable.setStandardName(tsn);
+                        
                     hTable.setLongName(md.getAttribute("LongName"));
 
                     String tmp = md.getAttribute("DbName");
@@ -1003,30 +1014,37 @@ public class MetadataImporter extends MetadataHelpers
         mSessions = cfg.buildSessionFactory();
     }
     
-    private TableStandardName lookupTableStandardName(String standardName)
+    protected TableStandardName lookupTableStandardName(String standardName)
     {
-        TableStandardName name = null;
-        SessionHelper helper = new SessionHelper(mSessions);
-        try
-        {
-            Session session = helper.beginTransaction();
-            List results = session.find(
-                "SELECT name" +
-                "  FROM TableStandardName name" +
-                " WHERE name.name = ?",
-                standardName, Hibernate.STRING);
-            if (results.size() == 1)
+        TableStandardName name = super.lookupTableStandardName(standardName);
+        if (name == null)
+        {            
+            SessionHelper helper = new SessionHelper(mSessions);
+            try
             {
-                name = (TableStandardName) results.get(1);
+                Session session = helper.beginTransaction();
+                List results = session.find(
+                    "SELECT name" +
+                    "  FROM TableStandardName name" +
+                    " WHERE name.name = ?",
+                    standardName, Hibernate.STRING);
+                if (results.size() == 1)
+                {
+                    name = (TableStandardName) results.get(1);
+                }
             }
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(System.err);
-        }
-        finally
-        {
-            helper.close(System.err);
+            catch (HibernateException e)
+            {
+                helper.rollback(System.err);
+            }
+            finally
+            {
+                helper.close(System.err);
+            }
+            if (name != null)
+            {
+                mTableStandardNames.put(standardName, name);
+            }
         }
         return name;
     }
@@ -1174,7 +1192,7 @@ public class MetadataImporter extends MetadataHelpers
     private SessionFactory mSessions;
     private String mUsername;
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.34 2003/09/04 17:33:58 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.35 2003/09/24 20:27:02 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
