@@ -3,8 +3,6 @@
 package org.realtors.rets.server.webapp.cct;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-
 import javax.servlet.ServletException;
 
 import org.realtors.rets.server.cct.ValidationResults;
