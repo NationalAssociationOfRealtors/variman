@@ -124,6 +124,7 @@
     <mkdir dir="build/rets-server/webapp/WEB-INF/rex"/>
     <mkdir dir="build/rets-server/admin/lib"/>
     <mkdir dir="build/rets-server/admin/classes"/>
+    <mkdir dir="build/rets-server/logs"/>
     <mkdir dir="build/webapp/test/classes"/>
     <mkdir dir="build/admin/classes"/>
     <mkdir dir="build/admin/bin"/>
