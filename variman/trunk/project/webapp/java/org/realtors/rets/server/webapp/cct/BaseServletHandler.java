@@ -29,17 +29,17 @@ public abstract class BaseServletHandler implements ServletHandler
     public BaseServletHandler()
     {
         mExpectedHeaders = new HashMap();
-        mHeaders = new HashMap();
+        mActualHeaders = new HashMap();
         mExpectedCookies = new HashMap();
-        mCookies = new HashMap();
+        mActualCookies = new HashMap();
     }
 
     public void reset()
     {
         mExpectedHeaders.clear();
-        mHeaders.clear();
+        mActualHeaders.clear();
         mExpectedCookies.clear();
-        mCookies.clear();
+        mActualCookies.clear();
         mDoGetInvokeCount = 0;
         mInvokeCount = InvokeCount.ZERO;
     }
@@ -55,19 +55,19 @@ public abstract class BaseServletHandler implements ServletHandler
 
     private void copyHeaders(HttpServletRequest request)
     {
-        mHeaders.clear();
+        mActualHeaders.clear();
         Enumeration headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements())
         {
             String headerName = (String) headerNames.nextElement();
-            mHeaders.put(headerName.toLowerCase(),
+            mActualHeaders.put(headerName.toLowerCase(),
                          request.getHeader(headerName));
         }
     }
 
     private void copyCookies(HttpServletRequest request)
     {
-        mCookies.clear();
+        mActualCookies.clear();
         Cookie[] cookies = request.getCookies();
         if (cookies == null)
         {
@@ -76,7 +76,8 @@ public abstract class BaseServletHandler implements ServletHandler
         for (int i = 0; i < cookies.length; i++)
         {
             Cookie cookie = cookies[i];
-            mCookies.put(cookie.getName(), cookie.getValue());
+            mActualCookies.put(cookie.getName().toLowerCase(),
+                               cookie.getValue());
         }
     }
 
@@ -115,7 +116,6 @@ public abstract class BaseServletHandler implements ServletHandler
         {
             failed = true;
         }
-
         else if (mInvokeCount.equals(InvokeCount.ZERO_OR_ONE) &&
                  !((mDoGetInvokeCount == 0) || (mDoGetInvokeCount == 1)))
         {
@@ -134,34 +134,26 @@ public abstract class BaseServletHandler implements ServletHandler
 
     private void validateHeaders(ValidationResult result)
     {
-        Set names = mExpectedHeaders.keySet();
-        for (Iterator iterator = names.iterator(); iterator.hasNext();)
-        {
-            String name = (String) iterator.next();
-            String header = (String) mHeaders.get(name.toLowerCase());
-            String regexp = (String) mExpectedHeaders.get(name);
-            if ((header == null) || !matches(header, regexp))
-            {
-                String message = getName() + " HTTP header [" + name +
-                    "] was " + header + ", expected " + regexp;
-                result.setStatus(StatusEnum.FAILED);
-                result.addMessage(message);
-                LOG.debug("Failed: " + message);
-            }
-        }
+        validateRegexpMaps(result, mExpectedHeaders, mActualHeaders, "header");
     }
 
     private void validateCookies(ValidationResult result)
     {
-        Set names = mExpectedCookies.keySet();
+        validateRegexpMaps(result, mExpectedCookies, mActualCookies, "cookie");
+    }
+
+    private void validateRegexpMaps(ValidationResult result, Map expected,
+                                    Map actual, String content)
+    {
+        Set names = expected.keySet();
         for (Iterator iterator = names.iterator(); iterator.hasNext();)
         {
             String name = (String) iterator.next();
-            String value = (String) mCookies.get(name);
-            String regexp = (String) mExpectedCookies.get(name);
+            String value = (String) actual.get(name.toLowerCase());
+            String regexp = (String) expected.get(name);
             if ((value == null) || !matches(value, regexp))
             {
-                String message = getName() + " HTTP cookie [" + name +
+                String message = getName() + " HTTP " + content +" [" + name +
                     "] was " + value + ", expected " + regexp;
                 result.setStatus(StatusEnum.FAILED);
                 result.addMessage(message);
@@ -209,12 +201,17 @@ public abstract class BaseServletHandler implements ServletHandler
         addCookie("RETS-Session-ID", "^" + sessionId + "$");
     }
 
+    protected void addRetsVersion(HttpServletResponse response)
+    {
+        response.addHeader("RETS-Version", "RETS/1.5");
+    }
+
     private static final Logger LOG =
         Logger.getLogger(BaseServletHandler.class);
-    private Map mExpectedHeaders;
     private int mDoGetInvokeCount;
     private InvokeCount mInvokeCount;
-    private Map mHeaders;
+    private Map mExpectedHeaders;
+    private Map mActualHeaders;
     private Map mExpectedCookies;
-    private Map mCookies;
+    private Map mActualCookies;
 }
