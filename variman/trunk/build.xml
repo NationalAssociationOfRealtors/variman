@@ -108,7 +108,7 @@
 
   <target name="dist" depends="generate-schema" />
 
-  <target name="build-hibernate-xdoclet" depends="prepare">
+  <target name="build-hibernate" depends="prepare">
     <taskdef name="hibernatedoclet"
              classname="xdoclet.modules.hibernate.HibernateDocletTask">
       <classpath>
@@ -137,7 +137,7 @@
          basedir="build/hibernate/xdoclet" index="true"/>
   </target>
 
-  <target name="build-hibernate-xschema" depends="build-hibernate-xdoclet">
+  <target name="build-hibernate-xschema" depends="build-hibernate">
     <taskdef name="schemaexport"
              classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
       <classpath>
@@ -157,7 +157,7 @@
     </schemaexport>
   </target>
 
-  <target name="build-hibernate" depends="build-generated-code,build-xml">
+  <target name="build-hibernate-old" depends="build-generated-code,build-xml">
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
          basedir="build/hibernate/final/classes"
          excludes="hibernate.properties" index="true"/>
@@ -317,8 +317,7 @@
           file="${commons-lang.jar}"/>
   </target>
 
-<!--   <target name="build-importer" depends="build-hibernate" -->
-  <target name="build-importer" depends="build-hibernate-xdoclet"
+  <target name="build-importer" depends="build-hibernate"
           description="Builds the data and metadata importers">
     <depend srcDir="project/importer/java"
             destDir="build/importer/classes"
@@ -383,7 +382,7 @@
 
   <target name="build-generated-code"
           unless="generated.code.up.to.date"
-          depends="mapping-files-check, compile-hibernate-enum-code, prepare">
+          depends="mapping-files-check, prepare">
     <pathconvert refid="hibernate.mapping.files"
                  property="hibernate.mappings" pathsep=" "/>
     <java classname="net.sf.hibernate.tool.hbm2java.CodeGenerator"
@@ -399,24 +398,6 @@
       <classpath>
         <path refid="lib.path"/>
         <pathelement location="build/hibernate/final/classes" />
-      </classpath>
-    </javac>
-  </target>
-
-  <target name="compile-hibernate-enum-code" depends="prepare">
-    <depend srcDir="project/hibernate/java/enums"
-            destDir="build/hibernate/final/classes"
-            cache="build/depcache" closure="yes">
-      <classpath>
-        <path refid="lib.path"/>
-      </classpath>
-    </depend>
-    <javac srcdir="project/hibernate/java/enums"
-           destdir="build/hibernate/final/classes"
-           optimize="${compile.optimize}" debug="${compile.debug}"
-           deprecation="${compile.deprecation}">
-      <classpath>
-        <path refid="lib.path"/>
       </classpath>
     </javac>
   </target>
