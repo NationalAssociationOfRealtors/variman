@@ -102,7 +102,7 @@ public class CreateSchema extends RetsHelpers
                     switch (table.getDataType().toInt())
                     {
                         case 0 :
-                            sb.append(dialect.getTypeName(Types.BOOLEAN));
+                            sb.append(dialect.getTypeName(Types.BIT));
                             break;
                         case 1 :
                             sb.append(
