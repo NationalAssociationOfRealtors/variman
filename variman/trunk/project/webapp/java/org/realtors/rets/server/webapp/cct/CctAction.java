@@ -16,18 +16,13 @@ import org.apache.struts.action.Action;
  */
 public abstract class CctAction extends Action
 {
-    /**
-     * 
-     * @param session
-     * @return
-     */
-    protected CertificationTestSuite getSuite(HttpSession session)
+    protected TestRunner getTestRunner(HttpSession session)
     {
-        return (CertificationTestSuite) session.getAttribute(TESTSUITE_KEY);
+        return (TestRunner) session.getAttribute(TESTRUNNER_KEY);
     }
     
     private static final Log LOG = LogFactory.getLog(CctAction.class);
-    public static final String TESTSUITE_KEY = "cctSuite";
+    public static final String TESTRUNNER_KEY = "cctTestRunner";
     public static final String USER_KEY = "cctUser";
     public static final String USERINFO_KEY = "cctUserInfo";
 
