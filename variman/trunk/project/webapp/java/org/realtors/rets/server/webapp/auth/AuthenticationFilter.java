@@ -115,12 +115,9 @@ public class AuthenticationFilter implements Filter, UserMap
     {
         MDC.put("addr", request.getRemoteAddr());
         String uri = request.getRequestURI();
-        if (request.getQueryString() != null)
-        {
-            uri = uri + "?" + request.getQueryString();
-        }
+        String query = request.getQueryString();
         String method = request.getMethod();
-        LOG.debug("Authorizing URI: " + method + " " + uri);
+        LOG.debug("Authorizing URI: " + method + " " + uri + " " + query);
         if (!uri.startsWith("/rets") && !uri.startsWith("/cct"))
         {
             filterChain.doFilter(request, response);
@@ -132,7 +129,7 @@ public class AuthenticationFilter implements Filter, UserMap
             String authorizationHeader = request.getHeader("Authorization");
             DigestAuthorizationRequest authorizationRequest =
                 new DigestAuthorizationRequest(authorizationHeader, method,
-                                               uri);
+                                               uri, query);
             HttpSession session = request.getSession();
             if (!verifyResponse(authorizationRequest, session))
             {

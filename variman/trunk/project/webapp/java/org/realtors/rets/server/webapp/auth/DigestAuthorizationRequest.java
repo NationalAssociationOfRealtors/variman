@@ -95,11 +95,12 @@ public class DigestAuthorizationRequest
      * @param header HTTP "Authorization" header
      * @param method HTTP method, i.e. GET, POST, etc.
      * @param requestUri HTTP Request-URI
+     * @param requestQuery HTTP query
      * @throws IllegalArgumentException if the header does not adhere to RFC
      * 2617
      */
     public DigestAuthorizationRequest(String header, String method,
-                                      String requestUri)
+                                      String requestUri, String requestQuery)
     {
         this();
         mMethod = method;
@@ -176,12 +177,28 @@ public class DigestAuthorizationRequest
             throw new IllegalArgumentException("Required fields not set");
         }
 
-        if (!mUri.equals(requestUri))
+        assertValidateUri(requestUri, requestQuery);
+    }
+
+    private void assertValidateUri(String requestUri, String requestQuery)
+    {
+        if (mUri.equals(requestUri))
         {
-            throw new IllegalArgumentException(
-                "URI from header <" + mUri + "> does not match Request-URI <" +
-                requestUri + ">");
+            return;
         }
+
+        if (requestQuery != null)
+        {
+            String uriWithQuery =  requestUri + "?" + requestQuery;
+            if (mUri.equals(uriWithQuery))
+            {
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException(
+            "URI from header <" + mUri + "> does not match Request-URI <" +
+            requestUri + ">");
     }
 
     private String removeQuotes(String string)

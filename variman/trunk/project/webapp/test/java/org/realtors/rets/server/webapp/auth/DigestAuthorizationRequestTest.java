@@ -15,7 +15,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
             "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
             "opaque=\"121d932ad13ff598b0df1d700e422812\"",
-            "GET", "/rets/login");
+            "GET", "/rets/login", null);
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -40,7 +40,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
             "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
             "opaque=\"121d932ad13ff598b0df1d700e422812\", " +
-            "foo=\"bar\", xxx=yyy", "GET", "/rets/login");
+            "foo=\"bar\", xxx=yyy", "GET", "/rets/login", null);
 
         assertTrue(request.verifyResponse("Schmoe"));
     }
@@ -55,7 +55,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "response=\"d7d4e90e15bdc2a43812f9e5383fac59\", " +
             "opaque=\"c54a061147901a1a1ddc55369a3439d8\", " +
             "algorithm=MD5, qop=auth, nc=00000001, " +
-            "cnonce=\"cbbaa5564d53563e\"", "GET", "/rets/login");
+            "cnonce=\"cbbaa5564d53563e\"", "GET", "/rets/login", null);
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -79,7 +79,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "algorithm=MD5, qop=\"auth\", cnonce=\"NzgzMTA=\", " +
             "nc=00000001, response=\"b83db9c43d82e38380e24ecb03109d5d\", " +
             "opaque=\"6055cb5ccdff7d130976dafffcd2e12c\"",
-            "GET", "/rets/login");
+            "GET", "/rets/login", null);
 
         assertEquals("NzgzMTA=", request.getCnonce());
         assertTrue(request.verifyResponse("Schmoe"));
@@ -115,7 +115,8 @@ public class DigestAuthorizationRequestTest extends TestCase
             "opaque=\"27bc2a479bd8213202039dbc3ef5922b\", " +
             "uri=\"/rets/cct/login\", " +
             "response=\"2c69a66c69996c5041f52697e70906b8\", qop=\"auth\", " +
-            "cnonce=\"0a4f113b\", nc=\"00000001\"", "GET", "/rets/cct/login");
+            "cnonce=\"0a4f113b\", nc=\"00000001\"",
+            "GET", "/rets/cct/login", null);
 
         assertEquals("showingtime2", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -194,7 +195,7 @@ public class DigestAuthorizationRequestTest extends TestCase
             "nonce=\"e19ef455409e9663b384d837453c74fd\", " +
             "uri=\"/rets/login\", " +
             "response=\"ddd25f230a426925b4a467e186718094\"",
-            "GET", "/rets/login");
+            "GET", "/rets/login", null);
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
@@ -222,7 +223,8 @@ public class DigestAuthorizationRequestTest extends TestCase
             "response=\"c2061fbdfe9ae597fe6cbdd33bbc423c\", " +
             "opaque=\"f46c35fa34fef8efc0b014d6e7099ba8",
             "GET",
-            "/rets/search?Class=RES&Count=1&Format=COMPACT-DECODED&" +
+            "/rets/search",
+            "Class=RES&Count=1&Format=COMPACT-DECODED&" +
             "Query=(ListPrice=900000-)&QueryType=DMQL2&SearchType=Property&" +
             "Select=ListingID,ListPrice,City,ListDate&StandardNames=1");
         assertEquals("Joe", request.getUsername());
@@ -242,10 +244,38 @@ public class DigestAuthorizationRequestTest extends TestCase
         assertTrue(request.verifyResponse("Schmoe"));
     }
 
+    public void testGetUrlWithQueryButNotInUri()
+    {
+        DigestAuthorizationRequest request = new DigestAuthorizationRequest(
+            "Digest username=\"Joe\", realm=\"RETS Server\", " +
+            "nonce=\"85952896ff3597832b2b38e185ce6c78\"," +
+            "uri=\"/rets/search\", " +
+            "cnonce=\"5b3f82636d8e87a2871bbf08a07f5590\", nc=00000001, " +
+            "qop=\"auth\", " +
+            "response=\"9a762557b09e8a60585782d705ff2050\", " +
+            "opaque=\"285d6d5f8507775bcaff7c8895351890\"",
+            "GET",
+            "/rets/search",
+            "Class=RES&Format=COMPACT&Query=%28STATUS%7C%3DA%29&" +
+            "QueryType=DMQL2&SearchType=Property");
+        assertEquals("Joe", request.getUsername());
+        assertEquals("RETS Server", request.getRealm());
+        assertEquals("85952896ff3597832b2b38e185ce6c78", request.getNonce());
+        assertEquals("/rets/search", request.getUri());
+        assertEquals("auth", request.getQop());
+        assertEquals("MD5", request.getAlgorithm());
+        assertEquals("00000001", request.getNonceCount());
+        assertEquals("5b3f82636d8e87a2871bbf08a07f5590", request.getCnonce());
+        assertEquals("9a762557b09e8a60585782d705ff2050", request.getResponse());
+        assertEquals("285d6d5f8507775bcaff7c8895351890", request.getOpaque());
+        assertEquals("GET", request.getMethod());
+        assertTrue(request.verifyResponse("Schmoe"));
+    }
+
     public void testNullHeader()
     {
         DigestAuthorizationRequest request =
-            new DigestAuthorizationRequest(null, "GET", "/rets/login");
+            new DigestAuthorizationRequest(null, "GET", "/rets/login", null);
         assertNull(request.getUsername());
 
         // Check correct response, but that verification still fails
@@ -259,7 +289,8 @@ public class DigestAuthorizationRequestTest extends TestCase
     {
         try
         {
-            new DigestAuthorizationRequest("Digest", "GET", "/rets/login");
+            new DigestAuthorizationRequest("Digest", "GET", "/rets/login",
+                                           null);
             fail("Should have thrown exception");
         }
         catch (IllegalArgumentException e)
@@ -279,7 +310,7 @@ public class DigestAuthorizationRequestTest extends TestCase
                 "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
                 "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
                 "opaque=\"121d932ad13ff598b0df1d700e422812\"",
-                "GET", "/foo");
+                "GET", "/foo", null);
             fail("Should have thrown exception");
         }
         catch (IllegalArgumentException e)
