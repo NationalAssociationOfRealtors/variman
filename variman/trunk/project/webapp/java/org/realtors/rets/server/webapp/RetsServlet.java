@@ -3,30 +3,145 @@
 package org.realtors.rets.server.webapp;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.User;
-import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.RetsUtils;
+import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
+
+import org.apache.log4j.Logger;
 
 public class RetsServlet extends HttpServlet implements Constants
 {
-    protected void sleep(long millis)
+
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+        throws ServletException, IOException
+    {
+        RetsServletRequest retsRequest = new RetsServletRequest(request);
+        RetsServletResponse retsResponse =
+            new RetsServletResponse(response);
+        serviceRets(retsRequest, retsResponse);
+    }
+
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+        throws IOException, ServletException
+    {
+        doGet(request, response);
+    }
+
+    /**
+     * Returns <code>true</code> if the response format is XML. The template
+     * error handler uses this to determine how to handle errors. For XML
+     * responses, a RETS reply is sent. For non-XML responses, a HTTP 500 error
+     * is sent.
+     *
+     * @return <code>true</code> if the response format is XML
+     */
+    protected boolean isXmlResponse()
+    {
+        return true;
+    }
+
+    /**
+     * Template method for RETS service handling. It calls serviceRets(), but
+     * handles exceptions.
+     *
+     * @see #isXmlResponse
+     */
+    protected void serviceRets(RetsServletRequest request,
+                               RetsServletResponse response)
+        throws IOException
     {
         try
         {
-            Thread.sleep(millis);
+            response.setRetsVersionHeader(request.getRetsVersion());
+            preDoRets(request, response);
+            doRets(request, response);
+            postDoRets(request, response);
         }
-        catch (InterruptedException e)
+        catch (RetsReplyException e)
         {
-            // Ignored
+            if (response.isCommitted())
+            {
+                // Nothing we can report to the client, so make sure to log
+                // this
+                LOG.error("Caught", e);
+            }
+            else
+            {
+                response.reset();
+                if (isXmlResponse())
+                {
+                    // These are not necessarily errors, as bad input from the
+                    // client could cause an exception
+                    LOG.debug("Caught", e);
+                    PrintWriter out = response.getXmlWriter();
+                    RetsUtils.printEmptyRets(out, e.getReplyCode(),
+                                             e.getMeaning());
+                }
+                else
+                {
+                    // This is probably an error
+                    LOG.error("Caught", e);
+                    response.setStatus(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
+            }
         }
+        catch (Exception e)
+        {
+            LOG.error("Caught", e);
+            if (!response.isCommitted())
+            {
+                response.reset();
+                if (isXmlResponse())
+                {
+                    PrintWriter out = response.getXmlWriter();
+                    RetsUtils.printEmptyRets(out, ReplyCode.MISC_ERROR);
+                }
+                else
+                {
+                    response.setStatus(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
+            }
+        }
+    }
+
+    protected void preDoRets(RetsServletRequest request,
+                             RetsServletResponse response)
+    {
+    }
+
+    /**
+     * Method to be overridden by subclasses to handle RETS requests. The
+     * subclass should try to put the error checking and exception throwing
+     * before the response is committed. This allows the error handler to send
+     * back appropriate RETS error responses. Once the response is committed,
+     * the only way to handle errors is to log them.
+     */
+    protected void doRets(RetsServletRequest request,
+                          RetsServletResponse response)
+        throws RetsServerException, IOException
+    {
+        // Should be overridden
+    }
+
+    protected void postDoRets(RetsServletRequest request,
+                                   RetsServletResponse response)
+    {
     }
 
     protected AccountingStatistics getStatistics(HttpSession session)
@@ -38,41 +153,6 @@ public class RetsServlet extends HttpServlet implements Constants
     {
         return (User) session.getAttribute(
             AuthenticationFilter.AUTHORIZED_USER_KEY);
-    }
-
-    protected InputStream getResource(String name)
-    {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        return cl.getResourceAsStream(getPackageName() + "/" + name);
-    }
-
-    /**
-     * Returns the package name with dots replaced with slashes.  So
-     * if the package name is "org.wxwindows.demo",
-     * "org/wxwindows/demo" is returned.
-     */
-    public String getPackageName()
-    {
-        // getPackage returns null in gcj
-        // String pkg = this.getClass().getPackage().getName();
-        String pkg = this.getClass().getName();
-        pkg = pkg.substring(0, pkg.lastIndexOf('.'));
-        return pkg.replace('.', '/');
-    }
-
-    protected void copyIOStream(InputStream inStream, OutputStream outStream)
-        throws IOException
-    {
-        byte[] buffer = new byte[1024];
-        while (true)
-        {
-            int bytesRead = inStream.read(buffer);
-            if (bytesRead == -1)
-            {
-                break;
-            }
-            outStream.write(buffer, 0, bytesRead);
-        }
     }
 
     protected void printOpenRets(PrintWriter out, int code, String message)
@@ -89,4 +169,7 @@ public class RetsServlet extends HttpServlet implements Constants
     {
         out.println("</RETS-RESPONSE></RETS>");
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(RetsServlet.class);
 }
