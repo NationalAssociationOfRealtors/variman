@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.User;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
@@ -80,6 +81,16 @@ public class AuthenticationFilter implements Filter, UserMap
                 (HttpServletResponse) servletResponse;
             doAuthentication(filterChain, request, response);
         }
+        catch (ServletException e)
+        {
+            LOG.error("Caught", e);
+            throw e;
+        }
+        catch (RuntimeException e)
+        {
+            LOG.error("Caught", e);
+            throw e;
+        }
         finally
         {
             MDC.remove("addr");
@@ -101,29 +112,31 @@ public class AuthenticationFilter implements Filter, UserMap
             filterChain.doFilter(request, response);
         }
 
-        String authorizationHeader = request.getHeader("Authorization");
-        LOG.debug("Authorization header: " + authorizationHeader);
-        if (authorizationHeader == null)
+        try
         {
-            send401(response);
-            return;
+            String authorizationHeader = request.getHeader("Authorization");
+            LOG.debug("Authorization header: <" + authorizationHeader + ">");
+            DigestAuthorizationRequest authorizationRequest =
+                new DigestAuthorizationRequest(authorizationHeader);
+            authorizationRequest.setMethod(method);
+            HttpSession session = request.getSession();
+            if (verifyResponse(authorizationRequest, session))
+            {
+                LOG.debug("Digest auth succeeded");
+                User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
+                MDC.put("user", user.getUsername());
+                filterChain.doFilter(request, response);
+            }
+            else
+            {
+                send401(response);
+            }
         }
-
-        DigestAuthorizationRequest authorizationRequest =
-            new DigestAuthorizationRequest(authorizationHeader);
-        authorizationRequest.setMethod(method);
-        HttpSession session = request.getSession();
-        if (verifyResponse(authorizationRequest, session))
+        catch (IllegalArgumentException e)
         {
-            LOG.debug("Digest auth succeeded");
-            User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
-            MDC.put("user", user.getUsername());
-            filterChain.doFilter(request, response);
-        }
-        else
-        {
-            LOG.debug("Invalid digest auth");
-            send401(response);
+            LOG.error("Caught", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                               e.getMessage());
         }
     }
 
@@ -160,6 +173,11 @@ public class AuthenticationFilter implements Filter, UserMap
 
     public User findUser(String username)
     {
+        if (username == null)
+        {
+            return null;
+        }
+        
         User user = new User();
         user.setPasswordMethod(
             PasswordMethod.getInstance(PasswordMethod.PLAIN_TEXT));
