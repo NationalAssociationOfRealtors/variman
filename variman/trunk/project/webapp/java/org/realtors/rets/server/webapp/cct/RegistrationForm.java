@@ -6,6 +6,10 @@ package org.realtors.rets.server.webapp.cct;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+import org.realtors.rets.server.Util;
+
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorActionForm;
 
@@ -210,6 +214,20 @@ public class RegistrationForm extends ValidatorActionForm
     {
         mVerifyPassword = string;
     }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+
+    public String toString()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append("username", mUserAgent)
+            .append("fullName", mFullName)
+            .append("company", mCompany)
+            .append("email", mEmail)
+            .append("userAgent", mUserAgent)
+            .toString();
+    }
     
     private String mAgentID;
     private String mCompany;
@@ -221,4 +239,5 @@ public class RegistrationForm extends ValidatorActionForm
     private String mUserAgent;
     private String mUsername;
     private String mVerifyPassword;
+
 }
