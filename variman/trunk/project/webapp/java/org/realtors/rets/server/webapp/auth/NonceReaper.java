@@ -24,7 +24,7 @@ public class NonceReaper
         mTimer = new Timer();
         mTimer.schedule(new ReaperTask(),
                         DateUtils.MILLIS_IN_MINUTE,     // Initial delay
-                        DateUtils.MILLIS_IN_MINUTE);    // Subsqeuent delay
+                        DateUtils.MILLIS_IN_MINUTE);    // Subsequent delay
         LOG.debug("Started nonce reaper");
     }
 
