@@ -14,8 +14,8 @@
   
     <many-to-one name="stamp" class="org.nar.rets.metadata.hibernate.MetadataStamp" cascade="all"/>
 
-    <set role="elements" lazy="false" readonly="false" cascade="all">
-      <key column="elements" type="long"/>
+    <set name="elements" lazy="false" cascade="all">
+      <key column="elements"/>
       <one-to-many class="org.nar.rets.metadata.hibernate.MetadataValidationLookupElement"/>
     </set>
     

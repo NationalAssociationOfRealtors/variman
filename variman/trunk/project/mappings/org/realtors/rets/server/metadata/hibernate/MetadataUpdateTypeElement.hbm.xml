@@ -21,7 +21,7 @@
     <many-to-one name="validationExpression" class="org.nar.rets.metadata.hibernate.MetadataValidationExpressionElement" cascade="none"/>
     <many-to-one name="updateHelpID" class="org.nar.rets.metadata.hibernate.MetadataUpdateHelpElement" cascade="none"/>
 
-    <set role="attributes" table="lookup_attributes">
+    <set name="attributes" table="lookup_attributes">
       <key column="lookup_name"/>
       <many-to-many column="lookup_attribute" class="org.nar.rets.metadata.hibernate.MetadataSystemLookupAttribute"/>
     </set>

@@ -22,33 +22,33 @@
     <many-to-one name="foreignKeys_pointer" class="org.nar.rets.metadata.hibernate.MetadataForeignKeys" cascade="all"/>
     <many-to-one name="resource_pointer" class="org.nar.rets.metadata.hibernate.MetadataResource" cascade="all"/>
     
-    <set role="objectTypes" lazy="false" readonly="false" cascade="all">
-      <key column="object_types" type="long"/>
+    <set name="objectTypes" lazy="false" cascade="all">
+      <key column="object_types"/>
       <one-to-many class="org.nar.rets.metadata.hibernate.MetadataSystemLookupObjectType"/>
     </set>
     
-    <set role="dataTypes" lazy="false" readonly="false" cascade="all">
-      <key column="data_types" type="long"/>
+    <set name="dataTypes" lazy="false" cascade="all">
+      <key column="data_types"/>
       <one-to-many class="org.nar.rets.metadata.hibernate.MetadataSystemLookupDataType"/>
     </set>
     
-    <set role="interpretations" lazy="false" readonly="false" cascade="all">
-      <key column="interpretations" type="long"/>
+    <set name="interpretations" lazy="false" cascade="all">
+      <key column="interpretations"/>
       <one-to-many class="org.nar.rets.metadata.hibernate.MetadataSystemLookupInterpretation"/>
     </set>
     
-    <set role="alignments" lazy="false" readonly="false" cascade="all">
-      <key column="alignments" type="long"/>
+    <set name="alignments" lazy="false" cascade="all">
+      <key column="alignments"/>
       <one-to-many class="org.nar.rets.metadata.hibernate.MetadataSystemLookupAlignment"/>
     </set>
     
-    <set role="units" lazy="false" readonly="false" cascade="all">
-      <key column="units" type="long"/>
+    <set name="units" lazy="false" cascade="all">
+      <key column="units"/>
       <one-to-many class="org.nar.rets.metadata.hibernate.MetadataSystemLookupUnits"/>
     </set>
     
-    <set role="attributes" lazy="false" readonly="false" cascade="all">
-      <key column="attributes" type="long"/>
+    <set name="attributes" lazy="false" cascade="all">
+      <key column="attributes"/>
       <one-to-many class="org.nar.rets.metadata.hibernate.MetadataSystemLookupAttribute"/>
     </set>
     
