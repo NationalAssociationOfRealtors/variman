@@ -20,7 +20,7 @@
 
   <global-forwards>
     <forward name="registration" path="/registration.jsp"/>
-    <forward name="userPage" path="/cct/index.jsp"/>
+    <forward name="userPage" path="/cct/index.jsp" redirect="true"/>
   </global-forwards>
 
   <action-mappings>
