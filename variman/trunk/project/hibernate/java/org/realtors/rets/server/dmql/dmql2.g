@@ -38,10 +38,14 @@ boolean_element
 field_value [AST name]
     : {isLookupField(name.getText())}? lookup_list[name]
     | {isCharacterField(name.getText())}? string_list[name]
-    | {isCharacterField(name.getText())}? STRING_LITERAL^
+    | {isCharacterField(name.getText())}? string_literal[name]
     | number {#field_value = #([NUMBER], name, #field_value);}
     | period {#field_value = #([PERIOD], name, #field_value);}
     | range_list[name]
+    ;
+
+string_literal [AST name]
+    : s:STRING_LITERAL {#string_literal =  #([STRING_LITERAL], name, s); }
     ;
 
 between [AST name]
