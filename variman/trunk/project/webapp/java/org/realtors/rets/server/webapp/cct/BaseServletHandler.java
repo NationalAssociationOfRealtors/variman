@@ -60,8 +60,22 @@ public abstract class BaseServletHandler implements ServletHandler
     }
 
     /**
-     * Template method for standard XML transactions. It takes care of any
+     * Returns <code>true</code> if the response format is XML. The error
+     * handler uses this to determine how to handle errors. For XML responses,
+     * a RETS reply is sent. For non-XML responses, a HTTP 500 error is sent.
+     *
+     * @return <code>true</code> if the response format is XML
+     */
+    protected boolean isXmlResponse()
+    {
+        return true;
+    }
+
+    /**
+     * Template method for RETS service handling. It takes care of any
      * housekeeping needed for tests, as well as handles exceptions.
+     *
+     * @see #isXmlResponse
      */
     private void serviceRetsTemplate(RetsServletRequest request,
                                      RetsServletResponse response)
@@ -85,38 +99,61 @@ public abstract class BaseServletHandler implements ServletHandler
         }
         catch(RetsReplyException e)
         {
-            // These are not necessarily errors, as bad input from the client
-            // could cause an exception
-            LOG.debug("Caught", e);
-            if (response.isXmlResponse())
+            if (response.isCommitted())
             {
-                PrintWriter out = response.getXmlWriter();
-                out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
-                            "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
+                // Nothing we can report to the client, so make sure to log
+                // this
+                LOG.error("Caught", e);
             }
             else
             {
-                response.setStatus(
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.reset();
+                if (isXmlResponse())
+                {
+                    // These are not necessarily errors, as bad input from the
+                    // client could cause an exception
+                    LOG.debug("Caught", e);
+                    PrintWriter out = response.getXmlWriter();
+                    out.print("<RETS ReplyCode=\"" + e.getReplyCode() +
+                              "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
+                }
+                else
+                {
+                    // This is probably an error
+                    LOG.error("Caught", e);
+                    response.setStatus(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
             }
         }
         catch(Exception e)
         {
             LOG.error("Caught", e);
-            if (response.isXmlResponse())
+            if (!response.isCommitted())
             {
-                PrintWriter out = response.getXmlWriter();
-                out.println("<RETS ReplyCode=\"20513\" " +
-                            "ReplyText=\"Miscellaneous error\"/>\n");
-            }
-            else
-            {
-                response.setStatus(
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.reset();
+                if (isXmlResponse())
+                {
+                    PrintWriter out = response.getXmlWriter();
+                    out.print("<RETS ReplyCode=\"20513\" " +
+                              "ReplyText=\"Miscellaneous error\"/>\n");
+                }
+                else
+                {
+                    response.setStatus(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
             }
         }
     }
 
+    /**
+     * Method to be overridden by subclasses to handle RETS requests. The
+     * subclass should try to put the error checking and exception throwing
+     * before the response is committed. This allows the error handler to send
+     * back appropriate RETS error responses. Once the response is committed,
+     * the only way to handle errors is to log them.
+     */
     protected void serviceRets(RetsServletRequest request,
                                RetsServletResponse response)
         throws RetsReplyException, IOException
