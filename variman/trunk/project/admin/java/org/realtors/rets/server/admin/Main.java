@@ -6,8 +6,16 @@ import org.wxwindows.wxApp;
 import org.wxwindows.wxPoint;
 import org.wxwindows.wxSize;
 
+import org.apache.log4j.xml.DOMConfigurator;
+
 public class Main extends wxApp
 {
+    public Main()
+    {
+        DOMConfigurator.configure(
+            getClass().getResource("/rex-admin-log4j.xml"));
+    }
+
     public boolean OnInit()
     {
         wxInitAllImageHandlers();
