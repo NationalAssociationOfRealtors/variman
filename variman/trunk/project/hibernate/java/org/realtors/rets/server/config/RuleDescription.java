@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.StringUtils;
 
 public class RuleDescription
 {
@@ -71,6 +72,15 @@ public class RuleDescription
             includeSystemName = !includeSystemName;
         }
         return includeSystemName;
+    }
+
+    public String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("For ").append(mResource).append(":").append(mRetsClass);
+        buffer.append(", ").append(mType).append(" fields: ");
+        buffer.append(StringUtils.join(mSystemNames.iterator(), " "));
+        return buffer.toString();
     }
 
     public static class Type extends Enum
