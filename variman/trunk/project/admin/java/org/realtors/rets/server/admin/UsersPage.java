@@ -47,7 +47,7 @@ public class UsersPage extends wxPanel
         mLastName = new wxStaticText(panel, -1, "");
         grid.addRow("Last Name:", mLastName);
         mUsername = new wxStaticText(panel, -1, "");
-        grid.addRow("username:", mUsername);
+        grid.addRow("Username:", mUsername);
 
         pBox.Add(grid, 0, wxALL, 5);
         panel.SetSizer(pBox);
