@@ -8,47 +8,29 @@
 
 package org.realtors.rets.server.metadata;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.realtors.rets.server.metadata.AlignmentEnum;
-import org.realtors.rets.server.metadata.ClassStandardNameEnum;
-import org.realtors.rets.server.metadata.DataTypeEnum;
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.ForeignKey;
-import org.realtors.rets.server.metadata.Identifiable;
-import org.realtors.rets.server.metadata.InterpretationEnum;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.ObjectTypeEnum;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.TableStandardName;
-import org.realtors.rets.server.metadata.UnitEnum;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExpressionTypeEnum;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.JdomUtils;
+import org.realtors.rets.server.RetsServerException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.realtors.rets.common.metadata.JDomCompactBuilder;
 import org.realtors.rets.common.metadata.Metadata;
 import org.realtors.rets.common.metadata.MetadataException;
@@ -115,6 +97,7 @@ public class MetadataLoader
      * @return an MSystem object.
      */
     public MSystem parseMetadata(InputStream in)
+        throws RetsServerException
     {
         try
         {
@@ -124,13 +107,12 @@ public class MetadataLoader
         }
         catch (MetadataException e)
         {
-            LOG.error("Caught exception", e);
-            throw new RuntimeException(e);
-
+            throw new RetsServerException(e);
         }
     }
 
     public MSystem parseMetadata(Document document)
+        throws RetsServerException
     {
         try
         {
@@ -140,8 +122,83 @@ public class MetadataLoader
         }
         catch (MetadataException e)
         {
-            LOG.error("Caught exception", e);
-            throw new RuntimeException(e);
+            throw new RetsServerException(e);
+        }
+    }
+
+    public MSystem parseMetadataDirectory(String metadataDir)
+        throws RetsServerException
+    {
+        try
+        {
+            List files = IOUtils.listFilesRecursive(
+                new File(metadataDir), new MetadataFileFilter());
+            List documents = parseAllFiles(files);
+            Document merged =
+                JdomUtils.mergeDocuments(documents, new Element("RETS"));
+            return parseMetadata(merged);
+        }
+        catch (IOException e)
+        {
+            throw new RetsServerException(e);
+        }
+        catch (JDOMException e)
+        {
+            throw new RetsServerException(e);
+        }
+    }
+
+    /**
+     * Parses all files, returning a list of JDOM Document objects.
+     *
+     * @param files list of File objects
+     * @return a list of Document objects
+     * @throws org.jdom.JDOMException if a JDOM error occurs
+     * @throws java.io.IOException if an I/O error occurs
+     */
+    private static List /* Document */ parseAllFiles(List /* File */ files)
+        throws JDOMException, IOException
+    {
+        List documents = new ArrayList();
+        SAXBuilder builder = new SAXBuilder();
+        for (int i = 0; i < files.size(); i++)
+        {
+            File file = (File) files.get(i);
+            documents.add(builder.build(file));
+        }
+        return documents;
+    }
+
+    /**
+     * Filters out directories and files that are not metadata, in particular
+     * files used by the 1.0 version of the RETS server. Metadata files must
+     * have a ".xml" extension. Certain directories, like Notices, Roles, and
+     * Template do not contain any metadata, so they are skipped completely.
+     */
+    private class MetadataFileFilter implements FileFilter
+    {
+        public boolean accept(File file)
+        {
+            if (file.isDirectory())
+            {
+                return false;
+            }
+
+            // These directories do not contain metadata
+            String parent = file.getParent();
+            if (StringUtils.contains(parent, "Notices") ||
+                StringUtils.contains(parent, "Roles") ||
+                StringUtils.contains(parent, "Template"))
+            {
+                return false;
+            }
+
+            if (file.getName().endsWith(".xml"))
+            {
+                return true;
+            }
+            // Everything else is not considered metadata
+            return false;
         }
     }
 
@@ -933,7 +990,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.1 2004/02/06 21:33:06 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.2 2004/02/09 22:32:20 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
