@@ -753,7 +753,8 @@
           description="Builds source and distribution"/>
 
   <target name="dist-src" depends="prepare">
-    <tar destfile="dist/${project.string}-src.tar.gz" compression="gzip">
+    <tar destfile="dist/${project.string}-src.tar.gz" compression="gzip"
+         longfile="gnu">
       <tarfileset dir="${basedir}"
                   prefix="${project.string}">
         <excludesfile name="project/build/dist-src-excludes"/>
@@ -769,14 +770,15 @@
 
   <target name="dist-bin" depends="build, doc-manual">
     <!-- Embedded -->
-    <tar destfile="dist/${project.string}.tar.gz" compression="gzip">
+    <tar destfile="dist/${project.string}.tar.gz" compression="gzip"
+         longfile="gnu">
       <tarfileset dir="build/rets-server" prefix="${project.string}">
         <excludesfile name="project/build/dist-bin-excludes"/>
       </tarfileset>
     </tar>
     <!-- Web applications -->
     <tar destfile="dist/${project.name}-webapp-${project.version}.tar.gz"
-         compression="gzip">
+         compression="gzip" longfile="gnu">
       <tarfileset dir="build/rets-server"
                   prefix="${project.name}-webapp-${project.version}"
                   includes="webapp/**,doc/**">
