@@ -1,8 +1,6 @@
 package org.realtors.rets.server.tomcat;
 
 import java.net.URL;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 import org.apache.catalina.Connector;
 import org.apache.catalina.Context;
@@ -10,9 +8,8 @@ import org.apache.catalina.Deployer;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
 import org.apache.catalina.logger.SystemOutLogger;
-import org.apache.catalina.startup.Embedded;
-import org.apache.catalina.Container;
 import org.apache.catalina.realm.MemoryRealm;
+import org.apache.catalina.startup.Embedded;
 
 public class EmbeddedTomcat
 {
