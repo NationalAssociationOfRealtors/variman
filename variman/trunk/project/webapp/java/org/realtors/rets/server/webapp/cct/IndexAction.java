@@ -6,8 +6,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.cct.StatusEnum;
+import org.realtors.rets.server.cct.UserInfo;
+import org.realtors.rets.server.cct.UserRoles;
 import org.realtors.rets.server.cct.ValidationResult;
 
 import org.apache.struts.action.ActionForm;
@@ -21,7 +24,9 @@ import org.apache.struts.action.ActionMapping;
  * Time: 3:08:59 PM
  * To change this template use Options | File Templates.
  */
-public class IndexAction extends CctAction
+public class IndexAction
+    extends CctAction
+    implements UserRoles
 {
 
     public ActionForward execute(ActionMapping mapping,
@@ -30,13 +35,13 @@ public class IndexAction extends CctAction
                                  HttpServletResponse response)
         throws Exception
     {
-        TestRunner testRunner = getTestRunner(request.getSession());
+        HttpSession session = request.getSession();
+        TestRunner testRunner = getTestRunner(session);
         List displayBeans = new ArrayList();
-        Iterator iter = testRunner.getTests(); 
-        int i = 0;
-        while (iter.hasNext())
+        Iterator i = testRunner.getTests(); 
+        while (i.hasNext())
         {
-            CertificationTest test = (CertificationTest) iter.next();
+            CertificationTest test = (CertificationTest) i.next();
             ValidationResult result = testRunner.getResult(test.getName());
             TestDisplayBean displayBean = new TestDisplayBean(test, result);
             displayBeans.add(displayBean);
@@ -45,7 +50,12 @@ public class IndexAction extends CctAction
             {
                 request.setAttribute("cctActiveTest", test.getName());
             }
-            i++;
+        }
+        
+        UserInfo userInfo = (UserInfo) session.getAttribute(USERINFO_KEY);
+        if (userInfo.isUserInRole(ADMIN_VIEW))
+        {
+            request.setAttribute("cctHasAdminView", Boolean.TRUE);
         }
         
         request.setAttribute("cctDisplayBeans", displayBeans);
