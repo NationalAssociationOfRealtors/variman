@@ -50,9 +50,20 @@ public class GroupRules
         mConditionRules.remove(conditionRule);
     }
 
+    public int getRecordLimit()
+    {
+        return mRecordLimit;
+    }
+
+    public void setRecordLimit(int recordLimit)
+    {
+        mRecordLimit = recordLimit;
+    }
+
     private String mGroupName;
     private List mFilterRules;
     private List mReadOnlyFilterRules;
     private List mConditionRules;
     private List mReadOnlyConditionRules;
+    private int mRecordLimit;
 }

@@ -21,6 +21,8 @@ public class AddGroupDialog extends JDialog
         tvp.addRow("Group Name:", mGroupName);
         mDescription = new JTextField(TEXT_WIDTH);
         tvp.addRow("Description:", mDescription);
+        mRecordLimit = new WholeNumberField(0, TEXT_WIDTH);
+        tvp.addRow("Record Limit:", mRecordLimit);
 
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         content.add(tvp);
@@ -53,6 +55,11 @@ public class AddGroupDialog extends JDialog
     public String getDescription()
     {
         return mDescription.getText();
+    }
+
+    public int getRecordLimit()
+    {
+        return mRecordLimit.getValue();
     }
 
     private class AddGroupButtonAction extends AbstractAction
@@ -88,4 +95,5 @@ public class AddGroupDialog extends JDialog
     private int mResponse;
     private JTextField mGroupName;
     private JTextField mDescription;
+    private WholeNumberField mRecordLimit;
 }
