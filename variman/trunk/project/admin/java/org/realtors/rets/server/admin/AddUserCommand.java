@@ -8,25 +8,23 @@
 
 package org.realtors.rets.server.admin;
 
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
-import org.wxwindows.wx;
-
-import net.sf.hibernate.Session;
 import net.sf.hibernate.HibernateException;
 
-import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.UserUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import org.wxwindows.wx;
 
 public class AddUserCommand extends wx
 {
     public void execute()
     {
-        SessionHelper helper = Admin.createSessionHelper();
         try
         {
             AdminFrame frame = Admin.getAdminFrame();
@@ -43,16 +41,13 @@ public class AddUserCommand extends wx
             user.setLastName(addUserDialog.getLastName());
             user.setUsername(addUserDialog.getUsername());
             user.changePassword(addUserDialog.getPassword());
-            Session session = helper.beginTransaction();
-            session.save(user);
-            helper.commit();
+            UserUtils.save(user);
             frame.SetStatusText("User " + user.getName() + " added");
             frame.refreshUsers();
             LOG.debug("New user: " + user);
         }
         catch (HibernateException e)
         {
-            helper.rollback(LOG);
             LOG.error("Caught exception", e);
             StringWriter stackTraceWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stackTraceWriter));
@@ -60,10 +55,6 @@ public class AddUserCommand extends wx
             stackTrace = StringUtils.replace(stackTrace, "\t", "    ");
             wxLogMessage(stackTrace);
             wxLogError("Could not add user.");
-        }
-        finally
-        {
-            helper.close(LOG);
         }
     }
 
