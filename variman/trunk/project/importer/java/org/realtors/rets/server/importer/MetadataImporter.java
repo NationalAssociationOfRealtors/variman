@@ -30,6 +30,8 @@ import org.realtors.rets.server.metadata.ObjectTypeEnum;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.Lookup;
+import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 
@@ -81,7 +83,11 @@ public class MetadataImporter
             doResource(rSession, hSession, hSystem);
             doClasses(rSession, hSession);
             doObjects(rSession, hSession);
-
+            doSearchHelp(rSession, hSession);
+            doEditMask(rSession, hSession);
+            doLookup(rSession, hSession);
+            
+            
             tx.commit();
             hSession.close();
         }
@@ -324,10 +330,104 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     EditMask hEditMask = new EditMask();
 
-                    
+                    hEditMask.setResourceid(resource);
+                    hEditMask.setEditMaskID(md.getAttribute("EditMaskID"));
+                    hEditMask.setValue(md.getAttribute("Value"));
+
+                    hSession.save(hEditMask);
+                    hEditMasks.add(hEditMask);
                 }
             }
+            resource.setEditMasks(hEditMasks);
+            hSession.saveOrUpdate(resource);
         }
+    }
+
+    private void doLookup(RetsSession rSession, Session hSession)
+        throws HibernateException, ParseException
+    {
+        MetadataTable tLookup =
+            rSession.getMetadataTable(MetadataTable.LOOKUP);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hLookups = new HashSet();
+            List lookups = tLookup.getDataRows(resource.getResourceID());
+            if (lookups != null)
+            {
+                Iterator j = lookups.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    Lookup hLookup = new Lookup();
+
+                    hLookup.setResourceid(resource);
+                    
+                    String lookupName = md.getAttribute("LookupName");
+                    hLookup.setLookupName(lookupName);
+                    
+                    hLookup.setVisibleName(md.getAttribute("VisibleName"));
+                    hLookup.setVersion(md.getAttribute("Version"));
+                    hLookup.setDate(
+                        mDateFormat.parse(md.getAttribute("Date")));
+
+                    doLookupTypes(hLookup, rSession, hSession);
+                    
+                    hSession.save(hLookup);
+                    hLookups.add(hLookup);
+                }
+            }
+            resource.setLookups(hLookups);
+            hSession.saveOrUpdate(resource);
+        }
+    }
+
+    /**
+     * Meant to be called only from do Lookup.
+     *
+     * @param hLookup the Lookup object to get the types for
+     * @param rSession the rets session
+     * @param hSession the hibernate session
+     * @exception HibernateExcepion if an error occurs
+     */
+    private void doLookupTypes(Lookup hLookup, RetsSession rSession,
+                               Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tLookupTypes =
+            rSession.getMetadataTable(MetadataTable.LOOKUP_TYPE);
+
+        Resource resource = hLookup.getResourceid();
+        String path = new StringBuffer().append(
+            resource.getResourceID()).append(":").append(
+                hLookup.getLookupName()).toString();
+        
+        List lookupTypes = tLookupTypes.getDataRows(path);
+        Set hLookupTypes = new HashSet();
+        if (lookupTypes != null)
+        {
+            System.out.println("in lookup type area: " +
+                               hLookup.getLookupName());
+            Iterator i = lookupTypes.iterator();
+            while (i.hasNext())
+            {
+                Metadata md = (Metadata) i.next();
+                LookupType hLookupType = new LookupType();
+
+                hLookupType.setLookupid(hLookup);
+
+                hLookupType.setLongValue(md.getAttribute("LongValue"));
+                hLookupType.setShortValue(md.getAttribute("ShortValue"));
+                hLookupType.setValue(md.getAttribute("Value"));
+
+                hSession.save(hLookupType);
+                hLookupTypes.add(hLookupType);
+            }
+        }
+        hLookup.setLookupTypes(hLookupTypes);
+        hSession.saveOrUpdate(hLookup);
     }
 
     public static final void main(String args[])
@@ -343,5 +443,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.10 2003/06/30 19:11:35 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.11 2003/06/30 20:39:19 kgarner Exp $";
 }
