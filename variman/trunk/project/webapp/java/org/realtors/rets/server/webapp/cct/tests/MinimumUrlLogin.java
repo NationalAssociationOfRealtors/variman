@@ -20,7 +20,7 @@ public class MinimumUrlLogin extends BaseCertificationTest
         return "Login, then logout.";
     }
 
-    protected ValidationResults validate()
+    public ValidationResults validate()
     {
         ValidationResults results = new ValidationResults();
         mLogin.validate(results);

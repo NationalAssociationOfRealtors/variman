@@ -13,7 +13,7 @@ import org.realtors.rets.server.webapp.cct.LogoutHandler;
 
 public class RelativeUrlLogin extends BaseCertificationTest
 {
-    protected ValidationResults validate()
+    public ValidationResults validate()
     {
         ValidationResults results = new ValidationResults();
         mLogin.validate(results);
