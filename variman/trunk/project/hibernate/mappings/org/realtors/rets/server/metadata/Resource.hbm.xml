@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Resource.hbm.xml,v 1.8 2003/06/19 21:53:41 kgarner Exp $ -->
+<!-- $Id: Resource.hbm.xml,v 1.9 2003/06/23 21:51:45 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.realtors.rets.server.metadata.Resource"
@@ -20,8 +20,9 @@
               index="resource_rets_id_index"/>
     </property>
 
-    <property name="standardName" type="string">
-      <column name="standard_name" length="32"/>
+    <property name="standardName"
+             type="org.realtors.rets.server.metadata.ResourceStandardNameEnum">
+      <column name="standard_name" index="resouce_standard_name_index"/>
     </property>
 
     <property name="visibleName" type="string">
@@ -38,7 +39,7 @@
     </property>
 
     <!-- should this be derived dynamically? -->
-    <property name="classCount" type="int"/>
+<!--     <property name="classCount" type="int"/> -->
 
     <property name="classVersion" type="string">
       <column name="class_version" length="11"/>
