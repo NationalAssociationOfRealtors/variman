@@ -32,6 +32,7 @@ import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
 
