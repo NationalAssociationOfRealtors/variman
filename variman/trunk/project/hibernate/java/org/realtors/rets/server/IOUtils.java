@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
@@ -167,6 +168,25 @@ public class IOUtils
         {
             destination.write(buffer, 0, bytesRead);
         }
+    }
+
+    public static void writeString(String file, String string)
+        throws IOException
+    {
+        writeString(new FileWriter(file), string);
+    }
+
+    public static void writeString(URL url, String string)
+        throws IOException
+    {
+        writeString(new FileWriter(url.getFile()), string);
+    }
+
+    public static void writeString(FileWriter output, String string)
+        throws IOException
+    {
+        output.write(string, 0, string.length());
+        output.flush();
     }
 
     /** The default buffer size is 8k. */
