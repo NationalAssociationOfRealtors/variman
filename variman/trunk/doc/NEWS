@@ -1,3 +1,10 @@
+Version 2.1.6 - xxx
+
+  * Fixed digest authorization for URIs with query strings.
+  * Added scroll bars to various lists in the admin tool.
+  * Fixed SQL generation for string literals.
+  * Honor default ordering.
+
 Version 2.1.5 - 1 February 2005
 
   * Fixed SQL generation for date fields.
