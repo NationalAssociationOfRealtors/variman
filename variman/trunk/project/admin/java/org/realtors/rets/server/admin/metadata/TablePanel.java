@@ -9,23 +9,24 @@
 package org.realtors.rets.server.admin.metadata;
 
 import java.util.List;
-import java.util.Collections;
 
+import org.wxwindows.wxChoice;
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
-import org.wxwindows.wxChoice;
+import org.wxwindows.wxTextValidator;
+import org.wxwindows.wxValidator;
 
 import org.realtors.rets.server.admin.BooleanChoice;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.DataTypeEnum;
-import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.AlignmentEnum;
-import org.realtors.rets.server.metadata.UnitEnum;
-import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.DataTypeEnum;
 import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.InterpretationEnum;
+import org.realtors.rets.server.metadata.Lookup;
+import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.UnitEnum;
 
 public class TablePanel extends AbstractSubPanel
 {
@@ -51,7 +52,7 @@ public class TablePanel extends AbstractSubPanel
         mDbName = new wxTextCtrl(this, -1);
         grid.addRow("DB Name:", mDbName, wxEXPAND);
 
-        mMaximumLength = new wxTextCtrl(this, -1);
+        mMaximumLength = createNumericTextCtrl();
         grid.addRow("Max Length:", mMaximumLength, wxEXPAND);
 
         mDataType = createDataTypeChoice();
