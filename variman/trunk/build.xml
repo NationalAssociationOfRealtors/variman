@@ -337,16 +337,6 @@
       </classpath>
     </javac>
 
-    <taskdef name="jar-manifest"
-             classname="org.realtors.rets.server.JarManifestTask"
-             classpath="build/hibernate/classes"/>
-    <jar-manifest main="org.realtors.rets.server.tomcat.EmbeddedTomcat"
-                  destfile="build/embedded/rex-server.manifest">
-      <classpath dir="build/rets-server" includes="server/lib/*.jar"/>
-    </jar-manifest>
-    <jar jarfile="build/rets-server/${project.name}.jar"
-         basedir="build/embedded/classes"
-         manifest="build/embedded/rex-server.manifest"/>
     <copy todir="build/rets-server/server/conf">
       <fileset dir="project/embedded/config" includes="*"/>
     </copy>
@@ -382,6 +372,12 @@
         <include name="mx4j-jmx.jar"/>
       </fileset>
     </copy>
+    <copy todir="build/rets-server/server/lib">
+      <fileset dir="${tomcat.home}/common/endorsed">
+        <include name="xercesImpl.jar"/>
+        <include name="xmlParserAPIs.jar"/>
+      </fileset>
+    </copy>
     <!-- Rename jakarta-regexp to not have version number in it -->
     <copy tofile="build/rets-server/server/lib/jakarta-regexp.jar">
       <fileset dir="${tomcat.home}/server/lib"
@@ -396,6 +392,17 @@
     </copy>
     <copy todir="build/rets-server" file="LICENSE.TXT"/>
     <copy tofile="build/rets-server/server/lib/log4j.jar" file="${log4j.jar}"/>
+
+    <taskdef name="jar-manifest"
+             classname="org.realtors.rets.server.JarManifestTask"
+             classpath="build/hibernate/classes"/>
+    <jar-manifest main="org.realtors.rets.server.tomcat.EmbeddedTomcat"
+                  destfile="build/embedded/rex-server.manifest">
+      <classpath dir="build/rets-server" includes="server/lib/*.jar"/>
+    </jar-manifest>
+    <jar jarfile="build/rets-server/${project.name}.jar"
+         basedir="build/embedded/classes"
+         manifest="build/embedded/rex-server.manifest"/>
   </target>
 
   <target name="build-webapp-webdoclet">
