@@ -20,6 +20,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         mColumnToField = new HashMap();
         mLookups = new HashMap();
         mStrings = new HashSet();
+        mNumerics = new HashSet();
     }
 
     public ServerDmqlMetadata(MClass clazz, boolean standardNames)
@@ -53,10 +54,31 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
             {
                 addLookups(fieldName, standardNames, lookup);
             }
+            else if (isNumeric(table))
+            {
+                mNumerics.add(fieldName);
+            }
             else
             {
                 mStrings.add(fieldName);
             }
+        }
+    }
+
+    private boolean isNumeric(Table table)
+    {
+        DataTypeEnum type = table.getDataType();
+        if (type.equals(DataTypeEnum.TINY) ||
+            type.equals(DataTypeEnum.SMALL) ||
+            type.equals(DataTypeEnum.INT) ||
+            type.equals(DataTypeEnum.LONG) ||
+            type.equals(DataTypeEnum.DECIMAL))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -107,6 +129,11 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     public boolean isValidStringName(String fieldName)
     {
         return mStrings.contains(fieldName);
+    }
+
+    public boolean isNumericField(String fieldName)
+    {
+        return mNumerics.contains(fieldName);
     }
 
     public boolean isValidLookupName(String lookupName)
@@ -161,6 +188,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private Map mLookups;
     private Set mStrings;
     private static final Map LISTING_STATUS_VALUES;
+    private Set mNumerics;
 
     static
     {

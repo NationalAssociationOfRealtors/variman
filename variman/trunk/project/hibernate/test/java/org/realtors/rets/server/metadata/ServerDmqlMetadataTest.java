@@ -40,9 +40,11 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidFieldName("AR"));
         assertTrue(metadata.isValidFieldName("STATUS"));
         assertTrue(metadata.isValidFieldName("OWNER"));
+        assertTrue(metadata.isValidFieldName("LP"));
         assertFalse(metadata.isValidFieldName("Area"));
         assertFalse(metadata.isValidFieldName("ListingStatus"));
         assertFalse(metadata.isValidFieldName("Owner"));
+        assertFalse(metadata.isValidFieldName("ListingPrice"));
         assertFalse(metadata.isValidFieldName("FOO"));
 
         // Check lookups
@@ -65,10 +67,19 @@ public class ServerDmqlMetadataTest extends TestCase
 
         // Check strings
         assertTrue(metadata.isValidStringName("OWNER"));
-        assertFalse(metadata.isValidStringName("Owner"));
         assertFalse(metadata.isValidStringName("AR"));
         assertFalse(metadata.isValidStringName("STATUS"));
+        assertFalse(metadata.isValidStringName("LP"));
         assertFalse(metadata.isValidStringName("FOO"));
+        assertFalse(metadata.isValidStringName("Owner"));
+
+        // Check numerics
+        assertFalse(metadata.isNumericField("OWNER"));
+        assertFalse(metadata.isNumericField("AR"));
+        assertFalse(metadata.isNumericField("STATUS"));
+        assertTrue(metadata.isNumericField("LP"));
+        assertFalse(metadata.isNumericField("FOO"));
+        assertFalse(metadata.isValidStringName("ListingPrice"));
 
         // Check tables
         assertEquals(mOwner, metadata.getTable("OWNER"));
@@ -112,6 +123,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidFieldName("Area"));
         assertTrue(metadata.isValidFieldName("ListingStatus"));
         assertTrue(metadata.isValidFieldName("Owner"));
+        assertTrue(metadata.isValidFieldName("ListingPrice"));
         assertFalse(metadata.isValidFieldName("AR"));
         assertFalse(metadata.isValidFieldName("STATUS"));
         assertFalse(metadata.isValidFieldName("OWNER"));
@@ -139,10 +151,17 @@ public class ServerDmqlMetadataTest extends TestCase
 
         // Check strings
         assertTrue(metadata.isValidStringName("Owner"));
-        assertFalse(metadata.isValidStringName("OWNER"));
-        assertFalse(metadata.isValidStringName("AR"));
-        assertFalse(metadata.isValidStringName("STATUS"));
+        assertFalse(metadata.isValidStringName("Area"));
+        assertFalse(metadata.isValidStringName("ListingStatus"));
         assertFalse(metadata.isValidStringName("FOO"));
+        assertFalse(metadata.isValidStringName("OWNER"));
+
+        // Check numerics
+        assertFalse(metadata.isNumericField("Owner"));
+        assertFalse(metadata.isNumericField("Area"));
+        assertTrue(metadata.isNumericField("ListingPrice"));
+        assertFalse(metadata.isNumericField("FOO"));
+        assertFalse(metadata.isNumericField("LP"));
 
         // Check tables
         assertEquals(mOwner, metadata.getTable("Owner"));
@@ -198,6 +217,7 @@ public class ServerDmqlMetadataTest extends TestCase
         mArea.setStandardName(new TableStandardName("Area"));
         mArea.setLookup(area);
         mArea.setDbName("r_AR");
+        mArea.setDataType(DataTypeEnum.CHARACTER);
         mClazz.addTable(mArea);
 
         mStatus = new Table(id++);
@@ -205,6 +225,7 @@ public class ServerDmqlMetadataTest extends TestCase
         mStatus.setStandardName(new TableStandardName("ListingStatus"));
         mStatus.setLookup(status);
         mStatus.setDbName("r_STATUS");
+        mStatus.setDataType(DataTypeEnum.CHARACTER);
         mClazz.addTable(mStatus);
 
         // Create a table w/o a lookup
@@ -212,11 +233,20 @@ public class ServerDmqlMetadataTest extends TestCase
         mOwner.setSystemName("OWNER");
         mOwner.setStandardName(new TableStandardName("Owner"));
         mOwner.setDbName("r_OWNER");
+        mOwner.setDataType(DataTypeEnum.CHARACTER);
         mClazz.addTable(mOwner);
+
+        mListingPrice = new Table(id++);
+        mListingPrice.setSystemName("LP");
+        mListingPrice.setStandardName(new TableStandardName("ListingPrice"));
+        mListingPrice.setDbName("r_LP");
+        mListingPrice.setDataType(DataTypeEnum.DECIMAL);
+        mClazz.addTable(mListingPrice);
     }
 
     private MClass mClazz = null;
     private Table mArea;
     private Table mStatus;
     private Table mOwner;
+    private Table mListingPrice;
 }

@@ -18,6 +18,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         mColumnsToFields = new HashMap();
         mLookups = new HashMap();
         mStrings = new HashSet();
+        mNumerics = new HashSet();
         mTables = new HashMap();
     }
 
@@ -28,8 +29,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         {
             valueSet.add(values[i]);
         }
-        mFieldsToColumns.put(name, PREFIX + name);
-        mColumnsToFields.put(PREFIX + name, name);
+        addColumnMapping(name, PREFIX + name);
         mLookups.put(name, valueSet);
     }
 
@@ -40,9 +40,25 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     public void addString(String fieldName, String columnName)
     {
-        mFieldsToColumns.put(fieldName, columnName);
-        mColumnsToFields.put(columnName, fieldName);
+        addColumnMapping(fieldName,  columnName);
         mStrings.add(fieldName);
+    }
+
+    public void addNumeric(String fieldName)
+    {
+        addNumeric(fieldName, PREFIX + fieldName);
+    }
+
+    public void addNumeric(String fieldName, String columnName)
+    {
+        addColumnMapping(fieldName, columnName);
+        mNumerics.add(fieldName);
+    }
+
+    private void addColumnMapping(String fieldName, String columnName)
+    {
+        mFieldsToColumns.put(fieldName, columnName);
+        mColumnsToFields.put(columnName,  fieldName);
     }
 
     public void addTable(String fieldName, Table table)
@@ -58,6 +74,11 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
     public boolean isValidStringName(String fieldName)
     {
         return mStrings.contains(fieldName);
+    }
+
+    public boolean isNumericField(String fieldName)
+    {
+        return mNumerics.contains(fieldName);
     }
 
     public boolean isValidLookupName(String lookupName)
@@ -103,4 +124,5 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
     private Map mFieldsToColumns;
     private Map mColumnsToFields;
     private Map mTables;
+    private Set mNumerics;
 }
