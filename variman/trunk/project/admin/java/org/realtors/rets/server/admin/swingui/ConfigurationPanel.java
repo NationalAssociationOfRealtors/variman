@@ -17,6 +17,7 @@ import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.IOUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 public class ConfigurationPanel extends JPanel
 {
@@ -94,6 +95,11 @@ public class ConfigurationPanel extends JPanel
         String webappRoot = Admin.getWebAppRoot();
         mMetadataDir.setText(IOUtils.resolve(webappRoot,
                                               config.getMetadataDir()));
+    }
+
+    public int getPort()
+    {
+        return NumberUtils.stringToInt(mPort.getText());
     }
 
     private class ChooseMetadataAction extends AbstractAction
