@@ -84,7 +84,7 @@ public class AccountingFilter implements Filter, Constants
     private AccountingStatistics createStatistics(User user)
     {
         AccountingStatistics statistics = null;
-        SessionHelper helper = new SessionHelper(InitServlet.getSessions());
+        SessionHelper helper = WebApp.createHelper();
         try
         {
             Session session = helper.beginTransaction();
@@ -128,7 +128,7 @@ public class AccountingFilter implements Filter, Constants
 
     private void saveStatistics(AccountingStatistics statistics)
     {
-        SessionHelper helper = new SessionHelper(InitServlet.getSessions());
+        SessionHelper helper = WebApp.createHelper();
         try
         {
             LOG.debug("Saving statistics");
