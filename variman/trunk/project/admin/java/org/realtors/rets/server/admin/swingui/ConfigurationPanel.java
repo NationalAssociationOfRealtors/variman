@@ -28,6 +28,7 @@ public class ConfigurationPanel extends JPanel
 {
     public ConfigurationPanel()
     {
+        mInConstructor = true;
         setLayout(new BorderLayout());
 
         JPanel content = new JPanel();
@@ -109,10 +110,7 @@ public class ConfigurationPanel extends JPanel
 
         updateLabels();
 
-        // It's important to set this flag at the end of the constructor, as
-        // events may trigger false changes during various setup during
-        // construction.
-        Admin.setRetsConfigChanged(false);
+        mInConstructor = false;
     }
 
     private void updateLabels()
@@ -257,7 +255,12 @@ public class ConfigurationPanel extends JPanel
 
         private void updateEdited()
         {
-            Admin.setRetsConfigChanged(true);
+            if (!mInConstructor)
+            {
+                // Events may occur during construction and trigger false
+                // changes, so ignore changes during construction.
+                Admin.setRetsConfigChanged(true);
+            }
         }
     }
 
@@ -269,4 +272,5 @@ public class ConfigurationPanel extends JPanel
     private JLabel mUsername;
     private JTextField mImageRootDir;
     private JTextField mImagePattern;
+    private boolean mInConstructor;
 }
