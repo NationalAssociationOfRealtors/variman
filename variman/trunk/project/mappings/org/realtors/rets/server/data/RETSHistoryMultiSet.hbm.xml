@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSHistoryMultiSet.hbm.xml,v 1.1 2003/06/09 18:06:37 kgarner Exp $ -->
+<!-- $Id: RETSHistoryMultiSet.hbm.xml,v 1.2 2003/06/09 21:31:20 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.data.RETSHistoryMultiSet"
@@ -20,8 +20,8 @@
 
     <set name="values" table="rets_history_multi_data_set">
       <key column="id"/>
-      <!-- this should be a pointer to lookup type? -->
-      <element column="value" type="string"/>
+      <many-to-many column="value"
+        class="org.nar.rets.metadata.newdb.MetadataLookupType"/>
     </set>
   </class>
 </hibernate-mapping>
