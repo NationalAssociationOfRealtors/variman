@@ -11,6 +11,7 @@ package org.realtors.rets.server.admin.metadata;
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxPanel;
 import org.wxwindows.wxWindow;
+import org.wxwindows.wxSplitterWindow;
 
 import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.ForeignKey;
@@ -32,6 +33,7 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.MetadataManager;
 
 /**
  * A panel that provides detailed and editable information for a metadata
@@ -40,9 +42,11 @@ import org.realtors.rets.server.metadata.ValidationLookupType;
  */
 public class DetailPanel extends wxPanel
 {
-    public DetailPanel(wxWindow parent)
+    public DetailPanel(wxWindow parent, MetadataManager manager)
     {
         super(parent);
+        mManager = manager;
+
         mDetailSizer = new wxBoxSizer(wxVERTICAL);
         mCurrentDetailPanel = null;
 
@@ -56,6 +60,7 @@ public class DetailPanel extends wxPanel
         addDetailPanel(mClassPanel);
 
         mTablePanel = new TablePanel(this);
+        mTablePanel.setManager(mManager);
         addDetailPanel(mTablePanel);
 
         mUpdatePanel = new UpdatePanel(this);
@@ -272,4 +277,5 @@ public class DetailPanel extends wxPanel
     private ValidationExternalPanel mValidationExternalPanel;
     private ValidationExternalTypePanel mValidationExternalTypePanel;
     private ValidationExpressionPanel mValidationExpressionPanel;
+    private MetadataManager mManager;
 }
