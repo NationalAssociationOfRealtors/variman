@@ -12,6 +12,8 @@ import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
 
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -37,6 +39,15 @@ public class ConfirmationAction extends Action
         HttpSession session = request.getSession();
         RegistrationForm form =
             (RegistrationForm) session.getAttribute("registrationForm");
+            
+        if (form == null)
+        {
+            ActionErrors errors = new ActionErrors();
+            errors.add(ActionErrors.GLOBAL_ERROR,
+                new ActionError("registration.session.timeout"));
+            saveErrors(request, errors);
+            return new ActionForward(mapping.getInput());
+        }
 
         User user = new User();
         user.setUsername(form.getUsername());
