@@ -34,6 +34,13 @@
           Name change edits.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>1.2</revnumber>
+        <date>2005-01-14</date>
+        <revremark>
+          Editorial changes and add seciton on condition rules.
+        </revremark>
+      </revision>
     </revhistory>
     
     <abstract>

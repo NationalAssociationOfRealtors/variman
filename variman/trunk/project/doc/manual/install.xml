@@ -11,7 +11,7 @@
     already have licenses for one.
   </para>
 
-  <section>
+  <section id="windows">
     <title>Windows Installation</title>
     <para>
       If you are running on Windows, and normal Windows installer is
@@ -25,7 +25,7 @@
     </para>
   </section>
 
-  <section>
+  <section id="non-windows">
     <title>Non-Windows Installation</title>
     <para>
       For other platforms, such as Linux and Mac OS X, a gzipped tar
@@ -35,7 +35,7 @@
     </para>
   </section>
 
-  <section>
+  <section id="webapp">
     <title>Web Application Installation</title>
     <para>
       A version of &name; without Tomcat is available as a zip file or
