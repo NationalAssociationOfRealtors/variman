@@ -6,10 +6,12 @@
 <struts-config>
 
   <form-beans>
-    <form-bean name="registrationForm"
+    <form-bean name="cctRegistrationForm"
                type="org.realtors.rets.server.webapp.cct.RegistrationForm"/>
-    <form-bean name="confirmationForm"
+    <form-bean name="cctConfirmationForm"
                type="org.realtors.rets.server.webapp.cct.NullForm"/>
+    <form-bean name="cctTestForm"
+               type="org.realtors.rets.server.webapp.cct.TestForm"/>
   </form-beans>
 
   <global-exceptions>
@@ -26,7 +28,7 @@
   <action-mappings>
     <action path="/registration"
             type="org.realtors.rets.server.webapp.cct.RegistrationAction"
-            name="registrationForm"
+            name="cctRegistrationForm"
             scope="session"
             validate="true"
             input="/registration.jsp">
@@ -34,7 +36,7 @@
     </action>
 
     <action path="/confirmation"
-            name="confirmationForm"
+            name="cctConfirmationForm"
             scope="request"
             validate="false"
             input="/registration.jsp"
@@ -43,6 +45,18 @@
       <action path="/cct/index"
               type="org.realtors.rets.server.webapp.cct.IndexAction">
           <forward name="home" path="/cct/home.jsp" />
+      </action>
+      <action path="/cct/start_test"
+              name="cctTestForm"
+              validate="false"
+              type="org.realtors.rets.server.webapp.cct.StartTestAction">
+          <forward name="home" path="/cct/" redirect="true"/>
+      </action>
+      <action path="/cct/stop_test"
+              name="cctTestForm"
+              validate="false"
+              type="org.realtors.rets.server.webapp.cct.StopTestAction">
+          <forward name="home" path="/cct/" redirect="true"/>
       </action>
   </action-mappings>
 
