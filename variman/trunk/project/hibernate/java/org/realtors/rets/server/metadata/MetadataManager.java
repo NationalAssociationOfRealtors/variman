@@ -96,6 +96,11 @@ public class MetadataManager
         return found;
     }
 
+    public ServerMetadata findUnique(String tableName, String level)
+    {
+        return (ServerMetadata) find(tableName, level).get(0);
+    }
+
     public void addRecursive(ServerMetadata metadata)
     {
         add(metadata);
