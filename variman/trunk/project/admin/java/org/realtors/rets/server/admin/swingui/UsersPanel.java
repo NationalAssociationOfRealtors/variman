@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -31,7 +32,8 @@ public class UsersPanel extends JPanel
     public UsersPanel()
     {
         super(new BorderLayout());
-        mUserList = new JList();
+        mUserListModel = new ListListModel();
+        mUserList = new JList(mUserListModel);
         mUserList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mUserList.getSelectionModel().addListSelectionListener(
             new OnUserSelectionChanged());
@@ -82,7 +84,8 @@ public class UsersPanel extends JPanel
         panel.add(new HeaderPanel("Groups"), BorderLayout.NORTH);
 
         JPanel box = new JPanel(new BorderLayout());
-        mGroupsList = new JList();
+        mGroupsListModel = new ListListModel();
+        mGroupsList = new JList(mGroupsListModel);
         mGroupsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mGroupsList.getSelectionModel().addListSelectionListener(
             new OnGroupSelectionChanged());
@@ -155,8 +158,8 @@ public class UsersPanel extends JPanel
             public void finished()
             {
                 List users = (List) get();
+                mUserListModel.setList(users);
 
-                mUserList.setModel(new ListListModel(users));
                 int newSelection = selection;
                 if (newSelection >= users.size())
                 {
@@ -198,7 +201,7 @@ public class UsersPanel extends JPanel
 
             mAddGroupButtonAction.setEnabled(false);
             mRemoveGroupButtonAction.setEnabled(false);
-            mGroupsList.setListData(new Object[0]);
+            mGroupsListModel.setList(Collections.EMPTY_LIST);
         }
     }
 
@@ -207,9 +210,7 @@ public class UsersPanel extends JPanel
         try
         {
             SortedSet groups = UserUtils.getGroups(user);
-            Group[] listData =
-                (Group[]) groups.toArray(new Group[groups.size()]);
-            mGroupsList.setListData(listData);
+            mGroupsListModel.setList(new ArrayList(groups));
             updateGroupButtons();
         }
         catch (HibernateException e)
@@ -376,4 +377,6 @@ public class UsersPanel extends JPanel
     private JList mGroupsList;
     private AddGroupButtonAction mAddGroupButtonAction;
     private RemoveGroupButtonAction mRemoveGroupButtonAction;
+    private ListListModel mUserListModel;
+    private ListListModel mGroupsListModel;
 }
