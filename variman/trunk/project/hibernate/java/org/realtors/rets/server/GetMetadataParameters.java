@@ -110,13 +110,13 @@ public class GetMetadataParameters
         type = type.toUpperCase();
         if (!type.startsWith("METADATA-"))
         {
-            throw new RetsReplyException(20501, "Invalid Type");
+            throw new RetsReplyException(ReplyCode.INVALID_TYPE, type);
         }
 
         type = type.substring("METADATA-".length());
         if (!sValidTypes.contains(type))
         {
-            throw new RetsReplyException(20501, "Invalid Type");
+            throw new RetsReplyException(ReplyCode.INVALID_TYPE, type);
         }
         return type;
     }

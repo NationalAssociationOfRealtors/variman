@@ -65,7 +65,7 @@ public class MetadataFinder
         {
             LOG.warn("Invalid levels length, expected " + mExpectedLevels +
                      ", was " + levels.length);
-            throw new RetsReplyException(20502, "Invalid Identifier");
+            throw new RetsReplyException(ReplyCode.INVALID_IDENTIFIER);
         }
     }
 

@@ -91,7 +91,7 @@ public class HibernateMetadataFetcher implements MetadataFetcher
         {
             LOG.warn("Recieved query for unknown metadataResults type: " +
                      type + ", level=" + StringUtils.join(levels, ":"));
-            throw new RetsReplyException(20501, "Invalid Type");
+            throw new RetsReplyException(ReplyCode.INVALID_TYPE, type);
         }
     }
 
