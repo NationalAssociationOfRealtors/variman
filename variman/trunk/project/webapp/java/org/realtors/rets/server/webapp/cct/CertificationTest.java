@@ -17,8 +17,8 @@ public interface CertificationTest
     public String getMessage();
 
     public StatusEnum getStatus();
-    
-    //public ValidationResult validate(ValidationResult results);
+
+    //public ValidationResult validate(ValidationResult result);
     public ValidationResult validate();
 
     public void start();

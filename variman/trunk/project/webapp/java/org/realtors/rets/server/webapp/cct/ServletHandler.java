@@ -19,7 +19,7 @@ public interface ServletHandler
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException;
 
-    public void validate(ValidationResult results);
+    public void validate(ValidationResult result);
 
     public ValidationResult validate();
 
