@@ -15,10 +15,11 @@ public class DmqlCompilerTest extends TestCase
 {
     public DmqlCompilerTest()
     {
-        mMetadata = new TestDmqlParserMetadata();
+        mMetadata = new SimpleDmqlMetadataValidator();
         mMetadata.addLookup("AR", new String[] {"GENVA", "BATV"});
         mMetadata.addLookup("STATUS",
                             new String[]{"A", "O", "S", "U", "C", "W", "P"});
+        mMetadata.addString("owner");
     }
 
     public void testLookupOr() throws ANTLRException
@@ -99,11 +100,33 @@ public class DmqlCompilerTest extends TestCase
         }
     }
 
-    static class TestDmqlParserMetadata implements DmqlParserMetadata
+    public void testStringEquals() throws ANTLRException
     {
-        public TestDmqlParserMetadata()
+        DmqlCompiler.parseDmql("(owner=foo)", mMetadata);
+    }
+
+    public void testStringStart() throws ANTLRException
+    {
+        DmqlCompiler.parseDmql("(owner=f*)", mMetadata);
+    }
+
+    public void testStringContains() throws ANTLRException
+    {
+        DmqlCompiler.parseDmql("(owner=*foo*)", mMetadata);
+    }
+
+    public void testStringChar() throws ANTLRException
+    {
+        DmqlCompiler.parseDmql("(owner=f?o)", mMetadata);
+    }
+
+    static class SimpleDmqlMetadataValidator implements DmqlParserMetadata
+    {
+        public SimpleDmqlMetadataValidator()
         {
+            mFields = new HashSet();
             mLookups = new HashMap();
+            mStrings = new HashSet();
         }
 
         public void addLookup(String name, String[] values)
@@ -113,7 +136,24 @@ public class DmqlCompilerTest extends TestCase
             {
                 valueSet.add(values[i]);
             }
+            mFields.add(name);
             mLookups.put(name, valueSet);
+        }
+
+        public void addString(String fieldName)
+        {
+            mFields.add(fieldName);
+            mStrings.add(fieldName);
+        }
+
+        public boolean isValidFieldName(String fieldName)
+        {
+            return mFields.contains(fieldName);
+        }
+
+        public boolean isValidStringName(String fieldName)
+        {
+            return mStrings.contains(fieldName);
         }
 
         public boolean isValidLookupName(String lookupName)
@@ -127,8 +167,10 @@ public class DmqlCompilerTest extends TestCase
             return values.contains(lookupValue);
         }
 
+        private Set mFields;
         private Map mLookups;
+        private Set mStrings;
     }
 
-    private TestDmqlParserMetadata mMetadata;
+    private SimpleDmqlMetadataValidator mMetadata;
 }
