@@ -10,6 +10,8 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
+import org.realtors.rets.server.SessionHelper;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -39,6 +41,11 @@ public class InitServlet extends RetsServlet
         {
             throw new ServletException("Could not initialize hibernate", e);
         }
+    }
+
+    public static SessionHelper createHelper()
+    {
+        return new SessionHelper(sSessions);
     }
 
     public static SessionFactory getSessions()
