@@ -28,6 +28,12 @@ public class MetadataManager
         mTablesByPath = new HashMap();
     }
 
+    public void clear()
+    {
+        mTablesByLevel.clear();
+        mTablesByPath.clear();
+    }
+
     public void add(ServerMetadata metadata)
     {
         addByLevel(metadata);
