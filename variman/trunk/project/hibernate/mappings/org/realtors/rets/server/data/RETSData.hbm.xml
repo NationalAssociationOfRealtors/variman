@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.nar.rets.data.RETSData" table="rets_data">
+    <id name="id" type="long">
+      <generator class="sequence">
+        <param name="sequence">rets_data_sequence</param>
+      </generator>
+    </id>
+
+    <!-- The resource element -->
+    <many-to-one name="resource" cascade="none"
+      class="org.nar.rets.metadata.hibernate.MetadataResourceElement">
+      <column name="resource" index="rets_data_resource"/>
+    </many-to-one>
+
+    <!-- The class element -->
+    <many-to-one name="clazz" cascade="none"
+      class="org.nar.rets.metadata.hibernate.MetadataClassElement">
+      <column name="clazz" index="rets_data_clazz"/>
+    </many-to-one>
+
+    <!-- a map of bool values -->
+    <map name="booleanValues" lazy="false">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_boolvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="boolean"/>
+    </map>
+
+    <!-- a map of char/string values -->
+    <map name="characterValues" lazy="false">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_charvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="string"/>
+    </map>
+
+    <!-- a map of date values -->
+    <map name="dateValues" lazy="false">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_datevalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="date"/>
+    </map>
+
+    <!-- a map of date values -->
+    <map name="dateTimeValues" lazy="false">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_datetimevalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="timestamp"/>
+    </map>
+
+    <!-- a map of time values -->
+    <map name="timeValues" lazy="false">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_timevalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="time"/>
+    </map>
+
+    <map name="intValues" lazy="false">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.hibernate.MetadataTableElement">
+        <column name="key" index="rets_data_intvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="long"/>
+    </map>
+      
+  </class>
+</hibernate-mapping>
