@@ -51,12 +51,24 @@ options
         mMetadata = metadata;
     }
 
+    public void setDmqlLexer(DmqlLexer lexer) {
+        mLexer = lexer;
+    }
+
+    public void enterFieldCriteria() {
+        mLexer.setInFieldCriteria(true);
+    }
+
+    public void exitFieldCriteria() {
+        mLexer.setInFieldCriteria(false);
+    }
+
     public void print(String s) {
-        System.out.println(s);
+        // System.out.println(s);
     }
 
     public void print(Token t) {
-        System.out.println(t);
+        // System.out.println(t);
     }
 
     public void traceIn(String text) throws TokenStreamException {
@@ -80,16 +92,36 @@ options
     
     private boolean mTrace = false;
     private DmqlParserMetadata mMetadata;
+    private DmqlLexer mLexer;
 }
 
 query returns [SqlConverter sql]
     { sql = null; }
-//    : query_clause ((PIPE | "OR" ) query)? EOF!
-    : sql=query_element EOF!
+//    : sql=query_element EOF!
+    : sql=and_clause (or and_clause)? EOF!
     ;
 
-query_clause
-    : boolean_element ((COMMA | "AND" ) query_clause)?
+and_clause returns [SqlConverter sql]
+    : sql=not_clause (and not_clause)?
+    ;
+
+not_clause returns [SqlConverter sql]
+    : (not)? sql=query_element
+    ;
+
+or
+    : OR
+    | PIPE
+    ;
+
+and
+    : AND
+    | COMMA
+    ;
+
+not
+    : NOT
+    | TILDE
     ;
 
 boolean_element
@@ -108,7 +140,7 @@ field_criteria returns [SqlConverter sql]
         sql = null;
         String field;
     }
-    : LPAREN field=field_name EQUAL sql=field_value[field] RPAREN
+    : LPAREN {enterFieldCriteria();} field=field_name EQUAL sql=field_value[field] RPAREN {exitFieldCriteria();}
     ;
 
 field_name returns [String field]
@@ -192,11 +224,16 @@ string_list
     : string (COMMA string)*
     ;
 
+// string_char conflicts with string_eq due to text being TEXT or a
+// reserved token.  We must use a syntactic predict to try matching
+// string_char first, and if it's not a string_char, it must be one of
+// the others.
 string
     : string_eq
     | string_start
     | string_contains
-    | string_char
+    | string_char1
+    | string_char2
     ;
 
 string_eq
@@ -211,8 +248,18 @@ string_contains
     : STAR TEXT STAR
     ;
 
-string_char
-    : TEXT QUESTION TEXT
+// Need to split string_char into 2 separate rules, otherwise ANTLR
+// cannot differentiate between a string_eq and a string_char
+// string_char
+//     : (TEXT)? QUESTION (TEXT)?
+//     ;
+
+string_char1
+    : TEXT QUESTION (TEXT)?
+    ;
+
+string_char2
+    : QUESTION (TEXT)?
     ;
 
 string_literal
@@ -241,7 +288,16 @@ options
         mTrace = trace;
     }
     
+    public void setInFieldCriteria(boolean inFieldCriteria) {
+        mInFieldCriteria = inFieldCriteria;
+    }
+
+    public boolean isInFieldCriteria() {
+        return mInFieldCriteria;
+    }
+
     private boolean mTrace = false;
+    private boolean mInFieldCriteria = false;
 }
 
 LPAREN : '(';
@@ -253,7 +309,7 @@ PLUS : '+';
 MINUS : '-';
 PIPE : '|';
 TILDE : '~';
-QUESTION : ('?')+;
+QUESTION : '?';
 SEMI : ';';
 
 protected DATETIME : YMD 'T' HMS;
@@ -273,11 +329,11 @@ protected
 DIGIT : ('0' .. '9');
 
 protected
-ALPHANUM : ('a'..'z' | 'A'..'Z' | DIGIT);
+ALPHANUM
+    : ('a'..'z' | 'A'..'Z' | DIGIT);
 
 protected
 TEXT
-	options { testLiterals = true; }
 	: (ALPHANUM)+;
 
 protected
@@ -291,11 +347,13 @@ TEXT_OR_NUMBER_OR_PERIOD
     | (DATE) => DATE {$setType(DATE);}
     | (TIME) => TIME {$setType(TIME);}
     | (NUMBER) => NUMBER {$setType(NUMBER);}
+    | {!isInFieldCriteria()}? "OR" {$setType(OR);}
+    | {!isInFieldCriteria()}? "AND" {$setType(AND);}
+    | {!isInFieldCriteria()}? "NOT" {$setType(NOT);}
     | TEXT {$setType(TEXT);}
     ;
 
 STRING_LITERAL
-	options { testLiterals = true; }
     : '"'! (~'"')* ('"'! '"' (~'"')*)* '"'!;
 
 WS  :   (' ' | '\t' | '\n' | '\r')
