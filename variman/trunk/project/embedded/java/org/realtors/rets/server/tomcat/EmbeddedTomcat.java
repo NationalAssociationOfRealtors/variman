@@ -9,6 +9,7 @@
 package org.realtors.rets.server.tomcat;
 
 import java.net.URL;
+import java.io.File;
 
 import org.apache.catalina.Connector;
 import org.apache.catalina.Context;
@@ -146,12 +147,13 @@ public class EmbeddedTomcat
         try
         {
             EmbeddedTomcat tomcat = EmbeddedTomcat.getInstance();
-            String workingDir = System.getProperty("user.dir");
+            String pwd = System.getProperty("user.dir");
+            String workingDir = pwd + File.separator + "server";
             tomcat.setPath(workingDir);
 
             tomcat.startTomcat();
 
-            URL url = new URL("file:" + workingDir + "/webapp");
+            URL url = new URL("file:" + pwd + "/webapp");
             tomcat.registerWebapp("/", url);
 
             tomcat.waitUntilStopped();
