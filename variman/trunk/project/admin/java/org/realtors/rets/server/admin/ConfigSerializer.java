@@ -25,7 +25,7 @@ public class ConfigSerializer
         throws IOException
     {
         Element rootElement = new Element("Retzilla-Config");
-        Document doc = new Document(rootElement,null);
+        Document doc = new Document(rootElement, null);
         
         List list = new ArrayList();
 
