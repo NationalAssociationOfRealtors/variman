@@ -29,7 +29,6 @@ public class AddUserAction extends AbstractAction
         AddUserDialog dialog = new AddUserDialog();
         try
         {
-            AdminFrame frame = SwingUtils.getAdminFrame();
             if (showUntilCancelOrValid(dialog) != JOptionPane.OK_OPTION)
             {
                 return;
@@ -44,6 +43,7 @@ public class AddUserAction extends AbstractAction
             user.setBrokerCode(dialog.getBrokerCode());
 
             HibernateUtils.save(user);
+            AdminFrame frame = SwingUtils.getAdminFrame();
             frame.setStatusText("User " + user.getName() + " added");
             frame.refreshUsers();
             LOG.debug("New user: " + user);
