@@ -83,14 +83,24 @@ public class WebApp
         return sGetObjectRoot;
     }
 
-    public static void setGetObjectPattern(String getObjectPattern)
+    public static void setPhotoPattern(String photoPattern)
     {
-        sGetObjectPattern = getObjectPattern;
+        sPhotoPattern = photoPattern;
     }
 
-    public static String getGetObjectPattern()
+    public static String getPhotoPattern()
     {
-        return sGetObjectPattern;
+        return sPhotoPattern;
+    }
+
+    public static void setObjectSetPattern(String objectSetPattern)
+    {
+        sObjectSetPattern = objectSetPattern;
+    }
+
+    public static String getObjectSetPattern()
+    {
+        return sObjectSetPattern;
     }
 
     public static void setNonceTable(NonceTable nonceTable)
@@ -141,7 +151,8 @@ public class WebApp
     private static MetadataManager sMetadataManager;
     private static String sLog4jFile;
     private static String sGetObjectRoot;
-    private static String sGetObjectPattern;
+    private static String sPhotoPattern;
+    private static String sObjectSetPattern;
     private static NonceTable sNonceTable;
     private static NonceReaper sReaper;
     private static String sVersion;
