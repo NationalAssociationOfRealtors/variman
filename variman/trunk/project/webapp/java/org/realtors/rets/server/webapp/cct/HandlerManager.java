@@ -20,8 +20,8 @@ public class HandlerManager
     {
         mHandlers = new HashMap();
         mHandlers.put(LoginHandler.NAME, new LoginHandler());
-        mActionHandler = new ActionHandler();
-        mLogoutHandler = new LogoutHandler();
+        mHandlers.put(ActionHandler.NAME, new ActionHandler());
+        mHandlers.put(LogoutHandler.NAME, new LogoutHandler());
     }
 
     public LoginHandler getLoginHandler()
@@ -31,12 +31,12 @@ public class HandlerManager
 
     public ActionHandler getActionHandler()
     {
-        return mActionHandler;
+        return (ActionHandler) mHandlers.get(ActionHandler.NAME);
     }
 
     public LogoutHandler getLogoutHandler()
     {
-        return mLogoutHandler;
+        return (LogoutHandler) mHandlers.get(LogoutHandler.NAME);
     }
 
     public void addServletHandler(String name, Class aClass)
@@ -60,7 +60,5 @@ public class HandlerManager
     }
 
     private Map mHandlers;
-    private ActionHandler mActionHandler;
-    private LogoutHandler mLogoutHandler;
 }
 
