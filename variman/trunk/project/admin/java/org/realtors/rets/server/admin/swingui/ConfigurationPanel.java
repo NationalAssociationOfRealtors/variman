@@ -138,7 +138,8 @@ public class ConfigurationPanel extends JPanel
             DatabaseConfig dbConfig = Admin.getRetsConfig().getDatabase();
             DatabasePropertiesDialog dialog =
                 new DatabasePropertiesDialog(dbConfig);
-            dialog.setVisible(true);
+            int rc = dialog.showDialog();
+            System.out.println("Done: " + rc);
         }
 
     }
