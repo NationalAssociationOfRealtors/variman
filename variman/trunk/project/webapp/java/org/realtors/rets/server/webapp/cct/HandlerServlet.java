@@ -3,7 +3,8 @@
 package org.realtors.rets.server.webapp.cct;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.webapp.RetsServlet;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -50,20 +52,39 @@ public class HandlerServlet extends RetsServlet
         }
     }
 
+    private static void wireLog(String message)
+    {
+        WireLog.LOG.debug(message + "\n");
+    }
+
     private void logRequest(HttpServletRequest request)
     {
-        WireLog.LOG.debug("\n--------------------\n");
-        WireLog.LOG.debug(request.getMethod() + " " + request.getRequestURI()
-                          + "\n");
+        wireLog("\n--------------------");
+        SimpleDateFormat format =
+            new SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS");
+        wireLog(format.format(new Date()));
+        wireLog(request.getMethod() + " " + request.getRequestURI());
+
         Enumeration parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements())
         {
             String name = (String) parameterNames.nextElement();
             String[] values = request.getParameterValues(name);
-            WireLog.LOG.debug("Parameter " + name + ": " +
-                              Arrays.asList(values) + "\n");
+            wireLog("Parameter " + name + ": " + StringUtils.join(values, ","));
         }
-        WireLog.LOG.debug("\n");
+
+        Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements())
+        {
+            String name = (String) headerNames.nextElement();
+            Enumeration values = request.getHeaders(name);
+            while (values.hasMoreElements())
+            {
+                String value = (String) values.nextElement();
+                wireLog(name + ": " + value);
+            }
+        }
+        wireLog("");
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
