@@ -429,6 +429,9 @@
     <copy file="project/datagen/shell/runDatagen"
           todir="build/datagen/bin"/>
     <chmod file="build/datagen/bin/runDatagen" perm="ugo+rx"/>
+    <copy file="project/datagen/shell/runBenchmark"
+          todir="build/datagen/bin"/>
+    <chmod file="build/datagen/bin/runBenchmark" perm="ugo+rx"/>
     <copy file="${commons-lang.jar}" todir="build/datagen/lib"/>
     <copy file="${commons-logging.jar}" todir="build/datagen/lib"/>
     <copy file="${log4j.jar}" todir="build/datagen/lib"/>
