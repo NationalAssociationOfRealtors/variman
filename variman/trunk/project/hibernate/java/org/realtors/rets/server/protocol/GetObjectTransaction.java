@@ -90,6 +90,7 @@ public class GetObjectTransaction
         else
         {
             // Todo: Throw an HTTP exception?
+            LOG.warn("Unknown file type: " + file);
             return "";
         }
     }
