@@ -69,6 +69,11 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidStringName("AR"));
         assertFalse(metadata.isValidStringName("STATUS"));
         assertFalse(metadata.isValidStringName("FOO"));
+
+        // Check tables
+        assertEquals(mOwner, metadata.getTable("OWNER"));
+        assertEquals(mArea, metadata.getTable("AR"));
+        assertEquals(mStatus, metadata.getTable("STATUS"));
     }
 
     public void testStandardNames()
@@ -138,6 +143,11 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidStringName("AR"));
         assertFalse(metadata.isValidStringName("STATUS"));
         assertFalse(metadata.isValidStringName("FOO"));
+
+        // Check tables
+        assertEquals(mOwner, metadata.getTable("Owner"));
+        assertEquals(mArea, metadata.getTable("Area"));
+        assertEquals(mStatus, metadata.getTable("ListingStatus"));
     }
 
     protected void setUp()
@@ -183,27 +193,30 @@ public class ServerDmqlMetadataTest extends TestCase
         mClazz.setDbTable("rets_Property_RES");
         resource.addClass(mClazz);
 
-        Table table = new Table(id++);
-        table.setSystemName("AR");
-        table.setStandardName(new TableStandardName("Area"));
-        table.setLookup(area);
-        table.setDbName("r_AR");
-        mClazz.addTable(table);
+        mArea = new Table(id++);
+        mArea.setSystemName("AR");
+        mArea.setStandardName(new TableStandardName("Area"));
+        mArea.setLookup(area);
+        mArea.setDbName("r_AR");
+        mClazz.addTable(mArea);
 
-        table = new Table(id++);
-        table.setSystemName("STATUS");
-        table.setStandardName(new TableStandardName("ListingStatus"));
-        table.setLookup(status);
-        table.setDbName("r_STATUS");
-        mClazz.addTable(table);
+        mStatus = new Table(id++);
+        mStatus.setSystemName("STATUS");
+        mStatus.setStandardName(new TableStandardName("ListingStatus"));
+        mStatus.setLookup(status);
+        mStatus.setDbName("r_STATUS");
+        mClazz.addTable(mStatus);
 
         // Create a table w/o a lookup
-        table = new Table(id++);
-        table.setSystemName("OWNER");
-        table.setStandardName(new TableStandardName("Owner"));
-        table.setDbName("r_OWNER");
-        mClazz.addTable(table);
+        mOwner = new Table(id++);
+        mOwner.setSystemName("OWNER");
+        mOwner.setStandardName(new TableStandardName("Owner"));
+        mOwner.setDbName("r_OWNER");
+        mClazz.addTable(mOwner);
     }
 
     private MClass mClazz = null;
+    private Table mArea;
+    private Table mStatus;
+    private Table mOwner;
 }
