@@ -3,7 +3,7 @@
 
   <!-- set global properties for this build -->
   <property name="project.name" value="rex"/>
-  <property name="project.version" value="2.0.3b2"/>
+  <property name="project.version" value="2.0.3b3"/>
   <property name="project.string" value="${project.name}-${project.version}"/>
 
   <!-- This must be done before any other propertes -->
