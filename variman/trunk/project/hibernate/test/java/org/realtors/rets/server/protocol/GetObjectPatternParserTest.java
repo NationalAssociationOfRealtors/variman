@@ -42,6 +42,20 @@ public class GetObjectPatternParserTest extends TestCase
         assertEquals("foo 1 bar", format("foo %i bar", context));
     }
 
+    public void testKeyWidth()
+    {
+        GetObjectPatternContext context = createContext();
+        assertEquals("foo abc bar", format("foo %3k bar", context));
+    }
+
+    public void testEmptyObjectIdPattern()
+    {
+        GetObjectPatternContext context = createContext();
+        assertEquals("foo _1 bar", format("foo %I bar", context));
+        context = new GetObjectPatternContext(null, null, context.getKey(), 0);
+        assertEquals("foo  bar", format("foo %I bar", context));
+    }
+
     public void testMultiplePatterns()
     {
         GetObjectPatternContext context = createContext();

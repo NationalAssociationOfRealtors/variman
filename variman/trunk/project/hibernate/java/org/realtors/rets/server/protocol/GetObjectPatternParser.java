@@ -79,23 +79,61 @@ public class GetObjectPatternParser
 
     private class EscapeState implements ParserState
     {
+        public EscapeState()
+        {
+            resetCount();
+        }
+
         public void handleCharacter(char ch)
         {
-            switch (ch)
+            if (ch == 'k')
             {
-                case 'k':
-                    addFormatter(new KeyFormatter());
-                    break;
-
-                case 'i':
-                    addFormatter((new ObjectIdFormatter()));
-                    break;
-
-                default:
-                    addFormatter(new LiteralPatternFormatter("%" + ch));
+                addFormatter(new KeyFormatter(mCount));
+                gotoNormalState();
             }
-            mState = mNormalState;
+            else if (ch == 'i')
+            {
+                addFormatter((new ObjectIdFormatter()));
+                gotoNormalState();
+            }
+            else if (ch == 'I')
+            {
+                addFormatter(new EmptyObjectIdFormatter());
+                gotoNormalState();
+            }
+            else if (Character.isDigit(ch))
+            {
+                appendCountDigit(ch);
+            }
+            else
+            {
+                addFormatter(new LiteralPatternFormatter("%" + ch));
+                gotoNormalState();
+            }
         }
+
+        private void gotoNormalState()
+        {
+            mState = mNormalState;
+            resetCount();
+        }
+
+        private void resetCount()
+        {
+            mCount = -1;
+        }
+
+        private void appendCountDigit(char ch)
+        {
+            if (mCount == -1)
+            {
+                mCount = 0;
+            }
+            mCount *= 10;
+            mCount += Character.getNumericValue(ch);
+        }
+
+        private int mCount;
     }
 
     // ----------------------------------------------------------------
@@ -131,11 +169,23 @@ public class GetObjectPatternParser
     private static class KeyFormatter
         extends GetObjectPatternFormatter
     {
+        public KeyFormatter(int width)
+        {
+            mWidth = width;
+        }
+
         protected void doFormat(StringBuffer buffer,
                                 GetObjectPatternContext context)
         {
-            buffer.append(context.getKey());
+            String key = context.getKey();
+            if (mWidth != -1)
+            {
+                key = key.substring(0, mWidth);
+            }
+            buffer.append(key);
         }
+
+        private int mWidth;
     }
 
     private static class ObjectIdFormatter
@@ -145,6 +195,20 @@ public class GetObjectPatternParser
                                 GetObjectPatternContext context)
         {
             buffer.append(context.getObjectId());
+        }
+    }
+
+    private static class EmptyObjectIdFormatter
+        extends GetObjectPatternFormatter
+    {
+        protected void doFormat(StringBuffer buffer,
+                                GetObjectPatternContext context)
+        {
+            int objectId = context.getObjectId();
+            if (objectId != 0)
+            {
+                buffer.append("_").append(objectId);
+            }
         }
     }
 
