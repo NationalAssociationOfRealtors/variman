@@ -147,6 +147,11 @@ public class MSystem implements Serializable
         mForeignKeys = foreignKeys;
     }
 
+    public String getPath()
+    {
+        return "";
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
