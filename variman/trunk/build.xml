@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- test checkins, sorry for the mess -->
+
 <project default = "build" basedir="." name="retsdb2">
 
   <!-- set global properties for this build -->
