@@ -9,7 +9,7 @@
     <form name="cctRegistrationForm">
       <field property="username" depends="required,minlength">
         <arg0 key="registration.field.username"/>
-        <arg1 name="minlength" key="{$var:minlength}" resource="false"/>
+        <arg1 name="minlength" key="${var:minlength}" resource="false"/>
         <var>
           <var-name>minlength</var-name>
           <var-value>3</var-value>
