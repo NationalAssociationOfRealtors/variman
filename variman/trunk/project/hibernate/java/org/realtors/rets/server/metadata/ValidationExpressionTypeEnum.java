@@ -26,8 +26,34 @@ public class ValidationExpressionTypeEnum implements PersistentEnum
             case 1: return REJECT;
             case 2: return SET;
             default:
-                throw new RuntimeException(
-                    "Unknown Validation Expression Type");
+                throw new IllegalArgumentException(
+                    "Unknown Validation Expression Type: " + code);
+        }
+    }
+
+    public String toString()
+    {
+        return toString(mCode);
+    }
+
+    public static String toString(int code)
+    {
+        if (code == ACCEPT.mCode)
+        {
+            return "ACCEPT";
+        }
+        else if (code == REJECT.mCode)
+        {
+            return "REJECT";
+        }
+        else if (code == SET.mCode)
+        {
+            return "SET";
+        }
+        else
+        {
+            throw new IllegalArgumentException(
+                "Unknown Validation Expression Type: " + code);
         }
     }
 
