@@ -290,49 +290,45 @@ public class RetsConfig
 
     public String getGetObjectPattern(String defaultValue)
     {
-        if (mGetObjectPattern == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return mGetObjectPattern;
-        }
+        return getDefault(mGetObjectPattern, defaultValue);
     }
 
     public String  getGetObjectRoot(String defaultValue)
     {
-        if (mGetObjectRoot == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return mGetObjectRoot;
-        }
+        return getDefault(mGetObjectRoot, defaultValue);
     }
 
     public int getNonceInitialTimeout(int defaultValue)
     {
-        if (mNonceInitialTimeout == -1)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return mNonceInitialTimeout;
-        }
+        return getDefault(mNonceInitialTimeout, defaultValue);
     }
 
     public int getNonceSuccessTimeout(int defaultValue)
     {
-        if (mNonceSuccessTimeout == -1)
+        return getDefault(mNonceSuccessTimeout, defaultValue);
+    }
+
+    private String getDefault(String string, String defaultValue)
+    {
+        if (string == null)
         {
             return defaultValue;
         }
         else
         {
-            return mNonceSuccessTimeout;
+            return string;
+        }
+    }
+
+    private int getDefault(int number, int defaultValue)
+    {
+        if (number == -1)
+        {
+            return defaultValue;
+        }
+        else
+        {
+            return number;
         }
     }
 
@@ -349,6 +345,11 @@ public class RetsConfig
     public String getMetadataDir()
     {
         return mMetadataDir;
+    }
+
+    public String getMetadataDir(String defaultValue)
+    {
+        return getDefault(mMetadataDir, defaultValue);
     }
 
     private static final String PORT = "port";
