@@ -330,7 +330,7 @@
       </classpath>
     </javac>
 
-    <jar jarfile="build/rets-server/lib/rets-server.jar"
+    <jar jarfile="build/rets-server/rets-server.jar"
          basedir="build/embedded/classes"
          manifest="project/build/rets-server.manifest"/>
     <copy todir="build/rets-server/lib">
