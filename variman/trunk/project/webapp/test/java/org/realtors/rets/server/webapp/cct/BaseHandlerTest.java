@@ -3,6 +3,7 @@
 package org.realtors.rets.server.webapp.cct;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 
 import org.realtors.rets.server.cct.ValidationResult;
@@ -41,7 +42,7 @@ public class BaseHandlerTest extends LocalTestCase
         mClient.getResponse(TEST_URL);
         result = mTest.validate();
         assertTrue(result.wasSuccessful());
-        assertEquals("Success", result.getMessage());
+        assertEquals("", result.getMessage());
 
         mClient.getResponse(TEST_URL);
         result = mTest.validate();
@@ -59,7 +60,7 @@ public class BaseHandlerTest extends LocalTestCase
 
         ValidationResult result = mTest.validate();
         assertTrue(result.wasSuccessful());
-        assertEquals("Success", result.getMessage());
+        assertEquals("", result.getMessage());
 
         mClient.getResponse(TEST_URL);
         result = mTest.validate();
@@ -83,12 +84,12 @@ public class BaseHandlerTest extends LocalTestCase
 
         ValidationResult result = mTest.validate();
         assertTrue(result.wasSuccessful());
-        assertEquals("Success", result.getMessage());
+        assertEquals("", result.getMessage());
 
         mClient.getResponse(TEST_URL);
         result = mTest.validate();
         assertTrue(result.wasSuccessful());
-        assertEquals("Success", result.getMessage());
+        assertEquals("", result.getMessage());
 
         mClient.getResponse(TEST_URL);
         result = mTest.validate();
@@ -101,54 +102,79 @@ public class BaseHandlerTest extends LocalTestCase
     {
         mTest.reset();
         mTest.addRequiredHeader("Accept", "^\\*/\\*$");
+        mTest.setGetInvokeCount(InvokeCount.ANY);
 
         mClient.getResponse(TEST_URL);
-        ValidationResult results = mTest.validate();
-        assertFalse(results.wasSuccessful());
+        ValidationResult result = mTest.validate();
+        assertFalse(result.wasSuccessful());
         assertEquals("test HTTP header [Accept] was null, expected ^\\*/\\*$",
-                     results.getMessage());
+                     result.getMessage());
 
         mClient.setHeaderField("Accept", "*/*");
         mClient.getResponse(TEST_URL);
-        results = mTest.validate();
-        assertTrue(results.wasSuccessful());
-        assertEquals("Success", results.getMessage());
+        result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("", result.getMessage());
     }
 
     public void testCaseInsensitiveHeaders() throws IOException, SAXException
     {
         mTest.reset();
         mTest.addRequiredHeader("Accept", "^\\*/\\*$");
+        mTest.setGetInvokeCount(InvokeCount.ANY);
 
         mClient.getResponse(TEST_URL);
-        ValidationResult results = mTest.validate();
-        assertFalse(results.wasSuccessful());
+        ValidationResult result = mTest.validate();
+        assertFalse(result.wasSuccessful());
         assertEquals("test HTTP header [Accept] was null, expected ^\\*/\\*$",
-                     results.getMessage());
+                     result.getMessage());
 
         mClient.setHeaderField("accept", "*/*");
         mClient.getResponse(TEST_URL);
-        results = mTest.validate();
-        assertTrue(results.wasSuccessful());
-        assertEquals("Success", results.getMessage());
+        result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("", result.getMessage());
     }
 
     public void testCookie() throws SAXException, IOException
     {
         mTest.reset();
         mTest.addCookie("RETS-Session-ID", "^testCookie$");
+        mTest.setGetInvokeCount(InvokeCount.ANY);
 
         mClient.getResponse(TEST_URL);
-        ValidationResult results = mTest.validate();
-        assertFalse(results.wasSuccessful());
+        ValidationResult result = mTest.validate();
+        assertFalse(result.wasSuccessful());
         assertEquals("test HTTP cookie [RETS-Session-ID] was null, expected " +
-                     "^testCookie$", results.getMessage());
+                     "^testCookie$", result.getMessage());
 
         mClient.addCookie("RETS-Session-ID", "testCookie");
         mClient.getResponse(TEST_URL);
-        results = mTest.validate();
-        assertTrue(results.wasSuccessful());
-        assertEquals("Success", results.getMessage());
+        result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("", result.getMessage());
+    }
+
+    public void testHeadersWithZeroInvokeCount()
+    {
+        mTest.reset();
+        mTest.addRequiredHeader("Accept", "^\\*/\\*$");
+        mTest.setGetInvokeCount(InvokeCount.ANY);
+
+        ValidationResult result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("", result.getMessage());
+    }
+
+    public void testCookiesWithZeroInvokeCount()
+    {
+        mTest.reset();
+        mTest.addCookie("RETS-Session-ID", "^testCookie$");
+        mTest.setGetInvokeCount(InvokeCount.ANY);
+
+        ValidationResult result = mTest.validate();
+        assertTrue(result.wasSuccessful());
+        assertEquals("", result.getMessage());
     }
 
     public static final String TEST_URL = "http://localhost/test";
