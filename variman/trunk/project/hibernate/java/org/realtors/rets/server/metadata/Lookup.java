@@ -21,6 +21,12 @@ public class Lookup extends ServerMetadata implements Serializable
         mLookupTypes = Collections.EMPTY_SET;
     }
 
+    public Lookup(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
     /**
      *
      * @return a Long object
@@ -111,6 +117,13 @@ public class Lookup extends ServerMetadata implements Serializable
         mLookupTypes = lookupTypes;
     }
 
+    public void addLookupType(LookupType lookupType)
+    {
+        lookupType.setLookup(this);
+        lookupType.updateLevel();
+        mLookupTypes.add(lookupType);
+    }
+
     /**
      * Returns the hierarchy level for this metadata object.
      *
@@ -162,7 +175,7 @@ public class Lookup extends ServerMetadata implements Serializable
         if (!(other instanceof Lookup))
         {
             return false;
-        } 
+        }
         Lookup castOther = (Lookup) other;
         return new EqualsBuilder()
             .append(this.getId(), castOther.getId())
