@@ -35,13 +35,21 @@ public class InitServlet extends RetsServlet
     public void init() throws ServletException
     {
         initLog4J();
-        LOG.debug("Running init servlet");
-        WebApp.setServletContext(getServletContext());
-        PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
-                                        PasswordMethod.RETS_REALM);
-        initHibernate();
-        initMetadata();
-        LOG.debug("Init servlet completed successfully");
+        try
+        {
+            LOG.debug("Running init servlet");
+            WebApp.setServletContext(getServletContext());
+            PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
+                                            PasswordMethod.RETS_REALM);
+            initHibernate();
+            initMetadata();
+            LOG.debug("Init servlet completed successfully");
+        }
+        catch (ServletException e)
+        {
+            LOG.fatal("Caught", e);
+            throw e;
+        }
     }
 
     /**
@@ -78,6 +86,7 @@ public class InitServlet extends RetsServlet
     {
         try
         {
+            LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
             cfg.addJar("retsdb2-hbm-xml.jar");
             setSessions(cfg.buildSessionFactory());
