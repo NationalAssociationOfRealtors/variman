@@ -13,30 +13,26 @@
  <br>
  <table cellpadding="2" cellspacing="0" border="1" width="99%">
   <tr>
-   <td>&nbsp;</td>
-   <th>Test name</th><th>Date Run</th><th>Status</th><th>Show Log</th><th>Start/Stop</th>
+   <th>Test description</th><th>Status</th><th>Messages</th><th>Start/Stop</th>
   </tr>
   <logic:iterate id="displayBean" name="cctDisplayBeans"
                  type="org.realtors.rets.server.webapp.cct.TestDisplayBean"
                  indexId="counter">
     <tr>
-     <cct:evenoddtd count="counter">
-      <%= counter %></td>
-     </cct:evenoddtd>
-     <cct:evenoddtd count="counter">
+     <cct:evenoddtd count="counter" width="40%">
       <bean:write name="displayBean" property="test.description" />
      </cct:evenoddtd>
      <cct:evenoddtd count="counter">
       <bean:write name="displayBean" property="result.formattedDate"/>
      </cct:evenoddtd>
      <cct:teststatustd name="displayBean" />
-     <cct:evenoddtd count="counter" >
+     <cct:evenoddtd count="counter" width="30%">
        <logic:iterate id="message" name="displayBean" type="String"
                       property="result.messages" indexId="message_count">
          <bean:write name="message_count"/>: <bean:write name="message"/><br/>
        </logic:iterate>
      </cct:evenoddtd>
-     <cct:evenoddtd count="counter">
+     <cct:evenoddtd count="counter" width="10%">
       <logic:notPresent name="cctActiveTest">
        <html:form action="/cct/start_test.do" method="GET" >
         <html:submit>Start</html:submit>
