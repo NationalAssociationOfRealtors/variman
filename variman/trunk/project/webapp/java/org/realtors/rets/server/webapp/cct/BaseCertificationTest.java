@@ -10,7 +10,7 @@ public abstract class BaseCertificationTest implements CertificationTest
     public BaseCertificationTest()
     {
         mValidationResults = null;
-        mMessage = "Test never run";
+        mMessage = "";
         mStatus = NOTRUN;
     }
 
@@ -22,6 +22,11 @@ public abstract class BaseCertificationTest implements CertificationTest
     public Status getStatus()
     {
         return mStatus;
+    }
+
+    public void start()
+    {
+        mMessage = "";
     }
 
     public void stop()
