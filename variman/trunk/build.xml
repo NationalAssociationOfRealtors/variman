@@ -64,6 +64,7 @@
     <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
     <fileset dir="${struts.lib}" includes="*.jar"/>
     <pathelement path="${httpunit.jar}"/>
+    <pathelement path="${antlr.jar}"/>
   </path>
 
   <path id="admin.path">
@@ -318,9 +319,7 @@
         <include name="servlets-default.jar"/>
       </fileset>
     </copy>
-    <!-- We must fix this eventually -->
-    <copy todir="build/rets-server/lib"
-          file="${java.home}/../lib/tools.jar"/>
+    <copy tofile="build/rets-server/lib/tools.jar" file="${jdk.tools.jar}"/>
 
     <copy tofile="build/rets-server/lib/log4j.jar" file="${log4j.jar}"/>
   </target>
