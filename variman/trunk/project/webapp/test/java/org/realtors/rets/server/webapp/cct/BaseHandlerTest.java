@@ -222,6 +222,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.setResponseMode(TestHandler.XML_WRITER);
         WebResponse response = getResponse();
         assertEquals("text/xml", response.getContentType());
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
     }
 
     public void testResponseXmlWriterException()
@@ -233,6 +234,7 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("text/xml", response.getContentType());
         assertEquals("<RETS ReplyCode=\"10\" ReplyText=\"Error\"/>\n",
                      response.getText());
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
     }
 
     public void testResponseXmlWriterRTException()
@@ -245,6 +247,7 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("<RETS ReplyCode=\"20513\" " +
                      "ReplyText=\"Miscellaneous error\"/>\n",
                      response.getText());
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
     }
 
     public void testResponseWriter() throws SAXException, IOException
@@ -252,6 +255,7 @@ public class BaseHandlerTest extends LocalTestCase
         mTest.setResponseMode(TestHandler.WRITER);
         WebResponse response = getResponse();
         assertEquals("text/xml", response.getContentType());
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
     }
 
     public void testResponseWriterException() throws SAXException, IOException
@@ -262,6 +266,7 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("text/xml", response.getContentType());
         assertEquals("<RETS ReplyCode=\"10\" ReplyText=\"Error\"/>\n",
                      response.getText());
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
     }
 
     public void testResponseWriterRTException() throws SAXException, IOException
@@ -273,6 +278,7 @@ public class BaseHandlerTest extends LocalTestCase
         assertEquals("<RETS ReplyCode=\"20513\" " +
                      "ReplyText=\"Miscellaneous error\"/>\n",
                      response.getText());
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
     }
 
     public static final String TEST_URL = "http://localhost/test";
