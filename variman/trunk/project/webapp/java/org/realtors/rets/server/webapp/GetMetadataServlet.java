@@ -24,6 +24,12 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.MetadataSegment;
+import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.format.FormattingVisitor;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
 
@@ -64,7 +70,7 @@ public class  GetMetadataServlet extends RetsServlet
             // chop off "*"
             ids = shrinkByOne(ids);
         }
-        else if (id.endsWith("0"))
+        else if (lastId.equals("0"))
         {
             recursive = false;
             // chop off "0"
@@ -134,22 +140,7 @@ public class  GetMetadataServlet extends RetsServlet
             System.out.println(system.getDescription());
             if (recursive)
             {
-                Set resourceSet = system.getResources();
-                Resource[] resources = (Resource[])
-                    resourceSet.toArray(new Resource[resourceSet.size()]);
-                metadata.add(new MetadataSegment(resources,  levels,
-                                                 version, date));
-                for (int i = 0; i < resources.length; i++)
-                {
-                    Resource resource = resources[i];
-                    Set classesSet = resource.getClasses();
-                    MClass[] classes = (MClass[])
-                        classesSet.toArray(new MClass[classesSet.size()]);
-                    metadata.add(new MetadataSegment(
-                        classes,
-                        new String[] {resource.getResourceID()},
-                        version, date));
-                }
+                recurseSystem(system, metadata, levels, version, date);
             }
         }
         else if (type.equals("RESOURCE"))
@@ -177,6 +168,103 @@ public class  GetMetadataServlet extends RetsServlet
 
         }
         return metadata;
+    }
+
+    private void recurseSystem(MSystem system, List metadata, String[] levels,
+                               String version, Date date)
+    {
+        Set resourceSet = system.getResources();
+        Resource[] resources = (Resource[])
+            resourceSet.toArray(new Resource[resourceSet.size()]);
+        metadata.add(new MetadataSegment(resources,  levels,
+                                         version, date));
+        recurseResources(resources, metadata, version, date);
+    }
+
+    private void recurseResources(Resource[] resources, List metadata,
+                                  String version, Date date)
+    {
+        for (int i = 0; i < resources.length; i++)
+        {
+            Resource resource = resources[i];
+            String[] thisLevel = new String[] {resource.getResourceID()};
+
+            Set classesSet = resource.getClasses();
+            MClass[] classes = (MClass[])
+                classesSet.toArray(new MClass[classesSet.size()]);
+            metadata.add(new MetadataSegment(classes, thisLevel, version,
+                                             date));
+            recurseClasses(classes, metadata, thisLevel, version, date);
+
+            Set objectsSet = resource.getObjects();
+            MObject[] objects = (MObject[])
+                objectsSet.toArray(new MObject[objectsSet.size()]);
+            metadata.add(new MetadataSegment(objects, thisLevel, version,
+                                             date));
+
+            Set searchHelpsSet = resource.getSearchHelps();
+            SearchHelp[] serachHelps = (SearchHelp[])
+                searchHelpsSet.toArray(new SearchHelp[searchHelpsSet.size()]);
+            metadata.add(new MetadataSegment(serachHelps, thisLevel, version,
+                                             date));
+
+            Set editMasksSet = resource.getEditMasks();
+            EditMask[] editMasks = (EditMask[])
+                editMasksSet.toArray(new EditMask[editMasksSet.size()]);
+            metadata.add(new MetadataSegment(editMasks, thisLevel, version,
+                                             date));
+
+            Set lookupsSet = resource.getLookups();
+            Lookup[] lookups = (Lookup[])
+                lookupsSet.toArray(new Lookup[lookupsSet.size()]);
+            metadata.add(new MetadataSegment(lookups, thisLevel, version,
+                                             date));
+            recurseLookups(lookups, metadata, thisLevel, version, date);
+        }
+    }
+
+    private void recurseLookups(Lookup[] lookups, List metadata,
+                                String[] level, String version, Date date)
+    {
+    }
+
+    private void recurseClasses(MClass[] classes, List metadata, String[] level,
+                                String version, Date date)
+    {
+        for (int i = 0; i < classes.length; i++)
+        {
+            MClass clazz = classes[i];
+            String[] thisLevel = new String[] {level[0], clazz.getClassName()};
+
+            Set tablesSet = clazz.getTables();
+            Table[] tables = (Table[])
+                tablesSet.toArray(new Table[tablesSet.size()]);
+            metadata.add(new MetadataSegment(tables, thisLevel, version, date));
+
+            Set updatesSet = clazz.getUpdates();
+            Update[] updates = (Update[])
+                updatesSet.toArray(new Update[updatesSet.size()]);
+            metadata.add(new MetadataSegment(updates, thisLevel, version,
+                                             date));
+            recurseUpdates(updates, metadata, thisLevel, version, date);
+        }
+    }
+
+    private void recurseUpdates(Update[] updates, List metadata,
+                                String[] levels, String version, Date date)
+    {
+        for (int i = 0; i < updates.length; i++)
+        {
+            Update update = updates[i];
+            String[] thisLevel = new String[] {levels[0], levels[1],
+                                               update.getUpdateName()};
+
+            Set updateTypesSet = update.getUpdateTypes();
+            UpdateType[] updateTypes = (UpdateType[])
+                updateTypesSet.toArray(new UpdateType[updateTypesSet.size()]);
+            metadata.add(new MetadataSegment(updateTypes,  thisLevel, version,
+                                             date));
+        }
     }
 
     private void assertLength(String[] array, int length)
@@ -240,7 +328,7 @@ public class  GetMetadataServlet extends RetsServlet
         {
             helper.close(LOG);
         }
-        return new Resource[0];
+        return resources;
     }
 
     private MClass[] findClasses(String resourceName)
