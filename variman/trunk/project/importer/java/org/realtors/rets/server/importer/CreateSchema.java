@@ -15,23 +15,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.Parser;
-
-import org.apache.log4j.Logger;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.dialect.Dialect;
 
 import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Parser;
 
 /**
  * Creates a database schema based on the metadata currently in the database.
@@ -63,7 +59,6 @@ public class CreateSchema extends RetsHelpers
         while (i.hasNext())
         {
             MClass clazz = (MClass) i.next();
-            Resource resource = clazz.getResource();
 
             String sqlTableName = clazz.getDbTable();
 
@@ -263,7 +258,7 @@ public class CreateSchema extends RetsHelpers
     }
 
     public static void main(String[] args)
-        throws ParseException, IOException, HibernateException, SQLException,
+        throws IOException, HibernateException, SQLException,
                InstantiationException, IllegalAccessException,
                ClassNotFoundException
     {
@@ -313,7 +308,7 @@ public class CreateSchema extends RetsHelpers
     /**
      * Write the schema out to a file.
      * 
-     * @param string the output filename
+     * @param fileName the output filename
      * @param schema the schema string
      */
     private static void writeFile(String fileName, String schema)
@@ -327,5 +322,4 @@ public class CreateSchema extends RetsHelpers
     private String mDialectClass;
     /** The Line Seperator */
     private String mLs;
-    private static final Logger LOG = Logger.getLogger(CreateSchema.class);
 }
