@@ -3,10 +3,18 @@
 package org.realtors.rets.server.dmql;
 
 /**
- * The DMQL parser's interface to the RETS metadata
+ * The DMQL parser's interface to the RETS metadata.
  */
 public interface DmqlParserMetadata
 {
+    /**
+     * Returns <code>true</code> if the field name is valid
+     *
+     * @param fieldName The field name to validate
+     * @return <code>true</code> if the field name is valid
+     */
+    public boolean isValidFieldName(String fieldName);
+
     /**
      * Returns <code>true</code> if the lookup name is a valid lookup name.
      *
@@ -24,4 +32,12 @@ public interface DmqlParserMetadata
      * @return <code>true</code> if the lookup value is valid
      */
     public boolean isValidLookupValue(String lookupName, String lookupValue);
+
+    /**
+     * Returns <code>true</code> if the field name is a valid string name.
+     *
+     * @param fieldName The field name to validate
+     * @return <code>true</code> if the field name is a valid string name
+     */
+    public boolean isValidStringName(String fieldName);
 }
