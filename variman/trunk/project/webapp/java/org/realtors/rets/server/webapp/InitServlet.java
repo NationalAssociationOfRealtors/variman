@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletContext;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -39,6 +40,7 @@ public class InitServlet extends RetsServlet
             WebApp.setServletContext(getServletContext());
             PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
                                             PasswordMethod.RETS_REALM);
+            initRetsConfiguration();
             initHibernate();
             initMetadata();
             LOG.debug("Init servlet completed successfully");
@@ -53,6 +55,34 @@ public class InitServlet extends RetsServlet
             LOG.fatal("Caught", e);
             throw e;
         }
+    }
+
+    private void initRetsConfiguration()
+    {
+        ServletContext context = getServletContext();
+        String localWebRoot = context.getRealPath("/");
+        String getObjectRoot = getInitParameter(context,
+                                                "rets-get-object-root",
+                                                localWebRoot);
+        WebApp.setGetObjectRoot(getObjectRoot);
+        LOG.debug("GetObject root: " + getObjectRoot);
+
+        String getObjectPattern = getInitParameter(context,
+                                                   "rets-get-object-pattern",
+                                                   "pictures/%k-%i.jpg");
+        WebApp.setGetObjectPattern(getObjectPattern);
+        LOG.debug("GetObject pattern: " + getObjectPattern);
+    }
+
+    private String getInitParameter(ServletContext context, String name,
+                                    String defaultValue)
+    {
+        String value = context.getInitParameter(name);
+        if (value == null)
+        {
+            value = defaultValue;
+        }
+        return value;
     }
 
     /**
