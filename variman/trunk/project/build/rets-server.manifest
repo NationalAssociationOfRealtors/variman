@@ -19,3 +19,5 @@ Class-Path: lib/bootstrap.jar
   lib/jasper-runtime.jar
   lib/ant.jar
   lib/tools.jar
+  lib/mx4j-jmx.jar
+  lib/jakarta-regexp.jar
