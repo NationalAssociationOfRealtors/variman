@@ -73,7 +73,7 @@ public class ValidationExternalType implements Serializable
      *   table="rets_metadata_validationexternaltype_searchfield"
      * @hibernate.collection-key column="id"
      * @hibernate.collection-element column="field"
-     *   type="string" length="32" not-null="true" 
+     *   type="string" length="32" not-null="true"
      */
     public Set getSearchField()
     {
@@ -93,7 +93,7 @@ public class ValidationExternalType implements Serializable
      *   table="rets_metadata_validationexternaltype_displayfield"
      * @hibernate.collection-key column="id"
      * @hibernate.collection-element column="field"
-     *   type="string" length="32" not-null="true" 
+     *   type="string" length="32" not-null="true"
      */
     public Set getDisplayField()
     {
@@ -134,9 +134,6 @@ public class ValidationExternalType implements Serializable
 
     /** nullable persistent field */
     private ValidationExternal mValidationExternalID;
-
-    /** nullable persistent field */
-    private String mValidationExternalTypeName;
 
     /** persistent field */
     private Map mResultFields;
