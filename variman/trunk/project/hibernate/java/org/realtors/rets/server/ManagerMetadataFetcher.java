@@ -3,6 +3,10 @@
 package org.realtors.rets.server;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
@@ -35,6 +39,26 @@ public class ManagerMetadataFetcher implements MetadataFetcher
         List metadata = manager.find(type, StringUtils.join(levels, ":"));
         return new MetadataSegment(metadata, levels, system.getVersionString(),
                                    system.getDate());
+    }
+
+    public List fetchAllMetadata(String type, String[] levels)
+    {
+        MetadataManager manager = getMetadataManager();
+        MSystem system = findSystem(manager);
+
+        List segments = new ArrayList();
+        Map metadata = manager.findByPattern(type, levels);
+        Set levelSet = metadata.keySet();
+        for (Iterator i = levelSet.iterator(); i.hasNext();)
+        {
+            String level = (String) i.next();
+            List data = (List) metadata.get(level);
+            String[] levelArray = StringUtils.split(level, ":");
+            segments.add(new MetadataSegment(data, levelArray,
+                                             system.getVersionString(),
+                                             system.getDate()));
+        }
+        return segments;
     }
 
     /**
