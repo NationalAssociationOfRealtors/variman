@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataObject.hbm.xml,v 1.5 2003/06/12 20:55:44 kgarner Exp $ -->
+<!-- $Id: MetadataObject.hbm.xml,v 1.6 2003/06/18 14:48:33 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.realtors.rets.server.metadata.MetadataObject"
@@ -32,6 +32,9 @@
     <property name="description" type="string">
       <column name="description" length="64"/>
     </property>
+
+    <!-- a solution to the ipix integration? -->
+<!--     <property name="x-storedBy" type="string"/> -->
 
   </class>
 </hibernate-mapping>
