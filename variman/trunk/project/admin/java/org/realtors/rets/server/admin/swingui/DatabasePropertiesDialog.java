@@ -1,10 +1,10 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.event.ActionEvent;
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import javax.swing.*;
 
 import org.apache.log4j.Logger;
@@ -54,6 +54,7 @@ public class DatabasePropertiesDialog extends JDialog
         buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         content.add(buttonBox);
 
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         getContentPane().add(content);
         pack();
         setResizable(false);

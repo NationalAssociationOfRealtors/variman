@@ -73,6 +73,7 @@ public class InitDatabaseAction extends AbstractAction
         {
             super(frame, true);
             setResizable(false);
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
             Container content = getContentPane();
             JLabel label = new JLabel("Initializing database...");
             label.setBorder(BorderFactory.createEmptyBorder(35, 35, 35, 35));
