@@ -196,11 +196,21 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testPeriod() throws ANTLRException
     {
-        assertInvalidParse("(OWNER=1970-01-01)");
-        parse("(OWNER=TODAY)");
-        assertInvalidParse("(OWNER=01:02:03)");
-        assertInvalidParse("(OWNER=1970-01-01T05:06:01.33)");
-        parse("(OWNER=NOW)");
+        assertInvalidParse("(LDATE=1970-01-01)");
+        assertInvalidParse("(LDATE=01:02:03)");
+        assertInvalidParse("(LDATE=1970-01-01T05:06:01.33)");
+        assertInvalidParse("(LDATE=TODAY)");
+        assertInvalidParse("(LDATE=NOW)");
+
+        SqlConverter sql = parse("(OWNER=TODAY)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("TODAY"));
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=NOW)");
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("NOW"));
+        assertEquals(list, sql);
     }
 
     public void testRangeList() throws ANTLRException

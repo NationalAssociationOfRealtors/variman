@@ -136,11 +136,37 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testPeriod() throws ANTLRException
     {
-        parse("(OWNER=1970-01-01)");
-        parse("(OWNER=TODAY)");
-        parse("(OWNER=01:02:03)");
-        parse("(OWNER=1970-01-01T05:06:01.33)");
-        parse("(OWNER=NOW)");
+        SqlConverter sql = parse("(LDATE=1970-01-01)");
+        EqualClause equal =
+            new EqualClause("r_LDATE", new DateSqlConverter("1970-01-01"));
+        assertEquals(equal, sql);
+
+        sql = parse("(LDATE=01:02:03)");
+        equal = new EqualClause("r_LDATE", new TimeSqlConverter("01:02:03"));
+        assertEquals(equal, sql);
+
+        sql = parse("(LDATE=1970-01-01T05:06:01.33)");
+        equal = new EqualClause(
+            "r_LDATE", new DateTimeSqlConverter("1970-01-01T05:06:01.33"));
+        assertEquals(equal, sql);
+
+        sql = parse("(LDATE=TODAY)");
+        equal = new EqualClause("r_LDATE", new DateSqlConverter());
+        assertEquals(equal, sql);
+
+        sql = parse("(LDATE=NOW)");
+        equal = new EqualClause("r_LDATE", new DateTimeSqlConverter());
+        assertEquals(equal, sql);
+
+        sql = parse("(OWNER=TODAY)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("TODAY"));
+        assertEquals(list, sql);
+
+        sql = parse("(OWNER=NOW)");
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("NOW"));
+        assertEquals(list, sql);
     }
 
     public void testBetweenStrings() throws ANTLRException
