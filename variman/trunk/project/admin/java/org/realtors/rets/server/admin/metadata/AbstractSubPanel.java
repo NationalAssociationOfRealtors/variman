@@ -10,12 +10,10 @@ package org.realtors.rets.server.admin.metadata;
 
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxChoice;
-import org.wxwindows.wxObject;
 import org.wxwindows.wxScrolledWindow;
 import org.wxwindows.wxTextCtrl;
-import org.wxwindows.wxValidator;
-import org.wxwindows.wxWindow;
 import org.wxwindows.wxTextValidator;
+import org.wxwindows.wxWindow;
 
 import org.realtors.rets.server.admin.BooleanChoice;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
