@@ -25,6 +25,7 @@
   <global-forwards>
     <forward name="registration" path="/registration.jsp"/>
     <forward name="userPage" path="/cct/index.jsp" redirect="true"/>
+    <forward name="adminPage" path="/cct/adminIndex.do"/>
     <forward name="logout" path="/logout.do" />
   </global-forwards>
 
@@ -63,6 +64,7 @@
     <action path="/cct/start_test"
             name="cctTestForm"
             validate="false"
+            roles="cctClientTester"
             type="org.realtors.rets.server.webapp.cct.StartTestAction">
       <forward name="home" path="/cct/" redirect="true"/>
       <forward name="showProcedure" path="/cct/showTestProcedure.do"/>
@@ -71,19 +73,34 @@
     <action path="/cct/stop_test"
             name="cctTestForm"
             validate="false"
+            roles="cctClientTester"
             type="org.realtors.rets.server.webapp.cct.StopTestAction">
       <forward name="home" path="/cct/" redirect="true"/>
       <forward name="showProcedure" path="/cct/showTestProcedure.do"/>
     </action>
 
-    <action path="/cct/resetAllTests"
+    <action path="/cct/resetAllTests" roles="cctClientTester"
             type="org.realtors.rets.server.webapp.cct.ResetAllTestsAction"/>
 
     <action path="/cct/showTestProcedure"
             type="org.realtors.rets.server.webapp.cct.ShowProcedureAction">
       <forward name="showProcedure" path="/cct/showProcedure.jsp"/>
     </action>
+
+    <action path="/cct/adminIndex"
+            type="org.realtors.rets.server.webapp.cct.AdminIndexAction"
+            roles="cctAdminView">
+      <forward name="adminIndex" path="/cct/adminIndex.jsp"/>
+    </action>
+
+    <action path="/cct/adminUserView"
+            type="org.realtors.rets.server.webapp.cct.AdminUserViewAction"
+            roles="cctAdminView">
+      <forward name="adminUserView" path="/cct/adminUserView.jsp"/>
+    </action>
   </action-mappings>
+
+  <controller processorClass="org.realtors.rets.server.webapp.cct.CctRequestProcessor"/>
 
   <message-resources parameter="ApplicationResources"/>
 
