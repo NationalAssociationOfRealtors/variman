@@ -16,6 +16,7 @@ import net.sf.hibernate.Session;
 
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.RetsServer;
 
 import org.apache.log4j.Logger;
 
@@ -83,7 +84,7 @@ public class UsersPage extends wxPanel
 
     private List findAllUsers() throws HibernateException
     {
-        SessionHelper helper = Admin.createSessionHelper();
+        SessionHelper helper = RetsServer.createSessionHelper();
         try
         {
             Session session = helper.beginSession();
