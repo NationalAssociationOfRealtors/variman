@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.AccountingStatistics;
-import org.apache.log4j.Logger;
+import org.realtors.rets.server.LogoutTransaction;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +23,12 @@ import org.apache.log4j.Logger;
  */
 public class LogoutServlet extends RetsServlet
 {
+    public void init() throws ServletException
+    {
+        super.init();
+        mTransaction = new LogoutTransaction();
+    }
+
     /**
      * Logs out of RETS server.
      *
@@ -36,19 +42,11 @@ public class LogoutServlet extends RetsServlet
     {
         HttpSession session = request.getSession();
         AccountingStatistics stats = getStatistics(request.getSession());
-        LOG.debug("Duration: " + stats.getSessionDuration());
-
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
-        printOpenRets(out, 0, "Operation Successful");
-        out.println("ConnectTime = " + stats.getSessionTime());
-        out.println("Billing = " + stats.getSessionBalanceFormatted());
-        out.println("SignOffMessage = Goodbye");
-        printCloseRets(out);
-
+        mTransaction.execute(out, stats);
         SessionFilter.invalidateSession(session);
     }
 
-    private static final Logger LOG =
-        Logger.getLogger(LogoutServlet.class);
+    private LogoutTransaction mTransaction;
 }
