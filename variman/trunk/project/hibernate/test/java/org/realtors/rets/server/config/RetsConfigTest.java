@@ -38,6 +38,7 @@ public class RetsConfigTest extends LinesEqualTestCase
 
         List securityConstraints = new ArrayList();
         GroupRules groupRules = new GroupRules("newspaper");
+        groupRules.setRecordLimit(25);
         FilterRule filterRule = new FilterRule();
         filterRule.setType(FilterRule.INCLUDE);
         filterRule.setResource("Property");
@@ -55,12 +56,15 @@ public class RetsConfigTest extends LinesEqualTestCase
         systemNames.add("EF");
         filterRule.setSystemNames(systemNames);
         groupRules.addFilterRule(filterRule);
-        securityConstraints.add(groupRules);
         ConditionRule conditionRule = new ConditionRule();
         conditionRule.setResource("Property");
         conditionRule.setRetsClass("RES");
         conditionRule.setSqlConstraint("r_lp < 500000");
         groupRules.addConditionRule(conditionRule);
+        securityConstraints.add(groupRules);
+
+        // Test empty group rules
+        securityConstraints.add(new GroupRules("agent"));
         retsConfig.setSecurityConstraints(securityConstraints);
 
         String xml = retsConfig.toXml();
@@ -89,6 +93,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "  </database>\n" +
             "  <security-constraints>\n" +
             "    <group-rules group=\"newspaper\">\n" +
+            "      <record-limit>25</record-limit>\n" +
             "      <include-rule resource=\"Property\" class=\"RES\">\n" +
             "        <system-names>LP LN</system-names>\n" +
             "      </include-rule>\n" +
@@ -145,6 +150,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      </exclude-rule>\n" +
             "    </group-rules>\n" +
             "    <group-rules group=\"agent\">\n" +
+            "      <record-limit>25</record-limit>\n" +
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
             "        <system-names>LN\nEF</system-names>\n" +
             "      </exclude-rule>" +
@@ -181,6 +187,9 @@ public class RetsConfigTest extends LinesEqualTestCase
 
         GroupRules groupRules = (GroupRules) securityConstraints.get(0);
         assertEquals("newspaper", groupRules.getGroupName());
+        assertEquals(0, groupRules.getRecordLimit());
+
+        /* Check filter rules */
         List rules = groupRules.getFilterRules();
         assertEquals(2, rules.size());
         FilterRule filterRule = (FilterRule) rules.get(0);
@@ -213,6 +222,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         
         groupRules = (GroupRules) securityConstraints.get(1);
         assertEquals("agent", groupRules.getGroupName());
+        assertEquals(25, groupRules.getRecordLimit());
         rules = groupRules.getFilterRules();
         assertEquals(1, rules.size());
         filterRule = (FilterRule) rules.get(0);
