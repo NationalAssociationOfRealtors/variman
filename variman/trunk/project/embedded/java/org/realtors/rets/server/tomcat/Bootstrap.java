@@ -5,6 +5,8 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 import org.apache.catalina.startup.ClassLoaderFactory;
+import org.apache.catalina.startup.SecurityClassLoad;
+import org.apache.catalina.loader.StandardClassLoader;
 
 
 /**
@@ -20,14 +22,21 @@ public final class Bootstrap
      */
     public static void main(String args[])
     {
-        ClassLoader classLoader = null;
+        ClassLoader commonLoader = null;
+        ClassLoader serverLoader = null;
         try
         {
-
+//            ClassLoaderFactory.setDebug(1);
             File packed[] = new File[1];
-            packed[0] = new File("lib");
-            classLoader =
+            packed[0] = new File("common/lib");
+            commonLoader =
                 ClassLoaderFactory.createClassLoader(null, packed, null);
+//            ((StandardClassLoader) commonLoader).setDebug(10);
+
+            packed[0] = new File("server/lib");
+            serverLoader = ClassLoaderFactory.createClassLoader(null, packed,
+                                                                commonLoader);
+//            ((StandardClassLoader) serverLoader).setDebug(10);
         }
         catch (Throwable t)
         {
@@ -38,14 +47,32 @@ public final class Bootstrap
         }
 
 
-        Thread.currentThread().setContextClassLoader(classLoader);
+        Thread.currentThread().setContextClassLoader(serverLoader);
 
         try
         {
-            Class paramTypes[] = new Class[] { args.getClass() };
-            Object paramValues[] = new Object[] { args };
-            Method method =
-                EmbeddedTomcat.class.getMethod("main", paramTypes);
+            loadClasses(serverLoader);
+            Class paramTypes[];
+            Object paramValues[];
+            Class mainClass;
+            Method method;
+
+            log("Loading class");
+            mainClass = serverLoader.loadClass(
+                "org.realtors.rets.server.tomcat.EmbeddedTomcat");
+//            mainClass = Class.forName(
+//                "org.realtors.rets.server.tomcat.EmbeddedTomcat", true,
+//                classLoader);
+            log("Setting parent classloader");
+            paramTypes = new Class[] { ClassLoader.class };
+            paramValues = new Object[] { commonLoader };
+            method = mainClass.getMethod("setParentClassLoader", paramTypes);
+            method.invoke(null, paramValues);
+
+            log("Launching main");
+            paramTypes = new Class[] { args.getClass() };
+            paramValues = new Object[] { args };
+            method = mainClass.getMethod("main", paramTypes);
             method.invoke(null, paramValues);
 
         }
@@ -56,6 +83,13 @@ public final class Bootstrap
             System.exit(2);
         }
 
+    }
+
+    private static void loadClasses(ClassLoader loader)
+        throws Exception
+    {
+        log("Loading logger");
+        loader.loadClass("org.apache.catalina.Logger");
     }
 
     /**
@@ -85,6 +119,4 @@ public final class Bootstrap
         exception.printStackTrace(System.out);
 
     }
-
-
 }
