@@ -3,6 +3,11 @@
       $tmpl_location = "Home";
       include("header.php");
 ?>
+    <div class="logo">
+    <img src="rex_logo.gif" alt="Rex Logo">
+    </div>
+
+    <div class="body">
     <h3>Introduction</h3>
 
     <p>
@@ -55,5 +60,6 @@
     <ul>
       <li><b>21 Jan 2004</b>: Version 1.0 Beta 1 released.</li>
     </ul>
+    </div>
 
 <?php include("footer.php"); ?>
