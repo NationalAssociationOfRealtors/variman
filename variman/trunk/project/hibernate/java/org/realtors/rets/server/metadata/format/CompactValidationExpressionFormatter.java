@@ -1,0 +1,47 @@
+/*
+ */
+package org.realtors.rets.server.metadata.format;
+
+import java.io.PrintWriter;
+
+import org.realtors.rets.server.metadata.ValidationExpression;
+
+public class CompactValidationExpressionFormatter
+    extends ValidationExpressionFormatter
+{
+    public void format(PrintWriter out,
+                       ValidationExpression[] validationExpressions)
+    {
+        TagBuilder tag = new TagBuilder(out);
+        tag.begin("METADATA-VALIDATION_EXPRESSION");
+        tag.appendAttribute("Resource", mResourceName);
+        tag.appendAttribute("Version", mVersion);
+        tag.appendAttribute("Date", mDate);
+        tag.endAttributes();
+        tag.appendColumns(sColumns);
+        for (int i = 0; i < validationExpressions.length; i++)
+        {
+            ValidationExpression validationExpression = validationExpressions[i];
+            appendDataRow(out, validationExpression);
+        }
+        tag.end();
+    }
+
+    private void appendDataRow(PrintWriter out,
+                               ValidationExpression validationExpression)
+    {
+        DataRowBuilder row = new DataRowBuilder(out);
+        row.begin();
+        row.append(validationExpression.getValidationExpressionID());
+        row.append(validationExpression.getValidationExpression());
+        row.append(validationExpression.getValue());
+        row.append(mVersion);
+        row.append(mDate);
+        row.end();
+    }
+
+    private static final String[] sColumns = {
+        "ValidationExpressionID", "ValidationExpressionType", "Value",
+        "Version", "Date",
+    };
+}
