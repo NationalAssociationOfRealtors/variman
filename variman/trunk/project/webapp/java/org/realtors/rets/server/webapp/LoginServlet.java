@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Performs all necessary one-time initializations for the web
@@ -15,16 +16,18 @@ import javax.servlet.http.HttpServletResponse;
  * @web:servlet name="login-servlet"
  * @web:servlet-mapping url-pattern="/login"
  */
-public class LoginServlet extends HttpServlet
+public class LoginServlet extends HttpServlet implements Constants
 {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
             throws ServletException, IOException
     {
-        response.setContentType("text/html");
+        HttpSession session = request.getSession();
+        session.setAttribute(LOGGED_IN_KEY, new Boolean(true));
+        response.setContentType("test/html");
         PrintWriter out = response.getWriter();
         out.println(
-                "<RETS ReplyCode=\"0\" ReplyText=\"Operation Successful\">");
+            "<RETS ReplyCode=\"0\" ReplyText=\"Operation Successful\">");
         out.println("<RETS-RESPONSE>");
         out.println("Broker = B123, BO987");
         out.println("MemberName = Joe T. Schmoe");
