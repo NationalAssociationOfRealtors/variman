@@ -5,8 +5,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 import org.apache.catalina.startup.ClassLoaderFactory;
-import org.apache.catalina.startup.SecurityClassLoad;
-import org.apache.catalina.loader.StandardClassLoader;
 
 
 /**
