@@ -10,7 +10,7 @@ public class OrClauseTest extends TestCase
     {
         OrClause orClause = new OrClause();
         orClause.add(new StringSqlConverter("one"));
-        assertEquals("one", TestUtil.toSql(orClause));
+        assertEquals("(one)", TestUtil.toSql(orClause));
     }
 
     public void testMultipleElements()
@@ -19,7 +19,7 @@ public class OrClauseTest extends TestCase
         orClause.add(new StringSqlConverter("one"));
         orClause.add(new StringSqlConverter("two"));
         orClause.add(new StringSqlConverter("three"));
-        assertEquals("one OR two OR three", TestUtil.toSql(orClause));
+        assertEquals("(one) OR (two) OR (three)", TestUtil.toSql(orClause));
     }
 
     public void testEquals()
