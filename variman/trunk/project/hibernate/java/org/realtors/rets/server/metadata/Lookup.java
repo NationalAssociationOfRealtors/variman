@@ -134,6 +134,11 @@ public class Lookup implements Serializable
         mLookupTypes = lookupTypes;
     }
 
+    public String getPath()
+    {
+        return mResourceid.getPath() + ":" + mLookupName;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)

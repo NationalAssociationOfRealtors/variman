@@ -225,6 +225,17 @@ public class MClass implements Serializable
         mUpdates = updates;
     }
 
+    /**
+     * Returns the path to the metadata object.  Similar to how the
+     * RETS Client does it.
+     *
+     * @return a string with the path.
+     */
+    public String getPath()
+    {
+        return mResourceid.getPath + ":" + mClassName;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
