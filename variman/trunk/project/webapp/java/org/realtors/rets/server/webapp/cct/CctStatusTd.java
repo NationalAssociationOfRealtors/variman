@@ -83,7 +83,7 @@ public class CctStatusTd extends TagSupport
                 tdclass = "active";
                 message = "Test Running";
             }
-            else if (test.getStatus() == StatusEnum.NOTRUN)
+            else if (test.getStatus() == StatusEnum.NOT_RUN)
             {
                 tdclass = "unknown";
                 message = "Test not yet run";
