@@ -135,11 +135,26 @@ public class ConfigurationPanel extends JPanel
 
         public void actionPerformed(ActionEvent event)
         {
-            DatabaseConfig dbConfig = Admin.getRetsConfig().getDatabase();
-            DatabasePropertiesDialog dialog =
-                new DatabasePropertiesDialog(dbConfig);
-            int rc = dialog.showDialog();
-            System.out.println("Done: " + rc);
+            DatabasePropertiesDialog dialog = null;
+            try
+            {
+                DatabaseConfig dbConfig = Admin.getRetsConfig().getDatabase();
+                dialog = new DatabasePropertiesDialog(dbConfig);
+                if (dialog.showDialog() != JOptionPane.OK_OPTION)
+                {
+                    return;
+                }
+                dialog.updateConfig(dbConfig);
+                updateLabels();
+                new InitDatabaseCommand().execute();
+            }
+            finally
+            {
+                if (dialog != null)
+                {
+                    dialog.dispose();
+                }
+            }
         }
 
     }
