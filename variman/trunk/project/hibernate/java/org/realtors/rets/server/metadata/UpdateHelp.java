@@ -11,6 +11,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class UpdateHelp implements Serializable
 {
+    public UpdateHelp(long id)
+    {
+        mId = new Long(id);
+    }
+
+    public UpdateHelp()
+    {
+        mId = null;
+    }
+
     /**
      *
      * @return a Long object
@@ -82,9 +92,7 @@ public class UpdateHelp implements Serializable
 
     public String toString()
     {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
+        return mUpdateHelpID;
     }
 
     public boolean equals(Object other)

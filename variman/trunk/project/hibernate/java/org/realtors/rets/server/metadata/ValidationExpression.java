@@ -11,6 +11,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ValidationExpression implements Serializable
 {
+    public ValidationExpression(long id)
+    {
+        mId = new Long(id);
+    }
+
+    public ValidationExpression()
+    {
+        mId = null;
+    }
+
     /**
      *
      * @return a Long object
@@ -84,7 +94,7 @@ public class ValidationExpression implements Serializable
      *
      * @return a Resource object
      *
-     * @hibernate.many-to-one 
+     * @hibernate.many-to-one
      */
     public Resource getResourceid()
     {
@@ -98,9 +108,7 @@ public class ValidationExpression implements Serializable
 
     public String toString()
     {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
+        return mValidationExpressionID;
     }
 
     public boolean equals(Object other)

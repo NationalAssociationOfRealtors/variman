@@ -13,6 +13,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ValidationExternal implements Serializable
 {
+    public ValidationExternal(long id)
+    {
+        mId = new Long(id);
+    }
+
+    public ValidationExternal()
+    {
+        mId = null;
+    }
+
     /**
      *
      * @return a Long object
@@ -118,9 +128,7 @@ public class ValidationExternal implements Serializable
 
     public String toString()
     {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
+        return mValidationExternalName;
     }
 
     public boolean equals(Object other)

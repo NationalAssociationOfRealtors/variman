@@ -13,6 +13,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ValidationLookup implements Serializable
 {
+    public ValidationLookup(long id)
+    {
+        mId = new Long(id);
+    }
+
+    public ValidationLookup()
+    {
+        mId = null;
+    }
+
     /**
      *
      * @return a Long object
@@ -119,9 +129,7 @@ public class ValidationLookup implements Serializable
 
     public String toString()
     {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
+        return mValidationLookupName;
     }
 
     public boolean equals(Object other)
