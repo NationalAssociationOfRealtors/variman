@@ -1,27 +1,26 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.List;
-import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.admin.Admin;
+import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.config.ConditionRule;
 
 public class GroupsPanel extends JPanel
 {
@@ -64,32 +63,11 @@ public class GroupsPanel extends JPanel
     private JPanel createRulesPanel()
     {
         JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(new HeaderPanel("Rules"), BorderLayout.NORTH);
-
-        JPanel box = new JPanel(new BorderLayout());
-        mRulesListModel = new ListListModel();
-        mRulesListModel.setFormatter(RULE_FORMATTER);
-        mRulesList = new JList(mRulesListModel);
-        mRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        mRulesList.getSelectionModel().addListSelectionListener(
-            new OnRuleSelectionChanged());
-        box.add(mRulesList);
-        box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
-        panel.add(box, BorderLayout.CENTER);
-
-        Box buttonBox = Box.createHorizontalBox();
-        buttonBox.add(Box.createHorizontalGlue());
-        mRuleAddButtonAction = new RuleAddAction(this);
-        buttonBox.add(new JButton(mRuleAddButtonAction));
-        buttonBox.add(Box.createHorizontalStrut(5));
-        mRuleRemoveButtonAction = new RuleRemoveButtonAction(this);
-        buttonBox.add(new JButton(mRuleRemoveButtonAction));
-        buttonBox.add(Box.createHorizontalStrut(5));
-        mRuleEditButtonAction = new RuleEditButtonAction(this);
-        buttonBox.add(new JButton(mRuleEditButtonAction));
-        buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.add(buttonBox, BorderLayout.SOUTH);
+        panel.setLayout(new GridLayout(0, 1));
+        mFilterRulesPanel = new FilterRulesPanel(this);
+        panel.add(mFilterRulesPanel);
+        mConditionRulesPanel = new ConditionRulesPanel(this);
+        panel.add(mConditionRulesPanel);
         return panel;
     }
 
@@ -108,18 +86,13 @@ public class GroupsPanel extends JPanel
         return mGroupRules;
     }
 
-    public FilterRule getSelectedRule()
-    {
-        Object elementAt = mRulesListModel.getSelectedListElement(mRulesList);
-        return (FilterRule) elementAt;
-    }
-
     private void updateComponentsFromSelection()
     {
         int selection = mGroupList.getSelectedIndex();
+        Group group = null;
         if (selection != -1)
         {
-            Group group = (Group) mGroupListModel.getElementAt(selection);
+            group = (Group) mGroupListModel.getElementAt(selection);
             mName.setText(group.getName());
             mDescription.setText(group.getDescription());
             mRemoveGroupAction.setEnabled(true);
@@ -130,11 +103,8 @@ public class GroupsPanel extends JPanel
             mName.setText("");
             mDescription.setText("");
             mRemoveGroupAction.setEnabled(false);
-
-            mRuleAddButtonAction.setEnabled(false);
-            mRuleEditButtonAction.setEnabled(false);
-            mRuleRemoveButtonAction.setEnabled(false);
-            mRulesListModel.setList(Collections.EMPTY_LIST);
+            mFilterRulesPanel.unselectGroup();
+            mConditionRulesPanel.unselectGroup();
         }
     }
 
@@ -142,31 +112,17 @@ public class GroupsPanel extends JPanel
     {
         RetsConfig retsConfig = Admin.getRetsConfig();
         List filterRules = Collections.EMPTY_LIST;
+        List conditionRules = Collections.EMPTY_LIST;
         SecurityConstraints securityConstraints =
             retsConfig.getSecurityConstraints();
         mGroupRules = securityConstraints.getRulesForGroup(group.getName());
         if (mGroupRules != null)
         {
             filterRules = mGroupRules.getFilterRules();
+            conditionRules = mGroupRules.getConditionRules();
         }
-        mRulesListModel.setList(filterRules);
-        mRulesList.clearSelection();
-        updateRulesButtons();
-    }
-
-    private void updateRulesButtons()
-    {
-        mRuleAddButtonAction.setEnabled(true);
-        if (mRulesList.getSelectedIndex() != -1)
-        {
-            mRuleEditButtonAction.setEnabled(true);
-            mRuleRemoveButtonAction.setEnabled(true);
-        }
-        else
-        {
-            mRuleEditButtonAction.setEnabled(false);
-            mRuleRemoveButtonAction.setEnabled(false);
-        }
+        mFilterRulesPanel.updateRulesList(filterRules);
+        mConditionRulesPanel.updateRulesList(conditionRules);
     }
 
     public void populateList()
@@ -255,104 +211,8 @@ public class GroupsPanel extends JPanel
         }
     }
 
-    private static class FilterRuleFormatter
-        implements ListElementFormatter
-    {
-        public Object format(Object object)
-        {
-            FilterRule rule = (FilterRule) object;
-            StringBuffer buffer = new StringBuffer();
-
-            buffer.append("In ");
-            buffer.append(rule.getResource()).append(":")
-                .append(rule.getRetsClass());
-            if (rule.getType() == FilterRule.INCLUDE)
-            {
-                buffer.append(" include ");
-            }
-            else
-            {
-                buffer.append(" exclude ");
-            }
-            Iterator systemNames = rule.getSystemNames().iterator();
-            buffer.append(StringUtils.join(systemNames, ", "));
-            return buffer.toString();
-        }
-    }
-
-    private class OnRuleSelectionChanged implements ListSelectionListener
-    {
-        public void valueChanged(ListSelectionEvent event)
-        {
-            updateRulesButtons();
-        }
-    }
-
-    private static class RuleRemoveButtonAction extends AbstractAction
-    {
-        public RuleRemoveButtonAction(GroupsPanel groupsPanel)
-        {
-            super("Remove Rule...");
-            mGroupsPanel = groupsPanel;
-        }
-
-        public void actionPerformed(ActionEvent event)
-        {
-            FilterRule rule = mGroupsPanel.getSelectedRule();
-            if (rule == null)
-            {
-                LOG.warn("Attempt to remove null rule");
-                return;
-            }
-
-            int rc = JOptionPane.showConfirmDialog(
-                SwingUtils.getAdminFrame(),
-                "Remove rule for " + RULE_FORMATTER.format(rule));
-            if (rc != JOptionPane.OK_OPTION)
-            {
-                return;
-            }
-            GroupRules rules = mGroupsPanel.getGroupRules();
-            rules.removeRule(rule);
-            Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
-        }
-
-        private GroupsPanel mGroupsPanel;
-    }
-
-    private static class RuleEditButtonAction extends AbstractAction
-    {
-        public RuleEditButtonAction(GroupsPanel groupsPanel)
-        {
-            super("Edit Rule...");
-            mGroupsPanel = groupsPanel;
-        }
-
-        public void actionPerformed(ActionEvent event)
-        {
-            RuleAddDialog dialog = new RuleAddDialog("Update Rule",
-                                                     "Update Rule");
-            FilterRule filterRule = mGroupsPanel.getSelectedRule();
-            dialog.setFilterRule(filterRule);
-            dialog.show();
-            if (dialog.getResponse() != JOptionPane.OK_OPTION)
-            {
-                return;
-            }
-
-            dialog.updateFilterRule(filterRule);
-            Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
-        }
-
-        private GroupsPanel mGroupsPanel;
-    }
-
     private static final Logger LOG =
         Logger.getLogger(GroupsPanel.class);
-    private static final ListElementFormatter RULE_FORMATTER =
-            new FilterRuleFormatter();
 
     private AddGroupAction mAddGroupAction;
     private JList mGroupList;
@@ -361,10 +221,7 @@ public class GroupsPanel extends JPanel
     private JPopupMenu mPopup;
     private ListListModel mGroupListModel;
     private RemoveGroupAction mRemoveGroupAction;
-    private JList mRulesList;
-    private ListListModel mRulesListModel;
-    private Action mRuleAddButtonAction;
-    private RuleEditButtonAction mRuleEditButtonAction;
-    private RuleRemoveButtonAction mRuleRemoveButtonAction;
     private GroupRules mGroupRules;
+    private FilterRulesPanel mFilterRulesPanel;
+    private ConditionRulesPanel mConditionRulesPanel;
 }
