@@ -3,12 +3,13 @@ package org.realtors.rets.server.importer;
 import java.text.DateFormat;
 import java.text.ParseException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.HashSet;
 
-import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
@@ -49,7 +50,6 @@ import org.realtors.rets.server.metadata.ValidationLookupType;
 
 public class MetadataImporter
 {
-
     /**
      * Creates a new <code>MetadataImporter</code> instance.
      *
@@ -58,6 +58,7 @@ public class MetadataImporter
         throws Exception
     {
         initHibernate();
+        mResources = new HashMap();
     }
 
     private void initHibernate()
@@ -132,6 +133,7 @@ public class MetadataImporter
         MetadataTable tResource =
             rSession.getMetadataTable(MetadataTable.RESOURCE);
 
+        String resourceID;
         Set hResources = new HashSet();
         List resources = tResource.getDataRows("");
         Iterator i = resources.iterator();
@@ -142,7 +144,8 @@ public class MetadataImporter
 
             hResource.setSystemid(hSystem);
             // do more stuff
-            hResource.setResourceID(md.getAttribute("ResouceID"));
+            resourceID = md.getAttribute("ResourceID");
+            hResource.setResourceID(resourceID);
             hResource.setStandardName(ResourceStandardNameEnum.fromString(
                                           md.getAttribute("StandardName")));
             hResource.setVisibleName(md.getAttribute("VisibleName"));
@@ -150,16 +153,60 @@ public class MetadataImporter
             hResource.setKeyField(md.getAttribute("KeyField"));
             hResource.setClassVersion(md.getAttribute("ClassVersion"));
 
-            DateFormat dateFormat = DateFormat.getDateInstance();
+            DateFormat dateFormat =
+                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+            
             hResource.setClassDate(
                 dateFormat.parse(md.getAttribute("ClassDate")));
-                                     
 
+
+            hResource.setObjectVersion(md.getAttribute("ObjectVersion"));
+            hResource.setObjectDate(dateFormat.parse(
+                md.getAttribute(md.getAttribute("ObjectDate"))));
+
+            hResource.setSearchHelpVersion(
+                md.getAttribute("SearchHelpVersion"));
+            hResource.setSearchHelpDate(
+                dateFormat.parse(
+                    md.getAttribute(md.getAttribute("SearchHelpDate"))));
+                    
+            hResource.setEditMaskVersion(md.getAttribute("EditMaskVersion"));
+            hResource.setEditMaskDate(
+                dateFormat.parse(md.getAttribute("EditMaskDate")));
+
+            hResource.setLookupVersion(md.getAttribute("LookupVersion"));
+            hResource.setLookupDate(
+                dateFormat.parse(md.getAttribute("LookupDate")));
+
+            hResource.setUpdateHelpVersion(
+                md.getAttribute("UpdateHelpVersion"));
+            hResource.setUpdateHelpDate(
+                dateFormat.parse(md.getAttribute("UpdateHelpDate")));
+
+            hResource.setValidationExpressionVersion(
+                md.getAttribute("ValidationExpressionVersion"));
+            hResource.setValidationExpressionDate(
+                dateFormat.parse(md.getAttribute("ValidationExpressionDate")));
+
+            hResource.setValidationLookupVersion(
+                md.getAttribute("ValidationLookupVersion"));
+            hResource.setValidationLookupDate(
+                dateFormat.parse(md.getAttribute("ValidationLookupDate")));
+
+            hResource.setValidationExternalVersion(
+                md.getAttribute("ValidationExternalVersion"));
+            hResource.setValidationExternalDate(
+                dateFormat.parse(md.getAttribute("ValidationExternalDate")));
+                
+            
+                
             hSession.save(hResource);
             hResources.add(hResource);
+            mResources.put(resourceID, hResource);
         }
 
         hSystem.setResources(hResources);
+        hSession.saveOrUpdate(hSystem);
 
         // change this
         return null;
@@ -173,7 +220,8 @@ public class MetadataImporter
     }
 
     private SessionFactory mSessions;
+    private Map mResources;
     
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.4 2003/06/23 21:52:02 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.5 2003/06/24 19:35:19 kgarner Exp $";
 }
