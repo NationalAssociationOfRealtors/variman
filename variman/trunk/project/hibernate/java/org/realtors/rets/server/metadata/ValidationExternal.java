@@ -46,7 +46,6 @@ public class ValidationExternal implements Serializable
      * @hibernate.property
      * @hibernate.column name="validationExternalName"
      *   not-null="true"
-     *   unique="true"
      *   index="rets_metadata_validationexternal_name_index"
      *   length="32"
      */
