@@ -10,11 +10,15 @@
  */
 package org.realtors.rets.server.webapp;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -25,10 +29,14 @@ import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.protocol.TableGroupFilter;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
 
@@ -51,6 +59,7 @@ public class InitServlet extends RetsServlet
             initHibernate();
             initMetadata();
             initNonceTable();
+            initGroupFilter();
             LOG.info("Init servlet completed successfully");
         }
         catch (ServletException e)
@@ -229,6 +238,39 @@ public class InitServlet extends RetsServlet
         }
         WebApp.setNonceTable(nonceTable);
         WebApp.setNonceReaper(new NonceReaper(nonceTable));
+    }
+
+    private void initGroupFilter()
+    {
+        LOG.debug("Initializing group filter");
+        TableGroupFilter groupFilter = new TableGroupFilter();
+        MetadataManager metadataManager = WebApp.getMetadataManager();
+        MSystem system =
+            (MSystem) metadataManager.findUnique(MSystem.TABLE, "");
+        Set resources = system.getResources();
+        for (Iterator i = resources.iterator(); i.hasNext();)
+        {
+            Resource resource = (Resource) i.next();
+            String resourceID = resource.getResourceID();
+            Set classes = resource.getClasses();
+            for (Iterator j = classes.iterator(); j.hasNext();)
+            {
+                MClass aClass = (MClass) j.next();
+                String className = aClass.getClassName();
+                LOG.debug("Setting tables for " + resourceID + ":" + className);
+                groupFilter.setTables(resourceID, className,
+                                      aClass.getTables());
+            }
+        }
+        List securityConstraints = mRetsConfig.getSecurityConstraints();
+        for (int i = 0; i < securityConstraints.size(); i++)
+        {
+            GroupRules rules = (GroupRules) securityConstraints.get(i);
+            LOG.debug("Adding rules for " + rules.getGroupName());
+            groupFilter.addRules(rules);
+        }
+
+        RetsServer.setTableGroupFilter(groupFilter);
     }
 
     public void destroy()
