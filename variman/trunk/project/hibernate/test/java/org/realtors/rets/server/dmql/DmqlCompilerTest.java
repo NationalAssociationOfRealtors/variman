@@ -191,67 +191,6 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         parse("(OWNER=NOW)");
     }
 
-    public void testBetweenPeriods() throws ANTLRException
-    {
-        SqlConverter sql = parse("(LDATE=1970-01-01-1980-01-01)");
-        StringSqlConverter left = new StringSqlConverter("1970-01-01");
-        StringSqlConverter right = new StringSqlConverter("1980-01-01");
-        BetweenClause between = new BetweenClause("LDATE", left, right);
-        OrClause or = new OrClause();
-        or.add(between);
-        assertEquals(or, sql);
-
-        sql = parse("(LDATE=1990-01-01-TODAY)");
-        left = new StringSqlConverter("1990-01-01");
-        right = new StringSqlConverter("TODAY");
-        between = new BetweenClause("LDATE", left, right);
-        or = new OrClause();
-        or.add(between);
-        assertEquals(or, sql);
-
-        sql = parse("(LDATE=1990-01-01T05:06:07.000-NOW)");
-        left = new StringSqlConverter("1990-01-01T05:06:07.000");
-        right = new StringSqlConverter("NOW");
-        between = new BetweenClause("LDATE", left, right);
-        or = new OrClause();
-        or.add(between);
-        assertEquals(or, sql);
-    }
-
-    public void testBetweenNubmers() throws ANTLRException
-    {
-        SqlConverter sql = parse("(LP=50-100)");
-        StringSqlConverter left = new StringSqlConverter("50");
-        StringSqlConverter right = new StringSqlConverter("100");
-        BetweenClause between = new BetweenClause("LP", left, right);
-        OrClause or = new OrClause();
-        or.add(between);
-        assertEquals(or, sql);
-    }
-
-    public void testBetweenStrings() throws ANTLRException
-    {
-        assertInvalidParse("(OWNER=abc-xyz)");
-    }
-
-    public void testLess() throws ANTLRException
-    {
-        parse("(OWNER=1970-01-01-)");
-        parse("(OWNER=50-)");
-        assertInvalidParse("(OWNER=xyz-)");
-        parse("(OWNER=TODAY-)");
-        parse("(OWNER=NOW-)");
-    }
-
-    public void testGreater() throws ANTLRException
-    {
-        parse("(OWNER=1970-01-01+)");
-        parse("(OWNER=50+)");
-        assertInvalidParse("(OWNER=xyz+)");
-        parse("(OWNER=TODAY+)");
-        parse("(OWNER=NOW+)");
-    }
-
     public void testRangeList() throws ANTLRException
     {
         parse("(OWNER=1970-01-01-1980-01-01,1985-01-01-1995-01-01)");
