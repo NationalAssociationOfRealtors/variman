@@ -21,6 +21,15 @@ tokens
 }
 
 {
+    private void assertValidField(Token t)
+        throws SemanticException
+    {
+        String fieldName = t.getText();
+        if (!mMetadata.isValidFieldName(fieldName)) {
+            throw newSemanticException("No such field [" + fieldName + "]", t);
+        }
+    }
+
     private boolean isLookupField(String fieldName) {
         return mMetadata.isValidLookupName(fieldName);
     }
@@ -89,7 +98,8 @@ field_criteria!
     ;
 
 field_name
-    : text
+    {Token t;}
+    : t=text_token {assertValidField(t);}
     ;
 
 field_value [AST name]
