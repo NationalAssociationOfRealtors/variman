@@ -6,7 +6,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import org.realtors.rets.server.cct.StatusEnum;
-import org.realtors.rets.server.cct.ValidationResult;
 import org.apache.struts.util.RequestUtils;
 
 /**
@@ -18,13 +17,14 @@ public class CctStatusTd extends TagSupport
     {
         super();
         mScope = null;
+        mProperty = null;
     }
 
     /**
      * gets the bean name
      * @return the name of the bean
      * @jsp:attribute required="true" rtexprvalue="false"
-     *  description="test of which to show status"
+     *  description="name of which to show status"
      */
     public String getName()
     {
@@ -59,32 +59,51 @@ public class CctStatusTd extends TagSupport
         mScope = scope;
     }
 
+    /**
+     * @jsp:attribute required="false" rtexprvalue="false"
+     *  description="property of which to show status"
+     */
+    public String getProperty()
+    {
+        return mProperty;
+    }
+
+    /**
+     * 
+     * @param string
+     */
+    public void setProperty(String string)
+    {
+        mProperty = string;
+    }
+
     public int doStartTag() throws JspException
     {
         JspWriter out = pageContext.getOut();
-        TestDisplayBean displayBean =
-            (TestDisplayBean) RequestUtils.lookup(pageContext, mName, mScope);
+            
+        StatusEnum status =
+            (StatusEnum) RequestUtils.lookup(pageContext, mName, mProperty,
+                                             mScope);
         try
         {
             String message;
             String tdclass;
-            ValidationResult result = displayBean.getResult(); 
-            if (result.getStatus() == StatusEnum.PASSED)
+            if (status == StatusEnum.PASSED)
             {
                 tdclass = "pass";
                 message = "Test Passed";
             }
-            else if (result.getStatus() == StatusEnum.FAILED)
+            else if (status == StatusEnum.FAILED)
             {
                 tdclass = "fail";
                 message = "Test Failed";
             }
-            else if (result.getStatus() == StatusEnum.RUNNING)
+            else if (status == StatusEnum.RUNNING)
             {
                 tdclass = "active";
                 message = "Test Running";
             }
-            else if (result.getStatus() == StatusEnum.NOT_RUN)
+            else if (status == StatusEnum.NOT_RUN)
             {
                 tdclass = "unknown";
                 message = "Test not yet run";
@@ -92,7 +111,7 @@ public class CctStatusTd extends TagSupport
             else
             {
                 tdclass = "unknown";
-                message = result.getStatus().getName();
+                message = status.getName();
             }
             out.write("<td class=\"");
             out.write(tdclass);
@@ -108,5 +127,7 @@ public class CctStatusTd extends TagSupport
     }
 
     private String mName;
+    private String mProperty;
     private String mScope;
+   
 }
