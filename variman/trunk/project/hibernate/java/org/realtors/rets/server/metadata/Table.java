@@ -24,18 +24,24 @@ public class Table extends ServerMetadata implements Serializable
 {
     public Table(long id)
     {
-        mId = new Long(id);
+        this(new Long(id));
     }
 
     public Table()
     {
-        mId = null;
+        this((Long) null);
     }
 
     public Table(String systemName)
     {
         this();
         mSystemName = systemName;
+    }
+
+    private Table(Long id)
+    {
+        mId = id;
+        mDefault = Integer.MAX_VALUE;
     }
 
     /**
