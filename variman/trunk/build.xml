@@ -264,6 +264,8 @@
     <copy file="${jdom.jar}" todir="build/importer/lib"/>
     <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
           todir="build/importer/lib"/>
+    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
+          todir="build/importer/classes"/>
 
     <!-- this copies the hibernate stuff we need -->
     <copy todir="build/importer/lib">
@@ -282,13 +284,8 @@
   </target>
 
   <target name="build-xml" depends="prepare">
-    <copy todir="build/hibernate/final/classes"
-          file="project/hibernate/config/hibernate.properties"/>
-    <copy todir="build/hibernate/final/classes">
-      <fileset dir="project/hibernate/mappings">
-        <include name="**/*.hbm.xml"/>
-      </fileset>
-    </copy>
+    <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
+         basedir="project/hibernate/mappings" index="true"/>
   </target>
 
   <target name="mapping-files-check">
@@ -340,17 +337,21 @@
 
   <target name="generate-schema" depends="build-generated-code"
           description="generates the database schema">
-    <pathconvert refid="hibernate.mapping.files"
-                 property="hibernate.mappings" pathsep=" "/>
-    <java classname="net.sf.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
-      <arg line="--output=build/hibernate/schema/test.schema --format ${hibernate.mappings}"/>
-      <jvmarg value="-Dhibernate.dialect=${hibernate.dialect}"/>
+    <taskdef name="schemaexport"
+             classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
       <classpath>
         <path refid="lib.path"/>
         <pathelement path="build/hibernate/final/classes"/>
-        <pathelement path="project/config"/>
       </classpath>
-    </java>
+    </taskdef>
+
+    <schemaexport properties="project/hibernate/config/hibernate.properties"
+                  quiet="no" text="yes" drop="no" delimiter=";"
+                  output="build/hibernate/schema/schema-export.sql">
+      <fileset dir="build/hibernate/final/classes">
+        <include name="**/*.hbm.xml"/>
+      </fileset>
+    </schemaexport>
   </target>
 
 
