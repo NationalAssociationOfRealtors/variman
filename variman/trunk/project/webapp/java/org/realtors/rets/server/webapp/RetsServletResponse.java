@@ -2,11 +2,11 @@
  */
 package org.realtors.rets.server.webapp;
 
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.realtors.rets.server.RetsVersion;
 
@@ -15,22 +15,24 @@ public class RetsServletResponse extends HttpServletResponseWrapper
     public RetsServletResponse(HttpServletResponse response)
     {
         super(response);
-        mXmlWriter = null;
     }
 
+    /**
+     * Helper method that sets the content type to <code>"text/xml"</code>
+     * and returns the writer.  Equivalent to:
+     *
+     * <code>
+     *   response.setContentType("text/xml");
+     *   PrintWriter out = response.getWriter();
+     * </code>
+     *
+     * @return
+     * @throws IOException
+     */
     public PrintWriter getXmlWriter() throws IOException
     {
-        if (mXmlWriter == null)
-        {
-            setContentType("text/xml");
-            mXmlWriter = getWriter();
-        }
-        return mXmlWriter;
-    }
-
-    public boolean isXmlResponse()
-    {
-        return (mXmlWriter != null);
+        setContentType("text/xml");
+        return getWriter();
     }
 
     public void setRetsVersionHeader(RetsVersion retsVersion)
@@ -44,6 +46,4 @@ public class RetsServletResponse extends HttpServletResponseWrapper
             setHeader("RETS-Version", "RETS/1.5");
         }
     }
-
-    private PrintWriter mXmlWriter;
 }
