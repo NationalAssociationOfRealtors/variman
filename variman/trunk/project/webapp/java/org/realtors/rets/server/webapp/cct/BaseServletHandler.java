@@ -88,6 +88,7 @@ public abstract class BaseServletHandler implements ServletHandler
     public ValidationResult validate()
     {
         ValidationResult result = new ValidationResult();
+        result.setStatus(StatusEnum.PASSED);
         validate(result);
         return result;
     }

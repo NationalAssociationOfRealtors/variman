@@ -14,7 +14,7 @@ public class ValidationResult
 {
     public ValidationResult()
     {
-        mStatus = StatusEnum.PASSED;
+        mStatus = StatusEnum.NOT_RUN;
         mMessages = new ArrayList();
         mTestName = "";
         mUsername = null;
