@@ -43,6 +43,8 @@ import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.ServerDmqlMetadata;
+import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.ServerMetadata;
 
 public class SearchTransaction
 {
@@ -96,14 +98,9 @@ public class SearchTransaction
         throws RetsServerException
     {
         mSessions = sessions;
-        MClass aClass = (MClass) manager.findByPath(
-            MClass.TABLE,
-            mParameters.getResourceId() + ":" + mParameters.getClassName());
-        Collection tables = getTables(aClass);
-        mMetadata = new ServerDmqlMetadata(tables,
-                                           mParameters.isStandardNames());
-        mFromClause = aClass.getDbTable();
-        generateWhereClause(aClass);
+        prepareMetadata(manager);;
+        mFromClause = mClass.getDbTable();
+        generateWhereClause(mClass);
         if (!mExecuteQuery)
         {
             RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
@@ -122,12 +119,31 @@ public class SearchTransaction
         }
     }
 
-    private Collection getTables(MClass aClass)
+    private void prepareMetadata(MetadataManager manager)
+        throws RetsReplyException
     {
+        String resourceName = mParameters.getResourceId();
+        ServerMetadata resource =
+            manager.findByPath(Resource.TABLE, resourceName);
+        if (resource == null)
+        {
+            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+                                        "Invalid resource: " + resourceName);
+        }
+
+        String className = mParameters.getClassName();
+        mClass = (MClass) manager.findByPath(
+            MClass.TABLE, resourceName + ":" + className);
+        if (mClass == null)
+        {
+            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+                                         "Invalid class: " + className);
+        }
+
         TableGroupFilter groupFilter = RetsServer.getTableGroupFilter();
-        String resourceName = aClass.getResource().getResourceID();
-        String className = aClass.getClassName();
-        return groupFilter.findTables(mGroups, resourceName, className);
+        mTables = groupFilter.findTables(mGroups, resourceName, className);
+        mMetadata = new ServerDmqlMetadata(mTables,
+                                           mParameters.isStandardNames());
     }
 
     /**
@@ -332,7 +348,8 @@ public class SearchTransaction
         }
         else
         {
-            throw new RetsServerException("Unknown format: " +
+            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+                                         "Unknown format: " +
                                           mParameters.getFormat());
         }
 
@@ -431,6 +448,8 @@ public class SearchTransaction
         Logger.getLogger(SearchTransaction.class);
     private SearchParameters mParameters;
     private SortedSet mGroups;
+    private MClass mClass;
+    private Collection mTables;
     private boolean mExecuteQuery;
     private String mFromClause;
     private String mWhereClause;
