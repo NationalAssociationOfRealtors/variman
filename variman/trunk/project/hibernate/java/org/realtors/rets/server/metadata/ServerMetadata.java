@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-public abstract class ServerMetadata
+public abstract class ServerMetadata implements Identifiable
 {
     public List getChildren()
     {
