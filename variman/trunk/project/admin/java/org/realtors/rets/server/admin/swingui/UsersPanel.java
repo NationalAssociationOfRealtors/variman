@@ -30,6 +30,7 @@ public class UsersPanel extends JPanel
         mUserList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mUserList.getSelectionModel().addListSelectionListener(
             new OnSelectionChanged());
+        mUserList.addMouseListener(new ListDoubleClickListener());
 
         JPanel panel = new JPanel(new BorderLayout());
         TextValuePanel tvp = new TextValuePanel();
@@ -58,6 +59,8 @@ public class UsersPanel extends JPanel
         mPopup.add(mRemoveUserAction);
         mChangePasswordAction = new ChangePasswordAction(this);
         mPopup.add(mChangePasswordAction);
+        mEditUserAction = new EditUserAction(this);
+        mPopup.add(mEditUserAction);
 
         PopupListener popupListener = new PopupListener();
         mUserList.addMouseListener(popupListener);
@@ -88,6 +91,11 @@ public class UsersPanel extends JPanel
     public ChangePasswordAction getChangePasswordAction()
     {
         return mChangePasswordAction;
+    }
+
+    public EditUserAction getEditUserAction()
+    {
+        return mEditUserAction;
     }
 
     public void populateList()
@@ -145,6 +153,7 @@ public class UsersPanel extends JPanel
             setLabel(mBrokerCode, user.getBrokerCode());
             mRemoveUserAction.setEnabled(true);
             mChangePasswordAction.setEnabled(true);
+            mEditUserAction.setEnabled(true);
         }
         else
         {
@@ -155,6 +164,7 @@ public class UsersPanel extends JPanel
             mBrokerCode.setText("");
             mRemoveUserAction.setEnabled(false);
             mChangePasswordAction.setEnabled(false);
+            mEditUserAction.setEnabled(false);
         }
     }
 
@@ -218,6 +228,20 @@ public class UsersPanel extends JPanel
         }
     }
 
+    private class ListDoubleClickListener extends MouseAdapter
+    {
+        public void mouseClicked(MouseEvent event)
+        {
+            if (event.getClickCount() == 2)
+            {
+                int index = mUserList.locationToIndex(event.getPoint());
+                mUserList.ensureIndexIsVisible(index);
+                mUserList.setSelectedIndex(index);
+                mEditUserAction.actionPerformed(null);
+            }
+        }
+    }
+
     private static final Logger LOG =
         Logger.getLogger(UsersPanel.class);
     private JList mUserList;
@@ -231,4 +255,5 @@ public class UsersPanel extends JPanel
     private AddUserAction mAddUserAction;
     private RemoveUserAction mRemoveUserAction;
     private ChangePasswordAction mChangePasswordAction;
+    private EditUserAction mEditUserAction;
 }
