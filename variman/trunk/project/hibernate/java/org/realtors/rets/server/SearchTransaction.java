@@ -46,7 +46,8 @@ public class SearchTransaction
         List classes = manager.find(Table.TABLE,
                                     mParameters.getResourceId() + ":" +
                                     mParameters.getClassName());
-        ServerDmqlMetadata metadata = new ServerDmqlMetadata(classes, false);
+        ServerDmqlMetadata metadata =
+            new ServerDmqlMetadata(classes, mParameters.isStandardNames());
         SqlConverter sqlConverter = parse(metadata);
         StringWriter stringWriter = new StringWriter();
         sqlConverter.toSql(new PrintWriter(stringWriter));
