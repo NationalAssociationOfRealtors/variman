@@ -32,11 +32,15 @@
     <fileset dir="${tomcat.home}/server/lib" includes="*.jar"/>
   </path>
 
+  <path id="importer.path">
+    <pathelement location="${rets-client.jar}"/>
+    <pathelement path="build/hibernate/final/classes"/>
+  </path>
+
   <path id="webapp.path">
     <pathelement path="${servlet.jar}"/>
     <pathelement path="${log4j.jar}"/>
   </path>
-
 
   <!-- Add the checkstyle task -->
 <!--   <taskdef name="checkstyle" -->
@@ -69,6 +73,7 @@
     <mkdir dir="build/hibernate/generated"/>
     <mkdir dir="build/hibernate/schema"/>
     <mkdir dir="build/hibernate/jar"/>
+    <mkdir dir="build/hibernate/doc"/>
     <mkdir dir="build/embedded/classes"/>
     <mkdir dir="build/importer/classes"/>
     <mkdir dir="build/importer/lib"/>
@@ -88,6 +93,33 @@
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
          basedir="build/hibernate/final/classes"
          excludes="hibernate.properties" index="true"/>
+  </target>
+
+  <target name="doc" depends="build-generated-code,prepare">
+    <javadoc packagenames="org.realtors.rets.*"
+             destdir="build/doc/api"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Retzilla API"
+             private="${javadoc.private}"
+             doctitle="Retzilla API">
+      <link offline="true"
+            href="http://java.sun.com/j2se/1.3/docs/api/"
+            packageListLoc="${javadoc.1.3.local}"/>
+      <sourcepath>
+        <pathelement location="project/embedded/java"/>
+        <pathelement location="project/hibernate/java"/>
+        <pathelement location="project/importer/java"/>
+        <pathelement location="project/webapp/java"/>
+        <pathelement location="build/hibernate/generated"/>
+      </sourcepath>
+      <classpath>
+        <path refid="lib.path"/>
+        <path refid="embedded.path"/>
+        <path refid="importer.path"/>
+      </classpath>
+    </javadoc>
   </target>
 
   <target name="build-embedded" depends="prepare">
@@ -186,8 +218,7 @@
             cache="build/importer/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
-        <pathelement location="${rets-client.jar}"/>
-        <pathelement path="build/hibernate/final/classes"/>
+        <path refid="importer.path"/>
       </classpath>
     </depend>
     <javac srcdir="project/importer/java"
@@ -196,8 +227,7 @@
            deprecation="${compile.deprecation}">
       <classpath>
         <path refid="lib.path"/>
-        <pathelement location="${rets-client.jar}"/>
-        <pathelement path="build/hibernate/final/classes"/>
+        <path refid="importer.path"/>
       </classpath>
     </javac>
 
@@ -217,7 +247,7 @@
     <!-- this copies the hibernate stuff we need -->
     <copy todir="build/importer/lib">
       <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="j2ee.jar,xerces.jar" />
+               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar" />
     </copy>
     <copy todir="build/importer/lib"
           file="${hibernate.jar}"/>
