@@ -1,25 +1,14 @@
 /*
- * Created on Sep 5, 2003
+ * Created on Sep 9, 2003
  *
  */
 package org.realtors.rets.server.cct;
-
-import java.util.List;
 
 /**
  * @hibernate.class table="rets_cct_validationresults"
  */
 public class DBValidationResult extends ValidationResult
 {
-    /**
-     * 
-     */
-    public DBValidationResult()
-    {
-        super();
-        mUsername = null;
-    }
-
     /**
      * @hibernate.id generator-class="native"
      */
@@ -29,50 +18,44 @@ public class DBValidationResult extends ValidationResult
     }
 
     /**
-     * @hibernate.list table="rets_cct_vr_messages"
-     * @hibernate.collection-key column="result_id"
-     * @hibernate.collection-index column="message_index"
-     * @hibernate.collection-element column="message" type="string"
-     */
-    public List getMessages()
-    {
-        return super.getMessages();
-    }
-
-    /**
-     * @hibernate.property
-     */
-    public StatusEnum getStatus()
-    {
-        return super.getStatus();
-    }
-
-    /**
-     * @hibernate.property
-     */
-    public String getTestName()
-    {
-        return super.getTestName();
-    }
-    
-    /**
-     * @hibernate.property
+     * @hibernate.property 
      */
     public String getUsername()
     {
         return mUsername;
     }
 
-    public void setId(Long long1)
+//    /**
+//     * @hibernate.component
+//     *   class="org.realtors.rets.server.cct.ValidationResult" 
+//     */
+//    public ValidationResult getValidationResult()
+//    {
+//        return mValidationResult;
+//    }
+
+    /**
+     * @param id The identifier
+     */
+    public void setId(Long id)
     {
-        mId = long1;
+        mId = id;
     }
 
-    public void setUsername(String info)
+    /**
+     * @param username The username
+     */
+    public void setUsername(String username)
     {
-        mUsername = info;
+        mUsername = username;
     }
+
+//    public void setValidationResult(ValidationResult result)
+//    {
+//        mValidationResult = result;
+//    }
 
     private Long mId;
     private String mUsername;
+//    private ValidationResult mValidationResult;
 }
