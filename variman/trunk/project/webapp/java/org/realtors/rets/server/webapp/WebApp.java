@@ -12,17 +12,14 @@ package org.realtors.rets.server.webapp;
 
 import javax.servlet.ServletContext;
 
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.HibernateException;
-
-import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.SessionHelper;
-import org.realtors.rets.server.webapp.auth.NonceTable;
+import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
+import org.realtors.rets.server.webapp.auth.NonceTable;
 
-import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
 
 public class WebApp
 {
@@ -68,24 +65,9 @@ public class WebApp
         }
     }
 
-    public static void setSessions(SessionFactory sessionFactory)
-    {
-        sSessions = sessionFactory;
-    }
-
     public static SessionHelper createHelper()
     {
-        return new SessionHelper(sSessions);
-    }
-
-    public static SessionFactory getSessions()
-    {
-        return sSessions;
-    }
-
-    public static Session openSession() throws HibernateException
-    {
-        return sSessions.openSession();
+        return RetsServer.createSessionHelper();
     }
 
     public static void setGetObjectRoot(String getObjectRoot)
@@ -130,7 +112,6 @@ public class WebApp
 
     private static ServletContext sServletContext;
     private static MetadataManager sMetadataManager;
-    private static SessionFactory sSessions;
     private static String sLog4jFile;
     private static String sGetObjectRoot;
     private static String sGetObjectPattern;
