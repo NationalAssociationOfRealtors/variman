@@ -1,10 +1,10 @@
 package org.realtors.rets.server.testing;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.sql.Date;
 import java.util.Random;
 
 import net.sf.hibernate.HibernateException;
@@ -19,34 +19,40 @@ public class DataGenerator extends DataGenBase
         mRandom = new Random(System.currentTimeMillis());
         mRandom.nextInt();
 
-        mECount = 0;
+        mCount = 0;
         mESchools = new int[] { 306, 300, 42, 304, 303 };
-        mACount = 0;
         mAgents = new String[] { "P345", "P123", "M123" };
-        mBCount = 0;
         mBrokers = new String[] { "Laffalot Realty", "Tex Mex Real Estate",
             "Yellow Armadillo Realty", "Retzilla Realty" };
-        mSCount = 0;
         mStreets = new String[] { "Buckingham Dr.", "Main St.",
             "Knoll Creek Dr.", "Randall Rd.", "Exeter Ct.", "Anderson Blvd.",
             "Westminster Circle" };
+        mUrls = new String[] { "http://www.crt.realtors.org/",
+            "http://www.realtors.org", "http://slashdot.org/" };
+        mListingTypes = new String[] { "INC", "LND", "RENT", "RES" };
+        mLocations = new String[] { "AUR", "BATV", "ELBRN", "ELGN", "GENVA",
+            "SELGN", "STC", "WYNE", "WCHIC" };
+        mStatus = new String[] { "A", "C", "X", "L", "O", "P", "S", "T", "U",
+            "W" };
+        mOwners = new String[] { "Keith Garner", "Dave Dribin",
+            "Dave Terrell", "Mark Lesswing" };
 
-        mDCount = 0;
         mDate = new Date[4];
         Calendar cal = Calendar.getInstance();
         cal.set(2003,6,10);
-        mDate[mDCount++] = new Date(cal.getTime().getTime());
+        mDate[mCount++] = new Date(cal.getTime().getTime());
         cal.set(2003,6,22);
-        mDate[mDCount++] = new Date(cal.getTime().getTime());
+        mDate[mCount++] = new Date(cal.getTime().getTime());
         cal.set(2002,11,5);
-        mDate[mDCount++] = new Date(cal.getTime().getTime());
-        mDate[mDCount++] = new Date(new java.util.Date().getTime());
+        mDate[mCount++] = new Date(cal.getTime().getTime());
+        mDate[mCount++] = new Date(new java.util.Date().getTime());
     }
 
     private void createData(int props) throws HibernateException, SQLException
     {
         Session session = null;
         Connection con = null;
+        PreparedStatement ps = null;
         try
         {
             session = mSessions.openSession();
@@ -55,13 +61,16 @@ public class DataGenerator extends DataGenBase
 
             for (int i = 0; i < props; i++)
             {
-                PreparedStatement ps = con.prepareStatement(
+                ps = con.prepareStatement(
                     "INSERT INTO " +
                     "rets_property_res(id,lp,broker,agent_id,ln,zip_code,ld," +
                     "                  sqft,e_school,m_school,h_school," +
-                    "                  stname)" +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?);"
+                    "                  stname, url, ltyp, stnum, vew, ar," +
+                    "                  status,owner)" +
+                    " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
                 );
+                // todo: LookupMulti EF needs to be added.
+                // todo: LookupMulti LIF needs to be added.
                 ps.setInt(1, i);
                 ps.setInt(2, mRandom.nextInt(1000000));
 
@@ -80,6 +89,13 @@ public class DataGenerator extends DataGenBase
                 ps.setInt(11, getNextSchool());
                 
                 ps.setString(12, getNextStreet());
+                ps.setString(13, getNextURL());
+                ps.setString(14, getNextListingType());
+                ps.setString(15, Long.toString(mRandom.nextInt(9999999)));
+                ps.setInt(16, mRandom.nextInt(2048));
+                ps.setString(17, getNextLocation());
+                ps.setString(18, getNextStatus());
+                ps.setString(19, getNextOwner());
                 ps.execute();
             }
             con.commit();
@@ -99,6 +115,7 @@ public class DataGenerator extends DataGenBase
         }
         catch (SQLException e)
         {
+            System.out.println(ps);
             if (con != null)
             {
                 con.rollback();
@@ -116,7 +133,7 @@ public class DataGenerator extends DataGenBase
      */
     private String getNextAgent()
     {
-        return mAgents[mACount++ % mAgents.length];
+        return mAgents[mCount++ % mAgents.length];
     }
 
     /**
@@ -124,7 +141,7 @@ public class DataGenerator extends DataGenBase
      */
     private String getNextBroker()
     {
-        return mBrokers[mBCount++ % mBrokers.length];
+        return mBrokers[mCount++ % mBrokers.length];
     }
 
     /**
@@ -132,7 +149,31 @@ public class DataGenerator extends DataGenBase
      */
     private Date getNextDate()
     {
-        return mDate[mDCount++ % mDate.length];
+        return mDate[mCount++ % mDate.length];
+    }
+
+    /**
+     * @return
+     */
+    private String getNextListingType()
+    {
+        return mListingTypes[mCount++ % mListingTypes.length];
+    }
+
+    /**
+     * @return
+     */
+    private String getNextLocation()
+    {
+        return mLocations[mCount++ % mLocations.length];
+    }
+
+    /**
+     * @return
+     */
+    private String getNextOwner()
+    {
+        return mOwners[mCount++ % mOwners.length];
     }
 
     /**
@@ -140,7 +181,15 @@ public class DataGenerator extends DataGenBase
      */
     private int getNextSchool()
     {
-        return mESchools[mECount++ % mESchools.length];
+        return mESchools[mCount++ % mESchools.length];
+    }
+
+    /**
+     * @return
+     */
+    private String getNextStatus()
+    {
+        return mStatus[mCount++ % mStatus.length];
     }
 
     /**
@@ -148,7 +197,15 @@ public class DataGenerator extends DataGenBase
      */
     private String getNextStreet()
     {
-        return mStreets[mSCount++ % mStreets.length];
+        return mStreets[mCount++ % mStreets.length];
+    }
+
+    /**
+     * @return a String from the URL array
+     */
+    private String getNextURL()
+    {
+        return mUrls[mCount++ % mUrls.length];
     }
     
     public static void main(String[] args)
@@ -173,17 +230,18 @@ public class DataGenerator extends DataGenBase
 
     }
 
-    private int mACount;
     private String[] mAgents;
-    private int mBCount;
     private String[] mBrokers;
+    private int mCount;
     private Date[] mDate;
-    private int mDCount;
-    private int mECount;
     private int[] mESchools;
-    private int mHCount; 
     private int[] mHSchools;
+    private String[] mListingTypes;
+    private String[] mLocations;
+    private String[] mOwners;
     private Random mRandom;
-    private int mSCount;
+    private String[] mStatus;
     private String[] mStreets;
+    private String[] mUrls;
+    private int[] mViews;
 }
