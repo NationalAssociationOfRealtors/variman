@@ -29,6 +29,7 @@ Name: "{app}\logs"
 ;Name: "{group}\CRT Rex RETS Server"; Filename: "{app}\MyProg.exe"
 ; NOTE: The following entry contains an English phrase ("Uninstall"). You are free to translate it into another language if required.
 Name: "{group}\Uninstall CRT Rex RETS Server"; Filename: "{uninstallexe}"
+Name: "{group}\View README"; Filename: "{app}\doc\readme.txt"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\work"
@@ -37,6 +38,7 @@ Type: filesandordirs; Name: "{app}\logs"
 [Run]
 ; NOTE: The following entry contains an English phrase ("Launch"). You are free to translate it into another language if required.
 Filename: "{app}\rex.exe"; Parameters: "{code:InstallServiceParams}"; Description: "Install service"; Flags: runhidden
+Filename: "{app}\doc\readme.txt"; Description: "View the README file"; Flags: shellexec postinstall skipifsilent
 
 [UninstallRun]
 Filename: "net"; Parameters: "stop Rex"; Flags: runhidden
