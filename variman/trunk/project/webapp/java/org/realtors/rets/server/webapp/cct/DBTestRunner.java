@@ -58,7 +58,7 @@ public class DBTestRunner extends TestRunner
                 results.addResult(result);
             }
         }
-        catch(HibernateException e)
+        catch (HibernateException e)
         {
             LOG.error("Error getting results", e);
         }
@@ -120,7 +120,7 @@ public class DBTestRunner extends TestRunner
             }
             sessionHelper.commit();
         }
-        catch(HibernateException e)
+        catch (HibernateException e)
         {
             LOG.error(e);
             sessionHelper.rollback(LOG);
