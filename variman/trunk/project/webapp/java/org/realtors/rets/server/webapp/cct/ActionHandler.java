@@ -9,10 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ActionHandler implements ServletHandler
+public class ActionHandler extends BaseServletHandler
 {
     public static final String NAME = "/action";
-    
+
     public String getName()
     {
         return NAME;
