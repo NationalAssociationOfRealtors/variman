@@ -17,9 +17,10 @@ InfoBeforeFile=@BASEDIR@\project\build\iss_java.txt
 LicenseFile=@BASEDIR@\LICENSE.TXT
 UninstallFilesDir={app}\uninstall
 MinVersion=0,4
+; Compression=none
 
 [Files]
-Source: "*"; Excludes: "\webapp\WEB-INF\rets\rets-config.xml"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "*"; Excludes: "\webapp\WEB-INF\rets\rets-config.xml"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Check: StopVarimanService
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
@@ -40,7 +41,7 @@ Type: filesandordirs; Name: "{app}\logs"
 
 [Run]
 ; NOTE: The following entry contains an English phrase ("Launch"). You are free to translate it into another language if required.
-Filename: "{app}\variman.exe"; Parameters: "{code:InstallServiceParams}"; Description: "Install service"; Flags: runhidden
+Filename: "{app}\variman.exe"; Parameters: "{code:InstallServiceParams}"; Description: "Install service"; Flags: runhidden; StatusMsg: "Installing Variman Service..."
 Filename: "{app}\doc\readme.txt"; Description: "View the README file"; Flags: shellexec postinstall skipifsilent
 
 [UninstallRun]
@@ -56,18 +57,11 @@ var
   JavaHome: String;
   JavaJvmDll: String;
   ServiceName: String;
+  ServiceStopped: Boolean;
   
 function GetJavaHome(Default: String): String;
 begin
   Result:= JavaHome;
-end;
-
-function bool(b: Boolean): String;
-begin
-  if b then
-    Result := 'True'
-  else
-    Result := 'False';
 end;
 
 procedure InitializeJava();
@@ -105,6 +99,7 @@ function InitializeSetup(): Boolean;
 begin
   InitializeJava();
   ServiceName := 'Variman';
+  ServiceStopped := False;
   Result := True;
 end;
 
@@ -142,4 +137,15 @@ function UninstallServiceParams(Default: String): String;
 begin
   Result := '-uninstall "' + ServiceName + '"';
 //  MsgBox('Uninstall service: ' + Result, mbInformation, MB_OK);
+end;
+
+function StopVarimanService() : Boolean;
+var rslt : integer;
+begin
+  if not ServiceStopped then begin
+//    MsgBox('Removing Variman Service', mbInformation, MB_OK);
+    Exec(GetSystemDir() + '\net.exe', 'stop Variman', GetSystemDir(), SW_HIDE, ewWaitUntilTerminated, rslt);
+    ServiceStopped := True;
+  end
+  Result := True;
 end;
