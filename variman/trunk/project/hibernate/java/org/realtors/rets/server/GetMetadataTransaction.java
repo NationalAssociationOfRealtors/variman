@@ -3,6 +3,7 @@
 package org.realtors.rets.server;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
@@ -30,9 +31,12 @@ public class GetMetadataTransaction
                         MetadataFetcher fetcher)
         throws RetsReplyException
     {
-        MetadataSegment segment = fetcher.fetchMetadata(parameters.getType(),
-                                                        parameters.getIds());
+//        MetadataSegment segment = fetcher.fetchMetadata(parameters.getType(),
+//                                                        parameters.getIds());
+        List segments = fetcher.fetchAllMetadata(parameters.getType(),
+                                                 parameters.getIds());
 
+        RetsUtils.printXmlHeader(out);
         RetsUtils.printOpenRetsSuccess(out);
         if (parameters.getFormat() == MetadataFormatter.STANDARD)
         {
@@ -40,13 +44,18 @@ public class GetMetadataTransaction
         }
         FormatterLookup lookup =
             new ClassFormatterLookup(parameters.getFormat());
-        FormatterContext context =
-            new FormatterContext(segment.getVersion(), segment.getDate(),
-                                 parameters.isRecursive(), out, lookup);
         StopWatch stopWatch = new StopWatch();
         LOG.debug("Formatting started");
         stopWatch.start();
-        context.format(segment.getDataList(), segment.getLevels());
+        for (int i = 0; i < segments.size(); i++)
+        {
+            MetadataSegment segment = (MetadataSegment) segments.get(i);
+            FormatterContext context =
+                new FormatterContext(segment.getVersion(), segment.getDate(),
+                                     parameters.isRecursive(), out, lookup);
+            context.format(segment.getDataList(), segment.getLevels());
+        }
+//        context.format(segment.getDataList(), segment.getLevels());
         stopWatch.stop();
         LOG.debug("Formatting done: " + stopWatch.getTime());
         if (parameters.getFormat() == MetadataFormatter.STANDARD)
