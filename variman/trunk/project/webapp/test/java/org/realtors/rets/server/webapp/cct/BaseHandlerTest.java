@@ -3,6 +3,7 @@
 package org.realtors.rets.server.webapp.cct;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.servlet.ServletException;
 
@@ -81,6 +82,24 @@ public class BaseHandlerTest extends LocalTestCase
                      results.getMessage());
 
         mClient.setHeaderField("accept", "*/*");
+        mClient.getResponse(TEST_URL);
+        results = mTest.validate();
+        assertTrue(results.wasSuccessful());
+        assertEquals("Success", results.getMessage());
+    }
+
+    public void testCookie() throws SAXException, IOException
+    {
+        mTest.reset();
+        mTest.addCookie("RETS-Session-ID", "^testCookie$");
+
+        mClient.getResponse(TEST_URL);
+        ValidationResults results = mTest.validate();
+        assertFalse(results.wasSuccessful());
+        assertEquals("test HTTP cookie [RETS-Session-ID] was null, expected " +
+                     "^testCookie$", results.getMessage());
+
+        mClient.addCookie("RETS-Session-ID", "testCookie");
         mClient.getResponse(TEST_URL);
         results = mTest.validate();
         assertTrue(results.wasSuccessful());

@@ -11,6 +11,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.ServletException;
 
 import org.apache.log4j.Logger;
@@ -29,12 +30,16 @@ public abstract class BaseServletHandler implements ServletHandler
     {
         mExpectedHeaders = new HashMap();
         mHeaders = new HashMap();
+        mExpectedCookies = new HashMap();
+        mCookies = new HashMap();
     }
 
     public void reset()
     {
         mExpectedHeaders.clear();
         mHeaders.clear();
+        mExpectedCookies.clear();
+        mCookies.clear();
         mDoGetInvokeCount = 0;
         mInvokeCount = InvokeCount.ANY;
     }
@@ -43,6 +48,13 @@ public abstract class BaseServletHandler implements ServletHandler
         throws ServletException, IOException
     {
         mDoGetInvokeCount++;
+        copyHeaders(request);
+        copyCookies(request);
+        LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
+    }
+
+    private void copyHeaders(HttpServletRequest request)
+    {
         mHeaders.clear();
         Enumeration headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements())
@@ -51,7 +63,21 @@ public abstract class BaseServletHandler implements ServletHandler
             mHeaders.put(headerName.toLowerCase(),
                          request.getHeader(headerName));
         }
-        LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
+    }
+
+    private void copyCookies(HttpServletRequest request)
+    {
+        mCookies.clear();
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null)
+        {
+            return;
+        }
+        for (int i = 0; i < cookies.length; i++)
+        {
+            Cookie cookie = cookies[i];
+            mCookies.put(cookie.getName(), cookie.getValue());
+        }
     }
 
     public void setGetInvokeCount(InvokeCount invokeCount)
@@ -59,7 +85,21 @@ public abstract class BaseServletHandler implements ServletHandler
         mInvokeCount = invokeCount;
     }
 
+    public ValidationResults validate()
+    {
+        ValidationResults results = new ValidationResults();
+        validate(results);
+        return results;
+    }
+
     public void validate(ValidationResults results)
+    {
+        validateInvokeCount(results);
+        validateHeaders(results);
+        validateCookies(results);
+    }
+
+    private void validateInvokeCount(ValidationResults results)
     {
         if (mInvokeCount.equals(InvokeCount.ONE) && !(mDoGetInvokeCount == 1))
         {
@@ -74,15 +114,6 @@ public abstract class BaseServletHandler implements ServletHandler
         {
             // Todo: LoginHandler.validate: log error
         }
-
-        validateHeaders(results);
-    }
-
-    public ValidationResults validate()
-    {
-        ValidationResults results = new ValidationResults();
-        validate(results);
-        return results;
     }
 
     private void validateHeaders(ValidationResults result)
@@ -98,6 +129,24 @@ public abstract class BaseServletHandler implements ServletHandler
                 String message = getName() + " HTTP header [" + name +
                     "] was " + header + ", expected " + regexp;
                 result.addFailure(message);
+                LOG.debug("Failed: " + message);
+            }
+        }
+    }
+
+    private void validateCookies(ValidationResults results)
+    {
+        Set names = mExpectedCookies.keySet();
+        for (Iterator iterator = names.iterator(); iterator.hasNext();)
+        {
+            String name = (String) iterator.next();
+            String value = (String) mCookies.get(name);
+            String regexp = (String) mExpectedCookies.get(name);
+            if ((value == null) || !matches(value, regexp))
+            {
+                String message = getName() + " HTTP cookie [" + name +
+                    "] was " + value + ", expected " + regexp;
+                results.addFailure(message);
                 LOG.debug("Failed: " + message);
             }
         }
@@ -124,10 +173,17 @@ public abstract class BaseServletHandler implements ServletHandler
         }
     }
 
+    public void addCookie(String name, String value)
+    {
+        mExpectedCookies.put(name, value);
+    }
+
     private static final Logger LOG =
         Logger.getLogger(BaseServletHandler.class);
     private Map mExpectedHeaders;
     private int mDoGetInvokeCount;
     private InvokeCount mInvokeCount;
     private Map mHeaders;
+    private Map mExpectedCookies;
+    private Map mCookies;
 }
