@@ -41,7 +41,7 @@ public abstract class BaseServletHandler implements ServletHandler
         mExpectedCookies.clear();
         mCookies.clear();
         mDoGetInvokeCount = 0;
-        mInvokeCount = InvokeCount.ANY;
+        mInvokeCount = InvokeCount.ZERO;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -87,19 +87,22 @@ public abstract class BaseServletHandler implements ServletHandler
 
     public ValidationResult validate()
     {
-        ValidationResult results = new ValidationResult();
-        validate(results);
-        return results;
+        ValidationResult result = new ValidationResult();
+        validate(result);
+        return result;
     }
 
-    public void validate(ValidationResult results)
+    public void validate(ValidationResult result)
     {
-        validateInvokeCount(results);
-        validateHeaders(results);
-        validateCookies(results);
+        validateInvokeCount(result);
+        if (mDoGetInvokeCount > 0)
+        {
+            validateHeaders(result);
+            validateCookies(result);
+        }
     }
 
-    private void validateInvokeCount(ValidationResult results)
+    private void validateInvokeCount(ValidationResult result)
     {
         boolean failed = false;
         if (mInvokeCount.equals(InvokeCount.ZERO) && !(mDoGetInvokeCount == 0))
@@ -122,8 +125,8 @@ public abstract class BaseServletHandler implements ServletHandler
         {
             String message = getName() + " get invoke count was " +
                 mDoGetInvokeCount + ", expected " + mInvokeCount.getName();
-            results.setStatus(StatusEnum.FAILED);
-            results.addMessage(message);
+            result.setStatus(StatusEnum.FAILED);
+            result.addMessage(message);
             LOG.debug("Failed: " + message);
         }
     }
@@ -147,7 +150,7 @@ public abstract class BaseServletHandler implements ServletHandler
         }
     }
 
-    private void validateCookies(ValidationResult results)
+    private void validateCookies(ValidationResult result)
     {
         Set names = mExpectedCookies.keySet();
         for (Iterator iterator = names.iterator(); iterator.hasNext();)
@@ -159,8 +162,8 @@ public abstract class BaseServletHandler implements ServletHandler
             {
                 String message = getName() + " HTTP cookie [" + name +
                     "] was " + value + ", expected " + regexp;
-                results.setStatus(StatusEnum.FAILED);
-                results.addMessage(message);
+                result.setStatus(StatusEnum.FAILED);
+                result.addMessage(message);
                 LOG.debug("Failed: " + message);
             }
         }
