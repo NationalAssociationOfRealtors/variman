@@ -141,11 +141,11 @@
         <pathelement location="build/hibernate/classes"/>
       </classpath>
     </javac>
-<!--     <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false" -->
-<!--                      mergedir="project/hibernate/java"> -->
-<!--       <fileset dir="project/hibernate/java" includes="**/*.java"/> -->
-<!--       <hibernate version="2.0"/> -->
-<!--     </hibernatedoclet> -->
+    <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false"
+                     mergedir="project/hibernate/java">
+      <fileset dir="project/hibernate/java" includes="**/*.java"/>
+      <hibernate version="2.0"/>
+    </hibernatedoclet>
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
          basedir="build/hibernate/classes"
          excludes="hibernate.properties" index="true"/>
@@ -463,7 +463,7 @@
 
       <formatter type="plain"/>
       <test fork="yes" name="test.AllTests"
-             outfile="build/tests/results.txt"/>
+             outfile="build/tests/results"/>
     </junit>
   </target>
 
