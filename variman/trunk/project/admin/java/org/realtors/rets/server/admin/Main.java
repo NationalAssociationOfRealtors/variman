@@ -12,7 +12,7 @@ public class Main extends wxApp
     {
         wxInitAllImageHandlers();
         AdminFrame frame = new AdminFrame("Rex Administration",
-                                    new wxPoint(50, 50), new wxSize(450, 340));
+                                    new wxPoint(50, 50), new wxSize(640, 480));
         frame.Show(true);
         frame.initDatabase();
         return true;
