@@ -49,5 +49,11 @@
         <arg0 key="registration.field.lastName"/>
       </field>
     </form>
+
+    <form name="cctLoginForm">
+      <field property="username" depends="required">
+        <arg0 key="login.field.username"/>
+      </field>
+    </form>
   </formset>
 </form-validation>
