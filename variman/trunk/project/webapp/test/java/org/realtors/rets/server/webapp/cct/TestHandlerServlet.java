@@ -20,7 +20,6 @@ public class TestHandlerServlet extends HttpServlet
         throws ServletException, IOException
     {
         mHandler.doGet(req, resp);
-        mHandler.validate();
     }
 
     private ServletHandler mHandler;
