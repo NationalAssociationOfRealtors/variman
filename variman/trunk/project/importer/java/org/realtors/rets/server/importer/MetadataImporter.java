@@ -66,7 +66,7 @@ public class MetadataImporter extends MetadataLoader
         }
         catch (HibernateException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -389,7 +389,7 @@ public class MetadataImporter extends MetadataLoader
     private Session mSession;
     private String mUsername;
     static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.42 2004/01/26 18:00:01 dterrell Exp $";
+        "$Id: MetadataImporter.java,v 1.43 2004/03/31 15:37:03 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 

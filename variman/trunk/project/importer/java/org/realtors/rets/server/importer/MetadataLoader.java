@@ -142,7 +142,7 @@ public class MetadataLoader
         }
         catch (MetadataException e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
 
         }
     }
@@ -911,7 +911,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.14 2004/01/15 22:06:32 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.15 2004/03/31 15:37:20 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
