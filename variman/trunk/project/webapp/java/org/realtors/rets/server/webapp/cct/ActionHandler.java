@@ -9,8 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.realtors.rets.server.cct.*;
-
 public class ActionHandler extends BaseServletHandler
 {
     public static final String NAME = "/action";
@@ -23,26 +21,10 @@ public class ActionHandler extends BaseServletHandler
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException
     {
+        super.doGet(request, response);
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         out.println("Welcome to the RETS Compliance Tester from the Center " +
                     "for REALTOR(R) Technology!");
-    }
-
-    public ValidationResults validate()
-    {
-        return null;
-    }
-
-    public void reset()
-    {
-    }
-
-    public void setGetInvokeCount(InvokeCount callCount)
-    {
-    }
-
-    public void addCookie(String name, String value)
-    {
     }
 }
