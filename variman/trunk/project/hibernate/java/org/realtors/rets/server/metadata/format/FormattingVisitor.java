@@ -17,8 +17,15 @@ import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.LookupType;
+import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.ValidationExternal;
+import org.realtors.rets.server.metadata.ValidationExternalType;
+import org.realtors.rets.server.metadata.ValidationExpression;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 public class FormattingVisitor
 {
@@ -126,6 +133,80 @@ public class FormattingVisitor
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
         formatter.format(mOut, lookup);
+    }
+
+    public void visitLookupType(MetadataSegment segment)
+    {
+        LookupType[] lookupTypes = (LookupType[]) segment.getData();
+        String[] levels = segment.getLevels();
+        LookupTypeFormatter formatter =
+            LookupTypeFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.setLookupName(levels[0]);
+        formatter.format(mOut, lookupTypes);
+    }
+
+    public void visitValidationLookup(MetadataSegment segment)
+    {
+        ValidationLookup[] validationLookups =
+            (ValidationLookup[]) segment.getData();
+        String[] levels = segment.getLevels();
+        ValidationLookupFormatter formatter =
+            ValidationLookupFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.format(mOut, validationLookups);
+    }
+
+    public void visitValidationLookupType(MetadataSegment segment)
+    {
+        ValidationLookupType[] validationLookupTypes =
+            (ValidationLookupType[]) segment.getData();
+        String[] levels = segment.getLevels();
+        ValidationLookupTypeFormatter formatter =
+            ValidationLookupTypeFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.setValidationLookupName(levels[1]);
+        formatter.format(mOut, validationLookupTypes);
+    }
+
+    public void visitValidationExternal(MetadataSegment segment)
+    {
+        ValidationExternal[] validationExternals =
+            (ValidationExternal[]) segment.getData();
+        String[] levels = segment.getLevels();
+        ValidationExternalFormatter formatter =
+            ValidationExternalFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.format(mOut, validationExternals);
+    }
+
+    public void visitValidationExternalType(MetadataSegment segment)
+    {
+        ValidationExternalType[] validationExternalTypes =
+            (ValidationExternalType[]) segment.getData();
+        String[] levels = segment.getLevels();
+        ValidationExternalTypeFormatter formatter =
+            ValidationExternalTypeFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.setValidationExternalName(levels[1]);
+        formatter.format(mOut, validationExternalTypes);
+    }
+
+    public void visitValidationExpression(MetadataSegment segment)
+    {
+        ValidationExpression[] validationExpressions =
+            (ValidationExpression[]) segment.getData();
+        String[] levels = segment.getLevels();
+        ValidationExpressionFormatter formatter =
+            ValidationExpressionFormatter.getInstance(mFormat);
+        formatter.setVersion(segment.getVersion(), segment.getDate());
+        formatter.setResourceName(levels[0]);
+        formatter.format(mOut, validationExpressions);
     }
 
     public void visitServerMetadata(MetadataSegment segment)
