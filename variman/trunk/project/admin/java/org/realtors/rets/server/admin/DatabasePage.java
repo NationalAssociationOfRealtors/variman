@@ -9,6 +9,7 @@
 package org.realtors.rets.server.admin;
 
 import org.realtors.rets.server.config.DatabaseConfig;
+import org.realtors.rets.server.config.RetsConfig;
 
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxButton;
@@ -18,21 +19,55 @@ import org.wxwindows.wxFlexGridSizer;
 import org.wxwindows.wxPanel;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
+import org.wxwindows.wxStaticLine;
+import org.wxwindows.wxTextCtrl;
+
+import org.apache.commons.lang.math.NumberUtils;
 
 public class DatabasePage extends wxPanel
 {
     public DatabasePage(wxWindow parent)
     {
         super(parent);
-        mConfig = Admin.getRetsConfig().getDatabase();
+
         wxBoxSizer box = new wxBoxSizer(wxVERTICAL);
-        wxFlexGridSizer grid = new wxFlexGridSizer(0, 3, 0, 0);
-        grid.AddGrowableCol(2);
         wxStaticText label;
+        wxFlexGridSizer grid;
+        wxBoxSizer hBox;
+
+        hBox = new wxBoxSizer(wxHORIZONTAL);
+        hBox.Add(new wxStaticText(this, -1, "Networking"), 0, wxALL, 5);
+        hBox.Add(new wxStaticLine(this, -1), 1,
+                 wxALIGN_CENTER_VERTICAL | wxALL, 5);
+        box.Add(hBox, 0, wxEXPAND, 0);
+
+        hBox = new wxBoxSizer(wxHORIZONTAL);
+        hBox.Add(20, 20);
+
+        grid = new wxFlexGridSizer(0, 3, 0, 0);
+        grid.AddGrowableCol(2);
+        label = new wxStaticText(this, -1, "Port:");
+        grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
+        grid.Add(SPACER_WIDTH, -1);
+        mPort = new wxTextCtrl(this, -1, "");
+        grid.Add(mPort, 0, wxBOTTOM, 5);
+        hBox.Add(grid, 1, wxALL | wxEXPAND, 10);
+        box.Add(hBox, 0, wxEXPAND, 0);
+
+        hBox = new wxBoxSizer(wxHORIZONTAL);
+        hBox.Add(new wxStaticText(this, -1, "Database"), 0, wxALL, 5);
+        hBox.Add(new wxStaticLine(this, -1), 1,
+                 wxALIGN_CENTER_VERTICAL | wxALL, 5);
+        box.Add(hBox, 0, wxEXPAND, 0);
+
+        hBox = new wxBoxSizer(wxHORIZONTAL);
+        hBox.Add(20, 20);
+        grid = new wxFlexGridSizer(0, 3, 0, 0);
+        grid.AddGrowableCol(2);
 
         label = new wxStaticText(this,  -1, "Driver class:");
         grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
-        grid.Add(SPACER_WIDTH, -1, 0);
+        grid.Add(SPACER_WIDTH, -1);
         mDriverClass = new wxStaticText(this, -1, "");
         grid.Add(mDriverClass, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
 
@@ -44,18 +79,19 @@ public class DatabasePage extends wxPanel
 
         label = new wxStaticText(this,  -1, "Username:");
         grid.Add(label, 0, wxALIGN_LEFT | wxBOTTOM | wxRIGHT, 5);
-        grid.Add(SPACER_WIDTH, -1, 0);
+        grid.Add(SPACER_WIDTH, -1);
         mUsername = new wxStaticText(this, -1, "");
         grid.Add(mUsername, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
 
         grid.Add(-1, -1, 0);
-        grid.Add(SPACER_WIDTH, -1, 0);
+        grid.Add(SPACER_WIDTH, -1);
         grid.Add(new wxButton(this, EDIT_PROPERTIES, "Edit Properties..."), 0);
 
+        hBox.Add(grid, 1, wxALL | wxEXPAND, 10);
+        box.Add(hBox, 0, wxEXPAND, 0);
+
+
         updateLabels();
-
-        box.Add(grid, 1, wxALL | wxEXPAND, 10);
-
         SetSizer(box);
 
         EVT_BUTTON(EDIT_PROPERTIES, new OnEditProperties());
@@ -63,17 +99,26 @@ public class DatabasePage extends wxPanel
 
     private void updateLabels()
     {
-        mDriverClass.SetLabel(mConfig.getDriver());
-        mUrl.SetLabel(mConfig.getUrl());
-        mUsername.SetLabel(mConfig.getUsername());
+        RetsConfig config = Admin.getRetsConfig();
+        DatabaseConfig dbConfig = config.getDatabase();
+        mDriverClass.SetLabel(dbConfig.getDriver());
+        mUrl.SetLabel(dbConfig.getUrl());
+        mUsername.SetLabel(dbConfig.getUsername());
+        mPort.SetValue("" + config.getPort());
+    }
+
+    public int getPort()
+    {
+        return NumberUtils.stringToInt(mPort.GetValue());
     }
 
     class OnEditProperties implements wxCommandListener
     {
         public void handleEvent(wxCommandEvent event)
         {
+            DatabaseConfig dbConfig = Admin.getRetsConfig().getDatabase();
             DatabasePropertiesDialog dialog =
-                new DatabasePropertiesDialog(null, mConfig);
+                new DatabasePropertiesDialog(Admin.getAdminFrame(), dbConfig);
             try
             {
                 int response = dialog.ShowModal();
@@ -81,7 +126,7 @@ public class DatabasePage extends wxPanel
                 {
                     return;
                 }
-                dialog.updateConfig(mConfig);
+                dialog.updateConfig(dbConfig);
                 updateLabels();
                 // Re-initialize Hibernate with new parameters
                 new InitDatabaseCommand().execute();
@@ -99,5 +144,5 @@ public class DatabasePage extends wxPanel
     private wxStaticText mDriverClass;
     private wxStaticText mUrl;
     private wxStaticText mUsername;
-    private DatabaseConfig mConfig;
+    private wxTextCtrl mPort;
 }
