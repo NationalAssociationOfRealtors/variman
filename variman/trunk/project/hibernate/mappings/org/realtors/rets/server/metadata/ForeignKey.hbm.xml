@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ForeignKey.hbm.xml,v 1.2 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: ForeignKey.hbm.xml,v 1.3 2003/06/04 20:47:58 kgarner Exp $ -->
 
 <hibernate-mapping>
 
@@ -22,20 +22,22 @@
         index="rets_metadata_foreignkey_id_index"/>
     </property>
 
-    <many-to-one name="parentResource" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+    <!-- We should be able to derive the resource and class from the table. -->
+<!--     <many-to-one name="parentResource" cascade="none" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataResource"/> -->
 
-    <many-to-one name="parentClass" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataClass"/>
+<!--     <many-to-one name="parentClass" cascade="none" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataClass"/> -->
 
     <many-to-one name="parentTable" cascade="none"
       class="org.nar.rets.metadata.newdb.MetadataTable"/>
 
-    <many-to-one name="childResource" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+    <!-- We should be able to derive the resource and class from the table. -->
+<!--     <many-to-one name="childResource" cascade="none" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataResource"/> -->
 
-    <many-to-one name="childClass" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataClass"/>
+<!--     <many-to-one name="childClass" cascade="none" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataClass"/> -->
 
     <many-to-one name="childTable" cascade="none"
       class="org.nar.rets.metadata.newdb.MetadataTable"/>
