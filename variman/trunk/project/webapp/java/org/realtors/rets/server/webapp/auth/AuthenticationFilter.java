@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.webapp.WebApp;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -110,25 +111,39 @@ public class AuthenticationFilter implements Filter, UserMap
         if (!uri.startsWith("/rets") && !uri.startsWith("/cct"))
         {
             filterChain.doFilter(request, response);
+            return;
         }
 
         try
         {
             String authorizationHeader = request.getHeader("Authorization");
             DigestAuthorizationRequest authorizationRequest =
-                new DigestAuthorizationRequest(authorizationHeader, method);
+                new DigestAuthorizationRequest(authorizationHeader, method,
+                                               uri);
             HttpSession session = request.getSession();
-            if (verifyResponse(authorizationRequest, session))
+            if (!verifyResponse(authorizationRequest, session))
             {
-                LOG.debug("Digest auth succeeded");
-                User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
-                MDC.put("user", user.getUsername());
-                filterChain.doFilter(request, response);
+                send401(NOT_STALE, response);
+                return;
             }
-            else
+
+            String qop = authorizationRequest.getQop();
+            if ((qop == null) && !validNonce(authorizationRequest))
             {
-                send401(response);
+                send401(STALE, response);
+                return;
             }
+
+            if ((qop != null) && !verifyNonce(authorizationRequest))
+            {
+                send401(STALE, response);
+                return;
+            }
+
+            LOG.debug("Digest auth succeeded");
+            User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
+            MDC.put("user", user.getUsername());
+            filterChain.doFilter(request, response);
         }
         catch (IllegalArgumentException e)
         {
@@ -136,6 +151,20 @@ public class AuthenticationFilter implements Filter, UserMap
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,
                                e.getMessage());
         }
+    }
+
+    private boolean validNonce(DigestAuthorizationRequest authorizationRequest)
+    {
+        NonceTable nonceTable = WebApp.getNonceTable();
+        return nonceTable.isValidNonce(authorizationRequest.getNonce());
+    }
+
+    private boolean verifyNonce(DigestAuthorizationRequest authorizationRequest)
+    {
+        NonceTable nonceTable = WebApp.getNonceTable();
+        return nonceTable.validateRequest(authorizationRequest.getNonce(),
+                                          authorizationRequest.getOpaque(),
+                                          authorizationRequest.getNonceCount());
     }
 
     private boolean verifyResponse(DigestAuthorizationRequest request,
@@ -194,10 +223,18 @@ public class AuthenticationFilter implements Filter, UserMap
         return user;
     }
 
-    private void send401(HttpServletResponse response) throws IOException
+    private void send401(boolean stale, HttpServletResponse response)
+        throws IOException
     {
-        String header =
-            new DigestAuthenticateResponse("RETS Server").getHeader();
+        NonceTable nonceTable = WebApp.getNonceTable();
+        String nonce = nonceTable.generateNonce();
+        String opaque = nonceTable.getOpaque(nonce);
+        DigestAuthenticateResponse authenticateResponse =
+            new DigestAuthenticateResponse("RETS Server");
+        authenticateResponse.setNonce(nonce);
+        authenticateResponse.setOpaque(opaque);
+        authenticateResponse.setStale(stale);
+        String header = authenticateResponse.getHeader();
         response.setHeader("WWW-Authenticate", header);
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         LOG.debug("Sending 401 with header: " + header);
@@ -208,6 +245,8 @@ public class AuthenticationFilter implements Filter, UserMap
         mUserMap = null;
     }
 
+    private static final boolean STALE = true;
+    private static final boolean NOT_STALE = false;
     private static final Logger LOG =
         Logger.getLogger(AuthenticationFilter.class);
     public static final String AUTHORIZED_USER_KEY = "authorized_user";
