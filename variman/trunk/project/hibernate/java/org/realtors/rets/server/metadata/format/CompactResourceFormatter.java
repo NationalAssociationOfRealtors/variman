@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.Date;
-
 import org.realtors.rets.server.metadata.Resource;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,15 +20,14 @@ public class CompactResourceFormatter
         for (int i = 0; i < resources.length; i++)
         {
             Resource resource = resources[i];
-            buffer.append(format(resource, mVersion, mDate));
+            append(buffer, resource);
         }
         buffer.append("</METADATA-RESOURCE>\n");
         return buffer.toString();
     }
 
-    private String format(Resource resource, String version, Date date)
+    private String append(StringBuffer buffer, Resource resource)
     {
-        StringBuffer buffer = new StringBuffer();
         buffer.append("<DATA>\t");
         buffer.append(resource.getResourceID()).append("\t");
         buffer.append(resource.getStandardName()).append("\t");
@@ -43,8 +40,8 @@ public class CompactResourceFormatter
         // expression, validation lookup, validation external.
         for (int i = 0; i < 9; i++)
         {
-            buffer.append(version).append("\t");
-            buffer.append(format(date)).append("\t");
+            buffer.append(mVersion).append("\t");
+            buffer.append(format(mDate)).append("\t");
         }
         buffer.append("</DATA>\n");
         return buffer.toString();

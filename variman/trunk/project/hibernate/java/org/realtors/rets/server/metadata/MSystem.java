@@ -3,6 +3,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import java.text.MessageFormat;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -83,14 +84,25 @@ public class MSystem implements Serializable
      *
      * @hibernate.property
      */
-    public String getVersion()
+    public int getVersion()
     {
         return mVersion;
     }
 
-    public void setVersion(String version)
+    public void setVersion(int version)
     {
         mVersion = version;
+    }
+
+    public String getVersionString()
+    {
+        Object[] dottedVersion = new Object[3];
+        dottedVersion[0] = new Integer(mVersion / 100000);
+        dottedVersion[1] = new Integer((mVersion / 1000) % 100);
+        dottedVersion[2] = new Integer(mVersion % 1000);
+        MessageFormat format =
+            new MessageFormat("{0,number,#}.{1,number,00}.{2,number,000}");
+        return format.format(dottedVersion);
     }
 
     /**
@@ -188,7 +200,7 @@ public class MSystem implements Serializable
     private String mComments;
 
     /** nullable persistent field */
-    private String mVersion;
+    private int mVersion;
 
     /** nullable persistent field */
     private Date mDate;

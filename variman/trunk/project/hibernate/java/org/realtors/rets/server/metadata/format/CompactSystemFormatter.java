@@ -13,7 +13,7 @@ public class CompactSystemFormatter
         StringBuffer buffer = new StringBuffer();
         buffer.append("<METADATA-SYSTEM ");
         buffer.append("Version=\"")
-            .append(system.getVersion())
+            .append(system.getVersionString())
             .append("\" ");
         buffer.append("Date=\"")
             .append(format(system.getDate()))

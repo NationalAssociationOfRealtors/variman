@@ -54,12 +54,12 @@ public class Table implements Serializable
      *
      * @hibernate.property
      */
-    public TableStandardNameEnum getStandardName()
+    public TableStandardName getStandardName()
     {
         return mStandardName;
     }
 
-    public void setStandardName(TableStandardNameEnum standardName)
+   public void setStandardName(TableStandardName standardName)
     {
         mStandardName = standardName;
     }
@@ -460,7 +460,7 @@ public class Table implements Serializable
     private String mSystemName;
 
     /** nullable persistent field */
-    private TableStandardNameEnum mStandardName;
+    private TableStandardName mStandardName;
 
     /** nullable persistent field */
     private String mLongName;

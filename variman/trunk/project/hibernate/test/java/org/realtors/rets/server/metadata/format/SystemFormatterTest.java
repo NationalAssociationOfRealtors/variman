@@ -12,7 +12,7 @@ public class SystemFormatterTest extends FormatterTestCase
         mSystem.setSystemID("CRT_RETS");
         mSystem.setDescription("Center for REALTOR Technology");
         mSystem.setComments("The reference implementation of a RETS Server");
-        mSystem.setVersion("1.00.001");
+        mSystem.setVersion(100001);
         mSystem.setDate(getDate());
     }
 

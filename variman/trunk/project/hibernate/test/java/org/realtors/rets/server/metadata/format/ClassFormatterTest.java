@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
+import org.realtors.rets.server.metadata.MClass;
 
 public class ClassFormatterTest extends FormatterTestCase
 {
@@ -28,12 +28,15 @@ public class ClassFormatterTest extends FormatterTestCase
             "<METADATA-CLASS Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
+
             "<COLUMNS>\tClassName\tStandardName\tVisibleName\tDBName\t" +
             "Description\tTableVersion\tTableDate\tUpdateVersion\t" +
             "UpdateDate\t</COLUMNS>\n" +
+
             "<DATA>\tRES\tResidentialProperty\tSingle Family\t\t" +
             "Single Family Residential" + VERSION_DATE + VERSION_DATE +
             "\t</DATA>\n" +
+
             "</METADATA-CLASS>\n",
             formatted
         );
