@@ -9,5 +9,6 @@ package org.realtors.rets.server.cct;
  */
 public interface ValidationResults
 {
-    public abstract ValidationResult getResultByName(String name);
+    public ValidationResult getResultByName(String name);
+    public void addResult(ValidationResult result);
 }
