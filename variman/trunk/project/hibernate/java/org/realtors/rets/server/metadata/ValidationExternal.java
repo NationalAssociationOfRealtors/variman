@@ -2,6 +2,9 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -13,12 +16,14 @@ public class ValidationExternal extends ServerMetadata implements Serializable
 {
     public ValidationExternal(long id)
     {
+        this();
         mId = new Long(id);
     }
 
     public ValidationExternal()
     {
         mId = null;
+        mValidationExternalTypes = Collections.EMPTY_SET;
     }
 
     /**
@@ -145,6 +150,14 @@ public class ValidationExternal extends ServerMetadata implements Serializable
     public String getPath()
     {
         return mLevel + ":" + mValidationExternalName;
+    }
+
+    public List getChildren()
+    {
+        List children = new ArrayList();
+        children.add(
+            mValidationExternalTypes.toArray(new ValidationExternalType[0]));
+        return children;
     }
 
     public String toString()

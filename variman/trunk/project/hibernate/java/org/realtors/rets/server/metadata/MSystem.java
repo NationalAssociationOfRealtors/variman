@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -14,6 +17,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class MSystem extends ServerMetadata implements Serializable
 {
+    public MSystem()
+    {
+        mResources = Collections.EMPTY_SET;
+        mForeignKeys = Collections.EMPTY_SET;
+    }
+
     /**
      *
      * @return a Long object
@@ -162,6 +171,19 @@ public class MSystem extends ServerMetadata implements Serializable
     public String getPath()
     {
         return "";
+    }
+
+    public List getChildren()
+    {
+        List children = new ArrayList();
+        children.add(mResources.toArray(new Resource[0]));
+        children.add(mForeignKeys.toArray(new ForeignKey[0]));
+        return children;
+    }
+
+    public String getRetsId()
+    {
+        return null;
     }
 
     public String toString()

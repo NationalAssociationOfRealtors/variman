@@ -5,10 +5,10 @@ package org.realtors.rets.server.webapp;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,21 +21,10 @@ import net.sf.hibernate.Session;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.MetadataSegment;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ValidationExternalType;
+import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.ServerMetadata;
+import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.format.FormattingVisitor;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
 
@@ -146,7 +135,10 @@ public class  GetMetadataServlet extends RetsServlet
             System.out.println(system.getDescription());
             if (recursive)
             {
-                recurseSystem(system, metadata, levels, version, date);
+//                recurseSystem(system, metadata, levels, version, date);
+                List systemList = new ArrayList();
+                systemList.add(system);
+                recurseChildren(systemList, metadata, version, date);
             }
         }
         else if (type.equals("METADAT-RESOURCE"))
@@ -181,181 +173,24 @@ public class  GetMetadataServlet extends RetsServlet
         return metadata;
     }
 
-    private void recurseSystem(MSystem system, List metadata, String[] levels,
-                               String version, Date date)
+    private void recurseChildren(List parents, List metadataResults,
+                                 String version, Date date)
     {
-        Set resourceSet = system.getResources();
-        Resource[] resources = (Resource[])
-            resourceSet.toArray(new Resource[resourceSet.size()]);
-        metadata.add(new MetadataSegment(resources,  levels,
-                                         version, date));
-        recurseResources(resources, metadata, version, date);
-    }
-
-    private void recurseResources(Resource[] resources, List metadata,
-                                  String version, Date date)
-    {
-        for (int i = 0; i < resources.length; i++)
+        for (int i = 0; i < parents.size(); i++)
         {
-            Resource resource = resources[i];
-            String[] thisLevel = new String[] {resource.getResourceID()};
-
-            Set classesSet = resource.getClasses();
-            MClass[] classes = (MClass[])
-                classesSet.toArray(new MClass[classesSet.size()]);
-            metadata.add(new MetadataSegment(classes, thisLevel, version,
-                                             date));
-            recurseClasses(classes, metadata, thisLevel, version, date);
-
-            Set objectsSet = resource.getObjects();
-            MObject[] objects = (MObject[])
-                objectsSet.toArray(new MObject[objectsSet.size()]);
-            metadata.add(new MetadataSegment(objects, thisLevel, version,
-                                             date));
-
-            Set searchHelpsSet = resource.getSearchHelps();
-            SearchHelp[] serachHelps = (SearchHelp[])
-                searchHelpsSet.toArray(new SearchHelp[searchHelpsSet.size()]);
-            metadata.add(new MetadataSegment(serachHelps, thisLevel, version,
-                                             date));
-
-            Set editMasksSet = resource.getEditMasks();
-            EditMask[] editMasks = (EditMask[])
-                editMasksSet.toArray(new EditMask[editMasksSet.size()]);
-            metadata.add(new MetadataSegment(editMasks, thisLevel, version,
-                                             date));
-
-            Set lookupsSet = resource.getLookups();
-            Lookup[] lookups = (Lookup[])
-                lookupsSet.toArray(new Lookup[lookupsSet.size()]);
-            metadata.add(new MetadataSegment(lookups, thisLevel, version,
-                                             date));
-            recurseLookups(lookups, metadata, thisLevel, version, date);
-
-            Set validationLookupsSet = resource.getValidationLookups();
-            ValidationLookup[] validationLookups = (ValidationLookup[])
-                validationLookupsSet.toArray(
-                    new ValidationLookup[validationLookupsSet.size()]);
-            metadata.add(new MetadataSegment(validationLookups,  thisLevel,
-                                             version, date));
-            recurseValidationLookups(validationLookups,  metadata, thisLevel,
-                                     version, date);
-
-            Set validationExternalsSet = resource.getValidationExternals();
-            ValidationExternal[] validationExternals = (ValidationExternal[])
-                validationExternalsSet.toArray(
-                    new ValidationExternal[validationExternalsSet.size()]);
-            metadata.add(new MetadataSegment(validationExternals, thisLevel,
-                                             version, date));
-            recurseValidationExternals(validationExternals, metadata, thisLevel,
-                                       version, date);
-
-            Set validationExpressionsSet = resource.getValidationExpressions();
-            ValidationExpression[] validationExpressions =
-                (ValidationExpression[]) validationExpressionsSet.toArray(
-                    new ValidationExpression[validationExpressionsSet.size()]);
-            metadata.add(new MetadataSegment(validationExpressions, thisLevel,
-                                             version, date));
+            ServerMetadata metadata = (ServerMetadata) parents.get(i);
+            List children = metadata.getChildren();
+            String[] childLevels = metadata.getPathAsArray();
+            for (int j = 0; j < children.size(); j++)
+            {
+                ServerMetadata[] child = (ServerMetadata[]) children.get(j);
+                metadataResults.add(new MetadataSegment(child, childLevels,
+                                                        version, date));
+                recurseChildren(Arrays.asList(child), metadataResults,
+                                version, date);
+            }
         }
     }
-
-    private void recurseClasses(MClass[] classes, List metadata, String[] level,
-                                String version, Date date)
-    {
-        for (int i = 0; i < classes.length; i++)
-        {
-            MClass clazz = classes[i];
-            String[] thisLevel = new String[] {level[0], clazz.getClassName()};
-
-            Set tablesSet = clazz.getTables();
-            Table[] tables = (Table[])
-                tablesSet.toArray(new Table[tablesSet.size()]);
-            metadata.add(new MetadataSegment(tables, thisLevel, version, date));
-
-            Set updatesSet = clazz.getUpdates();
-            Update[] updates = (Update[])
-                updatesSet.toArray(new Update[updatesSet.size()]);
-            metadata.add(new MetadataSegment(updates, thisLevel, version,
-                                             date));
-            recurseUpdates(updates, metadata, thisLevel, version, date);
-        }
-    }
-
-    private void recurseUpdates(Update[] updates, List metadata,
-                                String[] levels, String version, Date date)
-    {
-        for (int i = 0; i < updates.length; i++)
-        {
-            Update update = updates[i];
-            String[] thisLevel = new String[] {levels[0], levels[1],
-                                               update.getUpdateName()};
-
-            Set updateTypesSet = update.getUpdateTypes();
-            UpdateType[] updateTypes = (UpdateType[])
-                updateTypesSet.toArray(new UpdateType[updateTypesSet.size()]);
-            metadata.add(new MetadataSegment(updateTypes,  thisLevel, version,
-                                             date));
-        }
-    }
-
-    private void recurseLookups(Lookup[] lookups, List metadata,
-                                String[] level, String version, Date date)
-    {
-        for (int i = 0; i < lookups.length; i++)
-        {
-            Lookup lookup = lookups[i];
-            String[] thisLevel = new String[] {level[0],
-                                               lookup.getLookupName()};
-
-            Set lookupTypesSet = lookup.getLookupTypes();
-            LookupType[] lookupTypes = (LookupType[])
-                lookupTypesSet.toArray(new LookupType[lookupTypesSet.size()]);
-            metadata.add(new MetadataSegment(lookupTypes, thisLevel, version,
-                                             date));
-        }
-    }
-
-    private void recurseValidationLookups(ValidationLookup[] validationLookups,
-                                          List metadata, String[] level,
-                                          String version, Date date)
-    {
-        for (int i = 0; i < validationLookups.length; i++)
-        {
-            ValidationLookup validationLookup = validationLookups[i];
-            String[] thisLevel = new String[] {
-                level[0], validationLookup.getValidationLookupName()};
-
-            Set validationLookupTypesSet =
-                validationLookup.getValidationLookupTypes();
-            ValidationLookupType[] validationLookupTypes =
-                (ValidationLookupType[]) validationLookupTypesSet.toArray(
-                    new ValidationLookupType[validationLookupTypesSet.size()]);
-            metadata.add(new MetadataSegment(validationLookupTypes, thisLevel,
-                                             version, date));
-        }
-    }
-
-    private void recurseValidationExternals(
-        ValidationExternal[] validationExternals, List metadata, String[] level,
-        String version, Date date)
-    {
-        for (int i = 0; i < validationExternals.length; i++)
-        {
-            ValidationExternal validationExternal = validationExternals[i];
-            String[] thisLevel = new String[] {
-                level[0], validationExternal.getValidationExternalName()};
-
-            Set validationExternalTypesSet =
-                validationExternal.getValidationExternalTypes();
-            ValidationExternalType[] validationExternalTypes =
-                (ValidationExternalType[]) validationExternalTypesSet.toArray(
-                    new ValidationExternalType[
-                        validationExternalTypesSet.size()]);
-            metadata.add(new MetadataSegment(validationExternalTypes, thisLevel,
-                                             version, date));
-        }
-    }
-
     private void assertLength(String[] array, int length)
         throws IllegalArgumentException
     {

@@ -2,6 +2,9 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -13,10 +16,13 @@ public class MClass extends ServerMetadata implements Serializable
 {
     public MClass()
     {
+        mTables = Collections.EMPTY_SET;
+        mUpdates = Collections.EMPTY_SET;
     }
 
     public MClass(long id)
     {
+        this();
         mId = new Long(id);
     }
 
@@ -200,6 +206,19 @@ public class MClass extends ServerMetadata implements Serializable
     public String getPath()
     {
         return mLevel + ":" + mClassName;
+    }
+
+    public List getChildren()
+    {
+        List children = new ArrayList();
+        children.add(mTables.toArray(new Table[0]));
+        children.add(mUpdates.toArray(new Update[0]));
+        return children;
+    }
+
+    public String getRetsId()
+    {
+        return super.getRetsId();
     }
 
     public String toString()

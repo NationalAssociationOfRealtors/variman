@@ -2,6 +2,9 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -13,12 +16,14 @@ public class ValidationLookup extends ServerMetadata implements Serializable
 {
     public ValidationLookup(long id)
     {
+        this();
         mId = new Long(id);
     }
 
     public ValidationLookup()
     {
         mId = null;
+        mValidationLookupTypes = Collections.EMPTY_SET;
     }
 
     /**
@@ -152,6 +157,14 @@ public class ValidationLookup extends ServerMetadata implements Serializable
     public String getPath()
     {
         return mLevel + ":" + mValidationLookupName;
+    }
+
+    public List getChildren()
+    {
+        List children = new ArrayList();
+        children.add(
+            mValidationLookupTypes.toArray(new ValidationLookupType[0]));
+        return children;
     }
 
     public String toString()

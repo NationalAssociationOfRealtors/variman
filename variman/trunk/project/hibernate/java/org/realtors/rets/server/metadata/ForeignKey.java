@@ -9,7 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @hibernate.class table="rets_metadata_foreignkey"
  */
-public class ForeignKey implements Serializable
+public class ForeignKey extends ServerMetadata implements Serializable
 {
     /**
      * @return a Long object

@@ -2,6 +2,9 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -14,12 +17,21 @@ public class Resource extends ServerMetadata implements Serializable
 {
     public Resource(long id)
     {
+        this();
         mId = new Long(id);
     }
 
     public Resource()
     {
         mId = null;
+        mClasses = Collections.EMPTY_SET;
+        mObjects = Collections.EMPTY_SET;
+        mSearchHelps = Collections.EMPTY_SET;
+        mEditMasks  = Collections.EMPTY_SET;
+        mLookups = Collections.EMPTY_SET;
+        mValidationLookups = Collections.EMPTY_SET;
+        mValidationExternals = Collections.EMPTY_SET;
+        mValidationExpressions = Collections.EMPTY_SET;
     }
 
     /**
@@ -349,6 +361,26 @@ public class Resource extends ServerMetadata implements Serializable
         {
             return mLevel + ":" + mResourceID;
         }
+    }
+
+    public List getChildren()
+    {
+        List children = new ArrayList();
+        children.add(mClasses.toArray(new MClass[0]));
+        children.add(mObjects.toArray(new MObject[0]));
+        children.add(mSearchHelps.toArray(new SearchHelp[0]));
+        children.add(mEditMasks.toArray(new EditMask[0]));
+        children.add(mLookups.toArray(new Lookup[0]));
+        children.add(mValidationLookups.toArray(new ValidationLookup[0]));
+        children.add(mValidationExternals.toArray(new ValidationExternal[0]));
+        children.add(
+            mValidationExpressions.toArray(new ValidationExpression[0]));
+        return children;
+    }
+
+    public String getRetsId()
+    {
+        return mResourceID;
     }
 
     public String toString()

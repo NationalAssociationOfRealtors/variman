@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server.metadata;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 
 public class ValidationLookupTypeTest extends TestCase
@@ -11,5 +13,11 @@ public class ValidationLookupTypeTest extends TestCase
         ValidationLookupType validationLookupType =
             ObjectMother.createValidationLookupType();
         assertEquals("Property:School", validationLookupType.getLevel());
+    }
+
+    public void testChildren()
+    {
+        List children = ObjectMother.createValidationLookupType().getChildren();
+        assertEquals(0, children.size());
     }
 }

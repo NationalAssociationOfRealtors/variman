@@ -2,6 +2,9 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -12,6 +15,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class Lookup extends ServerMetadata implements Serializable
 {
+    public Lookup()
+    {
+        mId = null;
+        mLookupTypes = Collections.EMPTY_SET;
+    }
+
     /**
      *
      * @return a Long object
@@ -127,6 +136,13 @@ public class Lookup extends ServerMetadata implements Serializable
     public String getPath()
     {
         return mLevel + ":" + mLookupName;
+    }
+
+    public List getChildren()
+    {
+        List children = new ArrayList();
+        children.add(mLookupTypes.toArray(new LookupType[0]));
+        return children;
     }
 
     public String toString()
