@@ -23,11 +23,12 @@ import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
+import org.realtors.rets.server.protocol.TransactionParameters;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-public class GetMetadataParameters
+public class GetMetadataParameters extends TransactionParameters
 {
     static
     {
@@ -93,18 +94,6 @@ public class GetMetadataParameters
         sValidTypes.add(ValidationExpression.TABLE);
     }
 
-    private String getParameter(Map parameterMap, String name)
-    {
-        String[] values = (String[]) parameterMap.get(name);
-        if (values != null)
-        {
-            return values[0];
-        }
-        else
-        {
-            return null;
-        }
-    }
     private String cleanUpType(String type) throws RetsReplyException
     {
         String cleanType = type.toUpperCase();
