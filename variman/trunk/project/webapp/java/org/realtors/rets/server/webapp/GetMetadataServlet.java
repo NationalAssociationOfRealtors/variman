@@ -6,18 +6,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.realtors.rets.server.GetMetadataParameters;
 import org.realtors.rets.server.GetMetadataTransaction;
 import org.realtors.rets.server.HibernateMetadataFetcher;
-import org.realtors.rets.server.ManagerMetadataFetcher;
 import org.realtors.rets.server.MetadataFetcher;
-import org.realtors.rets.server.RetsReplyException;
-import org.realtors.rets.server.metadata.MetadataManager;
-
-import org.apache.log4j.Logger;
+import org.realtors.rets.server.RetsServerException;
 
 /**
  * @web.servlet name="get-metadata-servlet"
@@ -39,34 +33,16 @@ public class  GetMetadataServlet extends RetsServlet
         }
     }
 
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-        throws ServletException, IOException
+    protected void doRets(RetsServletRequest request,
+                          RetsServletResponse response)
+        throws RetsServerException, IOException
     {
-        response.setContentType("text/xml");
-        PrintWriter out = response.getWriter();
-
-        try
-        {
-            GetMetadataParameters parameters =
-                new GetMetadataParameters(request.getParameterMap());
-            mTransaction.execute(out, parameters, mMetadataFetcher);
-        }
-        catch (RetsReplyException e)
-        {
-            out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
-                        "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
-        }
-        catch (Exception e)
-        {
-            LOG.error("Caught", e);
-            out.println("<RETS ReplyCode=\"20513\" " +
-                        "ReplyText=\"Miscellaneous error\"/>\n");
-        }
+        PrintWriter out = response.getXmlWriter();
+        GetMetadataParameters parameters =
+            new GetMetadataParameters(request.getParameterMap());
+        mTransaction.execute(out, parameters, mMetadataFetcher);
     }
 
-    private static final Logger LOG =
-        Logger.getLogger(GetMetadataServlet.class);
     private GetMetadataTransaction mTransaction;
     private MetadataFetcher mMetadataFetcher;
     private static final boolean USE_CACHE = true;
