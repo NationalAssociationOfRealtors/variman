@@ -78,6 +78,11 @@ public class EditMask implements Serializable
         mResourceid = resourceid;
     }
 
+    public String getPath()
+    {
+        return mResourceid.getPath() + ":" + mEditMaskID;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
