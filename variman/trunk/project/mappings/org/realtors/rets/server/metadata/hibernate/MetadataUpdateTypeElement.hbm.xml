@@ -7,9 +7,8 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataUpdateTypeElement" table="e_update_type">
   
-    <!--<jcs-cache usage="read-write"/>-->
     <id name="id" column="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>  
 
     <property column="system_name" name="systemName" type="string"/>

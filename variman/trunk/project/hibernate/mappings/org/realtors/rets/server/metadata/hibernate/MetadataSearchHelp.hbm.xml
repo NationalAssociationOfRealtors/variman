@@ -7,10 +7,9 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataSearchHelp" table="m_search_help">
   
-    <!--<jcs-cache usage="read-write"/>-->
   
     <id column="id" name="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>
     
     <many-to-one name="stamp" class="org.nar.rets.metadata.hibernate.MetadataStamp" cascade="all"/>

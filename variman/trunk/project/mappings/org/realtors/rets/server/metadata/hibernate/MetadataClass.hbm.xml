@@ -7,9 +7,8 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataClass" table="m_class">
   
-    <!--<jcs-cache usage="read-write"/>-->
     <id name="id" column="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>  
 
     <many-to-one name="stamp" class="org.nar.rets.metadata.hibernate.MetadataStamp" cascade="all"/>

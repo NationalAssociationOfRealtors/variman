@@ -7,9 +7,8 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataValidationExpressionElement" table="e_validation_expression">
   
-    <!--<jcs-cache usage="read-write"/>-->
     <id name="id" column="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>  
 
     <property column="validation_expression_id" name="validationExpressionID" type="string"/>

@@ -7,10 +7,9 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataSearchHelpElement" table="e_search_help">
   
-    <!--<jcs-cache usage="read-write"/>-->
   
     <id column="id" name="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>
     
     <property column="search_help_id" name="searchHelpID" type="string"/>

@@ -7,9 +7,8 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataValidationExternalElement" table="e_validation_external">
   
-    <!--<jcs-cache usage="read-write"/>-->
     <id name="id" column="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>  
 
     <property column="validation_external_name" name="validationExternalName" type="string"/>

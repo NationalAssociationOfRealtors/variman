@@ -4,12 +4,11 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping>
+  <class name="org.nar.rets.metadata.hibernate.MetadataValidationLookupType"
+    table="m_validation_lookup_type">
   
-  <class name="org.nar.rets.metadata.hibernate.MetadataValidationLookupType" table="m_validation_lookup_type">
-  
-    <!--<jcs-cache usage="read-write"/>-->
     <id name="id" column="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>  
 
     <set name="elements" lazy="false" cascade="all">

@@ -7,9 +7,8 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataForeignKeysElement" table="e_foreign_keys">
   
-    <!--<jcs-cache usage="read-write"/>-->
     <id name="id" column="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>
   
     <property column="foreign_key_id" name="foreignKeyID" type="string"/>

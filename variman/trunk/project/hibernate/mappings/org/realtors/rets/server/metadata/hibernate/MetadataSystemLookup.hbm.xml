@@ -7,10 +7,9 @@
   
   <class name="org.nar.rets.metadata.hibernate.MetadataSystemLookup" table="m_system_lookup">
   
-    <!--<jcs-cache usage="read-write"/>-->
   
     <id column="id" name="uid" type="long">
-      <generator class="hilo.long"/>
+      <generator class="hilo"/>
     </id>
     <discriminator column="type"/>
     
