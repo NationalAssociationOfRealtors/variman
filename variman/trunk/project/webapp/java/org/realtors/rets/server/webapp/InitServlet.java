@@ -37,6 +37,7 @@ public class InitServlet extends RetsServlet
     {
         initLog4J();
         LOG.debug("Running init servlet");
+        WebApp.setServletContext(getServletContext());
         PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
                                         PasswordMethod.RETS_REALM);
         initHibernate();
@@ -96,8 +97,7 @@ public class InitServlet extends RetsServlet
         MetadataManager manager = new MetadataManager();
         manager.addRecursive(system);
         LOG.debug("Adding metadata to servlet context");
-        ServletContext context = getServletContext();
-        context.setAttribute(MANAGER_KEY, manager);
+        WebApp.setMetadataManager(manager);
     }
 
     private MSystem findSystem()
