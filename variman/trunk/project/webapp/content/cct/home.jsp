@@ -8,9 +8,10 @@
 <title>Client Compliance Testing Home</title>
 <link rel="stylesheet" href="cct.css" />
 </head>
- Welcome, <bean:write name="cctUser" property="firstName" />
+ <p>Welcome, <bean:write name="cctUser" property="firstName" />
  <bean:write name="cctUser" property="lastName" />
  <br>
+ The login URL is <bean:write name="loginUrl"/></p>
  <table cellpadding="2" cellspacing="0" border="1" width="99%">
   <tr>
    <th>Test description</th><th>Date run</th><th>Status</th>

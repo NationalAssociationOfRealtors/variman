@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
+import org.realtors.rets.server.webapp.Paths;
 
 /**
  * Created by IntelliJ IDEA.
@@ -52,6 +53,14 @@ public class IndexAction extends CctAction
         
         request.setAttribute("cctDisplayBeans", displayBeans);
         
+        StringBuffer loginUrl = new StringBuffer();
+        loginUrl.append(request.getScheme()).append("://");
+        loginUrl.append(request.getServerName());
+        loginUrl.append(":").append(request.getServerPort());
+        loginUrl.append(request.getContextPath());
+        loginUrl.append("/rets/cct/login");
+        request.setAttribute("loginUrl", loginUrl.toString());
+
         return mapping.findForward("home");
     }
 
