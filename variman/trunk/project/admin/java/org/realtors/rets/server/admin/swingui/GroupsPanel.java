@@ -139,7 +139,7 @@ public class GroupsPanel extends JPanel
     {
         RetsConfig retsConfig = Admin.getRetsConfig();
         List ruleDescriptions = Collections.EMPTY_LIST;
-        List securityConstraints = retsConfig.getSecurityConstraints();
+        List securityConstraints = retsConfig.getAllGroupRules();
         for (int i = 0; i < securityConstraints.size(); i++)
         {
             GroupRules rules = (GroupRules) securityConstraints.get(i);
@@ -321,7 +321,19 @@ public class GroupsPanel extends JPanel
 
         public void actionPerformed(ActionEvent event)
         {
-            System.out.println("Edit rule...");
+            RuleAddDialog dialog = new RuleAddDialog("Update Rule",
+                                                     "Update Rule");
+            RuleDescription ruleDescription = mGroupsPanel.getSelectedRule();
+            dialog.setRuleDescription(ruleDescription);
+            dialog.show();
+            if (dialog.getResponse() != JOptionPane.OK_OPTION)
+            {
+                return;
+            }
+
+            dialog.updateRuleDescription(ruleDescription);
+            Admin.setRetsConfigChanged(true);
+            mGroupsPanel.populateList();
         }
 
         private GroupsPanel mGroupsPanel;
