@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: UpdateHelp.hbm.xml,v 1.1 2003/06/03 20:24:27 kgarner Exp $ -->
+
+<hibernate-mapping>
+
+  <class name="org.nar.rets.metadata.newdb.MetadataUpdateHelp"
+    table="rets_metadata_updatehelp">
+
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="updateHelpID" type="string">
+      <column name="update_help_id" length="32" not-null="true" unique="true"
+        index="rets_metadata_updatehelp_id_index"/>
+    </property>
+
+    <property name="value" type="string">
+      <column name="value" length="256"/>
+    </property>
+
+  </class>
+</hibernate-mapping>
