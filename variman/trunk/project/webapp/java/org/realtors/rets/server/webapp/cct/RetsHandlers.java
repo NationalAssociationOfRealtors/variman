@@ -22,6 +22,7 @@ public class RetsHandlers
         add(new LoginHandler());
         add(new LogoutHandler());
         add(new GetMetadataHandler());
+        add(new SearchHandler());
     }
 
     private void add(ServletHandler handler)
@@ -65,6 +66,11 @@ public class RetsHandlers
     {
         return (GetMetadataHandler)
             mHandlersByName.get(GetMetadataHandler.NAME);
+    }
+
+    public SearchHandler getSearchHandler()
+    {
+        return (SearchHandler) mHandlersByName.get(SearchHandler.NAME);
     }
 
     public LoginHandler getLoginHandler()
