@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.realtors.rets.server.Util;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public class DmqlString implements SqlConverter
 {
     public static final DmqlStringComponent MATCH_ZERO_OR_MORE =
@@ -19,18 +24,12 @@ public class DmqlString implements SqlConverter
     {
         this();
         add(string);
-        mString = string;
     }
 
     public DmqlString()
     {
         mComponents = new ArrayList();
-        mContainsWildcards = false;
-    }
-
-    public String toString()
-    {
-        return mString;
+        mStringMatchOperator = " = ";
     }
 
     public void add(DmqlStringComponent component)
@@ -38,7 +37,7 @@ public class DmqlString implements SqlConverter
         mComponents.add(component);
         if (component.conatinsWildcards())
         {
-            mContainsWildcards = true;
+            mStringMatchOperator = " LIKE ";
         }
     }
 
@@ -52,37 +51,39 @@ public class DmqlString implements SqlConverter
         return mComponents;
     }
 
-    public boolean containsWildcards()
-    {
-        return mContainsWildcards;
-    }
-
     public void toSql(PrintWriter out)
     {
+        out.print(mStringMatchOperator);
         out.print("'");
         Iterator components = mComponents.iterator();
         while (components.hasNext())
         {
             DmqlStringComponent component =
                 (DmqlStringComponent) components.next();
-            if (component == DmqlString.MATCH_ZERO_OR_MORE)
-            {
-                out.print("%");
-            }
-            else if (component == DmqlString.MATCH_ZERO_OR_ONE)
-            {
-                out.print("_");
-            }
-            else
-            {
-                out.print(component);
-            }
-
+            out.print(component.toSql());
         }
         out.print("'");
     }
 
-    private String mString;
+    public String toString()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append(mComponents)
+            .toString();
+    }
+
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof DmqlString))
+        {
+            return false;
+        }
+        DmqlString rhs = (DmqlString) object;
+        return new EqualsBuilder()
+            .append(mComponents, rhs.mComponents)
+            .isEquals();
+    }
+
     private List mComponents;
-    private boolean mContainsWildcards;
+    private String mStringMatchOperator;
 }
