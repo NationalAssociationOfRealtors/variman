@@ -442,7 +442,7 @@ public class IOUtils
                 file = new File(base, file.getPath());
             }
             URL baseUrl = base.toURL();
-            URL resolvedUrl = new URL(baseUrl, file.getPath());
+            URL resolvedUrl = new URL(baseUrl, file.toURL().getPath());
             return new File(resolvedUrl.getFile());
         }
         catch (MalformedURLException e)
