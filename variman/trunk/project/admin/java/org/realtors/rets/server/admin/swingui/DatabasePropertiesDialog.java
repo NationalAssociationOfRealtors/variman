@@ -1,6 +1,7 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -56,6 +57,7 @@ public class DatabasePropertiesDialog extends JDialog
         getContentPane().add(content);
         pack();
         setResizable(false);
+        SwingUtils.centerOnFrame(this, AdminFrame.getInstance());
     }
 
     private void createDatabaseTypes(DatabaseConfig config)
@@ -163,7 +165,8 @@ public class DatabasePropertiesDialog extends JDialog
         {
             LOG.error("Caught exception", e);
             JOptionPane.showMessageDialog(
-                this, "Database connection failed.", "Test Database",
+                this, "Database connection failed.\n" + e.getMessage(),
+                "Test Database",
                 JOptionPane.WARNING_MESSAGE);
         }
         finally
@@ -185,6 +188,15 @@ public class DatabasePropertiesDialog extends JDialog
         {
             LOG.error("Caught exception", e);
         }
+    }
+
+    public void updateConfig(DatabaseConfig config)
+    {
+        config.setDatabaseType(getDatabaseType());
+        config.setHostName(mHostName.getText());
+        config.setDatabaseName(mDatabaseName.getText());
+        config.setUsername(mUsername.getText());
+        config.setPassword(new String(mPassword.getPassword()));
     }
 
     private static final Logger LOG =
