@@ -204,6 +204,29 @@
         <path refid="importer.path"/>
         <path refid="webapp.path"/>
       </classpath>
+      <tag name="hibernate.class" scope="all" description="Hibernate Class"/>
+      <tag name="hibernate.id" scope="all" description="Hibernate ID"/>
+      <tag name="hibernate.many-to-one" scope="all"
+           description="Hibernate Many-To-One"/>
+      <tag name="hibernate.property" scope="all"
+           description="Hibernate Property"/>
+      <tag name="hibernate.column" scope="all"
+           description="Hibernate Column"/>
+      <tag name="hibernate.collection-key" scope="all"
+           description="Hibernate Collection-Key"/>
+      <tag name="hibernate.collection-many-to-many" scope="all"
+           description="Hibernate Collection-Many-To-Many"/>
+      <tag name="hibernate.collection-element" scope="all"
+           description="Hibernate Collection-Element"/>
+      <tag name="hibernate.set" scope="all" description="Hibernate Set"/>
+      <tag name="hibernate.collection-one-to-many" scope="all"
+           description="Hibernate Collection-One-To-Many"/>
+      <tag name="web.servlet-mapping" scope="all"
+           description="Servlet Mapping"/>
+      <tag name="web.servlet" scope="all" description="Servlet"/>
+      <tag name="web.filter" scope="all" description="Filter"/>
+      <tag name="web.filter-init-param" scope="all"
+           description="Filter Init-Param"/>
     </javadoc>
   </target>
 
