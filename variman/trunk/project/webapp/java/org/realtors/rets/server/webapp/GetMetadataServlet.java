@@ -137,7 +137,7 @@ public class  GetMetadataServlet extends RetsServlet
         List metadata = new ArrayList();
         String level = StringUtils.join(levels, ":");
 
-        if (type.equals("SYSTEM"))
+        if (type.equals("METADATA-SYSTEM"))
         {
             assertLength(levels, 0);
             metadata.add(new MetadataSegment(new MSystem[] {system}, levels,
@@ -149,13 +149,13 @@ public class  GetMetadataServlet extends RetsServlet
                 recurseSystem(system, metadata, levels, version, date);
             }
         }
-        else if (type.equals("RESOURCE"))
+        else if (type.equals("METADAT-RESOURCE"))
         {
             assertLength(levels, 0);
             Resource[] resources = findResources();
             metadata.add(new MetadataSegment(resources, levels, version, date));
         }
-        else if (type.equals("CLASS"))
+        else if (type.equals("METADATA-CLASS"))
         {
             assertLength(levels, 1);
             MClass[] classes = findClasses(level);
@@ -166,12 +166,17 @@ public class  GetMetadataServlet extends RetsServlet
                 System.out.println("Class: " + aClass.getClassName());
             }
         }
-        else if (type.equals("TABLE"))
+        else if (type.equals("METADATA-TABLE"))
         {
             assertLength(levels, 2);
             Table[] tables = findTables(level);
             metadata.add(tables);
 
+        }
+        else
+        {
+            LOG.warn("Recieved query for unknown metadata type: " + type +
+                     ", level=" + level);
         }
         return metadata;
     }
