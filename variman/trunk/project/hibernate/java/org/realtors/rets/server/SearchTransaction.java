@@ -43,16 +43,29 @@ public class SearchTransaction
 
     public String getSql(MetadataManager manager) throws ANTLRException
     {
-//        return DmqlCompiler.dmqlToSql(mQuery);
         List classes = manager.find(Table.TABLE,
                                     mParameters.getResourceId() + ":" +
                                     mParameters.getClassName());
         ServerDmqlMetadata metadata = new ServerDmqlMetadata(classes, false);
-        SqlConverter sqlConverter =
-            DmqlCompiler.parseDmql(mParameters.getQuery(), metadata);
+        SqlConverter sqlConverter = parse(metadata);
         StringWriter stringWriter = new StringWriter();
         sqlConverter.toSql(new PrintWriter(stringWriter));
         return  stringWriter.toString();
+    }
+
+    private SqlConverter parse(ServerDmqlMetadata metadata)
+        throws ANTLRException
+    {
+        if (mParameters.getQueryType().equals(SearchParameters.DMQL))
+        {
+            LOG.debug("Parsing using DMQL");
+            return DmqlCompiler.parseDmql(mParameters.getQuery(), metadata);
+        }
+        else // if (mParameters.getQueryType().equals(SearchParameters.DMQL2))
+        {
+            LOG.debug("Parsing using DMQL2");
+            return DmqlCompiler.parseDmql2(mParameters.getQuery(),  metadata);
+        }
     }
 
 /*
@@ -174,6 +187,8 @@ public class SearchTransaction
     private static final Logger LOG =
         Logger.getLogger(SearchTransaction.class);
         */
+    private static final Logger LOG =
+        Logger.getLogger(SearchTransaction.class);
     private String mQuery;
     private SearchParameters mParameters;
 }
