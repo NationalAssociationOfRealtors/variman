@@ -1,4 +1,4 @@
-/*
+/*57
  * Created on Aug 27, 2003
  *
  */
@@ -44,12 +44,21 @@ public class LoginAction extends CctAction
 
         UserInfo userInfo = UTILS.getUserInfo(username); 
 
-        if ((userInfo != null) &&
-            !UTILS.authenticateUser(userInfo.getUser(), form.getPassword()))
+        boolean authFailed;
+        if (userInfo == null)
+        {
+            authFailed = true;
+        }
+        else
+        {
+            authFailed = !UTILS.authenticateUser(userInfo.getUser(),
+                                                 form.getPassword());
+        }
+        if (authFailed)
         {
             ActionErrors errors = new ActionErrors();
             errors.add(ActionErrors.GLOBAL_ERROR,
-                new ActionError("login.auth.failure"));
+                       new ActionError("login.auth.failure"));
             saveErrors(request, errors);
             return new ActionForward(mapping.getInput());
         }
