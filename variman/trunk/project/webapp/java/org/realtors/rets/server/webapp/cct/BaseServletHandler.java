@@ -32,6 +32,7 @@ public abstract class BaseServletHandler implements ServletHandler
         mActualHeaders = new HashMap();
         mExpectedCookies = new HashMap();
         mActualCookies = new HashMap();
+        mActualParameters = new HashMap();
     }
 
     public void reset()
@@ -40,6 +41,7 @@ public abstract class BaseServletHandler implements ServletHandler
         mActualHeaders.clear();
         mExpectedCookies.clear();
         mActualCookies.clear();
+        mActualParameters.clear();
         mDoGetInvokeCount = 0;
         mInvokeCount = InvokeCount.ZERO;
     }
@@ -50,6 +52,7 @@ public abstract class BaseServletHandler implements ServletHandler
         mDoGetInvokeCount++;
         copyHeaders(request);
         copyCookies(request);
+        copyParameters(request);
         LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
     }
 
@@ -80,6 +83,18 @@ public abstract class BaseServletHandler implements ServletHandler
                                cookie.getValue());
         }
     }
+    
+    private void copyParameters(HttpServletRequest request)
+    {
+        mActualParameters.clear();
+        Enumeration paramNames = request.getParameterNames();
+        while (paramNames.hasMoreElements())
+        {
+            String paramName = (String) paramNames.nextElement();
+            mActualParameters.put(paramName.toLowerCase(),
+                                  request.getParameter(paramName));
+        }
+    }
 
     public void setGetInvokeCount(InvokeCount invokeCount)
     {
@@ -101,6 +116,7 @@ public abstract class BaseServletHandler implements ServletHandler
         {
             validateHeaders(result);
             validateCookies(result);
+            validateParameters(result);
         }
     }
 
@@ -161,6 +177,10 @@ public abstract class BaseServletHandler implements ServletHandler
             }
         }
     }
+    
+    protected void validateParameters(ValidationResult result)
+    {
+    }
 
     public void addRequiredHeader(String header, String pattern)
     {
@@ -214,4 +234,5 @@ public abstract class BaseServletHandler implements ServletHandler
     private Map mActualHeaders;
     private Map mExpectedCookies;
     private Map mActualCookies;
+    protected Map mActualParameters;
 }
