@@ -11,7 +11,7 @@ package org.realtors.rets.server.config;
 public class SQLServerJSQLType extends DatabaseType
 {
     public static final String NAME = "sqlserver-jsql";
-    public static final String LONG_NAME = "SQLServer (JSQL)";
+    public static final String LONG_NAME = "SQLServer (JSQLConnect)";
     public static final String DIALECT =
         "net.sf.hibernate.dialect.SQLServerDialect";
     public static final String DRIVER = "com.jnetdirect.jsql.JSQLDriver";
