@@ -81,6 +81,16 @@ public class Admin
         return sRexHome;
     }
 
+    public static void findRexHome()
+    {
+        sRexHome = System.getProperty("rex.home");
+        if (sRexHome == null)
+        {
+            sRexHome = System.getProperty("user.dir");
+            System.setProperty("rex.home", sRexHome);
+        }
+    }
+
     private static Configuration sHibernateConfiguration;
     private static SessionFactory sSessionFactory;
     private static String sConfigFile;
