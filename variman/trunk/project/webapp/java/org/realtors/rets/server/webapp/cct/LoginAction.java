@@ -62,11 +62,10 @@ public class LoginAction extends CctAction
                              "true");
         session.setAttribute(USERINFO_KEY, userInfo);
         session.setAttribute(USER_KEY, user);
-                
-        CertificationTestSuite suite =
-            new CertificationTestSuite(user.getUsername());
-        session.setAttribute(TESTSUITE_KEY, suite);
-                             
+
+        TestRunner testRunner = new TestRunner(user.getUsername());
+        session.setAttribute(TESTRUNNER_KEY, testRunner);
+        
         return new RedirectingActionForward(form.getDone());        
     }
 }
