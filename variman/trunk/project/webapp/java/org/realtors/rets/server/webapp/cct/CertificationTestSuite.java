@@ -12,18 +12,20 @@ import org.realtors.rets.server.webapp.cct.tests.NormalLogin;
 import org.realtors.rets.server.webapp.cct.tests.RelativeUrlLogin;
 import org.realtors.rets.server.webapp.cct.tests.MinimumUrlLogin;
 import org.realtors.rets.server.webapp.cct.tests.MaximumUrlLogin;
+import org.realtors.rets.server.webapp.cct.tests.BasicSearch;
 
 public class CertificationTestSuite
 {
     public CertificationTestSuite(String testContext)
     {
         mTests = new ArrayList();
-        mTestMap = new HashMap();
+        mTestsByName = new HashMap();
         
         addTest(new NormalLogin());
         addTest(new RelativeUrlLogin());
         addTest(new MinimumUrlLogin());
         addTest(new MaximumUrlLogin());
+        addTest(new BasicSearch());
 
         for (int i = 0; i < mTests.size(); i++)
         {
@@ -35,7 +37,7 @@ public class CertificationTestSuite
     private void addTest(CertificationTest test)
     {
         mTests.add(test);
-        mTestMap.put(test.getName(), test);
+        mTestsByName.put(test.getName(), test);
     }
 
     public Iterator getTests()
@@ -50,7 +52,7 @@ public class CertificationTestSuite
     
     public CertificationTest getTest(String name)
     {
-        return (CertificationTest) mTestMap.get(name);
+        return (CertificationTest) mTestsByName.get(name);
     }
 
     public int getCount()
@@ -59,5 +61,5 @@ public class CertificationTestSuite
     }
 
     private List mTests;
-    private Map mTestMap;
+    private Map mTestsByName;
 }
