@@ -54,12 +54,12 @@ public class Table implements Serializable
      *
      * @hibernate.property
      */
-    public String getStandardName()
+    public TableStandardNameEnum getStandardName()
     {
         return mStandardName;
     }
 
-    public void setStandardName(String standardName)
+    public void setStandardName(TableStandardNameEnum standardName)
     {
         mStandardName = standardName;
     }
@@ -111,6 +111,26 @@ public class Table implements Serializable
     public void setShortName(String shortName)
     {
         mShortName = shortName;
+    }
+
+    /**
+     * Get the MaximumLength value.
+     * @return the MaximumLength value.
+     *
+     * @hibernate.property
+     */
+    public int getMaximumLength()
+    {
+        return mMaximumLength;
+    }
+
+    /**
+     * Set the MaximumLength value.
+     * @param newMaximumLength The new MaximumLength value.
+     */
+    public void setMaximumLength(int newMaximumLength)
+    {
+        mMaximumLength = newMaximumLength;
     }
 
     /**
@@ -431,7 +451,7 @@ public class Table implements Serializable
     private String mSystemName;
 
     /** nullable persistent field */
-    private String mStandardName;
+    private TableStandardNameEnum mStandardName;
 
     /** nullable persistent field */
     private String mLongName;
@@ -441,6 +461,9 @@ public class Table implements Serializable
 
     /** nullable persistent field */
     private String mShortName;
+
+    /** nullable persistent field */
+    private int mMaximumLength;
 
     /** nullable persistent field */
     private org.realtors.rets.server.metadata.DataTypeEnum mDataType;
