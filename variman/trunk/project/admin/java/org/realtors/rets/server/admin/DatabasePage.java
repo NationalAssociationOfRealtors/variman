@@ -9,7 +9,6 @@
 package org.realtors.rets.server.admin;
 
 import org.realtors.rets.server.config.DatabaseConfig;
-import org.realtors.rets.server.config.RetsConfig;
 
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxButton;
