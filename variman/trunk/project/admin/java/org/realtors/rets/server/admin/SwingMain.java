@@ -28,7 +28,7 @@ public class SwingMain
         if (!Admin.isDebugEnabled())
         {
             new org.realtors.rets.server.admin.swingui.
-                InitDatabaseCommand().execute();
+                InitDatabaseAction().execute();
         }
     }
 
