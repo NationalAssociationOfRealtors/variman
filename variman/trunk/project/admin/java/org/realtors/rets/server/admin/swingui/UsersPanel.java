@@ -57,8 +57,11 @@ public class UsersPanel extends JPanel
         JPanel groupsPanel = createGroupsPanel();
         panel.add(groupsPanel, BorderLayout.CENTER);
 
+        JScrollPane scrollPane = new JScrollPane(mUserList);
+        scrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                                              mUserList, panel);
+                                              scrollPane, panel);
         splitPane.setDividerLocation(200);
         add(splitPane, BorderLayout.CENTER);
 
@@ -89,7 +92,10 @@ public class UsersPanel extends JPanel
         mGroupsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mGroupsList.getSelectionModel().addListSelectionListener(
             new OnGroupSelectionChanged());
-        box.add(mGroupsList);
+        JScrollPane scrollPane = new JScrollPane(mGroupsList);
+        scrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        box.add(scrollPane);
         box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         panel.add(box, BorderLayout.CENTER);
 
