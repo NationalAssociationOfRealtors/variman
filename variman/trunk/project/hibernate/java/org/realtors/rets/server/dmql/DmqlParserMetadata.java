@@ -4,6 +4,8 @@ package org.realtors.rets.server.dmql;
 
 import java.util.Collection;
 
+import org.realtors.rets.server.metadata.Table;
+
 /**
  * The DMQL parser's interface to the RETS metadata.
  */
@@ -43,11 +45,13 @@ public interface DmqlParserMetadata
      */
     public boolean isValidStringName(String fieldName);
 
-    String getLookupDbValue(String lookupName, String lookupValue);
+    public String getLookupDbValue(String lookupName, String lookupValue);
 
-    String fieldToColumn(String fieldName);
+    public String fieldToColumn(String fieldName);
 
-    String columnToField(String columnName);
+    public String columnToField(String columnName);
 
-    Collection getAllColumns();
+    public Collection getAllColumns();
+
+    public Table getTable(String fieldName);
 }
