@@ -27,8 +27,14 @@ public class LoggingHttpServletResponse extends HttpServletResponseWrapper
 
     public void addHeader(String name, String value)
     {
-        mLog.debug(name + ": " + value + "\n");
+        mLog.debug(name + ":+ " + value + "\n");
         super.addHeader(name, value);
+    }
+
+    public void setHeader(String name, String value)
+    {
+        mLog.debug(name + ": " + value + "\n");
+        super.setHeader(name, value);
     }
 
     public ServletOutputStream getOutputStream() throws IOException
