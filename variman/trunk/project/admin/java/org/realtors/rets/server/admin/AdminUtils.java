@@ -10,16 +10,21 @@ package org.realtors.rets.server.admin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.SessionFactory;
+import net.sf.hibernate.Session;
 import net.sf.hibernate.cfg.Configuration;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.DatabaseType;
 import org.realtors.rets.server.config.RetsConfig;
@@ -55,7 +60,8 @@ public class AdminUtils
         }
     }
 
-    public static void initDatabase() throws HibernateException
+    public static void initDatabase()
+        throws HibernateException, RetsServerException
     {
         LOG.debug("Initializing Hibernate configuration");
         RetsConfig retsConfig = Admin.getRetsConfig();
@@ -69,6 +75,35 @@ public class AdminUtils
         LOG.debug("Hibernate initialized");
         Admin.setHibernateConfiguration(config);
         RetsServer.setSessions(sessionFactory);
+        logDatabaseInfo();
+    }
+
+    private static void logDatabaseInfo() throws RetsServerException
+    {
+        SessionHelper helper = RetsServer.createHelper();
+        try
+        {
+            Session session = helper.beginSession();
+            Connection connection = session.connection();
+            DatabaseMetaData metaData = connection.getMetaData();
+            LOG.info("JDBC Driver info: " + metaData.getDriverName() +
+                     " version " + metaData.getDriverVersion());
+            LOG.info("JDBC DB info: " + metaData.getDatabaseProductName() +
+                     " version " + metaData.getDatabaseProductVersion());
+        }
+        catch (SQLException e)
+        {
+            throw new RetsServerException("Caught", e);
+        }
+        catch (HibernateException e)
+        {
+            throw new RetsServerException("Caught", e);
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+
     }
 
     private static final Logger LOG =
