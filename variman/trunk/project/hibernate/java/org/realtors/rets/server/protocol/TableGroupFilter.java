@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.HashSet;
 
+import org.apache.log4j.Logger;
+
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RuleDescription;
 import org.realtors.rets.server.Group;
@@ -61,6 +63,12 @@ public class TableGroupFilter
                               ruleDescription.getRetsClass();
             String rulesKey = groupName + ":" + tableKey;
             Set tables = (Set) mAllTables.get(tableKey);
+            if (tables == null)
+            {
+                LOG.warn("No tables found for " + tableKey +
+                         ".  Skipping rule " + ruleDescription);
+                continue;
+            }
             Set filteredTables = new HashSet();
             for (Iterator iterator = tables.iterator(); iterator.hasNext();)
             {
@@ -80,6 +88,9 @@ public class TableGroupFilter
         String key = resource + ":" + retsClass;
         mAllTables.put(key, tables);
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(TableGroupFilter.class);
 
     /** Contains all tables for a given resource and class. */
     private Map /* String, Table */ mAllTables;
