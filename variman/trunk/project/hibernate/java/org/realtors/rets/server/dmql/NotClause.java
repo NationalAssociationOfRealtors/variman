@@ -6,6 +6,11 @@ import java.io.PrintWriter;
 
 public class NotClause implements SqlConverter
 {
+    public NotClause(SqlConverter negation)
+    {
+        mNegation = negation;
+    }
+
     public SqlConverter getNegation()
     {
         return mNegation;

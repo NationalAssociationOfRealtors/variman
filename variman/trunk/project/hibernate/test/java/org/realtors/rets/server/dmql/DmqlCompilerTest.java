@@ -191,13 +191,47 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         parse("(OWNER=NOW)");
     }
 
-    public void testBetween() throws ANTLRException
+    public void testBetweenPeriods() throws ANTLRException
     {
-        parse("(OWNER=1970-01-01-1980-01-01)");
-        parse("(OWNER=50-100)");
+        SqlConverter sql = parse("(LDATE=1970-01-01-1980-01-01)");
+        StringSqlConverter left = new StringSqlConverter("1970-01-01");
+        StringSqlConverter right = new StringSqlConverter("1980-01-01");
+        BetweenClause between = new BetweenClause("LDATE", left, right);
+        OrClause or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
+
+        sql = parse("(LDATE=1990-01-01-TODAY)");
+        left = new StringSqlConverter("1990-01-01");
+        right = new StringSqlConverter("TODAY");
+        between = new BetweenClause("LDATE", left, right);
+        or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
+
+        sql = parse("(LDATE=1990-01-01T05:06:07.000-NOW)");
+        left = new StringSqlConverter("1990-01-01T05:06:07.000");
+        right = new StringSqlConverter("NOW");
+        between = new BetweenClause("LDATE", left, right);
+        or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
+    }
+
+    public void testBetweenNubmers() throws ANTLRException
+    {
+        SqlConverter sql = parse("(LP=50-100)");
+        StringSqlConverter left = new StringSqlConverter("50");
+        StringSqlConverter right = new StringSqlConverter("100");
+        BetweenClause between = new BetweenClause("LP", left, right);
+        OrClause or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
+    }
+
+    public void testBetweenStrings() throws ANTLRException
+    {
         assertInvalidParse("(OWNER=abc-xyz)");
-        parse("(OWNER=1990-01-01-TODAY)");
-        parse("(OWNER=1990-01-01T05:06:07.000-NOW)");
     }
 
     public void testLess() throws ANTLRException
@@ -229,14 +263,46 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         assertInvalidParse("(OWNER=abc+,xyz-)");
     }
 
-    public void testCompoundQueries() throws ANTLRException
+    public void testCompoundOr() throws ANTLRException
     {
-        parse("(AR=|BATV,GENVA)|(OWNER=foo)");
+        SqlConverter sql = parse("(AR=|BATV,GENVA)|(OWNER=foo)");
+        LookupList lookupList = new LookupList(LookupListType.OR, "AR");
+        lookupList.addLookup("BATV");
+        lookupList.addLookup("GENVA");
+        DmqlStringList stringList = new DmqlStringList("OWNER");
+        stringList.add(new DmqlString("foo"));
+        OrClause orClause = new OrClause();
+        orClause.add(lookupList);
+        orClause.add(stringList);
+        assertEquals(orClause, sql);
+
         assertInvalidParse("(AR=|BATV,GENVA) OR (OWNER=foo)");
-        parse("(AR=|BATV,GENVA),(OWNER=foo)");
+    }
+
+    public void testCompoundAnd() throws ANTLRException
+    {
+        SqlConverter sql = parse("(AR=|BATV,GENVA),(OWNER=foo)");
+        LookupList lookupList = new LookupList(LookupListType.OR, "AR");
+        lookupList.addLookup("BATV");
+        lookupList.addLookup("GENVA");
+        DmqlStringList stringList = new DmqlStringList("OWNER");
+        stringList.add(new DmqlString("foo"));
+        AndClause andClause = new AndClause();
+        andClause.add(lookupList);
+        andClause.add(stringList);
+        assertEquals(andClause, sql);
+
         assertInvalidParse("(AR=|BATV,GENVA) AND (OWNER=foo)");
+    }
+
+    public void testCompoundNot() throws ANTLRException
+    {
         assertInvalidParse("~(AR=|BATV,GENVA)");
         assertInvalidParse("NOT (AR=|BATV,GENVA)");
+    }
+
+    public void testCompoundQueries() throws ANTLRException
+    {
         assertInvalidParse("(AR=|BATV,GENVA) AND NOT (OWNER=foo)");
         parse("((OWNER=foo),(OWNER=bar))");
         parse("(AR=|BATV,GENVA)|((OWNER=foo),(AND=bar))");

@@ -8,8 +8,7 @@ public class NotClauseTest extends TestCase
 {
     public void testNotClause()
     {
-        NotClause notClause = new NotClause();
-        notClause.setNegation(new TestSqlConverter("expr"));
+        NotClause notClause = new NotClause(new StringSqlConverter("expr"));
         assertEquals("NOT expr", TestUtil.toSql(notClause));
     }
 }

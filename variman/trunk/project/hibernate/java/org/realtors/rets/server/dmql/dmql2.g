@@ -9,65 +9,49 @@ options
 {
     defaultErrorHandler = false;
 	k = 3;
+    buildAST = true;
 }
 
 
-query returns [SqlConverter sql]
-    : sql=search_condition EOF
+query
+    : search_condition  e:EOF {#e.setText("");}
     ;
 
-search_condition returns [SqlConverter sql]
-    { SqlConverter sc;}
-    : sql=query_clause (or sc=query_clause)*
+search_condition
+    : query_clause (
+            (OR^ | p:PIPE^ {#p.setType(OR);})
+            query_clause)*
     ;
 
-query_clause returns [SqlConverter sql]
-    { SqlConverter be;}
-    : sql=boolean_element (and be=boolean_element)*
+query_clause
+    : boolean_element (
+            (AND^ | c:COMMA^ {#c.setType(AND);} )
+            boolean_element)*
     ;
 
-boolean_element returns [SqlConverter sql]
-    : (not)? sql=query_element
+boolean_element
+    : (NOT^ | t:TILDE^ {#t.setType(NOT);}) query_element
+    | query_element
     ;
 
-or
-    : PIPE
-    | OR
-    ;
-
-and
-    : COMMA
-    | AND
-    ;
-
-not
-    : NOT
-    | TILDE
-    ;
-
-field_value [String name] returns [SqlConverter sql]
-    { sql = null; }
-    : {isLookupField(name)}? sql=lookup_list[name]
-    | {isStringField(name)}? sql=string_list[name]
-    | {isStringField(name)}? string_literal
-    | number
-    | period
-    | range_list
-    ;
-
-string_literal
-    : STRING_LITERAL
+field_value [AST ast_name]
+    : {isLookupField(ast_name.getText())}? lookup_list[ast_name]
+    | {isStringField(ast_name.getText())}? string_list[ast_name]
+    | {isStringField(ast_name.getText())}? STRING_LITERAL^
+    | number {#field_value = #([NUMBER], #field_value);}
+    | period {#field_value = #([PERIOD], #field_value);}
+    | range_list[ast_name]
     ;
 
 between
-    : ((period) => period | number | string_eq) MINUS
-        ((period) => period | number | string_eq)
+    : ((period) => period | number | text) m:MINUS^ {#m.setType(BETWEEN);}
+        ((period) => period | number | text)
     ;
 
 less
-    : ((period) => period | number | string_eq) MINUS
+    : ((period) => period | number | text) m:MINUS^ {#m.setType(LESS);}
     ;
 
 greater
-    : ((period) => period | number | string_eq) PLUS
+    : ((period) => period | number | text) p:PLUS^ {#p.setType(GREATER);}
     ;

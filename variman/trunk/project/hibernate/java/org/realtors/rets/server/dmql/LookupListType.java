@@ -34,6 +34,11 @@ public abstract class LookupListType
         {
             return " AND ";
         }
+
+        public String toString()
+        {
+            return "and";
+        }
     }
 
     private static class Or extends LookupListType
@@ -41,6 +46,11 @@ public abstract class LookupListType
         public String getSqlOperator()
         {
             return " OR ";
+        }
+
+        public String toString()
+        {
+            return "or";
         }
     }
 
@@ -64,6 +74,11 @@ public abstract class LookupListType
         public String getSqlOperator()
         {
             return " OR ";
+        }
+
+        public String toString()
+        {
+            return "not";
         }
     }
 }

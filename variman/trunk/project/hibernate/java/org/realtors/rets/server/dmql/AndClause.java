@@ -3,36 +3,63 @@
 package org.realtors.rets.server.dmql;
 
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.realtors.rets.server.Util;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 public class AndClause implements SqlConverter
 {
-    public SqlConverter getLeft()
+    public AndClause()
     {
-        return mLeft;
+        mElements = new ArrayList();
     }
 
-    public void setLeft(SqlConverter left)
+    public AndClause(SqlConverter left, SqlConverter right)
     {
-        mLeft = left;
-    }
-
-    public SqlConverter getRight()
-    {
-        return mRight;
-    }
-
-    public void setRight(SqlConverter right)
-    {
-        mRight = right;
+        this();
+        add(left);
+        add(right);
     }
 
     public void toSql(PrintWriter out)
     {
-        mLeft.toSql(out);
-        out.print(" AND ");
-        mRight.toSql(out);
+        String separator = "";
+        for (int i = 0; i < mElements.size(); i++)
+        {
+            SqlConverter converter = (SqlConverter) mElements.get(i);
+            out.print(separator);
+            converter.toSql(out);
+            separator = " AND ";
+        }
     }
 
-    private SqlConverter mLeft;
-    private SqlConverter mRight;
+    public void add(SqlConverter sqlConverter)
+    {
+        mElements.add(sqlConverter);
+    }
+
+    public String toString()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append(mElements)
+            .toString();
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof AndClause))
+        {
+            return false;
+        }
+        AndClause rhs = (AndClause) obj;
+        return new EqualsBuilder()
+            .append(mElements, rhs.mElements)
+            .isEquals();
+    }
+
+    private List mElements;
 }

@@ -3,36 +3,63 @@
 package org.realtors.rets.server.dmql;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.realtors.rets.server.Util;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 public class OrClause implements SqlConverter
 {
-    public SqlConverter getLeft()
+    public OrClause()
     {
-        return mLeft;
+        mElements = new ArrayList();
     }
 
-    public void setLeft(SqlConverter left)
+    public OrClause(SqlConverter left, SqlConverter right)
     {
-        mLeft = left;
-    }
-
-    public SqlConverter getRight()
-    {
-        return mRight;
-    }
-
-    public void setRight(SqlConverter right)
-    {
-        mRight = right;
+        this();
+        add(left);
+        add(right);
     }
 
     public void toSql(PrintWriter out)
     {
-        mLeft.toSql(out);
-        out.print(" OR ");
-        mRight.toSql(out);
+        String separator = "";
+        for (int i = 0; i < mElements.size(); i++)
+        {
+            SqlConverter converter = (SqlConverter) mElements.get(i);
+            out.print(separator);
+            converter.toSql(out);
+            separator = " OR ";
+        }
     }
 
-    private SqlConverter mLeft;
-    private SqlConverter mRight;
+    public void add(SqlConverter sqlConverter)
+    {
+        mElements.add(sqlConverter);
+    }
+
+    public String toString()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append(mElements)
+            .toString();
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof OrClause))
+        {
+            return false;
+        }
+        OrClause rhs = (OrClause) obj;
+        return new EqualsBuilder()
+            .append(mElements, rhs.mElements)
+            .isEquals();
+    }
+
+    private List mElements;
 }

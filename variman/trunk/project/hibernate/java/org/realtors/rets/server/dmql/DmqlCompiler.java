@@ -3,6 +3,10 @@ package org.realtors.rets.server.dmql;
 import java.io.StringReader;
 
 import antlr.ANTLRException;
+import antlr.BaseAST;
+import antlr.RecognitionException;
+import antlr.Parser;
+import antlr.collections.AST;
 
 public class DmqlCompiler
 {
@@ -26,7 +30,22 @@ public class DmqlCompiler
         parser.setDmqlLexer(lexer);
         parser.setMetadata(metadata);
         parser.setTrace(traceParser);
-        return parser.query();
+        parser.query();
+        return walkTreeParser(parser, traceParser, parser.getAST());
+    }
+
+    private static SqlConverter walkTreeParser(Parser parser,
+                                               boolean traceParser, AST ast)
+        throws RecognitionException
+    {
+        BaseAST.setVerboseStringConversion(true, parser.getTokenNames());
+        if (traceParser)
+        {
+            System.out.println("ast: " + ast.toStringList());
+        }
+        DmqlTreeParser treeParser = new DmqlTreeParser();
+        treeParser.setTrace(traceParser);
+        return treeParser.query(ast);
     }
 
     public static SqlConverter parseDmql2(String dmql,
@@ -48,7 +67,8 @@ public class DmqlCompiler
         parser.setDmqlLexer(lexer);
         parser.setMetadata(metadata);
         parser.setTrace(traceParser);
-        return parser.query();
+        parser.query();
+        return walkTreeParser(parser, traceParser, parser.getAST());
     }
 }
 
