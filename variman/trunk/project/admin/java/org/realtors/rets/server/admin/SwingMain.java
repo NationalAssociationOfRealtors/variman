@@ -25,7 +25,7 @@ public class SwingMain
 //        JFrame.setDefaultLookAndFeelDecorated(true);
         setNativeLookAndFeel();
 
-        AdminFrame adminFrame = new AdminFrame("Rex Administration");
+        AdminFrame adminFrame = AdminFrame.getInstance();
         adminFrame.setLocationRelativeTo(null);    
         adminFrame.setVisible(true);
 //        //Create and set up the window.
