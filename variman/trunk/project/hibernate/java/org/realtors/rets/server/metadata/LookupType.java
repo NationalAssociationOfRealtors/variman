@@ -11,6 +11,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */ 
 public class LookupType extends ServerMetadata implements Serializable
 {
+    public LookupType()
+    {
+    }
+
+    public LookupType(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
     /**
      * 
      * @return a Long object
