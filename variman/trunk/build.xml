@@ -591,6 +591,9 @@
     </javac>
   </target>
           
+  <target name="build-full" description="Full build from clean"
+          depends="build-hibernate-xdoclet,build"/>
+
   <target name="test" description="Run all unit tests" depends="build">
     <junit printsummary="yes" haltonfailure="yes">
       <classpath>
