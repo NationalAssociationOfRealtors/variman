@@ -38,7 +38,7 @@ public class ConfirmationAction extends Action
         
         HttpSession session = request.getSession();
         RegistrationForm form =
-            (RegistrationForm) session.getAttribute("registrationForm");
+            (RegistrationForm) session.getAttribute("cctRegistrationForm");
             
         if (form == null)
         {
