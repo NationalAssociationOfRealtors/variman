@@ -22,7 +22,17 @@ public class DataTypeEnum implements PersistentEnum
 
     static
     {
-        // todo: fill this is
+        mStringMap = new HashMap();
+        mStringMap.put("boolean", BOOLEAN);
+        mStringMap.put("character", CHARACTER);
+        mStringMap.put("date", DATE);
+        mStringMap.put("datetime", DATETIME);
+        mStringMap.put("time", TIME);
+        mStringMap.put("tiny", TINY);
+        mStringMap.put("small", SMALL);
+        mStringMap.put("int", INT);
+        mStringMap.put("long", LONG);
+        mStringMap.put("decimal", DECIMAL);
     }
 
     private DataTypeEnum(int dataType)
@@ -65,7 +75,17 @@ public class DataTypeEnum implements PersistentEnum
     {
         switch (code)
         {
-            default: throw new RuntimeException("Unknown Object Type");
+            case 0: return "boolean";
+            case 1: return "character";
+            case 2: return "date";
+            case 3: return "datetime";
+            case 4: return "time";
+            case 5: return "tiny";
+            case 6: return "small";
+            case 7: return "int";
+            case 8: return "long";
+            case 9: return "decimal";
+            default: throw new RuntimeException("Unknown DataType");
         }
     }
 
@@ -73,7 +93,6 @@ public class DataTypeEnum implements PersistentEnum
     {
         return toString(ote.toInt());
     }
-
 
     private final int mDataType;
 }

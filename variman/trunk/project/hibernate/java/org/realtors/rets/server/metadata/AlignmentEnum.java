@@ -1,5 +1,8 @@
 package org.realtors.rets.server.metadata;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import net.sf.hibernate.PersistentEnum;
 
 public class AlignmentEnum implements PersistentEnum
@@ -8,6 +11,17 @@ public class AlignmentEnum implements PersistentEnum
     public static final AlignmentEnum RIGHT = new AlignmentEnum(1);
     public static final AlignmentEnum CENTER = new AlignmentEnum(2);
     public static final AlignmentEnum JUSTIFY = new AlignmentEnum(3);
+
+    private static Map mStringMap;
+
+    static
+    {
+        mStringMap = new HashMap();
+        mStringMap.put("left", LEFT);
+        mStringMap.put("right", RIGHT);
+        mStringMap.put("center", CENTER);
+        mStringMap.put("justify", JUSTIFY);
+    }
 
     private AlignmentEnum(int code)
     {
@@ -26,6 +40,33 @@ public class AlignmentEnum implements PersistentEnum
             case 3: return JUSTIFY;
             default: throw new RuntimeException("Unknown Alignment");
         }
+    }
+
+    public static AlignmentEnum fromString(String value)
+    {
+        return (AlignmentEnum) mStringMap.get(value.toLowerCase());
+    }
+
+    public String toString()
+    {
+        return toString(toInt());
+    }
+
+    public static String toString(int code)
+    {
+        switch (code)
+        {
+            case 0: return "left";
+            case 1: return "right";
+            case 2: return "center";
+            case 3: return "justify";
+            default: throw new RuntimeException("Unknown Alignment");
+        }
+    }
+
+    public static String toString(AlignmentEnum ae)
+    {
+        return toString(ae.toInt());
     }
 
     private final int mCode;
