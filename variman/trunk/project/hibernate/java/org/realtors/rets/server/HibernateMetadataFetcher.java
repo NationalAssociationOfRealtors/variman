@@ -68,7 +68,7 @@ public class HibernateMetadataFetcher implements MetadataFetcher
                              new MetadataFinder("ValidationExpression", 1));
     }
 
-    public MetadataSegment fetchMetadata(String type, String[] levels)
+    public MetadataSegment fetchMetadataOld(String type, String[] levels)
         throws RetsReplyException
     {
         // Always need system to get version and date
@@ -95,7 +95,7 @@ public class HibernateMetadataFetcher implements MetadataFetcher
         }
     }
 
-    public List fetchAllMetadata(String type, String[] levels)
+    public List fetchMetadata(String type, String[] levels)
     {
         throw new UnsupportedOperationException("not implemented");
     }
