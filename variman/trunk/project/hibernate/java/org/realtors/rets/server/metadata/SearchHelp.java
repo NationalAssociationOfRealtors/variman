@@ -80,6 +80,11 @@ public class SearchHelp implements Serializable
         mResourceid = resourceid;
     }
 
+    public String getPath()
+    {
+        return mResourceid.getPath() + ":" + mSearchHelpID;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
