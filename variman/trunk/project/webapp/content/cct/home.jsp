@@ -54,4 +54,5 @@
     </tr>
   </logic:iterate>
   </table>
+  <html:link forward="logout">Logout</html:link>
 </html:html>
