@@ -47,12 +47,16 @@ not
 
 field_value [String name] returns [SqlConverter sql]
     { sql = null; }
-    : {isLookup(name)}? sql=lookup_list[name]
-    | {isStringList(name)}? string_list
-    | {isStringList(name)}? string_literal
+    : {isLookupField(name)}? sql=lookup_list[name]
+    | {isStringField(name)}? sql=string_list[name]
+    | {isStringField(name)}? string_literal
     | number
     | period
     | range_list
+    ;
+
+string_literal
+    : STRING_LITERAL
     ;
 
 between
