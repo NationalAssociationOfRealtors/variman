@@ -38,14 +38,11 @@ public class ConfirmationAction extends Action
         RegistrationForm form =
             (RegistrationForm) session.getAttribute("registrationForm");
 
-//        User user = (User) session.getAttribute("RegUser");
-//        UserInfo userInfo = (UserInfo) session.getAttribute("RegUserInfo");
-
         User user = new User();
         user.setUsername(form.getUsername());
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
-        user.setPassword(form.getPassword());
+        user.changePassword(form.getPassword());
         
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(user);
