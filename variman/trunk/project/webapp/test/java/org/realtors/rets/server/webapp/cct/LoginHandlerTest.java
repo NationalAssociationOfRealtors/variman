@@ -42,9 +42,9 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/action" + EOL +
-            "Login = http://localhost:0/rets/login" + EOL +
-            "Logout = http://localhost:0/rets/logout" + EOL +
+            "Action = http://localhost:0/rets/cct/action" + EOL +
+            "Login = http://localhost:0/rets/cct/login" + EOL +
+            "Logout = http://localhost:0/rets/cct/logout" + EOL +
             "Search = http://localhost:0/rets/search" + EOL +
             "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
             "</RETS-RESPONSE>" + EOL +
@@ -65,7 +65,7 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Login = http://localhost:0/rets/login" + EOL +
+            "Login = http://localhost:0/rets/cct/login" + EOL +
             "Search = http://localhost:0/rets/search" + EOL +
             "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
             "</RETS-RESPONSE>" + EOL +
@@ -86,12 +86,12 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/action" + EOL +
+            "Action = http://localhost:0/rets/cct/action" + EOL +
             "ChangePassword = http://localhost:0/rets/changePassword" + EOL +
             "GetObject = http://localhost:0/rets/getObject" + EOL +
-            "Login = http://localhost:0/rets/login" + EOL +
+            "Login = http://localhost:0/rets/cct/login" + EOL +
             "LoginComplete = http://localhost:0/rets/loginComplete" + EOL +
-            "Logout = http://localhost:0/rets/logout" + EOL +
+            "Logout = http://localhost:0/rets/cct/logout" + EOL +
             "Search = http://localhost:0/rets/search" + EOL +
             "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
             "Update = http://localhost:0/rets/update" + EOL +
@@ -113,12 +113,13 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = /action" + EOL +
+            // Todo: LoginHandlerTest.testRelativeUrls: Action url
+            "Action = /rets/cct/action" + EOL +
             // Login must always be absolute
-            "Login = http://localhost:0/rets/login" + EOL +
-            "Logout = /logout" + EOL +
-            "Search = /search" + EOL +
-            "GetMetadata = /getMetadata" + EOL +
+            "Login = http://localhost:0/rets/cct/login" + EOL +
+            "Logout = /rets/cct/logout" + EOL +
+            "Search = /rets/search" + EOL +
+            "GetMetadata = /rets/getMetadata" + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
         assertLinesEqual(expected, response.getText());
@@ -137,9 +138,9 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/actionAlt" + EOL +
-            "Login = http://localhost:0/rets/login" + EOL +
-            "Logout = http://localhost:0/rets/logout" + EOL +
+            "Action = http://localhost:0/rets/cct/actionAlt" + EOL +
+            "Login = http://localhost:0/rets/cct/login" + EOL +
+            "Logout = http://localhost:0/rets/cct/logout" + EOL +
             "Search = http://localhost:0/rets/search" + EOL +
             "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
             "</RETS-RESPONSE>" + EOL +
@@ -160,9 +161,9 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            "Action = http://localhost:0/rets/action" + EOL +
-            "Login = http://localhost:0/rets/loginAlt" + EOL +
-            "Logout = http://localhost:0/rets/logout" + EOL +
+            "Action = http://localhost:0/rets/cct/action" + EOL +
+            "Login = http://localhost:0/rets/cct/loginAlt" + EOL +
+            "Logout = http://localhost:0/rets/cct/logout" + EOL +
             "Search = http://localhost:0/rets/search" + EOL +
             "GetMetadata = http://localhost:0/rets/getMetadata" + EOL +
             "</RETS-RESPONSE>" + EOL +
