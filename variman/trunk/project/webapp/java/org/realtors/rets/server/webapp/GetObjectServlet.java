@@ -35,8 +35,8 @@ public class GetObjectServlet extends RetsServlet
         GetObjectTransaction transaction =
             new GetObjectTransaction(parameters);
         transaction.setRootDirectory(WebApp.getGetObjectRoot());
-        transaction.setImagePattern(WebApp.getGetObjectPattern());
-        transaction.setObjectSetPattern("%k.xml");
+        transaction.setPhotoPattern(WebApp.getPhotoPattern());
+        transaction.setObjectSetPattern(WebApp.getObjectSetPattern());
         StringBuffer location = ServletUtils.getContextPath(request);
         location.append("/objects/");
         transaction.setBaseLocationUrl(location.toString());
@@ -45,7 +45,7 @@ public class GetObjectServlet extends RetsServlet
 
     protected boolean isXmlResponse()
     {
-        return false;
+        return true;
     }
 
     private static class Response implements GetObjectResponse
