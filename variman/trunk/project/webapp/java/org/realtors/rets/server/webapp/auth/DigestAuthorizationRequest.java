@@ -3,6 +3,7 @@
 package org.realtors.rets.server.webapp.auth;
 
 import org.realtors.rets.server.HashUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -25,12 +26,17 @@ public class DigestAuthorizationRequest
      * Initialize a request from an HTTP "Authorization" header line.
      *
      * @param header HTTP "Authorizatoin" header
-     * @throws IllegalArgumentException if the header is unparseable
+     * @throws IllegalArgumentException if the header is unparsable
      */
     public DigestAuthorizationRequest(String header)
         throws IllegalArgumentException
     {
         this();
+        // Valid header, but verify should always fail
+        if (header == null)
+        {
+            return;
+        }
         if (!header.startsWith(PREFIX))
         {
             throw new IllegalArgumentException("Incorrect prefix [" + header +
@@ -228,11 +234,28 @@ public class DigestAuthorizationRequest
 
     public boolean verifyResponse(String password, boolean passwordIsA1)
     {
-        if (password == null)
+        if (absoluteFailure(password))
         {
-            LOG.debug("Null password always fails");
             return false;
         }
+        String expectedResponse = calculateRequestDigest(password,
+                                                         passwordIsA1);
+        LOG.debug("Expected response: " + expectedResponse);
+        LOG.debug("Actual response:   " + mResponse);
+        return (expectedResponse.equals(mResponse));
+    }
+
+    /**
+     * Calculates the request digest according to Section 3.2.2.1 of RFC
+     * 2617. This has default (package) scope to allow for testing, though it
+     * could be private.
+     *
+     * @param password Plain text password
+     * @param passwordIsA1 <code>true</code> if the password is A1
+     * @return The expected digest response
+     */
+    String calculateRequestDigest(String password, boolean passwordIsA1)
+    {
         String a1;
         if (passwordIsA1)
         {
@@ -243,30 +266,42 @@ public class DigestAuthorizationRequest
             a1 = HashUtils.md5(mUsername + ":" + mRealm + ":" + password);
         }
         String a2 = HashUtils.md5(mMethod + ":" + mUri);
-        String expectedResponse = getRequestDigest(a1, a2);
-        LOG.debug("Expected response: " + expectedResponse);
-        LOG.debug("Actual response:   " + mResponse);
-        return (expectedResponse.equals(mResponse));
-    }
 
-    /**
-     * See RFC 2617, Section 3.2.2.1
-     *
-     * @param a1
-     * @param a2
-     * @return
-     */
-    private String getRequestDigest(String a1, String a2)
-    {
         if (mQop == null)
         {
             return HashUtils.md5(a1 + ":" + mNonce + ":" + a2);
         }
         else
         {
-            return HashUtils.md5(a1 + ":" + mNonce + ":" + mNonceCount +
-                                 ":" + mCnonce + ":" + mQop + ":" + a2);
+            return HashUtils.md5(a1 + ":" + mNonce + ":" + mNonceCount + ":" +
+                                 mCnonce + ":" + mQop + ":" + a2);
         }
+    }
+
+    /**
+     * Returns <code>true</code> for cases that should <b>always</b> fail
+     * verification regardless of if the digest hash happens to match. The
+     * current implementation checks for a null username or null password. In
+     * the case of a null password, it means the user never supplied a
+     * password. In the case of a null username, it means a valid digest
+     * header was never parsed.
+
+     * @param password The plain text password
+     * @return <code>true</code> if verification should always fail.
+     */
+    private boolean absoluteFailure(String password)
+    {
+        if (password == null)
+        {
+            LOG.debug("Null password always fails");
+            return true;
+        }
+        if (mUsername == null)
+        {
+            LOG.debug("Null username always fails");
+            return true;
+        }
+        return false;
     }
 
     private static final String PREFIX = "Digest ";
