@@ -20,7 +20,6 @@ public class FormatUtil
      */
     public static List toSortedStringList(Collection collection)
     {
-        // Todo: TagBuilder.toSortedStringList pull out to static util
         List strings = new ArrayList(collection.size());
         for (Iterator iterator = collection.iterator(); iterator.hasNext();)
         {
