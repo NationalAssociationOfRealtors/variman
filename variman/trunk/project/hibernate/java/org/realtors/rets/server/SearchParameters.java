@@ -14,9 +14,19 @@ public class SearchParameters
         mResourceId = getParameter(parameterMap, "SearchType");
         mClassName = getParameter(parameterMap, "Class");
         initQueryType(getParameter(parameterMap, "QueryType"), version);
-        mQuery = getParameter(parameterMap, "Query");
+        initQuery(getParameter(parameterMap, "Query"));
         initFormat(getParameter(parameterMap, "Format"));
         initStandardNames(getParameter(parameterMap, "StandardNames"));
+    }
+
+    private void initQuery(String query) throws RetsReplyException
+    {
+        if (query == null)
+        {
+            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+                                         "query is required");
+        }
+        mQuery = query;
     }
 
     private void initStandardNames(String standardNames)
@@ -32,8 +42,9 @@ public class SearchParameters
         }
         else
         {
-            throw new RetsReplyException(20203, "Invalid standard names: " +
-                                                standardNames);
+            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+                                         "Invalid standard names: " +
+                                         standardNames);
         }
     }
 
@@ -48,8 +59,9 @@ public class SearchParameters
             ((version == RetsVersion.RETS_1_5) && mQueryType.equals(DMQL2));
         if (!validQueryType)
         {
-            throw new RetsReplyException(20203, "Invalid query type: " +
-                                                mQueryType);
+            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+                                         "Invalid query type: " +
+                                         mQueryType);
         }
     }
 
