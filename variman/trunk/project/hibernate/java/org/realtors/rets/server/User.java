@@ -220,6 +220,11 @@ public class User implements Serializable, Comparable
 
     public String toString()
     {
+        return getName();    
+    }
+
+    public String dump()
+    {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
             .append("id", mId)
             .append("username", mUsername)
