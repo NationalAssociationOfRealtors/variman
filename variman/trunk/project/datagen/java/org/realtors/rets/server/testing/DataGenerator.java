@@ -1,5 +1,7 @@
 package org.realtors.rets.server.testing;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class DataGenerator
         mRandom.nextInt();
         initHibernate();
     }
-
+    
     private void initHibernate() throws HibernateException
     {
         Configuration cfg = new Configuration();
@@ -41,10 +43,9 @@ public class DataGenerator
     {
         Session session = mSessions.openSession();
         Transaction tx = session.beginTransaction();
-        Query query =
-            session.createQuery(
-                "SELECT system"
-                    + "  FROM org.realtors.rets.server.metadata.MSystem system");
+        Query query = session.createQuery(
+                "SELECT system" +
+                "  FROM org.realtors.rets.server.metadata.MSystem system");
         Iterator i = query.iterate();
         while (i.hasNext())
         {
@@ -74,6 +75,11 @@ public class DataGenerator
 
     private void createData() throws HibernateException
     {
+        createData(10);
+    }
+
+    private void createData(int props) throws HibernateException
+    {
         Session session = null;
         Transaction tx = null;
         try
@@ -81,38 +87,52 @@ public class DataGenerator
             session = mSessions.openSession();
             tx = session.beginTransaction();
 
-            RetsData retsData = new RetsData();
-            MClass clazz = (MClass) mClasses.get("Property:RES");
-            retsData.setClazz(clazz);
-            session.save(retsData);
-
-            Map dataElements = new HashMap();
-
-            RetsDataElement dataElement =
+            for (int i = 0; i < props; i++)
+            {
+                RetsData retsData = new RetsData();
+                MClass clazz = (MClass) mClasses.get("Property:RES");
+                retsData.setClazz(clazz);
+                session.save(retsData);
+                
+                Map dataElements = new HashMap();
+                
+                RetsDataElement dataElement =
                 createDataElement("Property:RES:LP", mRandom.nextInt(1000000));
-            dataElements.put(dataElement.getKey(), dataElement);
-            session.save(dataElement);
-
-            dataElement = createDataElement("Property:RES:BROKER", "BrokerMan");
-            dataElements.put(dataElement.getKey(), dataElement);
-            session.save(dataElement);
-
-            dataElement = createDataElement("Property:RES:AGENT_ID", "Agent");
-            dataElements.put(dataElement.getKey(), dataElement);
-            session.save(dataElement);
-            
-            String tmp = Long.toHexString(mRandom.nextInt(100000));
-            dataElement = createDataElement("Property:RES:LN", tmp);
-            dataElements.put(dataElement.getKey(), dataElement);
-            session.save(dataElement);
-            
-            dataElement = createDataElement("Property:RES:ZIP_CODE",
-                                            mRandom.nextInt(99999));
-            dataElements.put(dataElement.getKey(), dataElement);
-            session.save(dataElement);
-
-            retsData.setDataElements(dataElements);
-            session.saveOrUpdate(retsData);
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+                
+                dataElement =
+                    createDataElement("Property:RES:BROKER", "BrokerMan");
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+                
+                dataElement =
+                    createDataElement("Property:RES:AGENT_ID", "Agent");
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+                
+                String tmp = Long.toHexString(mRandom.nextInt(100000));
+                dataElement = createDataElement("Property:RES:LN", tmp);
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+                
+                dataElement = createDataElement("Property:RES:ZIP_CODE",
+                mRandom.nextInt(99999));
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+                
+                dataElement = createDataElement("Property:RES:LD", new Date());
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+                
+                dataElement = createDataElement("Property:RES:SQFT", 
+                                                mRandom.nextInt(7000));
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+                
+                retsData.setDataElements(dataElements);
+                session.saveOrUpdate(retsData);
+            }
             tx.commit();
         }
         catch (HibernateException e)
@@ -130,10 +150,27 @@ public class DataGenerator
     }
 
     /**
+     * Creates a RetsDataElement
      * 
-     * @param string
-     * @param long1
-     * @return
+     * @param path The path to the table
+     * @param value the value to store
+     * @return an initialized RetsDataElement
+     */
+    private RetsDataElement createDataElement(String path, Date value)
+    {
+        RetsDataElement rde = new RetsDataElement();
+        Table key = (Table) mTables.get(path);
+        rde.setKey(key);
+        rde.setDateValue(value);
+        return rde;
+    }
+
+    /**
+     * Creates a RetsDataElement
+     * 
+     * @param path The path to the table
+     * @param value the value to store
+     * @return an initialized RetsDataElement
      */
     private RetsDataElement createDataElement(String path, long value)
     {
@@ -144,6 +181,13 @@ public class DataGenerator
         return rde;
     }
 
+    /**
+     * Creates a RetsDataElement
+     * 
+     * @param path The path to the Table
+     * @param value the value to store
+     * @return an initialized RetsDataElement
+     */
     private RetsDataElement createDataElement(String path, String value)
     {
         RetsDataElement rde = new RetsDataElement();
@@ -181,6 +225,7 @@ public class DataGenerator
 
     public static void main(String[] args) throws HibernateException
     {
+
         DataGenerator dg = new DataGenerator();
         long before = System.currentTimeMillis();
         dg.loadMetadata();
@@ -189,12 +234,24 @@ public class DataGenerator
         System.out.print(after - before);
         System.out.println("ms");
 
-        before = System.currentTimeMillis();
-        dg.createData();
-        after = System.currentTimeMillis();
-        System.out.print("Time to create data:");
-        System.out.print(after - before);
-        System.out.println("ms");
+        String tmp = System.getProperty("add.data");
+        if (tmp != null && tmp.equalsIgnoreCase("yes"))
+        {
+            before = System.currentTimeMillis();
+            tmp = System.getProperty("prop.count");
+            if (tmp == null)
+            {
+                dg.createData();
+            }
+            else
+            {
+                dg.createData(Integer.parseInt(tmp));
+            }
+            after = System.currentTimeMillis();
+            System.out.print("Time to create data:");
+            System.out.print(after - before);
+            System.out.println("ms");
+        }
 
         for (int i = 0; i < 10; i++)
         {
