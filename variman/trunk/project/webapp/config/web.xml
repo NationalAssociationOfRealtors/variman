@@ -7,9 +7,19 @@
   <description>CRT RETS Server</description>
 
   <filter>
+    <filter-name>Authentication Filter</filter-name>
+    <filter-class>org.realtors.rets.server.webapp.auth.AuthenticationFilter</filter-class>
+  </filter>
+
+  <filter>
     <filter-name>Accounting Filter</filter-name>
     <filter-class>org.realtors.rets.server.webapp.AccountingFilter</filter-class>
   </filter>
+
+  <filter-mapping>
+    <filter-name>Authentication Filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
 
   <filter-mapping>
     <filter-name>Accounting Filter</filter-name>
@@ -32,6 +42,10 @@
     <servlet-name>GetMetadata Servlet</servlet-name>
     <servlet-class>org.realtors.rets.server.webapp.GetMetadataServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>Reset Servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.auth.ResetServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>Stop Servlet</servlet-name>
@@ -49,11 +63,16 @@
     <servlet-name>GetMetadata Servlet</servlet-name>
     <url-pattern>/rets/getMetadata</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Reset Servlet</servlet-name>
+    <url-pattern>/reset</url-pattern>
+  </servlet-mapping>
 
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>
 
+<!--
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>RETS Server</web-resource-name>
@@ -76,5 +95,6 @@
   <security-role>
     <role-name>rets-user</role-name>
   </security-role>
+-->
 
 </web-app>
