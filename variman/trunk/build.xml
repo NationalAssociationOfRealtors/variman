@@ -615,7 +615,7 @@
     <copy todir="build/importer/lib" file="${hibernate.jdbc.jar}"/>
   </target>
 
-  <target name="build-admin" depends="prepare"
+  <target name="build-admin" depends="build-hibernate"
           description="Builds the admin tool">
     <depend srcDir="project/admin/java"
             destDir="build/admin/classes"
