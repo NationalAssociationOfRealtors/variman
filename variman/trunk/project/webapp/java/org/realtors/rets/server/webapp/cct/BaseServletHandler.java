@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ public abstract class BaseServletHandler implements ServletHandler
     public BaseServletHandler()
     {
         mExpectedHeaders = new HashMap();
+        mHeaders = new HashMap();
     }
 
     public void reset()
@@ -37,7 +39,13 @@ public abstract class BaseServletHandler implements ServletHandler
         throws ServletException, IOException
     {
         mDoGetInvokeCount++;
-        mRequest = request;
+        mHeaders.clear();
+        Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements())
+        {
+            String headerName = (String) headerNames.nextElement();
+            mHeaders.put(headerName,  request.getHeader(headerName));
+        }
         LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
     }
 
@@ -73,16 +81,11 @@ public abstract class BaseServletHandler implements ServletHandler
 
     private void validateHeaders(ValidationResults result)
     {
-        if (mRequest == null)
-        {
-            return;
-        }
-
         Set names = mExpectedHeaders.keySet();
         for (Iterator iterator = names.iterator(); iterator.hasNext();)
         {
             String name = (String) iterator.next();
-            String header = mRequest.getHeader(name);
+            String header = (String) mHeaders.get(name);
             String regexp = (String) mExpectedHeaders.get(name);
             if ((header == null) || !matches(header, regexp))
             {
@@ -118,5 +121,5 @@ public abstract class BaseServletHandler implements ServletHandler
     private Map mExpectedHeaders;
     private int mDoGetInvokeCount;
     private InvokeCount mInvokeCount;
-    private HttpServletRequest mRequest;
+    private Map mHeaders;
 }
