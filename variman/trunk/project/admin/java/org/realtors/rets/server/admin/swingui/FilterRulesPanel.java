@@ -31,7 +31,10 @@ public class FilterRulesPanel extends JPanel
         mRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mRulesList.getSelectionModel().addListSelectionListener(
             new OnFilterRuleSelectionChanged());
-        box.add(mRulesList);
+        JScrollPane scrollPane = new JScrollPane(mRulesList);
+        scrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        box.add(scrollPane);
         box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         add(box, BorderLayout.CENTER);
 
