@@ -7,7 +7,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_updatehelp"
- * @hibernate.jcs-cache usage="read-write"
  */
 public class UpdateHelp implements Serializable
 {

@@ -12,7 +12,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_resource"
- * @hibernate.jcs-cache usage="read-write"
  */
 public class Resource extends ServerMetadata implements Serializable
 {
@@ -167,7 +166,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.MClass"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getClasses()
     {
@@ -187,7 +185,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.MObject"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getObjects()
     {
@@ -207,7 +204,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.SearchHelp"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getSearchHelps()
     {
@@ -227,7 +223,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.EditMask"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getEditMasks()
     {
@@ -247,7 +242,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.Lookup"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getLookups()
     {
@@ -267,7 +261,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ValidationLookup"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getValidationLookups()
     {
@@ -287,7 +280,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ValidationExternal"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getValidationExternals()
     {
@@ -307,7 +299,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ValidationExpression"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getValidationExpressions()
     {
@@ -327,7 +318,6 @@ public class Resource extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="resourceid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.UpdateHelp"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getUpdateHelps()
     {

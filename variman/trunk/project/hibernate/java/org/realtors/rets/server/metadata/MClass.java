@@ -11,7 +11,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_class"
- * @hibernate.jcs-cache usage="read-write"
  */
 public class MClass extends ServerMetadata implements Serializable
 {
@@ -147,7 +146,6 @@ public class MClass extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="classid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.Table"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getTables()
     {
@@ -167,7 +165,6 @@ public class MClass extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="classid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.Update"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getUpdates()
     {

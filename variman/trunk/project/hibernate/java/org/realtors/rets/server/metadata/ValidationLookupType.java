@@ -8,7 +8,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_validationlookuptype"
- * @hibernate.jcs-cache usage="read-write"
  */
 public class ValidationLookupType extends ServerMetadata implements Serializable
 {

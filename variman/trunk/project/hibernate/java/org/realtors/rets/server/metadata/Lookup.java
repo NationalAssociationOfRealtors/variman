@@ -12,7 +12,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_lookup"
- * @hibernate.jcs-cache usage="read-write"
  */
 public class Lookup extends ServerMetadata implements Serializable
 {
@@ -101,7 +100,6 @@ public class Lookup extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="lookupid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.LookupType"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getLookupTypes()
     {

@@ -7,7 +7,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_editmask"
- * @hibernate.jcs-cache usage="read-write"
  *
  */
 public class EditMask extends ServerMetadata implements Serializable

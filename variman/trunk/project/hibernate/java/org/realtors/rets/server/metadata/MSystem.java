@@ -14,7 +14,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_system"
- * @hibernate.jcs-cache usage="read-write"
  */
 public class MSystem extends ServerMetadata implements Serializable
 {
@@ -139,7 +138,6 @@ public class MSystem extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="systemid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.Resource"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getResources()
     {
@@ -159,7 +157,6 @@ public class MSystem extends ServerMetadata implements Serializable
      * @hibernate.collection-key column="systemid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ForeignKey"
-     * @hibernate.collection-jcs-cache usage="read-write"
      */
     public Set getForeignKeys()
     {
