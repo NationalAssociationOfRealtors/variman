@@ -10,28 +10,27 @@
  */
 package org.realtors.rets.server.webapp;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.cfg.Configuration;
-
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.PasswordMethod;
-import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.log4j.Logger;
 
 /**
  * @web.servlet name="init-servlet"
@@ -97,12 +96,40 @@ public class InitServlet extends RetsServlet
      */
     private void initLog4J()
     {
+        initRexLogHome();
         String log4jInitFile =
             getContextInitParameter("log4j-init-file",
-                                    "WEB-INF/classes/log4j.lcf");
+                                    "WEB-INF/classes/rex-webapp-log4j.xml");
         log4jInitFile = resolveFromConextRoot(log4jInitFile);
         WebApp.setLog4jFile(log4jInitFile);
         WebApp.loadLog4j();
+    }
+
+    /**
+     * Sets the <code>rex.log.home</code> system properly so it can be used in
+     * the log4j config file.
+     */
+    private void initRexLogHome()
+    {
+        String rexLogHome =
+            getServletContext().getInitParameter("rex-log4j-home");
+        if (rexLogHome == null)
+        {
+            rexLogHome = System.getProperty("rex.log.home");
+            if (rexLogHome == null)
+            {
+                rexLogHome = System.getProperty("rex.home");
+                if (rexLogHome == null)
+                {
+                    rexLogHome = System.getProperty("user.dir");
+                }
+                else
+                {
+                    rexLogHome = rexLogHome + File.separator + "logs";
+                }
+            }
+        }
+        System.setProperty("rex.log.home", rexLogHome);
     }
 
     private void initRetsConfiguration() throws ServletException
