@@ -4,6 +4,9 @@
  */
 package org.realtors.rets.server.cct;
 
+import java.io.Serializable;
+import java.util.Set;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.realtors.rets.server.User;
@@ -12,7 +15,7 @@ import org.realtors.rets.server.Util;
 /**
  * @hibernate.class table="rets_cct_userinfo"
  */
-public class UserInfo
+public class UserInfo implements Serializable
 {
     /**
      * @hibernate.property length="80" not-null="true" 
@@ -55,6 +58,16 @@ public class UserInfo
     }
 
     /**
+     * @hibernate.set table="rets_cct_userinfo_roles"
+     * @hibernate.collection-key column="userinfo_id"
+     * @hibernate.collection-element column="role" type="string" length="40"
+     */
+    public Set getRoles()
+    {
+        return mRoles;
+    }
+
+    /**
      * @hibernate.many-to-one
      * @hibernate.column name="user_id" not-null="true"
      */
@@ -69,6 +82,11 @@ public class UserInfo
     public String getUserAgent()
     {
         return mUserAgent;
+    }
+    
+    public boolean isUserInRole(String role)
+    {
+        return mRoles.contains(role);
     }
 
     /**
@@ -118,6 +136,15 @@ public class UserInfo
 
     /**
      * 
+     * @param list
+     */
+    public void setRoles(Set set)
+    {
+        mRoles = set;
+    }
+
+    /**
+     * 
      * @param user
      */
     public void setUser(User user)
@@ -143,7 +170,8 @@ public class UserInfo
             .append("ProductName", mProductName)
             .append("ProductVersion", mProductVersion)
             .append("user.Username", mUser.getUsername())
-            .append("UserAgent", mUserAgent).toString();
+            .append("UserAgent", mUserAgent)
+            .append("Roles", mRoles).toString();
     }
 
     private String mCompany;
@@ -151,6 +179,7 @@ public class UserInfo
     private Long mId;
     private String mProductName;
     private String mProductVersion;
+    private Set mRoles;
     private User mUser;
     private String mUserAgent;
 }
