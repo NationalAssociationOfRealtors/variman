@@ -1,11 +1,12 @@
 package org.realtors.rets.server;
 
 import java.io.Serializable;
+import java.util.SortedSet;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_group"
@@ -75,6 +76,23 @@ public class Group implements Serializable, Comparable
         mDescription = description;
     }
 
+    /**
+     * @hibernate.set table="rets_user_groups" lazy="true"
+     *   sort="natural" inverse="true"
+     * @hibernate.collection-key column="group_id"
+     * @hibernate.collection-many-to-many column="user_id"
+     *   class="org.realtors.rets.server.User"
+     */
+    protected SortedSet getUsers()
+    {
+        return mUsers;
+    }
+
+    protected void setUsers(SortedSet users)
+    {
+        mUsers = users;
+    }
+
     public String toString()
     {
         return mName;
@@ -119,4 +137,5 @@ public class Group implements Serializable, Comparable
     private Long mId;
     private String mName;
     private String mDescription;
+    private SortedSet mUsers;
 }
