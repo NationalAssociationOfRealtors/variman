@@ -1,5 +1,6 @@
 package org.realtors.rets.server.webapp.cct;
 
+import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +26,18 @@ public class IndexAction extends CctAction
                                  HttpServletResponse response)
         throws Exception
     {
+        Iterator iter = ((CertificationTestSuite)
+            request.getSession().getAttribute(TESTSUITE_KEY)).getTests();
+        int i = 0;
+        while (iter.hasNext())
+        {
+            CertificationTest test = (CertificationTest) iter.next();
+            if (test.getStatus() == CertificationTest.RUNNING)
+            {
+                request.setAttribute("cctActiveTest", new Integer(i));
+            }
+            i++;
+        }
         return mapping.findForward("home");
     }
 
