@@ -14,7 +14,7 @@ public class ValidationResult
 {
     public ValidationResult()
     {
-        mStatus = StatusEnum.NOTRUN;
+        mStatus = StatusEnum.PASSED;
         mMessages = new ArrayList();
         mTestName = "";
         mUsername = null;
@@ -81,7 +81,7 @@ public class ValidationResult
     public void reset()
     {
         mMessages = new ArrayList();
-        mStatus = StatusEnum.NOTRUN;
+        mStatus = StatusEnum.PASSED;
     }
 
     public void setId(Long long1)
