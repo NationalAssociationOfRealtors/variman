@@ -11,7 +11,7 @@
   <body>
     <table cellpadding="2" cellspacing="0" border="1" width="99%">
       <tr>
-        <th>User</th><th>Status</th>
+        <th>User</th><th>Product</th><th>Status</th>
       </tr>
       <logic:iterate id="info" name="cctAdminIndexInfos"
                      type="org.realtors.rets.server.webapp.cct.AdminIndexInfo">
@@ -21,6 +21,10 @@
                        paramName="info" paramProperty="userInfo.user.username">
               <bean:write name="info" property="userInfo.user.name"/>
             </html:link>
+          </td>
+          <td>
+            <bean:write name="info" property="userInfo.productName"/>
+            <bean:write name="info" property="userInfo.productVersion"/>
           </td>
           <cct:teststatustd name="info" property="overallStatus"/>
         </tr>
