@@ -6,8 +6,6 @@ package org.realtors.rets.server.webapp.cct;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
@@ -16,8 +14,9 @@ import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
-import org.realtors.rets.server.webapp.InitServlet;
 import org.realtors.rets.server.webapp.WebApp;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author kgarner
