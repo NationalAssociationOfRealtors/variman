@@ -366,7 +366,9 @@
     <!--
     <copy tofile="build/rets-server/lib/tools.jar" file="${jdk.tools.jar}"/>
     -->
-
+    <copy todir="build/rets-server/doc">
+      <fileset dir="doc" includes="**/*"/>
+    </copy>
     <copy tofile="build/rets-server/lib/log4j.jar" file="${log4j.jar}"/>
   </target>
 
@@ -678,8 +680,9 @@
   <target name="dist-bin" depends="build">
     <tar destfile="dist/${project.name}-webapp-${project.version}.tar.gz"
          compression="gzip">
-      <tarfileset dir="build/rets-server/webapp"
-                  prefix="${project.name}-webapp-${project.version}"/>
+      <tarfileset dir="build/rets-server"
+                  prefix="${project.name}-webapp-${project.version}"
+                  includes="webapp/**,doc/**"/>
     </tar>
     <tar destfile="dist/${project.string}.tar.gz" compression="gzip">
       <tarfileset dir="build/rets-server" prefix="${project.string}"/>
