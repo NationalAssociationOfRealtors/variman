@@ -112,9 +112,9 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testNumber() throws ANTLRException
     {
-        parse("(OWNER=5)");
-        parse("(OWNER=5.)");
-        parse("(OWNER=5.0)");
+        parse("(LP=5)");
+        parse("(LP=5.)");
+        parse("(LP=5.0)");
     }
 
     public void testPeriod() throws ANTLRException
