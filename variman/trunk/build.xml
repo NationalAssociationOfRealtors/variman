@@ -29,6 +29,7 @@
     <pathelement path="${antlr.jar}"/>
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${rets-client.jar}"/>
+    <pathelement path="${commons-codec.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -75,6 +76,7 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
     <pathelement path="${antlr.jar}"/>
+    <pathelement path="${commons-codec.jar}"/>
   </path>
 
   <path id="webapp.test.path">
@@ -500,6 +502,8 @@
           file="${hibernate.jdbc.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${commons-codec.jar}"/>
 
     <copy todir="build/rets-server/webapp/WEB-INF/rex"
           file="project/webapp/config/rets-config.xml"/>
