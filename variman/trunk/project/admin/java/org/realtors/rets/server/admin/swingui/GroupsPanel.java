@@ -66,7 +66,7 @@ public class GroupsPanel extends JPanel
 
         JPanel box = new JPanel(new BorderLayout());
         mRulesListModel = new ListListModel();
-        mRulesListModel.setFormatter(RULE_FORMAETTER);
+        mRulesListModel.setFormatter(RULE_FORMATTER);
         mRulesList = new JList(mRulesListModel);
         mRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mRulesList.getSelectionModel().addListSelectionListener(
@@ -77,7 +77,7 @@ public class GroupsPanel extends JPanel
 
         Box buttonBox = Box.createHorizontalBox();
         buttonBox.add(Box.createHorizontalGlue());
-        mRuleAddButtonAction = new RuleAddButtonAction(this);
+        mRuleAddButtonAction = new RuleAddAction(this);
         buttonBox.add(new JButton(mRuleAddButtonAction));
         buttonBox.add(Box.createHorizontalStrut(5));
         mRuleRemoveButtonAction = new RuleRemoveButtonAction(this);
@@ -98,6 +98,17 @@ public class GroupsPanel extends JPanel
     public Action getRemoveGroupAciton()
     {
         return mRemoveGroupAction;
+    }
+
+    public GroupRules getGroupRules()
+    {
+        return mGroupRules;
+    }
+
+    public RuleDescription getSelectedRule()
+    {
+        Object elementAt = mRulesListModel.getSelectedListElement(mRulesList);
+        return (RuleDescription) elementAt;
     }
 
     private void updateComponentsFromSelection()
@@ -134,6 +145,7 @@ public class GroupsPanel extends JPanel
             GroupRules rules = (GroupRules) securityConstraints.get(i);
             if (rules.getGroupName().equals(group.getName()))
             {
+                mGroupRules = rules;
                 ruleDescriptions = rules.getRules();
                 break;
             }
@@ -266,30 +278,6 @@ public class GroupsPanel extends JPanel
         }
     }
 
-    private static class RuleAddButtonAction extends AbstractAction
-    {
-        public RuleAddButtonAction(GroupsPanel groupsPanel)
-        {
-            super("New Rule...");
-            mGroupsPanel = groupsPanel;
-        }
-
-        public void actionPerformed(ActionEvent event)
-        {
-            RuleAddDialog dialog = new RuleAddDialog();
-            try
-            {
-                dialog.show();
-            }
-            finally
-            {
-                dialog.dispose();
-            }
-        }
-
-        private GroupsPanel mGroupsPanel;
-    }
-
     private static class RuleRemoveButtonAction extends AbstractAction
     {
         public RuleRemoveButtonAction(GroupsPanel groupsPanel)
@@ -300,7 +288,24 @@ public class GroupsPanel extends JPanel
 
         public void actionPerformed(ActionEvent event)
         {
-            System.out.println("Remove rule...");
+            RuleDescription rule = mGroupsPanel.getSelectedRule();
+            if (rule == null)
+            {
+                LOG.warn("Attempt to remove null rule");
+                return;
+            }
+
+            int rc = JOptionPane.showConfirmDialog(
+                SwingUtils.getAdminFrame(),
+                "Remove rule for " + RULE_FORMATTER.format(rule));
+            if (rc != JOptionPane.OK_OPTION)
+            {
+                return;
+            }
+            GroupRules rules = mGroupsPanel.getGroupRules();
+            rules.removeRule(rule);
+            Admin.setRetsConfigChanged(true);
+            mGroupsPanel.populateList();
         }
 
         private GroupsPanel mGroupsPanel;
@@ -324,7 +329,7 @@ public class GroupsPanel extends JPanel
 
     private static final Logger LOG =
         Logger.getLogger(GroupsPanel.class);
-    private static final ListElementFormatter RULE_FORMAETTER =
+    private static final ListElementFormatter RULE_FORMATTER =
             new RuleDescriptionFormatter();
 
     private AddGroupAction mAddGroupAction;
@@ -336,7 +341,8 @@ public class GroupsPanel extends JPanel
     private RemoveGroupAction mRemoveGroupAction;
     private JList mRulesList;
     private ListListModel mRulesListModel;
-    private RuleAddButtonAction mRuleAddButtonAction;
+    private Action mRuleAddButtonAction;
     private RuleEditButtonAction mRuleEditButtonAction;
     private RuleRemoveButtonAction mRuleRemoveButtonAction;
+    private GroupRules mGroupRules;
 }
