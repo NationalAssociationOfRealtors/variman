@@ -16,9 +16,9 @@ public class CompactFormatterTest extends LinesEqualTestCase
     {
         assertLinesEqual(
             "<DELIMITER value=\"09\"/>\n" +
-            "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\t</COLUMNS>\n" +
-            "<DATA>\tMain St.\t12345\t0\t</DATA>\n" +
-            "<DATA>\tMichigan Ave.\t60605\t1\t</DATA>\n",
+            "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\tIF\t</COLUMNS>\n" +
+            "<DATA>\tMain St.\t12345\t0\t\t</DATA>\n" +
+            "<DATA>\tMichigan Ave.\t60605\t1\tDW,FR\t</DATA>\n",
             format(CompactFormatter.NO_DECODING));
     }
 
@@ -26,9 +26,10 @@ public class CompactFormatterTest extends LinesEqualTestCase
     {
         assertLinesEqual(
             "<DELIMITER value=\"09\"/>\n" +
-            "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\t</COLUMNS>\n" +
-            "<DATA>\tMain St.\t12345\tActive\t</DATA>\n" +
-            "<DATA>\tMichigan Ave.\t60605\tInactive\t</DATA>\n",
+            "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\tIF\t</COLUMNS>\n" +
+            "<DATA>\tMain St.\t12345\tActive\t\t</DATA>\n" +
+            "<DATA>\tMichigan Ave.\t60605\tInactive\tDishwasher,Freezer\t" +
+            "</DATA>\n",
             format(CompactFormatter.DECODE_TO_SHORT_VALUE));
     }
 
@@ -39,13 +40,15 @@ public class CompactFormatterTest extends LinesEqualTestCase
             new CompactFormatter(lookupDecoding);
         MockResultSet results = new MockResultSet();
         results.setColumns(COLUMNS);
-        results.addRow(new String[] {"Main St.", "12345", "0"});
-        results.addRow(new String[] {"Michigan Ave.", "60605", "1"});
+        results.addRow(new String[] {"Main St.", "12345", "0", ""});
+        results.addRow(new String[] {"Michigan Ave.", "60605", "1", "DW,FR"});
         SimpleDmqlMetadata metadata = new SimpleDmqlMetadata();
         metadata.addString("STNAME");
         metadata.addString("ZIP_CODE");
         metadata.addLookup("STATUS", new String[]{"0", "1"},
                            new String[]{"Active", "Inactive"});
+        metadata.addLookupMulti("IF", new String[]{"FR", "DW"},
+                                new String[]{"Freezer", "Dishwasher"});
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
             new SearchFormatterContext(
@@ -56,5 +59,5 @@ public class CompactFormatterTest extends LinesEqualTestCase
     }
 
     public static final String[] COLUMNS =
-        new String[] {"r_STNAME", "r_ZIP_CODE", "r_STATUS"};
+        new String[] {"r_STNAME", "r_ZIP_CODE", "r_STATUS", "r_IF"};
 }
