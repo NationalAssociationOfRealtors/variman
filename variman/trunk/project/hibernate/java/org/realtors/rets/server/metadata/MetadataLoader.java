@@ -530,13 +530,18 @@ public class MetadataLoader
         while (i.hasNext())
         {
             MClass hClass = (MClass) i.next();
+            String resourceName = hClass.getResource().getResourceID();
+            String className = hClass.getClassName();
+            LOG.debug("Getting tables for resource: " + resourceName +
+                      ", class: " + className);
             Set hTables = new HashSet();
             MTable[] tables = mMetadata.getMClass(
-                    hClass.getResource().getResourceID(),
-                    hClass.getClassName()).getMTables();
+                    resourceName, className).getMTables();
             for (int j = 0; j < tables.length; j++)
             {
                 MTable in = tables[j];
+                LOG.debug("Table system name: " + in.getSystemName() +
+                          ", standard name: " + in.getStandardName());
                 Table hTable = new Table();
 
                 hTable.setMClass(hClass);
@@ -996,7 +1001,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.8 2004/07/20 20:15:49 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.9 2004/08/19 22:22:43 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
