@@ -29,6 +29,7 @@ public class SessionHelper
 
     public Session beginTransaction() throws HibernateException
     {
+        LOG.debug("begin");
         mSession = mFactory.openSession();
         mTx = mSession.beginTransaction();
         return mSession;
@@ -36,11 +37,13 @@ public class SessionHelper
 
     public void commit() throws HibernateException
     {
+        LOG.debug("commit");
         mTx.commit();
     }
 
     public void rollback() throws HibernateException
     {
+        LOG.debug("rollback");
         if (mTx != null)
         {
             mTx.rollback();
@@ -75,6 +78,7 @@ public class SessionHelper
 
     public void close() throws HibernateException
     {
+        LOG.debug("close");
         if (mSession != null)
         {
             mSession.close();
@@ -107,6 +111,8 @@ public class SessionHelper
         }
     }
 
+    private static final Logger LOG =
+        Logger.getLogger(SessionHelper.class);
     private SessionFactory mFactory;
     private Session mSession;
     private Transaction mTx;
