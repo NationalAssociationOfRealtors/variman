@@ -177,6 +177,13 @@ public class Resource extends ServerMetadata implements Serializable
         mClasses = classes;
     }
 
+    public void addClass(MClass clazz)
+    {
+        clazz.setResource(this);
+        clazz.updateLevel();
+        mClasses.add(clazz);
+    }
+
     /**
      *
      * @return a Set of MObject objects
@@ -251,6 +258,14 @@ public class Resource extends ServerMetadata implements Serializable
     public void setLookups(Set lookups)
     {
         mLookups = lookups;
+    }
+
+
+    public void addLookup(Lookup lookup)
+    {
+        lookup.setResource(this);
+        lookup.updateLevel();
+        mLookups.add(lookup);
     }
 
     /**
