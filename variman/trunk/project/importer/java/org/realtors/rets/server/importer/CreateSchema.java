@@ -28,6 +28,7 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.dialect.Dialect;
 
+import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
@@ -70,12 +71,13 @@ public class CreateSchema extends RetsHelpers
             sb.append(" (").append(mLs);
             sb.append("\tid ").append(dialect.getTypeName(Types.BIGINT));
             sb.append(" NOT NULL,").append(mLs);
+            
+            boolean needsLookupMultiTable = false;
 
             Set needsIndex = new HashSet();
             Iterator j = clazz.getTables().iterator();
             while (j.hasNext())
             {
-                // todo: Do right thing for LookupMultis
                 Table table = (Table) j.next();
                 sb.append("\t").append(table.getDbName()).append(" ");
                 switch (table.getDataType().toInt())
@@ -115,12 +117,18 @@ public class CreateSchema extends RetsHelpers
                         sb.append(dialect.getTypeName(Types.NUMERIC));
                         break;
                 }
+
+                if (table.getInterpretation() ==
+                    InterpretationEnum.LOOKUPMULTI)
+                {
+                    needsLookupMultiTable = true;
+                }
                 
                 if (table.isUnique() && dialect.supportsUnique())
                 {
                     sb.append(" unique");
                 }
-                if (i.hasNext())
+                if (j.hasNext())
                 {
                     sb.append(",").append(mLs);
                 }
@@ -132,7 +140,8 @@ public class CreateSchema extends RetsHelpers
             }
             sb.append(");").append(mLs);
             sb.append("alter table ").append(sqlTableName);
-            sb.append(dialect.getAddPrimaryKeyConstraintString("pk_id"));
+            sb.append(dialect.getAddPrimaryKeyConstraintString(
+                      sqlTableName + "_pk_id"));
             sb.append("(id);").append(mLs);
 
             j = needsIndex.iterator();
@@ -143,6 +152,30 @@ public class CreateSchema extends RetsHelpers
                 sb.append("create index ").append(sqlTableName).append("_");
                 sb.append(dbName).append("_index on ").append(sqlTableName);
                 sb.append("(").append(dbName).append(");").append(mLs);
+            }
+            
+            if (needsLookupMultiTable)
+            {
+                String bigint = dialect.getTypeName(Types.BIGINT);
+                String lmTable = sqlTableName + "_lm";
+                sb.append("create table ").append(lmTable).append(" (");
+                sb.append(mLs);
+                sb.append("\tid ").append(bigint).append(" NOT NULL,");
+                sb.append(mLs);
+                sb.append("\tparent_id ").append(bigint).append(" NOT NULL, ");
+                sb.append(mLs);
+                sb.append("\tlookup_name ");
+                sb.append(dialect.getTypeName(Types.VARCHAR, 32));
+                sb.append(" NOT NULL, ").append(mLs);
+                sb.append("\tvalue ");
+                sb.append(dialect.getTypeName(Types.VARCHAR, 32)).append(mLs);
+                sb.append(");").append(mLs);
+                
+                sb.append("alter table ").append(lmTable);
+                sb.append(
+                    dialect.getAddForeignKeyConstraintString(lmTable + "_fk",
+                        new String[] { "parent_id" }, sqlTableName,
+                        new String[] { "id" })).append(";").append(mLs);
             }
         }
 
