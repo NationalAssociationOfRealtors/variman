@@ -31,6 +31,7 @@ import org.wxwindows.wxSplitterWindow;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
+import org.wxwindows.wxJUtil;
 
 public class UsersPage extends wxPanel
 {
@@ -118,6 +119,7 @@ public class UsersPage extends wxPanel
                 catch (Throwable t)
                 {
                     LOG.error("Caught exception", t);
+                    wxJUtil.logError("Could not get users.", t);
                 }
                 return users;
             }
