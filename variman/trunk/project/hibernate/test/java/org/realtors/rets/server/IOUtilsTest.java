@@ -115,7 +115,7 @@ public class IOUtilsTest extends TestCase
 
     public void testResolveStrings()
     {
-        String base = SystemUtils.USER_DIR;
+        String base = SystemUtils.JAVA_IO_TMPDIR;
         String subDir = new File("sub/directory").getPath();
         String other = new File("/some/other/directory").getPath();
 
@@ -130,7 +130,7 @@ public class IOUtilsTest extends TestCase
 
     public void testResolveFiles()
     {
-        File base = new File(SystemUtils.USER_DIR);
+        File base = new File(SystemUtils.JAVA_IO_TMPDIR);
         File subDir = new File("sub/directory");
         File other = new File("/some/other/directory");
 
