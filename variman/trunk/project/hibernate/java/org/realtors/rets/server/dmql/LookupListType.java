@@ -2,16 +2,68 @@
  */
 package org.realtors.rets.server.dmql;
 
-import org.apache.commons.lang.enum.Enum;
-
-public final class LookupListType extends Enum
+public abstract class LookupListType
 {
-    public static final LookupListType AND = new LookupListType("AND");
-    public static final LookupListType OR = new LookupListType("OR");
-    public static final LookupListType NOT = new LookupListType("NOT");
+    public static final LookupListType AND = new And();
+    public static final LookupListType OR = new Or();
+    public static final LookupListType NOT = new Not();
 
-    private LookupListType(String type)
+    public String getLookupMultiPrefix()
     {
-        super(type);
+        return "";
+    }
+
+    public String getLookupPrefix()
+    {
+        return "";
+    }
+
+    public String getLookupSuffix()
+    {
+        return "";
+    }
+
+    public String getSqlOperator()
+    {
+        return "";
+    }
+
+    private static class And extends LookupListType
+    {
+        public String getSqlOperator()
+        {
+            return " AND ";
+        }
+    }
+
+    private static class Or extends LookupListType
+    {
+        public String getSqlOperator()
+        {
+            return " OR ";
+        }
+    }
+
+    private static class Not extends LookupListType
+    {
+        public String getLookupMultiPrefix()
+        {
+            return "NOT ";
+        }
+
+        public String getLookupPrefix()
+        {
+            return "NOT (";
+        }
+
+        public String getLookupSuffix()
+        {
+            return ")";
+        }
+
+        public String getSqlOperator()
+        {
+            return " OR ";
+        }
     }
 }
