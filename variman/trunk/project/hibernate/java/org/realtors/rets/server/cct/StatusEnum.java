@@ -38,7 +38,7 @@ public class StatusEnum
                 return RUNNING;
         }
         
-        return NOTRUN;
+        return NOT_RUN;
     }
     
     private int mValue;
@@ -46,5 +46,5 @@ public class StatusEnum
     public static final StatusEnum PASSED = new StatusEnum(0, "passed");
     public static final StatusEnum FAILED = new StatusEnum(1, "failed");
     public static final StatusEnum RUNNING = new StatusEnum(2, "running");
-    public static final StatusEnum NOTRUN = new StatusEnum(3, "not-run");
+    public static final StatusEnum NOT_RUN = new StatusEnum(3, "not-run");
 }
