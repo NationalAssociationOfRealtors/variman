@@ -10,10 +10,12 @@ package org.realtors.rets.server.admin.metadata;
 
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
+import org.wxwindows.wxChoice;
 
 import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
 import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 
 public class MClassPanel extends AbstractSubPanel
 {
@@ -27,21 +29,34 @@ public class MClassPanel extends AbstractSubPanel
         mClassName = new wxTextCtrl(this, -1);
         grid.addRow("Class Name:", mClassName, wxEXPAND);
 
-        mStandardName = new wxTextCtrl(this, -1);
-        grid.addRow("Standard Name:", mStandardName, wxEXPAND);
+        mStandardName = createStandardName();
+        grid.addRow("Standard Name:", mStandardName);
 
         mVisibleName = new wxTextCtrl(this, -1);
         grid.addRow("Visible Name:", mVisibleName, wxEXPAND);
     }
 
+    private wxChoice createStandardName()
+    {
+        String[] standardNames = {
+            "<none>",
+            ClassStandardNameEnum.COMMON_INTEREST.toString(),
+            ClassStandardNameEnum.LOTS_AND_LAND.toString(),
+            ClassStandardNameEnum.MULTI_FAMILY.toString(),
+            ClassStandardNameEnum.RESIDENTIAL.toString()
+        };
+        return new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize,
+                            standardNames);
+    }
+
     public void updateFrom(MClass clazz)
     {
-        mClassName.SetValue(clazz.getClassName());
-        AdminUtils.setValue(mStandardName, clazz.getStandardName());
-        mVisibleName.SetValue(clazz.getVisibleName());
+        setValue(mClassName, clazz.getClassName());
+        setValue(mStandardName, clazz.getStandardName());
+        setValue(mVisibleName, clazz.getVisibleName());
     }
 
     private wxTextCtrl mClassName;
-    private wxTextCtrl mStandardName;
+    private wxChoice mStandardName;
     private wxTextCtrl mVisibleName;
 }
