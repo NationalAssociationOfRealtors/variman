@@ -1,0 +1,73 @@
+package org.realtors.rets.server.admin.swingui;
+
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+
+import org.realtors.rets.server.admin.Admin;
+import org.realtors.rets.server.IOUtils;
+import org.apache.log4j.Logger;
+
+public class InstallJarAction extends AbstractAction
+{
+    public InstallJarAction()
+    {
+        super("Install Jar File...");
+    }
+
+    public void actionPerformed(ActionEvent event)
+    {
+        try
+        {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.addChoosableFileFilter(new JarFileChooser());
+            AdminFrame frame = SwingUtils.getAdminFrame();
+            int result = fileChooser.showDialog(frame, "Install");
+            if (result != JFileChooser.APPROVE_OPTION)
+            {
+                return;
+            }
+            File sourceJarFile = fileChooser.getSelectedFile();
+            String rexHome = Admin.getRexHome();
+            File libDirectory = new File(rexHome, "webapp/WEB-INF/lib");
+            IOUtils.copyFile(sourceJarFile, libDirectory);
+            JOptionPane.showMessageDialog(
+                frame,"You must restart Rex Admin and Rex for\n" +
+                      "them to recognize the new Jar file.", "Restart Warning",
+                JOptionPane.WARNING_MESSAGE);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Caught", e);
+        }
+    }
+
+    private class JarFileChooser extends FileFilter
+    {
+        public boolean accept(File file)
+        {
+            if (file.isDirectory())
+            {
+                return true;
+            }
+
+            if (file.getPath().endsWith(".jar"))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public String getDescription()
+        {
+            return "Jar Files";
+        }
+
+    }
+
+    private static final Logger LOG =
+        Logger.getLogger(InstallJarAction.class);
+}
