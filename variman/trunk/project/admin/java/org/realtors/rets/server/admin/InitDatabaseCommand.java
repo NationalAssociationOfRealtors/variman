@@ -8,20 +8,20 @@
 
 package org.realtors.rets.server.admin;
 
-import org.wxwindows.wxWindowDisabler;
-import org.wxwindows.wxJWorker;
-import org.wxwindows.wxDialog;
-import org.wxwindows.wxWindow;
-import org.wxwindows.wxBoxSizer;
-import org.wxwindows.wxStaticText;
-
-import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.SessionFactory;
+import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.config.RetsConfig;
 
 import org.apache.log4j.Logger;
+
+import org.wxwindows.wxBoxSizer;
+import org.wxwindows.wxDialog;
+import org.wxwindows.wxJWorker;
+import org.wxwindows.wxStaticText;
+import org.wxwindows.wxWindow;
+import org.wxwindows.wxWindowDisabler;
 
 public class InitDatabaseCommand
 {
@@ -74,13 +74,14 @@ public class InitDatabaseCommand
     {
         public InitDatabaseDialog(wxWindow parent)
         {
-            super(parent, -1, "Initializing Database");
+            super(parent, -1, "Status");
             wxBoxSizer box = new wxBoxSizer(wxVERTICAL);
             wxStaticText label =
                 new wxStaticText(this, -1, "Initializing database...");
-            box.Add(label, 0, wxALL, 15);
+            box.Add(label, 0, wxALIGN_CENTER | wxALL, 35);
             SetSizer(box);
             box.Fit(this);
+            CenterOnParent();
         }
     }
 
