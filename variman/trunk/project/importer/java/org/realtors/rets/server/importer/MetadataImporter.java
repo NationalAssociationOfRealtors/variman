@@ -1,5 +1,7 @@
 package org.realtors.rets.server.importer;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +29,7 @@ import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.client.Metadata;
 import org.realtors.rets.client.MetadataTable;
+import org.realtors.rets.client.RetsException;
 import org.realtors.rets.client.RetsSession;
 
 import org.realtors.rets.server.SessionHelper;
@@ -60,7 +63,7 @@ import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
 
-public class MetadataImporter
+public class MetadataImporter extends MetadataHelpers
 {
     /**
      * Creates a new <code>MetadataImporter</code> instance.
@@ -69,18 +72,9 @@ public class MetadataImporter
     public MetadataImporter()
         throws Exception
     {
+        super();
         initHibernate();
-        mResources = new HashMap();
-        mClasses = new HashMap();
-        mEditMasks = new HashMap();
-        mTables = new HashMap();
-        mLookups = new HashMap();
-        mSearchHelps = new HashMap();
-        mValidationExternals = new HashMap();
-        mValidationExpressions = new HashMap();
-        mValidationLookups = new HashMap();
-        mUpdates = new HashMap();
-        mUpdateHelps = new HashMap();
+        mFilename = null;
     }
 
     private boolean boolValue(String bString)
@@ -88,12 +82,17 @@ public class MetadataImporter
         return bString.equalsIgnoreCase("true") || 
                bString.equalsIgnoreCase("1");
     }
+    
+    public void closeRetsSession()
+        throws RetsException
+    {
+        mRetsSession.logout();
+    }
 
-    private void doClasses(RetsSession rSession, Session hSession)
+    private void doClasses(Session hSession)
         throws HibernateException
     {
-        MetadataTable tClass =
-            rSession.getMetadataTable(MetadataTable.CLASS);
+        MetadataTable tClass = getMetadataTable(MetadataTable.CLASS);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -131,12 +130,11 @@ public class MetadataImporter
             hSession.saveOrUpdate(resource);
         }
     }
-
-    private void doEditMask(RetsSession rSession, Session hSession)
+    
+    private void doEditMask(Session hSession)
         throws HibernateException
     {
-        MetadataTable tEditMask =
-            rSession.getMetadataTable(MetadataTable.EDITMASK);
+        MetadataTable tEditMask = getMetadataTable(MetadataTable.EDITMASK);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -168,12 +166,11 @@ public class MetadataImporter
         }
     }
 
-    private void doForeignKey(RetsSession rSession, Session hSession,
-                              MSystem hSystem)
+    private void doForeignKey(Session hSession, MSystem hSystem)
         throws HibernateException
     {
         MetadataTable tForeignKeys =
-            rSession.getMetadataTable(MetadataTable.FOREIGN_KEYS);
+            getMetadataTable(MetadataTable.FOREIGN_KEYS);
 
         Set hForeignKeys = new HashSet();
         List foreignKeys = tForeignKeys.getDataRows("");
@@ -214,22 +211,32 @@ public class MetadataImporter
         hSystem.setForeignKeys(hForeignKeys);
         hSession.saveOrUpdate(hSystem);
     }
-
+    
     public void doIt()
         throws Exception
     {
-        RetsSession session =
-            new RetsSession(mConnectionURL);
-        session.login(mUsername, mPassword);
-        parseMetadata(session);
-        session.logout();
+        if (mFilename == null)
+        {
+            getRetsSession();
+        }
+        else
+        {
+            InputStream in = new FileInputStream(mFilename);
+            loadMetadataTables(in);
+        }
+        
+        parseMetadata();
+
+        if (mFilename == null)
+        {
+            closeRetsSession();
+        }
     }
 
-    private void doLookup(RetsSession rSession, Session hSession)
+    private void doLookup(Session hSession)
         throws HibernateException
     {
-        MetadataTable tLookup =
-            rSession.getMetadataTable(MetadataTable.LOOKUP);
+        MetadataTable tLookup = getMetadataTable(MetadataTable.LOOKUP);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -271,11 +278,11 @@ public class MetadataImporter
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
-    private void doLookupTypes(RetsSession rSession, Session hSession)
+    private void doLookupTypes(Session hSession)
         throws HibernateException
     {
         MetadataTable tLookupTypes =
-            rSession.getMetadataTable(MetadataTable.LOOKUP_TYPE);
+            getMetadataTable(MetadataTable.LOOKUP_TYPE);
 
         Iterator i = mLookups.values().iterator();
         while (i.hasNext())
@@ -308,11 +315,10 @@ public class MetadataImporter
         }
     }
 
-    private void doObjects(RetsSession rSession, Session hSession)
+    private void doObjects(Session hSession)
         throws HibernateException
     {
-        MetadataTable tObject =
-            rSession.getMetadataTable(MetadataTable.OBJECT);
+        MetadataTable tObject = getMetadataTable(MetadataTable.OBJECT);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -350,12 +356,10 @@ public class MetadataImporter
         }
     }
 
-    private void doResource(RetsSession rSession, Session hSession,
-                            MSystem hSystem)
+    private void doResource(Session hSession, MSystem hSystem)
         throws HibernateException
     {
-        MetadataTable tResource =
-            rSession.getMetadataTable(MetadataTable.RESOURCE);
+        MetadataTable tResource = getMetadataTable(MetadataTable.RESOURCE);
 
         Set hResources = new HashSet();
         List resources = tResource.getDataRows("");
@@ -385,11 +389,11 @@ public class MetadataImporter
         hSession.saveOrUpdate(hSystem);
     }
 
-    private void doSearchHelp(RetsSession rSession, Session hSession)
+    private void doSearchHelp(Session hSession)
         throws HibernateException
     {
         MetadataTable tSearchHelp =
-            rSession.getMetadataTable(MetadataTable.SEARCH_HELP);
+            getMetadataTable(MetadataTable.SEARCH_HELP);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -424,7 +428,7 @@ public class MetadataImporter
         }
     }
 
-    private MSystem doSystem(RetsSession rSession, Session hSession)
+    private MSystem doSystem(Session hSession)
         throws HibernateException
     {
         MSystem hSystem = new MSystem();
@@ -434,11 +438,10 @@ public class MetadataImporter
         return hSystem;
     }
 
-    private void doTable(RetsSession rSession, Session hSession)
+    private void doTable(Session hSession)
         throws HibernateException
     {
-        MetadataTable tTables =
-            rSession.getMetadataTable(MetadataTable.TABLE);
+        MetadataTable tTables = getMetadataTable(MetadataTable.TABLE);
 
         Iterator i = mClasses.values().iterator();
         while (i.hasNext())
@@ -562,11 +565,10 @@ public class MetadataImporter
         }
     }
 
-    private void doUpdate(RetsSession rSession, Session hSession)
+    private void doUpdate(Session hSession)
         throws HibernateException
     {
-        MetadataTable tUpdates =
-            rSession.getMetadataTable(MetadataTable.UPDATE);
+        MetadataTable tUpdates = getMetadataTable(MetadataTable.UPDATE);
 
         Iterator i = mClasses.values().iterator();
         while (i.hasNext())
@@ -600,11 +602,11 @@ public class MetadataImporter
         }
     }
 
-    private void doUpdateHelp(RetsSession rSession, Session hSession)
+    private void doUpdateHelp(Session hSession)
         throws HibernateException
     {
         MetadataTable tUpdateHelps =
-            rSession.getMetadataTable(MetadataTable.UPDATE_HELP);
+            getMetadataTable(MetadataTable.UPDATE_HELP);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -638,11 +640,11 @@ public class MetadataImporter
         }
     }
 
-    public void doUpdateType(RetsSession rSession, Session hSession)
+    public void doUpdateType(Session hSession)
         throws HibernateException
     {
         MetadataTable tUpdateTypes =
-            rSession.getMetadataTable(MetadataTable.UPDATE_TYPE);
+            getMetadataTable(MetadataTable.UPDATE_TYPE);
 
         Iterator i = mUpdates.values().iterator();
         while (i.hasNext())
@@ -725,11 +727,11 @@ public class MetadataImporter
         }
     }
 
-    private void doValidationExpression(RetsSession rSession, Session hSession)
+    private void doValidationExpression(Session hSession)
         throws HibernateException
     {
         MetadataTable tValidationExpressions =
-            rSession.getMetadataTable(MetadataTable.VALIDATION_EXPRESSION);
+            getMetadataTable(MetadataTable.VALIDATION_EXPRESSION);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -766,11 +768,11 @@ public class MetadataImporter
         }
     }
 
-    private void doValidationExternal(RetsSession rSession, Session hSession)
+    private void doValidationExternal(Session hSession)
         throws HibernateException
     {
         MetadataTable tValidationExternals =
-            rSession.getMetadataTable(MetadataTable.VALIDATION_EXTERNAL);
+            getMetadataTable(MetadataTable.VALIDATION_EXTERNAL);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -820,12 +822,11 @@ public class MetadataImporter
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
-    private void doValidationExternalType(RetsSession rSession,
-                                          Session hSession)
+    private void doValidationExternalType(Session hSession)
         throws HibernateException
     {
         MetadataTable tValidationExternalTypes =
-            rSession.getMetadataTable(MetadataTable.VALIDATION_EXTERNAL_TYPE);
+            getMetadataTable(MetadataTable.VALIDATION_EXTERNAL_TYPE);
 
         Iterator i = mValidationExternals.values().iterator();
         while (i.hasNext())
@@ -895,11 +896,11 @@ public class MetadataImporter
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
-    private void doValidationLookup(RetsSession rSession, Session hSession)
+    private void doValidationLookup(Session hSession)
         throws HibernateException
     {
         MetadataTable tValidationLookups =
-            rSession.getMetadataTable(MetadataTable.VALIDATION_LOOKUP);
+            getMetadataTable(MetadataTable.VALIDATION_LOOKUP);
 
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
@@ -937,11 +938,11 @@ public class MetadataImporter
         }
     }
 
-    private void doValidationLookupType(RetsSession rSession, Session hSession)
+    private void doValidationLookupType(Session hSession)
         throws HibernateException
     {
         MetadataTable tValidationLookupTypes =
-            rSession.getMetadataTable(MetadataTable.VALIDATION_LOOKUP_TYPE);
+            getMetadataTable(MetadataTable.VALIDATION_LOOKUP_TYPE);
 
         Iterator i = mValidationLookups.values().iterator();
         while (i.hasNext())
@@ -971,6 +972,25 @@ public class MetadataImporter
             }
             vl.setValidationLookupTypes(hValdationLookupTypes);
             hSession.saveOrUpdate(vl);
+        }
+    }
+
+    public void getRetsSession()
+        throws RetsException
+    {
+        mRetsSession = new RetsSession(mConnectionURL);
+        mRetsSession.login(mUsername, mPassword);
+    }
+
+    private MetadataTable getMetadataTable(String tableName)
+    {
+        if (mFilename == null)
+        {
+            return mRetsSession.getMetadataTable(tableName);
+        }
+        else
+        {
+            return mMetadataTables.getTable(tableName);
         }
     }
 
@@ -1010,7 +1030,7 @@ public class MetadataImporter
         return name;
     }
 
-    private void parseMetadata(RetsSession rSession)
+    private void parseMetadata()
         throws Exception
     {
         Session hSession = null;
@@ -1021,24 +1041,24 @@ public class MetadataImporter
             hSession = mSessions.openSession();
             tx = hSession.beginTransaction();
 
-            MSystem hSystem = doSystem(rSession, hSession);
-            doResource(rSession, hSession, hSystem);
-            doClasses(rSession, hSession);
-            doObjects(rSession, hSession);
-            doSearchHelp(rSession, hSession);
-            doEditMask(rSession, hSession);
-            doLookup(rSession, hSession);
-            doLookupTypes(rSession, hSession);
-            doUpdateHelp(rSession, hSession);
-            doValidationExternal(rSession, hSession);
-            doUpdate(rSession, hSession);
-            doTable(rSession, hSession);
-            doValidationLookup(rSession, hSession);
-            doValidationLookupType(rSession, hSession);
-            doValidationExternalType(rSession, hSession);
-            doValidationExpression(rSession, hSession);
-            doUpdateType(rSession, hSession);
-            doForeignKey(rSession, hSession, hSystem);
+            MSystem hSystem = doSystem(hSession);
+            doResource(hSession, hSystem);
+            doClasses(hSession);
+            doObjects(hSession);
+            doSearchHelp(hSession);
+            doEditMask(hSession);
+            doLookup(hSession);
+            doLookupTypes(hSession);
+            doUpdateHelp(hSession);
+            doValidationExternal(hSession);
+            doUpdate(hSession);
+            doTable(hSession);
+            doValidationLookup(hSession);
+            doValidationLookupType(hSession);
+            doValidationExternalType(hSession);
+            doValidationExpression(hSession);
+            doUpdateType(hSession);
+            doForeignKey(hSession, hSystem);
 
             tx.commit();
             hSession.close();
@@ -1070,6 +1090,15 @@ public class MetadataImporter
      * 
      * @param string
      */
+    private void setFile(String filename)
+    {
+        mFilename = filename;
+    }
+
+    /**
+     * 
+     * @param string
+     */
     public void setPassword(String string)
     {
         mPassword = string;
@@ -1094,6 +1123,7 @@ public class MetadataImporter
         ops.addOption("c", "url", true, "The URL to connect with");
         ops.addOption("u", "username", true, "username to connect with");
         ops.addOption("p", "password", true, "password to connect with");
+        ops.addOption("f", "file", true, "get metadata from this file");
         return ops;
     }
 
@@ -1119,6 +1149,10 @@ public class MetadataImporter
                                 "http://demo.crt.realtors.org:6103/login"));
         mi.setUsername(cmdl.getOptionValue('u', "Joe"));
         mi.setPassword(cmdl.getOptionValue('p', "Schmoe"));
+        if (cmdl.hasOption('f'))
+        {
+            mi.setFile(cmdl.getOptionValue('f'));
+        }
         mi.doIt();
     }
 
@@ -1132,24 +1166,14 @@ public class MetadataImporter
         fs.printHelp("MetadataImporter [options]", opt);
     }
 
-    private Map mClasses;
     private String mConnectionURL;
-    private Map mEditMasks;
-    private Map mLookups;
+    private String mFilename;
     private String mPassword;
-    private Map mResources;
-    private Map mSearchHelps;
+    private RetsSession mRetsSession;
     private SessionFactory mSessions;
-    private Map mTables;
-    private Map mUpdateHelps;
-    private Map mUpdates;
     private String mUsername;
-    private Map mValidationExpressions;
-    private Map mValidationExternals;
-    private Map mValidationLookups;
-
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.31 2003/08/22 19:33:11 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.32 2003/08/25 17:25:53 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 

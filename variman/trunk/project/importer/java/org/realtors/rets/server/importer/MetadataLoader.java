@@ -13,15 +13,9 @@ import org.apache.commons.lang.StringUtils;
 
 import org.apache.log4j.Logger;
 
-import org.realtors.rets.client.GetMetadataResponse;
 import org.realtors.rets.client.Metadata;
-import org.realtors.rets.client.MetadataSegment;
 import org.realtors.rets.client.MetadataTable;
-import org.realtors.rets.client.MetadataTableBuilder;
-import org.realtors.rets.client.MetadataTables;
 import org.realtors.rets.client.RetsException;
-import org.realtors.rets.client.RetsSession;
-
 import org.realtors.rets.server.metadata.AlignmentEnum;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
@@ -57,7 +51,7 @@ import org.realtors.rets.server.metadata.ValidationLookupType;
  * 
  * @author kgarner
  */
-public class MetadataLoader
+public class MetadataLoader extends MetadataHelpers
 {
     /**
      * Creates a new <code>MetadataImporter</code> instance.
@@ -66,21 +60,7 @@ public class MetadataLoader
     public MetadataLoader()
         throws RetsException
     {
-        mResources = new HashMap();
-        mClasses = new HashMap();
-        mEditMasks = new HashMap();
-        mTables = new HashMap();
-        mLookups = new HashMap();
-        mSearchHelps = new HashMap();
-        mValidationExternals = new HashMap();
-        mValidationExpressions = new HashMap();
-        mValidationLookups = new HashMap();
-        mUpdates = new HashMap();
-        mUpdateHelps = new HashMap();
-        mMetadataTables =
-            MetadataTableBuilder.buildFromXml(
-                RetsSession.getResource(RetsSession.METADATA_TABLES));
-
+        super();
     }
 
     private boolean boolValue(String bString)
@@ -905,58 +885,6 @@ public class MetadataLoader
         }
     }
     
-    private void loadMetadataTables(InputStream in)
-    {
-        GetMetadataResponse response;
-        try
-        {
-            response = new GetMetadataResponse(in);
-        }
-        catch (RetsException e)
-        {
-            LOG.error(e);
-            throw new RuntimeException(e);
-        }
-        MetadataSegment[] segments = response.getMetadataSegments();
-        for (int i = 0; i < segments.length; i++)
-        {
-            MetadataSegment segment = segments[i];
-            String name = segment.getName();
-            MetadataTable table = mMetadataTables.getTable(name);
-            try
-            {
-                RetsSession.assertTableNotNull(name, table);
-            }
-            catch (RetsException e1)
-            {
-                LOG.error(e1);
-                throw new RuntimeException(e1);
-            }
-            String path =
-                RetsSession.pathFromAttributes(segment,
-                                               table.getPathAttributes());
-
-            List columns = segment.getColumns();
-            List dataRows = segment.getData();
-            if (dataRows == null)
-            {
-                continue;
-            }
-            for (Iterator j = dataRows.iterator(); j.hasNext();)
-            {
-                List dataRow = (List) j.next();
-                Map dataMap = RetsSession.mapFromLists(columns, dataRow);
-                if (dataMap == null)
-                {
-                    LOG.warn("Null return: name=" + name + ", path=" + path);
-                }
-                Metadata metadata =
-                    new Metadata(dataMap, table.getIdColumn(), path);
-                table.addMetadata(metadata);
-            }
-        }
-    }
-        
     private TableStandardName lookupTableStandardName(String standardName)
     {
         return new TableStandardName(standardName);    
@@ -994,22 +922,9 @@ public class MetadataLoader
         return mSystem;
     }
 
-    private Map mClasses;
-    private Map mEditMasks;
-    private Map mLookups;
-    private MetadataTables mMetadataTables;
-    private Map mResources;
-    private Map mSearchHelps;
     private MSystem mSystem;
-    private Map mTables;
-    private Map mUpdateHelps;
-    private Map mUpdates;
-    private Map mValidationExpressions;
-    private Map mValidationExternals;
-    private Map mValidationLookups;
-
     private static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.2 2003/08/21 19:51:52 kgarner Exp $";
+        "$Id: MetadataLoader.java,v 1.3 2003/08/25 17:25:53 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
 }
