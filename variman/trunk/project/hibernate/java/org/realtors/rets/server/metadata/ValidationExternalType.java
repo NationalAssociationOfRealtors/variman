@@ -2,7 +2,7 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 import java.util.Set;
-import java.util.SortedMap;
+import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -47,34 +47,33 @@ public class ValidationExternalType implements Serializable
 
     /**
      *
-     * @return
+     * @return a Map of Strings that are key value pairs
      *
-     * // todo fix XDoclet to support index-many-to-many
-     * hibernate.map table="rets_validationexternaltype_resultfields"
-     * hibernate.collection-key column="id"
-     * hibernate.collection-index column="key"
-     *   class="org.realtors.rets.server.metadata.Table"
-     * hibernate.collection-many-to-many column="value"
-     *   class="org.realtors.rets.server.metadata.Table"
+     * @hibernate.map table="rets_metadata_validationexternaltype_resultfields"
+     * @hibernate.collection-key column="id"
+     * @hibernate.collection-index column="key"
+     *   type="string" length="32"
+     * @hibernate.collection-element column="value"
+     *   type="string" length="32"
      */
-    public SortedMap getResultFields()
+    public Map getResultFields()
     {
         return mResultFields;
     }
-    public void setResultFields(SortedMap resultFields)
+    public void setResultFields(Map resultFields)
     {
         mResultFields = resultFields;
     }
 
     /**
      *
-     * @return a Set of Table objects
+     * @return a Set of Strings that are Table names
      *
      * @hibernate.set inverse="false"
-     *   table="rets_validationexternaltype_searchfield"
+     *   table="rets_metadata_validationexternaltype_searchfield"
      * @hibernate.collection-key column="id"
-     * @hibernate.collection-many-to-many column="field"
-     *   class="org.realtors.rets.server.metadata.Table"
+     * @hibernate.collection-element column="field"
+     *   type="string" length="32" not-null="true" 
      */
     public Set getSearchField()
     {
@@ -88,13 +87,13 @@ public class ValidationExternalType implements Serializable
 
     /**
      *
-     * @return a Set of Table objects
+     * @return a Set of Strings that are Table names
      *
      * @hibernate.set inverse="false"
-     *   table="rets_validationexternaltype_displayfield"
+     *   table="rets_metadata_validationexternaltype_displayfield"
      * @hibernate.collection-key column="id"
-     * @hibernate.collection-many-to-many column="field"
-     *   class="org.realtors.rets.server.metadata.Table"
+     * @hibernate.collection-element column="field"
+     *   type="string" length="32" not-null="true" 
      */
     public Set getDisplayField()
     {
@@ -136,8 +135,11 @@ public class ValidationExternalType implements Serializable
     /** nullable persistent field */
     private ValidationExternal mValidationExternalID;
 
+    /** nullable persistent field */
+    private String mValidationExternalTypeName;
+
     /** persistent field */
-    private SortedMap mResultFields;
+    private Map mResultFields;
 
     /** persistent field */
     private Set mSearchField;
