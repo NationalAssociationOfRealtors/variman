@@ -3,8 +3,10 @@
 package org.realtors.rets.server.webapp.cct;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.realtors.rets.server.webapp.cct.tests.NormalLogin;
 import org.realtors.rets.server.webapp.cct.tests.RelativeUrlLogin;
@@ -16,16 +18,24 @@ public class CertificationTestSuite
     public CertificationTestSuite(String testContext)
     {
         mTests = new ArrayList();
-        mTests.add(new NormalLogin());
-        mTests.add(new RelativeUrlLogin());
-        mTests.add(new MinimumUrlLogin());
-        mTests.add(new MaximumUrlLogin());
+        mTestMap = new HashMap();
+        
+        addTest(new NormalLogin());
+        addTest(new RelativeUrlLogin());
+        addTest(new MinimumUrlLogin());
+        addTest(new MaximumUrlLogin());
 
         for (int i = 0; i < mTests.size(); i++)
         {
             CertificationTest test = (CertificationTest) mTests.get(i);
             test.init(testContext);
         }
+    }
+    
+    private void addTest(CertificationTest test)
+    {
+        mTests.add(test);
+        mTestMap.put(test.getName(), test);
     }
 
     public Iterator getTests()
@@ -37,6 +47,11 @@ public class CertificationTestSuite
     {
         return (CertificationTest) mTests.get(index);
     }
+    
+    public CertificationTest getTest(String name)
+    {
+        return (CertificationTest) mTestMap.get(name);
+    }
 
     public int getCount()
     {
@@ -44,4 +59,5 @@ public class CertificationTestSuite
     }
 
     private List mTests;
+    private Map mTestMap;
 }
