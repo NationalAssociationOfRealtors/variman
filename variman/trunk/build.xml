@@ -191,6 +191,8 @@
   <target name="hibernate-run">
     <copy todir="build/hibernate/jar"
           file="project/hibernate/config/hibernate.properties"/>
+    <copy todir="build/hibernate/jar"
+          file="project/hibernate/config/cache.ccf"/>
     <java classname="org.realtors.rets.server.Admin"
           fork="true">
 <!--       <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"/> -->
@@ -441,6 +443,8 @@
           file="${hibernate.jar}"/>
     <copy todir="build/datagen/classes"
           file="project/hibernate/config/hibernate.properties"/>
+    <copy todir="build/datagen/classes"
+          file="project/hibernate/config/cache.ccf"/>
     <copy todir="build/datagen/lib" file="${hibernate.jdbc.jar}"/>
   </target>
   
@@ -487,6 +491,8 @@
           file="${hibernate.jar}"/>
     <copy todir="build/importer/classes"
           file="project/hibernate/config/hibernate.properties"/>
+    <copy todir="build/importer/classes"
+          file="project/hibernate/config/cache.ccf"/>
 <!--     <copy todir="build/importer/lib" -->
 <!--           file="code/hibernate/config/hibernate.properties.dist"/> -->
 
