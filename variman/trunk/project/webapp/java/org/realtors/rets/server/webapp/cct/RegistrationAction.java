@@ -73,7 +73,7 @@ public class RegistrationAction extends Action
 
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(user);
-        userInfo.setAgentID(form.getAgentId());
+        userInfo.setAgentId(form.getAgentId());
         userInfo.setCompany(form.getCompany());
         userInfo.setEmail(form.getEmail());
         userInfo.setProductName(form.getProductName());
