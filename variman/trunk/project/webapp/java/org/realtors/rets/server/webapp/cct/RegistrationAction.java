@@ -6,10 +6,10 @@ package org.realtors.rets.server.webapp.cct;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
-import org.realtors.rets.server.cct.UserUtils;
 import org.realtors.rets.server.webapp.auth.HibernateUserMap;
 import org.realtors.rets.server.webapp.auth.UserMap;
 
@@ -80,9 +80,12 @@ public class RegistrationAction extends Action
         userInfo.setProductVersion(form.getProductVersion());
         userInfo.setUserAgent(form.getUserAgent());
 
-        UserUtils userUtils = new UserUtils();
-        userUtils.createUser(user, userInfo);        
-
+//        UserUtils userUtils = new UserUtils();
+//        userUtils.createUser(user, userInfo);
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("regUser", user);
+        session.setAttribute("regUserInfo", userInfo);
         request.setAttribute("user", user);
         request.setAttribute("userInfo", userInfo);
 
