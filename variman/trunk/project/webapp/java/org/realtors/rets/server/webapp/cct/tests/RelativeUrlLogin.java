@@ -2,7 +2,7 @@
  */
 package org.realtors.rets.server.webapp.cct.tests;
 
-import org.realtors.rets.server.webapp.cct.ActionHandler;
+import org.realtors.rets.server.webapp.cct.AlternateActionHandler;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
 import org.realtors.rets.server.webapp.cct.GetMetadataHandler;
 import org.realtors.rets.server.webapp.cct.InvokeCount;
@@ -34,14 +34,13 @@ public class RelativeUrlLogin extends BaseCertificationTest
         handlers.resetAll();
 
         LoginHandler login = handlers.getLoginHandler();
-        login.reset();
         login.setRelativeUrls(true);
         login.setSessionId(SESSION_ID);
         login.setGetInvokeCount(InvokeCount.ONE);
+        login.setAlternateActionUrl(true);
         login.addStandardHeaders();
 
-        ActionHandler action = handlers.getActionHandler();
-        action.reset();
+        AlternateActionHandler action = handlers.getAlternateActionHandler();
         action.setGetInvokeCount(InvokeCount.ONE);
         action.addStandardHeaders();
         action.addStandardCookies(SESSION_ID);
@@ -52,7 +51,6 @@ public class RelativeUrlLogin extends BaseCertificationTest
         metadata.addStandardCookies(SESSION_ID);
 
         LogoutHandler logout = handlers.getLogoutHandler();
-        logout.reset();
         logout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
         logout.addStandardHeaders();
         logout.addStandardCookies(SESSION_ID);
