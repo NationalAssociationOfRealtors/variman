@@ -4,10 +4,8 @@ package org.realtors.rets.server.dmql;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.realtors.rets.server.metadata.Table;
 
@@ -18,8 +16,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         mFieldsToColumns = new HashMap();
         mColumnsToFields = new HashMap();
         mLookupShortValues = new HashMap();
-        mStrings = new HashSet();
-        mNumerics = new HashSet();
+        mFieldTypes = new HashMap();
         mTables = new HashMap();
     }
 
@@ -35,8 +32,8 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         {
             valueMap.put(values[i], shortValues[i]);
         }
-        addColumnMapping(name, PREFIX + name);
         mLookupShortValues.put(name, valueMap);
+        addType(name, PREFIX + name, DmqlFieldType.LOOKUP);
     }
 
     public void addString(String fieldName)
@@ -46,8 +43,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     public void addString(String fieldName, String columnName)
     {
-        addColumnMapping(fieldName,  columnName);
-        mStrings.add(fieldName);
+        addType(fieldName, columnName, DmqlFieldType.CHARACTER);
     }
 
     public void addNumeric(String fieldName)
@@ -57,8 +53,24 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     public void addNumeric(String fieldName, String columnName)
     {
+        addType(fieldName, columnName, DmqlFieldType.NUMERIC);
+    }
+
+    public void addTemporal(String fieldName)
+    {
+        addTemporal(fieldName, PREFIX + fieldName);
+    }
+
+    public void addTemporal(String fieldName, String columnName)
+    {
+        addType(fieldName, columnName, DmqlFieldType.TEMPORAL);
+    }
+
+    private void addType(String fieldName, String columnName,
+                         DmqlFieldType fieldType)
+    {
         addColumnMapping(fieldName, columnName);
-        mNumerics.add(fieldName);
+        mFieldTypes.put(fieldName, fieldType);
     }
 
     private void addColumnMapping(String fieldName, String columnName)
@@ -77,19 +89,9 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         return mFieldsToColumns.containsKey(fieldName);
     }
 
-    public boolean isCharacterField(String fieldName)
+    public DmqlFieldType getFieldType(String fieldName)
     {
-        return mStrings.contains(fieldName);
-    }
-
-    public boolean isNumericField(String fieldName)
-    {
-        return mNumerics.contains(fieldName);
-    }
-
-    public boolean isLookupField(String lookupName)
-    {
-        return mLookupShortValues.containsKey(lookupName);
+        return (DmqlFieldType) mFieldTypes.get(fieldName);
     }
 
     public boolean isValidLookupValue(String lookupName, String lookupValue)
@@ -137,9 +139,8 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     private static final String PREFIX = "r_";
     private Map mLookupShortValues;
-    private Set mStrings;
     private Map mFieldsToColumns;
     private Map mColumnsToFields;
     private Map mTables;
-    private Set mNumerics;
+    private Map mFieldTypes;
 }
