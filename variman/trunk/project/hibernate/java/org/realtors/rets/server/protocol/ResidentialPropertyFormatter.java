@@ -82,6 +82,10 @@ public class ResidentialPropertyFormatter implements SearchResultsFormatter
 
     private String getUnits(Table table)
     {
+        if (table == null)
+        {
+            return null;
+        }
         return (String) UNITS_MAP.get(table.getUnits());
     }
 
