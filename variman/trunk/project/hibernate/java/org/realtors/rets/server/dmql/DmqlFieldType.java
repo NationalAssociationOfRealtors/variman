@@ -16,6 +16,13 @@ public final class DmqlFieldType extends Enum
     public static final DmqlFieldType LOOKUP = new DmqlFieldType("lookup");
 
     /**
+     * If the interpretation of the field is a lookup.  This basically
+     * overrides the data type of the field.
+     */
+    public static final DmqlFieldType LOOKUP_MULTI =
+        new DmqlFieldType("lookup multi");
+
+    /**
      * The data type of the field is Character or Boolean.
      */
     public static final DmqlFieldType CHARACTER =
