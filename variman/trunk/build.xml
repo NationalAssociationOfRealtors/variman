@@ -408,6 +408,10 @@
     <!-- copy the struts stuff -->
     <copy todir="build/rets-server/webapp/WEB-INF"
           file="project/webapp/config/struts-config.xml"/>
+    <copy todir="build/rets-server/webapp/WEB-INF"
+          file="project/webapp/config/validation.xml"/>
+    <copy todir="build/rets-server/webapp/WEB-INF"
+          file="project/webapp/config/validator-rules.xml"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes">
       <fileset dir="project/webapp/config/properties/" includes="*" />
     </copy>
