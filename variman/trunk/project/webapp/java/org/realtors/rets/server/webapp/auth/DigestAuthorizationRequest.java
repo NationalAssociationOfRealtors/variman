@@ -10,8 +10,11 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 public class DigestAuthorizationRequest
@@ -28,6 +31,62 @@ public class DigestAuthorizationRequest
         mCnonce = "";
         mResponse = "";
         mOpaque = "";
+    }
+
+    /*
+     * This was copied and modified from commons-lang StringUtils
+     */
+    private String[] splitIgnoringQuotes(String str, char separatorChar)
+    {
+        // Performance tuned for 2.0 (JDK1.4)
+
+        if (str == null)
+        {
+            return null;
+        }
+        int len = str.length();
+        if (len == 0)
+        {
+            return ArrayUtils.EMPTY_STRING_ARRAY;
+        }
+        List list = new ArrayList();
+        int i = 0, start = 0;
+        boolean match = false;
+        while (i < len)
+        {
+            if (str.charAt(i) == '"')
+            {
+                i++;
+                while (i < len)
+                {
+                    if (str.charAt(i) == '"')
+                    {
+                        i++;
+                        break;
+                    }
+                    i++;
+                }
+                match = true;
+                continue;
+            }
+            if (str.charAt(i) == separatorChar)
+            {
+                if (match)
+                {
+                    list.add(str.substring(start, i));
+                    match = false;
+                }
+                start = ++i;
+                continue;
+            }
+            match = true;
+            i++;
+        }
+        if (match)
+        {
+            list.add(str.substring(start, i));
+        }
+        return (String[]) list.toArray(new String[list.size()]);
     }
 
     /**
@@ -57,11 +116,11 @@ public class DigestAuthorizationRequest
         }
         String authorization = header.substring(PREFIX.length());
 
-        String[] tokens = StringUtils.split(authorization, ",");
+        String[] tokens = splitIgnoringQuotes(authorization, ',');
         for (int i = 0; i < tokens.length; i++)
         {
             String token = tokens[i];
-            String[] keyValue = StringUtils.split(token, "=", 2);
+            String[] keyValue = splitIgnoringQuotes(token, '=');
             if (keyValue.length != 2)
             {
                 throw new IllegalArgumentException(
