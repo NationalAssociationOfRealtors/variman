@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -31,6 +33,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
         assertNull(response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
 
         byte[] expected =
             IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_1));
@@ -44,12 +47,13 @@ public class GetObjectTransactionTest extends TestCase
         GetObjectTransaction transaction = createTransaction("abc123:1", true);
         TestResponse response = new TestResponse();
         transaction.execute(response);
-        assertEquals("image/jpeg", response.getContentType());
+        assertEquals("application/octet-stream", response.getContentType());
         assertEquals("1.0", response.getHeader("MIME-Version"));
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
         assertEquals(createLocationUrl("abc123", "1"),
                      response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
 
         byte[] expected = ArrayUtils.EMPTY_BYTE_ARRAY;
         byte[] actual = response.getByteArray();
@@ -68,6 +72,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
         assertNull(response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
 
         byte[] expected =
             IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_1));
@@ -85,6 +90,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
         assertNull(response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
 
         byte[] expected =
             IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_1));
@@ -112,7 +118,7 @@ public class GetObjectTransactionTest extends TestCase
         try
         {
             GetObjectTransaction transaction = createTransaction("xyz:1");
-            transaction.setPattern("");
+            transaction.setImagePattern("");
             transaction.execute(new TestResponse());
             fail("Should throw an exception");
         }
@@ -126,7 +132,7 @@ public class GetObjectTransactionTest extends TestCase
     public void testSingleGif() throws IOException, RetsServerException
     {
         GetObjectTransaction transaction = createTransaction();
-        transaction.setPattern("%k-%i.gif");
+        transaction.setImagePattern("%k-%i.gif");
         TestResponse response = new TestResponse();
         transaction.execute(response);
         assertEquals("image/gif", response.getContentType());
@@ -134,6 +140,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("abc123", response.getHeader("Content-ID"));
         assertEquals("1", response.getHeader("Object-ID"));
         assertNull(response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
 
         byte[] expected =
             IOUtils.readBytes(getClass().getResourceAsStream(GIF_FILE));
@@ -154,29 +161,30 @@ public class GetObjectTransactionTest extends TestCase
         assertNull(response.getHeader("Content-ID"));
         assertNull(response.getHeader("Object-ID"));
         assertNull(response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
 
         ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(expectedStream);
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
-        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes(CRLF);
         InputStream stream = getClass().getResourceAsStream(JPEG_FILE_1);
         IOUtils.copyStream(stream, out);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
-        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 2" + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes(CRLF);
         stream = getClass().getResourceAsStream(JPEG_FILE_2);
         IOUtils.copyStream(stream, out);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
-        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc124" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes(CRLF);
         stream = getClass().getResourceAsStream(JPEG_FILE_3);
         IOUtils.copyStream(stream, out);
@@ -206,23 +214,23 @@ public class GetObjectTransactionTest extends TestCase
         ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(expectedStream);
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
-        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: application/octet-stream" + CRLF);
         out.writeBytes("Location: " + createLocationUrl("abc123", "1") + CRLF);
         out.writeBytes(CRLF);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
-        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 2" + CRLF);
+        out.writeBytes("Content-Type: application/octet-stream" + CRLF);
         out.writeBytes("Location: " + createLocationUrl("abc123", "2") + CRLF);
         out.writeBytes(CRLF);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
-        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc124" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: application/octet-stream" + CRLF);
         out.writeBytes("Location: " + createLocationUrl("abc124", "1") + CRLF);
         out.writeBytes(CRLF);
 
@@ -251,9 +259,9 @@ public class GetObjectTransactionTest extends TestCase
         DataOutputStream out = new DataOutputStream(expectedStream);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
-        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc124" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes(CRLF);
         InputStream stream = getClass().getResourceAsStream(JPEG_FILE_3);
         IOUtils.copyStream(stream, out);
@@ -264,6 +272,92 @@ public class GetObjectTransactionTest extends TestCase
         byte[] expected = expectedStream.toByteArray();
         byte[] actual = response.getByteArray();
         assertTrue(Arrays.equals(expected, actual));
+    }
+
+    public void testObjectSetImage() throws RetsServerException, IOException
+    {
+        GetObjectTransaction transaction = createTransaction("abc126:1");
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("image/jpeg", response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertEquals("abc126", response.getHeader("Content-ID"));
+        assertEquals("1", response.getHeader("Object-ID"));
+        assertEquals("Beautiful frontal view of home.",
+                     response.getHeader("Content-Description"));
+        assertNull(response.getHeader("Location"));
+
+        byte[] expected =
+            IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_1));
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
+
+    public void testObjectSetDefaultImage()
+        throws RetsServerException, IOException
+    {
+        GetObjectTransaction transaction = createTransaction("abc126:0");
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("image/jpeg", response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertEquals("abc126", response.getHeader("Content-ID"));
+        assertEquals("2", response.getHeader("Object-ID"));
+        assertNull(response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
+
+        byte[] expected =
+            IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE_2));
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
+    public void testMultipartForSingleImageObjectSet()
+        throws RetsServerException, IOException
+    {
+        GetObjectTransaction transaction =
+            createTransaction("abc125:*,abc126:1");
+        transaction.setBoundaryGenerator(new TestBoundaryGenerator());
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("multipart/parallel; boundary=\"" + BOUNDARY + "\"",
+                     response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertNull(response.getHeader("Content-ID"));
+        assertNull(response.getHeader("Object-ID"));
+
+        ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(expectedStream);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-ID: abc126" + CRLF);
+        out.writeBytes("Content-Description: Beautiful frontal view of home." +
+                       CRLF);
+        out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: image/jpeg" + CRLF);
+        out.writeBytes(CRLF);
+        InputStream stream = getClass().getResourceAsStream(JPEG_FILE_1);
+        IOUtils.copyStream(stream, out);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + "--" + CRLF);
+        out.flush();
+
+        byte[] expected = expectedStream.toByteArray();
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
+    public void testFindAllObjectDescriptors() throws RetsServerException
+    {
+        GetObjectTransaction transaction =
+            createTransaction("abc125:*,abc126:1");
+        List expected = new ArrayList();
+        expected.add(new ObjectDescriptor(
+            "abc126", 1, localUrl(JPEG_FILE_1),
+            "Beautiful frontal view of home."));
+        List actual = transaction.findAllObjectDescriptors();
+        assertEquals(expected, actual);
     }
 
     private GetObjectTransaction createTransaction()
@@ -287,7 +381,8 @@ public class GetObjectTransactionTest extends TestCase
         // exists.
         String imageDirectory = directoryOfResource(GIF_FILE);
         transaction.setRootDirectory(imageDirectory);
-        transaction.setPattern("%k-%i.jpg");
+        transaction.setImagePattern("%k-%i.jpg");
+        transaction.setObjectSetPattern("%k.xml");
         transaction.setBaseLocationUrl(BASE_LOCATION_URL);
         return transaction;
     }
@@ -308,6 +403,11 @@ public class GetObjectTransactionTest extends TestCase
         String imageDirectory =
             imagePath.substring(0, imagePath.lastIndexOf(resourceName) - 1);
         return imageDirectory;
+    }
+
+    private URL localUrl(String resourceName)
+    {
+        return getClass().getResource(resourceName);
     }
 
     private static class TestResponse implements GetObjectResponse

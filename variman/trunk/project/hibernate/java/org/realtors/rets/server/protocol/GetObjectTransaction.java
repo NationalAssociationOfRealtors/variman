@@ -12,7 +12,6 @@ package org.realtors.rets.server.protocol;
 
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,6 @@ public class GetObjectTransaction
     public GetObjectTransaction(GetObjectParameters parameters)
     {
         mParameters = parameters;
-        mPatternContext = new GetObjectPatternContext();
         mBoundaryGenerator = DEFAULT_BOUNDARY_GENERATOR;
         mBaseLocationUrl = "http://images.invalid/";
         mBlockLocation = false;
@@ -42,10 +40,9 @@ public class GetObjectTransaction
         mRootDirectory = rootDirectory;
     }
 
-    public void setPattern(String pattern)
+    public void setImagePattern(String imagePattern)
     {
-        GetObjectPatternParser parser = new GetObjectPatternParser(pattern);
-        mPatternFormatter = parser.parse();
+        mImagePattern = imagePattern;
     }
 
     public void setBoundaryGenerator(
@@ -59,20 +56,20 @@ public class GetObjectTransaction
     {
         try
         {
-            List allFiles = findAllFileDescriptors();
-            if (allFiles.size() == 0)
+            List allObjects = findAllObjectDescriptors();
+            if (allObjects.size() == 0)
             {
                 throw new RetsReplyException(ReplyCode.NO_OBJECT_FOUND);
             }
             else if (!mParameters.isMultipartId())
             {
-                FileDescriptor fileDescriptor =
-                    (FileDescriptor) allFiles.get(0);
-                executeSinglePart(response, fileDescriptor);
+                ObjectDescriptor objectDescriptor =
+                    (ObjectDescriptor) allObjects.get(0);
+                executeSinglePart(response, objectDescriptor);
             }
             else
             {
-                executeMultipart(response, allFiles);
+                executeMultipart(response, allObjects);
             }
         }
         catch (IOException e)
@@ -82,27 +79,33 @@ public class GetObjectTransaction
     }
 
     private void executeSinglePart(GetObjectResponse response,
-                                   FileDescriptor fileDescriptor)
+                                   ObjectDescriptor objectDescriptor)
         throws IOException
     {
-        String filePath = fileDescriptor.file.getPath();
-        LOG.info("GetObject file path: " + filePath);
-        response.setContentType(getContentType(filePath));
+        LOG.info("GetObject URL: " + objectDescriptor.getUrl());
         response.setHeader("MIME-Version", "1.0");
-        response.setHeader("Content-ID", fileDescriptor.objectKey);
-        response.setHeader("Object-ID", "" + fileDescriptor.objectId);
+        response.setHeader("Content-ID", objectDescriptor.getObjectKey());
+        String description = objectDescriptor.getDescription();
+        if (description != null)
+        {
+            response.setHeader("Content-Description", description);
+        }
+        response.setHeader("Object-ID", "" + objectDescriptor.getObjectId());
         if (useLocation())
         {
-            response.setHeader("Location", getLocationUrl(fileDescriptor));
+            response.setHeader("Location", getLocationUrl(objectDescriptor));
+            response.setContentType("application/octet-stream");
         }
         else
         {
-            IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
+            ObjectStream stream = objectDescriptor.openObjectStream();
+            response.setContentType(stream.getMimeType());
+            IOUtils.copyStream(stream.getInputStream(),
                                response.getOutputStream());
         }
     }
 
-    private void executeMultipart(GetObjectResponse response, List allFiles)
+    private void executeMultipart(GetObjectResponse response, List allObjects)
         throws IOException
     {
         String boundary = mBoundaryGenerator.generateBoundary();
@@ -112,26 +115,34 @@ public class GetObjectTransaction
         response.setHeader("MIME-Version", "1.0");
         DataOutputStream out = new DataOutputStream(response.getOutputStream());
 
-        for (int i = 0; i < allFiles.size(); i++)
+        for (int i = 0; i < allObjects.size(); i++)
         {
-            FileDescriptor fileDescriptor = (FileDescriptor) allFiles.get(i);
-            String filePath = fileDescriptor.file.getPath();
-            LOG.info("GetObject (mulitpart) file path: " + filePath);
+            ObjectDescriptor objectDescriptor =
+                (ObjectDescriptor) allObjects.get(i);
+            LOG.info("GetObject (mulitpart) URL: " + objectDescriptor.getUrl());
             out.writeBytes(CRLF + "--" + boundary + CRLF);
-            out.writeBytes("Content-Type: " + getContentType(filePath) + CRLF);
-            out.writeBytes("Content-ID: " + fileDescriptor.objectKey + CRLF);
-            out.writeBytes("Object-ID: " + fileDescriptor.objectId + CRLF);
+            out.writeBytes("Content-ID: " + objectDescriptor.getObjectKey() +
+                           CRLF);
+            String description = objectDescriptor.getDescription();
+            if (description != null)
+            {
+                out.writeBytes("Content-Description: " + description + CRLF);
+            }
+            out.writeBytes("Object-ID: " + objectDescriptor.getObjectId() +
+                           CRLF);
             if (useLocation())
             {
-                out.writeBytes("Location: " + getLocationUrl(fileDescriptor) +
+                out.writeBytes("Content-Type: application/octet-stream" + CRLF);
+                out.writeBytes("Location: " + getLocationUrl(objectDescriptor) +
                                CRLF);
                 out.writeBytes(CRLF);
             }
             else
             {
+                ObjectStream stream = objectDescriptor.openObjectStream();
+                out.writeBytes("Content-Type: " + stream.getMimeType() + CRLF);
                 out.writeBytes(CRLF);
-                IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
-                                   out);
+                IOUtils.copyStream(stream.getInputStream(), out);
             }
         }
         out.writeBytes(CRLF + "--" + boundary + "--" + CRLF);
@@ -161,88 +172,90 @@ public class GetObjectTransaction
         return (!mBlockLocation) && mParameters.getUseLocation();
     }
 
-    private String getLocationUrl(FileDescriptor fileDescriptor)
+    private String getLocationUrl(ObjectDescriptor objectDescriptor)
     {
         StringBuffer location = new StringBuffer();
         location.append(mBaseLocationUrl);
         location.append(mParameters.getResource()).append("/");
         location.append(mParameters.getType()).append("/");
-        location.append(fileDescriptor.objectKey).append("/");
-        location.append(fileDescriptor.objectId);
+        location.append(objectDescriptor.getObjectKey()).append("/");
+        location.append(objectDescriptor.getObjectId());
         return location.toString();
     }
 
     public List /* File */ findAllFileObjects()
     {
-        List allFiles = findAllFileDescriptors();
-        List fileObjects = new ArrayList(allFiles.size());
-        for (int i = 0; i < allFiles.size(); i++)
+        try
         {
-            FileDescriptor descriptor = (FileDescriptor) allFiles.get(i);
-            fileObjects.add(descriptor.file);
+            List allFiles = findAllObjectDescriptors();
+            List fileObjects = new ArrayList(allFiles.size());
+            for (int i = 0; i < allFiles.size(); i++)
+            {
+                FileDescriptor descriptor = (FileDescriptor) allFiles.get(i);
+                fileObjects.add(descriptor.file);
+            }
+            return fileObjects;
         }
-        return fileObjects;
+        catch (RetsServerException e)
+        {
+            LOG.error("Caught", e);
+        }
+        return new ArrayList();
     }
 
-    private List /* FileDescriptor */ findAllFileDescriptors()
+    public List /* ObjectDescriptor */ findAllObjectDescriptors()
+        throws RetsServerException
     {
-        List files = new ArrayList();
+        List objects = new ArrayList();
         int numberOfResources = mParameters.numberOfResources();
+        String type = mParameters.getType();
         for (int i = 0; i < numberOfResources; i++)
         {
             String resourceEntity = mParameters.getResourceEntity(i);
             List objectIdList = mParameters.getObjectIdList(i);
+            ObjectSet objectSet = getObjectSet(resourceEntity);
             for (int j = 0; j < objectIdList.size(); j++)
             {
                 String objectIdString = (String) objectIdList.get(j);
                 if (objectIdString.equals("*"))
                 {
-                    scanForFiles(resourceEntity, files);
+                    objects.addAll(objectSet.findAllObjects(type));
                 }
                 else
                 {
                     int objectId = NumberUtils.stringToInt(objectIdString);
-                    if (objectId == 0)
+                    ObjectDescriptor object =
+                        objectSet.findObject(type, objectId);
+                    if (object != null)
                     {
-                        objectId = 1;
+                        objects.add(object);
                     }
-                    addFileIfExists(resourceEntity, objectId, files);
                 }
             }
         }
-        return files;
+        return objects;
     }
 
-    private void scanForFiles(String resourceEntity, List files)
+    private ObjectSet getObjectSet(String resourceEntity)
+        throws RetsServerException
     {
-        int objectId = 1;
-        while (addFileIfExists(resourceEntity, objectId, files))
+        GetObjectPatternParser patternParser =
+            new GetObjectPatternParser(mObjectSetPattern);
+        GetObjectPatternFormatter formatter = patternParser.parse();
+        GetObjectPatternContext patternContext =
+            new GetObjectPatternContext(resourceEntity, -1);
+        StringBuffer buffer = new StringBuffer(mRootDirectory);
+        buffer.append(File.separator);
+        formatter.format(buffer, patternContext);
+        File xmlObjectFile = new File(buffer.toString());
+        if (xmlObjectFile.exists())
         {
-            objectId++;
-        }
-    }
-    
-    private boolean addFileIfExists(String resourceEntity, int objectId,
-                                    List files)
-    {
-        mPatternContext.setKey(resourceEntity);
-        mPatternContext.setObjectId(objectId);
-        StringBuffer fileBuffer = new StringBuffer(mRootDirectory);
-        fileBuffer.append(File.separator);
-        mPatternFormatter.format(fileBuffer, mPatternContext);
-        String filePath = fileBuffer.toString();
-        File file = new File(filePath);
-        if (file.exists() && file.isFile())
-        {
-            LOG.debug("File " + filePath + " exists");
-            files.add(new FileDescriptor(resourceEntity, objectId,
-                                         file));
-            return true;
+            return new XmlObjectSet(xmlObjectFile);
         }
         else
         {
-            LOG.debug("File " + filePath + " does not exist");
-            return false;
+            return new PatternObjectSet(mRootDirectory, mImagePattern,
+                                        resourceEntity);
         }
     }
 
@@ -254,6 +267,11 @@ public class GetObjectTransaction
     public void setBlockLocation(boolean blockLocation)
     {
         mBlockLocation = blockLocation;
+    }
+
+    public void setObjectSetPattern(String objectSetPattern)
+    {
+        mObjectSetPattern = objectSetPattern;
     }
 
     private static class FileDescriptor
@@ -284,10 +302,10 @@ public class GetObjectTransaction
     public static final MultipartBoundaryGenerator DEFAULT_BOUNDARY_GENERATOR =
         new BoundaryGenerator();
     private String mRootDirectory;
-    private GetObjectPatternFormatter mPatternFormatter;
-    private GetObjectPatternContext mPatternContext;
     private GetObjectParameters mParameters;
     private MultipartBoundaryGenerator mBoundaryGenerator;
     private String mBaseLocationUrl;
     private boolean mBlockLocation;
+    private String mImagePattern;
+    private String mObjectSetPattern;
 }
