@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import org.realtors.rets.server.metadata.ValidationLookup;
 

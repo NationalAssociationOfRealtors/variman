@@ -2,12 +2,12 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
-import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.ValidationExternal;
 
 public class ValidationExternalFormatterTest extends FormatterTestCase
 {
