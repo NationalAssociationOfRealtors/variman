@@ -105,6 +105,7 @@ public class UsersPage extends wxPanel
 
     public void populateList()
     {
+        wxBeginBusyCursor();
         final wxWindowDisabler disabler = new wxWindowDisabler();
         mListBox.Clear();
         wxJWorker worker = new wxJWorker()
@@ -136,6 +137,7 @@ public class UsersPage extends wxPanel
                 }
                 updateDetailedInfo();
                 disabler.delete();
+                wxEndBusyCursor();
             }
         };
         worker.start();
