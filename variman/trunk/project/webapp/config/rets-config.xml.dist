@@ -1,6 +1,7 @@
 <?xml version='1.0' ?>
 <rets-config>
   <port>6103</port>
+  <metadata-dir>WEB-INF/rex/metadata</metadata-dir>
   <!--
   <get-object-root>/tmp/pictures</get-object-root>
   <get-object-pattern>%k-%i.jpg</get-object-pattern>
