@@ -55,7 +55,7 @@ public class AdminFrame extends wxFrame
         menuBar.Append(fileMenu, "&File");
         menuBar.Append(databaseMenu, "&Database");
         menuBar.Append(userMenu, "&User");
-        if (System.getProperty("rex.debug") != null)
+        if (Admin.isDebugEnabled())
         {
             wxMenu debugMenu = new wxMenu();
             debugMenu.Append(CREATE_DATA_SCHEMA, "Create Data Schema...");
@@ -75,6 +75,9 @@ public class AdminFrame extends wxFrame
 
         mUsersPage = new UsersPage(mNotebook);
         mNotebook.AddPage(mUsersPage, "Users");
+
+        mMetadataPage = new MetadataPage(mNotebook);
+        mNotebook.AddPage(mMetadataPage, "Metadata");
 
         CreateStatusBar();
 
@@ -190,9 +193,14 @@ public class AdminFrame extends wxFrame
     {
         public void handleEvent(wxNotebookEvent event)
         {
-            if (event.GetSelection() == USERS_PAGE)
+            int selection = event.GetSelection();
+            if (selection == USERS_PAGE)
             {
                 mUsersPage.populateList();
+            }
+            else if (selection == METADATA_PAGE)
+            {
+                mMetadataPage.populateTree();
             }
         }
     }
@@ -229,8 +237,10 @@ public class AdminFrame extends wxFrame
     private static final int CREATE_PROPERTIES = wxNewId();
 
     private static final int USERS_PAGE = 1;
+    private static final int METADATA_PAGE = 2;
 
     private DatabasePage mDatabasePage;
     private UsersPage mUsersPage;
     private wxNotebook mNotebook;
+    private MetadataPage mMetadataPage;
 }
