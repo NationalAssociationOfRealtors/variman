@@ -27,6 +27,8 @@
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${antlr.jar}"/>
+    <pathelement path="${commons-digester.jar}"/>
+    <pathelement path="${commons-betwixt.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -73,7 +75,6 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
     <pathelement path="${antlr.jar}"/>
-    <pathelement path="${commons-betwixt.jar}"/>
   </path>
 
   <path id="webapp.test.path">
@@ -644,8 +645,9 @@
     <copy file="${wx4j.lib}" todir="build/admin/lib"/>
     <copy file="${log4j.jar}" todir="build/admin/lib"/>
     <copy file="${commons-lang.jar}" todir="build/admin/lib"/>
-    <copy file="project/hibernate/config/hibernate.properties"
-          todir="build/admin/classes"/>
+    <copy file="${commons-beanutils.jar}" todir="build/admin/lib"/>
+    <copy file="${commons-digester.jar}" todir="build/admin/lib"/>
+    <copy file="${commons-betwixt.jar}" todir="build/admin/lib"/>
     <copy todir="build/admin/lib" file="${hibernate.jdbc.jar}"/>
     <copy file="${hibernate.jar}" todir="build/admin/lib"/>
     <copy todir="build/admin/lib">
@@ -669,19 +671,19 @@
     <junit printsummary="yes" haltonfailure="yes">
       <classpath>
         <pathelement path="${java.class.path}"/>
+        <pathelement location="build/hibernate/test/classes"/>
+        <pathelement location="build/webapp/test/classes"/>
+        <pathelement location="build/admin/test/classes"/>
         <path refid="hibernate.path"/>
         <path refid="webapp.path"/>
+        <path refid="lib.path"/>
         <path refid="embedded.path"/>
         <pathelement path="${servlet.jar}"/>
         <pathelement path="${log4j.jar}"/>
         <pathelement path="${commons-lang.jar}"/>
         <pathelement location="build/hibernate/classes"/>
         <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
-        <pathelement location="build/hibernate/test/classes"/>
-        <pathelement location="build/webapp/test/classes"/>
         <pathelement location="build/admin/classes"/>
-        <pathelement location="build/admin/test/classes"/>
-        <path refid="lib.path"/>
       </classpath>
       <jvmarg value="-Dtest.basedir=${basedir}"/>
 
