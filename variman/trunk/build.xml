@@ -137,7 +137,8 @@
          basedir="build/hibernate/xdoclet" index="true"/>
   </target>
 
-  <target name="build-hibernate-xschema" depends="build-hibernate">
+  <target name="build-hibernate-xschema" depends="build-hibernate"
+          description="creates the schema">
     <taskdef name="schemaexport"
              classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
       <classpath>
@@ -402,8 +403,8 @@
     </javac>
   </target>
 
-  <target name="generate-schema" depends="build-generated-code"
-          description="generates the database schema">
+  <target name="generate-schema" depends="build-generated-code">
+<!--           description="generates the database schema"> -->
     <taskdef name="schemaexport"
              classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
       <classpath>
