@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata;
 
 import junit.framework.TestCase;
+import org.realtors.rets.server.dmql.DmqlFieldType;
 
 public class ServerDmqlMetadataTest extends TestCase
 {
@@ -36,12 +37,21 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidFieldName("ListingPrice"));
         assertFalse(metadata.isValidFieldName("FOO"));
 
+        // Check types
+        assertEquals(DmqlFieldType.CHARACTER, metadata.getFieldType("OWNER"));
+        assertEquals(DmqlFieldType.LOOKUP, metadata.getFieldType("AR"));
+        assertEquals(DmqlFieldType.LOOKUP, metadata.getFieldType("STATUS"));
+        assertEquals(DmqlFieldType.NUMERIC, metadata.getFieldType("LP"));
+        assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LD"));
+        assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LDT"));
+        assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LT"));
+        assertNull(metadata.getFieldType("Owner"));
+
         // Check lookups
-        assertTrue(metadata.isLookupField("AR"));
         assertTrue(metadata.isValidLookupValue("AR", "GENVA"));
         assertTrue(metadata.isValidLookupValue("AR", "BATV"));
         assertFalse(metadata.isValidLookupValue("AR", "STC"));
-        assertFalse(metadata.isLookupField("Area"));
+        assertNull(metadata.getFieldType("Area"));
 
         assertEquals("GENVA", metadata.getLookupDbValue("AR", "GENVA"));
         assertEquals("Geneva", metadata.getLookupShortValue("AR", "GENVA"));
@@ -58,37 +68,20 @@ public class ServerDmqlMetadataTest extends TestCase
         assertNull(metadata.getLookupShortValue("Area", "GENVA"));
         assertNull(metadata.getLookupLongValue("Area", "GENVA"));
 
-        assertTrue(metadata.isLookupField("STATUS"));
         assertTrue(metadata.isValidLookupValue("STATUS", "S"));
         assertTrue(metadata.isValidLookupValue("STATUS", "A"));
         assertTrue(metadata.isValidLookupValue("STATUS", "P"));
         assertFalse(metadata.isValidLookupValue("STATUS", "Z"));
-        assertFalse(metadata.isLookupField("ListingStatus"));
-
-        assertFalse(metadata.isLookupField("OWNER"));
-        assertFalse(metadata.isLookupField("Owner"));
-        assertFalse(metadata.isLookupField("FOO"));
-
-        // Check strings
-        assertTrue(metadata.isCharacterField("OWNER"));
-        assertFalse(metadata.isCharacterField("AR"));
-        assertFalse(metadata.isCharacterField("STATUS"));
-        assertFalse(metadata.isCharacterField("LP"));
-        assertFalse(metadata.isCharacterField("FOO"));
-        assertFalse(metadata.isCharacterField("Owner"));
-
-        // Check numerics
-        assertFalse(metadata.isNumericField("OWNER"));
-        assertFalse(metadata.isNumericField("AR"));
-        assertFalse(metadata.isNumericField("STATUS"));
-        assertTrue(metadata.isNumericField("LP"));
-        assertFalse(metadata.isNumericField("FOO"));
-        assertFalse(metadata.isCharacterField("ListingPrice"));
+        assertNull(metadata.getFieldType("ListingStatus"));
 
         // Check tables
         assertEquals(mOwner, metadata.getTable("OWNER"));
         assertEquals(mArea, metadata.getTable("AR"));
         assertEquals(mStatus, metadata.getTable("STATUS"));
+        assertEquals(mListingPrice, metadata.getTable("LP"));
+        assertEquals(mListDate, metadata.getTable("LD"));
+        assertEquals(mListTime, metadata.getTable("LT"));
+        assertEquals(mListDateTime, metadata.getTable("LDT"));
     }
 
     public void testStandardNames()
@@ -127,12 +120,23 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidFieldName("OWNER"));
         assertFalse(metadata.isValidFieldName("FOO"));
 
+        // Check types
+        assertEquals(DmqlFieldType.CHARACTER, metadata.getFieldType("Owner"));
+        assertEquals(DmqlFieldType.LOOKUP, metadata.getFieldType("Area"));
+        assertEquals(DmqlFieldType.LOOKUP,
+                     metadata.getFieldType("ListingStatus"));
+        assertEquals(DmqlFieldType.NUMERIC,
+                     metadata.getFieldType("ListingPrice"));
+        assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("ListDate"));
+        assertNull(metadata.getFieldType("LDT"));
+        assertNull(metadata.getFieldType("LT"));
+        assertNull(metadata.getFieldType("OWNER"));
+
         // Check lookups
-        assertTrue(metadata.isLookupField("Area"));
         assertTrue(metadata.isValidLookupValue("Area", "GENVA"));
         assertTrue(metadata.isValidLookupValue("Area", "BATV"));
         assertFalse(metadata.isValidLookupValue("Area", "STC"));
-        assertFalse(metadata.isLookupField("AR"));
+        assertNull(metadata.getFieldType("AR"));
 
         assertEquals("GENVA", metadata.getLookupDbValue("Area", "GENVA"));
         assertEquals("Geneva", metadata.getLookupShortValue("Area", "GENVA"));
@@ -150,36 +154,18 @@ public class ServerDmqlMetadataTest extends TestCase
         assertNull(metadata.getLookupLongValue("AR", "GENVA"));
 
         // Check listing status uses lookup values from DTD
-        assertTrue(metadata.isLookupField("ListingStatus"));
         assertTrue(metadata.isValidLookupValue("ListingStatus", "Pending"));
         assertTrue(metadata.isValidLookupValue("ListingStatus", "Active"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "Z"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "A"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "P"));
-        assertFalse(metadata.isLookupField("STATUS"));
-
-        assertFalse(metadata.isLookupField("OWNER"));
-        assertFalse(metadata.isLookupField("Owner"));
-        assertFalse(metadata.isLookupField("Foo"));
-
-        // Check strings
-        assertTrue(metadata.isCharacterField("Owner"));
-        assertFalse(metadata.isCharacterField("Area"));
-        assertFalse(metadata.isCharacterField("ListingStatus"));
-        assertFalse(metadata.isCharacterField("FOO"));
-        assertFalse(metadata.isCharacterField("OWNER"));
-
-        // Check numerics
-        assertFalse(metadata.isNumericField("Owner"));
-        assertFalse(metadata.isNumericField("Area"));
-        assertTrue(metadata.isNumericField("ListingPrice"));
-        assertFalse(metadata.isNumericField("FOO"));
-        assertFalse(metadata.isNumericField("LP"));
+        assertNull(metadata.getFieldType("STATUS"));
 
         // Check tables
         assertEquals(mOwner, metadata.getTable("Owner"));
         assertEquals(mArea, metadata.getTable("Area"));
         assertEquals(mStatus, metadata.getTable("ListingStatus"));
+        assertEquals(mListDate, metadata.getTable("ListDate"));
     }
 
     protected void setUp()
@@ -259,6 +245,25 @@ public class ServerDmqlMetadataTest extends TestCase
         mListingPrice.setDbName("r_LP");
         mListingPrice.setDataType(DataTypeEnum.DECIMAL);
         mClazz.addTable(mListingPrice);
+
+        mListDate = new Table(id++);
+        mListDate.setSystemName("LD");
+        mListDate.setStandardName(new TableStandardName("ListDate"));
+        mListDate.setDbName("r_LD");
+        mListDate.setDataType(DataTypeEnum.DATE);
+        mClazz.addTable(mListDate);
+
+        mListTime = new Table(id++);
+        mListTime.setSystemName("LT");
+        mListTime.setDbName("r_LT");
+        mListTime.setDataType(DataTypeEnum.TIME);
+        mClazz.addTable(mListTime);
+
+        mListDateTime = new Table(id++);
+        mListDateTime.setSystemName("LDT");
+        mListDateTime.setDbName("r_LDT");
+        mListDateTime.setDataType(DataTypeEnum.DATETIME);
+        mClazz.addTable(mListDateTime);
     }
 
     private MClass mClazz = null;
@@ -266,4 +271,7 @@ public class ServerDmqlMetadataTest extends TestCase
     private Table mStatus;
     private Table mOwner;
     private Table mListingPrice;
+    private Table mListDate;
+    private Table mListTime;
+    private Table mListDateTime;
 }
