@@ -44,9 +44,12 @@
   </path>
 
   <path id="importer.path">
+    <pathelement path="build/hibernate/classes"/>
     <pathelement location="${rets-client.jar}"/>
     <pathelement location="${commons-cli.jar}"/>
-    <pathelement path="build/hibernate/classes"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${log4j.jar}"/>
   </path>
 
   <path id="datagen.path">
@@ -446,7 +449,6 @@
             destDir="build/datagen/classes"
             cache="build/datagen/depcache" closure="yes">
       <classpath>
-        <path refid="lib.path"/>
         <path refid="datagen.path"/>
       </classpath>
     </depend>
@@ -455,7 +457,6 @@
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
-        <path refid="lib.path"/>
         <path refid="datagen.path"/>
       </classpath>
     </javac>
@@ -498,7 +499,6 @@
             destDir="build/importer/classes"
             cache="build/importer/depcache" closure="yes">
       <classpath>
-        <path refid="lib.path"/>
         <path refid="importer.path"/>
       </classpath>
     </depend>
@@ -507,7 +507,6 @@
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
-        <path refid="lib.path"/>
         <path refid="importer.path"/>
       </classpath>
     </javac>
@@ -589,7 +588,6 @@
   <target name="test" description="Run all unit tests" depends="build">
     <junit printsummary="yes" haltonfailure="yes">
       <classpath>
-        <path refid="lib.path"/>
         <pathelement path="${java.class.path}"/>
         <path refid="hibernate.path"/>
         <path refid="webapp.path"/>
@@ -603,6 +601,7 @@
         <pathelement location="build/webapp/test/classes"/>
         <pathelement location="build/admin/classes"/>
         <pathelement location="build/admin/test/classes"/>
+        <path refid="lib.path"/>
       </classpath>
       <jvmarg value="-Dtest.webapp=${basedir}/build/rets-server/webapp"/>
 
