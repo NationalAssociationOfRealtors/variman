@@ -5,3 +5,5 @@ build.properties*
 tmp
 .ant-targets-build.xml
 prj.el
+.classpath
+.project
