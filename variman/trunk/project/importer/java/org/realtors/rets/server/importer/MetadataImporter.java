@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.apache.log4j.Logger;
+
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.MappingException;
@@ -15,10 +19,6 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Transaction;
 import net.sf.hibernate.cfg.Configuration;
-
-import org.apache.commons.lang.StringUtils;
-
-import org.apache.log4j.Logger;
 
 import org.realtors.rets.client.Metadata;
 import org.realtors.rets.client.MetadataTable;
@@ -29,6 +29,7 @@ import org.realtors.rets.server.metadata.AlignmentEnum;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
 import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.ForeignKey;
 import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.LookupType;
@@ -43,16 +44,15 @@ import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.TableStandardName;
 import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.UpdateType;
 import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExpressionTypeEnum;
+import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ForeignKey;
 
 
 public class MetadataImporter
@@ -78,115 +78,10 @@ public class MetadataImporter
         mUpdateHelps = new HashMap();
     }
 
-    private void initHibernate()
-        throws MappingException, HibernateException
+    private boolean boolValue(String bString)
     {
-        Configuration cfg = new Configuration();
-        cfg.addJar("retsdb2-hbm-xml.jar");
-        mSessions = cfg.buildSessionFactory();
-    }
-
-    public void doIt()
-        throws Exception
-    {
-        RetsSession session =
-            new RetsSession("http://demo.crt.realtors.org:6103/login");
-        session.login("Joe", "Schmoe");
-        parseMetadata(session);
-        session.logout();
-    }
-
-    private void parseMetadata(RetsSession rSession)
-        throws Exception
-    {
-        Session hSession = null;
-        Transaction tx = null;
-
-        try
-        {
-            hSession = mSessions.openSession();
-            tx = hSession.beginTransaction();
-
-            MSystem hSystem = doSystem(rSession, hSession);
-            doResource(rSession, hSession, hSystem);
-            doClasses(rSession, hSession);
-            doObjects(rSession, hSession);
-            doSearchHelp(rSession, hSession);
-            doEditMask(rSession, hSession);
-            doLookup(rSession, hSession);
-            doLookupTypes(rSession, hSession);
-            doUpdateHelp(rSession, hSession);
-            doValidationExternal(rSession, hSession);
-            doUpdate(rSession, hSession);
-            doTable(rSession, hSession);
-            doValidationLookup(rSession, hSession);
-            doValidationLookupType(rSession, hSession);
-            doValidationExternalType(rSession, hSession);
-            doValidationExpression(rSession, hSession);
-            doUpdateType(rSession, hSession);
-            doForeignKey(rSession, hSession, hSystem);
-
-            tx.commit();
-            hSession.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            try
-            {
-                tx.rollback();
-                hSession.close();
-            }
-            catch (Exception e2)
-            {
-                e2.printStackTrace();
-            }
-        }
-    }
-
-    private MSystem doSystem(RetsSession rSession, Session hSession)
-        throws HibernateException
-    {
-        MSystem hSystem = new MSystem();
-        hSystem.setVersion(101001);
-        hSystem.setDate(Calendar.getInstance().getTime());
-        hSession.save(hSystem);
-        return hSystem;
-    }
-
-    private void doResource(RetsSession rSession, Session hSession,
-                            MSystem hSystem)
-        throws HibernateException
-    {
-        MetadataTable tResource =
-            rSession.getMetadataTable(MetadataTable.RESOURCE);
-
-        Set hResources = new HashSet();
-        List resources = tResource.getDataRows("");
-        Iterator i = resources.iterator();
-        while (i.hasNext())
-        {
-            Metadata md = (Metadata) i.next();
-            Resource hResource = new Resource();
-
-            hResource.setSystem(hSystem);
-            String resourceID = md.getAttribute("ResourceID");
-            hResource.setResourceID(resourceID);
-            hResource.setStandardName(ResourceStandardNameEnum.fromString(
-                                          md.getAttribute("StandardName")));
-            hResource.setVisibleName(md.getAttribute("VisibleName"));
-            hResource.setDescription(md.getAttribute("Description"));
-            hResource.setKeyField(md.getAttribute("KeyField"));
-
-            hResource.updateLevel();
-
-            hSession.save(hResource);
-            hResources.add(hResource);
-            mResources.put(hResource.getPath(), hResource);
-        }
-
-        hSystem.setResources(hResources);
-        hSession.saveOrUpdate(hSystem);
+        return bString.equalsIgnoreCase("true") || 
+               bString.equalsIgnoreCase("1");
     }
 
     private void doClasses(RetsSession rSession, Session hSession)
@@ -232,87 +127,6 @@ public class MetadataImporter
         }
     }
 
-    private void doObjects(RetsSession rSession, Session hSession)
-        throws HibernateException
-    {
-        MetadataTable tObject =
-            rSession.getMetadataTable(MetadataTable.OBJECT);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hObjects = new HashSet();
-            List objects = tObject.getDataRows(resource.getPath());
-            if (objects != null)
-            {
-                Iterator j = objects.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    MObject hObject = new MObject();
-
-                    hObject.setResource(resource);
-
-                    hObject.setObjectType(ObjectTypeEnum.fromString(
-                                              md.getAttribute("ObjectType")));
-                    hObject.setMimeType(md.getAttribute("MimeType"));
-                    hObject.setVisibleName(md.getAttribute("VisibleName"));
-                    hObject.setDescription(
-                        StringUtils.substring(
-                            md.getAttribute("Description"),0,64));
-
-                    // Should we have an updateLevel?
-
-                    hSession.save(hObject);
-                    hObjects.add(hObject);
-                }
-            }
-
-            resource.setObjects(hObjects);
-            hSession.saveOrUpdate(resource);
-        }
-    }
-
-    private void doSearchHelp(RetsSession rSession, Session hSession)
-        throws HibernateException
-    {
-        MetadataTable tSearchHelp =
-            rSession.getMetadataTable(MetadataTable.SEARCH_HELP);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hSearchHelps = new HashSet();
-            List searchHelps =
-                tSearchHelp.getDataRows(resource.getPath());
-            if (searchHelps != null)
-            {
-                Iterator j = searchHelps.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    SearchHelp hSearchHelp = new SearchHelp();
-
-                    hSearchHelp.setResource(resource);
-                    hSearchHelp.setSearchHelpID(
-                        md.getAttribute("SearchHelpID"));
-                    hSearchHelp.setValue(md.getAttribute("Value"));
-
-                    hSearchHelp.updateLevel();
-
-                    hSession.save(hSearchHelp);
-                    hSearchHelps.add(hSearchHelp);
-                    mSearchHelps.put(hSearchHelp.getPath(), hSearchHelp);
-                }
-            }
-
-            resource.setSearchHelps(hSearchHelps);
-            hSession.saveOrUpdate(resource);
-        }
-    }
-
     private void doEditMask(RetsSession rSession, Session hSession)
         throws HibernateException
     {
@@ -347,6 +161,63 @@ public class MetadataImporter
             resource.setEditMasks(hEditMasks);
             hSession.saveOrUpdate(resource);
         }
+    }
+
+    private void doForeignKey(RetsSession rSession, Session hSession,
+                              MSystem hSystem)
+        throws HibernateException
+    {
+        MetadataTable tForeignKeys =
+            rSession.getMetadataTable(MetadataTable.FOREIGN_KEYS);
+
+        Set hForeignKeys = new HashSet();
+        List foreignKeys = tForeignKeys.getDataRows("");
+        if (foreignKeys != null)
+        {
+            Iterator i = foreignKeys.iterator();
+            while (i.hasNext())
+            {
+                Metadata md = (Metadata) i.next();
+                ForeignKey hFk = new ForeignKey();
+
+                hFk.setSystem(hSystem);
+
+                hFk.setForeignKeyID(md.getAttribute("ForeignKeyID"));
+                String path[] = new String[3];
+                path[0] = md.getAttribute("ParentResourceID");
+                path[1] = md.getAttribute("ParentClassID");
+                path[2] = md.getAttribute("ParentSystemName");
+                String tablePath = StringUtils.join(path, ":");
+                Table table = (Table) mTables.get(tablePath);
+                hFk.setParentTable(table);
+
+                path[0] = md.getAttribute("ChildResourceID");
+                path[1] = md.getAttribute("ChildClassID");
+                path[2] = md.getAttribute("ChildSystemName");
+                tablePath = StringUtils.join(path, ":");
+                table = (Table) mTables.get(tablePath);
+                hFk.setChildTable(table);
+                if (table == null)
+                {
+                    LOG.error("table is null for path: " + tablePath);
+                }
+
+                hSession.save(hFk);
+                hForeignKeys.add(hFk);
+            }
+        }
+        hSystem.setForeignKeys(hForeignKeys);
+        hSession.saveOrUpdate(hSystem);
+    }
+
+    public void doIt()
+        throws Exception
+    {
+        RetsSession session =
+            new RetsSession("http://demo.crt.realtors.org:6103/login");
+        session.login("Joe", "Schmoe");
+        parseMetadata(session);
+        session.logout();
     }
 
     private void doLookup(RetsSession rSession, Session hSession)
@@ -432,6 +303,298 @@ public class MetadataImporter
         }
     }
 
+    private void doObjects(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tObject =
+            rSession.getMetadataTable(MetadataTable.OBJECT);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hObjects = new HashSet();
+            List objects = tObject.getDataRows(resource.getPath());
+            if (objects != null)
+            {
+                Iterator j = objects.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    MObject hObject = new MObject();
+
+                    hObject.setResource(resource);
+
+                    hObject.setObjectType(ObjectTypeEnum.fromString(
+                                              md.getAttribute("ObjectType")));
+                    hObject.setMimeType(md.getAttribute("MimeType"));
+                    hObject.setVisibleName(md.getAttribute("VisibleName"));
+                    hObject.setDescription(
+                        StringUtils.substring(
+                            md.getAttribute("Description"),0,64));
+
+                    // Should we have an updateLevel?
+
+                    hSession.save(hObject);
+                    hObjects.add(hObject);
+                }
+            }
+
+            resource.setObjects(hObjects);
+            hSession.saveOrUpdate(resource);
+        }
+    }
+
+    private void doResource(RetsSession rSession, Session hSession,
+                            MSystem hSystem)
+        throws HibernateException
+    {
+        MetadataTable tResource =
+            rSession.getMetadataTable(MetadataTable.RESOURCE);
+
+        Set hResources = new HashSet();
+        List resources = tResource.getDataRows("");
+        Iterator i = resources.iterator();
+        while (i.hasNext())
+        {
+            Metadata md = (Metadata) i.next();
+            Resource hResource = new Resource();
+
+            hResource.setSystem(hSystem);
+            String resourceID = md.getAttribute("ResourceID");
+            hResource.setResourceID(resourceID);
+            hResource.setStandardName(ResourceStandardNameEnum.fromString(
+                                          md.getAttribute("StandardName")));
+            hResource.setVisibleName(md.getAttribute("VisibleName"));
+            hResource.setDescription(md.getAttribute("Description"));
+            hResource.setKeyField(md.getAttribute("KeyField"));
+
+            hResource.updateLevel();
+
+            hSession.save(hResource);
+            hResources.add(hResource);
+            mResources.put(hResource.getPath(), hResource);
+        }
+
+        hSystem.setResources(hResources);
+        hSession.saveOrUpdate(hSystem);
+    }
+
+    private void doSearchHelp(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tSearchHelp =
+            rSession.getMetadataTable(MetadataTable.SEARCH_HELP);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hSearchHelps = new HashSet();
+            List searchHelps =
+                tSearchHelp.getDataRows(resource.getPath());
+            if (searchHelps != null)
+            {
+                Iterator j = searchHelps.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    SearchHelp hSearchHelp = new SearchHelp();
+
+                    hSearchHelp.setResource(resource);
+                    hSearchHelp.setSearchHelpID(
+                        md.getAttribute("SearchHelpID"));
+                    hSearchHelp.setValue(md.getAttribute("Value"));
+
+                    hSearchHelp.updateLevel();
+
+                    hSession.save(hSearchHelp);
+                    hSearchHelps.add(hSearchHelp);
+                    mSearchHelps.put(hSearchHelp.getPath(), hSearchHelp);
+                }
+            }
+
+            resource.setSearchHelps(hSearchHelps);
+            hSession.saveOrUpdate(resource);
+        }
+    }
+
+    private MSystem doSystem(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MSystem hSystem = new MSystem();
+        hSystem.setVersion(101001);
+        hSystem.setDate(Calendar.getInstance().getTime());
+        hSession.save(hSystem);
+        return hSystem;
+    }
+
+    private void doTable(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tTables =
+            rSession.getMetadataTable(MetadataTable.TABLE);
+
+        Iterator i = mClasses.values().iterator();
+        while (i.hasNext())
+        {
+            MClass hClass = (MClass) i.next();
+            Set hTables = new HashSet();
+            List tables = tTables.getDataRows(hClass.getPath());
+            if (tables != null)
+            {
+                Iterator j = tables.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    Table hTable = new Table();
+
+                    hTable.setMClass(hClass);
+
+                    hTable.setSystemName(md.getAttribute("SystemName"));
+
+                    String standardName = md.getAttribute("StandardName");
+                    hTable.setStandardName(
+                        lookupTableStandardName(standardName));
+                    hTable.setLongName(md.getAttribute("LongName"));
+
+                    String tmp = md.getAttribute("DbName");
+                    if(tmp.startsWith("r_"))
+                    {
+                        hTable.setDbName(StringUtils.substring(tmp,0,10));
+                    }
+                    else
+                    {
+                        hTable.setDbName(
+                            StringUtils.substring("r_" + tmp, 0, 10));
+                    }                        
+                        
+                    hTable.setShortName(md.getAttribute("ShortName"));
+                    hTable.setMaximumLength(
+                        Integer.parseInt(md.getAttribute("MaximumLength")));
+                    hTable.setDataType(
+                        DataTypeEnum.fromString(md.getAttribute("DataType")));
+                    hTable.setPrecision(
+                        Integer.parseInt(md.getAttribute("Precision")));
+                    hTable.setSearchable(
+                        boolValue(md.getAttribute("Searchable")));
+                    hTable.setInterpretation(
+                        InterpretationEnum.fromString(
+                            md.getAttribute("Interpretation")));
+                    hTable.setAlignment(
+                        AlignmentEnum.fromString(
+                            md.getAttribute("Alignment")));
+                    hTable.setUseSeparator(
+                        boolValue(md.getAttribute("UseSeparator")));
+
+                    String editMasksJoined = md.getAttribute("EditMaskID");
+                    String resourcePath =  hClass.getResource().getPath();
+                    String path = null;
+                    Set hEditMasks = new HashSet();
+                    if (editMasksJoined != null)
+                    {
+                        String editMasks[] =
+                            StringUtils.split(editMasksJoined,",");
+
+                        for (int c = 0; c < editMasks.length; c++)
+                        {
+                            path = resourcePath + ":" +
+                                StringUtils.clean(editMasks[c]);
+                            EditMask em = (EditMask) mEditMasks.get(path);
+                            hEditMasks.add(em);
+                            if (em == null)
+                            {
+                                LOG.error("edit mask null for path: " + path);
+                            }
+                        }
+                    }
+                    hTable.setEditMasks(hEditMasks);
+
+                    String lookupName = md.getAttribute("LookupName");
+                    path = resourcePath + ":" + lookupName;
+                    Lookup lookup = (Lookup) mLookups.get(path);
+                    hTable.setLookup(lookup);
+
+                    hTable.setMaxSelect(
+                        Integer.parseInt(md.getAttribute("MaxSelect")));
+
+                    hTable.setUnits(
+                        UnitEnum.fromString(md.getAttribute("Units")));
+
+                    hTable.setIndex(
+                        Integer.parseInt(md.getAttribute("Index")));
+
+                    hTable.setMinimum(
+                        Integer.parseInt(md.getAttribute("Minimum")));
+
+                    hTable.setMaximum(
+                        Integer.parseInt(md.getAttribute("Maximum")));
+
+                    hTable.setDefault(
+                        Integer.parseInt(md.getAttribute("Default")));
+
+                    hTable.setRequired(
+                        Integer.parseInt(md.getAttribute("Required")));
+
+                    String searchHelpID = md.getAttribute("SearchHelpID");
+                    path = resourcePath + ":" + searchHelpID;
+                    SearchHelp searchHelp =
+                        (SearchHelp) mSearchHelps.get(path);
+                    hTable.setSearchHelp(searchHelp);
+
+                    // String = md.getAttribute("unique");
+                    hTable.setUnique(boolValue(md.getAttribute("Unique")));
+
+                    hTable.updateLevel();
+
+                    hSession.save(hTable);
+                    hTables.add(hTable);
+                    mTables.put(hTable.getPath(), hTable);
+                }
+                hClass.setTables(hTables);
+                hSession.saveOrUpdate(hClass);
+            }
+        }
+    }
+
+    private void doUpdate(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tUpdates =
+            rSession.getMetadataTable(MetadataTable.UPDATE);
+
+        Iterator i = mClasses.values().iterator();
+        while (i.hasNext())
+        {
+            MClass clazz = (MClass) i.next();
+            Set hUpdates = new HashSet();
+            List updates = tUpdates.getDataRows(clazz.getPath());
+            if (updates != null)
+            {
+                Iterator j = updates.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    Update hUpdate = new Update();
+
+                    hUpdate.setMClass(clazz);
+
+                    hUpdate.setUpdateName(md.getAttribute("UpdateName"));
+                    hUpdate.setDescription(md.getAttribute("Description"));
+                    hUpdate.setKeyField(md.getAttribute("KeyField"));
+
+                    hUpdate.updateLevel();
+
+                    hSession.save(hUpdate);
+                    hUpdates.add(hUpdate);
+                    mUpdates.put(hUpdate.getPath(), hUpdate);
+                }
+            }
+            clazz.setUpdates(hUpdates);
+            hSession.saveOrUpdate(clazz);
+        }
+    }
+
     private void doUpdateHelp(RetsSession rSession, Session hSession)
         throws HibernateException
     {
@@ -466,6 +629,134 @@ public class MetadataImporter
                 }
             }
             resource.setUpdateHelps(hUpdateHelps);
+            hSession.saveOrUpdate(resource);
+        }
+    }
+
+    public void doUpdateType(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tUpdateTypes =
+            rSession.getMetadataTable(MetadataTable.UPDATE_TYPE);
+
+        Iterator i = mUpdates.values().iterator();
+        while (i.hasNext())
+        {
+            Update update = (Update) i.next();
+            Set hUpdateTypes = new HashSet();
+            List updateTypes = tUpdateTypes.getDataRows(update.getPath());
+            if (updateTypes != null)
+            {
+                Iterator j = updateTypes.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    UpdateType updateType = new UpdateType();
+
+                    updateType.setUpdate(update);
+                    String level = update.getLevel();
+                    String systemName = md.getAttribute("SystemName");
+                    String tablePath = level + ":" + systemName;
+                    Table table = (Table) mTables.get(tablePath);
+                    updateType.setTable(table);
+                    // Hack to get around metadata bug
+                    if (table == null)
+                    {
+                        LOG.error("null table for path: " + tablePath);
+                        System.exit(1);
+                    }
+
+                    updateType.setSequence(
+                        Integer.parseInt(md.getAttribute("Sequence")));
+
+                    String joinedAttributes = md.getAttribute("Attributes");
+                    String attributes[] =
+                        StringUtils.split(joinedAttributes, ",");
+                    Set attributeSet = new HashSet();
+                    for (int c = 0; c < attributes.length; c++)
+                    {
+                        attributeSet.add(UpdateTypeAttributeEnum.fromInt(
+                                             Integer.parseInt(attributes[c])));
+                    }
+                    updateType.setAttributes(attributeSet);
+
+                    updateType.setDefault(md.getAttribute("Default"));
+
+                    String valExp[] = StringUtils.split(
+                        md.getAttribute("ValidationExpressionID"), ",");
+                    Set valExpSet = new HashSet();
+                    String resourcePath =
+                        update.getMClass().getResource().getPath();
+                    for (int c = 0; c < valExp.length; c++)
+                    {
+                        String vePath = resourcePath + ":" + valExp[c];
+                        ValidationExpression ve = (ValidationExpression)
+                            mValidationExpressions.get(vePath);
+                        valExpSet.add(ve);
+                    }
+                    updateType.setValidationExpressions(valExpSet);
+
+                    String updateHelpPath = resourcePath + ":" +
+                        md.getAttribute("UpdateHelpID");
+                    updateType.setUpdateHelp(
+                        (UpdateHelp) mUpdateHelps.get(updateHelpPath));
+
+                    String vlPath = resourcePath + ":" +
+                        md.getAttribute("ValdiationLookupName");
+                    updateType.setValidationLookup(
+                        (ValidationLookup) mValidationLookups.get(vlPath));
+
+                    String vePath = resourcePath + ":" +
+                        md.getAttribute("ValdationExternalName");
+                    updateType.setValidationExternal(
+                        (ValidationExternal) mValidationExternals.get(vePath));
+
+                    hSession.save(updateType);
+                    hUpdateTypes.add(updateType);
+                }
+            }
+            update.setUpdateTypes(hUpdateTypes);
+            hSession.saveOrUpdate(update);
+        }
+    }
+
+    private void doValidationExpression(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tValidationExpressions =
+            rSession.getMetadataTable(MetadataTable.VALIDATION_EXPRESSION);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hValidationExpressions = new HashSet();
+            List validationExpressions =
+                tValidationExpressions.getDataRows(resource.getPath());
+            if (validationExpressions != null)
+            {
+                Iterator j = validationExpressions.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    ValidationExpression ve = new ValidationExpression();
+
+                    ve.setResource(resource);
+                    ve.setValidationExpressionID(
+                        md.getAttribute("ValidationExpressionID"));
+                    ve.setValidationExpressionType(
+                        ValidationExpressionTypeEnum.fromString(
+                            md.getAttribute("ValidationExpressionType")));
+                    ve.setValue(md.getAttribute("value"));
+
+                    ve.updateLevel();
+
+                    hSession.save(ve);
+                    hValidationExpressions.add(ve);
+                    mValidationExpressions.put(ve.getPath(), ve);
+                }
+            }
+            resource.setValidationExpressions(hValidationExpressions);
             hSession.saveOrUpdate(resource);
         }
     }
@@ -641,131 +932,6 @@ public class MetadataImporter
         }
     }
 
-    private void doUpdate(RetsSession rSession, Session hSession)
-        throws HibernateException
-    {
-        MetadataTable tUpdates =
-            rSession.getMetadataTable(MetadataTable.UPDATE);
-
-        Iterator i = mClasses.values().iterator();
-        while (i.hasNext())
-        {
-            MClass clazz = (MClass) i.next();
-            Set hUpdates = new HashSet();
-            List updates = tUpdates.getDataRows(clazz.getPath());
-            if (updates != null)
-            {
-                Iterator j = updates.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    Update hUpdate = new Update();
-
-                    hUpdate.setMClass(clazz);
-
-                    hUpdate.setUpdateName(md.getAttribute("UpdateName"));
-                    hUpdate.setDescription(md.getAttribute("Description"));
-                    hUpdate.setKeyField(md.getAttribute("KeyField"));
-
-                    hUpdate.updateLevel();
-
-                    hSession.save(hUpdate);
-                    hUpdates.add(hUpdate);
-                    mUpdates.put(hUpdate.getPath(), hUpdate);
-                }
-            }
-            clazz.setUpdates(hUpdates);
-            hSession.saveOrUpdate(clazz);
-        }
-    }
-
-    public void doUpdateType(RetsSession rSession, Session hSession)
-        throws HibernateException
-    {
-        MetadataTable tUpdateTypes =
-            rSession.getMetadataTable(MetadataTable.UPDATE_TYPE);
-
-        Iterator i = mUpdates.values().iterator();
-        while (i.hasNext())
-        {
-            Update update = (Update) i.next();
-            Set hUpdateTypes = new HashSet();
-            List updateTypes = tUpdateTypes.getDataRows(update.getPath());
-            if (updateTypes != null)
-            {
-                Iterator j = updateTypes.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    UpdateType updateType = new UpdateType();
-
-                    updateType.setUpdate(update);
-                    String level = update.getLevel();
-                    String systemName = md.getAttribute("SystemName");
-                    String tablePath = level + ":" + systemName;
-                    Table table = (Table) mTables.get(tablePath);
-                    updateType.setTable(table);
-                    // Hack to get around metadata bug
-                    if (table == null)
-                    {
-                        LOG.error("null table for path: " + tablePath);
-                        System.exit(1);
-                    }
-
-                    updateType.setSequence(
-                        Integer.parseInt(md.getAttribute("Sequence")));
-
-                    String joinedAttributes = md.getAttribute("Attributes");
-                    String attributes[] =
-                        StringUtils.split(joinedAttributes, ",");
-                    Set attributeSet = new HashSet();
-                    for (int c = 0; c < attributes.length; c++)
-                    {
-                        attributeSet.add(UpdateTypeAttributeEnum.fromInt(
-                                             Integer.parseInt(attributes[c])));
-                    }
-                    updateType.setAttributes(attributeSet);
-
-                    updateType.setDefault(md.getAttribute("Default"));
-
-                    String valExp[] = StringUtils.split(
-                        md.getAttribute("ValidationExpressionID"), ",");
-                    Set valExpSet = new HashSet();
-                    String resourcePath =
-                        update.getMClass().getResource().getPath();
-                    for (int c = 0; c < valExp.length; c++)
-                    {
-                        String vePath = resourcePath + ":" + valExp[c];
-                        ValidationExpression ve = (ValidationExpression)
-                            mValidationExpressions.get(vePath);
-                        valExpSet.add(ve);
-                    }
-                    updateType.setValidationExpressions(valExpSet);
-
-                    String updateHelpPath = resourcePath + ":" +
-                        md.getAttribute("UpdateHelpID");
-                    updateType.setUpdateHelp(
-                        (UpdateHelp) mUpdateHelps.get(updateHelpPath));
-
-                    String vlPath = resourcePath + ":" +
-                        md.getAttribute("ValdiationLookupName");
-                    updateType.setValidationLookup(
-                        (ValidationLookup) mValidationLookups.get(vlPath));
-
-                    String vePath = resourcePath + ":" +
-                        md.getAttribute("ValdationExternalName");
-                    updateType.setValidationExternal(
-                        (ValidationExternal) mValidationExternals.get(vePath));
-
-                    hSession.save(updateType);
-                    hUpdateTypes.add(updateType);
-                }
-            }
-            update.setUpdateTypes(hUpdateTypes);
-            hSession.saveOrUpdate(update);
-        }
-    }
-
     private void doValidationLookupType(RetsSession rSession, Session hSession)
         throws HibernateException
     {
@@ -803,226 +969,12 @@ public class MetadataImporter
         }
     }
 
-    private void doValidationExpression(RetsSession rSession, Session hSession)
-        throws HibernateException
+    private void initHibernate()
+        throws MappingException, HibernateException
     {
-        MetadataTable tValidationExpressions =
-            rSession.getMetadataTable(MetadataTable.VALIDATION_EXPRESSION);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hValidationExpressions = new HashSet();
-            List validationExpressions =
-                tValidationExpressions.getDataRows(resource.getPath());
-            if (validationExpressions != null)
-            {
-                Iterator j = validationExpressions.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    ValidationExpression ve = new ValidationExpression();
-
-                    ve.setResource(resource);
-                    ve.setValidationExpressionID(
-                        md.getAttribute("ValidationExpressionID"));
-                    ve.setValidationExpressionType(
-                        ValidationExpressionTypeEnum.fromString(
-                            md.getAttribute("ValidationExpressionType")));
-                    ve.setValue(md.getAttribute("value"));
-
-                    ve.updateLevel();
-
-                    hSession.save(ve);
-                    hValidationExpressions.add(ve);
-                    mValidationExpressions.put(ve.getPath(), ve);
-                }
-            }
-            resource.setValidationExpressions(hValidationExpressions);
-            hSession.saveOrUpdate(resource);
-        }
-    }
-
-    private void doForeignKey(RetsSession rSession, Session hSession,
-                              MSystem hSystem)
-        throws HibernateException
-    {
-        MetadataTable tForeignKeys =
-            rSession.getMetadataTable(MetadataTable.FOREIGN_KEYS);
-
-        Set hForeignKeys = new HashSet();
-        List foreignKeys = tForeignKeys.getDataRows("");
-        if (foreignKeys != null)
-        {
-            Iterator i = foreignKeys.iterator();
-            while (i.hasNext())
-            {
-                Metadata md = (Metadata) i.next();
-                ForeignKey hFk = new ForeignKey();
-
-                hFk.setSystem(hSystem);
-
-                hFk.setForeignKeyID(md.getAttribute("ForeignKeyID"));
-                String path[] = new String[3];
-                path[0] = md.getAttribute("ParentResourceID");
-                path[1] = md.getAttribute("ParentClassID");
-                path[2] = md.getAttribute("ParentSystemName");
-                String tablePath = StringUtils.join(path, ":");
-                Table table = (Table) mTables.get(tablePath);
-                hFk.setParentTable(table);
-
-                path[0] = md.getAttribute("ChildResourceID");
-                path[1] = md.getAttribute("ChildClassID");
-                path[2] = md.getAttribute("ChildSystemName");
-                tablePath = StringUtils.join(path, ":");
-                table = (Table) mTables.get(tablePath);
-                hFk.setChildTable(table);
-                if (table == null)
-                {
-                    LOG.error("table is null for path: " + tablePath);
-                }
-
-                hSession.save(hFk);
-                hForeignKeys.add(hFk);
-            }
-        }
-        hSystem.setForeignKeys(hForeignKeys);
-        hSession.saveOrUpdate(hSystem);
-    }
-
-    private void doTable(RetsSession rSession, Session hSession)
-        throws HibernateException
-    {
-        MetadataTable tTables =
-            rSession.getMetadataTable(MetadataTable.TABLE);
-
-        Iterator i = mClasses.values().iterator();
-        while (i.hasNext())
-        {
-            MClass hClass = (MClass) i.next();
-            Set hTables = new HashSet();
-            List tables = tTables.getDataRows(hClass.getPath());
-            if (tables != null)
-            {
-                Iterator j = tables.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    Table hTable = new Table();
-
-                    hTable.setMClass(hClass);
-
-                    hTable.setSystemName(md.getAttribute("SystemName"));
-
-                    String standardName = md.getAttribute("StandardName");
-                    hTable.setStandardName(
-                        lookupTableStandardName(standardName));
-                    hTable.setLongName(md.getAttribute("LongName"));
-
-                    String tmp = md.getAttribute("DbName");
-                    if(tmp.startsWith("r_"))
-                    {
-                        hTable.setDbName(StringUtils.substring(tmp,0,10));
-                    }
-                    else
-                    {
-                        hTable.setDbName(
-                            StringUtils.substring("r_" + tmp, 0, 10));
-                    }                        
-                        
-                    hTable.setShortName(md.getAttribute("ShortName"));
-                    hTable.setMaximumLength(
-                        Integer.parseInt(md.getAttribute("MaximumLength")));
-                    hTable.setDataType(
-                        DataTypeEnum.fromString(md.getAttribute("DataType")));
-                    hTable.setPrecision(
-                        Integer.parseInt(md.getAttribute("Precision")));
-                    hTable.setSearchable(
-                        boolValue(md.getAttribute("Searchable")));
-                    hTable.setInterpretation(
-                        InterpretationEnum.fromString(
-                            md.getAttribute("Interpretation")));
-                    hTable.setAlignment(
-                        AlignmentEnum.fromString(
-                            md.getAttribute("Alignment")));
-                    hTable.setUseSeparator(
-                        boolValue(md.getAttribute("UseSeparator")));
-
-                    String editMasksJoined = md.getAttribute("EditMaskID");
-                    String resourcePath =  hClass.getResource().getPath();
-                    String path = null;
-                    Set hEditMasks = new HashSet();
-                    if (editMasksJoined != null)
-                    {
-                        String editMasks[] =
-                            StringUtils.split(editMasksJoined,",");
-
-                        for (int c = 0; c < editMasks.length; c++)
-                        {
-                            path = resourcePath + ":" +
-                                StringUtils.clean(editMasks[c]);
-                            EditMask em = (EditMask) mEditMasks.get(path);
-                            hEditMasks.add(em);
-                            if (em == null)
-                            {
-                                LOG.error("edit mask null for path: " + path);
-                            }
-                        }
-                    }
-                    hTable.setEditMasks(hEditMasks);
-
-                    String lookupName = md.getAttribute("LookupName");
-                    path = resourcePath + ":" + lookupName;
-                    Lookup lookup = (Lookup) mLookups.get(path);
-                    hTable.setLookup(lookup);
-
-                    hTable.setMaxSelect(
-                        Integer.parseInt(md.getAttribute("MaxSelect")));
-
-                    hTable.setUnits(
-                        UnitEnum.fromString(md.getAttribute("Units")));
-
-                    hTable.setIndex(
-                        Integer.parseInt(md.getAttribute("Index")));
-
-                    hTable.setMinimum(
-                        Integer.parseInt(md.getAttribute("Minimum")));
-
-                    hTable.setMaximum(
-                        Integer.parseInt(md.getAttribute("Maximum")));
-
-                    hTable.setDefault(
-                        Integer.parseInt(md.getAttribute("Default")));
-
-                    hTable.setRequired(
-                        Integer.parseInt(md.getAttribute("Required")));
-
-                    String searchHelpID = md.getAttribute("SearchHelpID");
-                    path = resourcePath + ":" + searchHelpID;
-                    SearchHelp searchHelp =
-                        (SearchHelp) mSearchHelps.get(path);
-                    hTable.setSearchHelp(searchHelp);
-
-                    // String = md.getAttribute("unique");
-                    hTable.setUnique(boolValue(md.getAttribute("Unique")));
-
-                    hTable.updateLevel();
-
-                    hSession.save(hTable);
-                    hTables.add(hTable);
-                    mTables.put(hTable.getPath(), hTable);
-                }
-                hClass.setTables(hTables);
-                hSession.saveOrUpdate(hClass);
-            }
-        }
-    }
-
-    private boolean boolValue(String bString)
-    {
-        return bString.equalsIgnoreCase("true") || 
-               bString.equalsIgnoreCase("1");
+        Configuration cfg = new Configuration();
+        cfg.addJar("retsdb2-hbm-xml.jar");
+        mSessions = cfg.buildSessionFactory();
     }
     
     private TableStandardName lookupTableStandardName(String standardName)
@@ -1053,6 +1005,54 @@ public class MetadataImporter
         return name;
     }
 
+    private void parseMetadata(RetsSession rSession)
+        throws Exception
+    {
+        Session hSession = null;
+        Transaction tx = null;
+
+        try
+        {
+            hSession = mSessions.openSession();
+            tx = hSession.beginTransaction();
+
+            MSystem hSystem = doSystem(rSession, hSession);
+            doResource(rSession, hSession, hSystem);
+            doClasses(rSession, hSession);
+            doObjects(rSession, hSession);
+            doSearchHelp(rSession, hSession);
+            doEditMask(rSession, hSession);
+            doLookup(rSession, hSession);
+            doLookupTypes(rSession, hSession);
+            doUpdateHelp(rSession, hSession);
+            doValidationExternal(rSession, hSession);
+            doUpdate(rSession, hSession);
+            doTable(rSession, hSession);
+            doValidationLookup(rSession, hSession);
+            doValidationLookupType(rSession, hSession);
+            doValidationExternalType(rSession, hSession);
+            doValidationExpression(rSession, hSession);
+            doUpdateType(rSession, hSession);
+            doForeignKey(rSession, hSession, hSystem);
+
+            tx.commit();
+            hSession.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            try
+            {
+                tx.rollback();
+                hSession.close();
+            }
+            catch (Exception e2)
+            {
+                e2.printStackTrace();
+            }
+        }
+    }
+
     public static final void main(String args[])
         throws Exception
     {
@@ -1060,21 +1060,21 @@ public class MetadataImporter
         mi.doIt();
     }
 
-    private SessionFactory mSessions;
-    private Map mResources;
     private Map mClasses;
     private Map mEditMasks;
-    private Map mTables;
     private Map mLookups;
+    private Map mResources;
     private Map mSearchHelps;
-    private Map mValidationExternals;
-    private Map mValidationExpressions;
-    private Map mValidationLookups;
-    private Map mUpdates;
+    private SessionFactory mSessions;
+    private Map mTables;
     private Map mUpdateHelps;
-
-    private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
+    private Map mUpdates;
+    private Map mValidationExpressions;
+    private Map mValidationExternals;
+    private Map mValidationLookups;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.29 2003/08/12 20:45:47 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.30 2003/08/19 20:36:54 kgarner Exp $";
+
+    private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 }
