@@ -10,8 +10,9 @@
   -->
 
   <database>
-    <driver>org.postgresql.Driver</driver>
-    <url>jdbc:postgresql://localhost/rex_test</url>
+    <type>postgresql</type>
+    <host>localhost</host>
+    <name>rex_test</name>
     <username>dave</username>
     <password/>
     <max-active>100</max-active>
