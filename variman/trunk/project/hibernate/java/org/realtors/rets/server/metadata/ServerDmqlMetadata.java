@@ -78,7 +78,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         Map values;
         if (fieldName.equals("ListingStatus") && standardNames)
         {
-            values = sListingStatusValues;
+            values = LISTING_STATUS_VALUES;
         }
         else
         {
@@ -155,15 +155,15 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private Map mColumnToField;
     private Map mLookups;
     private Set mStrings;
-    private static final Map sListingStatusValues;
+    private static final Map LISTING_STATUS_VALUES;
 
     static
     {
-        sListingStatusValues = new HashMap();
-        sListingStatusValues.put("Active", "A");
-        sListingStatusValues.put("Closed", "C");
-        sListingStatusValues.put("Expired", "X");
-        sListingStatusValues.put("OffMarket", "O");
-        sListingStatusValues.put("Pending", "P");
+        LISTING_STATUS_VALUES = new HashMap();
+        LISTING_STATUS_VALUES.put("Active", "A");
+        LISTING_STATUS_VALUES.put("Closed", "C");
+        LISTING_STATUS_VALUES.put("Expired", "X");
+        LISTING_STATUS_VALUES.put("OffMarket", "O");
+        LISTING_STATUS_VALUES.put("Pending", "P");
     }
 }
