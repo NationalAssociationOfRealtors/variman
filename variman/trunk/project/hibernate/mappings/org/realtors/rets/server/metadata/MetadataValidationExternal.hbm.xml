@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataValidationExternal.hbm.xml,v 1.2 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: MetadataValidationExternal.hbm.xml,v 1.3 2003/06/09 18:08:04 kgarner Exp $ -->
 
 <hibernate-mapping>
 
@@ -22,8 +22,9 @@
         not-null="true" index="rets_metadata_validationexternal_name_index"/>
     </property>
 
-    <many-to-one name="searchResource"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+    <!-- we should be able to derive resource from class. -->
+<!--     <many-to-one name="searchResource" -->
+<!--       class="org.nar.rets.metadata.newdb.MetadataResource"/> -->
 
     <many-to-one name="searchClass"
       class="org.nar.rets.metadata.newdb.MetadataClass"/>
