@@ -17,8 +17,8 @@ public class TextValuePanel extends JPanel
         mGridBag = new GridBagLayout();
         setLayout(mGridBag);
         mConstraints = new GridBagConstraints();
-        mConstraints.fill = GridBagConstraints.HORIZONTAL;
         mConstraints.weighty = 0.0;
+        mConstraints.anchor = GridBagConstraints.WEST;
         mNumberAdded = 0;
         mTopLeftInsets = new Insets(0, 0, 0, 5);
         mTopRightInsets = new Insets(0, 0, 0, 0);
@@ -27,6 +27,11 @@ public class TextValuePanel extends JPanel
     }
 
     public void addRow(String text, JComponent component)
+    {
+        addRow(text, component, GridBagConstraints.HORIZONTAL);
+    }
+
+    public void addRow(String text, JComponent component, int fill)
     {
         Insets leftInsets;
         Insets rightInsets;
@@ -43,12 +48,13 @@ public class TextValuePanel extends JPanel
 
         JLabel label = new JLabel(text);
         mConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        mConstraints.fill = GridBagConstraints.NONE;
         mConstraints.weightx = 0.0;
         mConstraints.insets = leftInsets;
         add(label, mConstraints);
 
         mConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        mConstraints.fill = GridBagConstraints.HORIZONTAL;
+        mConstraints.fill = fill;
         mConstraints.weightx = 1.0;
         mConstraints.insets = rightInsets;
         add(component, mConstraints);
