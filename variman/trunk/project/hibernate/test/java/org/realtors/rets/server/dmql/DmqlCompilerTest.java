@@ -21,8 +21,21 @@ public class DmqlCompilerTest extends TestCase
                             new String[]{"A", "O", "S", "U", "C", "W", "P"});
         mMetadata.addLookup("OR",
                             new String[] {"OR", "AND", "NOT", "TODAY","NOW"});
-        mMetadata.addString("owner");
         mMetadata.addString("AND");
+        mMetadata.addString("NOT");
+
+        mMetadata.addLookup("AREA", new String[]{"1", "2"});
+        mMetadata.addString("CITY");
+
+        mMetadata.addLookup("ST", new String[]{"ACT", "SOLD"});
+        mMetadata.addLookup("EXT", new String[]{"WTRFRNT", "DOCK"});
+        mMetadata.addLookup("TYPE", new String[]{"CONDO", "TWNHME"});
+        mMetadata.addString("LP");
+        mMetadata.addString("STR");
+        mMetadata.addString("STYLE");
+        mMetadata.addString("LDATE");
+        mMetadata.addString("REM");
+        mMetadata.addString("OWNER");
     }
 
     public void testLookupOr() throws ANTLRException
@@ -77,107 +90,127 @@ public class DmqlCompilerTest extends TestCase
 
     public void testStringEquals() throws ANTLRException
     {
-        parse("(owner=foo)");
+        parse("(OWNER=foo)");
     }
 
     public void testStringStart() throws ANTLRException
     {
-        parse("(owner=f*)");
+        parse("(OWNER=f*)");
     }
 
     public void testStringContains() throws ANTLRException
     {
-        parse("(owner=*foo*)");
+        parse("(OWNER=*foo*)");
     }
 
     public void testStringChar() throws ANTLRException
     {
-        parse("(owner=f?o)");
-        parse("(owner=?oo)");
-        parse("(owner=fo?)");
-        parse("(owner=?)");
+        parse("(OWNER=f?o)");
+        parse("(OWNER=?oo)");
+        parse("(OWNER=fo?)");
+        parse("(OWNER=?)");
     }
 
     public void testStringList() throws ANTLRException
     {
-        parse("(owner=foo,f*,*foo*,f?o)");
+        parse("(OWNER=foo,f*,*foo*,f?o)");
     }
 
     public void testStringLiteral() throws ANTLRException
     {
-        parse("(owner=\"\")");
-        parse("(owner=\"foo\")");
-        parse("(owner=\"Foo Bar\")");
-        parse("(owner=\"Vito \"\"The Don\"\" Corleone\")");
+        parse("(OWNER=\"\")");
+        parse("(OWNER=\"foo\")");
+        parse("(OWNER=\"Foo Bar\")");
+        parse("(OWNER=\"Vito \"\"The Don\"\" Corleone\")");
     }
 
     public void testNumber() throws ANTLRException
     {
-        parse("(owner=5)");
-        parse("(owner=5.)");
-        parse("(owner=5.0)");
+        parse("(OWNER=5)");
+        parse("(OWNER=5.)");
+        parse("(OWNER=5.0)");
     }
 
     public void testPeriod() throws ANTLRException
     {
-        parse("(owner=1970-01-01)");
-        parse("(owner=TODAY)");
-        parse("(owner=01:02:03)");
-        parse("(owner=1970-01-01T05:06:01.33)");
-        parse("(owner=NOW)");
+        parse("(OWNER=1970-01-01)");
+        parse("(OWNER=TODAY)");
+        parse("(OWNER=01:02:03)");
+        parse("(OWNER=1970-01-01T05:06:01.33)");
+        parse("(OWNER=NOW)");
     }
 
     public void testBetween() throws ANTLRException
     {
-        parse("(owner=1970-01-01-1980-01-01)");
-        parse("(owner=50-100)");
-        parse("(owner=abc-xyz)");
+        parse("(OWNER=1970-01-01-1980-01-01)");
+        parse("(OWNER=50-100)");
+        parse("(OWNER=abc-xyz)");
     }
 
     public void testLess() throws ANTLRException
     {
-        parse("(owner=1970-01-01-)");
-        parse("(owner=50-)");
-        parse("(owner=xyz-)");
+        parse("(OWNER=1970-01-01-)");
+        parse("(OWNER=50-)");
+        parse("(OWNER=xyz-)");
     }
 
     public void testGreater() throws ANTLRException
     {
-        parse("(owner=1970-01-01+)");
-        parse("(owner=50+)");
-        parse("(owner=xyz+)");
+        parse("(OWNER=1970-01-01+)");
+        parse("(OWNER=50+)");
+        parse("(OWNER=xyz+)");
     }
 
     public void testRangeList() throws ANTLRException
     {
-        parse("(owner=1970-01-01-1980-01-01,1985-01-01-1995-01-01)");
-        parse("(owner=50-100,150-200)");
-        parse("(owner=abc-bar,foo-xyz)");
+        parse("(OWNER=1970-01-01-1980-01-01,1985-01-01-1995-01-01)");
+        parse("(OWNER=50-100,150-200)");
+        parse("(OWNER=abc-bar,foo-xyz)");
 
-        parse("(owner=1970-01-01+,1980-01-01-)");
-        parse("(owner=50+,60-)");
-        parse("(owner=abc+,xyz-)");
+        parse("(OWNER=1970-01-01+,1980-01-01-)");
+        parse("(OWNER=50+,60-)");
+        parse("(OWNER=abc+,xyz-)");
     }
 
     public void testCompoundQueries() throws ANTLRException
     {
-        parse("(AR=|BATV,GENVA)|(owner=foo)");
-        parse("(AR=|BATV,GENVA) OR (owner=foo)");
-        parse("(AR=|BATV,GENVA),(owner=foo)");
-        parse("(AR=|BATV,GENVA) AND (owner=foo)");
+        parse("(AR=|BATV,GENVA)|(OWNER=foo)");
+        parse("(AR=|BATV,GENVA) OR (OWNER=foo)");
+        parse("(AR=|BATV,GENVA),(OWNER=foo)");
+        parse("(AR=|BATV,GENVA) AND (OWNER=foo)");
         parse("~(AR=|BATV,GENVA)");
         parse("NOT (AR=|BATV,GENVA)");
-        parse("(AR=|BATV,GENVA) AND NOT (owner=foo)");
+        parse("(AR=|BATV,GENVA) AND NOT (OWNER=foo)");
+        parse("((OWNER=foo),(OWNER=bar))");
+        parse("(AR=|BATV,GENVA)|((OWNER=foo),(AND=bar))");
     }
 
     public void testTokensInStrings() throws ANTLRException
     {
-        parse("(owner=OR)");
-        parse("(owner=*OR*)");
-        parse("(owner=OR*)");
-        parse("(owner=OR?AND)");
-        parse("(owner=AND)");
-        parse("~(OR=|AND,NOT,TODAY)AND~(AND=NOW*,OR?AND,*NOT*)");
+        parse("(OWNER=OR)");
+        parse("(OWNER=*OR*)");
+        parse("(OWNER=OR*)");
+        parse("(OWNER=OR?AND)");
+        parse("(OWNER=AND)");
+        parse("(OR=OR)");
+        parse("(AND=foo)");
+        parse("(NOT=foo)");
+        parse("(OR=|OR,AND,NOT,TODAY)");
+        parse("~(OR=|OR,AND,NOT,TODAY)AND~(AND=NOW*,OR?AND,*NOT*)");
+    }
+
+    public void testSampleSubQuery() throws ANTLRException
+    {
+        parse("((AREA=|1,2)|(CITY=ACTION)),(LP=200000+)");
+        parse("(ST=|ACT,SOLD),\n" +
+              "(LP=200000-350000),\n" +
+              "(STR=RIVER),\n" +
+              "(STYLE=RANCH),\n" +
+              "(EXT=+WTRFRNT,DOCK),\n" +
+              "(LDATE=2000-03-01+),\n" +
+              "(REM=*FORECLOSE*),\n" +
+              "(TYPE=~CONDO,TWNHME),\n" +
+              "(OWNER=P?LE)");
     }
 
     private SqlConverter parse(String dmql, boolean traceParser,
