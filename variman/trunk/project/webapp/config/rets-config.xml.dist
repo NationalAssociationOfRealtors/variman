@@ -4,7 +4,8 @@
   <metadata-dir>WEB-INF/rex/metadata</metadata-dir>
   <!--
   <get-object-root>/tmp/pictures</get-object-root>
-  <get-object-pattern>%k-%i.jpg</get-object-pattern>
+  <photo-pattern>%k-%i.jpg</photo-pattern>
+  <object-set-pattern>%k.xml</object-set-pattern>
   <nonce-initial-timeout>1</nonce-initial-timeout>
   <nonce-success-timeout>1</nonce-success-timeout>
   -->
