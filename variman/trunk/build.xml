@@ -484,7 +484,9 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib">
-      <fileset dir="${hibernate.lib}" includes="*.jar"/>
+      <fileset dir="${hibernate.lib}" includes="*.jar"
+               excludes="commons-lang*.jar">
+      </fileset>
     </copy>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jdbc.jar}"/>
