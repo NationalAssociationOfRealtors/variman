@@ -7,3 +7,4 @@ tmp
 prj.el
 .classpath
 .project
+.build
