@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<object-set
+   xmlns="http://www.crt.realtors.org/xml/variman/object-set"
+   resource-key="abc123">
+  <object-group type="Photo">
+    <object>
+      <path>abc123-1.jpg</path>
+      <description>Beautiful frontal view of home.</description>
+    </object>
+    <object default="true">
+      <path>abc123-2.jpg</path>
+      <description/>
+    </object>
+    <object>
+      <path>abc123-1.gif</path>
+    </object>
+  </object-group>
+
+  <object-group type="Documents" base-path="../dirTest/">
+    <object>
+      <path mimetype="">foo.xml</path>
+      <description>Some basic document.</description>
+    </object>
+    <object>
+      <path mimetype="">2002 tax records.rtf</path>
+      <description>County tax records for 2002.</description>
+    </object>
+    <object default="true">
+      <path mimetype="">a/bar.html</path>
+      <description>Disclosure statement from current owners.</description>
+    </object>
+  </object-group>
+
+  <object-group type="Video" base-path="http://example.com/video/">
+    <object>
+      <path mimetype="">abc123-tour.mov</path>
+      <description>Take a virtual tour of this house.</description>
+    </object>
+  </object-group>
+</object-set>

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<object-set
+   xmlns="http://www.crt.realtors.org/xml/variman/object-set"
+   resource-key="abc126"
+   remote-locations="true">
+  <object-group type="Photo">
+    <object>
+      <path>abc123-1.jpg</path>
+      <description>Beautiful frontal view of home.</description>
+    </object>
+    <object default="true">
+      <path>abc123-2.jpg</path>
+      <description/>
+    </object>
+    <object>
+      <path>http://images.example.com/abc123-1.gif</path>
+    </object>
+  </object-group>
+</object-set>
