@@ -25,7 +25,7 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         mMetadata.addLookup("ST", new String[]{"ACT", "SOLD"});
         mMetadata.addLookup("EXT", new String[]{"WTRFRNT", "DOCK"});
         mMetadata.addLookup("TYPE", new String[]{"CONDO", "TWNHME"});
-        mMetadata.addString("LP");
+        mMetadata.addNumeric("LP");
         mMetadata.addString("STR");
         mMetadata.addString("STYLE");
         mMetadata.addString("LDATE");
@@ -41,9 +41,16 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
 
     protected void assertInvalidParse(String dmql) throws ANTLRException
     {
+        assertInvalidParse(dmql, false, false);
+    }
+
+    private void assertInvalidParse(String dmql, boolean traceParser,
+                                    boolean traceLexer)
+        throws ANTLRException
+    {
         try
         {
-            parse(dmql);
+            parse(dmql, traceParser, traceLexer);
             fail("Should have thrown an exception");
         }
         catch (RecognitionException e)
