@@ -675,6 +675,10 @@
     <copy todir="build/rets-server/admin/classes">
       <fileset dir="project/admin/java" includes="**/*" excludes="**/*.java"/>
     </copy>
+    <propertyfile file="build/admin/classes/rex-admin.properties">
+      <entry key="version" value="${project.version}" />
+      <entry key="build-date" type="date" value="now" />
+    </propertyfile>
     <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
           todir="build/rets-server/admin/classes"/>
     <!-- Put Bootstrap class in its own jar.  This is necessary for

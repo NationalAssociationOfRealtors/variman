@@ -51,8 +51,8 @@ public class AdminFrame extends JFrame
         JMenu menu = new JMenu("File");
         menuBar.add(menu);
 
-       mMenuShortcutKeyMask =
-           Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        mMenuShortcutKeyMask =
+            Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
         menu.add(new SaveAction());
         menu.add(new InstallJarAction());
@@ -89,6 +89,10 @@ public class AdminFrame extends JFrame
         mGroupMenu.add(mGroupsPanel.getAddGroupAction());
         mGroupMenu.add(mGroupsPanel.getRemoveGroupAciton());
         mGroupMenu.setEnabled(false);
+
+        menu = new JMenu("Help");
+        menuBar.add(menu);
+        menu.add(new AboutAction());
 
         mStatusBar = new JLabel("Status bar");
         mStatusBar.setBorder(
@@ -191,6 +195,21 @@ public class AdminFrame extends JFrame
             saveConfig();
         }
 
+    }
+
+    private class AboutAction extends AbstractAction
+    {
+        public AboutAction()
+        {
+            super("About Rex Admin");
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            AboutBox dialog = new AboutBox(AdminFrame.this);
+            dialog.show();
+            dialog.dispose();
+        }
     }
 
     private class QuitAction extends AbstractAction

@@ -9,7 +9,9 @@
 package org.realtors.rets.server.admin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -34,6 +36,7 @@ public class AdminUtils
 
     public static void initConfig() throws RetsServerException
     {
+        initAdminProperties();
         File configFile = new File(Admin.getRexHome() +
                                    "/webapp/WEB-INF/rex/rets-config.xml");
         Admin.setConfigFile(configFile.getAbsolutePath());
@@ -57,6 +60,27 @@ public class AdminUtils
             retsConfig.setSecurityConstraints(new ArrayList());
             Admin.setRetsConfig(retsConfig);
             Admin.setRetsConfigChanged(true);
+        }
+    }
+
+    public static void initAdminProperties() throws RetsServerException
+    {
+        try
+        {
+            Admin.initProperties();
+            LOG.info("Rex Admin version " + Admin.getVersion());
+            LOG.info("Build date " + Admin.getBuildDate());
+            LOG.info("Java version " + SystemUtils.JAVA_VERSION);
+            LOG.info(SystemUtils.JAVA_RUNTIME_NAME + ", version " +
+                     SystemUtils.JAVA_RUNTIME_VERSION);
+            LOG.info(SystemUtils.JAVA_VM_NAME + ", version " +
+                     SystemUtils.JAVA_VM_VERSION);
+            LOG.info(SystemUtils.OS_NAME + ", version " +
+                     SystemUtils.OS_VERSION);
+        }
+        catch (IOException e)
+        {
+            throw new RetsServerException(e);
         }
     }
 
@@ -109,4 +133,6 @@ public class AdminUtils
 
     private static final Logger LOG =
         Logger.getLogger(AdminUtils.class);
+    private static String sVersion;
+    private static String sBuildDate;
 }

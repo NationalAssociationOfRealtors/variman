@@ -9,6 +9,8 @@
 package org.realtors.rets.server.admin;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 import net.sf.hibernate.cfg.Configuration;
 
@@ -104,10 +106,33 @@ public class Admin
         return sDebugEnabled;
     }
 
+    public static void initProperties() throws IOException
+    {
+        ClassLoader classLoader =
+            Thread.currentThread().getContextClassLoader();
+        Properties rexProperties = new Properties();
+        rexProperties.load(
+            classLoader.getResourceAsStream("rex-admin.properties"));
+        sVersion = rexProperties.getProperty("version");
+        sBuildDate = rexProperties.getProperty("build-date");
+    }
+
+    public static String getBuildDate()
+    {
+        return sBuildDate;
+    }
+
+    public static String getVersion()
+    {
+        return sVersion;
+    }
+
     private static Configuration sHibernateConfiguration;
     private static String sConfigFile;
     private static RetsConfig sRetsConfig;
     private static boolean sRetsConfigChanged;
     private static String sRexHome;
     private static boolean sDebugEnabled;
+    private static String sVersion;
+    private static String sBuildDate;
 }
