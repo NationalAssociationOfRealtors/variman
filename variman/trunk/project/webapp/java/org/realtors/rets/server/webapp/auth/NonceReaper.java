@@ -2,51 +2,51 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 
-public class NonceReaper implements Runnable
+/**
+ * Expires nonces on a nonce table once a minute.
+ */
+public class NonceReaper
 {
+    /**
+     * Create a new nonce reaper for a nonce table.
+     *
+     * @param nonceTable Nonce table to expire
+     */
     public NonceReaper(NonceTable nonceTable)
     {
         mNonceTable = nonceTable;
+        mTimer = new Timer();
+        mTimer.schedule(new ReaperTask(),
+                        DateUtils.MILLIS_IN_MINUTE,     // Initial delay
+                        DateUtils.MILLIS_IN_MINUTE);    // Subsqeuent delay
+        LOG.debug("Started nonce reaper");
     }
 
-    public void start()
-    {
-        LOG.debug("Starting nonce reaper");
-        mReaper = new Thread(this, "Nonce reaper");
-        mReaper.start();
-    }
-
+    /**
+     * Stops expiring nonces.
+     */ 
     public void stop()
     {
         LOG.debug("Stopping nonce reaper");
-        Thread thread = mReaper;
-        mReaper = null;
-        thread.interrupt();
+        mTimer.cancel();
     }
 
-    public void run()
+    private class ReaperTask extends TimerTask
     {
-        Thread thisThread = Thread.currentThread();
-        while (mReaper == thisThread)
+        public void run()
         {
-            try
-            {
-                thisThread.sleep(DateUtils.MILLIS_IN_MINUTE);
-            }
-            catch (InterruptedException e)
-            {
-                // Empty
-            }
             mNonceTable.expireNonces();
         }
-        LOG.debug("Stopped nonce reaper");
     }
 
     private static final Logger LOG =
         Logger.getLogger(NonceReaper.class);
-    private volatile Thread mReaper;
     private NonceTable mNonceTable;
+    private Timer mTimer;
 }
