@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
@@ -13,6 +15,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mValidationExternals = new ArrayList();
         ValidationExternal validationExternal = new ValidationExternal();
         validationExternal.setValidationExternalName("VET1");
 
@@ -23,7 +26,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
         res.setResource(property);
         validationExternal.setSearchClass(res);
 
-        mValidationExternals = new ValidationExternal[] {validationExternal};
+        mValidationExternals.add(validationExternal);
     }
 
     private ValidationExternalFormatter getFormatter(int format)
@@ -63,5 +66,5 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private ValidationExternal[] mValidationExternals;
+    private List mValidationExternals;
 }

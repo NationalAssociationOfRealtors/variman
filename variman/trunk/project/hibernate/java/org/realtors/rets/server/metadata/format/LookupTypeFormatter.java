@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.LookupType;
 
@@ -31,6 +32,12 @@ public abstract class LookupTypeFormatter extends MetadataFormatter
     }
 
     public abstract void format(PrintWriter out, LookupType[] lookupTypes);
+
+    public void format(PrintWriter out, List lookupTypes)
+    {
+        format(out, (LookupType[]) lookupTypes.toArray(
+            new LookupType[lookupTypes.size()]));
+    }
 
     protected String mLookupName;
     protected String mResourceName;

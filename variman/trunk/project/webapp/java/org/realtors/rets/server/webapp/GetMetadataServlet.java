@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
+import net.sf.hibernate.Query;
 
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.metadata.MClass;
@@ -123,35 +124,33 @@ public class  GetMetadataServlet extends RetsServlet
         LOG.debug("Got system");
         String version = system.getVersionString();
         Date date = system.getDate();
-        List metadata = new ArrayList();
+        List metadataResults = new ArrayList();
         String level = StringUtils.join(levels, ":");
 
         if (type.equals("METADATA-SYSTEM"))
         {
             assertLength(levels, 0);
-            metadata.add(new MetadataSegment(new MSystem[] {system}, levels,
-                                             "", null));
+            List systemList = findMetadata("from MSystem", null);
+            metadataResults.add(new MetadataSegment(
+                new MSystem[] {(MSystem) systemList.get(0)},
+                levels, "", null));
 
-            System.out.println(system.getDescription());
             if (recursive)
             {
-//                recurseSystem(system, metadata, levels, version, date);
-                List systemList = new ArrayList();
-                systemList.add(system);
-                recurseChildren(systemList, metadata, version, date);
+                recurseChildren(systemList, metadataResults, version, date);
             }
         }
         else if (type.equals("METADAT-RESOURCE"))
         {
             assertLength(levels, 0);
             Resource[] resources = findResources();
-            metadata.add(new MetadataSegment(resources, levels, version, date));
+            metadataResults.add(new MetadataSegment(resources, levels, version, date));
         }
         else if (type.equals("METADATA-CLASS"))
         {
             assertLength(levels, 1);
             MClass[] classes = findClasses(level);
-            metadata.add(classes);
+            metadataResults.add(classes);
             for (int i = 0; i < classes.length; i++)
             {
                 MClass aClass = classes[i];
@@ -162,15 +161,15 @@ public class  GetMetadataServlet extends RetsServlet
         {
             assertLength(levels, 2);
             Table[] tables = findTables(level);
-            metadata.add(tables);
+            metadataResults.add(tables);
 
         }
         else
         {
-            LOG.warn("Recieved query for unknown metadata type: " + type +
+            LOG.warn("Recieved query for unknown metadataResults type: " + type +
                      ", level=" + level);
         }
-        return metadata;
+        return metadataResults;
     }
 
     private void recurseChildren(List parents, List metadataResults,
@@ -229,6 +228,32 @@ public class  GetMetadataServlet extends RetsServlet
             helper.close(LOG);
         }
         return system;
+    }
+
+    private List findMetadata(String hql, String level)
+    {
+        SessionHelper helper = InitServlet.createHelper();
+        List metadata = null;
+        try
+        {
+            Session session = helper.beginTransaction();
+            Query query = session.createQuery(hql);
+            if (level != null)
+            {
+                query.setString("level", level);
+            }
+            metadata = query.list();
+        }
+        catch (HibernateException e)
+        {
+            LOG.warn("Caught", e);
+            helper.rollback(LOG);
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+        return metadata;
     }
 
     private Resource[] findResources()

@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.ValidationLookup;
 
@@ -11,11 +13,12 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mValidationLookups = new ArrayList();
         ValidationLookup validationLookup = new ValidationLookup();
         validationLookup.setValidationLookupName("School");
         validationLookup.setParent1Field("Area");
         validationLookup.setParent2Field("Subarea");
-        mValidationLookups = new ValidationLookup[] {validationLookup};
+        mValidationLookups.add(validationLookup);
     }
 
     private ValidationLookupFormatter getFormatter(int format)
@@ -55,5 +58,5 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    protected ValidationLookup[] mValidationLookups;
+    protected List mValidationLookups;
 }

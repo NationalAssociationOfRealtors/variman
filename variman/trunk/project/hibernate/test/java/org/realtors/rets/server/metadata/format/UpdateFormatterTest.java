@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.Update;
 
@@ -11,11 +13,12 @@ public class UpdateFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mUpdates = new ArrayList();
         Update update = new Update();
         update.setUpdateName("Add");
         update.setDescription("Add a new Residential Listing");
         update.setKeyField("key");
-        mUpdates = new Update[] {update};
+        mUpdates.add(update);
     }
 
     private UpdateFormatter getFormatter(int format)
@@ -54,5 +57,5 @@ public class UpdateFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private Update[] mUpdates;
+    private List mUpdates;
 }

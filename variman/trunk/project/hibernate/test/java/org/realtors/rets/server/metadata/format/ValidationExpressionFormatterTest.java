@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExpressionTypeEnum;
@@ -12,13 +14,13 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mValidationExpressions = new ArrayList();
         ValidationExpression validationExpression = new ValidationExpression();
         validationExpression.setValidationExpressionID("LD_DATE");
         validationExpression.setValidationExpressionType(
             ValidationExpressionTypeEnum.SET);
         validationExpression.setValue("LD=.TODAY.");
-        mValidationExpressions =
-            new ValidationExpression[] {validationExpression};
+        mValidationExpressions.add(validationExpression);
     }
 
     private ValidationExpressionFormatter getFormatter(int format)
@@ -59,5 +61,5 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private ValidationExpression[] mValidationExpressions;
+    private List mValidationExpressions;
 }

@@ -5,6 +5,8 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
@@ -14,6 +16,7 @@ public class ResourceFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mResources = new ArrayList();
         Resource resource = new Resource();
         resource.setResourceID("PropertyID");
         resource.setStandardName(ResourceStandardNameEnum.PROPERTY);
@@ -24,7 +27,7 @@ public class ResourceFormatterTest extends FormatterTestCase
         classes.add(new MClass(1));
         classes.add(new MClass(2));
         resource.setClasses(classes);
-        mResources = new Resource[] {resource};
+        mResources.add(resource);
     }
 
     private ResourceFormatter getFormatter(int format)
@@ -71,5 +74,5 @@ public class ResourceFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private Resource[] mResources;
+    private List mResources;
 }

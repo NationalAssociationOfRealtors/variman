@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.MClass;
@@ -12,12 +14,13 @@ public class ClassFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mClasses = new ArrayList();
         MClass clazz = new MClass();
         clazz.setClassName("RES");
         clazz.setStandardName(ClassStandardNameEnum.RESIDENTIAL);
         clazz.setVisibleName("Single Family");
         clazz.setDescription("Single Family Residential");
-        mClasses = new MClass[] {clazz};
+        mClasses.add(clazz);
     }
 
     private ClassFormatter getFormatter(int format)
@@ -60,5 +63,5 @@ public class ClassFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private MClass[] mClasses;
+    private List mClasses;
 }

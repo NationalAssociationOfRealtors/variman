@@ -57,6 +57,13 @@ public class ObjectMother
         return updateType;
     }
 
+    public static MObject createMObject()
+    {
+        MObject object = new MObject();
+        object.setResource(createResource());
+        return object;
+    }
+
     public static SearchHelp createSearchHelp()
     {
         SearchHelp searchHelp = new SearchHelp();
@@ -132,5 +139,12 @@ public class ObjectMother
         validationExpression.setResource(createResource());
         validationExpression.updateLevel();
         return validationExpression;
+    }
+
+    public static ForeignKey createForeignKey()
+    {
+        ForeignKey foreignKey = new ForeignKey();
+        foreignKey.setSystem(createSystem());
+        return foreignKey;
     }
 }

@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.SearchHelp;
 
@@ -11,10 +13,11 @@ public class SearchHelpFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mSearchHelps = new ArrayList();
         SearchHelp searchHelp = new SearchHelp();
         searchHelp.setSearchHelpID("LN_SEARCH_HELP");
         searchHelp.setValue("Listing Number (all numbers)");
-        mSearchHelps = new SearchHelp[] {searchHelp};
+        mSearchHelps.add(searchHelp);
     }
 
     private SearchHelpFormatter getFormatter(int format)
@@ -54,5 +57,5 @@ public class SearchHelpFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private SearchHelp[] mSearchHelps;
+    private List mSearchHelps;
 }

@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.Lookup;
 
@@ -11,10 +13,11 @@ public class LookupFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mLookups = new ArrayList();
         Lookup lookup = new Lookup();
         lookup.setLookupName("E_SCHOOL");
         lookup.setVisibleName("Elementary School District");
-        mLookups = new Lookup[] {lookup};
+        mLookups.add(lookup);
     }
 
     private LookupFormatter getFormatter(int format)
@@ -52,5 +55,5 @@ public class LookupFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private Lookup[] mLookups;
+    private List mLookups;
 }

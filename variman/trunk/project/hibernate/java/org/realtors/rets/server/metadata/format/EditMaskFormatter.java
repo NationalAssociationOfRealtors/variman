@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.EditMask;
 
@@ -26,6 +27,12 @@ public abstract class EditMaskFormatter extends MetadataFormatter
     }
 
     public abstract void format(PrintWriter out, EditMask[] editMasks);
+
+    public void format(PrintWriter out, List editMasks)
+    {
+        format(out, (EditMask[]) editMasks.toArray(
+            new EditMask[editMasks.size()]));
+    }
 
     protected String mResourceName;
 }

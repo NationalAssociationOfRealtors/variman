@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.LookupType;
 
@@ -11,11 +13,12 @@ public class LookupTypeFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mLookupTypes = new ArrayList();
         LookupType lookupType = new LookupType();
         lookupType.setLongValue("Aurora 306");
         lookupType.setShortValue("306");
         lookupType.setValue("306");
-        mLookupTypes = new LookupType[] {lookupType};
+        mLookupTypes.add(lookupType);
     }
 
     private LookupTypeFormatter getFormatter(int format)
@@ -52,5 +55,5 @@ public class LookupTypeFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    protected LookupType[] mLookupTypes;
+    protected List mLookupTypes;
 }

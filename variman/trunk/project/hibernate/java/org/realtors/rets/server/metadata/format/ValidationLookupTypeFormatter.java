@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
@@ -32,6 +33,13 @@ abstract public class ValidationLookupTypeFormatter extends MetadataFormatter
 
     public abstract void format(PrintWriter out,
                                 ValidationLookupType[] validationLookupTypes);
+
+    public void format(PrintWriter out, List validationLookupTypes)
+    {
+        format(out, (ValidationLookupType[])
+            validationLookupTypes.toArray(
+                new ValidationLookupType[validationLookupTypes.size()]));
+    }
 
     protected String mValidationLookupName;
     protected String mResourceName;

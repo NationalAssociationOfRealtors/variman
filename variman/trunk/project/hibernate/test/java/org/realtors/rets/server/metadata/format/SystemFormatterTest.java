@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.MSystem;
 
@@ -11,12 +13,14 @@ public class SystemFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
-        mSystem = new MSystem();
-        mSystem.setSystemID("CRT_RETS");
-        mSystem.setDescription("Center for REALTOR Technology");
-        mSystem.setComments("The reference implementation of a RETS Server");
-        mSystem.setVersion(100001);
-        mSystem.setDate(getDate());
+        mSystems = new ArrayList();
+        MSystem system = new MSystem();
+        system.setSystemID("CRT_RETS");
+        system.setDescription("Center for REALTOR Technology");
+        system.setComments("The reference implementation of a RETS Server");
+        system.setVersion(100001);
+        system.setDate(getDate());
+        mSystems.add(system);
     }
 
     public void testCompactFormatSystem()
@@ -24,7 +28,7 @@ public class SystemFormatterTest extends FormatterTestCase
         SystemFormatter formatter =
             SystemFormatter.getInstance(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
-        formatter.format(new PrintWriter(formatted), mSystem);
+        formatter.format(new PrintWriter(formatted), mSystems);
         assertEquals(
             "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
@@ -36,5 +40,5 @@ public class SystemFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
-    private MSystem mSystem;
+    private List mSystems;
 }

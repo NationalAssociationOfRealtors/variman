@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
@@ -11,12 +13,12 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mValidationLookupTypes = new ArrayList();
         ValidationLookupType validationLookupType = new ValidationLookupType();
         validationLookupType.setValidText("135");
         validationLookupType.setParent1Value("AREA2");
         validationLookupType.setParent2Value(null);
-        mValidationLookupTypes =
-            new ValidationLookupType[] {validationLookupType};
+        mValidationLookupTypes.add(validationLookupType);
     }
 
     private ValidationLookupTypeFormatter getFormatter(int format)
@@ -58,5 +60,5 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    protected ValidationLookupType[] mValidationLookupTypes;
+    protected List mValidationLookupTypes;
 }

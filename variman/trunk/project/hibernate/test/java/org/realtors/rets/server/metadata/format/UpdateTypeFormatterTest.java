@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.UpdateType;
@@ -19,6 +21,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mUpdateTypes = new ArrayList();
         Table table = new Table();
         table.setId(new Long(123));
         table.setSystemName("STATUS");
@@ -55,7 +58,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         validationExternal.setValidationExternalName("VE_NAME");
         updateType.setValidationExternal(validationExternal);
 
-        mUpdateTypes = new UpdateType[] {updateType};
+        mUpdateTypes.add(updateType);
     }
 
     private UpdateTypeFormatter getFormatter(int format)
@@ -98,5 +101,5 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private UpdateType[] mUpdateTypes;
+    private List mUpdateTypes;
 }

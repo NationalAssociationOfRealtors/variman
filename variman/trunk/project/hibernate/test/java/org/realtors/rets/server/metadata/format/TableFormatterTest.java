@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.AlignmentEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
@@ -20,7 +22,7 @@ public class TableFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
-        mTables = new Table[2];
+        mTables = new ArrayList();
 
         Table table = new Table(1);
         table.setSystemName("E_SCHOOL");
@@ -57,7 +59,7 @@ public class TableFormatterTest extends FormatterTestCase
         table.setDefault(5);
         table.setRequired(6);
         table.setUnique(false);
-        mTables[0] = table;
+        mTables.add(table);
 
         table = new Table(2);
         table.setSystemName("AGENT_ID");
@@ -77,7 +79,7 @@ public class TableFormatterTest extends FormatterTestCase
         table.setDefault(5);
         table.setRequired(0);
         table.setUnique(false);
-        mTables[1] = table;
+        mTables.add(table);
     }
 
     public void testCompactFormatTable()
@@ -130,5 +132,5 @@ public class TableFormatterTest extends FormatterTestCase
         return formatter;
     }
 
-    private Table[] mTables;
+    private List mTables;
 }

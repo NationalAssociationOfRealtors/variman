@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.ValidationExternalType;
 
@@ -32,6 +33,13 @@ public abstract class ValidationExternalTypeFormatter extends MetadataFormatter
 
     public abstract void format(
         PrintWriter out, ValidationExternalType[] validationExternalTypes);
+
+    public void format(PrintWriter out, List validationExternalTypes)
+    {
+        format(out, (ValidationExternalType[])
+            validationExternalTypes.toArray(
+                new ValidationExternalType[validationExternalTypes.size()]));
+    }
 
     protected String mResourceName;
     protected String mValidationExternalName;

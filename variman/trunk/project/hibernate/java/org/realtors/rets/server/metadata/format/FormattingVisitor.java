@@ -5,29 +5,13 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataSegment;
-import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.MetadataSegmentVisitor;
 import org.realtors.rets.server.metadata.ServerMetadata;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ValidationExpression;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
-public class FormattingVisitor
+public class FormattingVisitor extends MetadataSegmentVisitor
 {
     public FormattingVisitor(PrintWriter out, int format)
     {
@@ -37,53 +21,47 @@ public class FormattingVisitor
 
     public void visitMSystem(MetadataSegment segment)
     {
-        MSystem[] system = (MSystem[]) segment.getData();
         SystemFormatter formatter = SystemFormatter.getInstance(mFormat);
-        formatter.format(mOut, system[0]);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitResource(MetadataSegment segment)
     {
-        Resource[] resources = (Resource[]) segment.getData();
         ResourceFormatter formatter = ResourceFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
-        formatter.format(mOut, resources);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitMClass(MetadataSegment segment)
     {
-        MClass[] classes = (MClass[]) segment.getData();
         ClassFormatter formatter = ClassFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(segment.getLevels()[0]);
-        formatter.format(mOut, classes);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitTable(MetadataSegment segment)
     {
-        Table[] tables = (Table[]) segment.getData();
         String[] levels = segment.getLevels();
         TableFormatter formatter = TableFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
         formatter.setClassName(levels[1]);
-        formatter.format(mOut, tables);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitUpdate(MetadataSegment segment)
     {
-        Update[] updates = (Update[]) segment.getData();
         String[] levels = segment.getLevels();
         UpdateFormatter formatter = UpdateFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
         formatter.setClassName(levels[1]);
-        formatter.format(mOut, updates);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitUpdateType(MetadataSegment segment)
     {
-        UpdateType[] updateTypes = (UpdateType[]) segment.getData();
         String[] levels = segment.getLevels();
         UpdateTypeFormatter formatter =
             UpdateTypeFormatter.getInstance(mFormat);
@@ -91,122 +69,111 @@ public class FormattingVisitor
         formatter.setResourceName(levels[0]);
         formatter.setClassName(levels[1]);
         formatter.setUpdateName(levels[2]);
-        formatter.format(mOut, updateTypes);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitMObject(MetadataSegment segment)
     {
-        MObject[] objects = (MObject[]) segment.getData();
         String[] levels = segment.getLevels();
         ObjectFormatter formatter = ObjectFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
-        formatter.format(mOut, objects);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitSearchHelp(MetadataSegment segment)
     {
-        SearchHelp[] searchHelps = (SearchHelp[]) segment.getData();
         String[] levels = segment.getLevels();
         SearchHelpFormatter formatter =
             SearchHelpFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
-        formatter.format(mOut, searchHelps);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitEditMask(MetadataSegment segment)
     {
-        EditMask[] editMasks = (EditMask[]) segment.getData();
         String[] levels = segment.getLevels();
         EditMaskFormatter formatter = EditMaskFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
-        formatter.format(mOut, editMasks);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitLookup(MetadataSegment segment)
     {
-        Lookup[] lookup = (Lookup[]) segment.getData();
         String[] levels = segment.getLevels();
         LookupFormatter formatter = LookupFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
-        formatter.format(mOut, lookup);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitLookupType(MetadataSegment segment)
     {
-        LookupType[] lookupTypes = (LookupType[]) segment.getData();
         String[] levels = segment.getLevels();
         LookupTypeFormatter formatter =
             LookupTypeFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
         formatter.setLookupName(levels[0]);
-        formatter.format(mOut, lookupTypes);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitValidationLookup(MetadataSegment segment)
     {
-        ValidationLookup[] validationLookups =
-            (ValidationLookup[]) segment.getData();
         String[] levels = segment.getLevels();
         ValidationLookupFormatter formatter =
             ValidationLookupFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
-        formatter.format(mOut, validationLookups);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitValidationLookupType(MetadataSegment segment)
     {
-        ValidationLookupType[] validationLookupTypes =
-            (ValidationLookupType[]) segment.getData();
         String[] levels = segment.getLevels();
         ValidationLookupTypeFormatter formatter =
             ValidationLookupTypeFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
         formatter.setValidationLookupName(levels[1]);
-        formatter.format(mOut, validationLookupTypes);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitValidationExternal(MetadataSegment segment)
     {
-        ValidationExternal[] validationExternals =
-            (ValidationExternal[]) segment.getData();
         String[] levels = segment.getLevels();
         ValidationExternalFormatter formatter =
             ValidationExternalFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
-        formatter.format(mOut, validationExternals);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitValidationExternalType(MetadataSegment segment)
     {
-        ValidationExternalType[] validationExternalTypes =
-            (ValidationExternalType[]) segment.getData();
         String[] levels = segment.getLevels();
         ValidationExternalTypeFormatter formatter =
             ValidationExternalTypeFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
         formatter.setValidationExternalName(levels[1]);
-        formatter.format(mOut, validationExternalTypes);
+        formatter.format(mOut, segment.getDataList());
     }
 
     public void visitValidationExpression(MetadataSegment segment)
     {
-        ValidationExpression[] validationExpressions =
-            (ValidationExpression[]) segment.getData();
         String[] levels = segment.getLevels();
         ValidationExpressionFormatter formatter =
             ValidationExpressionFormatter.getInstance(mFormat);
         formatter.setVersion(segment.getVersion(), segment.getDate());
         formatter.setResourceName(levels[0]);
-        formatter.format(mOut, validationExpressions);
+        formatter.format(mOut, segment.getDataList());
+    }
+
+    public void visitForeignKey(MetadataSegment segment)
+    {
     }
 
     public void visitServerMetadata(MetadataSegment segment)

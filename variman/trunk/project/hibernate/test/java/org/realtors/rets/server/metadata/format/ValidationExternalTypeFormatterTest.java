@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.ValidationExternalType;
 
@@ -15,6 +17,7 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mValidationExternalTypes = new ArrayList();
         ValidationExternalType validationExternalType =
             new ValidationExternalType();
 
@@ -33,8 +36,7 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
         resultFields.put("SaleAgentName", "AgentName");
         validationExternalType.setResultFields(resultFields);
 
-        mValidationExternalTypes =
-            new ValidationExternalType[] {validationExternalType};
+        mValidationExternalTypes.add(validationExternalType);
     }
 
     private ValidationExternalTypeFormatter getFormatter(int format)
@@ -79,5 +81,5 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private ValidationExternalType[] mValidationExternalTypes;
+    private List mValidationExternalTypes;
 }

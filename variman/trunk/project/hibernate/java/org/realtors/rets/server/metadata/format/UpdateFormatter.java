@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.Update;
 
@@ -35,6 +36,11 @@ public abstract class UpdateFormatter extends MetadataFormatter
     public void setResourceName(String resourceName)
     {
         mResourceName = resourceName;
+    }
+
+    public void format(PrintWriter out, List updates)
+    {
+        format(out, (Update[]) updates.toArray(new Update[updates.size()]));
     }
 
     protected String mClassName;

@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.EditMask;
 
@@ -11,10 +13,11 @@ public class EditMaskFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mEditMasks = new ArrayList();
         EditMask editMask = new EditMask();
         editMask.setEditMaskID("LN_EDITMASK");
         editMask.setValue("[0-9]{4,8}");
-        mEditMasks = new EditMask[] {editMask};
+        mEditMasks.add(editMask);
     }
 
     private EditMaskFormatter getFormatter(int format)
@@ -51,5 +54,5 @@ public class EditMaskFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private EditMask[] mEditMasks;
+    private List mEditMasks;
 }

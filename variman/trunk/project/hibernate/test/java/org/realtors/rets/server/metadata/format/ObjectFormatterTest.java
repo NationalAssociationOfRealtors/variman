@@ -4,6 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.ObjectTypeEnum;
@@ -12,12 +14,13 @@ public class ObjectFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        mObjects = new ArrayList();
         MObject object = new MObject();
         object.setObjectType(ObjectTypeEnum.THUMBNAIL);
         object.setMimeType("image/jpeg");
         object.setVisibleName("Small Photos");
         object.setDescription("A lower-resolution image");
-        mObjects = new MObject[] {object};
+        mObjects.add(object);
     }
 
     private ObjectFormatter getFormatter(int format)
@@ -55,5 +58,5 @@ public class ObjectFormatterTest extends FormatterTestCase
         assertEquals("", formatted.toString());
     }
 
-    private MObject[] mObjects;
+    private List mObjects;
 }

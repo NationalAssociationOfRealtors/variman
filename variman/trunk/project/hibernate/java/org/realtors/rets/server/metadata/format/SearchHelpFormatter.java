@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.SearchHelp;
 
@@ -26,6 +27,12 @@ public abstract class SearchHelpFormatter extends MetadataFormatter
     }
 
     public abstract void format(PrintWriter out, SearchHelp[] searchHelps);
+
+    public void format(PrintWriter out, List searchHelps)
+    {
+        format(out, (SearchHelp[]) searchHelps.toArray(
+            new SearchHelp[searchHelps.size()]));
+    }
 
     protected String mResourceName;
 }
