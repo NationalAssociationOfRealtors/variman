@@ -578,14 +578,12 @@
 <COLUMNS>	SearchField	DisplayField	ResultFields	</COLUMNS>
 <DATA>	AgentID, AgentCode	AgentName, OfficeName	SaleAgentID=AgentID, SaleAgentName=AgentName, SaleOfficeID=OfficeID, SaleOfficeName=OfficeName	</DATA>
 </METADATA-VALIDATION_EXTERNAL_TYPE>
-<!--
 <METADATA-FOREIGNKEYS Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
 <COLUMNS>	ForeignKeyID	ParentResourceID	ParentClassID	ParentSystemName	ChildResourceID	ChildClassID	ChildSystemName	</COLUMNS>
-<DATA>	ActiveAgent_Office	ActiveAgent	ACTAGT	OFFICE_ID			OFFICE_ID	</DATA>
-<DATA>	Property_ActiveAgent	Property	RES	AGENT_ID			AGENT_ID	</DATA>
-<DATA>	Property_Agent	Property	RES	AGENT_ID			AGENT_ID	</DATA>
-<DATA>	Agent_Office	Agent	AGT	OFFICE_ID			OFFICE_ID	</DATA>
-<DATA>	ActiveAgent_Agent	ActiveAgent	ACTAGT	AGENT_ID			AGENT_ID	</DATA>
+<DATA>	ActiveAgent_Office	ActiveAgent	ACTAGT	OFFICE_ID	Office	OFFICE	OFFICE_ID	</DATA>
+<DATA>	Property_ActiveAgent	Property	RES	AGENT_ID	ActiveAgent	ACTAGT	AGENT_ID	</DATA>
+<DATA>	Property_Agent	Property	RES	AGENT_ID	Agent	AGT	AGENT_ID	</DATA>
+<DATA>	Agent_Office	Agent	AGT	OFFICE_ID	Office	OFFICE	OFFICE_ID	</DATA>
+<DATA>	ActiveAgent_Agent	ActiveAgent	ACTAGT	AGENT_ID	Agent	AGT	AGENT_ID	</DATA>
 </METADATA-FOREIGNKEYS>
--->
 </RETS>
