@@ -11,14 +11,13 @@
 package org.realtors.rets.server.webapp;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.beans.IntrospectionException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -28,8 +27,8 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
-import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
@@ -38,7 +37,6 @@ import org.realtors.rets.server.webapp.auth.NonceTable;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
-import org.xml.sax.SAXException;
 
 /**
  * @web.servlet name="init-servlet"
