@@ -12,7 +12,6 @@ import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
 import org.wxwindows.wxCloseEvent;
 import org.wxwindows.wxCloseListener;
@@ -22,10 +21,10 @@ import org.wxwindows.wxFrame;
 import org.wxwindows.wxMenu;
 import org.wxwindows.wxMenuBar;
 import org.wxwindows.wxNotebook;
-import org.wxwindows.wxPanel;
+import org.wxwindows.wxNotebookEvent;
+import org.wxwindows.wxNotebookListener;
 import org.wxwindows.wxPoint;
 import org.wxwindows.wxSize;
-import org.wxwindows.wxStaticText;
 
 public class AdminFrame extends wxFrame
 {
@@ -39,10 +38,9 @@ public class AdminFrame extends wxFrame
         fileMenu.AppendSeparator();
         fileMenu.Append(QUIT, "E&xit\tCtrl-Q", "Quit this program");
 
-        wxMenu usersMenu = new wxMenu();
-        usersMenu.Append(ADD_USER, "&Add User...", "Add a new user");
-        usersMenu.Append(REMOVE_USER, "&Remove User...", "Add a new user");
-        usersMenu.Append(LIST_USERS, "&List Users...", "List all users");
+        wxMenu userMenu = new wxMenu();
+        userMenu.Append(ADD_USER, "&Add User...", "Add a new user");
+        userMenu.Append(REMOVE_USER, "&Remove User...", "Add a new user");
 
         wxMenu databaseMenu = new wxMenu();
         databaseMenu.Append(INIT_DATABASE, "Re-&initialize Database...\tCtrl-I",
@@ -52,20 +50,19 @@ public class AdminFrame extends wxFrame
 
         wxMenuBar menuBar = new wxMenuBar();
         menuBar.Append(fileMenu, "&File");
-        menuBar.Append(usersMenu, "&Users");
+        menuBar.Append(userMenu, "&User");
         menuBar.Append(databaseMenu, "&Database");
         SetMenuBar(menuBar);
 
         initConfig();
 
-        wxNotebook notebook = new wxNotebook(this, -1);
+        mNotebook = new wxNotebook(this, NOTEBOOK);
 
-        mDatabasePage = new DatabasePage(notebook);
-        notebook.AddPage(mDatabasePage, "Configuration");
+        mDatabasePage = new DatabasePage(mNotebook);
+        mNotebook.AddPage(mDatabasePage, "Configuration");
 
-        wxPanel userPage = new wxPanel(notebook);
-        new wxStaticText(userPage, -1, "User Page");
-        notebook.AddPage(userPage, "Users");
+        mUsersPage = new UsersPage(mNotebook);
+        mNotebook.AddPage(mUsersPage, "Users");
 
         CreateStatusBar();
 
@@ -76,6 +73,7 @@ public class AdminFrame extends wxFrame
 
         EVT_MENU(ADD_USER, new OnAddUser());
         EVT_MENU(REMOVE_USER, new OnRemoveUser());
+        EVT_NOTEBOOK_PAGE_CHANGED(NOTEBOOK, new OnPageChanged());
         EVT_CLOSE(new OnClose());
     }
 
@@ -105,6 +103,14 @@ public class AdminFrame extends wxFrame
         catch (RetsServerException e)
         {
             LOG.error("Caught exception", e);
+        }
+    }
+
+    public void refreshUsers()
+    {
+        if (mNotebook.GetSelection() == USERS_PAGE)
+        {
+            mUsersPage.populateList();
         }
     }
 
@@ -166,6 +172,17 @@ public class AdminFrame extends wxFrame
         }
     }
 
+    private class OnPageChanged implements wxNotebookListener
+    {
+        public void handleEvent(wxNotebookEvent event)
+        {
+            if (event.GetSelection() == USERS_PAGE)
+            {
+                mUsersPage.populateList();
+            }
+        }
+    }
+
     private static final Logger LOG =
         Logger.getLogger(AdminFrame.class);
     private static final int SAVE = wxNewId();
@@ -175,7 +192,12 @@ public class AdminFrame extends wxFrame
 
     private static final int ADD_USER = wxNewId();
     private static final int REMOVE_USER = wxNewId();
-    private static final int LIST_USERS = wxNewId();
+
+    public static final int NOTEBOOK = wxNewId();
+
+    private static final int USERS_PAGE = 1;
 
     private DatabasePage mDatabasePage;
+    private UsersPage mUsersPage;
+    private wxNotebook mNotebook;
 }
