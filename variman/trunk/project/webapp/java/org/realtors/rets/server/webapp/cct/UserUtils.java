@@ -6,11 +6,13 @@ package org.realtors.rets.server.webapp.cct;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
-import org.apache.log4j.Logger;
 
+import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
@@ -21,6 +23,17 @@ import org.realtors.rets.server.webapp.InitServlet;
  */
 public class UserUtils
 {
+    public boolean authenticateUser(User user, String password)
+    {
+        if (user == null)
+        {
+            return false;
+        } 
+        PasswordMethod pm = user.getPasswordMethod();
+        String hash = pm.hash(user.getUsername(), password);
+        return pm.verifyPassword(user.getPassword(), hash);
+    }
+
     public void createUser(User user, UserInfo userInfo)
     {
         SessionHelper helper = InitServlet.createHelper();
