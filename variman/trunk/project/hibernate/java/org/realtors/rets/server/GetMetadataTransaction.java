@@ -10,7 +10,7 @@ import org.realtors.rets.server.metadata.format.MetadataSegmentFormatter;
 
 import org.apache.log4j.Logger;
 
-public class GetMetadataTransaction
+public class GetMetadataTransaction extends RetsTransaction
 {
     /**
      * Gets metadata and formats it. Only throws an exception if an error
@@ -31,10 +31,9 @@ public class GetMetadataTransaction
                                                      parameters.getIds(),
                                                      parameters.isRecursive());
 
-        out.println("<RETS ReplyCode=\"0\" " +
-                    "ReplyText=\"Operation Successful\">");
+        printOpenRetsSuccess(out);
         formatOutput(out, metadataObjects, parameters.getFormat());
-        out.println("</RETS>");
+        printCloseRets(out);
     }
 
     public void formatOutput(PrintWriter out, List metadataSegments,
