@@ -67,6 +67,13 @@ options
         return list;
     }
 
+    private DmqlStringList newStringList(String field, String string) {
+        String column = mMetadata.fieldToColumn(field);
+        DmqlStringList list = new DmqlStringList(column);
+        list.add(new DmqlString(string));
+        return list;
+    }
+
     private EqualClause newEqualClause(String field, String value) {
         return newEqualClause(field, new StringSqlConverter(value));
     }
@@ -174,9 +181,10 @@ period returns [SqlConverter sql]
     | NOW          {sql = new DateTimeSqlConverter();}
     ;
 
-string_literal returns [SqlConverter sql]
-    { sql = null; }
-    : STRING_LITERAL
+string_literal returns [DmqlStringList list]
+    { String f; }
+    : #(STRING_LITERAL f=field s:STRING_LITERAL)
+         { list = newStringList(f, s.getText()); }
     ;
 
 number_value returns [SqlConverter sql]
@@ -185,6 +193,6 @@ number_value returns [SqlConverter sql]
     ;
 
 period_value returns [SqlConverter sql]
-    { sql = null; String f; SqlConverter p;}
+    { String f; SqlConverter p;}
     : #(PERIOD f=field p=period) { sql = newEqualClause(f, p);}
     ;
