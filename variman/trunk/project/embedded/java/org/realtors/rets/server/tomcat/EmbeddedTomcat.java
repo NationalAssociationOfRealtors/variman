@@ -11,7 +11,6 @@ package org.realtors.rets.server.tomcat;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.Enumeration;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -126,7 +125,8 @@ public class EmbeddedTomcat
         return mPort;
     }
 
-    public void stopTomcat() throws Exception
+    public void stopTomcat()
+        throws Exception
     {
         mEmbedded.stop();
         synchronized (this)
