@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Resource.hbm.xml,v 1.1 2003/05/28 21:32:52 kgarner Exp $ -->
+<!-- $Id: Resource.hbm.xml,v 1.2 2003/05/29 21:51:44 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataResource"
@@ -31,6 +31,106 @@
     <property name="keyField" type="string">
       <column name="key_field" length="32"/>
     </property>
+
+    <!-- should this be derived dynamically? -->
+    <property name="classCount" type="int"/>
+
+    <property name="classVersion" type="string">
+      <column name="class_version" length="11"/>
+    </property>
+
+    <property name="classDate" type="date"/>
+
+    <property name="objectVersion" type="string">
+      <column name="object_version" length="11"/>
+    </property>
+
+    <property name="objectDate" type="date"/>
+
+    <property name="searchHelpVersion" type="string">
+      <column name="searchelp_version" length="11"/>
+    </property>
+
+    <property name="searchHelpDate" type="date"/>
+
+    <property name="editMaskVersion" type="string">
+      <column name="editmask_version" length="11"/>
+    </property>
+
+    <property name="editMaskDate" type="date"/>
+
+    <property name="lookupVersion" type="string">
+      <column name="lookup_version" length="11"/>
+    </property>
+
+    <property name="lookupDate" type="date"/>
+
+    <property name="updateHelpVersion" type="string">
+      <column name="updatehelp_version" length="11"/>
+    </property>
+
+    <property name="updateHelpDate" type="date"/>
+
+    <property name="validationExpressionVersion" type="string">
+      <column name="validationexpression_version" length="11"/>
+    </property>
+
+    <property name="validationExpressionDate" type="date"/>
+
+    <property name="validationLookupVersion" type="string">
+      <column name="validationlookup_version" length="11"/>
+    </property>
+
+    <property name="validationLookupDate" type="date"/>
+
+    <property name="validationExternalVersion" type="string">
+      <column name="validationexternal_version" length="11"/>
+    </property>
+
+    <property name="validationExternalDate" type="date"/>
+
+    <set name="classes">
+      <key column="id"/>
+      <one-to-many class="org.nar.rets.metadata.newdb.MetadataClass"/>
+    </set>
+
+<!--     <set name="objects"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many class="org.nar.rets.metadata.newdb.MetadataObject"/> -->
+<!--     </set> -->
+
+<!--     <set name="searchHelps"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many class="org.nar.rets.metadata.newdb.MetadataSearchHelp"/> -->
+<!--     </set> -->
+
+<!--     <set name="editMasks"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many class="org.nar.rets.metadata.newdb.MetadataEditMask"/> -->
+<!--     </set> -->
+
+<!--     <set name="lookups"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many class="org.nar.rets.metadata.newdb.MetadataLookup"/> -->
+<!--     </set> -->
+
+<!--     <set name="validationLookups"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many -->
+<!--         class="org.nar.rets.metadata.newdb.MetadataValidationLookup"/> -->
+<!--     </set> -->
+
+<!--     <set name="validationExternals"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many -->
+<!--         class="org.nar.rets.metadata.newdb.MetadataValidationExternal"/> -->
+<!--     </set> -->
+
+<!--     <set name="validationExpressions"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many -->
+<!--         class="org.nar.rets.metadata.newdb.MetadataValidationExpression"/> -->
+<!--     </set> -->
 
   </class>
 </hibernate-mapping>
