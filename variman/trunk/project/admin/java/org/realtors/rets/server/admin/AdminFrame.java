@@ -12,6 +12,7 @@ import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.wxwindows.wxCloseEvent;
 import org.wxwindows.wxCloseListener;
@@ -34,6 +35,8 @@ public class AdminFrame extends wxFrame
         Centre(wxBOTH);
 
         wxMenu fileMenu = new wxMenu();
+        fileMenu.Append(SAVE, "&Save\tCtrl-S", "Save configuration file");
+        fileMenu.AppendSeparator();
         fileMenu.Append(QUIT, "E&xit\tCtrl-Q", "Quit this program");
 
         wxMenu usersMenu = new wxMenu();
@@ -57,8 +60,8 @@ public class AdminFrame extends wxFrame
 
         wxNotebook notebook = new wxNotebook(this, -1);
 
-        DatabasePage databasePage = new DatabasePage(notebook);
-        notebook.AddPage(databasePage, "Database");
+        mDatabasePage = new DatabasePage(notebook);
+        notebook.AddPage(mDatabasePage, "Configuration");
 
         wxPanel userPage = new wxPanel(notebook);
         new wxStaticText(userPage, -1, "User Page");
@@ -66,6 +69,7 @@ public class AdminFrame extends wxFrame
 
         CreateStatusBar();
 
+        EVT_MENU(SAVE, new OnSave());
         EVT_MENU(QUIT, new OnQuit());
         EVT_MENU(INIT_DATABASE, new OnInitDatabase());
         EVT_MENU(CREATE_SCHEMA, new OnCreateSchema());
@@ -90,6 +94,20 @@ public class AdminFrame extends wxFrame
         }
     }
 
+    private void saveConfig()
+    {
+        try
+        {
+            RetsConfig retsConfig = Admin.getRetsConfig();
+            retsConfig.setPort(mDatabasePage.getPort());
+            retsConfig.toXml(Admin.getConfigFile());
+        }
+        catch (RetsServerException e)
+        {
+            LOG.error("Caught exception", e);
+        }
+    }
+
     class OnQuit implements wxCommandListener
     {
         public void handleEvent(wxCommandEvent event)
@@ -98,19 +116,21 @@ public class AdminFrame extends wxFrame
         }
     }
 
-    class OnClose implements wxCloseListener
+    private class OnClose implements wxCloseListener
     {
         public void handleEvent(wxCloseEvent event)
         {
-            try
-            {
-                Admin.getRetsConfig().toXml(Admin.getConfigFile());
-            }
-            catch (RetsServerException e)
-            {
-                LOG.error("Caught exception", e);
-            }
+            saveConfig();
             Destroy();
+        }
+    }
+
+    private class OnSave implements wxCommandListener
+    {
+        public void handleEvent(wxCommandEvent event)
+        {
+            saveConfig();
+            SetStatusText("Saved configuration: " + Admin.getConfigFile());
         }
     }
 
@@ -148,12 +168,14 @@ public class AdminFrame extends wxFrame
 
     private static final Logger LOG =
         Logger.getLogger(AdminFrame.class);
-    public static final int QUIT = wxNewId();
-    public static final int CREATE_SCHEMA = wxNewId();
-    public static final int INIT_DATABASE = wxNewId();
-    public static final int TEST_DATABASE = wxNewId();
+    private static final int SAVE = wxNewId();
+    private static final int QUIT = wxNewId();
+    private static final int CREATE_SCHEMA = wxNewId();
+    private static final int INIT_DATABASE = wxNewId();
 
-    public static final int ADD_USER = wxNewId();
-    public static final int REMOVE_USER = wxNewId();
-    public static final int LIST_USERS = wxNewId();
+    private static final int ADD_USER = wxNewId();
+    private static final int REMOVE_USER = wxNewId();
+    private static final int LIST_USERS = wxNewId();
+
+    private DatabasePage mDatabasePage;
 }
