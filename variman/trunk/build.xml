@@ -491,6 +491,8 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
 
+    <copy todir="build/rets-server/webapp/WEB-INF/rex"
+          file="project/webapp/config/rets-config.xml"/>
     <!-- copy the struts stuff -->
     <copy todir="build/rets-server/webapp/WEB-INF"
           file="project/webapp/config/struts-config.xml"/>
