@@ -15,9 +15,13 @@ import org.apache.log4j.Logger;
 
 public class HibernateUserMap implements UserMap
 {
-
     public User findUser(String username)
     {
+        if (username == null)
+        {
+            return null;
+        }
+
         User user = null;
 
         SessionHelper sessionHelper =
