@@ -10,10 +10,15 @@ package org.realtors.rets.server.admin.metadata;
 
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
+import org.wxwindows.wxChoice;
 
-import org.realtors.rets.server.admin.AdminUtils;
+import org.realtors.rets.server.admin.BooleanChoice;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
 import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.DataTypeEnum;
+import org.realtors.rets.server.metadata.InterpretationEnum;
+import org.realtors.rets.server.metadata.AlignmentEnum;
+import org.realtors.rets.server.metadata.UnitEnum;
 
 public class TablePanel extends AbstractSubPanel
 {
@@ -42,29 +47,29 @@ public class TablePanel extends AbstractSubPanel
         mMaximumLength = new wxTextCtrl(this, -1);
         grid.addRow("Max Length:", mMaximumLength, wxEXPAND);
 
-        mDataType = new wxTextCtrl(this, -1);
-        grid.addRow("Data Type:", mDataType, wxEXPAND);
+        mDataType = createDataTypeChoice();
+        grid.addRow("Data Type:", mDataType);
 
         mPrecision = new wxTextCtrl(this, -1);
         grid.addRow("Precision:", mPrecision, wxEXPAND);
 
-        mSearchable = new wxTextCtrl(this, -1);
-        grid.addRow("Searchable:", mSearchable, wxEXPAND);
+        mSearchable = new BooleanChoice(this, -1);
+        grid.addRow("Searchable:", mSearchable);
 
-        mInterpretation = new wxTextCtrl(this, -1);
-        grid.addRow("Interpretation:", mInterpretation, wxEXPAND);
+        mInterpretation = createInterpretationChoice();
+        grid.addRow("Interpretation:", mInterpretation);
 
-        mAlignment = new wxTextCtrl(this, -1);
-        grid.addRow("Alignment:", mAlignment, wxEXPAND);
+        mAlignment = createAlignmentChoice();
+        grid.addRow("Alignment:", mAlignment);
 
-        mUseSeparator = new wxTextCtrl(this, -1);
-        grid.addRow("Use Separator:", mUseSeparator, wxEXPAND);
+        mUseSeparator = new BooleanChoice(this, -1);
+        grid.addRow("Use Separator:", mUseSeparator);
 
         mMaxSelect = new wxTextCtrl(this, -1);
         grid.addRow("Max Select:", mMaxSelect, wxEXPAND);
 
-        mUnits = new wxTextCtrl(this, -1);
-        grid.addRow("Units:", mUnits, wxEXPAND);
+        mUnits = createUnitsChoice();
+        grid.addRow("Units:", mUnits);
 
         mIndex = new wxTextCtrl(this, -1);
         grid.addRow("Index:", mIndex, wxEXPAND);
@@ -81,8 +86,8 @@ public class TablePanel extends AbstractSubPanel
         mRequired = new wxTextCtrl(this, -1);
         grid.addRow("Required:", mRequired, wxEXPAND);
 
-        mUnique = new wxTextCtrl(this, -1);
-        grid.addRow("Unique:", mUnique, wxEXPAND);
+        mUnique = new BooleanChoice(this, -1);
+        grid.addRow("Unique:", mUnique);
 
         // Todo: TablePanel.TablePanel EditMasks
 
@@ -93,29 +98,88 @@ public class TablePanel extends AbstractSubPanel
         grid.addRow("Search Help:", mSearchHelp, wxEXPAND);
     }
 
+    private wxChoice createDataTypeChoice()
+    {
+        String[] choices = {
+            DataTypeEnum.BOOLEAN.toString(),
+            DataTypeEnum.CHARACTER.toString(),
+            DataTypeEnum.DATE.toString(),
+            DataTypeEnum.DATETIME.toString(),
+            DataTypeEnum.DECIMAL.toString(),
+            DataTypeEnum.INT.toString(),
+            DataTypeEnum.LONG.toString(),
+            DataTypeEnum.SMALL.toString(),
+            DataTypeEnum.TIME.toString(),
+            DataTypeEnum.TINY.toString(),
+        };
+        return new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize,
+                            choices);
+    }
+
+    private wxChoice createInterpretationChoice()
+    {
+        String[] choices = {
+            "<none>",
+            InterpretationEnum.CURRENCY.toString(),
+            InterpretationEnum.LOOKUP.toString(),
+            InterpretationEnum.LOOKUPBITMASK.toString(),
+            InterpretationEnum.LOOKUPBITSTRING.toString(),
+            InterpretationEnum.LOOKUPMULTI.toString(),
+            InterpretationEnum.NUMBER.toString()
+        };
+        return new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize,
+                            choices);
+    }
+
+    private wxChoice createAlignmentChoice()
+    {
+        String[] choices = {
+            AlignmentEnum.LEFT.toString(),
+            AlignmentEnum.RIGHT.toString(),
+            AlignmentEnum.CENTER.toString(),
+            AlignmentEnum.JUSTIFY.toString()
+        };
+        return new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize,
+                            choices);
+    }
+
+    private wxChoice createUnitsChoice()
+    {
+        String[] choices = {
+            "<none>",
+            UnitEnum.ACRES.toString(),
+            UnitEnum.FEET.toString(),
+            UnitEnum.HECTARES.toString(),
+            UnitEnum.METERS.toString(),
+            UnitEnum.SQFT.toString(),
+            UnitEnum.SQMETERS.toString()
+        };
+        return new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize,
+                            choices);
+    }
+
     public void setModel(Table table)
     {
-        AdminUtils.setValue(mSystemName, table.getSystemName());
-        AdminUtils.setValue(mStandardName, table.getStandardName());
-        AdminUtils.setValue(mLongName, table.getLongName());
-        AdminUtils.setValue(mShortName, table.getShortName());
-        AdminUtils.setValue(mDbName, table.getDbName());
-        AdminUtils.setValue(mMaximumLength, table.getMaximumLength());
-        AdminUtils.setValue(mDataType, table.getDataType());
-        AdminUtils.setValue(mPrecision, table.getPrecision());
-        AdminUtils.setValue(mSearchable, table.isSearchable());
-        AdminUtils.setValue(mInterpretation, table.getInterpretation());
-        AdminUtils.setValue(mAlignment, table.getAlignment());
-        AdminUtils.setValue(mUseSeparator, table.isUseSeparator());
-        AdminUtils.setValue(mUnits, table.getUnits());
-        AdminUtils.setValue(mIndex, table.getIndex());
-        AdminUtils.setValue(mMinimum, table.getMinimum());
-        AdminUtils.setValue(mMaximum, table.getMaximum());
-        AdminUtils.setValue(mDefault, table.getDefault());
-        AdminUtils.setValue(mRequired, table.getRequired());
-        AdminUtils.setValue(mUnique, table.isUnique());
-        AdminUtils.setValue(mLookup, table.getLookup());
-        AdminUtils.setValue(mSearchHelp,  table.getSearchHelp());
+        setValue(mSystemName, table.getSystemName());
+        setValue(mStandardName, table.getStandardName());
+        setValue(mLongName, table.getLongName());
+        setValue(mDbName, table.getDbName());
+        setValue(mMaximumLength, table.getMaximumLength());
+        setValue(mDataType, table.getDataType());
+        setValue(mPrecision, table.getPrecision());
+        setValue(mSearchable, table.isSearchable());
+        setValue(mInterpretation, table.getInterpretation());
+        setValue(mAlignment, table.getAlignment());
+        setValue(mUseSeparator, table.isUseSeparator());
+        setValue(mUnits, table.getUnits());
+        setValue(mIndex, table.getIndex());
+        setValue(mMinimum, table.getMinimum());
+        setValue(mMaximum, table.getMaximum());
+        setValue(mDefault, table.getDefault());
+        setValue(mRequired, table.getRequired());
+        setValue(mUnique, table.isUnique());
+        setValue(mLookup, table.getLookup());
+        setValue(mSearchHelp,  table.getSearchHelp());
     }
 
     private wxTextCtrl mSystemName;
@@ -124,20 +188,20 @@ public class TablePanel extends AbstractSubPanel
     private wxTextCtrl mShortName;
     private wxTextCtrl mDbName;
     private wxTextCtrl mMaximumLength;
-    private wxTextCtrl mDataType;
+    private wxChoice mDataType;
     private wxTextCtrl mPrecision;
-    private wxTextCtrl mSearchable;
-    private wxTextCtrl mInterpretation;
-    private wxTextCtrl mAlignment;
-    private wxTextCtrl mUseSeparator;
+    private BooleanChoice mSearchable;
+    private wxChoice mInterpretation;
+    private wxChoice mAlignment;
+    private BooleanChoice mUseSeparator;
     private wxTextCtrl mMaxSelect;
-    private wxTextCtrl mUnits;
+    private wxChoice mUnits;
     private wxTextCtrl mIndex;
     private wxTextCtrl mMinimum;
     private wxTextCtrl mMaximum;
     private wxTextCtrl mDefault;
     private wxTextCtrl mRequired;
-    private wxTextCtrl mUnique;
+    private BooleanChoice mUnique;
     private wxTextCtrl mLookup;
     private wxTextCtrl mSearchHelp;
 }
