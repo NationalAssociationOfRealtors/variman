@@ -3,6 +3,8 @@
 package org.realtors.rets.server.webapp.cct;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +24,14 @@ import org.apache.log4j.Logger;
 public class HandlerServlet extends RetsServlet
 {
     protected void doGet(HttpServletRequest request,
-                         HttpServletResponse respsponse)
+                         HttpServletResponse response)
         throws ServletException, IOException
     {
+        if (WireLog.LOG.isDebugEnabled())
+        {
+            logRequest(request);
+            response = new LoggingHttpServletResponse(response, WireLog.LOG);
+        }
         String name = request.getPathInfo();
         User user = getUser(request.getSession());
         RetsHandlers handlers =
@@ -34,13 +41,35 @@ public class HandlerServlet extends RetsServlet
         {
             LOG.debug("Dispatching " + name + " to " +
                       handler.getClass().getName());
-            handler.doGet(request, respsponse);
+            handler.doGet(request, response);
         }
         else
         {
             LOG.warn("No handler for " + name);
-            respsponse.sendError(404, request.getRequestURI());
+            response.sendError(404, request.getRequestURI());
         }
+    }
+
+    private void logRequest(HttpServletRequest request)
+    {
+        WireLog.LOG.debug("\n--------------------\n");
+        WireLog.LOG.debug(request.getMethod() + " " + request.getRequestURI()
+                          + "\n");
+        Enumeration parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements())
+        {
+            String name = (String) parameterNames.nextElement();
+            String[] values = request.getParameterValues(name);
+            WireLog.LOG.debug("Parameter " + name + ": " +
+                              Arrays.asList(values) + "\n");
+        }
+        WireLog.LOG.debug("\n");
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+        throws ServletException, IOException
+    {
+        doGet(req, resp);
     }
 
     private static final Logger LOG =
