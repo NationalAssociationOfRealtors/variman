@@ -1,0 +1,8 @@
+build/**
+dist/**
+tmp/**
+scratch/**
+build.properties
+**/.*
+**/*.bak
+project/webapp/content/WEB-INF/**

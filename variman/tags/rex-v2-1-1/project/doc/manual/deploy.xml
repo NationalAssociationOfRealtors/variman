@@ -1,0 +1,291 @@
+<section id="deploy">
+  <title>Deploying Rex</title>
+  <para>
+    This chapter describes how to configure and run Rex.
+  </para>
+
+  <section>
+    <title>First Time Configuration</title>
+    <para>
+      Before running Rex for the first time, there are a few steps you
+      need to take.  Rex requires access to a database.  Currently,
+      Rex supports PostgreSQL <xref linkend="bib-postgres"/> and
+      Microsft SQL Server.  This database is where RETS data is
+      stored, as well as Rex specific information.  Rex requires
+      read/write access to the database, as well as the ability to
+      create new tables.
+    </para>
+
+    <section>
+      <title>PostgreSQL Setup</title>
+      <para>
+        PostgreSQL must be configured to accept TCP/IP connections, as
+        this is how the JDBC driver connects.  This is done adding the
+        following setting in <filename>postgresql.conf</filename>:
+      </para>
+      <programlisting>tcpip_socket = true
+</programlisting>
+      <para>
+        You may also have to edit <filename>pg_hba.conf</filename> to
+        make network connections permissible.  See the documentation
+        in that file for details.
+      </para>
+      <para>
+        It is probably a good idea to create a user other than the
+        default <literal>postgres</literal> superuser.  This user must
+        have read and write access, and permissions to create new
+        tables in the database used by Rex.
+      </para>
+      <para>
+        The JDBC driver for Postgres version 7.4.x is included with
+        the distribution.
+      </para>
+    </section>
+      
+    <section>
+      <title>Microsoft SQL Server Setup</title>
+      <para>
+        First, either choose an existing database, or create a new
+        database for use with Rex.  Then, create a new user that has
+        the following role memberships:
+      </para>
+      <itemizedlist>
+        <listitem><literal>public</literal></listitem>
+        <listitem><literal>db_owner</literal></listitem>
+        <listitem><literal>db_datareader</literal></listitem>
+        <listitem><literal>db_datawriter</literal></listitem>
+      </itemizedlist>
+      <para>
+        There are currently no free or Open Source SQL Server JDBC
+        drivers, so none is included with Rex.  The one that Microsoft
+        offers is buggy and does not work with Rex.  The only
+        supported driver is the commercial JSQLConnect driver from
+        JNetDirect <xref linkend="bib-jnetdirect"/>.
+      </para>
+    </section>
+
+    <section>
+      <title>Installing a JDBC Driver</title>
+      <para>
+        The easiest way to install your JDBC driver is to use the
+        Administration Tool.  Choose the Install Jar command from the
+        File menu.  You must then restart the Administration Tool
+        and/or Rex to use the new JDBC driver.
+      </para>
+    </section>
+
+    <section>
+      <title>Configuring Database Properties</title>
+      <para>
+        From the Configuration tab of the Administration Tool, the
+        current database properties are listed.  You will have change
+        these to suit your environment.  Click on the Edit button, to
+        bring up the Database Properties dialog, as in <xref
+        linkend="fig-db"/>.  You should use the Test Connection button
+        to make sure that the properties are entered correctly.  If
+        the test fails, then neither the Administration Tool nor Rex
+        will be able to access your database.
+      </para>
+      <figure id="fig-db">
+        <title>Database Properties Window</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="db.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section>
+      <title>Creating the Schema</title>
+      <para>
+        Rex needs tables for it's own use, such as user information.
+        Before you create users and groups, you need to create these
+        tables by chosing the Create Schema command from the Database
+        menu.
+      </para>
+    </section>
+  </section> <!-- First Time -->
+
+  <section>
+    <title>Configuring RETS Parameters</title>
+    <para>
+      From the main Configuration panel, as seen in <xref
+                                                       linkend="fig-config"/>, you can configure various RETS
+      parameters.
+    </para>
+    <figure id="fig-config">
+      <title>Configuration Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="config.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    <para>
+      The Listening Port is the TCP port number that the Rex server
+      listens on.  6103 is the standard, well-known port number for
+      RETS.  The Metadata Directory points to the root directory of
+      the metadata hierarchy.  Configuring metadata is explained in
+      <xref linkend="deploy-metadata"/>.  The Image Root and Image
+      Pattern parameters are used to allow Rex to serve up images for
+      the GetObject transaction.  The Image Root is a directory where
+      the images are located.  The Image Pattern is a percent
+      substitution pattern that describes the format of the actual
+      file names.  The possible patterns and their substitutions are
+      listed in <xref linkend="tab-image-pattern"/>.
+    </para>
+
+    <table frame="all" id="tab-image-pattern">
+      <title>Image Patterns</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Pattern</entry>
+            <entry>Substitution</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>%k</entry>
+            <entry>Object Key</entry>
+          </row>
+          <row>
+            <entry>%i</entry>
+            <entry>Object Index</entry>
+          </row>
+          <row>
+            <entry>%I</entry>
+            <entry>Object Index, or empty if index is 0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>
+      For example, if you have pictures
+      in <filename>/home/rex/pictures/</filename>.  The key is used as
+      the base file name, with each image given a number.  Say there
+      are three pictures for the property
+      ID <literal>LN1001</literal>, the full paths for these pictures
+      are:
+      <itemizedlist>
+        <listitem>
+          <literal>/home/rex/pictures/LN1001_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/LN1001_2.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/LN1001_3.jpg</literal>
+        </listitem>
+      </itemizedlist>
+      The, you could set the Image Root
+      to <filename>/home/rex/pictures</filename> and the Image Pattern
+      to <literal>%k_%i.jpg</literal>.  The <literal>%k</literal> gets
+      replaced with the object ID, and the <literal>%i</literal> gets
+      replaced with the image number.
+    </para>
+    <para>
+      The <literal>%k</literal> percent pattern may be proceeded by a
+      number modifier that truncates the number of characters used
+      during substitution.  This allows files to be split up into
+      multiple directories for large installations.  If the number is
+      positive, the characters are taken from the front, where if the
+      number is negative, the characters are taken from the end. So,
+      with a pattern of <literal>%-2k/%k_%i.jpg</literal>, the first
+      picture
+      for <literal>LN1001</literal>, <literal>LN1002</literal>, <literal>LN1101</literal>
+      would be at the following paths:
+      <itemizedlist>
+        <listitem>
+          <literal>/home/rex/pictures/01/LN1001_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/02/LN1002_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/01/LN1101_1.jpg</literal>
+        </listitem>
+      </itemizedlist>
+    </para>
+    
+  </section>
+
+  <section>
+    <title>Users</title>
+    <para>
+      Users are managed through the Users Tab as seen in <xref
+                                                            linkend="fig-users"/>.  Users may be created, removed, and
+      edited from the User menu or contextual menu.  Users may also
+      be added and removed from groups.
+    </para>
+
+    <figure id="fig-users">
+      <title>Users Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="users.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section>
+    <title>Groups</title>
+    <para>
+      Groups are manged through the Groups Tab as seen in <xref
+      linkend="fig-groups"/>. Groups may be created and removed from
+      the Group menu or contextual menu.
+    </para>
+
+    <figure id="fig-groups">
+      <title>Groups Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="groups.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      Group rules allow access to fields to be restricted for members
+      of this group.  Rules are written for a particular resource and
+      class.  There two types of rules: include and exlude.  Include
+      rules includes on the fields listed.  Exclude rules includes all
+      fields except the ones listed.  An example rule is shown in
+      <xref linkend="fig-rule"/>.  The individual fields are listed
+      with spaces between them.  If a user is a member of multiple
+      groups, then the fields allowed to be seen are a union of the
+      fields of each group's set of fields.
+    </para>
+
+    <figure id="fig-rule">
+      <title>Rule Dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="rule.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section> <!-- Groups -->
+
+  <section id="deploy-metadata">
+    <title>Configuring Metadata</title>
+    <para>
+      Metadata describes how to map property data in your relational
+      database to RETS names.  The metadata is stored as compact
+      format metadata, split into multiple files.  For more
+      information on compact metadata format, see RETS specification.
+      A sample set of metadata is provided on the Rex website, and
+      should be used as a starting point.
+    </para>
+  </section>
+</section> <!-- deploy -->
+
+<!--
+Local Variables:
+mode: xml
+sgml-parent-document: ("manual.xml" "" "section")
+End:
+-->

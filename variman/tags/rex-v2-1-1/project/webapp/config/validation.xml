@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_0.dtd">
+
+<form-validation>
+  <formset>
+    <form name="cctRegistrationForm">
+      <field property="username" depends="required,minlength">
+        <arg0 key="registration.field.username"/>
+        <arg1 name="minlength" key="${var:minlength}" resource="false"/>
+        <var>
+          <var-name>minlength</var-name>
+          <var-value>3</var-value>
+        </var>
+      </field>
+      <field property="password" depends="required,minlength,identical">
+        <arg0 key="registration.field.password"/>
+        <arg1 name="minlength" key="${var:minlength}" resource="false"/>
+        <var>
+          <var-name>secondProperty</var-name>
+          <var-value>verifyPassword</var-value>
+        </var>
+        <var>
+          <var-name>minlength</var-name>
+          <var-value>5</var-value>
+        </var>
+      </field>
+      <field property="productName" depends="required">
+        <arg0 key="registration.field.productName"/>
+      </field>
+      <field property="productVersion" depends="required">
+        <arg0 key="registration.field.productVersion"/>
+      </field>
+      <field property="company" depends="required">
+        <arg0 key="registration.field.company"/>
+      </field>
+      <field property="email" depends="required,email">
+        <arg0 key="registration.field.email"/>
+      </field>
+      <field property="firstName" depends="required">
+        <arg0 key="registration.field.firstName"/>
+      </field>
+      <field property="lastName" depends="required">
+        <arg0 key="registration.field.lastName"/>
+      </field>
+    </form>
+
+    <form name="cctLoginForm">
+      <field property="username" depends="required">
+        <arg0 key="login.field.username"/>
+      </field>
+    </form>
+  </formset>
+</form-validation>
