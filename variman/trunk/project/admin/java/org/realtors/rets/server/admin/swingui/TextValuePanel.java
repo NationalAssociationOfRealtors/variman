@@ -1,6 +1,11 @@
 package org.realtors.rets.server.admin.swingui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.*;
 
 /**
@@ -19,11 +24,12 @@ public class TextValuePanel extends JPanel
         mConstraints = new GridBagConstraints();
         mConstraints.weighty = 0.0;
         mConstraints.anchor = GridBagConstraints.WEST;
-        mNumberAdded = 0;
         mTopLeftInsets = new Insets(0, 0, 0, 5);
         mTopRightInsets = new Insets(0, 0, 0, 0);
         mLeftInsets = new Insets(5, 0, 0, 5);
         mRightInsets = new Insets(5, 0, 0, 0);
+        mLabels = new ArrayList();
+        mComponents = new ArrayList();
     }
 
     public void addRow(String text, JComponent component)
@@ -35,7 +41,7 @@ public class TextValuePanel extends JPanel
     {
         Insets leftInsets;
         Insets rightInsets;
-        if (mNumberAdded == 0)
+        if (mLabels.size() == 0)
         {
             leftInsets = mTopLeftInsets;
             rightInsets = mTopRightInsets;
@@ -64,15 +70,31 @@ public class TextValuePanel extends JPanel
         }
         mConstraints.insets = rightInsets;
         add(component, mConstraints);
-        mNumberAdded++;
+
+        mLabels.add(label);
+        mComponents.add(component);
     }
 
-    
+    public int getNumberOfRows()
+    {
+        return mLabels.size();
+    }
+
+    public void setRowVisible(int row, boolean visible)
+    {
+        JLabel label = (JLabel) mLabels.get(row);
+        JComponent component = (JComponent) mComponents.get(row);
+        label.setVisible(visible);
+        component.setVisible(visible);
+    }
+
+
     private GridBagLayout mGridBag;
     private GridBagConstraints mConstraints;
-    private int mNumberAdded;
     private Insets mTopLeftInsets;
     private Insets mLeftInsets;
     private Insets mTopRightInsets;
     private Insets mRightInsets;
+    private List mLabels;
+    private List mComponents;
 }
