@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hibernate.HibernateException;
@@ -22,6 +21,10 @@ import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.ServerDmqlMetadata;
+import org.realtors.rets.server.protocol.CompactFormatter;
+import org.realtors.rets.server.protocol.ResidentialPropertyFormatter;
+import org.realtors.rets.server.protocol.SearchFormatterContext;
+import org.realtors.rets.server.protocol.SearchResultsFormatter;
 
 import antlr.ANTLRException;
 import org.apache.commons.lang.StringUtils;
@@ -82,8 +85,7 @@ public class SearchTransaction
         Collection columns = getColumns(mMetadata);
         String sql = generateSql(StringUtils.join(columns.iterator(), ","));
         LOG.debug("SQL: " + sql);
-        Collection fields = columnsToFields(columns, mMetadata);
-        executeSql(sql, out, fields);
+        executeSql(sql, out, columns);
     }
 
     /**
@@ -178,21 +180,10 @@ public class SearchTransaction
     private void generateWhereClause()
         throws RetsReplyException
     {
-        try
-        {
-            SqlConverter sqlConverter = parse(mMetadata);
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter sqlWriter = new PrintWriter(stringWriter);
-            sqlConverter.toSql(sqlWriter);
-            mWhereCluase = stringWriter.toString();
-        }
-        catch (ANTLRException e)
-        {
-            // This is not an error as bad DMQL can cause this to be thrown.
-            LOG.debug("Caught", e);
-            throw new RetsReplyException(ReplyCode.INVALID_QUERY_SYNTAX,
-                                         e.toString());
-        }
+        SqlConverter sqlConverter = parse(mMetadata);
+        StringWriter stringWriter = new StringWriter();
+        sqlConverter.toSql(new PrintWriter(stringWriter));
+        mWhereCluase = stringWriter.toString();
     }
 
     private void printCountOnly(PrintWriter out)
@@ -202,7 +193,7 @@ public class SearchTransaction
         RetsUtils.printCloseRets(out);
     }
 
-    private void executeSql(String sql, PrintWriter out, Collection fields)
+    private void executeSql(String sql, PrintWriter out, Collection columns)
         throws RetsServerException
     {
         Session session = null;
@@ -215,26 +206,7 @@ public class SearchTransaction
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
             advance(resultSet);
-            RetsUtils.printOpenRetsSuccess(out);
-            printCount(out);
-            out.println("<DELIMITER value=\"09\"/>");
-            out.print("<COLUMNS>\t");
-            out.print(StringUtils.join(fields.iterator(), "\t"));
-            out.println("\t</COLUMNS>");
-            int rowCount;
-            for (rowCount = 0;
-                 rowCount < mParameters.getLimit() && resultSet.next();
-                 rowCount++)
-            {
-                out.print("<DATA>\t");
-                for (int i = 0; i < fields.size(); i++)
-                {
-                    out.print(resultSet.getString(i + 1) + "\t");
-                }
-                out.println("\t</DATA>");
-            }
-            RetsUtils.printCloseRets(out);
-            LOG.debug("Row count: " + rowCount);
+            printResults(out, columns, resultSet);
         }
         catch (HibernateException e)
         {
@@ -250,6 +222,36 @@ public class SearchTransaction
             close(statement);
             close(session);
         }
+    }
+
+    private void printResults(PrintWriter out, Collection columns,
+                                     ResultSet resultSet)
+        throws RetsServerException
+    {
+        SearchFormatterContext context =
+            new SearchFormatterContext(out, resultSet, columns, mMetadata);
+        context.setLimit(mParameters.getLimit());
+        SearchResultsFormatter formatter = getFormatter();
+
+        RetsUtils.printOpenRetsSuccess(out);
+        printCount(out);
+        formatter.formatResults(context);
+        LOG.debug("Row count: " + context.getRowCount());
+        RetsUtils.printCloseRets(out);
+    }
+
+    private SearchResultsFormatter getFormatter()
+    {
+        SearchResultsFormatter formatter;
+        if (mParameters.getFormat().equals("STANDARD-XML"))
+        {
+            formatter = new ResidentialPropertyFormatter();
+        }
+        else
+        {
+            formatter = new CompactFormatter();
+        }
+        return formatter;
     }
 
     private void printCount(PrintWriter out)
@@ -269,30 +271,29 @@ public class SearchTransaction
         }
     }
 
-    private Collection columnsToFields(Collection columns,
-                                 ServerDmqlMetadata metadata)
-    {
-        List fields = new ArrayList();
-        for (Iterator i = columns.iterator(); i.hasNext();)
-        {
-            String column = (String) i.next();
-            fields.add(metadata.columnToField(column));
-        }
-        return fields;
-    }
-
     private SqlConverter parse(ServerDmqlMetadata metadata)
-        throws ANTLRException
+        throws RetsReplyException
     {
-        if (mParameters.getQueryType().equals(SearchParameters.DMQL))
+        try
         {
-            LOG.debug("Parsing using DMQL");
-            return DmqlCompiler.parseDmql(mParameters.getQuery(), metadata);
+            if (mParameters.getQueryType().equals(SearchParameters.DMQL))
+            {
+                LOG.debug("Parsing using DMQL");
+                return DmqlCompiler.parseDmql(mParameters.getQuery(), metadata);
+            }
+            else // if DMQL2
+            {
+                LOG.debug("Parsing using DMQL2");
+                return DmqlCompiler.parseDmql2(mParameters.getQuery(),
+                                               metadata);
+            }
         }
-        else // if (mParameters.getQueryType().equals(SearchParameters.DMQL2))
+        catch (ANTLRException e)
         {
-            LOG.debug("Parsing using DMQL2");
-            return DmqlCompiler.parseDmql2(mParameters.getQuery(),  metadata);
+            // This is not an error as bad DMQL can cause this to be thrown.
+            LOG.debug("Caught", e);
+            throw new RetsReplyException(ReplyCode.INVALID_QUERY_SYNTAX,
+                                         e.toString());
         }
     }
 
