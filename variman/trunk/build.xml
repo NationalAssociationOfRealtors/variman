@@ -28,6 +28,7 @@
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${antlr.jar}"/>
     <pathelement path="${jdom.jar}"/>
+    <pathelement path="${rets-client.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -74,7 +75,6 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
     <pathelement path="${antlr.jar}"/>
-    <pathelement location="${rets-client.jar}"/>
   </path>
 
   <path id="webapp.test.path">
