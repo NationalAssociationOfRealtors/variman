@@ -15,7 +15,8 @@ public class RetsConfigTest extends LinesEqualTestCase
     {
         RetsConfig retsConfig = new RetsConfig();
         retsConfig.setGetObjectRoot("/tmp/pictures");
-        retsConfig.setGetObjectPattern("%k-%i.jpg");
+        retsConfig.setPhotoPattern("%k-%i.jpg");
+        retsConfig.setObjectSetPattern("%k.xml");
         retsConfig.setNonceInitialTimeout(5);
         retsConfig.setNonceSuccessTimeout(10);
         retsConfig.setPort(7103);
@@ -74,7 +75,8 @@ public class RetsConfigTest extends LinesEqualTestCase
             "  <port>7103</port>\n" +
             "  <metadata-dir>WEB-INF/rets/metadata</metadata-dir>\n" +
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
-            "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
+            "  <photo-pattern>%k-%i.jpg</photo-pattern>\n" +
+            "  <object-set-pattern>%k.xml</object-set-pattern>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
             "  <nonce-success-timeout>10</nonce-success-timeout>\n" +
             "  <database>\n" +
@@ -120,7 +122,8 @@ public class RetsConfigTest extends LinesEqualTestCase
             "  <port>7103</port>\n" +
             "  <metadata-dir>WEB-INF/rets/metadata</metadata-dir>\n" +
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
-            "  <get-object-pattern>%k-%i.jpg</get-object-pattern>\n" +
+            "  <photo-pattern>%k-%i.jpg</photo-pattern>\n" +
+            "  <object-set-pattern>%k.xml</object-set-pattern>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
             "  <nonce-success-timeout>10</nonce-success-timeout>\n" +
             "  <database>\n" +
@@ -160,7 +163,8 @@ public class RetsConfigTest extends LinesEqualTestCase
         RetsConfig retsConfig = RetsConfig.initFromXml(xml);
         assertEquals(7103, retsConfig.getPort());
         assertEquals("WEB-INF/rets/metadata", retsConfig.getMetadataDir());
-        assertEquals("%k-%i.jpg", retsConfig.getGetObjectPattern());
+        assertEquals("%k-%i.jpg", retsConfig.getPhotoPattern());
+        assertEquals("%k.xml", retsConfig.getObjectSetPattern());
         assertEquals("/tmp/pictures", retsConfig.getGetObjectRoot());
         assertEquals(5, retsConfig.getNonceInitialTimeout());
         assertEquals(10, retsConfig.getNonceSuccessTimeout());
@@ -242,7 +246,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "<rets-config>\n" +
             "</rets-config>";
         RetsConfig retsConfig = RetsConfig.initFromXml(xml);
-        assertNull(retsConfig.getGetObjectPattern());
+        assertNull(retsConfig.getPhotoPattern());
         assertNull(retsConfig.getGetObjectRoot());
         assertEquals(-1, retsConfig.getNonceInitialTimeout());
         assertEquals(-1, retsConfig.getNonceSuccessTimeout());
@@ -252,17 +256,20 @@ public class RetsConfigTest extends LinesEqualTestCase
     {
         RetsConfig retsConfig = new RetsConfig();
         assertEquals("/", retsConfig.getGetObjectRoot("/"));
-        assertEquals("%i.jpg", retsConfig.getGetObjectPattern("%i.jpg"));
+        assertEquals("%i.jpg", retsConfig.getPhotoPattern("%i.jpg"));
+        assertEquals("foo", retsConfig.getObjectSetPattern("foo"));
         assertEquals(2, retsConfig.getNonceInitialTimeout(2));
         assertEquals(2, retsConfig.getNonceSuccessTimeout(2));
 
         retsConfig.setGetObjectRoot("/tmp/pictures");
-        retsConfig.setGetObjectPattern("%k-%i.jpg");
+        retsConfig.setPhotoPattern("%k-%i.jpg");
+        retsConfig.setObjectSetPattern("%k.xml");
         retsConfig.setNonceInitialTimeout(5);
         retsConfig.setNonceSuccessTimeout(10);
 
         assertEquals("/tmp/pictures", retsConfig.getGetObjectRoot("/"));
-        assertEquals("%k-%i.jpg", retsConfig.getGetObjectPattern("%i.jpg"));
+        assertEquals("%k-%i.jpg", retsConfig.getPhotoPattern("%i.jpg"));
+        assertEquals("%k.xml", retsConfig.getObjectSetPattern("foo"));
         assertEquals(5, retsConfig.getNonceInitialTimeout(2));
         assertEquals(10, retsConfig.getNonceSuccessTimeout(2));
     }
