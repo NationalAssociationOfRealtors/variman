@@ -11,6 +11,9 @@
 package org.realtors.rets.server.protocol;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -35,7 +38,7 @@ public class SearchParameters
     public SearchParameters(Map parameterMap, RetsVersion version, User user)
         throws RetsReplyException
     {
-        LOG.debug("Parameters: " + parameterMap);
+        logParameterMap(parameterMap);
         mResourceId = getParameter(parameterMap, "SearchType");
         mClassName = getParameter(parameterMap, "Class");
         initQueryType(getParameter(parameterMap, "QueryType"), version);
@@ -141,6 +144,29 @@ public class SearchParameters
         {
             return null;
         }
+    }
+
+    private void logParameterMap(Map parameterMap)
+    {
+        if (!LOG.isDebugEnabled())
+        {
+            return;
+        }
+
+        String separator = "";
+        StringBuffer message = new StringBuffer();
+        message.append("Parameters: {");
+        Set keys = parameterMap.keySet();
+        for (Iterator iterator = keys.iterator(); iterator.hasNext();)
+        {
+            String key = (String) iterator.next();
+            String[] value = (String[]) parameterMap.get(key);
+            message.append(separator).append(key).append("=")
+                .append(Arrays.asList(value));
+            separator  = ", ";
+        }
+        message.append("}");
+        LOG.debug(message.toString());
     }
 
     public String getClassName()
