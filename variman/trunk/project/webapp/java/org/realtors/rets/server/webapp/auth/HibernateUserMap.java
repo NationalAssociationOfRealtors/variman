@@ -11,6 +11,8 @@ import net.sf.hibernate.Session;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.webapp.InitServlet;
+import org.realtors.rets.server.webapp.WebApp;
+
 import org.apache.log4j.Logger;
 
 public class HibernateUserMap implements UserMap
@@ -24,8 +26,7 @@ public class HibernateUserMap implements UserMap
 
         User user = null;
 
-        SessionHelper sessionHelper =
-            new SessionHelper(InitServlet.getSessions());
+        SessionHelper sessionHelper = WebApp.createHelper();
 
         try
         {
