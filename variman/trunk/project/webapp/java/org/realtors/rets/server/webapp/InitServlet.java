@@ -22,6 +22,7 @@ import net.sf.hibernate.cfg.Configuration;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
@@ -144,7 +145,7 @@ public class InitServlet extends RetsServlet
             Configuration cfg = new Configuration();
             cfg.addJar("rex-hbm-xml.jar");
             cfg.setProperties(mRetsConfig.createHibernateProperties());
-            WebApp.setSessions(cfg.buildSessionFactory());
+            RetsServer.setSessions(cfg.buildSessionFactory());
         }
         catch (HibernateException e)
         {
