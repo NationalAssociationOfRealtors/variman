@@ -55,6 +55,7 @@ public class ValidationResult
     {
         mMessages = new ArrayList();
         mStatus = StatusEnum.NOT_RUN;
+        mDate = null;
     }
 
     public void setMessage(String message)
