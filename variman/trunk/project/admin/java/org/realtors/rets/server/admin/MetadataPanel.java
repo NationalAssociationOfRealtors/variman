@@ -10,34 +10,6 @@ package org.realtors.rets.server.admin;
 
 import java.util.List;
 
-import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.admin.metadata.MSystemPanel;
-import org.realtors.rets.server.admin.metadata.ResourcePanel;
-import org.realtors.rets.server.admin.metadata.MClassPanel;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataLoader;
-import org.realtors.rets.server.metadata.MetadataVisitor;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.ServerMetadata;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ForeignKey;
-
-import org.apache.log4j.Logger;
-
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxJUtil;
 import org.wxwindows.wxJWorker;
@@ -50,6 +22,32 @@ import org.wxwindows.wxTreeListener;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
 
+import org.apache.log4j.Logger;
+
+import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.admin.metadata.DetailPanel;
+import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.ForeignKey;
+import org.realtors.rets.server.metadata.Lookup;
+import org.realtors.rets.server.metadata.LookupType;
+import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.metadata.MetadataLoader;
+import org.realtors.rets.server.metadata.MetadataVisitor;
+import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.ServerMetadata;
+import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateHelp;
+import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.ValidationExpression;
+import org.realtors.rets.server.metadata.ValidationExternal;
+import org.realtors.rets.server.metadata.ValidationExternalType;
+import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.metadata.ValidationLookupType;
+
 public class MetadataPanel extends wxPanel
 {
     public MetadataPanel(wxWindow parent)
@@ -60,33 +58,14 @@ public class MetadataPanel extends wxPanel
         mTree = new wxTreeCtrl(splitter, METADATA_TREE, wxDefaultPosition,
                                wxDefaultSize, wxTR_DEFAULT_STYLE);
 
-        wxPanel detailPanel = new wxPanel(splitter);
-        mDetailSizer = new wxBoxSizer(wxVERTICAL);
-        splitter.SplitVertically(mTree, detailPanel, 300);
-        mCurrentDetailPanel = null;
+        mDetailPanel = new DetailPanel(splitter);
+        splitter.SplitVertically(mTree, mDetailPanel, 300);
 
         box.Add(splitter, 1, wxEXPAND);
         SetSizer(box);
 
-        mSystemPanel = new MSystemPanel(detailPanel);
-        addDetailPanel(mSystemPanel);
-
-        mResourcePanel = new ResourcePanel(detailPanel);
-        addDetailPanel(mResourcePanel);
-
-        mClassPanel = new MClassPanel(detailPanel);
-        addDetailPanel(mClassPanel);
-
-        detailPanel.SetSizer(mDetailSizer);
-
         EVT_TREE_SEL_CHANGED(METADATA_TREE, new OnSelectionChanged());
         mNodeTextVisitor = new NodeTextVisitor();
-    }
-
-    private void addDetailPanel(wxPanel panel)
-    {
-        mDetailSizer.Add(panel, 1, wxEXPAND);
-        mDetailSizer.Show(panel, false);
     }
 
     public void populateTree()
@@ -94,6 +73,7 @@ public class MetadataPanel extends wxPanel
         wxBeginBusyCursor();
         final wxWindowDisabler disabler = new wxWindowDisabler();
         mTree.DeleteAllItems();
+        mDetailPanel.switchToPanelFor(null);
         wxJWorker worker = new wxJWorker()
         {
             public Object construct()
@@ -163,47 +143,11 @@ public class MetadataPanel extends wxPanel
             ServerMetadata metadata =
                 (ServerMetadata) mTree.GetJData(selection);
             System.out.println("Metadata: " + metadata);
-            System.out.println(metadata);
-            if (metadata instanceof MSystem)
-            {
-                MSystem system = (MSystem) metadata;
-                mSystemPanel.populateFrom(system);
-                show(mSystemPanel);
-            }
-            else if (metadata instanceof Resource)
-            {
-                Resource resource = (Resource) metadata;
-                mResourcePanel.populateFrom(resource);
-                show(mResourcePanel);
-            }
-            else if (metadata instanceof MClass)
-            {
-                MClass clazz = (MClass) metadata;
-                mClassPanel.updateFrom(clazz);
-                show(mClassPanel);
-            }
-            else
-            {
-                show(null);
-            }
-        }
-
-        private void show(wxWindow window)
-        {
-            if (mCurrentDetailPanel != null)
-            {
-                mDetailSizer.Show(mCurrentDetailPanel, false);
-            }
-            if (window != null)
-            {
-                mDetailSizer.Show(window, true);
-            }
-            mDetailSizer.Layout();
-            mCurrentDetailPanel = window;
+            mDetailPanel.switchToPanelFor(metadata);
         }
     }
 
-    private class NodeTextVisitor implements MetadataVisitor
+    private static class NodeTextVisitor implements MetadataVisitor
     {
         public Object visit(MSystem system)
         {
@@ -301,9 +245,6 @@ public class MetadataPanel extends wxPanel
     private static final int METADATA_TREE = wxNewId();
     private wxTreeCtrl mTree;
     private NodeTextVisitor mNodeTextVisitor;
-    private MSystemPanel mSystemPanel;
-    private wxBoxSizer mDetailSizer;
-    private ResourcePanel mResourcePanel;
     private wxWindow mCurrentDetailPanel;
-    private MClassPanel mClassPanel;
+    private DetailPanel mDetailPanel;
 }
