@@ -23,11 +23,13 @@ import org.wxwindows.wxJWorker;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
+import org.wxwindows.wx;
 
-public class InitDatabaseCommand
+public class InitDatabaseCommand extends wx
 {
     public void execute()
     {
+        wxBeginBusyCursor();
         final wxWindowDisabler disabler = new wxWindowDisabler();
         final AdminFrame frame = Admin.getAdminFrame();
         final InitDatabaseDialog dialog = new InitDatabaseDialog(frame);
@@ -37,7 +39,6 @@ public class InitDatabaseCommand
         {
             public Object construct()
             {
-                String message = "";
                 try
                 {
                     LOG.debug("Initializing Hibernate configuration");
@@ -56,16 +57,27 @@ public class InitDatabaseCommand
                 catch (Throwable e)
                 {
                     LOG.error("Caught", e);
-                    message = e.getMessage();
+                    return e;
                 }
-                return message;
+                return null;
             }
 
             public void finished()
             {
                 dialog.Destroy();
                 disabler.delete();
-                frame.SetStatusText("Database initialized successfully");
+                wxEndBusyCursor();
+                Object o = get();
+                if (o instanceof Throwable)
+                {
+                    Throwable t = (Throwable) o;
+                    frame.SetStatusText("Database initialization failed: " +
+                                        t.getMessage());
+                }
+                else
+                {
+                    frame.SetStatusText("Database initialized successfully");
+                }
             }
         };
         worker.start();
