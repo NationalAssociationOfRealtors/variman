@@ -54,6 +54,11 @@ public class HandlerManager
         return (ServletHandler) mHandlers.get(name);
     }
 
+    public LoginHandler getLoginHandler(String testContext)
+    {
+        return getLoginHandler();
+    }
+
     private Map mHandlers;
     private ActionHandler mActionHandler;
     private LogoutHandler mLogoutHandler;
