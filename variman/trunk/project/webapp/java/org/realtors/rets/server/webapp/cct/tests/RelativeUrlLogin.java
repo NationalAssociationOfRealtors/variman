@@ -33,24 +33,37 @@ public class RelativeUrlLogin extends BaseCertificationTest
 
     public void start()
     {
+        super.start();
         HandlerManager actionManager = HandlerManager.getInstance();
         login = actionManager.getLoginHandler(mTestContext);
-        login.setSessionId("login-headers");
+        login.reset();
+        login.setRelativeUrls(true);
+        login.setSessionId(SESSION_ID);
         login.setGetInvokeCount(InvokeCount.ONE);
         login.addRequiredHeader("Accept", "^\\*/\\*$");
-        login.addRequiredHeader("User-Agent", "^[^/]+(/[^/])?$");
+        login.addRequiredHeader("User-Agent", ".*");
         login.addRequiredHeader("RETS-Version", ".*");
 
         action = actionManager.getActionHandler();
+        action.reset();
         action.setGetInvokeCount(InvokeCount.ONE);
-        action.addCookie("RETS-Session-ID", "login-headers");
+        login.addRequiredHeader("Accept", "^\\*/\\*$");
+        login.addRequiredHeader("User-Agent", ".*");
+        login.addRequiredHeader("RETS-Version", ".*");
+        action.addCookie("RETS-Session-ID", "^" + SESSION_ID + "$");
 
         logout = actionManager.getLogoutHandler();
+        logout.reset();
         logout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
-//        logout.addCookie("RETS-Session-ID", "login-headers");
+        login.addRequiredHeader("Accept", "^\\*/\\*$");
+        login.addRequiredHeader("User-Agent", ".*");
+        login.addRequiredHeader("RETS-Version", ".*");
+        logout.addCookie("RETS-Session-ID", "^" + SESSION_ID + "$");
+        mStatus = RUNNING;
     }
 
     private LoginHandler login;
     private ActionHandler action;
     private LogoutHandler logout;
+    public static final String SESSION_ID = "RelativeUrlLogin";
 }
