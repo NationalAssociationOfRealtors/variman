@@ -111,7 +111,7 @@ public class XmlObjectSetTest extends TestCase
         assertEquals(Collections.EMPTY_LIST, actual);
     }
 
-    public void testRemoteBasePath()
+    public void testRemoteBaseUrl()
         throws RetsServerException, MalformedURLException
     {
         ObjectDescriptor expected = new ObjectDescriptor(
