@@ -8,22 +8,21 @@
 
 package org.realtors.rets.server.admin.swingui;
 
-import javax.swing.*;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
 import java.io.File;
 
-import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.config.DatabaseConfig;
-import org.realtors.rets.server.admin.Admin;
-import org.realtors.rets.server.IOUtils;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import org.apache.commons.lang.math.NumberUtils;
+import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.admin.Admin;
+import org.realtors.rets.server.config.DatabaseConfig;
+import org.realtors.rets.server.config.RetsConfig;
 
 public class ConfigurationPanel extends JPanel
 {
@@ -60,6 +59,7 @@ public class ConfigurationPanel extends JPanel
         mMetadataDir.getDocument().addDocumentListener(changeListener);
         box.add(mMetadataDir, c);
         c.weightx = 0.0;
+        box.add(Box.createHorizontalStrut(5));
         box.add(new JButton(new ChooseMetadataAction()), c);
         retsConfig.addRow("Metadatata Directory:", box);
 
@@ -69,6 +69,7 @@ public class ConfigurationPanel extends JPanel
         mImageRootDir.getDocument().addDocumentListener(changeListener);
         box.add(mImageRootDir, c);
         c.weightx = 0.0;
+        box.add(Box.createHorizontalStrut(5));
         box.add(new JButton(new ChooseImageRootAction()), c);
         retsConfig.addRow("Image Root:", box);
 
@@ -196,7 +197,7 @@ public class ConfigurationPanel extends JPanel
         {
             RetsConfig config = Admin.getRetsConfig();
             String webappRoot = Admin.getWebAppRoot();
-            String getObjectRoot = config.getGetObjectRoot();
+            String getObjectRoot = config.getGetObjectRoot("");
             getObjectRoot = IOUtils.resolve(webappRoot, getObjectRoot);
 
             JFileChooser dirDialog = new JFileChooser();
@@ -267,19 +268,6 @@ public class ConfigurationPanel extends JPanel
         private void updateEdited()
         {
             mChanged = true;
-        }
-    }
-
-    private class MyFocusListener implements FocusListener
-    {
-        public void focusGained(FocusEvent event)
-        {
-
-        }
-
-        public void focusLost(FocusEvent event)
-        {
-            System.out.println("Focus lost: " + event);
         }
     }
 
