@@ -18,9 +18,9 @@ public class QuotedSqlConverter implements SqlConverter
 
     public void toSql(PrintWriter out)
     {
-        out.print("\"");
+        out.print("'");
         out.print(mValue);
-        out.print("\"");
+        out.print("'");
     }
 
     public String toString()
