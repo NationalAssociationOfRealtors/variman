@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 /**
  * Performs all necessary one-time initializations for the web
  * application.
@@ -26,15 +28,15 @@ public class LoginServlet extends RetsServlet
         contextPath.append(request.getServerName());
         contextPath.append(":").append(request.getServerPort());
         contextPath.append(request.getContextPath());
-        System.out.println("context="+contextPath);
+        LOG.debug("context=" + contextPath);
 
         HttpSession session = request.getSession();
-        session.setAttribute(LOGGED_IN_KEY, new Boolean(true));
+        session.setAttribute(LOGGED_IN_KEY, Boolean.TRUE);
         AccountingStatistics statitics =
             (AccountingStatistics) session.getAttribute(ACCOUNTING_KEY);
         statitics.resetStartTime();
 
-        response.setContentType("test/html");
+        response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
         printOpenRets(out, 0, "Operation Successful");
 
@@ -64,4 +66,7 @@ public class LoginServlet extends RetsServlet
         out.println(message);
         out.println("\">");
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(LoginServlet.class);
 }
