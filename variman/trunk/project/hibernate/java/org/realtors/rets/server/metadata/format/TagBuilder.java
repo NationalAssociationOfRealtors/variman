@@ -149,6 +149,11 @@ public class TagBuilder
         return this;
     }
 
+    public static void emptyTag(PrintWriter writer, String tagName)
+    {
+        new TagBuilder(writer, tagName).close();
+    }
+
     public static void simpleTag(PrintWriter writer, String tagName, int value)
     {
         new TagBuilder(writer, tagName).beginContent().print(value).close();
