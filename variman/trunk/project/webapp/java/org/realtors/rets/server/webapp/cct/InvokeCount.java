@@ -11,7 +11,9 @@ public class InvokeCount extends Enum
     public static final InvokeCount ZERO = new InvokeCount("zero");
     public static final InvokeCount ZERO_OR_ONE = new
         InvokeCount("zero or one");
-    
+    public static final InvokeCount ZERO_OR_TWO = new
+        InvokeCount("zero or two");
+
     public InvokeCount(String callCount)
     {
         super(callCount);
