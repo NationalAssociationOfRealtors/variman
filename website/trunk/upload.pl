@@ -57,7 +57,7 @@ if ($opt_user ne "")
 }
 
 my $remote_host = "dargo.crt.realtors.org";
-my $remote_home = "/nar/www/sites/www.crt.realtors.org/www.crt.realtors.org/projects/rets/variman";
+my $remote_home = "/www/www.crt.realtors.org/www.crt.realtors.org/projects/rets/variman";
 $command = 
     "rsync ${dry_run_option} -v -rltz -e \"ssh -x\" --delete " .
     "--exclude='*~' --exclude='CVS' --exclude='*.jar' " .
