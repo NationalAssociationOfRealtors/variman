@@ -16,20 +16,20 @@
    <td>&nbsp;</td>
    <th>Test name</th><th>Status</th><th>Show Log</th><th>Start/Stop</th>
   </tr>
-  <logic:iterate id="test" name="cctSuite"
-                 property="tests"
-                 type="org.realtors.rets.server.webapp.cct.CertificationTest"
+  <logic:iterate id="displayBean" name="cctDisplayBeans"
+                 type="org.realtors.rets.server.webapp.cct.TestDisplayBean"
                  indexId="counter">
     <tr>
      <cct:evenoddtd count="counter">
       <%= counter %></td>
      </cct:evenoddtd>
      <cct:evenoddtd count="counter" >
-      <bean:write name="test" property="description" />
+      <bean:write name="displayBean" property="test.description" />
      </cct:evenoddtd>
-     <cct:teststatustd name="test" />
+     <cct:teststatustd name="displayBean" />
+     <!-- this has changed -->
      <cct:evenoddtd count="counter" >
-      <bean:write name="test" property="message" />
+      <bean:write name="displayBean" property="result.message" />
      </cct:evenoddtd>
      <cct:evenoddtd count="counter">
       <logic:notPresent name="cctActiveTest">
