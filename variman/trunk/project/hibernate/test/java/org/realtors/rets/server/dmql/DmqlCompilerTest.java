@@ -41,16 +41,7 @@ public class DmqlCompilerTest extends TestCase
 
     public void testImpliedLookupOrError()
     {
-        try
-        {
-            parse("(AR=GENVA,BATV)");
-            fail("Should have thrown an exception");
-        }
-        catch (ANTLRException e)
-        {
-            // Expected
-            assertTrue(e instanceof RecognitionException);
-        }
+        assertInvalidParse("(AR=GENVA,BATV)");
     }
 
     public void testLookupAnd() throws ANTLRException
@@ -73,30 +64,12 @@ public class DmqlCompilerTest extends TestCase
 
     public void testInvalidLookupName()
     {
-        try
-        {
-            parse("(XX=|A,S)");
-            fail("Should have thrown exception");
-        }
-        catch (ANTLRException e)
-        {
-            // Expected
-            assertTrue(e instanceof RecognitionException);
-        }
+        assertInvalidParse("(XX=|A,S)");
     }
 
     public void testInvalidLookupValue()
     {
-        try
-        {
-            parse("(AR=|A,S)");
-            fail("Should have thrown exception");
-        }
-        catch (ANTLRException e)
-        {
-            // Expected
-            assertTrue(e instanceof RecognitionException);
-        }
+        assertInvalidParse("(AR=|A,S)");
     }
 
     public void testStringEquals() throws ANTLRException
@@ -134,12 +107,76 @@ public class DmqlCompilerTest extends TestCase
 
     public void testNumber() throws ANTLRException
     {
-//        parse("(owner=1.0)");
+        parse("(owner=5)");
+        parse("(owner=5.)");
+        parse("(owner=5.0)");
+    }
+
+    public void testPeriod() throws ANTLRException
+    {
+        parse("(owner=1970-01-01)");
+        parse("(owner=TODAY)");
+        parse("(owner=01:02:03)");
+        parse("(owner=1970-01-01T05:06:01.33)");
+        parse("(owner=NOW)");
+    }
+
+    public void testBetween() throws ANTLRException
+    {
+        parse("(owner=1970-01-01-1980-01-01)");
+        parse("(owner=50-100)");
+        parse("(owner=abc-xyz)");
+    }
+
+    public void testLess() throws ANTLRException
+    {
+        parse("(owner=1970-01-01-)");
+        parse("(owner=50-)");
+        parse("(owner=xyz-)");
+    }
+
+    public void testGreater() throws ANTLRException
+    {
+        parse("(owner=1970-01-01+)");
+        parse("(owner=50+)");
+        parse("(owner=xyz+)");
+    }
+
+    public void testRangeList() throws ANTLRException
+    {
+        parse("(owner=1970-01-01-1980-01-01,1985-01-01-1995-01-01)");
+        parse("(owner=50-100,150-200)");
+        parse("(owner=abc-bar,foo-xyz)");
+
+        parse("(owner=1970-01-01+,1980-01-01-)");
+        parse("(owner=50+,60-)");
+        parse("(owner=abc+,xyz-)");
+    }
+
+    protected SqlConverter parse(String dmql, boolean traceParser,
+                                 boolean traceLexer)
+        throws ANTLRException
+    {
+        return DmqlCompiler.parseDmql(dmql, mMetadata, traceParser, traceLexer);
     }
 
     private SqlConverter parse(String dmql) throws ANTLRException
     {
         return DmqlCompiler.parseDmql(dmql, mMetadata);
+    }
+
+    private void assertInvalidParse(String dmql)
+    {
+        try
+        {
+            parse(dmql);
+            fail("Should have thrown an exception");
+        }
+        catch (ANTLRException e)
+        {
+            // Expected
+            assertTrue(e instanceof RecognitionException);
+        }
     }
 
     static class SimpleDmqlMetadataValidator implements DmqlParserMetadata

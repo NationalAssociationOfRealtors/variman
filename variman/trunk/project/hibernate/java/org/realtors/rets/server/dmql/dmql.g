@@ -51,8 +51,24 @@ options
         mMetadata = metadata;
     }
 
+    public void print(String s) {
+        System.out.println(s);
+    }
+
     public void print(Token t) {
         System.out.println(t);
+    }
+
+    public void traceIn(String text) throws TokenStreamException {
+        if (mTrace) super.traceIn(text);
+    }
+
+    public void traceOut(String text) throws TokenStreamException {
+        if (mTrace) super.traceOut(text);
+    }
+
+    public void setTrace(boolean trace) {
+        mTrace = trace;
     }
 
     private SemanticException newSemanticException(String message, Token t)
@@ -61,6 +77,8 @@ options
                                      t.getColumn());
     }
 
+    
+    private boolean mTrace = false;
     private DmqlParserMetadata mMetadata;
 }
 
@@ -104,10 +122,38 @@ field_value [String name] returns [SqlConverter sql]
     | {isStringList(name)}? string_list
     | {isStringList(name)}? string_literal
     | number
+    | period
+    | range_list
     ;
 
-number
-    : NUMBER
+range_list
+    : range (COMMA range)*
+    ;
+
+range
+    : between
+    | less
+    | greater
+    ;
+
+between
+    : (period | number | string_eq) MINUS (period | number | string_eq)
+    ;
+
+less
+    : (period | number | string_eq) MINUS
+    ;
+
+greater
+    : (period | number | string_eq) PLUS
+    ;
+
+number : n:NUMBER {print("n"); print(n);} ;
+
+period
+    : d:DATE {print("d"); print(d);}
+    | dt:DATETIME {print("dt"); print(dt);}
+    | t:TIME {print("t"); print(t);}
     ;
 
 lookup_list [String name] returns [SqlConverter sql]
@@ -177,8 +223,25 @@ class DmqlLexer extends Lexer;
 
 options
 {
-    k = 11;
+    k = 2;
 	testLiterals = false;
+}
+
+
+{
+    public void traceIn(String text) throws CharStreamException {
+        if (mTrace) super.traceIn(text);
+    }
+
+    public void traceOut(String text) throws CharStreamException {
+        if (mTrace) super.traceOut(text);
+    }
+
+    public void setTrace(boolean trace) {
+        mTrace = trace;
+    }
+    
+    private boolean mTrace = false;
 }
 
 LPAREN : '(';
@@ -192,41 +255,44 @@ PIPE : '|';
 TILDE : '~';
 QUESTION : ('?')+;
 SEMI : ';';
-DATETIME
-    : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-'
-        ('0'..'9')('0'..'9')
-        'T' ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ':'
-        ('0'..'9')('0'..'9') ('.' ('0'..'9')('0'..'9'))?;
-DATE
-    : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-'
-        ('0'..'9')('0'..'9');
-TIME
-    : ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ':'
-        ('0'..'9')('0'..'9') ('.' ('0'..'9')('0'..'9'))?;
 
-// Not sure why these don't quite work:
-//DATETIME : YMD 'T' HMS;
-//DATE : YMD;
-//TIME : HMS;
+protected DATETIME : YMD 'T' HMS;
+protected DATE : YMD;
+protected TIME : HMS;
 
 // Year-Month-Day
-//protected
-//YMD 
-//    : DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT DIGIT DIGIT;
+protected
+YMD 
+    : DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT;
 
-// Hour:Minute:Second[.fraction]
-//protected
-//HMS : DIGIT DIGIT ':' DIGIT DIGIT ':' DIGIT DIGIT ('.' DIGIT DIGIT)?;
+// Hour:Minute:Second[.Fraction]
+protected
+HMS : DIGIT DIGIT ':' DIGIT DIGIT ':' DIGIT DIGIT ('.' DIGIT DIGIT)?;
 
 protected
 DIGIT : ('0' .. '9');
 
+protected
+ALPHANUM : ('a'..'z' | 'A'..'Z' | DIGIT);
+
+protected
 TEXT
 	options { testLiterals = true; }
-	: ('a'..'z' | 'A'..'Z' | '0'..'9')+;
+	: (ALPHANUM)+;
 
-//NUMBER
-//    : ('0'..'9')+ ('.' ('0'..'9')*)* ;
+protected
+NUMBER
+    : (DIGIT)+ ('.' (DIGIT)*)* ;
+
+// Since these all basically have overlapping patterns, we need to use
+// backtracking to try them in order.
+TEXT_OR_NUMBER_OR_PERIOD
+    : (YMD 'T') => DATETIME {$setType(DATETIME);}
+    | (DATE) => DATE {$setType(DATE);}
+    | (TIME) => TIME {$setType(TIME);}
+    | (NUMBER) => NUMBER {$setType(NUMBER);}
+    | TEXT {$setType(TEXT);}
+    ;
 
 STRING_LITERAL
 	options { testLiterals = true; }
