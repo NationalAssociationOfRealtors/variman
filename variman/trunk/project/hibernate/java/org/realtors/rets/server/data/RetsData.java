@@ -1,8 +1,7 @@
 package org.realtors.rets.server.data;
 
 import java.io.Serializable;
-import java.util.SortedMap;
-
+import java.util.Map;
 import org.realtors.rets.server.metadata.MClass;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -47,14 +46,14 @@ public class RetsData implements Serializable
 
     /**
      *
-     * @return a SortedMap of RetsDataElements
+     * @return a Map of RetsDataElements
      */
-    public SortedMap getDataElements()
+    public Map getDataElements()
     {
         return mDataElements;
     }
 
-    public void setDataElements(SortedMap dataElements)
+    public void setDataElements(Map dataElements)
     {
         mDataElements = dataElements;
     }
@@ -89,5 +88,5 @@ public class RetsData implements Serializable
     private MClass mClazz;
 
     /** persistent field */
-    private SortedMap mDataElements;
+    private Map mDataElements;
 }
