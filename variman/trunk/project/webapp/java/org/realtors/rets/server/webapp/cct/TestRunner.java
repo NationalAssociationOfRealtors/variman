@@ -106,6 +106,11 @@ public class TestRunner
     {
         return mSuite.getTests();
     }
+    
+    public CertificationTest getTest(int testNo)
+    {
+        return mSuite.getTest(testNo);
+    }
 
     public StatusEnum getStatus(String name)
     {
