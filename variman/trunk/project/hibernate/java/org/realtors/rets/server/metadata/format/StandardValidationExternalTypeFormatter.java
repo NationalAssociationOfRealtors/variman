@@ -18,7 +18,7 @@ public class StandardValidationExternalTypeFormatter
     {
         PrintWriter out = context.getWriter();
         TagBuilder metadata =
-            new TagBuilder(out,"METADATA-VALIDATION_EXTERNAL_TYPE")
+            new TagBuilder(out, "METADATA-VALIDATION_EXTERNAL_TYPE")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("ValidationExternal",
                              levels[VALIDATION_EXTERNAL_LEVEL])
