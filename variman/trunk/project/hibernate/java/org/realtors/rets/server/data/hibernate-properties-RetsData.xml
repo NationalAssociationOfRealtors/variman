@@ -1,6 +1,0 @@
-    <map name="dataElements" lazy="false" cascade="all">
-      <key column="data"/>
-      <index-many-to-many column="key"
-                      class="org.realtors.rets.server.metadata.Table"/>
-      <one-to-many class="org.realtors.rets.server.data.RetsDataElement"/>
-    </map>
