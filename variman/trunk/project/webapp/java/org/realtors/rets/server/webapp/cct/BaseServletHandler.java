@@ -31,6 +31,7 @@ public abstract class BaseServletHandler implements ServletHandler
     public void reset()
     {
         mExpectedHeaders.clear();
+        mHeaders.clear();
         mDoGetInvokeCount = 0;
         mInvokeCount = InvokeCount.ANY;
     }
@@ -44,7 +45,8 @@ public abstract class BaseServletHandler implements ServletHandler
         while (headerNames.hasMoreElements())
         {
             String headerName = (String) headerNames.nextElement();
-            mHeaders.put(headerName,  request.getHeader(headerName));
+            mHeaders.put(headerName.toLowerCase(),
+                         request.getHeader(headerName));
         }
         LOG.info(getName() + " doGet invoked: " + mDoGetInvokeCount);
     }
@@ -58,9 +60,10 @@ public abstract class BaseServletHandler implements ServletHandler
     {
         if (mInvokeCount.equals(InvokeCount.ONE) && !(mDoGetInvokeCount == 1))
         {
-            results.addFailure(getName() + " get invoke count was " +
-                               mDoGetInvokeCount +
-                               ", expected " + mInvokeCount.getName());
+            String message = getName() + " get invoke count was " +
+                mDoGetInvokeCount + ", expected " + mInvokeCount.getName();
+            results.addFailure(message);
+            LOG.debug("Failed: " + message);
         }
 
         if (mInvokeCount.equals(InvokeCount.ZERO_OR_ONE) &&
@@ -85,12 +88,14 @@ public abstract class BaseServletHandler implements ServletHandler
         for (Iterator iterator = names.iterator(); iterator.hasNext();)
         {
             String name = (String) iterator.next();
-            String header = (String) mHeaders.get(name);
+            String header = (String) mHeaders.get(name.toLowerCase());
             String regexp = (String) mExpectedHeaders.get(name);
             if ((header == null) || !matches(header, regexp))
             {
-                result.addFailure(getName() + " HTTP header [" + name +
-                                  "] was " + header + ", expected " + regexp);
+                String message = getName() + " HTTP header [" + name +
+                    "] was " + header + ", expected " + regexp;
+                result.addFailure(message);
+                LOG.debug("Failed: " + message);
             }
         }
     }
