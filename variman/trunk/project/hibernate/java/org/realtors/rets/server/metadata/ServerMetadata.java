@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.metadata;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 

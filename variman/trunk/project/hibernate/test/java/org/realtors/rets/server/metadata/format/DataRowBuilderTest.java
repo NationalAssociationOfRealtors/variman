@@ -2,11 +2,11 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.StringWriter;
 import java.io.PrintWriter;
-import java.util.List;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import junit.framework.TestCase;
 

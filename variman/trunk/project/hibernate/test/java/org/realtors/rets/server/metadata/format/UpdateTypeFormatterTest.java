@@ -4,14 +4,14 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
 import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExternal;

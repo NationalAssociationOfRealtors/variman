@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.Table;
-
 public abstract class TableFormatter extends MetadataFormatter
 {
     public static TableFormatter getInstance(int format)

@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.EditMask;
-
 public abstract class EditMaskFormatter extends MetadataFormatter
 {
     public static EditMaskFormatter getInstance(int format)

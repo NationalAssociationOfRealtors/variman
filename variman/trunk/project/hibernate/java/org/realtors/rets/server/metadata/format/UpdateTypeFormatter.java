@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.UpdateType;
-
 public abstract class UpdateTypeFormatter extends MetadataFormatter
 {
     public static UpdateTypeFormatter getInstance()

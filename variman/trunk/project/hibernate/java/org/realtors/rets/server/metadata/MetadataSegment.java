@@ -2,11 +2,9 @@
  */
 package org.realtors.rets.server.metadata;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Arrays;
-
-import org.realtors.rets.server.metadata.ServerMetadata;
 
 public class MetadataSegment
 {

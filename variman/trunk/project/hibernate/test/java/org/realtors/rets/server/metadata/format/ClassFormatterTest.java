@@ -4,8 +4,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.MClass;

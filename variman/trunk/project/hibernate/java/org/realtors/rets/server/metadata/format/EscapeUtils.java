@@ -2,8 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class EscapeUtils
 {

@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.ValidationExternal;
-
 public abstract class ValidationExternalFormatter extends MetadataFormatter
 {
     public static ValidationExternalFormatter getInstance(int format)

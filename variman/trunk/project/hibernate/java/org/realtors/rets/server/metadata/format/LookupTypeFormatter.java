@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.LookupType;
-
 public abstract class LookupTypeFormatter extends MetadataFormatter
 {
     public static LookupTypeFormatter getInstance(int format)

@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.MObject;
-
 public abstract class ObjectFormatter extends MetadataFormatter
 {
     public static ObjectFormatter getInstance()

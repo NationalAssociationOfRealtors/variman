@@ -5,22 +5,22 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ValidationExpression;
+import org.realtors.rets.server.metadata.ValidationLookup;
+import org.realtors.rets.server.metadata.ValidationLookupType;
 
 import junit.framework.TestCase;
 

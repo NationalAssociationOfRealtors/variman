@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.SearchHelp;
-
 public abstract class SearchHelpFormatter extends MetadataFormatter
 {
     public static SearchHelpFormatter getInstance(int format)

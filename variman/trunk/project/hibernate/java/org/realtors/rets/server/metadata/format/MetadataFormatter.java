@@ -2,9 +2,9 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
-import java.io.PrintWriter;
 
 public abstract class MetadataFormatter
 {

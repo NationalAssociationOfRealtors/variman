@@ -5,8 +5,6 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.ValidationExpression;
-
 public abstract class ValidationExpressionFormatter extends MetadataFormatter
 {
     public static ValidationExpressionFormatter getInstance(int format)
