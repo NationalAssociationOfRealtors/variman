@@ -45,14 +45,21 @@ public class GetObjectParameters extends TransactionParameters
     {
         LOG.debug("ID: " + id);    
         mResourceSets = new ArrayList();
-        ResourceSet resourceSet = new ResourceSet();
-        // Split resource-set into resource-entity and object-id-list
-        String[] resourceSetParameter = StringUtils.split(id, ":", 2);
-        resourceSet.setResourceEntity(resourceSetParameter[0]);
-        // Split object-id-list into object-id
-        String[] objectIds = StringUtils.split(resourceSetParameter[1], ":");
-        resourceSet.addObjectIds(objectIds);
-        mResourceSets.add(resourceSet);
+        String[] resourceSets = StringUtils.split(id, ",");
+        for (int i = 0; i < resourceSets.length; i++)
+        {
+            String stringResourceSet = resourceSets[i];
+            ResourceSet resourceSet = new ResourceSet();
+            // Split resource-set into resource-entity and object-id-list
+            String[] resourceSetParameter =
+                StringUtils.split(stringResourceSet, ":", 2);
+            resourceSet.setResourceEntity(resourceSetParameter[0]);
+            // Split object-id-list into object-id
+            String[] objectIds =
+                StringUtils.split(resourceSetParameter[1], ":");
+            resourceSet.addObjectIds(objectIds);
+            mResourceSets.add(resourceSet);
+        }
     }
 
     public String getType()
@@ -72,13 +79,15 @@ public class GetObjectParameters extends TransactionParameters
 
     public String getResourceEntity(int resourceIndex)
     {
-        ResourceSet resourceSet = (ResourceSet) mResourceSets.get(0);
+        ResourceSet resourceSet =
+            (ResourceSet) mResourceSets.get(resourceIndex);
         return resourceSet.getResourceEntity();
     }
 
     public List getObjectIdList(int resourceIndex)
     {
-        ResourceSet resourceSet = (ResourceSet) mResourceSets.get(0);
+        ResourceSet resourceSet =
+            (ResourceSet) mResourceSets.get(resourceIndex);
         return resourceSet.getObjectIds();
     }
 
