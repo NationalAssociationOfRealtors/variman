@@ -39,7 +39,10 @@ public class DataRowBuilder
 
     public void append(String string)
     {
-        mWriter.print(string);
+        if (string != null)
+        {
+            mWriter.print(string);
+        }
         mWriter.print("\t");
     }
 
