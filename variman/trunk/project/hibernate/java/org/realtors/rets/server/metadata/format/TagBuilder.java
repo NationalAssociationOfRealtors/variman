@@ -154,6 +154,12 @@ public class TagBuilder
         new TagBuilder(writer, tagName).close();
     }
 
+    public TagBuilder emptyTag(String tagName)
+    {
+        emptyTag(mWriter, tagName);
+        return this;
+    }
+
     public static void simpleTag(PrintWriter writer, String tagName, int value)
     {
         new TagBuilder(writer, tagName).beginContent().print(value).close();
@@ -169,6 +175,12 @@ public class TagBuilder
                                  Object value)
     {
         new TagBuilder(writer, tagName).beginContent().print(value).close();
+    }
+
+    public TagBuilder simpleTag(String tagName, Object value)
+    {
+        simpleTag(mWriter, tagName, value);
+        return this;
     }
 
     public static void simpleTag(PrintWriter writer, String tagName,
