@@ -26,6 +26,7 @@
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${log4j.jar}"/>
+    <pathelement path="${antlr.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -98,6 +99,7 @@
   <target name="prepare" depends="build-properties-up-to-date">
     <mkdir dir="build/hibernate/final/classes"/>
     <mkdir dir="build/hibernate/generated"/>
+    <mkdir dir="build/hibernate/generated/org/realtors/rets/server/dmql"/>
     <mkdir dir="build/hibernate/schema"/>
     <mkdir dir="build/hibernate/jar"/>
     <mkdir dir="build/hibernate/classes"/>
@@ -124,11 +126,14 @@
   <target name="dist" depends="" />
 
   <target name="build-hibernate" depends="prepare">
-    <javac srcdir="project/hibernate/java"
-           destdir="build/hibernate/classes"
+    <antlr target="project/hibernate/java/org/realtors/rets/server/dmql/dmql.g"
+           outputdirectory="build/hibernate/generated/org/realtors/rets/server/dmql"/>
+    <javac destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
            deprecation="${compile.deprecation}">
+      <src path="project/hibernate/java"/>
+      <src path="build/hibernate/generated"/>
       <classpath>
         <path refid="hibernate.path" />
       </classpath>
@@ -406,6 +411,7 @@
     </copy>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jdbc.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
   </target>
 
   <target name="build-datagen" depends="build-hibernate"
