@@ -5,6 +5,9 @@ package org.realtors.rets.server;
 import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.math.NumberUtils;
 
 public class SearchParameters
 {
@@ -17,6 +20,40 @@ public class SearchParameters
         initQuery(getParameter(parameterMap, "Query"));
         initFormat(getParameter(parameterMap, "Format"));
         initStandardNames(getParameter(parameterMap, "StandardNames"));
+        initSelect(getParameter(parameterMap, "Select"));
+        initLimit(getParameter(parameterMap, "Limit"));
+        initOffset(getParameter(parameterMap, "Offset"));
+        initCount(getParameter(parameterMap, "Count"));
+    }
+
+    private void initCount(String count)
+    {
+        mCount = Count.getEnum(count);
+        if (mCount == null)
+        {
+            mCount = NO_COUNT;
+        }
+    }
+
+    private void initOffset(String offset)
+    {
+        mOffset = NumberUtils.stringToInt(offset, 1);
+    }
+
+    private void initLimit(String limit)
+    {
+        // "NONE" will not parse, and will correctly be set to MAX_VALUE. So
+        // will any other non-integer string, but we'll let it slide, rather
+        // than throwing an error.
+        mLimit = NumberUtils.stringToInt(limit, Integer.MAX_VALUE);
+    }
+
+    private void initSelect(String select)
+    {
+        if (select != null)
+        {
+            mSelect = StringUtils.split(select, ",");
+        }
     }
 
     private void initQuery(String query) throws RetsReplyException
@@ -113,6 +150,36 @@ public class SearchParameters
         return mStandardNames;
     }
 
+    public String[] getSelect()
+    {
+        return mSelect;
+    }
+
+    public int getLimit()
+    {
+        return mLimit;
+    }
+
+    public int getOffset()
+    {
+        return mOffset;
+    }
+
+    public Count getCount()
+    {
+        return mCount;
+    }
+
+    public boolean countRequested()
+    {
+        return ((mCount == COUNT_AND_DATA) || (mCount == COUNT_ONLY));
+    }
+
+    public boolean dataRequested()
+    {
+        return ((mCount == NO_COUNT) || (mCount == COUNT_AND_DATA));
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -124,8 +191,24 @@ public class SearchParameters
             .toString();
     }
 
+    public static class Count extends Enum
+    {
+        private Count(String name)
+        {
+            super(name);
+        }
+
+        public static Count getEnum(String name)
+        {
+            return (Count) getEnum(Count.class, name);
+        }
+    }
+
     public static final String DMQL = "DMQL";
     public static final String DMQL2 = "DMQL2";
+    public static final Count NO_COUNT = new Count("0");
+    public static final Count COUNT_AND_DATA = new Count("1");
+    public static final Count COUNT_ONLY = new Count("2");
 
     private String mResourceId;
     private String mClassName;
@@ -133,4 +216,8 @@ public class SearchParameters
     private String mQuery;
     private String mFormat;
     private boolean mStandardNames;
+    private String[] mSelect;
+    private int mLimit;
+    private int mOffset;
+    private Count mCount;
 }
