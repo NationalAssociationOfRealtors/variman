@@ -1,4 +1,4 @@
-package org.nar.rets.metadata.newdb;
+package org.realtors.rets.server.metadata;
 
 import net.sf.hibernate.PersistentEnum;
 
