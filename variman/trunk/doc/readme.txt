@@ -37,7 +37,7 @@ servlet container.
 Administration
 ==============
 
-Rex comes both with a GUI and a command line administraion tool.  The
+Rex comes both with a GUI and a command line administration tool.  The
 GUI tool is based on wx4j[1], and thus requires a special native
 library.  Currently only Linux i386 and Windows are supported.  All
 other platforms must use the command line utility.  To start the
@@ -75,6 +75,8 @@ first configure your database connection information.  This can be
 done via the GUI, or by editing this file:
 
   webapp/WEB-INF/rex/rets-config.xml
+
+You can use rets-config.xml.dist as a template for this file.
 
 Once you are able to connect to your database, you must use the
 administration tool to create the schema.  Then, you can add, edit,
