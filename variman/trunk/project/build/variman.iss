@@ -2,36 +2,36 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 [Setup]
-AppName=Rex RETS Server
-AppVerName=Rex RETS Server @VERSION@
+AppName=Variman RETS Server
+AppVerName=Variman RETS Server @VERSION@
 AppPublisher=Center for REALTOR Technology
 AppPublisherURL=http://www.crt.realors.org/
 AppSupportURL=http://www.crt.realors.org/
 AppUpdatesURL=http://www.crt.realors.org/
 SourceDir=@BASEDIR@\build\rets-server
 OutputDir=@BASEDIR@\dist
-OutputBaseFilename=rex-@VERSION@-setup
-DefaultDirName={pf}\Rex RETS Server
-DefaultGroupName=Rex RETS Server
+OutputBaseFilename=variman-@VERSION@-setup
+DefaultDirName={pf}\Variman RETS Server
+DefaultGroupName=Variman RETS Server
 InfoBeforeFile=@BASEDIR@\project\build\iss_java.txt
 LicenseFile=@BASEDIR@\LICENSE.TXT
 UninstallFilesDir={app}\uninstall
 MinVersion=0,4
 
 [Files]
-Source: "*"; Excludes: "\webapp\WEB-INF\rex\rets-config.xml"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "*"; Excludes: "\webapp\WEB-INF\rets\rets-config.xml"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
 Name: "{app}\logs"
 
 [Icons]
-;Name: "{group}\CRT Rex RETS Server"; Filename: "{app}\MyProg.exe"
+;Name: "{group}\CRT Variman RETS Server"; Filename: "{app}\MyProg.exe"
 ; NOTE: The following entry contains an English phrase ("Uninstall"). You are free to translate it into another language if required.
-Name: "{group}\Uninstall CRT Rex RETS Server"; Filename: "{uninstallexe}"
+Name: "{group}\Uninstall CRT Variman RETS Server"; Filename: "{uninstallexe}"
 Name: "{group}\View README"; Filename: "{app}\doc\readme.txt"
 Name: "{group}\View Manual"; Filename: "{app}\doc\manual\index.html"
-Name: "{group}\Rex Administration"; Filename: "javaw.exe"; Parameters: "-jar rex-admin.jar"; WorkingDir: "{app}";
+Name: "{group}\Variman Administration"; Filename: "javaw.exe"; Parameters: "-jar variman-admin.jar"; WorkingDir: "{app}";
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\server\work"
@@ -40,12 +40,12 @@ Type: filesandordirs; Name: "{app}\logs"
 
 [Run]
 ; NOTE: The following entry contains an English phrase ("Launch"). You are free to translate it into another language if required.
-Filename: "{app}\rex.exe"; Parameters: "{code:InstallServiceParams}"; Description: "Install service"; Flags: runhidden
+Filename: "{app}\variman.exe"; Parameters: "{code:InstallServiceParams}"; Description: "Install service"; Flags: runhidden
 Filename: "{app}\doc\readme.txt"; Description: "View the README file"; Flags: shellexec postinstall skipifsilent
 
 [UninstallRun]
-Filename: "net"; Parameters: "stop Rex"; Flags: runhidden
-Filename: "{app}\rex.exe"; Parameters: "{code:UninstallServiceParams}"; Flags: runhidden
+Filename: "net"; Parameters: "stop Variman"; Flags: runhidden
+Filename: "{app}\variman.exe"; Parameters: "{code:UninstallServiceParams}"; Flags: runhidden
 
 [Code]
 var
@@ -104,7 +104,7 @@ end;
 function InitializeSetup(): Boolean;
 begin
   InitializeJava();
-  ServiceName := 'Rex';
+  ServiceName := 'Variman';
   Result := True;
 end;
 
@@ -130,7 +130,7 @@ end;
 function InstallServiceParams(Default: String): String;
 begin
   Result := '-install "' + ServiceName + '" "' + JavaJvmDll +
-    '" "-Djava.class.path={app}\rex.jar" ' +
+    '" "-Djava.class.path={app}\variman.jar" ' +
     '-start org.realtors.rets.server.tomcat.EmbeddedTomcat ' +
     '-params start -out "{app}\logs\stdout.log" -err "{app}\logs\stderr.log" ' +
     '-current "{app}"';
