@@ -40,6 +40,7 @@ public class DmqlCompiler
         DmqlLexer lexer = new DmqlLexer(new StringReader(dmql));
         lexer.setTrace(traceLexer);
         DmqlParser parser = new DmqlParser(lexer);
+        parser.setDmqlLexer(lexer);
         parser.setMetadata(metadata);
         parser.setTrace(traceParser);
         return parser.query();
