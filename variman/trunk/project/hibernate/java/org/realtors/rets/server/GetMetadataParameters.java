@@ -123,8 +123,13 @@ public class GetMetadataParameters
 
     private int parseFormat(String formatString)
     {
+        if (formatString == null)
+        {
+            return MetadataFormatter.COMPACT;
+        }
+        
         formatString = formatString.toUpperCase();
-        if ((formatString == null) || formatString.equals("COMPACT"))
+        if (formatString.equals("COMPACT"))
         {
             return MetadataFormatter.COMPACT;
         }
