@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+
+  <form-beans>
+    <form-bean name="registrationForm"
+               type="path.to.reg.form"/>
+  </form-beans>
+
+  <global-excpetions>
+    <exception type="java.lang.Exception"
+               key="general.exception"
+               path="/some/jsp/file"/>
+  </global-excpetions>
+
+  <global-forwards>
+    <forward name="registration" path="/registration"/>
+  </global-forwards>
+
+  <action-mappings>
+    <action path="/registration"
+            type="path.to.RegistrationAction"
+            name="registrationForm"
+            scope="request"
+            validate="false"
+            input="/registration.jsp"?
+    </action>
+  </action-mappings>
+
+  <message-resources parameter="ApplicationResources"/>
+
+</struts-config>

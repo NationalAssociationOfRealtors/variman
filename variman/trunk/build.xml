@@ -61,6 +61,7 @@
     <pathelement location="build/embedded/classes"/>
     <pathelement path="${hibernate.jar}"/>
     <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
+    <fileset dir="${struts.lib}" includes="*.jar"/>
   </path>
 
   <path id="admin.path">
@@ -120,6 +121,7 @@
     <mkdir dir="build/rets-server/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
+    <mkdir dir="build/rets-server/webapp/WEB-INF/tld"/>
     <mkdir dir="build/webapp/test/classes"/>
     <mkdir dir="build/admin/classes"/>
     <mkdir dir="build/admin/test/classes"/>
@@ -419,6 +421,19 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jdbc.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
+
+    <!-- copy the struts stuff -->
+    <copy todir="build/rets-server/webapp/WEB-INF"
+          file="project/webapp/config/struts-config.xml"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/classes">
+      <fileset dir="project/webapp/config/properties/" includes="*" />
+    </copy>
+    <copy todir="build/rets-server/webapp/WEB-INF/tld">
+      <fileset dir="${struts.lib}" includes="*.tld" />
+    </copy>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib">
+      <fileset dir="${struts.lib}" includes="*.jar" />
+    </copy>
   </target>
 
   <target name="build-datagen" depends="build-hibernate"
