@@ -83,12 +83,12 @@ public class MSystem implements Serializable
      *
      * @hibernate.property
      */
-    public int getVersion()
+    public String getVersion()
     {
         return mVersion;
     }
 
-    public void setVersion(int version)
+    public void setVersion(String version)
     {
         mVersion = version;
     }
@@ -188,7 +188,7 @@ public class MSystem implements Serializable
     private String mComments;
 
     /** nullable persistent field */
-    private int mVersion;
+    private String mVersion;
 
     /** nullable persistent field */
     private Date mDate;

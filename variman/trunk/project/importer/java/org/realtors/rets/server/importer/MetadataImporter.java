@@ -130,7 +130,8 @@ public class MetadataImporter
         MetadataTable tSystem =
             rSession.getMetadataTable(MetadataTable.SYSTEM);
         MSystem hSystem = new MSystem();
-        hSystem.setVersion(10101);
+//        hSystem.setVersion(10101);
+        // Todo: DLD fix system version
         hSystem.setDate(Calendar.getInstance().getTime());
 
         hSession.save(hSystem);
@@ -682,5 +683,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.17 2003/07/08 21:23:07 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.18 2003/07/09 16:43:47 dribin Exp $";
 }
