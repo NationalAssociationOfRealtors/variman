@@ -76,7 +76,7 @@ public class AuthenticationFilter implements Filter, UserMap
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String uri = request.getRequestURI();
         LOG.debug("Authorizing URI: " + uri);
-        if (!uri.startsWith("/rets"))
+        if (!uri.startsWith("/rets") && !uri.startsWith("/cct"))
         {
             filterChain.doFilter(servletRequest, servletResponse);
         }

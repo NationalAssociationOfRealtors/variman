@@ -34,5 +34,10 @@ public class CertificationTestSuite
         return (CertificationTest) mTests.get(index);
     }
 
+    public int getCount()
+    {
+        return mTests.size();
+    }
+
     private List mTests;
 }

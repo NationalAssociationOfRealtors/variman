@@ -39,6 +39,11 @@
             validate="false"
             input="/registration.jsp"
             type="org.realtors.rets.server.webapp.cct.ConfirmationAction"/>
+
+      <action path="/cct/index"
+              type="org.realtors.rets.server.webapp.cct.IndexAction">
+          <forward name="home" path="/cct/home.jsp" />
+      </action>
   </action-mappings>
 
   <message-resources parameter="ApplicationResources"/>
@@ -47,6 +52,4 @@
     <set-property property="pathnames"
                   value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
   </plug-in>
-
-
 </struts-config>

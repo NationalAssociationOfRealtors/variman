@@ -40,7 +40,7 @@ public class RegistrationAction extends Action
         ActionErrors errors = new ActionErrors();
 
         RegistrationForm form = (RegistrationForm) actionForm;
-
+        
         UserMap userMap = new HibernateUserMap();
         String username = form.getUsername();
         User user = userMap.findUser(username);

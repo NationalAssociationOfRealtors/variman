@@ -1,8 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/tld/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/tld/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
 <html:html>
 
  <html:messages header="registration.error.header"
@@ -56,7 +54,7 @@
   <bean:message key="registration.field.username"/></td><td>
   <html:text property="username"/></td></tr>
   <tr><td colspan=2 align="center">
-  <textarea>
+  <textarea ROWS=20 COLS=80 READONLY>
     <jsp:include page="eula.html" />
   </textarea>
   <br>

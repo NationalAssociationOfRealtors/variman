@@ -9,11 +9,16 @@ public abstract class BaseCertificationTest implements CertificationTest
 {
     public BaseCertificationTest()
     {
+        mValidationResults = null;
         mStatus = FAILED;
     }
 
     public String getMessage()
     {
+        if (mValidationResults == null)
+        {
+            return "Test never run";
+        }
         return mValidationResults.getMessage();
     }
 
