@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: RETSHistoryData.hbm.xml,v 1.1 2003/06/03 20:21:51 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.data.RETSHistoryData" table="rets_history_data">
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="dateChanged" type="date"/>
+    
+    <!-- The resource element -->
+    <many-to-one name="resource" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataResource">
+      <column name="resource" index="rets_history_data_resource"/>
+    </many-to-one>
+
+    <!-- The class element -->
+    <many-to-one name="clazz" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataClass">
+      <column name="clazz" index="rets_history_data_clazz"/>
+    </many-to-one>
+
+    <!-- a map of bool values -->
+    <map name="booleanValues" lazy="false"
+      table="rets_history_data_booleanvalues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_boolvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="boolean"/>
+    </map>
+
+    <!-- a map of char/string values -->
+    <map name="characterValues" lazy="false"
+      table="rets_history_data_charactervalues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_charvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="string"/>
+    </map>
+
+    <!-- a map of date values -->
+    <map name="dateValues" lazy="false" table="rets_history_data_datevalues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_datevalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="date"/>
+    </map>
+
+    <!-- a map of date values -->
+    <map name="dateTimeValues" lazy="false"
+      table="rets_history_data_datetimevalues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_datetimevalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="timestamp"/>
+    </map>
+
+    <!-- a map of time values -->
+    <map name="timeValues" lazy="false" table="rets_history_data_timevalues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_timevalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="time"/>
+    </map>
+
+    <!-- a map for the family int values (tiny, small, int, long) -->
+    <map name="intValues" lazy="false" table="rets_history_data_intvalues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_intvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="long"/>
+    </map>
+
+    <!-- a map for arbitrary precision signed decimal numbers -->
+    <map name="decimalValues" lazy="false"
+      table="rets_history_data_decimalValues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_decimalvalue_key"/>
+      </index-many-to-many>
+      <element column="value" type="big_decimal"/>
+    </map>
+
+    <map name="multiValues" lazy="false" table="rets_history_data_multiValues">
+      <key column="id"/>
+      <index-many-to-many
+        class="org.nar.rets.metadata.newdb.MetadataTable">
+        <column name="key" index="rets_history_data_multivalue_key"/>
+      </index-many-to-many>
+      <many-to-many column="multi" class="org.nar.rets.data.RETSMultiSet"/>
+    </map>
+      
+  </class>
+</hibernate-mapping>
