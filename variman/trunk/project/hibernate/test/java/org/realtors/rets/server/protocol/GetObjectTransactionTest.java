@@ -346,6 +346,24 @@ public class GetObjectTransactionTest extends TestCase
         assertTrue(Arrays.equals(expected, actual));
     }
 
+    public void testRemoteLocationObjectSet() throws RetsServerException
+    {
+        GetObjectTransaction transaction = createTransaction("abc126:3", true);
+        TestResponse response = new TestResponse();
+        transaction.execute(response);
+        assertEquals("application/octet-stream", response.getContentType());
+        assertEquals("1.0", response.getHeader("MIME-Version"));
+        assertEquals("abc126", response.getHeader("Content-ID"));
+        assertEquals("3", response.getHeader("Object-ID"));
+        assertEquals("http://images.example.com/abc123-1.gif",
+                     response.getHeader("Location"));
+        assertNull(response.getHeader("Content-Description"));
+
+        byte[] expected = ArrayUtils.EMPTY_BYTE_ARRAY;
+        byte[] actual = response.getByteArray();
+        assertTrue(Arrays.equals(expected, actual));
+    }
+
     public void testFindObjectDescriptor() throws RetsServerException
     {
         GetObjectTransaction transaction =
@@ -354,6 +372,7 @@ public class GetObjectTransactionTest extends TestCase
         ObjectDescriptor expected = new ObjectDescriptor(
             "abc126", 1, localUrl(JPEG_FILE_1),
             "Beautiful frontal view of home.");
+        expected.setRemoteLocationAllowable(true);
         ObjectDescriptor actual =
             transaction.findObjectDescriptor("abc126", 1);
         assertEquals(expected, actual);
