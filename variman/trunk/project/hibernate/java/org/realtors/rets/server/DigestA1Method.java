@@ -6,8 +6,8 @@ public class DigestA1Method extends PasswordMethod
 {
     public String hash(String username, String plainTextPassword)
     {
-        String a1 = HashUtils.md5(username + ":" + mRealm + ":" +
-                                  plainTextPassword);
+        String a1 = DigestUtils.md5Hex(username + ":" + mRealm + ":" +
+                                       plainTextPassword);
         return a1;
     }
 
