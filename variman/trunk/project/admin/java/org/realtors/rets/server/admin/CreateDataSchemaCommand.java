@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Properties;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -43,7 +44,6 @@ public class CreateDataSchemaCommand extends wx
         mClasses = new HashMap();
         mTables = new HashMap();
         mLs = System.getProperty("line.separator");
-        mDialectClass = "net.sf.hibernate.dialect.PostgreSQLDialect";
         mSessions = Admin.getSessionFactory();
     }
 
@@ -88,11 +88,11 @@ public class CreateDataSchemaCommand extends wx
     }
 
     public String createTables()
-        throws InstantiationException, IllegalAccessException,
-               ClassNotFoundException, HibernateException
+        throws HibernateException
     {
-        Dialect dialect = (Dialect)
-            getClass().getClassLoader().loadClass(mDialectClass).newInstance();
+        Properties properties =
+            Admin.getHibernateConfiguration().getProperties();
+        Dialect dialect = Dialect.getDialect(properties);
         Iterator i = mClasses.values().iterator();
         StringBuffer sb = new StringBuffer();
         while (i.hasNext())
@@ -281,6 +281,5 @@ public class CreateDataSchemaCommand extends wx
     private Map mClasses;
     private Map mTables;
     private String mLs;
-    private String mDialectClass;
     private SessionFactory mSessions;
 }
