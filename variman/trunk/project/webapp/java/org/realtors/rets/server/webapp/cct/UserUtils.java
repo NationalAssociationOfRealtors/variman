@@ -6,13 +6,12 @@ package org.realtors.rets.server.webapp.cct;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
+import org.apache.log4j.Logger;
 
+import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
 import org.realtors.rets.server.webapp.InitServlet;
@@ -24,63 +23,59 @@ public class UserUtils
 {
     public void createUser(User user, UserInfo userInfo)
     {
-        Session session = null;
-        Transaction tx = null;
+        SessionHelper helper = InitServlet.createHelper();
         try
         {
-            session = InitServlet.getSessions().openSession();
-            tx = session.beginTransaction();
+            Session session = helper.beginTransaction();
 
             session.save(user);
             session.save(userInfo);
 
-            tx.commit();
-            session.close();
+            helper.commit();
         }
         catch (HibernateException e)
         {
-            LOG.warn("Exception", e);
-            try
-            {
-                if (tx != null)
-                {
-                    tx.rollback();
-                }
-                if (session != null)
-                {
-                    session.close();
-                }
-            }
-            catch (HibernateException e1)
-            {
-                LOG.warn("Exception", e);
-            }
+            LOG.error("An exception occured", e);
+            helper.rollback(LOG);
+        }
+        finally
+        {
+            helper.close(LOG);
         }
     }
 
     public UserInfo getUserInfo(String username)
     {
-        Session session = null;
+        if (username == null)
+        {
+            LOG.warn("You dumbass, you gave me a null username");
+            return null;
+        }
+        SessionHelper helper = InitServlet.createHelper();
         UserInfo userInfo = null;
         try
         {
-            session = InitServlet.getSessions().openSession();
+            Session session = helper.beginSession();
             Query query = session.createQuery(
-                "SELECT userInfo" +
-                "  FROM org.realtors.rets.server.cct.UserInfo" +
+                "SELECT userInfo FROM UserInfo userInfo" +
                 " WHERE userInfo.user.username = ?");
-            query.setString(1, username);
+            query.setString(0, username);
             List list = query.list();
-            userInfo = (UserInfo) list.get(0);
-            session.close();
-            return userInfo;
+            LOG.debug(list);
+            if (list != null && list.size() > 0)
+            {
+                userInfo = (UserInfo) list.get(0);
+            }
         }
         catch (HibernateException e)
         {
-            LOG.error(e);
-            //todo fill this in
+            LOG.error("An exception occured", e);
         }
-        return null;
+        finally
+        {
+            helper.close(LOG);
+        }
+        return userInfo;
     }
 
     private static final Logger LOG = Logger.getLogger(UserUtils.class);
