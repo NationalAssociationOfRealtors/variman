@@ -10,6 +10,8 @@
  */
 package org.realtors.rets.server;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 public class PlainTextMethod extends PasswordMethod
 {
     public String hash(String username, String plainTextPassword)
@@ -30,9 +32,22 @@ public class PlainTextMethod extends PasswordMethod
 
     protected PasswordMethod deepCopy()
     {
-        PasswordMethod copy = new PlainTextMethod();
+        PlainTextMethod copy = new PlainTextMethod();
         copy.mMethod = mMethod;
         copy.mOptions = mOptions;
         return copy;
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof PlainTextMethod))
+        {
+            return false;
+        }
+        PlainTextMethod rhs = (PlainTextMethod) obj;
+        return new EqualsBuilder()
+            .append(mMethod, rhs.mMethod)
+            .append(mOptions, rhs.mOptions)
+            .isEquals();
     }
 }
