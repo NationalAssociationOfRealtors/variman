@@ -11,13 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 public interface ServletHandler
 {
     public String getName();
-    
+
     public void reset();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException;
 
-    ValidationResults validate();
+    public void validate(ValidationResults results);
 
-    void setGetInvokeCount(InvokeCount callCount);
+    public ValidationResults validate();
+
+    public void setGetInvokeCount(InvokeCount callCount);
 }

@@ -46,14 +46,13 @@ public abstract class BaseServletHandler implements ServletHandler
         mInvokeCount = invokeCount;
     }
 
-    public ValidationResults validate()
+    public void validate(ValidationResults results)
     {
-        ValidationResults result = new ValidationResults();
         if (mInvokeCount.equals(InvokeCount.ONE) && !(mDoGetInvokeCount == 1))
         {
-            result.addFailure(getName() + " get invoke count was " +
-                              mDoGetInvokeCount +
-                              ", expected " + mInvokeCount.getName());
+            results.addFailure(getName() + " get invoke count was " +
+                               mDoGetInvokeCount +
+                               ", expected " + mInvokeCount.getName());
         }
 
         if (mInvokeCount.equals(InvokeCount.ZERO_OR_ONE) &&
@@ -62,8 +61,14 @@ public abstract class BaseServletHandler implements ServletHandler
             // Todo: LoginHandler.validate: log error
         }
 
-        validateHeaders(result);
-        return result;
+        validateHeaders(results);
+    }
+
+    public ValidationResults validate()
+    {
+        ValidationResults results = new ValidationResults();
+        validate(results);
+        return results;
     }
 
     private void validateHeaders(ValidationResults result)
