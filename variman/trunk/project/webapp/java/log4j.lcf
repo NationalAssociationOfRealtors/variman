@@ -1,4 +1,7 @@
 log4j.rootLogger=warn, stdout
+log4j.logger.net.sf.hibernate.util.JDBCExceptionReporter = off
+log4j.logger.org.realtors.rets.server = info
+#log4j.logger.org.realtors.rets.server = debug
 
 ### direct log messages to stdout ###
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
