@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -18,11 +18,12 @@ import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.SessionHelper;
-import org.realtors.rets.server.webapp.auth.NonceTable;
-import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.webapp.auth.NonceReaper;
+import org.realtors.rets.server.webapp.auth.NonceTable;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -182,16 +183,48 @@ public class InitServlet extends RetsServlet
     private void initNonceTable()
     {
         NonceTable nonceTable = new NonceTable();
+
+        ServletContext context = getServletContext();
+        String initialTimeout =
+            context.getInitParameter("nonce-initial-timeout");
+        if (initialTimeout != null)
+        {
+            long timeout = stringToLong(initialTimeout,
+                                        NonceTable.DEFAULT_INITIAL_TIMEOUT);
+            nonceTable.setInitialTimeout(timeout * DateUtils.MILLIS_IN_MINUTE);
+            LOG.debug("Set initial nonce timeout to " + timeout + " minutes");
+        }
+
+        String successTimeout =
+            context.getInitParameter("nonce-success-timeout");
+        if (successTimeout != null)
+        {
+            long timeout = stringToLong(successTimeout,
+                                        NonceTable.DEFAULT_SUCCESS_TIMEOUT);
+            nonceTable.setSuccessTimeout(timeout * DateUtils.MILLIS_IN_MINUTE);
+            LOG.debug("Set success nonce timeout to " + timeout + " minutes");
+        }
         WebApp.setNonceTable(nonceTable);
-        NonceReaper reaper = new NonceReaper(nonceTable);
-        reaper.start();
-        WebApp.setNonceReaper(reaper);
+        WebApp.setNonceReaper(new NonceReaper(nonceTable));
+    }
+
+    private static long stringToLong(String string, long defaultValue)
+    {
+        long value;
+        try
+        {
+            value = Long.parseLong(string);
+        }
+        catch (NumberFormatException e)
+        {
+            value = defaultValue;
+        }
+        return value;
     }
 
     public void destroy()
     {
-        NonceReaper reaper = WebApp.getReaper();
-        reaper.stop();
+        WebApp.getReaper().stop();
     }
 
     private static final Logger LOG =
