@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -28,13 +29,15 @@ import antlr.ANTLRException;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
+import org.realtors.rets.server.Group;
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.RetsUtils;
-import org.realtors.rets.server.User;
 import org.realtors.rets.server.UserUtils;
+import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.dmql.DmqlCompiler;
 import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.metadata.MClass;
@@ -44,9 +47,43 @@ import org.realtors.rets.server.metadata.ServerDmqlMetadata;
 public class SearchTransaction
 {
     public SearchTransaction(SearchParameters parameters)
+        throws RetsServerException
     {
-        mParameters = parameters;
-        mExecuteQuery = true;
+        try
+        {
+            mParameters = parameters;
+            mGroups = UserUtils.getGroups(mParameters.getUser());
+            mLimit = getLimit();
+            mExecuteQuery = true;
+        }
+        catch (HibernateException e)
+        {
+            throw new RetsServerException(e);
+        }
+    }
+
+    private int getLimit()
+    {
+        int userSuppliedLimit =  mParameters.getLimit();
+        LOG.debug("User supplied limit is " + userSuppliedLimit);
+        int limit = userSuppliedLimit;
+        for (Iterator iterator = mGroups.iterator(); iterator.hasNext();)
+        {
+            Group group = (Group) iterator.next();
+            SecurityConstraints securityConstraints =
+                RetsServer.getSecurityConstraints();
+            GroupRules rules =
+                securityConstraints.getRulesForGroup(group.getName());
+            int recordLimit = rules.getRecordLimit();
+            LOG.debug("Limit for group " + group.getName() + " is " +
+                      recordLimit);
+            if ((recordLimit != 0) && (recordLimit < limit))
+            {
+                limit = recordLimit;
+            }
+        }
+        LOG.debug("Using limit of " + limit);
+        return limit;
     }
 
     public void setExecuteQuery(boolean executeQuery)
@@ -86,21 +123,11 @@ public class SearchTransaction
     }
 
     private Collection getTables(MClass aClass)
-        throws RetsServerException
     {
-        try
-        {
-            User user = mParameters.getUser();
-            SortedSet groups = UserUtils.getGroups(user);
-            TableGroupFilter groupFilter = RetsServer.getTableGroupFilter();
-            String resourceName = aClass.getResource().getResourceID();
-            String className = aClass.getClassName();
-            return groupFilter.findTables(groups, resourceName, className);
-        }
-        catch (HibernateException e)
-        {
-            throw new RetsServerException(e);
-        }
+        TableGroupFilter groupFilter = RetsServer.getTableGroupFilter();
+        String resourceName = aClass.getResource().getResourceID();
+        String className = aClass.getClassName();
+        return groupFilter.findTables(mGroups, resourceName, className);
     }
 
     /**
@@ -146,6 +173,7 @@ public class SearchTransaction
             if (resultSet.next())
             {
                 mCount = resultSet.getInt(1);
+                mCount = Math.min(mCount, mLimit);
             }
             else
             {
@@ -210,30 +238,21 @@ public class SearchTransaction
     private void generateWhereClause(MClass aClass)
         throws RetsServerException
     {
-        try
-        {
-            User user = mParameters.getUser();
-            SortedSet groups = UserUtils.getGroups(user);
-            ConditionRuleSet conditionRuleSet =
-                RetsServer.getConditionRuleSet();
-            String resourceName = aClass.getResource().getResourceID();
-            String className = aClass.getClassName();
-            String sqlConstraint =
-                conditionRuleSet.findSqlConstraint(groups, resourceName,
-                                                   className);
-            SqlConverter sqlConverter = parse(mMetadata);
-            StringWriter stringWriter = new StringWriter();
-            sqlConverter.toSql(new PrintWriter(stringWriter));
-            mWhereClause = stringWriter.toString();
+        ConditionRuleSet conditionRuleSet =
+            RetsServer.getConditionRuleSet();
+        String resourceName = aClass.getResource().getResourceID();
+        String className = aClass.getClassName();
+        String sqlConstraint =
+            conditionRuleSet.findSqlConstraint(mGroups, resourceName,
+                                               className);
+        SqlConverter sqlConverter = parse(mMetadata);
+        StringWriter stringWriter = new StringWriter();
+        sqlConverter.toSql(new PrintWriter(stringWriter));
+        mWhereClause = stringWriter.toString();
 
-            if (StringUtils.isNotEmpty(sqlConstraint))
-            {
-                mWhereClause = "(" + mWhereClause + ") AND " + sqlConstraint;
-            }
-        }
-        catch (HibernateException e)
+        if (StringUtils.isNotEmpty(sqlConstraint))
         {
-            throw new RetsServerException(e);
+            mWhereClause = "(" + mWhereClause + ") AND " + sqlConstraint;
         }
     }
 
@@ -281,7 +300,7 @@ public class SearchTransaction
     {
         SearchFormatterContext context =
             new SearchFormatterContext(out, resultSet, columns, mMetadata);
-        context.setLimit(mParameters.getLimit());
+        context.setLimit(getLimit());
         SearchResultsFormatter formatter = getFormatter();
 
         RetsUtils.printXmlHeader(out);
@@ -411,10 +430,12 @@ public class SearchTransaction
     private static final Logger LOG =
         Logger.getLogger(SearchTransaction.class);
     private SearchParameters mParameters;
+    private SortedSet mGroups;
     private boolean mExecuteQuery;
     private String mFromClause;
     private String mWhereClause;
     private int mCount;
     private SessionFactory mSessions;
     private ServerDmqlMetadata mMetadata;
+    private int mLimit;
 }
