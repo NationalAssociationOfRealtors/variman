@@ -25,18 +25,35 @@
 
     <h3>Features</h3>
 
-    <ul> <li> Certified RETS 1.0 and 1.5 compliant.  </li> <li> Cross
-      platform.  Runs on Microsoft Windows, Linux, Unix, Mac OS X, and
-      anywhere else a 1.3 version of Java is available.  </li> <li>
-      Minimal external intallation requirements.  Embedded Tomcat
-      version requires only Java and a relational database.  </li>
-      <li> Supports PostgreSQL and Microsoft SQLServer with either the
-      <a
-      href="http://www.jnetdirect.com/products.php?op=jsqlconnect">JNetDirect
-      JSQLConnect driver</a> or <a
-      href="http://jtds.sourceforge.net/">jTDS</a>.  </li> </ul>
+    <ul>
+      <li> Certified RETS 1.0 and 1.5 compliant.  </li>
+      <li>
+        Cross platform.  Runs on Microsoft Windows, Linux, Unix, Mac
+        OS X, and anywhere else a 1.3 version of Java is available.
+      </li>
+      <li>
+        Minimal external intallation requirements.  Embedded Tomcat
+        version requires only Java and a relational database.
+      </li>
+      <li>
+        Supports PostgreSQL and Microsoft SQLServer with either the <a
+        href="http://www.jnetdirect.com/products.php?op=jsqlconnect">JNetDirect
+        JSQLConnect driver</a> or <a
+        href="http://jtds.sourceforge.net/">jTDS</a>.
+      </li>
+    </ul>
+
+    <para>
+      The current version is 2.1.3.  View the complete <a
+      href="NEWS">version history</a>.
+    </para>
 
     <h3>News</h3>
+    <ul>
+      <li>
+        <b>14 Jan 2005</b>: Version 2.1.3 released.
+      </li>
+    </ul>
     <ul>
       <li>
         <b>20 Dec 2004</b>: Version 2.1.2 released.  Name changed to
