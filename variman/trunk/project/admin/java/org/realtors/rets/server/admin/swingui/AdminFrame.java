@@ -71,6 +71,8 @@ public class AdminFrame extends JFrame
         mTabbedPane.addTab("Configuration", mConfigurationPanel);
         mUsersPanel = new UsersPanel();
         mTabbedPane.addTab("Users", mUsersPanel);
+        mGroupsPanel = new GroupsPanel();
+        mTabbedPane.addTab("Groups", mGroupsPanel);
         mTabbedPane.addChangeListener(new OnTabChanged());
         content.add(mTabbedPane, BorderLayout.CENTER);
 
@@ -81,6 +83,11 @@ public class AdminFrame extends JFrame
         mUserMenu.add(mUsersPanel.getChangePasswordAction());
         mUserMenu.add(mUsersPanel.getEditUserAction());
         mUserMenu.setEnabled(false);
+
+        mGroupMenu = new JMenu("Group");
+        menuBar.add(mGroupMenu);
+        mGroupMenu.add(mGroupsPanel.getAddGroupAction());
+        mGroupMenu.setEnabled(false);
 
         mStatusBar = new JLabel("Status bar");
         mStatusBar.setBorder(
@@ -155,6 +162,11 @@ public class AdminFrame extends JFrame
         mUsersPanel.populateList();
     }
 
+    public void refreshGroups()
+    {
+        mGroupsPanel.populateList();
+    }
+
     private class OnClose extends WindowAdapter
     {
         public void windowClosing(WindowEvent e)
@@ -208,20 +220,25 @@ public class AdminFrame extends JFrame
     {
         public void stateChanged(ChangeEvent event)
         {
+            mUserMenu.setEnabled(false);
+            mGroupMenu.setEnabled(false);
+
             int tab = mTabbedPane.getSelectedIndex();
             if (tab == USERS_TAB)
             {
                 mUsersPanel.populateList();
                 mUserMenu.setEnabled(true);
             }
-            else
+            else if (tab == GROUPS_TAB)
             {
-                mUserMenu.setEnabled(false);
+                mGroupsPanel.populateList();
+                mGroupMenu.setEnabled(true);
             }
         }
     }
 
     private static final int USERS_TAB = 1;
+    private static final int GROUPS_TAB = 2;
 
     private static final Logger LOG =
         Logger.getLogger(AdminFrame.class);
@@ -233,4 +250,6 @@ public class AdminFrame extends JFrame
     private JMenu mUserMenu;
     private int mMenuShortcutKeyMask;
     private ConfigurationPanel mConfigurationPanel;
+    private GroupsPanel mGroupsPanel;
+    private JMenu mGroupMenu;
 }
