@@ -42,15 +42,15 @@ tokens
     }
 
     private boolean isLookupField(String fieldName) {
-        return mMetadata.isLookupField(fieldName);
+        return (mMetadata.getFieldType(fieldName) == DmqlFieldType.LOOKUP);
     }
 
     private boolean isCharacterField(String fieldName) {
-        return mMetadata.isCharacterField(fieldName);
+        return (mMetadata.getFieldType(fieldName) == DmqlFieldType.CHARACTER);
     }
 
     private boolean isNumericField(String fieldName) {
-        return mMetadata.isNumericField(fieldName);
+        return (mMetadata.getFieldType(fieldName) == DmqlFieldType.NUMERIC);
     }
 
     private void assertValidLookupValue(AST field, Token t)

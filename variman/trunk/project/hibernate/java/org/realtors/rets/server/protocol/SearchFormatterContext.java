@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
+import org.realtors.rets.server.dmql.DmqlFieldType;
 
 /**
  * Contains all objects needed to format search results. It contains:
@@ -213,7 +214,7 @@ public class SearchFormatterContext
     public boolean isColumnALookup(String column)
     {
         String field = mMetadata.columnToField(column);
-        return mMetadata.isLookupField(field);
+        return (mMetadata.getFieldType(field) == DmqlFieldType.LOOKUP);
     }
 
     /** The writer to print to. */
