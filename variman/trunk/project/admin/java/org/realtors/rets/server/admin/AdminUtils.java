@@ -10,14 +10,10 @@ package org.realtors.rets.server.admin;
 
 import java.io.File;
 
-import org.wxwindows.wxTextCtrl;
-
-import org.apache.log4j.Logger;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
-import org.realtors.rets.server.Util;
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
@@ -25,27 +21,6 @@ import org.realtors.rets.server.config.RetsConfig;
 
 public class AdminUtils
 {
-    public static void setValue(wxTextCtrl textCtrl, Object text)
-    {
-        if (text == null)
-        {
-            textCtrl.SetValue("");
-        }
-        else
-        {
-            textCtrl.SetValue(text.toString());
-        }
-    }
-
-    public static void setValue(wxTextCtrl textCtrl, int number)
-    {
-        textCtrl.SetValue(Integer.toString(number));
-    }
-
-    public static void setValue(wxTextCtrl textCtrl, boolean b)
-    {
-        textCtrl.SetValue(Util.toString(b));
-    }
 
     public static void initConfig() throws RetsServerException
     {
