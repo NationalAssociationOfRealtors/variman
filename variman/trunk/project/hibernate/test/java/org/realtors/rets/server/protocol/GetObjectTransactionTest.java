@@ -118,6 +118,7 @@ public class GetObjectTransactionTest extends TestCase
         out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes(CRLF);
         InputStream stream = getClass().getResourceAsStream(JPEG_FILE_1);
         IOUtils.copyStream(stream, out);
 
@@ -125,6 +126,7 @@ public class GetObjectTransactionTest extends TestCase
         out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 2" + CRLF);
+        out.writeBytes(CRLF);
         stream = getClass().getResourceAsStream(JPEG_FILE_2);
         IOUtils.copyStream(stream, out);
 
@@ -132,6 +134,7 @@ public class GetObjectTransactionTest extends TestCase
         out.writeBytes("Content-Type: image/jpeg" + CRLF);
         out.writeBytes("Content-ID: abc124" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes(CRLF);
         stream = getClass().getResourceAsStream(JPEG_FILE_3);
         IOUtils.copyStream(stream, out);
 

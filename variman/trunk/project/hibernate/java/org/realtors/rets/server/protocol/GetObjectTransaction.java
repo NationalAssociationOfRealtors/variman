@@ -112,6 +112,7 @@ public class GetObjectTransaction
             out.writeBytes("Content-Type: " + getContentType(filePath) + CRLF);
             out.writeBytes("Content-ID: " + fileDescriptor.objectKey + CRLF);
             out.writeBytes("Object-ID: " + fileDescriptor.objectId + CRLF);
+            out.writeBytes(CRLF);
             IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
                                out);
         }
