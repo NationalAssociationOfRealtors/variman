@@ -30,7 +30,7 @@ public class GroupRules
         mFilterRules.add(filterRule);
     }
 
-    public void removeRule(FilterRule filterRule)
+    public void removeFilterRule(FilterRule filterRule)
     {
         mFilterRules.remove(filterRule);
     }
@@ -43,6 +43,11 @@ public class GroupRules
     public void addConditionRule(ConditionRule conditionRule)
     {
         mConditionRules.add(conditionRule);
+    }
+
+    public void removeConditionRule(ConditionRule conditionRule)
+    {
+        mConditionRules.remove(conditionRule);
     }
 
     private String mGroupName;
