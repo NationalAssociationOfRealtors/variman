@@ -55,6 +55,8 @@ public class MetadataImporter
         initHibernate();
         mResources = new HashMap();
         mClasses = new HashMap();
+        mEditMasks = new HashMap();
+        mTables = new HashMap();
         mDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
     }
 
@@ -97,13 +99,14 @@ public class MetadataImporter
             doUpdateHelp(rSession, hSession);
             doValidationExternal(rSession, hSession);
             doUpdate(rSession, hSession);
+            doTable(rSession, hSession);
             
             tx.commit();
             hSession.close();
         }
         catch (Exception e)
         {
-            System.out.println(e);
+            e.printStackTrace();
             try
             {
                 tx.rollback();
@@ -111,7 +114,7 @@ public class MetadataImporter
             }
             catch (Exception e2)
             {
-                System.out.println(e2);
+                e2.printStackTrace();
             }
         }
     }
@@ -346,6 +349,7 @@ public class MetadataImporter
 
                     hSession.save(hEditMask);
                     hEditMasks.add(hEditMask);
+                    mEditMasks.put(hEditMask.getPath(), hEditMask);
                 }
             }
             resource.setEditMasks(hEditMasks);
@@ -596,9 +600,9 @@ public class MetadataImporter
         Iterator i = mClasses.values().iterator();
         while (i.hasNext())
         {
-            MClass clazz = (MClass) i.next();
+            MClass hClass = (MClass) i.next();
             Set hTables = new HashSet();
-            List tables = tTables.getDataRows(clazz.getPath());
+            List tables = tTables.getDataRows(hClass.getPath());
             if (tables != null)
             {
                 Iterator j = tables.iterator();
@@ -607,7 +611,7 @@ public class MetadataImporter
                     Metadata md = (Metadata) j.next();
                     Table hTable = new Table();
 
-                    hTable.setClassid(clazz);
+                    hTable.setClassid(hClass);
 
                     hTable.setSystemName(md.getAttribute("SystemName"));
                     hTable.setStandardName(
@@ -634,11 +638,32 @@ public class MetadataImporter
                     hTable.setUseSeparator(
                         Boolean.valueOf(
                             md.getAttribute("UseSeparator")).booleanValue());
-                    // todo: pickup at editmask
+
                     String editMasksJoined = md.getAttribute("EditMaskID");
-                    String editMasks[] =
-                        StringUtils.split(editMasksJoined,",");
+                    if (editMasksJoined != null)
+                    {
+                        String editMasks[] =
+                            StringUtils.split(editMasksJoined,",");
+                        Set hEditMasks = new HashSet();
+                        for (int c = 0; c < editMasks.length; c++)
+                        {
+                            Resource resource = hClass.getResourceid();
+                            String path = hClass.getResourceid().getPath() +
+                                ":" + editMasks[c];
+                            EditMask em = (EditMask) mEditMasks.get(path);
+                            hEditMasks.add(em);
+                        }
+                        hTable.setEditMasks(hEditMasks);
+                    }
+
+                    // todo: pick up after editmasks
+
+                    hSession.save(hTable);
+                    hTables.add(hTable);
+                    mTables.put(hTable.getPath(), hTable);
                 }
+                hClass.setTables(hTables);
+                hSession.saveOrUpdate(hClass);
             }
         }
     }
@@ -653,8 +678,10 @@ public class MetadataImporter
     private SessionFactory mSessions;
     private Map mResources;
     private Map mClasses;
+    private Map mEditMasks;
+    private Map mTables;
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.13 2003/07/03 15:36:19 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.14 2003/07/03 20:09:09 kgarner Exp $";
 }
