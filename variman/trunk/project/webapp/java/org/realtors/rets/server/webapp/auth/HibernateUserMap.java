@@ -8,6 +8,7 @@ import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 
+import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.webapp.InitServlet;
 import org.apache.log4j.Logger;
@@ -18,9 +19,13 @@ public class HibernateUserMap implements UserMap
     public User findUser(String username)
     {
         User user = null;
+
+        SessionHelper sessionHelper =
+            new SessionHelper(InitServlet.getSessions());
+
         try
         {
-            Session session = InitServlet.getSessions().openSession();
+            Session session = sessionHelper.beginSession();
             List users = session.find(
                 "SELECT user " +
                 "  FROM User user " +
@@ -39,6 +44,10 @@ public class HibernateUserMap implements UserMap
         catch (HibernateException e)
         {
             LOG.warn("Exception", e);
+        }
+        finally
+        {
+            sessionHelper.close(LOG);
         }
         return user;
     }
