@@ -474,9 +474,13 @@ public class MetadataLoader
                 hTable.setDataType(DataTypeEnum.fromString(in.getDataType()));
                 hTable.setPrecision(in.getPrecision());
                 hTable.setSearchable(in.getSearchable());
-                hTable.setInterpretation(
+                String interpretation = in.getInterpretation();
+                if (interpretation != null)
+                {
+                    hTable.setInterpretation(
                         InterpretationEnum.fromString(
-                                in.getInterpretation()));
+                            interpretation));
+                }
                 hTable.setAlignment(
                         AlignmentEnum.fromString(
                                in.getAlignment()));
@@ -510,7 +514,11 @@ public class MetadataLoader
                 hTable.setLookup(lookup);
 
                 hTable.setMaxSelect(in.getMaxSelect());
-                hTable.setUnits(UnitEnum.fromString(in.getUnits()));
+                String units = in.getUnits();
+                if (units != null)
+                {
+                    hTable.setUnits(UnitEnum.fromString(units));
+                }
                 hTable.setIndex(in.getIndex());
                 hTable.setMinimum(in.getMinimum());
                 hTable.setMaximum(in.getMaximum());
@@ -895,7 +903,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.10 2003/12/18 19:10:15 dterrell Exp $";
+        "$Id: MetadataLoader.java,v 1.11 2003/12/18 19:21:04 dterrell Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
