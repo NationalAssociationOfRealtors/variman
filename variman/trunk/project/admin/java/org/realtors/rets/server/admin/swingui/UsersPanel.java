@@ -1,16 +1,18 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
-import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.UserUtils;
-import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,12 +43,22 @@ public class UsersPanel extends JPanel
         tvp.addRow("Agent Code:", mAgentCode);
         mBrokerCode = new JLabel();
         tvp.addRow("Broker Code:", mBrokerCode);
+        tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(tvp, BorderLayout.NORTH);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                               mUserList, panel);
         splitPane.setDividerLocation(200);
         add(splitPane, BorderLayout.CENTER);
+
+        AdminFrame frame = SwingUtils.getAdminFrame();
+        mPopup = new JPopupMenu();
+        mPopup.add(frame.getAddUserAction());
+        mPopup.add(frame.getRemoveUserAction());
+
+        PopupListener popupListener = new PopupListener();
+        mUserList.addMouseListener(popupListener);
+        splitPane.addMouseListener(popupListener);
     }
 
     public void populateList()
@@ -151,6 +163,27 @@ public class UsersPanel extends JPanel
         }
     }
 
+    private class PopupListener extends MouseAdapter
+    {
+        public void mousePressed(MouseEvent event)
+        {
+            maybeShowPopup(event);
+        }
+
+        public void mouseReleased(MouseEvent event)
+        {
+            maybeShowPopup(event);
+        }
+
+        private void maybeShowPopup(MouseEvent event)
+        {
+            if (mPopup.isPopupTrigger(event))
+            {
+                mPopup.show(event.getComponent(), event.getX(), event.getY());
+            }
+        }
+    }
+
     private static final Logger LOG =
         Logger.getLogger(UsersPanel.class);
     private JList mUserList;
@@ -160,4 +193,5 @@ public class UsersPanel extends JPanel
     private JLabel mAgentCode;
     private JLabel mBrokerCode;
     private UserListModel mUserListModel;
+    private JPopupMenu mPopup;
 }
