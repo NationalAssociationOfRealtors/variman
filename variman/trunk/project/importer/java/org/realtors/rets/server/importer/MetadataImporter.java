@@ -507,7 +507,7 @@ public class MetadataImporter extends MetadataHelpers
                         for (int c = 0; c < editMasks.length; c++)
                         {
                             path = resourcePath + ":" +
-                                StringUtils.clean(editMasks[c]);
+                                StringUtils.trimToEmpty(editMasks[c]);
                             EditMask em = (EditMask) mEditMasks.get(path);
                             hEditMasks.add(em);
                             if (em == null)
@@ -851,7 +851,8 @@ public class MetadataImporter extends MetadataHelpers
                     Set searchFieldSet = new HashSet();
                     for (int c = 0; c < searchField.length; c++)
                     {
-                        searchFieldSet.add(StringUtils.clean(searchField[c]));
+                        searchFieldSet.add(
+                            StringUtils.trimToEmpty(searchField[c]));
                     }
                     vet.setSearchField(searchFieldSet);
 
@@ -863,7 +864,7 @@ public class MetadataImporter extends MetadataHelpers
                     for (int c = 0; c < displayFields.length; c++)
                     {
                         displayFieldSet.add(
-                            StringUtils.clean(displayFields[c]));
+                            StringUtils.trimToEmpty(displayFields[c]));
                     }
                     vet.setDisplayField(displayFieldSet);
 
@@ -876,8 +877,8 @@ public class MetadataImporter extends MetadataHelpers
                     {
                         String split[] =
                             StringUtils.split(resultFields[c], "=", 2);
-                        resultFieldMap.put(StringUtils.clean(split[0]),
-                                           StringUtils.clean(split[1]));
+                        resultFieldMap.put(StringUtils.trimToEmpty(split[0]),
+                                           StringUtils.trimToEmpty(split[1]));
                     }
                     vet.setResultFields(resultFieldMap);
 
@@ -1173,7 +1174,7 @@ public class MetadataImporter extends MetadataHelpers
     private SessionFactory mSessions;
     private String mUsername;
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.33 2003/08/28 21:24:04 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.34 2003/09/04 17:33:58 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
