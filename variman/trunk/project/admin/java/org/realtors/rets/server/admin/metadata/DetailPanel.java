@@ -8,11 +8,9 @@
 
 package org.realtors.rets.server.admin.metadata;
 
+import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxPanel;
 import org.wxwindows.wxWindow;
-import org.wxwindows.wxBoxSizer;
-import org.wxwindows.wxScrolledWindow;
-import org.wxwindows.wxSize;
 
 import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.ForeignKey;
@@ -24,6 +22,7 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataVisitor;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.ServerMetadata;
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.Update;
 import org.realtors.rets.server.metadata.UpdateHelp;
@@ -33,7 +32,6 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ServerMetadata;
 
 /**
  * A panel that provides detailed and editable information for a metadata
@@ -59,6 +57,45 @@ public class DetailPanel extends wxPanel
 
         mTablePanel = new TablePanel(this);
         addDetailPanel(mTablePanel);
+
+        mUpdatePanel = new UpdatePanel(this);
+        addDetailPanel(mUpdatePanel);
+
+        mUpdateTypePanel = new UpdateTypePanel(this);
+        addDetailPanel(mUpdateTypePanel);
+
+        mObjectPanel = new MObjectPanel(this);
+        addDetailPanel(mObjectPanel);
+
+        mSearchHelpPanel = new SearchHelpPanel(this);
+        addDetailPanel(mSearchHelpPanel);
+
+        mEditMaskPanel = new EditMaskPanel(this);
+        addDetailPanel(mEditMaskPanel);
+
+        mLookupPanel = new LookupPanel(this);
+        addDetailPanel(mLookupPanel);
+
+        mLookupTypePanel = new LookupTypePanel(this);
+        addDetailPanel(mLookupTypePanel);
+
+        mUpdateHelpPanel = new UpdateHelpPanel(this);
+        addDetailPanel(mUpdateHelpPanel);
+
+        mValidationLookupPanel = new ValidationLookupPanel(this);
+        addDetailPanel(mValidationLookupPanel);
+
+        mValidationLookupTypePanel = new ValidationLookupTypePanel(this);
+        addDetailPanel(mValidationLookupTypePanel);
+
+        mValidationExternalPanel = new ValidationExternalPanel(this);
+        addDetailPanel(mValidationExternalPanel);
+
+        mValidationExternalTypePanel = new ValidationExternalTypePanel(this);
+        addDetailPanel(mValidationExternalTypePanel);
+
+        mValidationExpressionPanel = new ValidationExpressionPanel(this);
+        addDetailPanel(mValidationExpressionPanel);
 
         SetSizer(mDetailSizer);
 
@@ -115,7 +152,8 @@ public class DetailPanel extends wxPanel
 
         public Object visit(EditMask editMask)
         {
-            return null;
+            mEditMaskPanel.setModel(editMask);
+            return mEditMaskPanel;
         }
 
         public Object visit(ForeignKey foreignKey)
@@ -125,17 +163,20 @@ public class DetailPanel extends wxPanel
 
         public Object visit(Lookup lookup)
         {
-            return null;
+            mLookupPanel.setModel(lookup);
+            return mLookupPanel;
         }
 
         public Object visit(LookupType lookupType)
         {
-            return null;
+            mLookupTypePanel.setModel(lookupType);
+            return mLookupTypePanel;
         }
 
         public Object visit(MObject object)
         {
-            return null;
+            mObjectPanel.setModel(object);
+            return mObjectPanel;
         }
 
         public Object visit(Resource resource)
@@ -146,7 +187,8 @@ public class DetailPanel extends wxPanel
 
         public Object visit(SearchHelp searchHelp)
         {
-            return null;
+            mSearchHelpPanel.setModel(searchHelp);
+            return mSearchHelpPanel;
         }
 
         public Object visit(MSystem system)
@@ -163,42 +205,50 @@ public class DetailPanel extends wxPanel
 
         public Object visit(Update update)
         {
-            return null;
+            mUpdatePanel.setModel(update);
+            return mUpdatePanel;
         }
 
         public Object visit(UpdateHelp updateHelp)
         {
-            return null;
+            mUpdateHelpPanel.setModel(updateHelp);
+            return mUpdateHelpPanel;
         }
 
         public Object visit(UpdateType updateType)
         {
-            return null;
+            mUpdateTypePanel.setModel(updateType);
+            return mUpdateTypePanel;
         }
 
         public Object visit(ValidationExpression validationExpression)
         {
-            return null;
+            mValidationExpressionPanel.setModel(validationExpression);
+            return mValidationExpressionPanel;
         }
 
         public Object visit(ValidationExternal validationExternal)
         {
-            return null;
+            mValidationExternalPanel.setModel(validationExternal);
+            return mValidationExternalPanel;
         }
 
         public Object visit(ValidationExternalType validationExternalType)
         {
-            return null;
+            mValidationExternalTypePanel.setModel(validationExternalType);
+            return mValidationExternalTypePanel;
         }
 
         public Object visit(ValidationLookup validationLookup)
         {
-            return null;
+            mValidationLookupPanel.setModel(validationLookup);
+            return mValidationLookupPanel;
         }
 
         public Object visit(ValidationLookupType validationLookupType)
         {
-            return null;
+            mValidationLookupTypePanel.setModel(validationLookupType);
+            return mValidationLookupTypePanel;
         }
     }
 
@@ -209,4 +259,17 @@ public class DetailPanel extends wxPanel
     private MClassPanel mClassPanel;
     private DetailPanelVisitor mDetailPanelVisitor;
     private TablePanel mTablePanel;
+    private UpdatePanel mUpdatePanel;
+    private UpdateTypePanel mUpdateTypePanel;
+    private MObjectPanel mObjectPanel;
+    private SearchHelpPanel mSearchHelpPanel;
+    private EditMaskPanel mEditMaskPanel;
+    private LookupPanel mLookupPanel;
+    private LookupTypePanel mLookupTypePanel;
+    private UpdateHelpPanel mUpdateHelpPanel;
+    private ValidationLookupPanel mValidationLookupPanel;
+    private ValidationLookupTypePanel mValidationLookupTypePanel;
+    private ValidationExternalPanel mValidationExternalPanel;
+    private ValidationExternalTypePanel mValidationExternalTypePanel;
+    private ValidationExpressionPanel mValidationExpressionPanel;
 }
