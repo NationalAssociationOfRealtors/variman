@@ -35,7 +35,8 @@ public class GetObjectServlet extends RetsServlet
         GetObjectTransaction transaction =
             new GetObjectTransaction(parameters);
         transaction.setRootDirectory(WebApp.getGetObjectRoot());
-        transaction.setPattern(WebApp.getGetObjectPattern());
+        transaction.setImagePattern(WebApp.getGetObjectPattern());
+        transaction.setObjectSetPattern("%k.xml");
         StringBuffer location = ServletUtils.getContextPath(request);
         location.append("/objects/");
         transaction.setBaseLocationUrl(location.toString());
