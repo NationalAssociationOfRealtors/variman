@@ -32,19 +32,17 @@ public class UpdateType implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
+     * @hibernate.many-to-one
      * @hibernate.column name="systemName"
      *   not-null="true"
-     *   unique="true"
-     *   index="updatetype_system_name_index"
-     *   length="32"
+     *   index="updatetype_systemname_index"
      */
-    public String getSystemName()
+    public Table getSystemName()
     {
         return mSystemName;
     }
 
-    public void setSystemName(String systemName)
+    public void setSystemName(Table systemName)
     {
         mSystemName = systemName;
     }
@@ -233,7 +231,7 @@ public class UpdateType implements Serializable
     private Long mId;
 
     /** nullable persistent field */
-    private String mSystemName;
+    private Table mSystemName;
 
     /** nullable persistent field */
     private int mSequence;
