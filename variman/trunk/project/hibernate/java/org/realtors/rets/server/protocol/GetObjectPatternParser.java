@@ -217,7 +217,7 @@ public class GetObjectPatternParser
         protected void doFormat(StringBuffer buffer,
                                 GetObjectPatternContext context)
         {
-            int objectId = context.getObjectId();
+            int objectId = context.getObjectId() - 1;
             if (objectId != 0)
             {
                 buffer.append("_").append(objectId);
