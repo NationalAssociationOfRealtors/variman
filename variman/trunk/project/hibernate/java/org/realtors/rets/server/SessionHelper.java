@@ -48,13 +48,20 @@ public class SessionHelper
     public Query createQuery(String queryString) throws HibernateException
     {
         LOG.debug("createQuery");
-        return beginSession().createQuery(queryString);
+        if (mSession == null)
+        {
+            beginSession();
+        }
+        return mSession.createQuery(queryString);
     }
 
     public void commit() throws HibernateException
     {
         LOG.debug("commit");
-        mTx.commit();
+        if (mTx != null)
+        {
+            mTx.commit();
+        }
     }
 
     public void rollback() throws HibernateException
