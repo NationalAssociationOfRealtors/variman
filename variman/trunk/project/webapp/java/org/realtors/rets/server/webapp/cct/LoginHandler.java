@@ -11,7 +11,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.realtors.rets.server.webapp.SessionFilter;
 
 public class LoginHandler extends BaseServletHandler
 {
@@ -63,13 +63,17 @@ public class LoginHandler extends BaseServletHandler
     {
         super.doGet(request, response);
 
+        SessionFilter.validateSession(request.getSession());
+
         mContextPath = new StringBuffer();
         mContextPath.append(request.getScheme()).append("://");
         mContextPath.append(request.getServerName());
         mContextPath.append(":").append(request.getServerPort());
         mContextPath.append(request.getContextPath());
 
-        response.addCookie(new Cookie("RETS-Session-ID", mSessionId));
+        Cookie cookie = new Cookie("RETS-Session-ID", mSessionId);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         response.setContentType("text/xml");
         mOut = response.getWriter();
         println(mOut, "<RETS ReplyCode=\"0\" " +
@@ -85,7 +89,7 @@ public class LoginHandler extends BaseServletHandler
         printMaximalUrl(mOut, "GetObject", "getObject");
         printAbsoluteCapabilityUrl(mOut, "Login", getLoginUrl());
         printMaximalUrl(mOut, "LoginComplete", "loginComplete");
-        printNormalUrl(mOut, "Logout", "logout");
+        printNormalUrl(mOut, "Logout", "cct/logout");
         printMinimalUrl(mOut, "Search", "search");
         printMinimalUrl(mOut, "GetMetadata", "getMetadata");
         printMaximalUrl(mOut, "Update", "update");
@@ -95,12 +99,12 @@ public class LoginHandler extends BaseServletHandler
 
     private String getActionUrl()
     {
-        return mAlternateActionUrl ? "actionAlt" : "action";
+        return mAlternateActionUrl ? "cct/actionAlt" : "cct/action";
     }
 
     private String getLoginUrl()
     {
-        return mAlternateLoginUrl ? "loginAlt" : "login";
+        return mAlternateLoginUrl ? "cct/loginAlt" : "cct/login";
     }
 
     private void printCapabilityUrl(PrintWriter out, String capability,
@@ -125,7 +129,7 @@ public class LoginHandler extends BaseServletHandler
     private void printRelativeCapabilityUrl(PrintWriter out, String capability,
                                             String url)
     {
-        println(out, capability + " = " + "/" + url);
+        println(out, capability + " = " + "/rets/" + url);
     }
 
     private void printMinimalUrl(PrintWriter out, String capability, String url)
@@ -162,18 +166,11 @@ public class LoginHandler extends BaseServletHandler
         out.print("\r\n");
     }
 
-    private void println(String data)
-    {
-        println(mOut, data);
-    }
-
     public void setCapabilityUrlLevel(CapabilityUrlLevel capabilityUrlLevel)
     {
         mCapabilityUrlLevel = capabilityUrlLevel;
     }
 
-    private static final Logger LOG =
-        Logger.getLogger(LoginHandler.class);
     private String mSessionId;
     private CapabilityUrlLevel mCapabilityUrlLevel;
     private boolean mRelativeUrls;
