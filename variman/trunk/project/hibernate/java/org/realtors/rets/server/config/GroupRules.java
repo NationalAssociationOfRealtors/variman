@@ -28,6 +28,11 @@ public class GroupRules
         mRules.add(ruleDescription);
     }
 
+    public void removeRule(RuleDescription ruleDescription)
+    {
+        mRules.remove(ruleDescription);
+    }
+
     private String mGroupName;
     private List mRules;
     private List mReadOnlyRules;
