@@ -391,6 +391,8 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
+          file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="project/hibernate/config/cache.ccf"/>
