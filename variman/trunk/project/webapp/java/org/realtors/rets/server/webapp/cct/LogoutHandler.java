@@ -8,9 +8,11 @@ import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 
 import org.realtors.rets.server.LogoutTransaction;
 import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.webapp.SessionFilter;
 
 public class LogoutHandler extends BaseServletHandler
 {
@@ -31,6 +33,14 @@ public class LogoutHandler extends BaseServletHandler
     {
         super.doGet(request, response);
         addRetsVersion(response);
+
+        SessionFilter.invalidateSession(request.getSession());
+        // Delete session cookie
+        Cookie cookie = new Cookie("RETS-Session-ID", "");
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
         mTransaction.execute(out, new AccountingStatistics());
