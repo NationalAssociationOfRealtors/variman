@@ -272,7 +272,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         LookupType lookupType = findLookupType(lookupName, value);
         if (lookupType == null)
         {
-            return null;
+            return value;
         }
         return lookupType.getShortValue();
     }
@@ -282,7 +282,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         LookupType lookupType = findLookupType(lookupName, value);
         if (lookupType == null)
         {
-            return null;
+            return value;
         }
         return lookupType.getLongValue();
     }
