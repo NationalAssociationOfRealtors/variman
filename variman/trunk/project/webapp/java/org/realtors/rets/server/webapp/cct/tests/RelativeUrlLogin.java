@@ -22,9 +22,9 @@ public class RelativeUrlLogin extends BaseCertificationTest
         return "Tests client can handle relative URLs";
     }
 
+    public static final String[] PROCEDURE = { "Login." , "Logout." };
     public String[] getProcedure()
     {
-        final String[] PROCEDURE = { "Login." , "Logout." };
         return PROCEDURE;
     }
 

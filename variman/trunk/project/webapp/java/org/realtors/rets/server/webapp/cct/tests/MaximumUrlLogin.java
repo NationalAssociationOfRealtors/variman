@@ -19,9 +19,9 @@ public class MaximumUrlLogin extends BaseCertificationTest
         return MaximumUrlLogin.class.getName();
     }
 
+    public static final String[] PROCEDURE = { "Login.", "Logout" };
     public String[] getProcedure()
     {
-        final String[] PROCEDURE = { "Login.", "Logout" };
         return PROCEDURE;
     }
 
