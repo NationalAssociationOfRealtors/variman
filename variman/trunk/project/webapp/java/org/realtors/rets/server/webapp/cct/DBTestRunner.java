@@ -86,7 +86,6 @@ public class DBTestRunner extends TestRunner
     {
         SessionHelper sessionHelper = InitServlet.createHelper();
         Session session = null;
-        LOG.info(result);
         try
         {
             session = sessionHelper.beginTransaction();
