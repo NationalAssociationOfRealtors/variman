@@ -22,6 +22,11 @@
   <property name="hibernate.schema.text.only" value="yes"/>
   <property name="hibernate.schema.quiet" value="yes"/>
 
+  <path id="hibernate.path">
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${hibernate.jar}"/>
+  </path>
+
   <path id="lib.path">
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${hibernate.jdbc.jar}"/>
@@ -36,7 +41,7 @@
 
   <path id="importer.path">
     <pathelement location="${rets-client.jar}"/>
-    <pathelement path="build/hibernate/final/classes"/>
+    <pathelement path="build/hibernate/classes"/>
   </path>
 
   <path id="webapp.path">
@@ -50,7 +55,7 @@
     <pathelement path="${ant.home}/lib/ant.jar" />
     <fileset dir="${xdoclet.lib}" includes="commons-*.jar"/>
     <pathelement location="${xdoclet.jar}"/>
-    <pathelement location="${servlet.jar}"/>
+    <pathelement location="${xdoclet.xdoclet.jar}"/>
     <pathelement location="${xjavadoc.jar}"/>
   </path>
 
@@ -85,6 +90,7 @@
     <mkdir dir="build/hibernate/generated"/>
     <mkdir dir="build/hibernate/schema"/>
     <mkdir dir="build/hibernate/jar"/>
+    <mkdir dir="build/hibernate/classes"/>
     <mkdir dir="build/hibernate/doc"/>
     <mkdir dir="build/embedded/classes"/>
     <mkdir dir="build/importer/classes"/>
@@ -101,6 +107,55 @@
           description="Build all"/>
 
   <target name="dist" depends="generate-schema" />
+
+  <target name="build-hibernate-xdoclet" depends="prepare">
+    <taskdef name="hibernatedoclet"
+             classname="xdoclet.modules.hibernate.HibernateDocletTask">
+      <classpath>
+        <path refid="xdoclet.path"/>
+        <path location="${xdoclet.hibernate.jar}"/>
+      </classpath>
+    </taskdef>
+    <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="true"
+                     mergedir="project/hibernate/merge">
+      <fileset dir="project/hibernate/javax" includes="**/*.java"/>
+      <hibernate version="2.0"/>
+    </hibernatedoclet>
+    <javac srcdir="project/hibernate/javax"
+           destdir="build/hibernate/classes"
+           optimize="${compile.optimize}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="hibernate.path" />
+      </classpath>
+    </javac>
+    <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
+         basedir="build/hibernate/classes"
+         excludes="hibernate.properties" index="true"/>
+    <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
+         basedir="build/hibernate/xdoclet" index="true"/>
+  </target>
+
+  <target name="build-hibernate-xschema" depends="build-hibernate-xdoclet">
+    <taskdef name="schemaexport"
+             classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement path="build/hibernate/classes"/>
+      </classpath>
+    </taskdef>
+
+    <schemaexport properties="project/hibernate/config/hibernate.properties"
+                  quiet="${hibernate.schema.quiet}"
+                  text="${hibernate.schema.text.only}"
+                  drop="no" delimiter=";"
+                  output="build/hibernate/schema/xschema-export.sql">
+      <fileset dir="build/hibernate/xdoclet">
+        <include name="**/*.hbm.xml"/>
+      </fileset>
+    </schemaexport>
+  </target>
 
   <target name="build-hibernate" depends="build-generated-code,build-xml">
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
@@ -190,6 +245,7 @@
       <classpath>
         <path refid="xdoclet.path"/>
         <path location="${xdoclet.web.jar}"/>
+        <pathelement location="${servlet.jar}"/>
       </classpath>
     </taskdef>
     <webdoclet destdir="build/webapp/generated" verbose="false">
@@ -261,7 +317,8 @@
           file="${commons-lang.jar}"/>
   </target>
 
-  <target name="build-importer" depends="build-hibernate"
+<!--   <target name="build-importer" depends="build-hibernate" -->
+  <target name="build-importer" depends="build-hibernate-xdoclet"
           description="Builds the data and metadata importers">
     <depend srcDir="project/importer/java"
             destDir="build/importer/classes"
