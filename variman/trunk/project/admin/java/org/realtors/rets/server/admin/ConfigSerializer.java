@@ -5,12 +5,15 @@
 package org.realtors.rets.server.admin;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 
 /**
@@ -42,5 +45,25 @@ public class ConfigSerializer
         
         XMLOutputter out = new XMLOutputter("  ", true, "ISO-8859-1");
         out.output(doc, writer);
+    }
+    
+    public static ConfigOptions fromXML(Reader reader)
+        throws JDOMException, IOException
+    {
+        ConfigOptions opts = new ConfigOptions();
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = builder.build(reader);
+        Element root = doc.getRootElement();
+        
+        Element child = root.getChild("hostname");
+        opts.setHostname(child.getText());
+        
+        child = root.getChild("port");
+        opts.setPort(Integer.parseInt(child.getText()));
+        
+        child = root.getChild("timeout");
+        opts.setSessionTimeout(Integer.parseInt(child.getText()));
+        
+        return opts; 
     }
 }
