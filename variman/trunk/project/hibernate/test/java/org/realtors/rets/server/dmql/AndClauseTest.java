@@ -10,7 +10,7 @@ public class AndClauseTest extends TestCase
     {
         AndClause andClause = new AndClause();
         andClause.add(new StringSqlConverter("one"));
-        assertEquals("one", TestUtil.toSql(andClause));
+        assertEquals("(one)", TestUtil.toSql(andClause));
     }
 
     public void testMultipleElements()
@@ -19,7 +19,7 @@ public class AndClauseTest extends TestCase
         andClause.add(new StringSqlConverter("one"));
         andClause.add(new StringSqlConverter("two"));
         andClause.add(new StringSqlConverter("three"));
-        assertEquals("one AND two AND three", TestUtil.toSql(andClause));
+        assertEquals("(one) AND (two) AND (three)", TestUtil.toSql(andClause));
     }
 
     public void testEquals()
