@@ -210,6 +210,38 @@ public class DigestAuthorizationRequestTest extends TestCase
         assertTrue(request.verifyResponse("Schmoe"));
     }
 
+    public void testGetUrlWithQuery()
+    {
+        DigestAuthorizationRequest request = new DigestAuthorizationRequest(
+            "Digest username=\"Joe\", realm=\"RETS Server\", " +
+            "nonce=\"51a6fd04a4250575b0d0caebdfd1cd5d\"," +
+            "uri=\"/rets/search?Class=RES&Count=1&Format=COMPACT-DECODED&" +
+            "Query=(ListPrice=900000-)&QueryType=DMQL2&SearchType=Property&" +
+            "Select=ListingID,ListPrice,City,ListDate&StandardNames=1\", " +
+            "cnonce=\"MTExMTA5\", nc=00000002, qop=\"auth\", " +
+            "response=\"c2061fbdfe9ae597fe6cbdd33bbc423c\", " +
+            "opaque=\"f46c35fa34fef8efc0b014d6e7099ba8",
+            "GET",
+            "/rets/search?Class=RES&Count=1&Format=COMPACT-DECODED&" +
+            "Query=(ListPrice=900000-)&QueryType=DMQL2&SearchType=Property&" +
+            "Select=ListingID,ListPrice,City,ListDate&StandardNames=1");
+        assertEquals("Joe", request.getUsername());
+        assertEquals("RETS Server", request.getRealm());
+        assertEquals("51a6fd04a4250575b0d0caebdfd1cd5d", request.getNonce());
+        assertEquals("/rets/search?Class=RES&Count=1&Format=COMPACT-DECODED&" +
+                     "Query=(ListPrice=900000-)&QueryType=DMQL2&" +
+                     "SearchType=Property&Select=ListingID,ListPrice,City," +
+                     "ListDate&StandardNames=1", request.getUri());
+        assertEquals("auth", request.getQop());
+        assertEquals("MD5", request.getAlgorithm());
+        assertEquals("00000002", request.getNonceCount());
+        assertEquals("MTExMTA5", request.getCnonce());
+        assertEquals("c2061fbdfe9ae597fe6cbdd33bbc423c", request.getResponse());
+        assertEquals("f46c35fa34fef8efc0b014d6e7099ba8", request.getOpaque());
+        assertEquals("GET", request.getMethod());
+        assertTrue(request.verifyResponse("Schmoe"));
+    }
+
     public void testNullHeader()
     {
         DigestAuthorizationRequest request =
