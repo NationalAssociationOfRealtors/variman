@@ -21,7 +21,6 @@ public class  GetMetadataServlet extends RetsServlet
 {
     public void init() throws ServletException
     {
-        mTransaction = new GetMetadataTransaction();
         if (USE_CACHE)
         {
             mMetadataFetcher = new WebAppMetadataFetcher();
@@ -40,10 +39,11 @@ public class  GetMetadataServlet extends RetsServlet
         PrintWriter out = response.getXmlWriter();
         GetMetadataParameters parameters =
             new GetMetadataParameters(request.getParameterMap());
-        mTransaction.execute(out, parameters, mMetadataFetcher);
+        GetMetadataTransaction transaction =
+            new GetMetadataTransaction(out, parameters, mMetadataFetcher);
+        transaction.execute();
     }
 
-    private GetMetadataTransaction mTransaction;
     private MetadataFetcher mMetadataFetcher;
     private static final boolean USE_CACHE = true;
 }

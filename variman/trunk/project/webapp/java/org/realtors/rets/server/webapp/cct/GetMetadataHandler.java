@@ -10,7 +10,7 @@ import java.util.Set;
 import org.realtors.rets.server.GetMetadataParameters;
 import org.realtors.rets.server.GetMetadataTransaction;
 import org.realtors.rets.server.MetadataFetcher;
-import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.webapp.RetsServletRequest;
@@ -21,7 +21,6 @@ public class GetMetadataHandler extends BaseServletHandler
 {
     public GetMetadataHandler()
     {
-        mTransaction = new GetMetadataTransaction();
         mMetadataFetcher = new WebAppMetadataFetcher();
         if (sMetadataTypes == null)
         {
@@ -51,12 +50,14 @@ public class GetMetadataHandler extends BaseServletHandler
 
     protected void serviceRets(RetsServletRequest request,
                                RetsServletResponse response)
-        throws RetsReplyException, IOException
+        throws RetsServerException, IOException
     {
         PrintWriter out = response.getXmlWriter();
         GetMetadataParameters parameters =
             new GetMetadataParameters(request.getParameterMap());
-        mTransaction.execute(out, parameters, mMetadataFetcher);
+        GetMetadataTransaction transaction =
+            new GetMetadataTransaction(out, parameters, mMetadataFetcher);
+        transaction.execute();
     }
 
     protected void validateParameters(ValidationResult result)
@@ -121,6 +122,5 @@ public class GetMetadataHandler extends BaseServletHandler
 
     private static Set sMetadataTypes = null;
     public static final String NAME = "/getMetadata";
-    private GetMetadataTransaction mTransaction;
     private MetadataFetcher mMetadataFetcher;
 }
