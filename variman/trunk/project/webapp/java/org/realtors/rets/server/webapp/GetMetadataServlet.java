@@ -24,5 +24,6 @@ public class GetMetadataServlet extends RetsServlet
         InputStream inStream = getResource("metadata_response.xml");
         OutputStream outStream = response.getOutputStream();
         copyIOStream(inStream, outStream);
+        sleep(100L);
     }
 }

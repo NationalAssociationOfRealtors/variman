@@ -30,6 +30,45 @@ public class User
         mId = id;
     }
 
+    public String getName()
+    {
+        return mFirstName + " " + mLastName;
+    }
+
+    /**
+     *
+     * @return
+     *
+     * @hibernate.property length="80"
+     *   not-null="true"
+     */
+    public String getFirstName()
+    {
+        return mFirstName;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        mFirstName = firstName;
+    }
+
+    /**
+     *
+     * @return
+     *
+     * @hibernate.property len="80"
+     *   not-null="true"
+     */
+    public String getLastName()
+    {
+        return mLastName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        mLastName = lastName;
+    }
+
     /**
      *
      * @return
@@ -125,6 +164,8 @@ public class User
     }
 
     private Long mId;
+    private String mFirstName;
+    private String mLastName;
     private String mUsername;
     private String mPassword;
     private PasswordMethod mPasswordMethod;

@@ -4,9 +4,10 @@ package org.realtors.rets.server.webapp;
 
 import javax.servlet.ServletException;
 
-import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.SessionFactory;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.apache.log4j.Logger;
@@ -43,6 +44,11 @@ public class InitServlet extends RetsServlet
     public static SessionFactory getSessions()
     {
         return sSessions;
+    }
+
+    public static Session openSession() throws HibernateException
+    {
+        return sSessions.openSession();
     }
 
     public static void setSessions(SessionFactory sessions)

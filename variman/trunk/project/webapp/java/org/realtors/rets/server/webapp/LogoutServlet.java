@@ -1,11 +1,15 @@
 package org.realtors.rets.server.webapp;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.realtors.rets.server.AccountingStatistics;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,23 +35,20 @@ public class LogoutServlet extends RetsServlet
         throws ServletException, IOException
     {
         HttpSession session = request.getSession();
-        Boolean loggedIn = (Boolean) session.getAttribute(LOGGED_IN_KEY);
-        if (!loggedIn.booleanValue())
-        {
-            System.out.println("Not logged in");
-        }
-        else
-        {
-            System.out.println("Blah!");
-        }
-        sleep(73L);
+        AccountingStatistics stats = getStatistics(request.getSession());
+        LOG.debug("Duration: " + stats.getSessionDuration());
 
         response.setContentType("text/xml");
-        copyIOStream(getResource("logout_response.xml"),
-                     response.getOutputStream());
+        PrintWriter out = response.getWriter();
+        printOpenRets(out, 0, "Operation Successful");
+        out.println("Connect time = " + stats.getSessionAccumalatedTime());
+        out.println("Billing = 0.05");
+        out.println("SignOffMessage = Goodbye");
+        printCloseRets(out);
 
-        AccountingStatistics stats = getStatistics(request.getSession());
-        System.out.println("Duration: " + stats.getDuration());
-        session.removeAttribute(SessionFilter.SESSION_VALID_KEY);
+        SessionFilter.invalidateSession(session);
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(LogoutServlet.class);
 }

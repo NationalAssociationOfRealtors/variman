@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.realtors.rets.server.webapp.auth.DigestAuthenticateResponse;
 import org.realtors.rets.server.webapp.RetsServlet;
 
 /**

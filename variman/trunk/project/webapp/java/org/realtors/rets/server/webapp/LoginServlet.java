@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.AccountingStatistics;
 import org.apache.log4j.Logger;
 
 /**
@@ -31,41 +33,28 @@ public class LoginServlet extends RetsServlet
         LOG.debug("context=" + contextPath);
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionFilter.SESSION_VALID_KEY, "true");
-        session.setAttribute(LOGGED_IN_KEY, Boolean.TRUE);
-        AccountingStatistics statitics =
-            (AccountingStatistics) session.getAttribute(ACCOUNTING_KEY);
-        statitics.resetStartTime();
+        SessionFilter.validateSession(session);
+        AccountingStatistics statitics = getStatistics(session);
+        statitics.startSession();
+        User user = getUser(session);
 
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
         printOpenRets(out, 0, "Operation Successful");
-
-        out.println("<RETS-RESPONSE>");
         out.println("Broker = B123, BO987");
-        out.println("MemberName = Joe T. Schmoe");
+        out.println("MemberName = " + user.getName());
         out.println("MetadataVersion = 1.0.000");
         out.println("MinMetadataVersion = 1.00.000");
         out.println("User = A123,5678,1,A123");
-        out.println("Login = " + contextPath + "/rets/login");
-        out.println("Logout = " + contextPath + "/rets/logout");
-        out.println("Search = " + contextPath + "/rets/search");
-        out.println("GetMetadata = " + contextPath + "/rets/getMetadata");
-        out.println("ChangePassword = " + contextPath + "/rets/changePassword");
-        out.println("GetObject = " + contextPath + "/rets/get");
+        out.println("Login = " + contextPath + Paths.LOGIN);
+        out.println("Logout = " + contextPath + Paths.LOGOUT);
+        out.println("Search = " + contextPath + Paths.SEARCH);
+        out.println("GetMetadata = " + contextPath + Paths.GET_METADATA);
+        out.println("ChangePassword = " + contextPath + Paths.CHANGE_PASSWORD);
+        out.println("GetObject = " + contextPath + Paths.GET);
         out.println("Balance = 44.21");
-        out.println("TimeoutSeconds = 60");
-        out.println("</RETS-RESPONSE></RETS>");
-        sleep(250L);
-    }
-
-    private void printOpenRets(PrintWriter out, int code, String message)
-    {
-        out.println("<RETS ReplyCode=\"");
-        out.println(code);
-        out.println("0\" ReplyText=\"");
-        out.println(message);
-        out.println("\">");
+        out.println("TimeoutSeconds = " + session.getMaxInactiveInterval());
+        printCloseRets(out);
     }
 
     private static final Logger LOG =

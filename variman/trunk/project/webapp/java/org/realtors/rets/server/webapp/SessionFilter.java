@@ -56,12 +56,12 @@ public class SessionFilter implements Filter
         // Someone tries to hit one of the other URLs without a valid session
         //
         // Anything else is fine, and we let it go.
-        if (contextUrl.equals("/rets/login") && isSessionValid)
+        if (contextUrl.equals(Paths.LOGIN) && isSessionValid)
         {
             LOG.debug("Logging in while session is valid, sending response");
             sendAdditionalLoginNotPermitted(response);
         }
-        else if (!contextUrl.equals("/rets/login") && !isSessionValid)
+        else if (!contextUrl.equals(Paths.LOGIN) && !isSessionValid)
         {
             LOG.debug("Invalid session, sending response");
             sendInvalidSession(response);
@@ -83,7 +83,6 @@ public class SessionFilter implements Filter
     }
 
     private void sendInvalidSession(HttpServletResponse response)
-        throws IOException
     {
         response.setContentType("text/xml");
 //        PrintWriter out = response.getWriter();
@@ -105,6 +104,17 @@ public class SessionFilter implements Filter
 
     public void destroy()
     {
+    }
+
+    public static void validateSession(HttpSession session)
+    {
+        session.setAttribute(SESSION_VALID_KEY, "true");
+    }
+
+    public static void invalidateSession(HttpSession session)
+    {
+        session.removeAttribute(SessionFilter.SESSION_VALID_KEY);
+        session.invalidate();
     }
 
     private static final Logger LOG =

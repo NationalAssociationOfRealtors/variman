@@ -5,9 +5,14 @@ package org.realtors.rets.server.webapp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
+
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
 public class RetsServlet extends HttpServlet implements Constants
 {
@@ -25,6 +30,12 @@ public class RetsServlet extends HttpServlet implements Constants
     protected AccountingStatistics getStatistics(HttpSession session)
     {
         return (AccountingStatistics) session.getAttribute(ACCOUNTING_KEY);
+    }
+
+    protected User getUser(HttpSession session)
+    {
+        return (User) session.getAttribute(
+            AuthenticationFilter.AUTHORIZED_USER_KEY);
     }
 
     protected InputStream getResource(String name)
@@ -60,5 +71,20 @@ public class RetsServlet extends HttpServlet implements Constants
             }
             outStream.write(buffer, 0, bytesRead);
         }
+    }
+
+    protected void printOpenRets(PrintWriter out, int code, String message)
+    {
+        out.println("<RETS ReplyCode=\"");
+        out.println(code);
+        out.println("\" ReplyText=\"");
+        out.println(message);
+        out.println("\">");
+        out.println("<RETS-RESPONSE>");
+    }
+
+    protected void printCloseRets(PrintWriter out)
+    {
+        out.println("</RETS-RESPONSE></RETS>");
     }
 }
