@@ -88,14 +88,15 @@ public class FormatterContext
     }
 
     /**
-     * Checks to see if a table is valid for a resource and class.
+     * Checks to see if a table is accessible for a resource and class.
      *
      * @param table table to check
      * @param resource a RETS resource name
      * @param retsClass a RETS class name
      * @return <code>true</code> if table is valid
      */
-    public boolean isValidTable(Table table, String resource, String retsClass)
+    public boolean isAccessibleTable(Table table, String resource,
+                                     String retsClass)
     {
         Set tables = mGroupFilter.findTables(mGroups, resource, retsClass);
         return tables.contains(table);

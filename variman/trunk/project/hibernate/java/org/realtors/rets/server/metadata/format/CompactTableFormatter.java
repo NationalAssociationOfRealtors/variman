@@ -19,8 +19,9 @@ import org.realtors.rets.server.metadata.Table;
 
 public class CompactTableFormatter extends MetadataFormatter
 {
-    private Collection filterInvalidTables(FormatterContext context,
-                                           Collection tables, String[] levels)
+    private Collection filterInaccessibleTables(FormatterContext context,
+                                                Collection tables,
+                                                String[] levels)
     {
         String resource = levels[RESOURCE_LEVEL];
         String retsClass = levels[CLASS_LEVEL];
@@ -28,7 +29,7 @@ public class CompactTableFormatter extends MetadataFormatter
         for (Iterator iterator = tables.iterator(); iterator.hasNext();)
         {
             Table table = (Table) iterator.next();
-            if (context.isValidTable(table, resource, retsClass))
+            if (context.isAccessibleTable(table, resource, retsClass))
             {
                 filteredTables.add(table);
             }
@@ -39,7 +40,7 @@ public class CompactTableFormatter extends MetadataFormatter
     public void format(FormatterContext context, Collection tables,
                        String[] levels)
     {
-        tables = filterInvalidTables(context, tables, levels);
+        tables = filterInaccessibleTables(context, tables, levels);
         if (tables.size() == 0)
         {
             return;

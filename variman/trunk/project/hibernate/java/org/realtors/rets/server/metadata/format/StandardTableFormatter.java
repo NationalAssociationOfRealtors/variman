@@ -34,7 +34,7 @@ public class StandardTableFormatter extends BaseStandardFormatter
         for (Iterator i = tables.iterator(); i.hasNext();)
         {
             Table table = (Table) i.next();
-            if (!context.isValidTable(table, resource, retsClass))
+            if (!context.isAccessibleTable(table, resource, retsClass))
             {
                 continue;
             }
