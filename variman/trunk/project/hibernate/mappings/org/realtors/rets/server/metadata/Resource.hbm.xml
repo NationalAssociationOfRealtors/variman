@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Resource.hbm.xml,v 1.2 2003/05/29 21:51:44 kgarner Exp $ -->
+<!-- $Id: Resource.hbm.xml,v 1.3 2003/05/30 20:53:36 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataResource"
@@ -13,7 +13,8 @@
     </id>
 
     <property name="resourceID" type="string">
-      <column name="resource_id" length="32"/>
+      <column name="resource_id" length="32" not-null="true" unique="true"
+        index="resource_rets_id_index"/>
     </property>
 
     <property name="standardName" type="string">
@@ -28,6 +29,7 @@
       <column name="description" length="64"/>
     </property>
 
+    <!-- this is probably not correct -->
     <property name="keyField" type="string">
       <column name="key_field" length="32"/>
     </property>
