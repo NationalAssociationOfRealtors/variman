@@ -332,9 +332,16 @@
       </classpath>
     </javac>
 
+    <taskdef name="jar-manifest"
+             classname="org.realtors.rets.server.JarManifestTask"
+             classpath="build/hibernate/classes"/>
+    <jar-manifest main="org.realtors.rets.server.tomcat.EmbeddedTomcat"
+                  destfile="build/embedded/rex-server.manifest">
+      <classpath dir="build/rets-server" includes="lib/*.jar"/>
+    </jar-manifest>
     <jar jarfile="build/rets-server/${project.name}.jar"
          basedir="build/embedded/classes"
-         manifest="project/build/rets-server.manifest"/>
+         manifest="build/embedded/rex-server.manifest"/>
     <copy todir="build/rets-server/lib">
       <fileset dir="${tomcat.home}/bin">
         <include name="bootstrap.jar"/>
@@ -617,6 +624,22 @@
         <path refid="admin.path"/>
       </classpath>
     </javac>
+    <copy todir="build/rets-server/admin/classes">
+      <fileset dir="project/admin/java" includes="**/*" excludes="**/*.java"/>
+    </copy>
+    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
+          todir="build/rets-server/admin/classes"/>
+    <taskdef name="jar-manifest"
+             classname="org.realtors.rets.server.JarManifestTask"
+             classpath="build/hibernate/classes"/>
+    <jar-manifest main="org.realtors.rets.server.admin.Main"
+                  destfile="build/admin/rex-admin.manifest">
+      <classpath dir="build/rets-server" includes="admin/classes"/>
+      <classpath dir="build/rets-server" includes="admin/lib/*.jar"/>
+    </jar-manifest>
+    <jar destfile="build/rets-server/${project.name}-admin.jar"
+         basedir="build/admin/classes"
+         manifest="build/admin/rex-admin.manifest"/>
 
     <!-- build the test code -->
     <depend srcDir="project/admin/test/java"
@@ -639,25 +662,20 @@
 
     <copy file="project/admin/shell/rex" todir="build/admin/bin"/>
     <chmod file="build/admin/bin/rex" perm="ugo+rx"/>
-    <copy file="${wx4j.jar}" todir="build/admin/lib"/>
-    <copy file="${wx4j.lib}" todir="build/admin/lib"/>
-    <copy file="${log4j.jar}" todir="build/admin/lib"/>
-    <copy file="${commons-lang.jar}" todir="build/admin/lib"/>
-    <copy file="${jdom.jar}" todir="build/admin/lib"/>
-    <copy todir="build/admin/lib" file="${hibernate.jdbc.jar}"/>
-    <copy file="${hibernate.jar}" todir="build/admin/lib"/>
-    <copy todir="build/admin/lib">
+    <copy file="${wx4j.jar}" todir="build/rets-server/admin/lib"/>
+    <copy file="${wx4j.lib}" todir="build/rets-server/admin/lib"/>
+    <copy file="${log4j.jar}" todir="build/rets-server/admin/lib"/>
+    <copy file="${commons-lang.jar}" todir="build/rets-server/admin/lib"/>
+    <copy file="${jdom.jar}" todir="build/rets-server/admin/lib"/>
+    <copy todir="build/rets-server/admin/lib" file="${hibernate.jdbc.jar}"/>
+    <copy file="${hibernate.jar}" todir="build/rets-server/admin/lib"/>
+    <copy todir="build/rets-server/admin/lib">
       <fileset dir="${hibernate.lib}" includes="*.jar"
                excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar,
                          commons-lang.jar" />
     </copy>
-    <copy todir="build/admin/classes">
-      <fileset dir="project/admin/java" includes="**/*" excludes="**/*.java"/>
-    </copy>
     <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
-          todir="build/admin/lib"/>
-    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
-          todir="build/admin/classes"/>
+          todir="build/rets-server/admin/lib"/>
   </target>
 
   <target name="build-full" description="Full build from clean"
