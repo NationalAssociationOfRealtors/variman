@@ -12,7 +12,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 public class AccountingFilter implements Filter, Constants
 {
@@ -25,7 +27,6 @@ public class AccountingFilter implements Filter, Constants
                          FilterChain filterChain)
         throws IOException, ServletException
     {
-        LOG.debug("Begin AccountingFilter");
         if (!(servletRequest instanceof HttpServletRequest))
         {
             filterChain.doFilter(servletRequest, servletResponse);
@@ -34,18 +35,18 @@ public class AccountingFilter implements Filter, Constants
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpSession session = request.getSession();
+        MDC.put("uri", request.getRequestURI());
 
+        LOG.debug("Begin AccountingFilter");
         AccountingStatistics statistics = getStatistics(session);
 
         long startTime = System.currentTimeMillis();
         filterChain.doFilter(servletRequest, servletResponse);
         long responseDuration = System.currentTimeMillis() - startTime;
         statistics.addTime(responseDuration);
-
-        System.out.println("URL: "+request.getRequestURL());
-        System.out.println("Accumalated time: " +
-                           statistics.getAccumaltedTime());
-        LOG.debug("End AccountingFilter");
+        LOG.debug("Response duration: " + responseDuration);
+        LOG.debug("Accumalated time: "+ statistics.getAccumaltedTime());
+        MDC.remove("uri");
     }
 
     public void destroy()
@@ -58,6 +59,7 @@ public class AccountingFilter implements Filter, Constants
             (AccountingStatistics) session.getAttribute(ACCOUNTING_KEY);
         if (statistics == null)
         {
+            LOG.debug("Creating new accounting statistics");
             statistics = new AccountingStatistics();
             session.setAttribute(ACCOUNTING_KEY, statistics);
         }
