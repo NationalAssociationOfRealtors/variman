@@ -13,6 +13,7 @@ import net.sf.hibernate.SessionFactory;
 
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.IOUtils;
 
 public class Admin
 {
@@ -89,6 +90,11 @@ public class Admin
             sRexHome = System.getProperty("user.dir");
             System.setProperty("rex.home", sRexHome);
         }
+    }
+
+    public static String getWebappRoot()
+    {
+        return sRexHome + "/webapp";
     }
 
     private static Configuration sHibernateConfiguration;
