@@ -65,6 +65,7 @@ public class AdminUtils
     {
         LOG.debug("Initializing Hibernate configuration");
         RetsConfig retsConfig = Admin.getRetsConfig();
+        LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         Configuration config = new Configuration()
             .addJar("rex-hbm-xml.jar")
             .setProperties(retsConfig.createHibernateProperties());
