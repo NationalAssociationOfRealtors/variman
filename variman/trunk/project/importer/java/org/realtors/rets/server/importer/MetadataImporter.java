@@ -37,6 +37,7 @@ import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
+import org.realtors.rets.server.metadata.ObjectTypeEnum;
 import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.Table;
@@ -86,15 +87,35 @@ public class MetadataImporter
     private void parseMetadata(RetsSession rSession)
         throws Exception
     {
-        Session hSession = mSessions.openSession();
-        Transaction tx = hSession.beginTransaction();
+        Session hSession = null;
+        Transaction tx = null;
 
-        MSystem hSystem = system(rSession, hSession);
-        doResource(rSession, hSession, hSystem);
-        doClasses(rSession, hSession);
+        try
+        {
+            hSession = mSessions.openSession();
+            tx = hSession.beginTransaction();
+
+            MSystem hSystem = system(rSession, hSession);
+            doResource(rSession, hSession, hSystem);
+            doClasses(rSession, hSession);
+            doObjects(rSession, hSession);
         
-        tx.commit();
-        hSession.close();
+            tx.commit();
+            hSession.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+            try
+            {
+                tx.rollback();
+                hSession.close();
+            }
+            catch (Exception e2)
+            {
+                System.out.println(e2);
+            }
+        }
     }
 
     private MSystem system(RetsSession rSession, Session hSession)
@@ -115,7 +136,6 @@ public class MetadataImporter
         MetadataTable tResource =
             rSession.getMetadataTable(MetadataTable.RESOURCE);
 
-        String resourceID;
         Set hResources = new HashSet();
         List resources = tResource.getDataRows("");
         Iterator i = resources.iterator();
@@ -125,7 +145,7 @@ public class MetadataImporter
             Resource hResource = new Resource();
 
             hResource.setSystemid(hSystem);
-            resourceID = md.getAttribute("ResourceID");
+            String resourceID = md.getAttribute("ResourceID");
             hResource.setResourceID(resourceID);
             hResource.setStandardName(ResourceStandardNameEnum.fromString(
                                           md.getAttribute("StandardName")));
@@ -190,7 +210,6 @@ public class MetadataImporter
         MetadataTable tClass =
             rSession.getMetadataTable(MetadataTable.CLASS);
 
-        String classID;
         Iterator i = mResources.values().iterator();
         while (i.hasNext())
         {
@@ -227,9 +246,42 @@ public class MetadataImporter
         }
     }
 
-    public void doObjectes(RetsSession rSession, Session hSession)
+    public void doObjects(RetsSession rSession, Session hSession)
         throws HibernateException,ParseException
     {
+        MetadataTable tObject =
+            rSession.getMetadataTable(MetadataTable.OBJECT);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hObjects = new HashSet();
+            List objects = tObject.getDataRows(resource.getResourceID());
+            if (objects != null)
+            {
+                Iterator j = objects.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    MObject hObject = new MObject();
+
+                    hObject.setResourceid(resource);
+
+                    hObject.setObjectType(ObjectTypeEnum.fromString(
+                                              md.getAttribute("ObjectType")));
+                    hObject.setMimeType(md.getAttribute("MimeType"));
+                    hObject.setVisibleName(md.getAttribute("VisibleName"));
+                    hObject.setDescription(md.getAttribute("Description"));
+
+                    hSession.save(hObject);
+                    hObjects.add(hObject);
+                }
+            }
+
+            resource.setObjects(hObjects);
+            hSession.saveOrUpdate(resource);
+        }
     }
 
     public static final void main(String args[])
@@ -245,5 +297,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
     
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.6 2003/06/26 17:54:01 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.7 2003/06/27 19:19:14 kgarner Exp $";
 }
