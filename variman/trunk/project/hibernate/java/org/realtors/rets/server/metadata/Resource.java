@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -601,7 +602,15 @@ public class Resource implements Serializable
      */
     public String getPath()
     {
-        return mSystemid.getPath() + ":" + mResourceID;
+        String systemId = mSystemid.getPath();
+        if (StringUtils.isEmpty(systemId))
+        {
+            return mResourceID;
+        }
+        else
+        {
+            return systemId + ":" + mResourceID;
+        }
     }
 
     public String toString()
