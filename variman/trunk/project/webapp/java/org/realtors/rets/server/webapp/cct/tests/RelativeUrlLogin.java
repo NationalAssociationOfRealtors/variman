@@ -13,6 +13,12 @@ import org.realtors.rets.server.webapp.cct.LogoutHandler;
 
 public class RelativeUrlLogin extends BaseCertificationTest
 {
+    
+    public String getName()
+    {
+        return RelativeUrlLogin.class.getName();
+    }
+    
     public ValidationResult validate()
     {
         ValidationResult results = new ValidationResult();

@@ -13,6 +13,10 @@ import org.realtors.rets.server.webapp.cct.LogoutHandler;
 
 public class NormalLogin extends BaseCertificationTest
 {
+    public String getName()
+    {
+        return NormalLogin.class.getName();
+    }
 
     public String getProcedure()
     {

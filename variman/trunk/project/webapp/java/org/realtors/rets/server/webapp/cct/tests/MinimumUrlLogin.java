@@ -14,6 +14,11 @@ import org.realtors.rets.server.webapp.cct.CapabilityUrlLevel;
 
 public class MinimumUrlLogin extends BaseCertificationTest
 {
+    
+    public String getName()
+    {
+        return MinimumUrlLogin.class.getName();
+    }
 
     public String getProcedure()
     {

@@ -15,6 +15,11 @@ import org.realtors.rets.server.webapp.cct.CapabilityUrlLevel;
 public class MaximumUrlLogin extends BaseCertificationTest
 {
 
+    public String getName()
+    {
+        return MaximumUrlLogin.class.getName();
+    }
+    
     public String getProcedure()
     {
         return "Login, then logout.";
