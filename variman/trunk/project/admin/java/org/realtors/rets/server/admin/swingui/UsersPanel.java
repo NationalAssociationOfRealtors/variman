@@ -1,16 +1,21 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.sf.hibernate.HibernateException;
 import org.apache.log4j.Logger;
+import org.realtors.rets.server.Group;
+import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.UserUtils;
 
@@ -47,6 +52,9 @@ public class UsersPanel extends JPanel
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(tvp, BorderLayout.NORTH);
 
+        JPanel groupsPanel = createGroupsPanel();
+        panel.add(groupsPanel, BorderLayout.CENTER);
+
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                               mUserList, panel);
         splitPane.setDividerLocation(200);
@@ -67,6 +75,28 @@ public class UsersPanel extends JPanel
         splitPane.addMouseListener(popupListener);
     }
 
+    private JPanel createGroupsPanel()
+    {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(new HeaderPanel("Groups"), BorderLayout.NORTH);
+
+        JPanel box = new JPanel(new BorderLayout());
+        mGroupsList = new JList();
+        box.add(mGroupsList);
+        box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
+        panel.add(box, BorderLayout.CENTER);
+
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.add(Box.createHorizontalGlue());
+        buttonBox.add(new JButton(new AddGroupButtonAction(this)));
+        buttonBox.add(Box.createHorizontalStrut(5));
+        buttonBox.add(new JButton(new RemoveGroupButtonAction(this)));
+        buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.add(buttonBox, BorderLayout.SOUTH);
+        return panel;
+    }
+
     public User getSelectedUser()
     {
         User user = null;
@@ -76,6 +106,11 @@ public class UsersPanel extends JPanel
             user = mUserListModel.getUserAt(selection);
         }
         return user;
+    }
+
+    public Group getSelectedGroup()
+    {
+        return (Group) mGroupsList.getSelectedValue();
     }
 
     public AddUserAction getAddUserAction()
@@ -154,6 +189,17 @@ public class UsersPanel extends JPanel
             mRemoveUserAction.setEnabled(true);
             mChangePasswordAction.setEnabled(true);
             mEditUserAction.setEnabled(true);
+            try
+            {
+                SortedSet groups = UserUtils.getGroups(user);
+                Group[] listData =
+                    (Group[]) groups.toArray(new Group[groups.size()]);
+                mGroupsList.setListData(listData);
+            }
+            catch (HibernateException e)
+            {
+                LOG.error("Caught", e);
+            }
         }
         else
         {
@@ -165,6 +211,7 @@ public class UsersPanel extends JPanel
             mRemoveUserAction.setEnabled(false);
             mChangePasswordAction.setEnabled(false);
             mEditUserAction.setEnabled(false);
+            mGroupsList.setListData(new Object[0]);
         }
     }
 
@@ -242,6 +289,80 @@ public class UsersPanel extends JPanel
         }
     }
 
+    private static class AddGroupButtonAction extends AbstractAction
+    {
+        public AddGroupButtonAction(UsersPanel usersPanel)
+        {
+            super("Add Group...");
+            mUsersPanel = usersPanel;
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            try
+            {
+                List availableGroups = GroupUtils.findAll();
+                User user = mUsersPanel.getSelectedUser();
+                availableGroups.removeAll(UserUtils.getGroups(user));
+                Group[] selectionValues =
+                    (Group[]) availableGroups.toArray(
+                        new Group[availableGroups.size()]);
+                Group group = (Group) JOptionPane.showInputDialog(
+                    mUsersPanel, "Enter Group:", "Add Group",
+                    JOptionPane.PLAIN_MESSAGE, null, selectionValues, null);
+                if (group == null)
+                {
+                    return;
+                }
+                System.out.println("Group: " + group);
+                SortedSet groups = UserUtils.getGroups(user);
+                groups.add(group);
+                UserUtils.updateGroups(user, groups);
+                mUsersPanel.populateList();
+            }
+            catch (HibernateException e)
+            {
+                LOG.error("Caught", e);
+            }
+        }
+
+        private UsersPanel mUsersPanel;
+
+    }
+
+    private static class RemoveGroupButtonAction extends AbstractAction
+    {
+        public RemoveGroupButtonAction(UsersPanel usersPanel)
+        {
+            super("Remove Group...");
+            mUsersPanel = usersPanel;
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            try
+            {
+                Group group = mUsersPanel.getSelectedGroup();
+                if (group == null)
+                {
+                    LOG.warn("Removing null group");
+                    return;
+                }
+                User user = mUsersPanel.getSelectedUser();
+                SortedSet groups = UserUtils.getGroups(user);
+                groups.remove(group);
+                UserUtils.updateGroups(user, groups);
+                mUsersPanel.populateList();
+            }
+            catch (HibernateException e)
+            {
+                LOG.error("Caught", e);
+            }
+        }
+
+        private UsersPanel mUsersPanel;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(UsersPanel.class);
     private JList mUserList;
@@ -256,4 +377,5 @@ public class UsersPanel extends JPanel
     private RemoveUserAction mRemoveUserAction;
     private ChangePasswordAction mChangePasswordAction;
     private EditUserAction mEditUserAction;
+    private JList mGroupsList;
 }
