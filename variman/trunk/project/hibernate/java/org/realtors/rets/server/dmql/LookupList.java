@@ -89,76 +89,41 @@ public class LookupList implements SqlConverter
 
     private void toSqlLookup(PrintWriter out)
     {
-        boolean first = true;
-        if (mType == LookupListType.NOT)
-        {
-            out.print("NOT (");
-        }
+        out.print(mType.getLookupPrefix());
+        String sqlOperator = "";
         for (int i = 0; i < mLookups.size(); i++)
         {
             String lookup = (String) mLookups.get(i);
-            if (!first)
-            {
-                out.print(sqlOperator());
-            }
+            out.print(sqlOperator);
             out.print(mSqlColumn);
             out.print(" = '");
             out.print(lookup);
             out.print("'");
-            first = false;
+            sqlOperator = mType.getSqlOperator();
         }
-        if (mType == LookupListType.NOT)
-        {
-            out.print(")");
-        }
+        out.print(mType.getLookupSuffix());
     }
 
     private void toSqlLookupMulti(PrintWriter out)
     {
         out.print("id ");
-        if (mType == LookupListType.NOT)
-        {
-            out.print("NOT ");
-        }
+        out.print(mType.getLookupMultiPrefix());
         out.print("IN (SELECT data_id FROM ");
         out.print(mLookupMultiTable);
         out.print(" WHERE name = '");
         out.print(mSqlColumn);
         out.print("' AND (");
-        boolean first = true;
+        String sqlOperator = "";
         for (int i = 0; i < mLookups.size(); i++)
         {
             String lookup = (String) mLookups.get(i);
-            if (!first)
-            {
-                out.print(sqlOperator());
-            }
+            out.print(sqlOperator);
             out.print("value = '");
             out.print(lookup);
             out.print("'");
-            first = false;
+            sqlOperator = mType.getSqlOperator();
         }
         out.print("))");
-    }
-
-    private String sqlOperator()
-    {
-        if (mType == LookupListType.AND)
-        {
-            return " AND ";
-        }
-        else if (mType == LookupListType.OR)
-        {
-            return " OR ";
-        }
-        else if (mType == LookupListType.NOT)
-        {
-            return " OR ";
-        }
-        else
-        {
-            return " ??? ";
-        }
     }
 
     public String toString()
