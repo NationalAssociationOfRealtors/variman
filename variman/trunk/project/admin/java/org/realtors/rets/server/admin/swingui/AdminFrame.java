@@ -55,6 +55,7 @@ public class AdminFrame extends JFrame
            Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
         menu.add(new SaveAction());
+        menu.add(new InstallJarAction());
         menu.addSeparator();
         menu.add(new QuitAction());
 
