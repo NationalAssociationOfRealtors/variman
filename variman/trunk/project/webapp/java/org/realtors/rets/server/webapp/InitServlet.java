@@ -2,12 +2,12 @@
  */
 package org.realtors.rets.server.webapp;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.io.File;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 import javax.servlet.ServletException;
 
@@ -22,7 +22,6 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 /**
  * @web.servlet name="init-servlet"
@@ -72,8 +71,10 @@ public class InitServlet extends RetsServlet
 
             if (file != null)
             {
-                URL configURL = new URL(prefix, file);
-                PropertyConfigurator.configure(configURL);
+                // Resolve file, relative to prefix
+                file = new URL(prefix, file).getFile();
+                WebApp.setLog4jFile(file);
+                WebApp.loadLog4j();
             }
         }
         catch (MalformedURLException e)
