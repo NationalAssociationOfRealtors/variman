@@ -87,6 +87,7 @@ public class AdminFrame extends JFrame
         mGroupMenu = new JMenu("Group");
         menuBar.add(mGroupMenu);
         mGroupMenu.add(mGroupsPanel.getAddGroupAction());
+        mGroupMenu.add(mGroupsPanel.getRemoveGroupAciton());
         mGroupMenu.setEnabled(false);
 
         mStatusBar = new JLabel("Status bar");
