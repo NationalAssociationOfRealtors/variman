@@ -8,3 +8,4 @@ prj.el
 .classpath
 .project
 .build
+.checkstyle
