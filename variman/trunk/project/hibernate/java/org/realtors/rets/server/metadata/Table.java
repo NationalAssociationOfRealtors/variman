@@ -474,7 +474,7 @@ public class Table extends ServerMetadata implements Serializable
 
     public String getRetsId()
     {
-        return mLongName;
+        return mSystemName;
     }
 
     public String getTableName()
