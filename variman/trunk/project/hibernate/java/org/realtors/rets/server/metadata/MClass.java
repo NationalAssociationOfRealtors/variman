@@ -35,6 +35,12 @@ public class MClass extends ServerMetadata implements Serializable
         mId = new Long(id);
     }
 
+    public MClass(String className)
+    {
+        this();
+        mClassName = className;
+    }
+
     /**
      *
      * @return a Long object
@@ -168,13 +174,22 @@ public class MClass extends ServerMetadata implements Serializable
 
     public void addTable(Table table)
     {
-        if (mTables == Collections.EMPTY_SET)
-        {
-            mTables = new HashSet();
-        }
+        mTables = ensureNotEmptySet(mTables);
         table.setMClass(this);
         table.updateLevel();
         mTables.add(table);
+    }
+
+    private Set ensureNotEmptySet(Set set)
+    {
+        if (set == Collections.EMPTY_SET)
+        {
+            return new HashSet();
+        }
+        else
+        {
+            return set;
+        }
     }
 
     /**
@@ -198,10 +213,7 @@ public class MClass extends ServerMetadata implements Serializable
 
     public void addUpdate(Update update)
     {
-        if (mUpdates == Collections.EMPTY_SET)
-        {
-            mUpdates = new HashSet();
-        }
+        mUpdates = ensureNotEmptySet(mUpdates);
         update.setMClass(this);
         update.updateLevel();
         mUpdates.add(update);
