@@ -36,21 +36,11 @@ public class DataRowBuilder
     {
         mWriter.print("</DATA>\n");
     }
-
-    public void append(String string)
-    {
-        if (string != null)
-        {
-            mWriter.print(string);
-        }
-        mWriter.print("\t");
-    }
-
     public void append(Object object)
     {
         if (object != null)
         {
-            mWriter.print(object.toString());
+            mWriter.print(EscapeUtils.escapeXml(object.toString()));
         }
         mWriter.print("\t");
     }
@@ -93,9 +83,12 @@ public class DataRowBuilder
         if (collection != null)
         {
             List strings = toSortedStringList(collection);
-            mWriter.print(StringUtils.join(strings.iterator(), ","));
+            append(StringUtils.join(strings.iterator(), ","));
         }
-        mWriter.print("\t");
+        else
+        {
+            mWriter.print("\t");
+        }
     }
 
     /**
