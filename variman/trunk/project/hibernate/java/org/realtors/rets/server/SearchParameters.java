@@ -16,6 +16,25 @@ public class SearchParameters
         initQueryType(parameterMap, version);
         mQuery = getParameter(parameterMap, "Query");
         initFormat(parameterMap);
+        initStandardNames(parameterMap);
+    }
+
+    private void initStandardNames(Map parameterMap) throws RetsReplyException
+    {
+        String standardNames = getParameter(parameterMap, "StandardNames");
+        if (standardNames.equals("0"))
+        {
+            mStandardNames = false;
+        }
+        else if (standardNames.equals("1"))
+        {
+            mStandardNames = true;
+        }
+        else
+        {
+            throw new RetsReplyException(20203, "Invalid standard names: " +
+                                                standardNames);
+        }
     }
 
     private void initQueryType(Map parameterMap, RetsVersion version)
@@ -77,6 +96,11 @@ public class SearchParameters
         return mResourceId;
     }
 
+    public boolean isStandardNames()
+    {
+        return mStandardNames;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -96,4 +120,5 @@ public class SearchParameters
     private String mQueryType;
     private String mQuery;
     private String mFormat;
+    private boolean mStandardNames;
 }
