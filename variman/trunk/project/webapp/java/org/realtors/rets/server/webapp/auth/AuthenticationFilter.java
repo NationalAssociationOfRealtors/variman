@@ -15,10 +15,39 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-public class AuthenticationFilter implements Filter
+public class AuthenticationFilter implements Filter, PasswordMap
 {
     public void init(FilterConfig filterConfig) throws ServletException
     {
+        instantiatePasswordMap(filterConfig.getInitParameter("password-map"));
+        LOG.info("Using password map: " + mPasswordMap.getClass().getName());
+    }
+
+    private void instantiatePasswordMap(String passwordMapName)
+    {
+        mPasswordMap = new NullPasswordMap();
+        if (passwordMapName == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mPasswordMap = (PasswordMap)
+                Class.forName(passwordMapName).newInstance();
+        }
+        catch (InstantiationException e)
+        {
+            LOG.warn("Could not instantiate: " + passwordMapName, e);
+        }
+        catch (IllegalAccessException e)
+        {
+            LOG.warn("Could not instantiate: " + passwordMapName, e);
+        }
+        catch (ClassNotFoundException e)
+        {
+            LOG.warn("Could not instantiate: " + passwordMapName, e);
+        }
     }
 
     public void doFilter(ServletRequest servletRequest,
@@ -42,7 +71,7 @@ public class AuthenticationFilter implements Filter
         }
 
         String authorizationHeader = request.getHeader("Authorization");
-        LOG.debug("Authorizition header: " + authorizationHeader);
+        LOG.debug("Authorization header: " + authorizationHeader);
         if (authorizationHeader == null)
         {
             send401(response);
@@ -51,8 +80,7 @@ public class AuthenticationFilter implements Filter
 
         DigestAuthorizationRequest authorizationRequest =
             new DigestAuthorizationRequest(authorizationHeader);
-        authorizationRequest.setUsername("Joe");
-        authorizationRequest.setPassword("Schmoe");
+        authorizationRequest.setPassword(getPassword(authorizationRequest));
         authorizationRequest.setMethod(request.getMethod());
         if (authorizationRequest.verifyResponse())
         {
@@ -66,6 +94,21 @@ public class AuthenticationFilter implements Filter
         }
     }
 
+    private String getPassword(DigestAuthorizationRequest authorizationRequest)
+    {
+        return mPasswordMap.getPassword(authorizationRequest.getUsername());
+    }
+
+    public String getPassword(String username)
+    {
+        if (username.equals("Joe"))
+            return "Schmoe";
+        else if (username.equals("test"))
+            return "test1";
+        else
+            return null;
+    }
+
     private void send401(HttpServletResponse response) throws IOException
     {
         String header =
@@ -77,8 +120,10 @@ public class AuthenticationFilter implements Filter
 
     public void destroy()
     {
+        mPasswordMap = null;
     }
 
     private static final Logger LOG =
         Logger.getLogger(AuthenticationFilter.class);
+    private PasswordMap mPasswordMap;
 }
