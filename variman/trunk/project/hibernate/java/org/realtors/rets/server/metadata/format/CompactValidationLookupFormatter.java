@@ -10,6 +10,10 @@ public class CompactValidationLookupFormatter extends ValidationLookupFormatter
 {
     public void format(PrintWriter out, ValidationLookup[] validationLookups)
     {
+        if (validationLookups.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-VALIDATION_LOOKUP");
         tag.appendAttribute("Resource", mResourceName);

@@ -17,6 +17,10 @@ public class CompactValidationExternalTypeFormatter
     public void format(
         PrintWriter out, ValidationExternalType[] validationExternalTypes)
     {
+        if (validationExternalTypes.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-VALIDATION_EXTERNAL_TYPE");
         tag.appendAttribute("Resource", mResourceName);

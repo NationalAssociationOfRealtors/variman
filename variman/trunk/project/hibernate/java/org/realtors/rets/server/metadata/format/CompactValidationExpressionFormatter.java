@@ -12,6 +12,10 @@ public class CompactValidationExpressionFormatter
     public void format(PrintWriter out,
                        ValidationExpression[] validationExpressions)
     {
+        if (validationExpressions.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-VALIDATION_EXPRESSION");
         tag.appendAttribute("Resource", mResourceName);

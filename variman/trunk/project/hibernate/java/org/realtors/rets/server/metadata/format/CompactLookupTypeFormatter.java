@@ -10,6 +10,10 @@ public class CompactLookupTypeFormatter extends LookupTypeFormatter
 {
     public void format(PrintWriter out, LookupType[] lookupTypes)
     {
+        if (lookupTypes.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-LOOKUP_TYPE");
         tag.appendAttribute("Resource", mResourceName);

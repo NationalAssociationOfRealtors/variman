@@ -10,6 +10,10 @@ public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
 {
     public void format(PrintWriter out, UpdateType[] updateTypes)
     {
+        if (updateTypes.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-UPDATE_TYPE");
         tag.appendAttribute("Resource", mResourceName);

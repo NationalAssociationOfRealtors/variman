@@ -10,6 +10,10 @@ public class CompactEditMaskFormatter extends EditMaskFormatter
 {
     public void format(PrintWriter out, EditMask[] editMasks)
     {
+        if (editMasks.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-EDITMASK");
         tag.appendAttribute("Resource", mResourceName);

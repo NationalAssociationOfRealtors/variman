@@ -10,6 +10,10 @@ public class CompactObjectFormatter extends ObjectFormatter
 {
     public void format(PrintWriter out, MObject[] objects)
     {
+        if (objects.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-OBJECT");
         tag.appendAttribute("Resource", mResourceName);

@@ -6,11 +6,16 @@ import java.io.PrintWriter;
 
 import org.realtors.rets.server.metadata.ValidationLookupType;
 
-public class CompactValidationLookupTypeFormatter extends ValidationLookupTypeFormatter
+public class CompactValidationLookupTypeFormatter
+    extends ValidationLookupTypeFormatter
 {
     public void format(PrintWriter out,
                        ValidationLookupType[] validationLookupTypes)
     {
+        if (validationLookupTypes.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-VALIDATION_LOOKUP_TYPE");
         tag.appendAttribute("Resource", mResourceName);

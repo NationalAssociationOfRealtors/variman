@@ -10,6 +10,10 @@ public class CompactUpdateFormatter extends UpdateFormatter
 {
     public void format(PrintWriter out, Update[] updates)
     {
+        if (updates.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-UPDATE");
         tag.appendAttribute("Resource", mResourceName);

@@ -10,6 +10,10 @@ public class CompactTableFormatter extends TableFormatter
 {
     public void format(PrintWriter out, Table[] tables)
     {
+        if (tables.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-TABLE");
         tag.appendAttribute("Resource", mResourceName);
@@ -43,7 +47,14 @@ public class CompactTableFormatter extends TableFormatter
         row.append(table.getAlignment());
         row.append(table.isUseSeparator());
         row.append(table.getEditMasks());
-        row.append(table.getLookup().getLookupName());
+
+        String lookupName = null;
+        if (table.getLookup() != null)
+        {
+            lookupName = table.getLookup().getLookupName();
+        }
+        row.append(lookupName);
+
         row.append(table.getMaxSelect());
         row.append(table.getUnits());
         row.append(table.getIndex());

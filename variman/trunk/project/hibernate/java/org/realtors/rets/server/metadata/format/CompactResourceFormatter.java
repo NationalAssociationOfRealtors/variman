@@ -11,6 +11,10 @@ public class CompactResourceFormatter
 {
     public void format(PrintWriter out, Resource[] resources)
     {
+        if (resources.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-RESOURCE");
         tag.appendAttribute("Version", mVersion);

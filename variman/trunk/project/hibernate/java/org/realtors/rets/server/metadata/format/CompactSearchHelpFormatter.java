@@ -10,6 +10,10 @@ public class CompactSearchHelpFormatter extends SearchHelpFormatter
 {
     public void format(PrintWriter out, SearchHelp[] searchHelps)
     {
+        if (searchHelps.length == 0)
+        {
+            return; 
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-SEARCH_HELP");
         tag.appendAttribute("Resource", mResourceName);

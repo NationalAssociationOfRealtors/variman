@@ -10,6 +10,10 @@ public class CompactClassFormatter extends ClassFormatter
 {
     public void format(PrintWriter out, MClass[] classes)
     {
+        if (classes.length == 0)
+        {
+            return;
+        }
         TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-CLASS");
         tag.appendAttribute("Resource", mResource);
