@@ -1,32 +1,30 @@
 package org.realtors.rets.server.webapp;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.protocol.GetObjectParameters;
 import org.realtors.rets.server.protocol.GetObjectTransaction;
+import org.realtors.rets.server.protocol.ObjectDescriptor;
+import org.realtors.rets.server.protocol.ObjectStream;
 
 /**
  * @web.servlet name="object-servlet"
  * @web.servlet-mapping  url-pattern="/objects/*"
  */
-public class ObjectServlet extends HttpServlet
+public class ObjectServlet extends RetsServlet
 {
-    protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
-        throws ServletException, IOException
+    protected void doRets(RetsServletRequest request,
+                          RetsServletResponse response)
+        throws RetsServerException, IOException
     {
         String contextPath = request.getContextPath();
         String servletPath = request.getServletPath();
@@ -59,8 +57,9 @@ public class ObjectServlet extends HttpServlet
         GetObjectTransaction transaction =
             new GetObjectTransaction(getObjectParameters);
         transaction.setRootDirectory(WebApp.getGetObjectRoot());
-        transaction.setPattern(WebApp.getGetObjectPattern());
-        List allFiles = transaction.findAllFileObjects();
+        transaction.setImagePattern(WebApp.getGetObjectPattern());
+        transaction.setObjectSetPattern("%k.xml");
+        List allFiles = transaction.findAllObjectDescriptors();
         if (allFiles.size() == 0)
         {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, uri);
@@ -73,10 +72,11 @@ public class ObjectServlet extends HttpServlet
             return;
         }
 
-        File file = (File) allFiles.get(0);
-        LOG.debug("File: " + file);
-        response.setContentType(transaction.getContentType(file.getPath()));
-        IOUtils.copyStream(new FileInputStream(file),
+        ObjectDescriptor objectDescriptor = (ObjectDescriptor) allFiles.get(0);
+        LOG.debug("Object URL: " + objectDescriptor.getUrl());
+        ObjectStream objectStream = objectDescriptor.openObjectStream();
+        response.setContentType(objectStream.getMimeType());
+        IOUtils.copyStream(objectStream.getInputStream(),
                            response.getOutputStream());
     }
 
