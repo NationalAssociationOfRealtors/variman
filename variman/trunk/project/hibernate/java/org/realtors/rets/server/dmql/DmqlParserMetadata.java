@@ -28,12 +28,13 @@ public interface DmqlParserMetadata
     public boolean isValidFieldName(String fieldName);
 
     /**
-     * Returns <code>true</code> if the lookup name is a valid lookup name.
+     * Returns the type of the field, or <code>null</code> if the field
+     * does not exist.
      *
-     * @param fieldName The lookup name to validate
-     * @return <code>true</code> if the lookup name is valid
+     * @param fieldName A field name
+     * @return The type for the field 
      */
-    public boolean isLookupField(String fieldName);
+    public DmqlFieldType getFieldType(String fieldName);
 
     /**
      * Returns <code>true</code> if the lookup value is valid for the lookups
@@ -44,23 +45,6 @@ public interface DmqlParserMetadata
      * @return <code>true</code> if the lookup value is valid
      */
     public boolean isValidLookupValue(String lookupName, String lookupValue);
-
-    /**
-     * Returns <code>true</code> if the field name is a character type.
-     *
-     * @param fieldName A field name
-     * @return <code>true</code> if the field name is a character type
-     */
-    public boolean isCharacterField(String fieldName);
-
-    /**
-     * Returns <code>true</code> if the field name is a numeric type (tiny,
-     * small, int, long, or decimal).
-     *
-     * @param fieldName A field name
-     * @return <code>true</code> if the field name is a numeric type
-     */
-    public boolean isNumericField(String fieldName);
 
     public String getLookupLongValue(String lookupName, String value);
 
