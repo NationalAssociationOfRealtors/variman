@@ -18,17 +18,22 @@ import org.realtors.rets.server.admin.AdminUtils;
 
 public class AdminFrame extends JFrame implements ActionListener
 {
-    public AdminFrame(String title)
+    public static AdminFrame getInstance()
+    {
+        if (sInstance == null)
+        {
+            sInstance = new AdminFrame("Rex Administration");
+        }
+        return sInstance;
+    }
+
+    private AdminFrame(String title)
     {
         super(title);
         initConfig();
 
         addWindowListener(new OnClose());
         Container content = getContentPane();
-
-        //Add the ubiquitous "Hello World" label.
-        JLabel label = new JLabel("Hello World");
-        getContentPane().add(label);
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
@@ -111,5 +116,6 @@ public class AdminFrame extends JFrame implements ActionListener
     private static final Logger LOG =
         Logger.getLogger(AdminFrame.class);
 
+    private static AdminFrame sInstance;
     private JTabbedPane mTabbedPane;
 }
