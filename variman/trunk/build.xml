@@ -44,6 +44,7 @@
 
   <path id="embedded.path">
     <fileset dir="${tomcat.home}/server/lib" includes="*.jar"/>
+    <pathelement path="${tomcat.home}/bin/bootstrap.jar"/>
   </path>
 
   <path id="importer.path">
