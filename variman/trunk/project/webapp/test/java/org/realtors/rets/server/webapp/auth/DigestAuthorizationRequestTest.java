@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
-import java.security.NoSuchAlgorithmException;
-
 import junit.framework.TestCase;
 
 public class DigestAuthorizationRequestTest extends TestCase
@@ -13,23 +11,36 @@ public class DigestAuthorizationRequestTest extends TestCase
         DigestAuthorizationRequest request = new DigestAuthorizationRequest(
             "Digest username=\"Joe\", realm=\"RETS Server\", " +
             "nonce=\"246e1b9f80fd87d67c6eceffbcf89941\", " +
-            "uri=\"/rets/login\", qop=\"auth\", algorithm=\"HashUtils\", " +
+            "uri=\"/rets/login\", qop=\"auth\", algorithm=\"MD5\", " +
             "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
             "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
-            "opaque=\"121d932ad13ff598b0df1d700e422812\"");
+            "opaque=\"121d932ad13ff598b0df1d700e422812\"", "GET");
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
         assertEquals("246e1b9f80fd87d67c6eceffbcf89941", request.getNonce());
         assertEquals("/rets/login", request.getUri());
         assertEquals("auth", request.getQop());
-        assertEquals("HashUtils", request.getAlgorithm());
+        assertEquals("MD5", request.getAlgorithm());
         assertEquals("00000001", request.getNonceCount());
         assertEquals("f151926f19d2566706621616d29f257c", request.getCnonce());
         assertEquals("4ac947bd0b23ca972a5f1d5d794b13a6", request.getResponse());
         assertEquals("121d932ad13ff598b0df1d700e422812", request.getOpaque());
+        assertEquals("GET", request.getMethod());
+        assertTrue(request.verifyResponse("Schmoe"));
+    }
 
-        request.setMethod("GET");
+    public void testExtraFields()
+    {
+        DigestAuthorizationRequest request = new DigestAuthorizationRequest(
+            "Digest username=\"Joe\", realm=\"RETS Server\", " +
+            "nonce=\"246e1b9f80fd87d67c6eceffbcf89941\", " +
+            "uri=\"/rets/login\", qop=\"auth\", algorithm=\"MD5\", " +
+            "nc=00000001, cnonce=\"f151926f19d2566706621616d29f257c\", " +
+            "response=\"4ac947bd0b23ca972a5f1d5d794b13a6\", " +
+            "opaque=\"121d932ad13ff598b0df1d700e422812\", " +
+            "foo=\"bar\", xxx=yyy", "GET");
+
         assertTrue(request.verifyResponse("Schmoe"));
     }
 
@@ -42,21 +53,20 @@ public class DigestAuthorizationRequestTest extends TestCase
             "uri=\"/rets/login\", " +
             "response=\"d7d4e90e15bdc2a43812f9e5383fac59\", " +
             "opaque=\"c54a061147901a1a1ddc55369a3439d8\", " +
-            "qop=auth, nc=00000001, " +
-            "cnonce=\"cbbaa5564d53563e\"");
+            "algorithm=MD5, qop=auth, nc=00000001, " +
+            "cnonce=\"cbbaa5564d53563e\"", "GET");
 
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
         assertEquals("d1b916ff2bf199f51c4670d011f9ac21", request.getNonce());
         assertEquals("/rets/login", request.getUri());
         assertEquals("auth", request.getQop());
-        assertEquals("HashUtils", request.getAlgorithm());
+        assertEquals("MD5", request.getAlgorithm());
         assertEquals("00000001", request.getNonceCount());
         assertEquals("cbbaa5564d53563e", request.getCnonce());
         assertEquals("d7d4e90e15bdc2a43812f9e5383fac59", request.getResponse());
         assertEquals("c54a061147901a1a1ddc55369a3439d8", request.getOpaque());
-
-        request.setMethod("GET");
+        assertEquals("GET", request.getMethod());
         assertTrue(request.verifyResponse("Schmoe"));
     }
 
@@ -65,16 +75,15 @@ public class DigestAuthorizationRequestTest extends TestCase
         DigestAuthorizationRequest request = new DigestAuthorizationRequest(
             "Digest username=\"Joe\", realm=\"RETS Server\", " +
             "nonce=\"e023742615efa35fa18df72d750a4317\", uri=\"/rets/login\", " +
-            "algorithm=\"HashUtils\", qop=\"auth\", cnonce=\"NzgzMTA=\", " +
+            "algorithm=MD5, qop=\"auth\", cnonce=\"NzgzMTA=\", " +
             "nc=00000001, response=\"b83db9c43d82e38380e24ecb03109d5d\", " +
-            "opaque=\"6055cb5ccdff7d130976dafffcd2e12c\"");
-        assertEquals("NzgzMTA=", request.getCnonce());
+            "opaque=\"6055cb5ccdff7d130976dafffcd2e12c\"", "GET");
 
-        request.setMethod("GET");
+        assertEquals("NzgzMTA=", request.getCnonce());
         assertTrue(request.verifyResponse("Schmoe"));
     }
 
-    public void testValidResponse() throws NoSuchAlgorithmException
+    public void testValidResponse()
     {
         DigestAuthorizationRequest request = new DigestAuthorizationRequest();
         request.setUsername("Joe");
@@ -104,20 +113,19 @@ public class DigestAuthorizationRequestTest extends TestCase
             "opaque=\"27bc2a479bd8213202039dbc3ef5922b\", " +
             "uri=\"/rets/cct/login\", " +
             "response=\"2c69a66c69996c5041f52697e70906b8\", qop=\"auth\", " +
-            "cnonce=\"0a4f113b\", nc=\"00000001\"");
+            "cnonce=\"0a4f113b\", nc=\"00000001\"", "GET");
 
         assertEquals("showingtime2", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
         assertEquals("27bc2a479bd8213202039dbc3ef5922b", request.getNonce());
         assertEquals("/rets/cct/login", request.getUri());
         assertEquals("auth", request.getQop());
-        assertEquals("HashUtils", request.getAlgorithm());
+        assertEquals("MD5", request.getAlgorithm());
         assertEquals("\"00000001\"", request.getNonceCount());
         assertEquals("0a4f113b", request.getCnonce());
         assertEquals("2c69a66c69996c5041f52697e70906b8", request.getResponse());
         assertEquals("27bc2a479bd8213202039dbc3ef5922b", request.getOpaque());
-
-        request.setMethod("GET");
+        assertEquals("GET", request.getMethod());
         assertFalse(request.verifyResponse("stcom"));
 
         // Test that removing quotes from nonce count results in a succesful
@@ -126,7 +134,7 @@ public class DigestAuthorizationRequestTest extends TestCase
         assertTrue(request.verifyResponse("stcom"));
     }
 
-    public void testShowingtimeResponse() throws NoSuchAlgorithmException
+    public void testShowingtimeResponse()
     {
         DigestAuthorizationRequest request = new DigestAuthorizationRequest();
         request.setUsername("showingtime2");
@@ -145,7 +153,7 @@ public class DigestAuthorizationRequestTest extends TestCase
                                           true));
     }
 
-    public void testNullPassword() throws NoSuchAlgorithmException
+    public void testNullPassword()
     {
         DigestAuthorizationRequest request = new DigestAuthorizationRequest();
         request.setUsername("Joe");
@@ -158,10 +166,10 @@ public class DigestAuthorizationRequestTest extends TestCase
         request.setCnonce("f151926f19d2566706621616d29f257c");
         request.setNonceCount("00000001");
         // Response if password is interpreted as 'n', 'u', 'l', 'l'
-        assertEquals("16620f100bad0abee21864791b2ff1e5",
-                     request.calculateRequestDigest(null, false));
+        String response = "16620f100bad0abee21864791b2ff1e5";
+        assertEquals(response, request.calculateRequestDigest(null, false));
         // Response should fail, even though the response matches.
-        request.setResponse("16620f100bad0abee21864791b2ff1e5");
+        request.setResponse(response);
         assertFalse(request.verifyResponse(null));
     }
 
@@ -183,33 +191,32 @@ public class DigestAuthorizationRequestTest extends TestCase
             "Digest username=\"Joe\", realm=\"RETS Server\", " +
             "nonce=\"e19ef455409e9663b384d837453c74fd\", " +
             "uri=\"/rets/login\", " +
-            "response=\"ddd25f230a426925b4a467e186718094\"");
+            "response=\"ddd25f230a426925b4a467e186718094\"", "GET");
+
         assertEquals("Joe", request.getUsername());
         assertEquals("RETS Server", request.getRealm());
         assertEquals("e19ef455409e9663b384d837453c74fd", request.getNonce());
         assertEquals("/rets/login", request.getUri());
         assertNull(request.getQop());
-        assertEquals("HashUtils", request.getAlgorithm());
+        assertEquals("MD5", request.getAlgorithm());
         assertEquals("", request.getNonceCount());
         assertEquals("", request.getCnonce());
         assertEquals("ddd25f230a426925b4a467e186718094", request.getResponse());
         assertEquals("", request.getOpaque());
-
-        request.setMethod("GET");
+        assertEquals("GET", request.getMethod());
         assertTrue(request.verifyResponse("Schmoe"));
     }
 
     public void testNullHeader()
     {
         DigestAuthorizationRequest request =
-            new DigestAuthorizationRequest(null);
+            new DigestAuthorizationRequest(null, "GET");
         assertNull(request.getUsername());
 
-        request.setMethod("GET");
         // Check correct response, but that verification still fails
-        assertEquals("5d3e49c0a3f8aaee371e3a4dc99bc462",
-                     request.calculateRequestDigest("yo", false));
-        request.setResponse("5d3e49c0a3f8aaee371e3a4dc99bc462");
+        String response = "5d3e49c0a3f8aaee371e3a4dc99bc462";
+        assertEquals(response, request.calculateRequestDigest("yo", false));
+        request.setResponse(response);
         assertFalse(request.verifyResponse("yo"));
     }
 
@@ -217,7 +224,7 @@ public class DigestAuthorizationRequestTest extends TestCase
     {
         try
         {
-            new DigestAuthorizationRequest("Digest");
+            new DigestAuthorizationRequest("Digest", "GET");
             fail("Should have thrown exception");
         }
         catch (IllegalArgumentException e)
