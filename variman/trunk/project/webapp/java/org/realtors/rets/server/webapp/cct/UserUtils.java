@@ -33,7 +33,7 @@ public class UserUtils
 
             session.save(user);
             session.save(userInfo);
-            
+
             tx.commit();
             session.close();
         }
@@ -57,7 +57,7 @@ public class UserUtils
             }
         }
     }
-    
+
     public UserInfo getUserInfo(String username)
     {
         Session session = null;
@@ -73,6 +73,7 @@ public class UserUtils
             List list = query.list();
             userInfo = (UserInfo) list.get(0);
             session.close();
+            return userInfo;
         }
         catch (HibernateException e)
         {
