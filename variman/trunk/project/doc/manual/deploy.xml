@@ -121,7 +121,24 @@
         where the images are located.  The Image Pattern is a '%'
         substitution pattern that describes the format of the actual
         file names.  The possible patterns and their substitutions are
-        listed in <xref linkend="tab-image-pattern"/>.
+        listed in <xref linkend="tab-image-pattern"/>.  An example of
+        this may help.  If you have pictures
+        in <filename>/home/rex/pictures/</filename>.  The key is used
+        as the base file name, with each image given a number.  Say
+        there are 3 picture for the property
+        ID <literal>LN1001</literal>, the full paths for these
+        pictures are:
+        <itemizedlist>
+          <listitem>
+            <literal>/home/rex/pictures/LN1001_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/rex/pictures/LN1001_2.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/rex/pictures/LN1001_3.jpg</literal>
+          </listitem>
+        </itemizedlist>
       </para>
       <figure id="fig-config">
         <title>Configuration Tab</title>
