@@ -1,6 +1,8 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.Frame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
@@ -28,11 +30,20 @@ public class AboutBox extends JDialog
             "</center></html>");
         content.add(label);
         content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        content.addMouseListener(new CloseOnClickListener());
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         getContentPane().add(content);
         pack();
         setResizable(false);
         SwingUtils.centerOnFrame(this, frame);
+    }
+
+    private class CloseOnClickListener extends MouseAdapter
+    {
+        public void mouseClicked(MouseEvent event)
+        {
+            dispose();
+        }
     }
 }
