@@ -44,6 +44,7 @@ public class RetsConfig
         mNonceInitialTimeout = -1;
         mNonceSuccessTimeout = -1;
         mSecurityConstraints = new SecurityConstraints();
+        mBlockLocation = false;
     }
 
     public int getPort()
@@ -473,6 +474,16 @@ public class RetsConfig
         mSecurityConstraints.setAllConstraints(securityConstraints);
     }
 
+    public boolean getBlockLocation()
+    {
+        return mBlockLocation;
+    }
+
+    public void setBlockLocation(boolean blockLocation)
+    {
+        mBlockLocation = blockLocation;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(RetsConfig.class);
     private static final String PORT = "port";
@@ -511,6 +522,6 @@ public class RetsConfig
     private int mNonceSuccessTimeout;
     private DatabaseConfig mDatabase;
     private String mMetadataDir;
-//    private List mSecurityConstraints;
     private SecurityConstraints mSecurityConstraints;
+    private boolean mBlockLocation;
 }
