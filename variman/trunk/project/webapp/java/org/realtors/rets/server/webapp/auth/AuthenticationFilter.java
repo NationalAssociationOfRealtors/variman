@@ -13,48 +13,50 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.PasswordMethod;
 import org.apache.log4j.Logger;
 
 /**
  * @web.filter name="authentication-filter"
  *   description="Performs digest authentication"
- * @web.filter-init-param name="password-map"
- *   value="org.realtors.rets.server.webapp.auth.HibernatePasswordMap"
+ * @web.filter-init-param name="user-map"
+ *   value="org.realtors.rets.server.webapp.auth.HibernateUserMap"
  *
  *   valuex="org.realtors.rets.server.webapp.auth.AuthenticationFilter"
  */
-public class AuthenticationFilter implements Filter, PasswordMap
+public class AuthenticationFilter implements Filter, UserMap
 {
     public void init(FilterConfig filterConfig) throws ServletException
     {
-        instantiatePasswordMap(filterConfig.getInitParameter("password-map"));
-        LOG.info("Using password map: " + mPasswordMap.getClass().getName());
+        instantiateUserMap(filterConfig.getInitParameter("user-map"));
+        LOG.info("Using user map: " + mUserMap.getClass().getName());
     }
 
-    private void instantiatePasswordMap(String passwordMapName)
+    private void instantiateUserMap(String userMapName)
     {
-        mPasswordMap = new NullPasswordMap();
-        if (passwordMapName == null)
+        mUserMap = new NullUserMap();
+        if (userMapName == null)
         {
             return;
         }
 
         try
         {
-            mPasswordMap = (PasswordMap)
-                Class.forName(passwordMapName).newInstance();
+            mUserMap = (UserMap)
+                Class.forName(userMapName).newInstance();
         }
         catch (InstantiationException e)
         {
-            LOG.warn("Could not instantiate: " + passwordMapName, e);
+            LOG.warn("Could not instantiate: " + userMapName, e);
         }
         catch (IllegalAccessException e)
         {
-            LOG.warn("Could not instantiate: " + passwordMapName, e);
+            LOG.warn("Could not instantiate: " + userMapName, e);
         }
         catch (ClassNotFoundException e)
         {
-            LOG.warn("Could not instantiate: " + passwordMapName, e);
+            LOG.warn("Could not instantiate: " + userMapName, e);
         }
     }
 
@@ -103,24 +105,33 @@ public class AuthenticationFilter implements Filter, PasswordMap
 
     private boolean verifyResponse(DigestAuthorizationRequest request)
     {
-        PasswordMap.PasswordInfo info =
-            mPasswordMap.getPassword(request.getUsername());
-        return request.verifyResponse(info.getPassword(), info.isA1());
+        User user = mUserMap.findUser(request.getUsername());
+        if (user == null)
+        {
+            return false;
+        }
+        boolean passwordIsA1 = user.isPasswordMethod(PasswordMethod.DIGEST_A1);
+        return request.verifyResponse(user.getPassword(), passwordIsA1);
     }
 
-    public boolean passwordIsA1()
+    public User findUser(String username)
     {
-        return false;
-    }
-
-    public PasswordInfo getPassword(String username)
-    {
-        PasswordInfo info = new PasswordInfo();
+        User user = new User();
+        user.setPasswordMethod(
+            PasswordMethod.getInstance(PasswordMethod.PLAIN_TEXT));
         if (username.equals("Joe"))
-            info.setPassword("Schmoe");
+        {
+            user.setPassword("Schmoe");
+        }
         else if (username.equals("test"))
-            info.setPassword("test1");
-        return info;
+        {
+            user.setPassword("test1");
+        }
+        else
+        {
+            user = null;
+        }
+        return user;
     }
 
     private void send401(HttpServletResponse response) throws IOException
@@ -134,10 +145,10 @@ public class AuthenticationFilter implements Filter, PasswordMap
 
     public void destroy()
     {
-        mPasswordMap = null;
+        mUserMap = null;
     }
 
     private static final Logger LOG =
         Logger.getLogger(AuthenticationFilter.class);
-    private PasswordMap mPasswordMap;
+    private UserMap mUserMap;
 }

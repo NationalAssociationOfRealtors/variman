@@ -60,6 +60,11 @@ public class User
         return mPasswordMethod;
     }
 
+    public boolean isPasswordMethod(String method)
+    {
+        return mPasswordMethod.getMethod().equals(method);
+    }
+
     /**
      * Sets the method used to hash the password for backend storage. The
      * default method is plain text, i.e. no hashing.
@@ -83,11 +88,12 @@ public class User
 
     /**
      * Sets the hashed password. This should only be called by hibernate when
-     * loaded from the database.
+     * loaded from the database. To change the password use changePassword()
+     * as it correctly hashes the password using the current password method.
      *
      *  @param password Hashed password
      */
-    protected void setPassword(String password)
+    public void setPassword(String password)
     {
         mPassword = password;
     }

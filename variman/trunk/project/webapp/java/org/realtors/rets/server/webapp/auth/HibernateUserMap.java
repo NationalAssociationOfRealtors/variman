@@ -12,16 +12,12 @@ import org.realtors.rets.server.webapp.InitServlet;
 import org.realtors.rets.server.User;
 import org.apache.log4j.Logger;
 
-public class HibernatePasswordMap implements PasswordMap
+public class HibernateUserMap implements UserMap
 {
-    public boolean passwordIsA1()
-    {
-        return true;
-    }
 
-    public PasswordInfo getPassword(String username)
+    public User findUser(String username)
     {
-        PasswordInfo info = new PasswordInfo();
+        User user = null;
         try
         {
             Session session = InitServlet.getSessions().openSession();
@@ -32,10 +28,8 @@ public class HibernatePasswordMap implements PasswordMap
                 username, Hibernate.STRING);
             if (users.size() == 1)
             {
-                User user = (User) users.get(0);
+                user = (User) users.get(0);
                 LOG.debug(user);
-                info.setPassword(user.getPassword());
-                info.setA1(user.getPasswordMethod().getMethod().equals("A1"));
             }
             else
             {
@@ -46,9 +40,9 @@ public class HibernatePasswordMap implements PasswordMap
         {
             LOG.warn("Exception", e);
         }
-        return info;
+        return user;
     }
 
     private static final Logger LOG =
-        Logger.getLogger(HibernatePasswordMap.class);
+        Logger.getLogger(HibernateUserMap.class);
 }

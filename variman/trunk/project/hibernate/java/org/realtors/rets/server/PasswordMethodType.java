@@ -17,13 +17,11 @@ public class PasswordMethodType implements UserType
 {
     public int[] sqlTypes()
     {
-        System.out.println("In sqlTypes");
         return TYPES;
     }
 
     public Class returnedClass()
     {
-        System.out.println("In returnedClass");
         return PasswordMethod.class;
     }
 
