@@ -73,7 +73,7 @@ public class ValidationExternalType implements Serializable
      * @hibernate.set inverse="false"
      *   table="rets_validationexternaltype_searchfield"
      * @hibernate.collection-key column="id"
-     * @hibernate.collection-one-to-many
+     * @hibernate.collection-many-to-many column="field"
      *   class="org.realtors.rets.server.metadata.Table"
      */
     public Set getSearchField()
@@ -93,7 +93,7 @@ public class ValidationExternalType implements Serializable
      * @hibernate.set inverse="false"
      *   table="rets_validationexternaltype_displayfield"
      * @hibernate.collection-key column="id"
-     * @hibernate.collection-one-to-many
+     * @hibernate.collection-many-to-many column="field"
      *   class="org.realtors.rets.server.metadata.Table"
      */
     public Set getDisplayField()
