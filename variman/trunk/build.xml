@@ -660,6 +660,16 @@
     </junit>
   </target>
 
+  <target name="dist-win" description="Builds a Windows binary distribution">
+    <copy file="${javaservice.exe}" tofile="build/rets-server/rex.exe"/>
+    <echo message="Running Inno Setup compiler"/>
+    <exec executable="${inno_setup.iscc}"
+          output="build/iss.log"
+          failonerror="yes">
+      <arg line="${basedir}/project/build/rex.iss"/>
+    </exec>
+  </target>
+
   <target name="clean" description="Cleans all ant targets">
     <delete dir="build" />
     <delete dir="dist" />
