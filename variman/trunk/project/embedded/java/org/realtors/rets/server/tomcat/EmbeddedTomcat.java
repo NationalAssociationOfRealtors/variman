@@ -1,9 +1,6 @@
 package org.realtors.rets.server.tomcat;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.net.URL;
-import java.util.StringTokenizer;
 
 import org.apache.catalina.Connector;
 import org.apache.catalina.Context;
@@ -16,22 +13,6 @@ import org.apache.catalina.startup.Embedded;
 
 public class EmbeddedTomcat
 {
-    public class JarFileFilter implements FileFilter
-    {
-        /* (non-Javadoc)
-         * @see java.io.FileFilter#accept(java.io.File)
-         */
-        public boolean accept(File pathname)
-        {
-            if (pathname.isFile())
-            {
-                String name = pathname.getName();
-                return name.endsWith(".jar");
-            }
-            return false;
-        }
-
-    }
 
     public static synchronized EmbeddedTomcat getInstance()
     {
@@ -144,70 +125,21 @@ public class EmbeddedTomcat
         }
         deployer.install(contextPath, webapp);
     }
-    
 
-    
-    /**
-     * Creates a classPath based on what's passed in.  When "java -jar" is
-     * called, it sets java.class.path incorrectly.  This functions attempts
-     * to fix that by building the classpath based on what is passed in.
-     * "java -jar" always only has one element in it.  If there is more than
-     * one element in the classPath, its just tossed back.
-     * 
-     * @param classPath passed in class path
-     * @return String a "fixed" classpath
-     */
-    public String buildClassPath(String classPath)
-    {
-        // How many items are in the classpath?
-        StringTokenizer tok =
-            new StringTokenizer(classPath, File.pathSeparator);
-        if (tok.countTokens() > 1)
-        {
-            return classPath; 
-        }
-
-        // Create a classpath based on the known entity.            
-        File file = new File(classPath);
-        File dir = file.getParentFile();
-        File jarFiles[] = dir.listFiles(new JarFileFilter());
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < jarFiles.length; i++)
-        {
-            if (i > 0)
-            {
-                buffer.append(File.pathSeparatorChar);
-            }
-            buffer.append(jarFiles[i].getPath());
-        }
-        return buffer.toString();
-    }
 
     public static void main(String args[])
     {
         try
         {
             EmbeddedTomcat tomcat = EmbeddedTomcat.getInstance();
-//            String workingDir = System.getProperty("catalina.realhome",
-//                System.getProperty("user.dir"));
             String workingDir = System.getProperty("user.dir");
             tomcat.setPath(workingDir);
-
-            // fix the classpath
-            System.setProperty("java.class.path",
-                tomcat.buildClassPath(System.getProperty("java.class.path")));
 
             tomcat.startTomcat();
 
             URL url = new URL("file:" + workingDir + "/webapp");
             tomcat.registerWebapp("/", url);
 
-            /*
-            // Two minutes
-            Thread.sleep(2*60*1000L);
-
-            tomcat.stopTomcat();
-            */
             tomcat.waitUntilStopped();
             System.out.println("Stopped");
         }
