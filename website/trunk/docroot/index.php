@@ -41,6 +41,9 @@
 
     <h3>News</h3>
     <ul>
+      <li><b>16 Jun 2004</b>: Version 2.0.3 released.</li>
+    </ul>
+    <ul>
       <li><b>04 May 2004</b>: Version 2.0.2 released.</li>
     </ul>
     <ul>

@@ -4,7 +4,7 @@
 
 function ver()
 {
-    return "2.0.2";
+    return "2.0.3";
 }
 
 function print_ver()
@@ -46,13 +46,6 @@ function dl_file($file)
           Embedded Tomcat Windows installer.  Installs a Service to
           start and stop Rex.
         </td>
-      </tr>
-      <tr>
-        <td>
-          <?php dl_file("rex-" . ver() . "-linux.tar.gz")?>
-        </td>
-        <td>17M</td>
-        <td>Embedded Tomcat archive Linux i386 platforms.</td>
       </tr>
       <tr>
         <td>
