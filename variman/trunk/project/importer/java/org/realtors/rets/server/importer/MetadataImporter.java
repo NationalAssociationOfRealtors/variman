@@ -115,6 +115,7 @@ public class MetadataImporter
             doSearchHelp(rSession, hSession);
             doEditMask(rSession, hSession);
             doLookup(rSession, hSession);
+            doLookupTypes(rSession, hSession);
             doUpdateHelp(rSession, hSession);
             doValidationExternal(rSession, hSession);
             doUpdate(rSession, hSession);
@@ -375,7 +376,7 @@ public class MetadataImporter
 
                     hLookup.updateLevel();
                     hSession.save(hLookup);
-                    doLookupTypes(hLookup, rSession, hSession);
+                    // doLookupTypes(hLookup, rSession, hSession);
                     hLookups.add(hLookup);
                     mLookups.put(hLookup.getPath(), hLookup);
                 }
@@ -393,39 +394,41 @@ public class MetadataImporter
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
-    private void doLookupTypes(Lookup hLookup, RetsSession rSession,
-                               Session hSession)
+    private void doLookupTypes(RetsSession rSession, Session hSession)
         throws HibernateException
     {
         MetadataTable tLookupTypes =
             rSession.getMetadataTable(MetadataTable.LOOKUP_TYPE);
 
-        List lookupTypes = tLookupTypes.getDataRows(hLookup.getPath());
-        Set hLookupTypes = new HashSet();
-        if (lookupTypes != null)
+        Iterator i = mLookups.values().iterator();
+        while (i.hasNext())
         {
-            System.out.println("in lookup type area: " +
-                               hLookup.getLookupName());
-            Iterator i = lookupTypes.iterator();
-            while (i.hasNext())
+            Lookup lookup = (Lookup) i.next();
+            List lookupTypes = tLookupTypes.getDataRows(lookup.getPath());
+            Set hLookupTypes = new HashSet();
+            if (lookupTypes != null)
             {
-                Metadata md = (Metadata) i.next();
-                LookupType hLookupType = new LookupType();
+                Iterator j = lookupTypes.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    LookupType hLookupType = new LookupType();
 
-                hLookupType.setLookupid(hLookup);
+                    hLookupType.setLookupid(lookup);
 
-                hLookupType.setLongValue(md.getAttribute("LongValue"));
-                hLookupType.setShortValue(md.getAttribute("ShortValue"));
-                hLookupType.setValue(md.getAttribute("Value"));
+                    hLookupType.setLongValue(md.getAttribute("LongValue"));
+                    hLookupType.setShortValue(md.getAttribute("ShortValue"));
+                    hLookupType.setValue(md.getAttribute("Value"));
 
-                hLookupType.updateLevel();
+                    hLookupType.updateLevel();
 
-                hSession.save(hLookupType);
-                hLookupTypes.add(hLookupType);
+                    hSession.save(hLookupType);
+                    hLookupTypes.add(hLookupType);
+                }
             }
+            lookup.setLookupTypes(hLookupTypes);
+            hSession.saveOrUpdate(lookup);
         }
-        hLookup.setLookupTypes(hLookupTypes);
-        hSession.saveOrUpdate(hLookup);
     }
 
     private void doUpdateHelp(RetsSession rSession, Session hSession)
@@ -705,7 +708,8 @@ public class MetadataImporter
                     // Hack to get around metadata bug
                     if (table == null)
                     {
-                        continue;
+                        LOG.error("null table for path: " + tablePath);
+                        System.exit(1);
                     }
                     
                     updateType.setSequence(
@@ -1060,5 +1064,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.21 2003/07/16 20:18:44 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.22 2003/07/16 21:41:12 kgarner Exp $";
 }
