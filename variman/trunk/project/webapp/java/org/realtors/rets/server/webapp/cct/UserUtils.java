@@ -17,6 +17,7 @@ import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
 import org.realtors.rets.server.webapp.InitServlet;
+import org.realtors.rets.server.webapp.WebApp;
 
 /**
  * @author kgarner
@@ -36,7 +37,7 @@ public class UserUtils
 
     public void createUser(User user, UserInfo userInfo)
     {
-        SessionHelper helper = InitServlet.createHelper();
+        SessionHelper helper = WebApp.createHelper();
         try
         {
             Session session = helper.beginTransaction();
@@ -64,7 +65,7 @@ public class UserUtils
             LOG.warn("You dumbass, you gave me a null username");
             return null;
         }
-        SessionHelper helper = InitServlet.createHelper();
+        SessionHelper helper = WebApp.createHelper();
         UserInfo userInfo = null;
         try
         {
@@ -93,7 +94,7 @@ public class UserUtils
     
     public List getAllUserInfos()
     {
-        SessionHelper helper = InitServlet.createHelper();
+        SessionHelper helper = WebApp.createHelper();
         List userInfos = null;
         try
         {
