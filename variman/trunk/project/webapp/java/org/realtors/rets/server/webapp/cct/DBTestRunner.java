@@ -110,5 +110,21 @@ public class DBTestRunner extends TestRunner
         }
     }
 
+    public void resetAllResults()
+    {
+        if (mRunningTest != null)
+        {
+            stopRunningTest();
+        }
+
+        Iterator i = mResults.iterator();
+        while (i.hasNext())
+        {
+            DBValidationResult result = (DBValidationResult) i.next();
+            result.reset();
+            saveResult(result);
+        }
+    }
+
     public final static Logger LOG = Logger.getLogger(DBTestRunner.class);
 }

@@ -73,6 +73,21 @@ public class TestRunner
             LOG.warn("No running test to stop");
         }
     }
+    
+    public void resetAllResults()
+    {
+        if (mRunningTest != null)
+        {
+            stopRunningTest();
+        }
+
+        Iterator i = mResults.iterator();
+        while (i.hasNext())
+        {
+            ValidationResult result = (ValidationResult) i.next();
+            result.reset();
+        }
+    }
 
     /**
      *
