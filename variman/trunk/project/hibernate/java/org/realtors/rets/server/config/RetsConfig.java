@@ -114,7 +114,8 @@ public class RetsConfig
     {
         Element retsConfig = new Element(RETS_CONFIG);
         addChild(retsConfig, PORT, mPort);
-        addChild(retsConfig,  GET_OBJECT_PATTERN, mGetObjectPattern);
+        addChild(retsConfig, METADATA_DIR, mMetadataDir);
+        addChild(retsConfig, GET_OBJECT_PATTERN, mGetObjectPattern);
         addChild(retsConfig, GET_OBJECT_ROOT, mGetObjectRoot);
         addChild(retsConfig, NONCE_INITIAL_TIMEOUT, mNonceInitialTimeout);
         addChild(retsConfig, NONCE_SUCCESS_TIMEOUT, mNonceSuccessTimeout);
@@ -181,15 +182,16 @@ public class RetsConfig
     private static RetsConfig elementToConfig(Element element)
     {
         RetsConfig config = new RetsConfig();
-        config.mPort = getInt(element,  PORT);
-        config.mGetObjectPattern = getString(element,  GET_OBJECT_PATTERN);
+        config.mPort = getInt(element, PORT);
+        config.mMetadataDir = getString(element, METADATA_DIR);
+        config.mGetObjectPattern = getString(element, GET_OBJECT_PATTERN);
         config.mGetObjectRoot = getString(element, GET_OBJECT_ROOT);
         config.mNonceInitialTimeout = getInt(element, NONCE_INITIAL_TIMEOUT);
-        config.mNonceSuccessTimeout = getInt(element,  NONCE_SUCCESS_TIMEOUT);
+        config.mNonceSuccessTimeout = getInt(element, NONCE_SUCCESS_TIMEOUT);
 
         element = element.getChild(DATABASE);
         DatabaseConfig database = new DatabaseConfig();
-        database.setDriver(getString(element,  DRIVER));
+        database.setDriver(getString(element, DRIVER));
         database.setUrl(getString(element, URL));
         database.setUsername(getString(element, USERNAME));
         database.setPassword(getString(element, PASSWORD));
@@ -313,7 +315,18 @@ public class RetsConfig
         return mDatabase.createHibernateProperties();
     }
 
+    public void setMetadataDir(String metadataDir)
+    {
+        mMetadataDir = metadataDir;
+    }
+
+    public String getMetadataDir()
+    {
+        return mMetadataDir;
+    }
+
     private static final String PORT = "port";
+    private static final String METADATA_DIR = "metadata-dir";
     private static final String RETS_CONFIG = "rets-config";
     private static final String GET_OBJECT_PATTERN = "get-object-pattern";
     private static final String GET_OBJECT_ROOT = "get-object-root";
@@ -337,4 +350,5 @@ public class RetsConfig
     private int mNonceInitialTimeout;
     private int mNonceSuccessTimeout;
     private DatabaseConfig mDatabase;
+    private String mMetadataDir;
 }
