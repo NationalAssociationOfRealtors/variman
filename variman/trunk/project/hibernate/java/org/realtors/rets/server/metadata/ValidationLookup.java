@@ -127,6 +127,11 @@ public class ValidationLookup implements Serializable
         mValidationLookupTypes = validationLookupTypes;
     }
 
+    public String getPath()
+    {
+        return mResourceid.getPath() + ":" + mValidationLookupName;
+    }
+
     public String toString()
     {
         return mValidationLookupName;
