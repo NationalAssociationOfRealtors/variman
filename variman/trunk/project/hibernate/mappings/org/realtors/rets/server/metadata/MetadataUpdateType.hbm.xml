@@ -3,22 +3,22 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataUpdateType.hbm.xml,v 1.4 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: MetadataUpdateType.hbm.xml,v 1.5 2003/06/12 20:55:45 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.nar.rets.metadata.newdb.MetadataUpdateType"
-    table="rets_metadata_updatetype">
+  <class name="org.realtors.rets.server.metadata.MetadataUpdateType"
+         table="rets_metadata_updatetype">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="updateid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataUpdate"/>
+                 class="org.realtors.rets.server.metadata.MetadataUpdate"/>
 
     <property name="systemName" type="string">
       <column name="system_name" length="32" not-null="true" unique="true"
-        index="updatetype_system_name_index"/>
+              index="updatetype_system_name_index"/>
     </property>
 
     <property name="sequence" type="int"/>
@@ -26,7 +26,7 @@
     <set name="attributes" table="rets_metadata_updatetype_attributes">
       <key column="id"/>
       <element column="attributes"
-        type="org.nar.rets.metadata.newdb.UpdateTypeAttributeEnum"/>
+             type="org.realtors.rets.server.metadata.UpdateTypeAttributeEnum"/>
     </set>
 
     <property name="Default" type="string">
@@ -34,20 +34,20 @@
     </property>
 
     <set name="validationExpressions"
-      table="rets_metadata_updatetype_validationexpressions">
+         table="rets_metadata_updatetype_validationexpressions">
       <key column="id"/>
       <one-to-many
-        class="org.nar.rets.metadata.newdb.MetadataValidationExpression"/>
+       class="org.realtors.rets.server.metadata.MetadataValidationExpression"/>
     </set>
 
     <many-to-one name="updateHelp" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataUpdateHelp"/>
+                 class="org.realtors.rets.server.metadata.MetadataUpdateHelp"/>
 
     <many-to-one name="validationLookup" cascade="none"
-        class="org.nar.rets.metadata.newdb.MetadataValidationLookup"/>
+           class="org.realtors.rets.server.metadata.MetadataValidationLookup"/>
     
     <many-to-one name="validationExternal" cascade="none"
-        class="org.nar.rets.metadata.newdb.MetadataValidationExternal"/>
+         class="org.realtors.rets.server.metadata.MetadataValidationExternal"/>
     
   </class>
 </hibernate-mapping>

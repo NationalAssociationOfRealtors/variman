@@ -3,21 +3,21 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MObject.hbm.xml,v 1.4 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: MObject.hbm.xml,v 1.5 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.nar.rets.metadata.newdb.MetadataObject"
-    table="rets_metadata_object">
+  <class name="org.realtors.rets.server.metadata.MetadataObject"
+         table="rets_metadata_object">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.MetadataResource"/>
 
     <property name="objectType"
-      type="org.nar.rets.metadata.newdb.ObjectTypeEnum">
+              type="org.realtors.rets.server.metadata.ObjectTypeEnum">
       <column name="object_type" index="rets_metadata_objectype_index"/>
     </property>
 

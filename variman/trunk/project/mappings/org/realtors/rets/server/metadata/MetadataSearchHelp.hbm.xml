@@ -3,23 +3,23 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataSearchHelp.hbm.xml,v 1.2 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: MetadataSearchHelp.hbm.xml,v 1.3 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.nar.rets.metadata.newdb.MetadataSearchHelp"
-    table="rets_metadata_searchhelp">
+  <class name="org.realtors.rets.server.metadata.MetadataSearchHelp"
+         table="rets_metadata_searchhelp">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.MetadataResource"/>
 
     <property name="searchHelpID" type="string">
       <column name="search_help_id" length="32"
-        index="rets_metadata_searchhelp_index"/>
+              index="rets_metadata_searchhelp_index"/>
     </property>
 
     <property name="value" type="string">

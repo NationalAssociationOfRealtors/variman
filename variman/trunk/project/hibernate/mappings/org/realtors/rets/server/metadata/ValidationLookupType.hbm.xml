@@ -3,19 +3,19 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ValidationLookupType.hbm.xml,v 1.2 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: ValidationLookupType.hbm.xml,v 1.3 2003/06/12 20:55:45 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.nar.rets.metadata.newdb.MetadataValidationLookupType"
-    table="rets_metadata_validationlookuptype">
+  <class name="org.realtors.rets.server.metadata.MetadataValidationLookupType"
+         table="rets_metadata_validationlookuptype">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="validationLookupID" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataValidationLookup"/>
+           class="org.realtors.rets.server.metadata.MetadataValidationLookup"/>
 
     <property name="validText" type="string">
       <column name="valid_text" length="32"/>

@@ -3,23 +3,23 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: EditMask.hbm.xml,v 1.2 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: EditMask.hbm.xml,v 1.3 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.nar.rets.metadata.newdb.MetadataEditMask"
-    table="rets_metadata_editmask">
+  <class name="org.realtors.rets.server.metadata.MetadataEditMask"
+         table="rets_metadata_editmask">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.MetadataResource"/>
 
     <property name="editMaskID" type="string">
       <column name="edit_mask_id" unique="true" not-null="true"
-        index="rets_metadata_editmask_id_index" length="32"/>
+              index="rets_metadata_editmask_id_index" length="32"/>
     </property>
 
     <property  name="value" type="string">

@@ -3,44 +3,30 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ForeignKey.hbm.xml,v 1.3 2003/06/04 20:47:58 kgarner Exp $ -->
+<!-- $Id: ForeignKey.hbm.xml,v 1.4 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.nar.rets.metadata.newdb.MetadataForeignKey"
-    table="rets_metadata_foreignkey">
+  <class name="org.realtors.rets.server.metadata.MetadataForeignKey"
+         table="rets_metadata_foreignkey">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="systemid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataSystem"/>
+                 class="org.realtors.rets.server.metadata.MetadataSystem"/>
 
     <property name="foreignKeyID" type="string">
       <column name="foreign_key_id" length="32" not-null="true" unique="true"
-        index="rets_metadata_foreignkey_id_index"/>
+              index="rets_metadata_foreignkey_id_index"/>
     </property>
 
-    <!-- We should be able to derive the resource and class from the table. -->
-<!--     <many-to-one name="parentResource" cascade="none" -->
-<!--       class="org.nar.rets.metadata.newdb.MetadataResource"/> -->
-
-<!--     <many-to-one name="parentClass" cascade="none" -->
-<!--       class="org.nar.rets.metadata.newdb.MetadataClass"/> -->
-
     <many-to-one name="parentTable" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataTable"/>
-
-    <!-- We should be able to derive the resource and class from the table. -->
-<!--     <many-to-one name="childResource" cascade="none" -->
-<!--       class="org.nar.rets.metadata.newdb.MetadataResource"/> -->
-
-<!--     <many-to-one name="childClass" cascade="none" -->
-<!--       class="org.nar.rets.metadata.newdb.MetadataClass"/> -->
+                 class="org.realtors.rets.server.metadata.MetadataTable"/>
 
     <many-to-one name="childTable" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataTable"/>
+                 class="org.realtors.rets.server.metadata.MetadataTable"/>
 
   </class>
 </hibernate-mapping>

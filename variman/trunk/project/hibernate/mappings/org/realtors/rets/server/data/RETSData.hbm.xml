@@ -3,10 +3,10 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSData.hbm.xml,v 1.7 2003/06/09 18:05:27 kgarner Exp $ -->
+<!-- $Id: RETSData.hbm.xml,v 1.8 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.nar.rets.data.RETSData" table="rets_data">
+  <class name="org.realtors.rets.server.data.RETSData" table="rets_data">
 
     <id name="id" type="long">
       <generator class="hilo"/>
@@ -14,16 +14,16 @@
 
     <!-- The class element -->
     <many-to-one name="clazz" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataClass">
+                 class="org.realtors.rets.server.metadata.MetadataClass">
       <column name="clazz" index="rets_data_clazz"/>
     </many-to-one>
 
     <map name="dataElements" lazy="false" cascade="all">
       <key column="data"/>
       <index-many-to-many column="key"
-        class="org.nar.rets.metadata.newdb.MetadataTable"/>
-      <one-to-many class="org.nar.rets.data.RETSDataElement"/>
+                      class="org.realtors.rets.server.metadata.MetadataTable"/>
+      <one-to-many class="org.realtors.rets.server.data.RETSDataElement"/>
     </map>
-      
+    
   </class>
 </hibernate-mapping>

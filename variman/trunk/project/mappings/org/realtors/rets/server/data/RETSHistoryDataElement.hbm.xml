@@ -3,21 +3,22 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSHistoryDataElement.hbm.xml,v 1.1 2003/06/09 18:06:37 kgarner Exp $ -->
+<!-- $Id: RETSHistoryDataElement.hbm.xml,v 1.2 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.nar.rets.data.RETSHistoryDataElement"
-    table="rets_history_data_dataelement">
+  <class name="org.realtors.rets.server.data.RETSHistoryDataElement"
+         table="rets_history_data_dataelement">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
-    <many-to-one name="data" class="org.nar.rets.data.RETSHistoryData"/>
+    <many-to-one name="data"
+                 class="org.realtors.rets.server.data.RETSHistoryData"/>
 
     <many-to-one name="key" cascade="none" unique="true" not-null="true"
-      class="org.nar.rets.metadata.newdb.MetadataTable"/>
+                 class="org.realtors.rets.server.metadata.MetadataTable"/>
 
     <property name="booleanValue" type="java.lang.Boolean"/>
 
@@ -33,7 +34,8 @@
 
     <property name="decimalValue" type="big_decimal"/>
 
-    <many-to-one name="multi" class="org.nar.rets.data.RETSHistoryMultiSet"/>
+    <many-to-one name="multi"
+                 class="org.realtors.rets.server.data.RETSHistoryMultiSet"/>
 
   </class>
 </hibernate-mapping>

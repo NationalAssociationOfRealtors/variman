@@ -3,21 +3,21 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Table.hbm.xml,v 1.7 2003/06/09 18:07:30 kgarner Exp $ -->
+<!-- $Id: Table.hbm.xml,v 1.8 2003/06/12 20:55:45 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.nar.rets.metadata.newdb.MetadataTable"
-    table="rets_metadata_table">
+  <class name="org.realtors.rets.server.metadata.MetadataTable"
+         table="rets_metadata_table">
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="classid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataClass"/>
+                 class="org.realtors.rets.server.metadata.MetadataClass"/>
 
     <property name="systemName" type="string">
       <column name="system_name" length="32" not-null="true" unique="true"
-        index="table_system_name_index"/>
+              index="table_system_name_index"/>
     </property>
 
     <!-- this should probably become an enum after consluting the DTD -->
@@ -35,29 +35,30 @@
       <column name="short_name" length="24"/>
     </property>
 
-    <property name="dataType" type="org.nar.rets.metadata.newdb.DataTypeEnum"/>
+    <property name="dataType"
+              type="org.realtors.rets.server.metadata.DataTypeEnum"/>
 
     <property name="precision" type="int"/>
 
     <property name="searchable" type="boolean"/>
 
     <property name="interpretation"
-      type="org.nar.rets.metadata.newdb.InterpretationEnum"/>
+              type="org.realtors.rets.server.metadata.InterpretationEnum"/>
 
     <property name="alignment"
-      type="org.nar.rets.metadata.newdb.AlignmentEnum"/>
+              type="org.realtors.rets.server.metadata.AlignmentEnum"/>
 
     <property name="useSeparator" type="boolean"/>
 
     <many-to-one name="editMask" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataEditMask"/>
+                 class="org.realtors.rets.server.metadata.MetadataEditMask"/>
 
     <many-to-one name="lookup" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataLookup"/>
+                 class="org.realtors.rets.server.metadata.MetadataLookup"/>
 
     <property name="maxSelect" type="int"/>
 
-    <property name="units" type="org.nar.rets.metadata.newdb.UnitEnum"/>
+    <property name="units" type="org.realtors.rets.server.metadata.UnitEnum"/>
 
     <property name="index" type="int"/>
 
@@ -70,9 +71,9 @@
     <property name="required" type="int"/>
 
     <many-to-one name="searchHelp" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataSearchHelp"/>
+                 class="org.realtors.rets.server.metadata.MetadataSearchHelp"/>
 
     <property name="unique" column="r_unique" type="boolean"/>
-      
+    
   </class>
 </hibernate-mapping>

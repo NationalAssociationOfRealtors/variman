@@ -3,31 +3,28 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ValidationExternal.hbm.xml,v 1.3 2003/06/09 18:08:04 kgarner Exp $ -->
+<!-- $Id: ValidationExternal.hbm.xml,v 1.4 2003/06/12 20:55:45 kgarner Exp $ -->
 
 <hibernate-mapping>
 
-  <class name="org.nar.rets.metadata.newdb.MetadataValidationExternal"
-    table="rets_metadata_validationexternal">
+  <class name="org.realtors.rets.server.metadata.MetadataValidationExternal"
+         table="rets_metadata_validationexternal">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.MetadataResource"/>
 
     <property name="validationExternalName" type="string">
       <column name="validation_external_name" length="32" unique="true"
-        not-null="true" index="rets_metadata_validationexternal_name_index"/>
+              not-null="true"
+              index="rets_metadata_validationexternal_name_index"/>
     </property>
 
-    <!-- we should be able to derive resource from class. -->
-<!--     <many-to-one name="searchResource" -->
-<!--       class="org.nar.rets.metadata.newdb.MetadataResource"/> -->
-
     <many-to-one name="searchClass"
-      class="org.nar.rets.metadata.newdb.MetadataClass"/>
+                 class="org.realtors.rets.server.metadata.MetadataClass"/>
 
     <property name="version" type="string">
       <column name="version" length="11"/>
@@ -39,8 +36,7 @@
 
     <set name="validationExternalTypes">
       <key column="validationExternalID"/>
-      <one-to-many
-        class="org.nar.rets.metadata.newdb.MetadataValidationExternalType"/>
+      <one-to-many class="org.realtors.rets.server.metadata.MetadataValidationExternalType"/>
     </set>
 
   </class>

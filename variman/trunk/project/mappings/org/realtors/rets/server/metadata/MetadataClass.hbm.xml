@@ -3,31 +3,31 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataClass.hbm.xml,v 1.4 2003/06/04 20:32:45 kgarner Exp $ -->
+<!-- $Id: MetadataClass.hbm.xml,v 1.5 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.nar.rets.metadata.newdb.MetadataClass"
-    table="rets_metadata_class">
+  <class name="org.realtors.rets.server.metadata.MetadataClass"
+         table="rets_metadata_class">
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="resourceid" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+                 class="org.realtors.rets.server.metadata.MetadataResource"/>
 
     <property name="className" type="string">
       <column name="class_name" length="32" not-null="true" unique="true"
-        index="class_name_index"/>
+              index="class_name_index"/>
     </property>
 
     <property name="stardardName"
-      type="org.nar.rets.metadata.newdb.ResourceStandardNameEnum">
+             type="org.realtors.rets.server.metadata.ResourceStandardNameEnum">
       <column name="standard_name" index="class_standard_name_index"/>
     </property>
 
     <property name="visibleName" type="string">
       <column name="visible_name" length="32"
-        index="class_visible_name_index"/>
+              index="class_visible_name_index"/>
     </property>
 
     <property name="description" type="string">
@@ -48,12 +48,12 @@
 
     <set name="tables" inverse="true">
       <key column="classid"/>
-      <one-to-many class="org.nar.rets.metadata.newdb.MetadataTable"/>
+      <one-to-many class="org.realtors.rets.server.metadata.MetadataTable"/>
     </set>
 
     <set name="updates" inverse="true">
       <key column="classid"/>
-      <one-to-many class="org.nar.rets.metadata.newdb.MetadataUpdate"/>
+      <one-to-many class="org.realtors.rets.server.metadata.MetadataUpdate"/>
     </set>
 
   </class>

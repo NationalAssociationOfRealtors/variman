@@ -3,25 +3,27 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSHistoryData.hbm.xml,v 1.4 2003/06/09 18:06:18 kgarner Exp $ -->
+<!-- $Id: RETSHistoryData.hbm.xml,v 1.5 2003/06/12 20:55:44 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.nar.rets.data.RETSHistoryData" table="rets_history_data">
+  <class name="org.realtors.rets.server.data.RETSHistoryData"
+         table="rets_history_data">
 
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
 
     <many-to-one name="originalData" cascade="none"
-      class="org.nar.rets.data.RETSData"/>
+                 class="org.realtors.rets.server.data.RETSData"/>
 
     <property name="dateChanged" type="date"/>
 
     <map name="dataElements" lazy="false" cascade="all">
       <key column="data"/>
       <index-many-to-many column="key"
-        class="org.nar.rets.metadata.newdb.MetadataTable"/>
-      <one-to-many class="org.nar.rets.data.RETSHistoryDataElement"/>
+                      class="org.realtors.rets.server.metadata.MetadataTable"/>
+      <one-to-many
+              class="org.realtors.rets.server.data.RETSHistoryDataElement"/>
     </map>
     
   </class>
