@@ -125,7 +125,7 @@ public class GetMetadataParameters extends TransactionParameters
         return cleanType;
     }
 
-    private int parseFormat(String formatString)
+    private int parseFormat(String formatString) throws RetsReplyException
     {
         if (formatString == null)
         {
@@ -143,8 +143,9 @@ public class GetMetadataParameters extends TransactionParameters
         }
         else
         {
-            throw new IllegalArgumentException("Unknown formatString: " +
-                                               formatString);
+            throw new RetsReplyException(ReplyCode.MISC_ERROR,
+                                         "Unknown format: " +
+                                         formatString);
         }
     }
 
