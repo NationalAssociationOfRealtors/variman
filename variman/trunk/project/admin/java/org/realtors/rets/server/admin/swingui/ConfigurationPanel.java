@@ -72,11 +72,15 @@ public class ConfigurationPanel extends JPanel
         c.weightx = 0.0;
         box.add(Box.createHorizontalStrut(5));
         box.add(new JButton(new ChooseImageRootAction()), c);
-        retsConfig.addRow("Image Root:", box);
+        retsConfig.addRow("Get Object Root:", box);
 
-        mImagePattern = new JTextField(config.getGetObjectPattern());
-        mImagePattern.getDocument().addDocumentListener(changeListener);
-        retsConfig.addRow("Image Pattern:", mImagePattern);
+        mPhotoPattern = new JTextField(config.getPhotoPattern());
+        mPhotoPattern.getDocument().addDocumentListener(changeListener);
+        retsConfig.addRow("Photo Pattern:", mPhotoPattern);
+
+        mObjectSetPattern = new JTextField(config.getObjectSetPattern());
+        mObjectSetPattern.getDocument().addDocumentListener(changeListener);
+        retsConfig.addRow("Object Set Pattern:", mObjectSetPattern);
 
         retsConfig.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         content.add(retsConfig);
@@ -139,9 +143,14 @@ public class ConfigurationPanel extends JPanel
         return mImageRootDir.getText();
     }
 
-    public String getImagePattern()
+    public String getPhotoPattern()
     {
-        return mImagePattern.getText();
+        return mPhotoPattern.getText();
+    }
+
+    public String getObjectSetPattern()
+    {
+        return mObjectSetPattern.getText();
     }
 
     private class ChooseMetadataAction extends AbstractAction
@@ -271,6 +280,7 @@ public class ConfigurationPanel extends JPanel
     private JLabel mDatabaseName;
     private JLabel mUsername;
     private JTextField mImageRootDir;
-    private JTextField mImagePattern;
+    private JTextField mPhotoPattern;
+    private JTextField mObjectSetPattern;
     private boolean mInConstructor;
 }

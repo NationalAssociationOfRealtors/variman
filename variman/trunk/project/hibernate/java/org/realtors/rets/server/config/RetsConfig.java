@@ -67,14 +67,24 @@ public class RetsConfig
         mGetObjectRoot = getObjectRoot;
     }
 
-    public String getGetObjectPattern()
+    public String getPhotoPattern()
     {
-        return mGetObjectPattern;
+        return mPhotoPattern;
     }
 
-    public void setGetObjectPattern(String getObjectPattern)
+    public void setPhotoPattern(String photoPattern)
     {
-        mGetObjectPattern = getObjectPattern;
+        mPhotoPattern = photoPattern;
+    }
+
+    public String getObjectSetPattern()
+    {
+        return mObjectSetPattern;
+    }
+
+    public void setObjectSetPattern(String objectSetPattern)
+    {
+        mObjectSetPattern = objectSetPattern;
     }
 
     public int getNonceInitialTimeout()
@@ -111,7 +121,7 @@ public class RetsConfig
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
             .append("GetObject root", mGetObjectRoot)
-            .append("GetObject pattern", mGetObjectPattern)
+            .append("GetObject photo pattern", mPhotoPattern)
             .append("nonce initial timeout", mNonceInitialTimeout)
             .append("nonce success timeout", mNonceSuccessTimeout)
             .append(mDatabase)
@@ -124,7 +134,8 @@ public class RetsConfig
         addChild(retsConfig, PORT, mPort);
         addChild(retsConfig, METADATA_DIR, mMetadataDir);
         addChild(retsConfig, GET_OBJECT_ROOT, mGetObjectRoot);
-        addChild(retsConfig, GET_OBJECT_PATTERN, mGetObjectPattern);
+        addChild(retsConfig, PHOTO_PATTERN, mPhotoPattern);
+        addChild(retsConfig, OBJECT_SET_PATTERN, mObjectSetPattern);
         addChild(retsConfig, NONCE_INITIAL_TIMEOUT, mNonceInitialTimeout);
         addChild(retsConfig, NONCE_SUCCESS_TIMEOUT, mNonceSuccessTimeout);
         Element database = new Element(DATABASE);
@@ -275,8 +286,18 @@ public class RetsConfig
         RetsConfig config = new RetsConfig();
         config.mPort = getInt(element, PORT);
         config.mMetadataDir = getString(element, METADATA_DIR);
-        config.mGetObjectPattern = getString(element, GET_OBJECT_PATTERN);
+        String photoPattern = getString(element, PHOTO_PATTERN);
+        String getObjectPattern = getString(element, GET_OBJECT_PATTERN);
+        if (StringUtils.isNotBlank(photoPattern))
+        {
+            config.mPhotoPattern = photoPattern;
+        }
+        else
+        {
+            config.mPhotoPattern = getObjectPattern;
+        }
         config.mGetObjectRoot = getString(element, GET_OBJECT_ROOT);
+        config.mObjectSetPattern = getString(element, OBJECT_SET_PATTERN);
         config.mNonceInitialTimeout = getInt(element, NONCE_INITIAL_TIMEOUT);
         config.mNonceSuccessTimeout = getInt(element, NONCE_SUCCESS_TIMEOUT);
 
@@ -449,14 +470,19 @@ public class RetsConfig
         }
     }
 
-    public String getGetObjectPattern(String defaultValue)
+    public String getPhotoPattern(String defaultValue)
     {
-        return getDefault(mGetObjectPattern, defaultValue);
+        return getDefault(mPhotoPattern, defaultValue);
     }
 
     public String  getGetObjectRoot(String defaultValue)
     {
         return getDefault(mGetObjectRoot, defaultValue);
+    }
+
+    public String getObjectSetPattern(String defaultValue)
+    {
+        return getDefault(mObjectSetPattern, defaultValue);
     }
 
     public int getNonceInitialTimeout(int defaultValue)
@@ -543,8 +569,10 @@ public class RetsConfig
     private static final String PORT = "port";
     private static final String METADATA_DIR = "metadata-dir";
     private static final String RETS_CONFIG = "rets-config";
-    private static final String GET_OBJECT_PATTERN = "get-object-pattern";
     private static final String GET_OBJECT_ROOT = "get-object-root";
+    private static final String GET_OBJECT_PATTERN = "get-object-pattern";
+    private static final String OBJECT_SET_PATTERN = "object-set-pattern";
+    private static final String PHOTO_PATTERN = "photo-pattern";
     private static final String NONCE_INITIAL_TIMEOUT = "nonce-initial-timeout";
     private static final String NONCE_SUCCESS_TIMEOUT = "nonce-success-timeout";
     private static final String TYPE = "type";
@@ -574,7 +602,8 @@ public class RetsConfig
 
     private int mPort;
     private String mGetObjectRoot;
-    private String mGetObjectPattern;
+    private String mPhotoPattern;
+    private String mObjectSetPattern;
     private int mNonceInitialTimeout;
     private int mNonceSuccessTimeout;
     private DatabaseConfig mDatabase;

@@ -135,8 +135,10 @@ public class AdminFrame extends JFrame
             retsConfig.setPort(mConfigurationPanel.getPort());
             retsConfig.setMetadataDir(mConfigurationPanel.getMetadataDir());
             retsConfig.setGetObjectRoot(mConfigurationPanel.getImageRootDir());
-            retsConfig.setGetObjectPattern(
-                mConfigurationPanel.getImagePattern());
+            retsConfig.setPhotoPattern(
+                mConfigurationPanel.getPhotoPattern());
+            retsConfig.setObjectSetPattern(
+                mConfigurationPanel.getObjectSetPattern());
             retsConfig.toXml(Admin.getConfigFile());
             Admin.setRetsConfigChanged(false);
         }
