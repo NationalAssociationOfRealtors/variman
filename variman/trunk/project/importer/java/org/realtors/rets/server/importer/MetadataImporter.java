@@ -52,7 +52,6 @@ import org.realtors.rets.server.metadata.ValidationExpressionTypeEnum;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 import org.realtors.rets.server.metadata.ForeignKey;
 
 
@@ -1061,5 +1060,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.24 2003/07/18 15:59:42 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.25 2003/07/23 15:05:53 kgarner Exp $";
 }
