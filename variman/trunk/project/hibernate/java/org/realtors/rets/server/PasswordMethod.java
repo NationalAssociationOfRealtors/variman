@@ -4,11 +4,12 @@ package org.realtors.rets.server;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
 
-public abstract class PasswordMethod
+public abstract class PasswordMethod implements Serializable
 {
     public abstract String hash(String username, String plainTextPassword);
 
