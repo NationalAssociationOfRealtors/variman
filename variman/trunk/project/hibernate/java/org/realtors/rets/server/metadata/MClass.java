@@ -2,7 +2,6 @@ package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
 import java.util.Set;
-import java.util.Date;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -13,6 +12,15 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class MClass implements Serializable
 {
+    public MClass()
+    {
+    }
+
+    public MClass(long id)
+    {
+        mId = new Long(id);
+    }
+
     /**
      *
      * @return a Long object
