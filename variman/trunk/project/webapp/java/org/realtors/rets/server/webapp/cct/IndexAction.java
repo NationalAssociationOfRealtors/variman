@@ -56,7 +56,7 @@ public class IndexAction extends CctAction
         loginUrl.append(":").append(request.getServerPort());
         loginUrl.append(request.getContextPath());
         loginUrl.append("/rets/cct/login");
-        request.setAttribute("loginUrl", loginUrl.toString());
+        request.setAttribute("cctLoginUrl", loginUrl.toString());
 
         return mapping.findForward("home");
     }

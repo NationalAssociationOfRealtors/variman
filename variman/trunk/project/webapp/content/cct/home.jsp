@@ -11,7 +11,7 @@
  <p>Welcome, <bean:write name="cctUser" property="firstName" />
  <bean:write name="cctUser" property="lastName" />
  <br>
- The login URL is <bean:write name="loginUrl"/></p>
+ The login URL is <bean:write name="cctLoginUrl"/></p>
  <table cellpadding="2" cellspacing="0" border="1" width="99%">
   <tr>
    <th>Test description</th><th>Date run</th><th>Status</th>
