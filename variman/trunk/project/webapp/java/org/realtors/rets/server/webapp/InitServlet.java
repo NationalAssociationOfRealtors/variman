@@ -160,6 +160,7 @@ public class InitServlet extends RetsServlet
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
             cfg.addJar("rex-hbm-xml.jar");
+            cfg.setProperties(mRetsConfig.createHibernateProperties());
             WebApp.setSessions(cfg.buildSessionFactory());
         }
         catch (HibernateException e)
