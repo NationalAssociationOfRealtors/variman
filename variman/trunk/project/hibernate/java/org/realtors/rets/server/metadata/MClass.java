@@ -233,7 +233,7 @@ public class MClass implements Serializable
      */
     public String getPath()
     {
-        return mResourceid.getPath + ":" + mClassName;
+        return mResourceid.getPath() + ":" + mClassName;
     }
 
     public String toString()
