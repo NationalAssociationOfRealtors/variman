@@ -25,7 +25,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -419,28 +418,14 @@ public class IOUtils
         URI baseUri = base.toURI();
         URI fileUri = file.toURI();
         URI relativeUri = baseUri.relativize(fileUri);
-        // convert back to File
+        // convert back to File. Don't use URI version of File constructor. For
+        // some reason, it doesn't like relative paths.
         return new File(relativeUri.getPath());
     }
 
     public static String relativize(String base, String file)
     {
-        try
-        {
-            URI baseUri = new URI("file", null, base, null);
-            URI fileUri = new URI("file", null, file, null);
-            URI relativeUri = baseUri.relativize(fileUri);
-            return relativeUri.getPath();
-        }
-        catch (URISyntaxException e)
-        {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-    }
-
-    public static String resolve(String base, String file)
-    {
-        return resolve(new File(base), new File(file)).getPath();
+        return relativize(new File(base), new File(file)).getPath();
     }
 
     public static File resolve(File base, File file)
@@ -449,6 +434,11 @@ public class IOUtils
         URI fileUri = file.toURI();
         URI resolvedUri = baseUri.resolve(fileUri);
         return new File(resolvedUri);
+    }
+
+    public static String resolve(String base, String file)
+    {
+        return resolve(new File(base), new File(file)).getPath();
     }
 
     /**
