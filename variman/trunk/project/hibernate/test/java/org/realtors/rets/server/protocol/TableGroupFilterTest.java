@@ -106,6 +106,48 @@ public class TableGroupFilterTest extends TestCase
                      mGroupFilter.findTables(groups, "Property", "RES"));
     }
 
+    public void testAddUnknownResource()
+    {
+        RuleDescription ruleDescription = new RuleDescription(
+            RuleDescription.INCLUDE);
+        ruleDescription.setResource("UNKNOWN");
+        ruleDescription.setRetsClass("RES");
+        ruleDescription.addSystemName("ListingNumber");
+        ruleDescription.addSystemName("ListingPrice");
+        GroupRules rules = new GroupRules(mNewspaper.getName());
+        rules.addRule(ruleDescription);
+        // Make sure no exception is thrown
+        mGroupFilter.addRules(rules);
+    }
+
+    public void testAddUnknownClass()
+    {
+        RuleDescription ruleDescription = new RuleDescription(
+            RuleDescription.INCLUDE);
+        ruleDescription.setResource("Property");
+        ruleDescription.setRetsClass("UNKNOWN");
+        ruleDescription.addSystemName("ListingNumber");
+        ruleDescription.addSystemName("ListingPrice");
+        GroupRules rules = new GroupRules(mNewspaper.getName());
+        rules.addRule(ruleDescription);
+        // Make sure no exception is thrown
+        mGroupFilter.addRules(rules);
+    }
+
+    public void testAddUnknownGroup()
+    {
+        RuleDescription ruleDescription = new RuleDescription(
+            RuleDescription.INCLUDE);
+        ruleDescription.setResource("Property");
+        ruleDescription.setRetsClass("RES");
+        ruleDescription.addSystemName("ListingNumber");
+        ruleDescription.addSystemName("ListingPrice");
+        GroupRules rules = new GroupRules("UNKNOWN");
+        rules.addRule(ruleDescription);
+        // Make sure no exception is thrown
+        mGroupFilter.addRules(rules);
+    }
+
     private TableGroupFilter mGroupFilter;
     private Table mListingNumber;
     private Table mListingPrice;
