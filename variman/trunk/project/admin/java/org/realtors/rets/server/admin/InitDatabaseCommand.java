@@ -12,6 +12,7 @@ import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.config.RetsConfig;
 
 import org.apache.log4j.Logger;
@@ -50,7 +51,7 @@ public class InitDatabaseCommand
                                                     PasswordMethod.RETS_REALM);
                     LOG.info("Hibernate initialized");
                     Admin.setHibernateConfiguration(config);
-                    Admin.setSessionFactory(sessionFactory);
+                    RetsServer.setSessions(sessionFactory);
                 }
                 catch (Throwable e)
                 {
