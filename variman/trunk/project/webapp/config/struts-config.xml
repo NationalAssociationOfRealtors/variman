@@ -17,7 +17,8 @@
   </global-excpetions>
 
   <global-forwards>
-    <forward name="registration" path="/registration"/>
+    <forward name="registration" path="/registration.jsp"/>
+    <forward name="userPage" path="/userPage.jsp"/>
   </global-forwards>
 
   <action-mappings>
@@ -26,7 +27,7 @@
             name="registrationForm"
             scope="request"
             validate="false"
-            input="/registration.jsp"?
+            input="/registration.jsp">
     </action>
   </action-mappings>
 
