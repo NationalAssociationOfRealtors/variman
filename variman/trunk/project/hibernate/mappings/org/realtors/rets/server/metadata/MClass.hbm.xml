@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MClass.hbm.xml,v 1.7 2003/06/19 21:53:41 kgarner Exp $ -->
+<!-- $Id: MClass.hbm.xml,v 1.8 2003/06/23 21:51:13 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.realtors.rets.server.metadata.MClass"
@@ -21,7 +21,7 @@
     </property>
 
     <property name="stardardName"
-             type="org.realtors.rets.server.metadata.ResourceStandardNameEnum">
+             type="org.realtors.rets.server.metadata.ClassStandardNameEnum">
       <column name="standard_name" index="class_standard_name_index"/>
     </property>
 
