@@ -81,6 +81,14 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         assertEquals(list, sql);
     }
 
+    public void testStringEqualsDigitsOnly() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=12345)");
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("12345"));
+        assertEquals(list, sql);
+    }
+
     public void testStringStart() throws ANTLRException
     {
         SqlConverter sql = parse("(OWNER=f*)");
@@ -141,7 +149,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testStringList() throws ANTLRException
     {
-        SqlConverter sql = parse("(OWNER=foo,f*,*foo*,f?o)");
+        SqlConverter sql = parse("(OWNER=foo,f*,*foo*,f?o,50)");
         DmqlStringList list = new DmqlStringList("r_OWNER");
         DmqlString string = new DmqlString();
         string.add("foo");
@@ -164,6 +172,10 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         string.add("o");
         list.add(string);
 
+        string = new DmqlString();
+        string.add("50");
+        list.add(string);
+
         assertEquals(list, sql);
     }
 
@@ -177,9 +189,9 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testNumber() throws ANTLRException
     {
-        assertInvalidParse("(OWNER=5)");
-        assertInvalidParse("(OWNER=5.)");
-        assertInvalidParse("(OWNER=5.0)");
+        assertInvalidParse("(LP=5)");
+        assertInvalidParse("(LP=5.)");
+        assertInvalidParse("(LP=5.0)");
     }
 
     public void testPeriod() throws ANTLRException
@@ -194,11 +206,11 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     public void testRangeList() throws ANTLRException
     {
         parse("(OWNER=1970-01-01-1980-01-01,1985-01-01-1995-01-01)");
-        parse("(OWNER=50-100,150-200)");
+        parse("(LP=50-100,150-200)");
         assertInvalidParse("(OWNER=abc-bar,foo-xyz)");
 
         parse("(OWNER=1970-01-01+,1980-01-01-)");
-        parse("(OWNER=50+,60-)");
+        parse("(LP=50+,60-)");
         assertInvalidParse("(OWNER=abc+,xyz-)");
     }
 
