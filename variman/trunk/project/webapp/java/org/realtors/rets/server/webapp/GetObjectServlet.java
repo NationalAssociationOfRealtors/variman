@@ -36,6 +36,9 @@ public class GetObjectServlet extends RetsServlet
             new GetObjectTransaction(parameters);
         transaction.setRootDirectory(WebApp.getGetObjectRoot());
         transaction.setPattern(WebApp.getGetObjectPattern());
+        StringBuffer location = ServletUtils.getContextPath(request);
+        location.append("/objects/");
+        transaction.setBaseLocationUrl(location.toString());
         transaction.execute(new Response(response));
     }
 
