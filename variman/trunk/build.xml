@@ -381,6 +381,8 @@
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="project/hibernate/config/hibernate.properties"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/classes"
+          file="project/hibernate/config/cache.ccf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${commons-lang.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
