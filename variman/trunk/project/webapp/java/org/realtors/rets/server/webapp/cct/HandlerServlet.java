@@ -56,7 +56,8 @@ public class HandlerServlet extends RetsServlet
         else
         {
             LOG.warn("No handler for " + name);
-            response.sendError(404, request.getRequestURI());
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                               request.getRequestURI());
         }
     }
 
