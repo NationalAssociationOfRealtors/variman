@@ -3,17 +3,18 @@
 
 [Setup]
 AppName=Rex RETS Server
-AppVerName=Rex RETS Server 1.0-beta1
+AppVerName=Rex RETS Server @VERSION@
 AppPublisher=Center for REALTOR Technology
 AppPublisherURL=http://www.crt.realors.org/
 AppSupportURL=http://www.crt.realors.org/
 AppUpdatesURL=http://www.crt.realors.org/
-SourceDir=..\..\build\rets-server
-OutputDir=..\..\dist
-OutputBaseFilename=rex-1.0-beta1
+SourceDir=@BASEDIR@\build\rets-server
+OutputDir=@BASEDIR@\dist
+OutputBaseFilename=rex-@VERSION@
 DefaultDirName={pf}\Rex RETS Server
 DefaultGroupName=Rex RETS Server
-InfoBeforeFile=..\..\project\build\iss_java.txt
+InfoBeforeFile=@BASEDIR@\project\build\iss_java.txt
+LicenseFile=@BASEDIR@\LICENSE.TXT
 UninstallFilesDir={app}\uninstall
 Compression=zip
 MinVersion=0,4

@@ -3,7 +3,7 @@
 
   <!-- set global properties for this build -->
   <property name="project.name" value="rex"/>
-  <property name="project.version" value="1.0-beta1"/>
+  <property name="project.version" value="1.0.0-beta1"/>
   <property name="project.string" value="${project.name}-${project.version}"/>
 
   <!-- This must be done before any other propertes -->
@@ -369,6 +369,7 @@
     <copy todir="build/rets-server/doc">
       <fileset dir="doc" includes="**/*"/>
     </copy>
+    <copy todir="build/rets-server" file="LICENSE.TXT"/>
     <copy tofile="build/rets-server/lib/log4j.jar" file="${log4j.jar}"/>
   </target>
 
@@ -690,12 +691,18 @@
   </target>
 
   <target name="dist-win" description="Builds a Windows binary distribution">
+    <copy file="project/build/rex.iss" todir="build">
+      <filterset>
+        <filter token="VERSION" value="${project.version}"/>
+        <filter token="BASEDIR" value="${basedir}"/>
+      </filterset>
+    </copy>
     <copy file="${javaservice.exe}" tofile="build/rets-server/rex.exe"/>
     <echo message="Running Inno Setup compiler"/>
     <exec executable="${inno_setup.iscc}"
           output="build/iss.log"
           failonerror="yes">
-      <arg line="${basedir}/project/build/rex.iss"/>
+      <arg line="${basedir}/build/rex.iss"/>
     </exec>
   </target>
 
