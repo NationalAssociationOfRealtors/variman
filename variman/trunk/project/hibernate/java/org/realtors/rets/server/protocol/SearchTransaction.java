@@ -8,7 +8,7 @@
 
 /*
  */
-package org.realtors.rets.server;
+package org.realtors.rets.server.protocol;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -20,23 +20,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import antlr.ANTLRException;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
-
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.realtors.rets.server.ReplyCode;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.dmql.DmqlCompiler;
 import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.ServerDmqlMetadata;
-import org.realtors.rets.server.protocol.CompactFormatter;
-import org.realtors.rets.server.protocol.ResidentialPropertyFormatter;
-import org.realtors.rets.server.protocol.SearchFormatterContext;
-import org.realtors.rets.server.protocol.SearchResultsFormatter;
-
-import antlr.ANTLRException;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 public class SearchTransaction
 {

@@ -8,14 +8,18 @@
 
 /*
  */
-package org.realtors.rets.server;
+package org.realtors.rets.server.protocol;
 
 import java.util.Map;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.enum.Enum;
 import org.apache.commons.lang.math.NumberUtils;
+import org.realtors.rets.server.ReplyCode;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsVersion;
+import org.realtors.rets.server.Util;
 
 public class SearchParameters
 {
