@@ -1,6 +1,7 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import org.realtors.rets.server.admin.AdminUtils;
@@ -13,9 +14,19 @@ import org.apache.log4j.Logger;
  * Time: 11:09:43 AM
  * To change this template use File | Settings | File Templates.
  */
-public class InitDatabaseCommand
+public class InitDatabaseAction extends AbstractAction
 {
+    public InitDatabaseAction()
+    {
+        super("Initliaze Database...");
+    }
+
     public void execute()
+    {
+        actionPerformed(null);
+    }
+
+    public void actionPerformed(ActionEvent event)
     {
         final AdminFrame frame = AdminFrame.getInstance();
         final InitDatabaseDialog dialog = new InitDatabaseDialog(frame);
@@ -72,5 +83,5 @@ public class InitDatabaseCommand
     }
 
     private static final Logger LOG =
-        Logger.getLogger(InitDatabaseCommand.class);
+        Logger.getLogger(InitDatabaseAction.class);
 }

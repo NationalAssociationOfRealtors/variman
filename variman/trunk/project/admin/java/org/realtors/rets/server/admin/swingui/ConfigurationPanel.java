@@ -146,7 +146,7 @@ public class ConfigurationPanel extends JPanel
                 }
                 dialog.updateConfig(dbConfig);
                 updateLabels();
-                new InitDatabaseCommand().execute();
+                new InitDatabaseAction().execute();
             }
             finally
             {
