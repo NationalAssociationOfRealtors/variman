@@ -14,7 +14,7 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
     {
         ValidationExpression validationExpression = new ValidationExpression();
         validationExpression.setValidationExpressionID("LD_DATE");
-        validationExpression.setValidationExpression(
+        validationExpression.setValidationExpressionType(
             ValidationExpressionTypeEnum.SET);
         validationExpression.setValue("LD=.TODAY.");
         mValidationExpressions =
