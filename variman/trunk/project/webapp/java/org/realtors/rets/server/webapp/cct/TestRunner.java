@@ -17,7 +17,7 @@ import org.realtors.rets.server.cct.ValidationResults;
  * @author kgarner
  */
 public class TestRunner
-{
+{    
     public TestRunner(String context)
     {
         this(context, new CertificationTestSuite(context),
@@ -27,10 +27,10 @@ public class TestRunner
     public TestRunner(String context, CertificationTestSuite suite,
                       ValidationResults results)
     {
+        mTestContext = context;
+        mRunningTest = null;
         mSuite = suite;
         mResults = results;
-        mRunningTest = null;
-        mTestContext = context;
     }
 
     public void startTestByName(String name)
@@ -72,20 +72,6 @@ public class TestRunner
         }
     }
 
-    public void stopRunningTest(int i)
-    {
-        CertificationTest test = mSuite.getTest(i);
-        if (mRunningTest == test)
-        {
-            stopRunningTest();
-        }
-        else
-        {
-            LOG.warn("Trying to stop test that isn't actually running:" +
-                       test.getName());
-        }
-    }
-
     /**
      *
      * @param i
@@ -122,9 +108,9 @@ public class TestRunner
         return mResults.getResultByName(name);
     }
 
-    private ValidationResults mResults;
-    private CertificationTest mRunningTest;
-    private CertificationTestSuite mSuite;
-    private String mTestContext;
+    protected ValidationResults mResults;
+    protected CertificationTest mRunningTest;
+    protected CertificationTestSuite mSuite;
+    protected String mTestContext;
     private static final Logger LOG = Logger.getLogger(TestRunner.class);
 }
