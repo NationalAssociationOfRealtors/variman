@@ -73,13 +73,31 @@ public class AuthenticationFilter implements Filter, UserMap
             return;
         }
 
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        try
+        {
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            HttpServletResponse response = (HttpServletResponse) servletResponse;
+            doAuthentication(filterChain, request, response);
+        }
+        finally
+        {
+            MDC.remove("addr");
+            MDC.remove("user");
+        }
+    }
+
+    private void doAuthentication(FilterChain filterChain,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response)
+        throws IOException, ServletException
+    {
+        MDC.put("addr", request.getRemoteAddr());
         String uri = request.getRequestURI();
-        LOG.debug("Authorizing URI: " + uri);
+        String method = request.getMethod();
+        LOG.debug("Authorizing URI: " + method + " " + uri);
         if (!uri.startsWith("/rets") && !uri.startsWith("/cct"))
         {
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(request, response);
         }
 
         String authorizationHeader = request.getHeader("Authorization");
@@ -92,15 +110,14 @@ public class AuthenticationFilter implements Filter, UserMap
 
         DigestAuthorizationRequest authorizationRequest =
             new DigestAuthorizationRequest(authorizationHeader);
-        authorizationRequest.setMethod(request.getMethod());
+        authorizationRequest.setMethod(method);
         HttpSession session = request.getSession();
         if (verifyResponse(authorizationRequest, session))
         {
             LOG.debug("Digest auth succeeded");
             User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
             MDC.put("user", user.getUsername());
-            filterChain.doFilter(servletRequest, servletResponse);
-            MDC.remove("user");
+            filterChain.doFilter(request, response);
         }
         else
         {
