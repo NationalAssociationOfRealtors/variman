@@ -142,7 +142,6 @@ public class MetadataPanel extends wxPanel
             wxTreeItemId selection = event.GetItem();
             ServerMetadata metadata =
                 (ServerMetadata) mTree.GetJData(selection);
-            System.out.println("Metadata: " + metadata);
             mDetailPanel.switchToPanelFor(metadata);
         }
     }
@@ -151,6 +150,7 @@ public class MetadataPanel extends wxPanel
     {
         public Object visit(MSystem system)
         {
+            // There can be only one...
             return "System";
         }
 
