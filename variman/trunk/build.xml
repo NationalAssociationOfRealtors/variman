@@ -373,9 +373,10 @@
     </taskdef>
 
     <schemaexport properties="project/hibernate/config/hibernate.properties"
-                  quiet="no" text="yes" drop="no" delimiter=";"
+                  quiet="no" text="${hibernate.schema.text.only}"
+                  drop="no" delimiter=";"
                   output="build/hibernate/schema/schema-export.sql">
-      <fileset dir="build/hibernate/final/classes">
+      <fileset dir="project/hibernate/mappings">
         <include name="**/*.hbm.xml"/>
       </fileset>
     </schemaexport>
