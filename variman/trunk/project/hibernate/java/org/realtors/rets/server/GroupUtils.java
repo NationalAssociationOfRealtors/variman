@@ -1,9 +1,13 @@
 package org.realtors.rets.server;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.LockMode;
+import net.sf.hibernate.Hibernate;
 import org.apache.log4j.Logger;
 
 public class GroupUtils
@@ -50,6 +54,23 @@ public class GroupUtils
             "WHERE aGroup.name = :name");
         query.setString("name", name);
         return (Group) query.uniqueResult();
+    }
+
+    public static SortedSet getUsers(Group group) throws HibernateException
+    {
+        SessionHelper helper = RetsServer.createSessionHelper();
+        try
+        {
+            Session session = helper.beginSession();
+            session.lock(group, LockMode.NONE);
+            SortedSet users = group.getUsers();
+            Hibernate.initialize(users);
+            return users;
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
     }
 
     private static final Logger LOG =
