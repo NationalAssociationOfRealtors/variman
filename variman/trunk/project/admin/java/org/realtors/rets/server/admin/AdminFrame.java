@@ -80,7 +80,7 @@ public class AdminFrame extends wxFrame
         try
         {
             Admin.setConfigFile(
-                getClass().getResource("/rets-config.xml").getFile());
+                Admin.getRexHome() + "/webapp/WEB-INF/classes/rets-config.xml");
             Admin.setRetsConfig(
                 RetsConfig.initFromXmlFile(Admin.getConfigFile()));
         }
