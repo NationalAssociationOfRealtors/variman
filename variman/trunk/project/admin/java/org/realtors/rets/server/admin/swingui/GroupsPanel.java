@@ -3,16 +3,21 @@ package org.realtors.rets.server.admin.swingui;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import org.realtors.rets.server.GroupUtils;
-import org.realtors.rets.server.Group;
 import org.apache.log4j.Logger;
+
+import org.realtors.rets.server.Group;
+import org.realtors.rets.server.GroupUtils;
+import org.realtors.rets.server.admin.Admin;
+import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.RuleDescription;
 
 public class GroupsPanel extends JPanel
 {
@@ -33,6 +38,7 @@ public class GroupsPanel extends JPanel
         tvp.addRow("Description:", mDescription);
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(tvp, BorderLayout.NORTH);
+        panel.add(createRulesPanel(), BorderLayout.CENTER);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                               mGroupList, panel);
@@ -49,6 +55,37 @@ public class GroupsPanel extends JPanel
         mGroupList.addMouseListener(popupListener);
         splitPane.addMouseListener(popupListener);
 
+    }
+
+    private JPanel createRulesPanel()
+    {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(new HeaderPanel("Rules"), BorderLayout.NORTH);
+
+        JPanel box = new JPanel(new BorderLayout());
+        mRulesListModel = new ListListModel();
+        mRulesListModel.setFormatter(RULE_FORMAETTER);
+        mRulesList = new JList(mRulesListModel);
+        mRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//        mRulesList.getSelectionModel().addListSelectionListener(
+//            new OnGroupSelectionChanged());
+        box.add(mRulesList);
+        box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
+        panel.add(box, BorderLayout.CENTER);
+
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.add(Box.createHorizontalGlue());
+//        mAddGroupButtonAction = new AddGroupButtonAction(this);
+        buttonBox.add(new JButton("New Rule..."));
+        buttonBox.add(Box.createHorizontalStrut(5));
+//        mRemoveGroupButtonAction = new RemoveGroupButtonAction(this);
+        buttonBox.add(new JButton("Remove Rule..."));
+        buttonBox.add(Box.createHorizontalStrut(5));
+        buttonBox.add(new JButton("Edit Rule..."));
+        buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.add(buttonBox, BorderLayout.SOUTH);
+        return panel;
     }
 
     public Action getAddGroupAction()
@@ -70,13 +107,33 @@ public class GroupsPanel extends JPanel
             mName.setText(group.getName());
             mDescription.setText(group.getDescription());
             mRemoveGroupAction.setEnabled(true);
+            updateRulesList(group);
         }
         else
         {
             mName.setText("");
             mDescription.setText("");
             mRemoveGroupAction.setEnabled(false);
+            mRulesListModel.setList(Collections.EMPTY_LIST);
         }
+    }
+
+    private void updateRulesList(Group group)
+    {
+        RetsConfig retsConfig = Admin.getRetsConfig();
+        List ruleDescriptions = Collections.EMPTY_LIST;
+        List securityConstraints = retsConfig.getSecurityConstraints();
+        for (int i = 0; i < securityConstraints.size(); i++)
+        {
+            GroupRules rules = (GroupRules) securityConstraints.get(i);
+            if (rules.getGroupName().equals(group.getName()))
+            {
+                ruleDescriptions = rules.getRules();
+                break;
+            }
+        }
+        mRulesListModel.setList(ruleDescriptions);
+        mRulesList.setSelectedIndex(-1);
     }
 
     public void populateList()
@@ -165,8 +222,25 @@ public class GroupsPanel extends JPanel
         }
     }
 
+    private static class RuleDescriptionFormatter
+        implements ListElementFormatter
+    {
+        public Object format(Object object)
+        {
+            RuleDescription description = (RuleDescription) object;
+            StringBuffer buffer = new StringBuffer();
+
+            buffer.append(description.getResource()).append(":")
+                .append(description.getRetsClass());
+            return buffer.toString();
+        }
+    }
+
     private static final Logger LOG =
         Logger.getLogger(GroupsPanel.class);
+    private static final ListElementFormatter RULE_FORMAETTER =
+            new RuleDescriptionFormatter();
+
     private AddGroupAction mAddGroupAction;
     private JList mGroupList;
     private JLabel mName;
@@ -174,4 +248,6 @@ public class GroupsPanel extends JPanel
     private JPopupMenu mPopup;
     private ListListModel mGroupListModel;
     private RemoveGroupAction mRemoveGroupAction;
+    private JList mRulesList;
+    private ListListModel mRulesListModel;
 }
