@@ -21,7 +21,7 @@ public class ClassStandardNameEnum implements PersistentEnum
     static
     {
         mStringMap = new HashMap();
-        // We must get more from the XML DTD
+        //todo: We must get more from the XML DTD
         mStringMap.put("residential-property", RESIDENTIAL);
         mStringMap.put("residentialproperty", RESIDENTIAL);
         mStringMap.put("lotsandland", LOTS_AND_LAND);
