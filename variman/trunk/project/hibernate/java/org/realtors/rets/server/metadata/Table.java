@@ -372,6 +372,8 @@ public class Table implements Serializable
      * @return an MClass object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="classid"
+     *   not-null="true"
      */
     public MClass getMClass()
     {

@@ -84,6 +84,8 @@ public class UpdateType implements Serializable
      * @return an Update object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="updateid"
+     *   not-null="true"
      */
     public Update getUpdate()
     {

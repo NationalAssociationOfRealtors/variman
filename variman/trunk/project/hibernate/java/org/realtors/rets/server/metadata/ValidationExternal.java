@@ -62,6 +62,8 @@ public class ValidationExternal implements Serializable
      * @return a Resource Object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="resourceid"
+     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -104,7 +106,7 @@ public class ValidationExternal implements Serializable
      * @return a Set of ValidationExternalType objects
      *
      * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="validationExternalID"
+     * @hibernate.collection-key column="validationexternalid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ValidationExternalType"
      */

@@ -95,6 +95,8 @@ public class ValidationLookup implements Serializable
      * @return a Resouce object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="resourceid"
+     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -111,7 +113,7 @@ public class ValidationLookup implements Serializable
      * @return a Set of ValidationLookupTypes
      *
      * @hibernate.set inverse="false"
-     * @hibernate.collection-key column="validationLookupID"
+     * @hibernate.collection-key column="validationlookupid"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ValidationLookupType"
      */

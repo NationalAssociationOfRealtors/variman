@@ -132,6 +132,9 @@ public class Resource extends ServerMetadata implements Serializable
      * @return a MSystem object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="systemid"
+     *   not-null="true"
+     * 
      */
     public MSystem getSystem()
     {

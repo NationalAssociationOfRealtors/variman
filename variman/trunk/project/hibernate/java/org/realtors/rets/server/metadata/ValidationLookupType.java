@@ -79,7 +79,9 @@ public class ValidationLookupType implements Serializable
      *
      * @return a ValidationLookupType object
      *
-     * @hibernate.many-to-one 
+     * @hibernate.many-to-one
+     * @hibernate.column name="validationlookupid"
+     *   not-null="true" 
      */
     public ValidationLookup getValidationLookup()
     {

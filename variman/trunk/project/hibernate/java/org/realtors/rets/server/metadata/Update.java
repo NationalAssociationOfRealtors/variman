@@ -86,6 +86,8 @@ public class Update implements Serializable
      * @return a MClass object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="classid"
+     *   not-null="true"
      */
     public MClass getMClass()
     {

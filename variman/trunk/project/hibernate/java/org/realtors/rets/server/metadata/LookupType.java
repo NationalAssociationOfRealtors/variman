@@ -79,7 +79,9 @@ public class LookupType implements Serializable
      * 
      * @return a Lookup object
      *
-     * @hibernate.many-to-one 
+     * @hibernate.many-to-one
+     * @hibernate.column name="lookupid"
+     *   not-null="true" 
      */
     public Lookup getLookup()
     {

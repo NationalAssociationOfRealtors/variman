@@ -34,6 +34,8 @@ public class ValidationExternalType implements Serializable
      * @return returns a ValdiationExternal object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="validationexternalid"
+     *   not-null="true"
      */
     public ValidationExternal getValidationExternal()
     {

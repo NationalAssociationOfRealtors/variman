@@ -119,6 +119,8 @@ public class MClass extends ServerMetadata implements Serializable
      * @return a Resource object
      *
      * @hibernate.many-to-one
+     * @hibernate.column name="resourceid"
+     *   not-null="true"
      */
     public Resource getResource()
     {
