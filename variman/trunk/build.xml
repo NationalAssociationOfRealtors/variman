@@ -83,14 +83,6 @@
     <pathelement location="${xjavadoc.jar}"/>
   </path>
 
-  <!-- Add the checkstyle task -->
-<!--   <taskdef name="checkstyle" -->
-<!--            classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"> -->
-<!--     <classpath> -->
-<!--       <pathelement path="${checkstyle.jar}" /> -->
-<!--     </classpath> -->
-<!--   </taskdef> -->
-
   <target name="prepare">
     <mkdir dir="build/hibernate/final/classes"/>
     <mkdir dir="build/hibernate/generated"/>
@@ -649,5 +641,22 @@
     <property name="cp" refid="full-classpath"/>
     <echo message="${cp}"/>
   </target>
+
+  <target name="checkstyle" description="Runs checkstyle">
+    <taskdef resource="checkstyletask.properties"
+             classpath="${checkstyle.jar}"/>
+
+    <checkstyle config="project/build/default_checks.xml">
+      <fileset dir="project/admin/java" includes="**/*.java"/>
+      <fileset dir="project/datagen/java" includes="**/*.java"/>
+      <fileset dir="project/embedded/java" includes="**/*.java"/>
+      <fileset dir="project/hibernate/java" includes="**/*.java"/>
+      <fileset dir="project/importer/java" includes="**/*.java"/>
+      <fileset dir="project/webapp/java" includes="**/*.java"/>
+      <property key="checkstyle.cache.file" file="build/client/cs-cache"/>
+    </checkstyle>
+    <echo message="All checks passed"/>
+  </target>
+  <target name="cs" depends="checkstyle" description="Runs checkstyle"/>
 
 </project>
