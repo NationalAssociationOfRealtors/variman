@@ -389,7 +389,7 @@ public class Table implements Serializable
         return mEditMasks;
     }
 
-    public void setEditMask(Set editMasks)
+    public void setEditMasks(Set editMasks)
     {
         mEditMasks = editMasks;
     }
@@ -424,6 +424,11 @@ public class Table implements Serializable
     public void setSearchHelp(SearchHelp searchHelp)
     {
         mSearchHelp = searchHelp;
+    }
+
+    public String getPath()
+    {
+        return mClassid.getPath() + ":" + mSystemName;
     }
 
     public String toString()
@@ -471,7 +476,7 @@ public class Table implements Serializable
     private int mMaximumLength;
 
     /** nullable persistent field */
-    private org.realtors.rets.server.metadata.DataTypeEnum mDataType;
+    private DataTypeEnum mDataType;
 
     /** nullable persistent field */
     private int mPrecision;
