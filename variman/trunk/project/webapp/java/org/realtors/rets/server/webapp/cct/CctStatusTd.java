@@ -81,6 +81,11 @@ public class CctStatusTd extends TagSupport
                 tdclass = "active";
                 message = "Test Running";
             }
+            else if (test.getStatus() == CertificationTest.NOTRUN)
+            {
+                tdclass = "unknown";
+                message = "Test not yet run";
+            }
             else
             {
                 tdclass = "unknown";
