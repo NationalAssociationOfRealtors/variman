@@ -27,15 +27,14 @@ public class AddGroupAction extends AbstractAction
                 return;
             }
 
-            Group group = new Group();
-            group.setName(dialog.getGroupName());
+            Group group = new Group(dialog.getGroupName());
             group.setDescription(dialog.getDescription());
 
             HibernateUtils.save(group);
             AdminFrame frame = SwingUtils.getAdminFrame();
             frame.setStatusText("Group " + group.getName() + " added");
             frame.refreshGroups();
-            LOG.debug("New group: " + group);
+            LOG.debug("New group: " + group.dump());
         }
         catch (HibernateException e)
         {
