@@ -5,9 +5,11 @@ package org.realtors.rets.server.webapp.cct;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.webapp.RetsServlet;
 
 import org.apache.log4j.Logger;
 
@@ -17,15 +19,17 @@ import org.apache.log4j.Logger;
  * @web.servlet name="cct-handler-servlet"
  * @web.servlet-mapping url-pattern="/rets/cct/*"
  */
-public class HandlerServlet extends HttpServlet
+public class HandlerServlet extends RetsServlet
 {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse respsponse)
         throws ServletException, IOException
     {
         String name = request.getPathInfo();
-        ServletHandler handler =
-            HandlerManager.getInstance().getServletHandler(name);
+        User user = getUser(request.getSession());
+        RetsHandlers handlers =
+            HandlerManager.getInstance().getHandlers(user.getUsername());
+        ServletHandler handler = handlers.getByName(name);
         if (handler != null)
         {
             LOG.debug("Dispatching " + name + " to " +
