@@ -16,11 +16,10 @@ DefaultGroupName=Rex RETS Server
 InfoBeforeFile=@BASEDIR@\project\build\iss_java.txt
 LicenseFile=@BASEDIR@\LICENSE.TXT
 UninstallFilesDir={app}\uninstall
-Compression=zip
 MinVersion=0,4
 
 [Files]
-Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "*"; Excludes: "\webapp\WEB-INF\rex\rets-config.xml"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
@@ -35,6 +34,7 @@ Name: "{group}\Rex Administration"; Filename: "javaw.exe"; Parameters: "-jar rex
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\server\work"
+Type: filesandordirs; Name: "{app}\server\logs"
 Type: filesandordirs; Name: "{app}\logs"
 
 [Run]
