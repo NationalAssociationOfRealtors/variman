@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.realtors.rets.server.metadata.Table;
+
 public class SimpleDmqlMetadata implements DmqlParserMetadata
 {
     public SimpleDmqlMetadata()
@@ -16,6 +18,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         mColumnsToFields = new HashMap();
         mLookups = new HashMap();
         mStrings = new HashSet();
+        mTables = new HashMap();
     }
 
     public void addLookup(String name, String[] values)
@@ -40,6 +43,11 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         mFieldsToColumns.put(fieldName, columnName);
         mColumnsToFields.put(columnName, fieldName);
         mStrings.add(fieldName);
+    }
+
+    public void addTable(String fieldName, Table table)
+    {
+        mTables.put(fieldName, table);
     }
 
     public boolean isValidFieldName(String fieldName)
@@ -84,9 +92,15 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         return mFieldsToColumns.keySet();
     }
 
+    public Table getTable(String fieldName)
+    {
+        return (Table) mTables.get(fieldName);
+    }
+
     private static final String PREFIX = "r_";
     private Map mLookups;
     private Set mStrings;
     private Map mFieldsToColumns;
     private Map mColumnsToFields;
+    private Map mTables;
 }

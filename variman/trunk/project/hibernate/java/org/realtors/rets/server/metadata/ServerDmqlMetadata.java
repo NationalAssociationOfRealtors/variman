@@ -15,7 +15,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 {
     private ServerDmqlMetadata()
     {
-        mFields = new HashSet();
+        mFields = new HashMap();
         mFieldToColumn = new HashMap();
         mColumnToField = new HashMap();
         mLookups = new HashMap();
@@ -40,7 +40,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         {
             Table table = (Table) i.next();
             String fieldName = getTableName(table,  standardNames);
-            mFields.add(fieldName);
+            mFields.put(fieldName, table);
 
             if (table.getInterpretation() != InterpretationEnum.LOOKUPMULTI)
             {
@@ -101,7 +101,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public boolean isValidFieldName(String fieldName)
     {
-        return mFields.contains(fieldName);
+        return mFields.containsKey(fieldName);
     }
 
     public boolean isValidStringName(String fieldName)
@@ -148,9 +148,14 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
     }
 
+    public Table getTable(String fieldName)
+    {
+        return (Table) mFields.get(fieldName);
+    }
+
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
-    private Set mFields;
+    private Map mFields;
     private Map mFieldToColumn;
     private Map mColumnToField;
     private Map mLookups;
