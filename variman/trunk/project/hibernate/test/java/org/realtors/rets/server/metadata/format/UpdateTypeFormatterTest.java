@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
 import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExternal;
@@ -18,8 +19,13 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
+        Table table = new Table();
+        table.setId(new Long(123));
+        table.setSystemName("STATUS");
+        
         UpdateType updateType = new UpdateType();
-        updateType.setSystemName("STATUS");
+        // updateType.setSystemName("STATUS");
+        updateType.setSystemName(table);
         updateType.setSequence(12);
 
         Set attributes = new HashSet();
