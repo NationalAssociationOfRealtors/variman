@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.realtors.rets.server.LinesEqualTestCase;
+
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.InvocationContext;
 import com.meterware.servletunit.ServletRunner;
@@ -13,7 +15,7 @@ import com.meterware.servletunit.ServletUnitClient;
 import org.xml.sax.SAXException;
 
 public class LoginHandlerTest
-    extends LocalTestCase
+    extends LinesEqualTestCase
 {
     protected void setUp() throws IOException, ServletException
     {

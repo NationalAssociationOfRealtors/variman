@@ -25,13 +25,14 @@ import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.WebApp;
+import org.realtors.rets.server.LinesEqualTestCase;
 
 import org.xml.sax.SAXException;
 
 /**
  * @author kgarner
  */
-public class GetMetadataHandlerTest extends LocalTestCase
+public class GetMetadataHandlerTest extends LinesEqualTestCase
 {
     public void setUp() throws IOException, ServletException
     {

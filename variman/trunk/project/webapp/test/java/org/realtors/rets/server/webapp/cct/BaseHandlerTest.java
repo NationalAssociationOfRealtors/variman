@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import org.realtors.rets.server.cct.ValidationResult;
+import org.realtors.rets.server.LinesEqualTestCase;
 
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.InvocationContext;
@@ -14,7 +15,7 @@ import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
 import org.xml.sax.SAXException;
 
-public class BaseHandlerTest extends LocalTestCase
+public class BaseHandlerTest extends LinesEqualTestCase
 {
     protected void setUp() throws IOException, ServletException
     {
