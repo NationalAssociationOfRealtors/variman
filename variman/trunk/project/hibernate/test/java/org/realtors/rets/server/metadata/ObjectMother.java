@@ -29,9 +29,8 @@ public class ObjectMother
 
     public static MClass createClass()
     {
-        MClass clazz = new MClass();
+        MClass clazz = new MClass("RES");
         Resource resource = createResource();
-        clazz.setClassName("RES");
         resource.addClass(clazz);
         return clazz;
     }
