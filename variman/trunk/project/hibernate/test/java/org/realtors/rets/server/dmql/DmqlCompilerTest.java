@@ -19,7 +19,10 @@ public class DmqlCompilerTest extends TestCase
         mMetadata.addLookup("AR", new String[] {"GENVA", "BATV"});
         mMetadata.addLookup("STATUS",
                             new String[]{"A", "O", "S", "U", "C", "W", "P"});
+        mMetadata.addLookup("OR",
+                            new String[] {"OR", "AND", "NOT", "TODAY","NOW"});
         mMetadata.addString("owner");
+        mMetadata.addString("AND");
     }
 
     public void testLookupOr() throws ANTLRException
@@ -90,6 +93,9 @@ public class DmqlCompilerTest extends TestCase
     public void testStringChar() throws ANTLRException
     {
         parse("(owner=f?o)");
+        parse("(owner=?oo)");
+        parse("(owner=fo?)");
+        parse("(owner=?)");
     }
 
     public void testStringList() throws ANTLRException
@@ -153,8 +159,29 @@ public class DmqlCompilerTest extends TestCase
         parse("(owner=abc+,xyz-)");
     }
 
-    protected SqlConverter parse(String dmql, boolean traceParser,
-                                 boolean traceLexer)
+    public void testCompoundQueries() throws ANTLRException
+    {
+        parse("(AR=|BATV,GENVA)|(owner=foo)");
+        parse("(AR=|BATV,GENVA) OR (owner=foo)");
+        parse("(AR=|BATV,GENVA),(owner=foo)");
+        parse("(AR=|BATV,GENVA) AND (owner=foo)");
+        parse("~(AR=|BATV,GENVA)");
+        parse("NOT (AR=|BATV,GENVA)");
+        parse("(AR=|BATV,GENVA) AND NOT (owner=foo)");
+    }
+
+    public void testTokensInStrings() throws ANTLRException
+    {
+        parse("(owner=OR)");
+        parse("(owner=*OR*)");
+        parse("(owner=OR*)");
+        parse("(owner=OR?AND)");
+        parse("(owner=AND)");
+        parse("~(OR=|AND,NOT,TODAY)AND~(AND=NOW*,OR?AND,*NOT*)");
+    }
+
+    private SqlConverter parse(String dmql, boolean traceParser,
+                               boolean traceLexer)
         throws ANTLRException
     {
         return DmqlCompiler.parseDmql(dmql, mMetadata, traceParser, traceLexer);
@@ -162,7 +189,7 @@ public class DmqlCompilerTest extends TestCase
 
     private SqlConverter parse(String dmql) throws ANTLRException
     {
-        return DmqlCompiler.parseDmql(dmql, mMetadata);
+        return parse(dmql, false, false);
     }
 
     private void assertInvalidParse(String dmql)
