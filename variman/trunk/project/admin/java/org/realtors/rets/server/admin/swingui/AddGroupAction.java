@@ -7,6 +7,11 @@ import javax.swing.*;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.HibernateUtils;
 import org.realtors.rets.server.GroupUtils;
+import org.realtors.rets.server.admin.Admin;
+import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.config.GroupRules;
+
 import org.apache.log4j.Logger;
 import net.sf.hibernate.HibernateException;
 
@@ -31,9 +36,20 @@ public class AddGroupAction extends AbstractAction
             group.setDescription(dialog.getDescription());
 
             HibernateUtils.save(group);
+
+            // Update this after hibernate, just in case of DB failure
+            RetsConfig retsConfig = Admin.getRetsConfig();
+            SecurityConstraints securityConstraints =
+                retsConfig.getSecurityConstraints();
+            GroupRules rules =
+                securityConstraints.getRulesForGroup(group.getName());
+            rules.setRecordLimit(dialog.getRecordLimit());
+
             AdminFrame frame = SwingUtils.getAdminFrame();
             frame.setStatusText("Group " + group.getName() + " added");
             frame.refreshGroups();
+            // Group rules are stored in RetsConfig
+            Admin.setRetsConfigChanged(true);
             LOG.debug("New group: " + group.dump());
         }
         catch (HibernateException e)
