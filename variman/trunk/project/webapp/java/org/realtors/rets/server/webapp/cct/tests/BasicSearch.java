@@ -18,6 +18,12 @@ public class BasicSearch extends BaseCertificationTest
         return BasicSearch.class.getName();
     }
 
+    private static final String[] PROCEDURE = {
+        "Login.",
+        "Perform a search with a valid DMQL query.",
+        "Logout."
+    };
+
     public String[] getProcedure()
     {
         return PROCEDURE;
@@ -68,9 +74,4 @@ public class BasicSearch extends BaseCertificationTest
     }
 
     public static final String SESSION_ID = "BasicSearch";
-    private static final String[] PROCEDURE = {
-        "Login.",
-        "Perform a search with a valid DMQL query.",
-        "Logout."
-    };
 }
