@@ -38,9 +38,8 @@ public class ObjectMother
 
     public static Table createTable()
     {
-        Table table = new Table();
+        Table table = new Table("E_SCHOOL");
         MClass clazz = createClass();
-        table.setSystemName("E_SCHOOL");
         clazz.addTable(table);
         return table;
     }
