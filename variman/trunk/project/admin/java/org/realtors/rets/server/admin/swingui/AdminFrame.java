@@ -57,7 +57,13 @@ public class AdminFrame extends JFrame implements ActionListener
         mTabbedPane.addTab("Users", new JPanel());
         content.add(mTabbedPane, BorderLayout.CENTER);
 
+        mStatusBar = new JLabel("Status bar");
+        mStatusBar.setBorder(
+            BorderFactory.createEtchedBorder());
+        content.add(mStatusBar, BorderLayout.SOUTH);
+
         setSize(640, 480);
+        SwingUtils.centerOnScreen(this);
     }
 
     private void initConfig()
@@ -76,6 +82,11 @@ public class AdminFrame extends JFrame implements ActionListener
     {
         dispose();
         System.exit(0);
+    }
+
+    public void setStatusText(String text)
+    {
+        mStatusBar.setText(text);
     }
 
     private class OnClose extends WindowAdapter
@@ -118,4 +129,5 @@ public class AdminFrame extends JFrame implements ActionListener
 
     private static AdminFrame sInstance;
     private JTabbedPane mTabbedPane;
+    private JLabel mStatusBar;
 }
