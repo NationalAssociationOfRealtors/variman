@@ -55,7 +55,9 @@ public class TestRunner
             ValidationResult result = 
                 mResults.getResultByName(mRunningTest.getName());
             mRunningTest.stop();
-            mRunningTest.validate(result);
+            // todo: this won't compile
+            // mRunningTest.validate(result);
+            mRunningTest.validate();
             mRunningTest = null;
         }
     }
