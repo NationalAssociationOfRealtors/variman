@@ -39,7 +39,7 @@
 
     <h3>News</h3>
     <ul>
-      <li><b>19 Jan 2004</b>: Version 1.0 Beta 1 released.</li>
+      <li><b>21 Jan 2004</b>: Version 1.0 Beta 1 released.</li>
     </ul>
 
 <?php include("footer.php"); ?>

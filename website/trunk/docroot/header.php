@@ -25,9 +25,10 @@ function ROOT()
 
 
 $nav_urls = array("Home" => "/",
-             "Documentation" => "/documentation/",
-             "Downloads" => "/downloads/",
-             "Support" => "/support/");
+                  "Demo" => "/demo/",
+                  "Documentation" => "/documentation/",
+                  "Downloads" => "/downloads/",
+                  "Support" => "/support/");
 
 function nav($url, $name)
 {
@@ -60,6 +61,7 @@ function enav($name)
           <td class="hleft">Rex RETS Server</td>
           <td class="hright">
         <?php enav("Home") ?> |
+        <?php enav("Demo") ?> |
         <?php enav("Documentation") ?> |
         <?php enav("Downloads") ?> |
         <?php enav("Support") ?>

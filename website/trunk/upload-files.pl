@@ -59,11 +59,8 @@ if ($opt_user ne "")
 my $remote_host = "dargo.crt.realtors.org";
 my $remote_home = "/nar/www/sites/www.crt.realtors.org/www.crt.realtors.org/projects/rets/rex";
 $command = 
-    "rsync ${dry_run_option} -v -rltz -e \"ssh -x\" --delete " .
-    "--exclude='*~' --exclude='CVS' --exclude='*.jar' " .
-    "--exclude='/documentation/api/' --exclude='/documentation/manual/' " .
-    "--exclude='/files/' " .
-    "docroot/ ${opt_user}${remote_host}:${remote_home}/";
+    "rsync ${dry_run_option} -v -rltz -e \"ssh -x\" " .
+    "files ${opt_user}${remote_host}:${remote_home}";
 
 print "${command}\n\n" if ($opt_dry_run);
 

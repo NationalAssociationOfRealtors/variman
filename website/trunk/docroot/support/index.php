@@ -4,8 +4,8 @@
 ?>
     <h3>Support</h3>
     <p>
-      For now, please contact Dave Dribin at <a
-      href="mailto:dribin@crt.realtors.org">dribin@crt.realtors.org</a>
+      Please join the <a
+        href="http://www.crt.realtors.org/mailman/listinfo/rex-users">rex-users mailing list</a>, and send questions there.
     </p>
 
     <?php include("../footer.php"); ?>

@@ -66,6 +66,14 @@ A:hover {
   font-weight: bold;
 }
 
+.demo-param {
+  font-weight: bold;
+  text-align: right;
+}
+
+.demo-value {
+}
+
 .x-nav { 
   position: relative;
   float: right;
