@@ -155,23 +155,34 @@ public class RetsConfig
         for (int i = 0; i < allGroupRules.size(); i++)
         {
             GroupRules groupRules = (GroupRules) allGroupRules.get(i);
-            List filterRules = groupRules.getFilterRules();
-            List conditionRules = groupRules.getConditionRules();
-            if ((filterRules.size() == 0) && (conditionRules.size() == 0))
-            {
-                continue;
-            }
             Element groupRulesElement = new Element(GROUP_RULES);
             groupRulesElement.setAttribute(GROUP, groupRules.getGroupName());
-            addFilterRules(filterRules, groupRulesElement);
-            addConditionRules(conditionRules, groupRulesElement);
-            securityContraints.addContent(groupRulesElement);
+            addRecordLimit(groupRules, groupRulesElement);
+            addFilterRules(groupRules, groupRulesElement);
+            addConditionRules(groupRules, groupRulesElement);
+            if (groupRulesElement.getChildren().size() != 0)
+            {
+                securityContraints.addContent(groupRulesElement);
+            }
         }
         return securityContraints;
     }
 
-    private void addFilterRules(List rules, Element element)
+    private void addRecordLimit(GroupRules groupRules,
+                                Element groupRulesElement)
     {
+        int recordLimit = groupRules.getRecordLimit();
+        if (recordLimit > 0)
+        {
+            Element recordLimitElement = new Element(RECORD_LIMIT);
+            recordLimitElement.setText(Integer.toString(recordLimit));
+            groupRulesElement.addContent(recordLimitElement);
+        }
+    }
+
+    private void addFilterRules(GroupRules groupRules, Element element)
+    {
+        List rules = groupRules.getFilterRules();
         for (int i = 0; i < rules.size(); i++)
         {
             FilterRule filterRule = (FilterRule) rules.get(i);
@@ -195,8 +206,9 @@ public class RetsConfig
         }
     }
 
-    private void addConditionRules(List conditionRules, Element element)
+    private void addConditionRules(GroupRules groupRules, Element element)
     {
+        List conditionRules = groupRules.getConditionRules();
         for (int i = 0; i < conditionRules.size(); i++)
         {
             ConditionRule rule = (ConditionRule) conditionRules.get(i);
@@ -328,6 +340,11 @@ public class RetsConfig
                 else if (ruleName.equals(CONDITION_RULE))
                 {
                     addConditionRule(groupRules, grandChild);
+                }
+                else if (ruleName.equals(RECORD_LIMIT))
+                {
+                    groupRules.setRecordLimit(
+                        NumberUtils.stringToInt(grandChild.getTextTrim()));
                 }
                 else
                 {
@@ -553,6 +570,7 @@ public class RetsConfig
     private static final String SYSTEM_NAMES = "system-names";
     private static final String CONDITION_RULE = "condition-rule";
     private static final String SQL_CONSTRAINT = "sql-constraint";
+    private static final String RECORD_LIMIT = "record-limit";
 
     private int mPort;
     private String mGetObjectRoot;
