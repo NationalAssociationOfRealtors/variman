@@ -8,31 +8,30 @@
 
 package org.realtors.rets.server.admin.metadata;
 
-import org.wxwindows.wxPanel;
-import org.wxwindows.wxWindow;
-import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxTextCtrl;
-import org.realtors.rets.server.admin.TwoColumnGridSizer;
+import org.wxwindows.wxWindow;
+
 import org.realtors.rets.server.admin.AdminUtils;
+import org.realtors.rets.server.admin.TwoColumnGridSizer;
 import org.realtors.rets.server.metadata.MClass;
 
-public class MClassPanel extends wxPanel
+public class MClassPanel extends AbstractSubPanel
 {
     public MClassPanel(wxWindow parent)
     {
         super(parent);
-        wxBoxSizer box = new wxBoxSizer(wxVERTICAL);
+    }
 
-        TwoColumnGridSizer grid = new TwoColumnGridSizer(this);
+    protected void addContent(TwoColumnGridSizer grid)
+    {
         mClassName = new wxTextCtrl(this, -1);
         grid.addRow("Class Name:", mClassName, wxEXPAND);
+
         mStandardName = new wxTextCtrl(this, -1);
         grid.addRow("Standard Name:", mStandardName, wxEXPAND);
+
         mVisibleName = new wxTextCtrl(this, -1);
         grid.addRow("Visible Name:", mVisibleName, wxEXPAND);
-
-        box.Add(grid, 1, wxEXPAND | wxALL, 5);
-        SetSizer(box);
     }
 
     public void updateFrom(MClass clazz)
