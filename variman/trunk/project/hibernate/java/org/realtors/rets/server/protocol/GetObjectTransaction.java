@@ -66,14 +66,7 @@ public class GetObjectTransaction
             {
                 FileDescriptor fileDescriptor =
                     (FileDescriptor) allFiles.get(0);
-                String filePath = fileDescriptor.file.getPath();
-                LOG.info("GetObject file path: " + filePath);
-                response.setContentType(getContentType(filePath));
-                response.setHeader("MIME-Version", "1.0");
-                response.setHeader("Content-ID", fileDescriptor.objectKey);
-                response.setHeader("Object-ID", "" + fileDescriptor.objectId);
-                IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
-                                   response.getOutputStream());
+                executeSinglePart(response, fileDescriptor);
             }
             else
             {
@@ -84,6 +77,20 @@ public class GetObjectTransaction
         {
             throw new RetsServerException(e);
         }
+    }
+
+    private void executeSinglePart(GetObjectResponse response,
+                                   FileDescriptor fileDescriptor)
+        throws IOException
+    {
+        String filePath = fileDescriptor.file.getPath();
+        LOG.info("GetObject file path: " + filePath);
+        response.setContentType(getContentType(filePath));
+        response.setHeader("MIME-Version", "1.0");
+        response.setHeader("Content-ID", fileDescriptor.objectKey);
+        response.setHeader("Object-ID", "" + fileDescriptor.objectId);
+        IOUtils.copyStream(new FileInputStream(fileDescriptor.file),
+                           response.getOutputStream());
     }
 
     private void executeMultipart(GetObjectResponse response, List allFiles)
@@ -143,7 +150,7 @@ public class GetObjectTransaction
                 String objectIdString = (String) objectIdList.get(j);
                 if (objectIdString.equals("*"))
                 {
-                    addAllFilesForResourceEntity(resourceEntity, files);
+                    scanForFiles(resourceEntity, files);
                 }
                 else
                 {
@@ -152,24 +159,24 @@ public class GetObjectTransaction
                     {
                         objectId = 1;
                     }
-                    addSingleFile(resourceEntity, objectId, files);
+                    addFileIfExists(resourceEntity, objectId, files);
                 }
             }
         }
         return files;
     }
 
-    private void addAllFilesForResourceEntity(String resourceEntity, List files)
+    private void scanForFiles(String resourceEntity, List files)
     {
         int objectId = 1;
-        while (addSingleFile(resourceEntity, objectId, files))
+        while (addFileIfExists(resourceEntity, objectId, files))
         {
             objectId++;
         }
     }
     
-    private boolean addSingleFile(String resourceEntity, int objectId,
-                                  List files)
+    private boolean addFileIfExists(String resourceEntity, int objectId,
+                                    List files)
     {
         mPatternContext.setKey(resourceEntity);
         mPatternContext.setObjectId(objectId);
