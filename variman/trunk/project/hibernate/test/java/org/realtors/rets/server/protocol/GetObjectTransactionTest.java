@@ -3,21 +3,19 @@
 package org.realtors.rets.server.protocol;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServerException;
-
-import junit.framework.TestCase;
 
 public class GetObjectTransactionTest extends TestCase
 {
@@ -58,6 +56,22 @@ public class GetObjectTransactionTest extends TestCase
         try
         {
             GetObjectTransaction transaction = createTransaction("xyz:1");
+            transaction.execute(new TestResponse());
+            fail("Should throw an exception");
+        }
+        catch (RetsReplyException e)
+        {
+            assertEquals(20403, e.getReplyCode());
+            assertEquals("No Object Found", e.getMeaning());
+        }
+    }
+
+    public void testEmptyPattern() throws RetsServerException
+    {
+        try
+        {
+            GetObjectTransaction transaction = createTransaction("xyz:1");
+            transaction.setPattern("");
             transaction.execute(new TestResponse());
             fail("Should throw an exception");
         }
