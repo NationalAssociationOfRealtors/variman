@@ -44,6 +44,7 @@ public class RetsConfig
         mPort = 6103;
         mNonceInitialTimeout = -1;
         mNonceSuccessTimeout = -1;
+        mSecurityConstraints = new SecurityConstraints();
     }
 
     public int getPort()
@@ -150,9 +151,10 @@ public class RetsConfig
     private Element getSecurityContraintsElement()
     {
         Element securityContraints = new Element(SECURITY_CONSTRAINTS);
-        for (int i = 0; i < mSecurityConstraints.size(); i++)
+        List allConstraints = mSecurityConstraints.getAllConstraints();
+        for (int i = 0; i < allConstraints.size(); i++)
         {
-            GroupRules groupRules = (GroupRules) mSecurityConstraints.get(i);
+            GroupRules groupRules = (GroupRules) allConstraints.get(i);
             Element groupRulesElement = new Element(GROUP_RULES);
             groupRulesElement.setAttribute(GROUP, groupRules.getGroupName());
             List rules = groupRules.getRules();
@@ -453,14 +455,19 @@ public class RetsConfig
         return getDefault(mMetadataDir, defaultValue);
     }
 
-    public List getSecurityConstraints()
+    public List getAllGroupRules()
+    {
+        return mSecurityConstraints.getAllConstraints();
+    }
+
+    public SecurityConstraints getSEcSecurityConstraints()
     {
         return mSecurityConstraints;
     }
 
     public void setSecurityConstraints(List securityConstraints)
     {
-        mSecurityConstraints = securityConstraints;
+        mSecurityConstraints.setAllConstraints(securityConstraints);
     }
 
     private static final Logger LOG =
@@ -501,5 +508,6 @@ public class RetsConfig
     private int mNonceSuccessTimeout;
     private DatabaseConfig mDatabase;
     private String mMetadataDir;
-    private List mSecurityConstraints;
+//    private List mSecurityConstraints;
+    private SecurityConstraints mSecurityConstraints;
 }
