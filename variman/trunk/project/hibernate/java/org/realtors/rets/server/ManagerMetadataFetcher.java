@@ -29,19 +29,7 @@ public class ManagerMetadataFetcher implements MetadataFetcher
         mManager = manager;
     }
 
-    public MetadataSegment fetchMetadata(String type, String[] levels)
-        throws RetsReplyException
-    {
-        // Always need system to get version and date
-        MetadataManager manager = getMetadataManager();
-        MSystem system = findSystem(manager);
-
-        List metadata = manager.find(type, StringUtils.join(levels, ":"));
-        return new MetadataSegment(metadata, levels, system.getVersionString(),
-                                   system.getDate());
-    }
-
-    public List fetchAllMetadata(String type, String[] levels)
+    public List fetchMetadata(String type, String[] levels)
     {
         MetadataManager manager = getMetadataManager();
         MSystem system = findSystem(manager);
