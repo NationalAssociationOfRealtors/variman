@@ -3,6 +3,7 @@
 package org.realtors.rets.server.metadata;
 
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -51,5 +52,47 @@ public class MetadataManagerTest extends TestCase
 
         metadata = manager.findByPath(MSystem.TABLE, "");
         assertNull(metadata);
+    }
+
+    public void testLevelMatch()
+    {
+        assertTrue(MetadataManager.levelsMatch("Property", ""));
+        assertTrue(MetadataManager.levelsMatch("Property", "*"));
+        assertTrue(MetadataManager.levelsMatch("Property", "Property"));
+        assertFalse(MetadataManager.levelsMatch("Property", "foo"));
+
+        assertTrue(MetadataManager.levelsMatch("Property:RES", ""));
+        assertTrue(MetadataManager.levelsMatch("Property:RES", "*"));
+        assertTrue(MetadataManager.levelsMatch("Property:RES", "Property:*"));
+        assertTrue(MetadataManager.levelsMatch("Property:RES", "Property:RES"));
+        assertTrue(MetadataManager.levelsMatch("Property:RES", "*:RES"));
+        assertFalse(MetadataManager.levelsMatch("Property:RES", "foo"));
+        assertFalse(MetadataManager.levelsMatch("Property:RES", "foo:*"));
+        assertFalse(MetadataManager.levelsMatch("Property:RES", "*:foo"));
+    }
+
+    public void testFindByPattern()
+    {
+        Table table = ObjectMother.createTable();
+        MSystem system = table.getMClass().getResource().getSystem();
+        MetadataManager manager = new MetadataManager();
+        manager.addRecursive(system);
+
+        Map found = manager.findByPattern(Table.TABLE, "*");
+        assertEquals(1, found.size());
+        List atLevel = (List) found.get("Property:RES");
+        assertNotNull(atLevel);
+        assertEquals(1, atLevel.size());
+        assertSame(table, atLevel.get(0));
+
+        found = manager.findByPattern(Table.TABLE, "Property:RES");
+        assertEquals(1, found.size());
+        atLevel = (List) found.get("Property:RES");
+        assertNotNull(atLevel);
+        assertEquals(1, atLevel.size());
+        assertSame(table, atLevel.get(0));
+
+        found = manager.findByPattern(Table.TABLE, "foo");
+        assertEquals(0, found.size());
     }
 }
