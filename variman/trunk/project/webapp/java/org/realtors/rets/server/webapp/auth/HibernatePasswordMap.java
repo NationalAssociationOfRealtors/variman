@@ -19,9 +19,9 @@ public class HibernatePasswordMap implements PasswordMap
         return true;
     }
 
-    public String getPassword(String username)
+    public PasswordInfo getPassword(String username)
     {
-        String password = null;
+        PasswordInfo info = new PasswordInfo();
         try
         {
             Session session = InitServlet.getSessions().openSession();
@@ -34,7 +34,8 @@ public class HibernatePasswordMap implements PasswordMap
             {
                 User user = (User) users.get(0);
                 LOG.debug(user);
-                password = user.getA1Password();
+                info.setPassword(user.getPassword());
+                info.setA1(user.getPasswordMethod().getMethod().equals("A1"));
             }
             else
             {
@@ -45,7 +46,7 @@ public class HibernatePasswordMap implements PasswordMap
         {
             LOG.warn("Exception", e);
         }
-        return password;
+        return info;
     }
 
     private static final Logger LOG =

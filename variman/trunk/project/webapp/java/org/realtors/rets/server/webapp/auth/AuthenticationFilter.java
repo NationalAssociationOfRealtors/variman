@@ -103,8 +103,9 @@ public class AuthenticationFilter implements Filter, PasswordMap
 
     private boolean verifyResponse(DigestAuthorizationRequest request)
     {
-        String password = mPasswordMap.getPassword(request.getUsername());
-        return request.verifyResponse(password, mPasswordMap.passwordIsA1());
+        PasswordMap.PasswordInfo info =
+            mPasswordMap.getPassword(request.getUsername());
+        return request.verifyResponse(info.getPassword(), info.isA1());
     }
 
     public boolean passwordIsA1()
@@ -112,14 +113,14 @@ public class AuthenticationFilter implements Filter, PasswordMap
         return false;
     }
 
-    public String getPassword(String username)
+    public PasswordInfo getPassword(String username)
     {
+        PasswordInfo info = new PasswordInfo();
         if (username.equals("Joe"))
-            return "Schmoe";
+            info.setPassword("Schmoe");
         else if (username.equals("test"))
-            return "test1";
-        else
-            return null;
+            info.setPassword("test1");
+        return info;
     }
 
     private void send401(HttpServletResponse response) throws IOException

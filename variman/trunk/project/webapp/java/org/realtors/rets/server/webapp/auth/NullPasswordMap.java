@@ -9,8 +9,9 @@ public class NullPasswordMap implements PasswordMap
         return false;
     }
 
-    public String getPassword(String username)
+    public PasswordInfo getPassword(String username)
     {
-        return null;
+        return new PasswordInfo();
     }
+
 }

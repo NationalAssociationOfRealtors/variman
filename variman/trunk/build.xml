@@ -25,6 +25,7 @@
   <path id="hibernate.path">
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${log4j.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -33,6 +34,7 @@
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${hibernate-ext.tools.jar}"/>
     <pathelement path="${jdom.jar}"/>
+    <pathelement path="${log4j.jar}"/>
   </path>
 
   <path id="embedded.path">
@@ -118,11 +120,6 @@
         <path location="${xdoclet.hibernate.jar}"/>
       </classpath>
     </taskdef>
-    <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false"
-                     mergedir="project/hibernate/java">
-      <fileset dir="project/hibernate/java" includes="**/*.java"/>
-      <hibernate version="2.0"/>
-    </hibernatedoclet>
     <javac srcdir="project/hibernate/java"
            destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
@@ -132,6 +129,11 @@
         <path refid="hibernate.path" />
       </classpath>
     </javac>
+    <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false"
+                     mergedir="project/hibernate/java">
+      <fileset dir="project/hibernate/java" includes="**/*.java"/>
+      <hibernate version="2.0"/>
+    </hibernatedoclet>
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
          basedir="build/hibernate/classes"
          excludes="hibernate.properties" index="true"/>
@@ -165,6 +167,7 @@
           file="project/hibernate/config/hibernate.properties"/>
     <java classname="org.realtors.rets.server.Admin"
           fork="true">
+<!--       <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"/> -->
       <classpath>
         <path refid="hibernate.path" />
         <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
@@ -172,6 +175,7 @@
         <pathelement location="${hibernate.jdbc.jar}"/>
         <fileset dir="${hibernate.lib}" includes="*.jar"/>
       </classpath>
+      <arg line="${admin.args}"/>
     </java>
   </target>
 

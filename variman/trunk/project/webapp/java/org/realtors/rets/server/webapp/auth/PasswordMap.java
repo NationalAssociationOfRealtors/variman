@@ -19,5 +19,31 @@ public interface PasswordMap
      * @param username
      * @return
      */
-    String getPassword(String username);
+    PasswordInfo getPassword(String username);
+
+    public class PasswordInfo
+    {
+        public void setPassword(String password)
+        {
+            mPassword = password;
+        }
+
+        public String getPassword()
+        {
+            return mPassword;
+        }
+
+        public boolean isA1()
+        {
+            return mIsA1;
+        }
+
+        public void setA1(boolean a1)
+        {
+            mIsA1 = a1;
+        }
+
+        private String mPassword;
+        private boolean mIsA1;
+    }
 }

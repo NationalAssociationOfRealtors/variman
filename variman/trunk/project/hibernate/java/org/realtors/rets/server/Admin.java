@@ -8,6 +8,7 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Transaction;
+import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
 import net.sf.hibernate.cfg.Configuration;
 
 public class Admin
@@ -19,9 +20,14 @@ public class Admin
 
     private void initHibernate() throws HibernateException
     {
-        Configuration cfg = new Configuration();
-        cfg.addJar("retsdb2-hbm-xml.jar");
-        mSessions = cfg.buildSessionFactory();
+        mCfg = new Configuration();
+        mCfg.addJar("retsdb2-hbm-xml.jar");
+        mSessions = mCfg.buildSessionFactory();
+    }
+
+    public void generateSchema() throws HibernateException
+    {
+        new SchemaExport(mCfg).create(true, true);
     }
 
     public void doIt()
@@ -61,8 +67,13 @@ public class Admin
         throws Exception
     {
         Admin admin = new Admin();
+        if ("sch".equals(args[0]))
+        {
+            admin.generateSchema();
+        }
         admin.doIt();
     }
 
     private SessionFactory mSessions;
+    private Configuration mCfg;
 }
