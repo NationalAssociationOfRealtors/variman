@@ -8,7 +8,7 @@
   </biblioentry>
 
   <biblioentry id="bib-tomcat">
-    <abbrev>Tomcate</abbrev>
+    <abbrev>Tomcat</abbrev>
     <title>Jakarta Tomcat Web Site</title>
     <releaseinfo>
       <ulink url="http://jakarta.apache.org/tomcat/">http://jakarta.apache.org/tomcat/</ulink>
@@ -44,6 +44,14 @@
     <title>RETS Web Site</title>
     <releaseinfo>
       <ulink url="http://www.rets.org/">http://www.rets.org/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-variman">
+    <abbrev>&name;</abbrev>
+    <title>&name; Web Site</title>
+    <releaseinfo>
+      <ulink url="http://www.crt.realtors.org/projects/rets/variman/">http://www.crt.realtors.org/projects/rets/variman/</ulink>
     </releaseinfo>
   </biblioentry>
 </bibliography>
