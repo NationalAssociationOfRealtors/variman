@@ -32,7 +32,7 @@ public class RetsUtils
 
     public static void printEmptyRets(PrintWriter out, ReplyCode replyCode)
     {
-        printOpenRets(out, replyCode.getValue(), replyCode.getName());
+        printEmptyRets(out, replyCode.getValue(), replyCode.getName());
     }
 
     public static void printCloseRets(PrintWriter out)
