@@ -13,16 +13,16 @@ public class SearchParameters
     {
         mResourceId = getParameter(parameterMap, "SearchType");
         mClassName = getParameter(parameterMap, "Class");
-        initQueryType(parameterMap, version);
+        initQueryType(getParameter(parameterMap, "QueryType"), version);
         mQuery = getParameter(parameterMap, "Query");
-        initFormat(parameterMap);
-        initStandardNames(parameterMap);
+        initFormat(getParameter(parameterMap, "Format"));
+        initStandardNames(getParameter(parameterMap, "StandardNames"));
     }
 
-    private void initStandardNames(Map parameterMap) throws RetsReplyException
+    private void initStandardNames(String standardNames)
+        throws RetsReplyException
     {
-        String standardNames = getParameter(parameterMap, "StandardNames");
-        if (standardNames.equals("0"))
+        if ((standardNames  == null) || standardNames.equals("0"))
         {
             mStandardNames = false;
         }
@@ -37,10 +37,10 @@ public class SearchParameters
         }
     }
 
-    private void initQueryType(Map parameterMap, RetsVersion version)
+    private void initQueryType(String queryType, RetsVersion version)
         throws RetsReplyException
     {
-        mQueryType = getParameter(parameterMap, "QueryType");
+        mQueryType = queryType;
         boolean validQueryType = false;
         validQueryType |=
             ((version == RetsVersion.RETS_1_0) && mQueryType.equals(DMQL));
@@ -53,9 +53,9 @@ public class SearchParameters
         }
     }
 
-    private void initFormat(Map parameterMap)
+    private void initFormat(String format)
     {
-        mFormat = getParameter(parameterMap, "Format");
+        mFormat = format;
     }
 
     private String getParameter(Map parameterMap, String name)
