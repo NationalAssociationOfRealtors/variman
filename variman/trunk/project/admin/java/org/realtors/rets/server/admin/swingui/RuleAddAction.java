@@ -25,8 +25,7 @@ public class RuleAddAction extends AbstractAction
             return;
         }
 
-        RuleDescription ruleDescription = new RuleDescription();
-        dialog.setRuleDescription(ruleDescription);
+        RuleDescription ruleDescription = dialog.getRuleDescription();
         GroupRules rules = mGroupsPanel.getGroupRules();
         rules.addRule(ruleDescription);
         Admin.setRetsConfigChanged(true);
