@@ -25,11 +25,11 @@ options
         }
     }
 
-    public boolean isLookup(String fieldName) {
+    public boolean isLookupField(String fieldName) {
         return mMetadata.isValidLookupName(fieldName);
     }
 
-    public boolean isStringList(String fieldName) {
+    public boolean isStringField(String fieldName) {
         return mMetadata.isValidStringName(fieldName);
     }
 
@@ -45,6 +45,47 @@ options
             throw newSemanticException("No such lookup value [" +
                                        lookupName + "]: " + lookupValue, t);
         }
+    }
+
+    private void addStringEq(DmqlStringList list, Token t) 
+        throws SemanticException
+    {
+        list.add(new DmqlString(t.getText()));
+    }
+
+    private void addStringStart(DmqlStringList list, Token t) 
+        throws SemanticException
+    {
+        DmqlString string = new DmqlString();
+        string.add(t.getText());
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+    }
+
+    private void addStringContains(DmqlStringList list, Token t) 
+        throws SemanticException
+    {
+        DmqlString string = new DmqlString();
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string.add(t.getText());
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+    }
+
+    private void add(DmqlString string, Token t) {
+        string.add(t.getText());
+    }
+
+    private void add(DmqlString string, DmqlStringComponent component) {
+        string.add(component);
+    }
+
+    private void addStar(DmqlString string) {
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+    }
+
+    private void addQuestion(DmqlString string) {
+        string.add(DmqlString.MATCH_ZERO_OR_ONE);
     }
 
     public void setMetadata(DmqlParserMetadata metadata) {
@@ -130,8 +171,8 @@ field_name returns [String field]
 
 field_value [String name] returns [SqlConverter sql]
     { sql = null; }
-    : {isLookup(name)}? sql=lookup_list[name]
-    | {isStringList(name)}? string_list
+    : {isLookupField(name)}? sql=lookup_list[name]
+    | {isStringField(name)}? sql=string_list[name]
     | range_list
     ;
 
@@ -209,35 +250,32 @@ lookup [LookupList list]
     | n:NUMBER {addLookup(list, n);}
     ;
 
-string_list
-    : string (COMMA string)*
+string_list [String name] returns [SqlConverter sql]
+    { DmqlStringList list = new DmqlStringList(name); sql = list; }
+    : string[list] (COMMA string[list])*
     ;
 
-// string_char conflicts with string_eq due to text being TEXT or a
-// reserved token.  We must use a syntactic predict to try matching
-// string_char first, and if it's not a string_char, it must be one of
-// the others.
-string
-    : string_eq
-    | string_start
-    | string_contains
-    | string_char1
-    | string_char2
+string [DmqlStringList list]
+    { Token t; DmqlString s = new DmqlString(); }
+    : t=string_eq {add(s, t); list.add(s);}
+    | string_start[s] {list.add(s);}
+    | string_contains[s] {list.add(s);}
+    | string_char1[s] {list.add(s);}
+    | string_char2[s] {list.add(s);}
     ;
 
-string_eq
-    { Token t; }
+string_eq returns [Token t]
     : t=text
     ;
 
-string_start
+string_start [DmqlString s]
     { Token t; }
-    : t=text STAR
+    : t=text {add(s, t);} STAR {addStar(s);}
     ;
 
-string_contains
+string_contains [DmqlString s]
     { Token t; }
-    : STAR t=text STAR
+    : STAR {addStar(s);} t=text {add(s, t);} STAR {addStar(s);}
     ;
 
 // Need to split string_char into 2 separate rules, otherwise ANTLR
@@ -246,18 +284,14 @@ string_contains
 //     : (TEXT)? QUESTION (TEXT)?
 //     ;
 
-string_char1
+string_char1 [DmqlString s]
     { Token t; }
-    : t=text QUESTION (t=text)?
+    : t=text {add(s, t);} QUESTION {addQuestion(s);} (t=text {add(s, t);})?
     ;
 
-string_char2
+string_char2 [DmqlString s]
     { Token t; }
-    : QUESTION (t=text)?
-    ;
-
-string_literal
-    : STRING_LITERAL
+    : QUESTION {addQuestion(s);} (t=text {add(s, t);})?
     ;
 
 text returns [Token token]
