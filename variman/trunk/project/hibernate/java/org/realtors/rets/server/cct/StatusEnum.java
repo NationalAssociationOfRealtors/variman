@@ -26,7 +26,7 @@ public class StatusEnum
         return mValue;
     }
     
-    public StatusEnum fromInt(int value)
+    public static StatusEnum fromInt(int value)
     {
         switch (value)
         {
@@ -41,7 +41,7 @@ public class StatusEnum
         return NOT_RUN;
     }
     
-    private int mValue;
+    private final int mValue;
     
     public static final StatusEnum PASSED = new StatusEnum(0, "passed");
     public static final StatusEnum FAILED = new StatusEnum(1, "failed");
