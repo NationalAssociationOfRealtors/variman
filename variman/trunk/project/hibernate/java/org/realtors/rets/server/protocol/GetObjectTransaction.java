@@ -185,7 +185,7 @@ public class GetObjectTransaction
         mPatternFormatter.format(fileBuffer, mPatternContext);
         String filePath = fileBuffer.toString();
         File file = new File(filePath);
-        if (file.exists())
+        if (file.exists() && file.isFile())
         {
             LOG.debug("File " + filePath + " exists");
             files.add(new FileDescriptor(resourceEntity, objectId,
