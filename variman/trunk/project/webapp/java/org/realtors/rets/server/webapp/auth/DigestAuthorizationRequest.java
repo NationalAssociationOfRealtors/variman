@@ -2,6 +2,7 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
+import org.realtors.rets.server.HashUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -10,11 +11,10 @@ public class DigestAuthorizationRequest
     public DigestAuthorizationRequest()
     {
         mUsername = null;
-        mPassword = null;
         mUri = null;
         mNonce = null;
         mQop = "auth";
-        mAlgorithm = "MD5";
+        mAlgorithm = "HashUtils";
         mNonceCount = "";
         mCnonce = "";
         mResponse = "";
@@ -43,7 +43,7 @@ public class DigestAuthorizationRequest
         mNonce = null;
         mUri = null;
         mResponse = null;
-        mAlgorithm = "MD5";
+        mAlgorithm = "HashUtils";
         mCnonce = "";
         mOpaque = "";
         mQop = "auth";
@@ -135,16 +135,6 @@ public class DigestAuthorizationRequest
     public String getUsername()
     {
         return mUsername;
-    }
-
-    public void setPassword(String password)
-    {
-        mPassword = password;
-    }
-
-    public String getPassword()
-    {
-        return mPassword;
     }
 
     public void setUri(String uri)
@@ -242,18 +232,31 @@ public class DigestAuthorizationRequest
         return mMethod;
     }
 
-    public boolean verifyResponse()
+    public boolean verifyResponse(String password)
     {
-        if (mPassword == null)
+        return verifyResponse(password, false);
+    }
+
+    public boolean verifyResponse(String password, boolean passwordIsA1)
+    {
+        if (password == null)
         {
             LOG.debug("Null password always fails");
             return false;
         }
-        String a1 = Util.md5(mUsername + ":" + mRealm + ":" + mPassword);
-        String a2 = Util.md5(mMethod + ":" + mUri);
+        String a1;
+        if (passwordIsA1)
+        {
+            a1 = password;
+        }
+        else
+        {
+            a1 = HashUtils.md5(mUsername + ":" + mRealm + ":" + password);
+        }
+        String a2 = HashUtils.md5(mMethod + ":" + mUri);
         String expectedResponse =
-            Util.md5(a1 + ":" + mNonce + ":" + mNonceCount +
-                     ":" + mCnonce + ":" + mQop + ":" + a2);
+            HashUtils.md5(a1 + ":" + mNonce + ":" + mNonceCount +
+                          ":" + mCnonce + ":" + mQop + ":" + a2);
         LOG.debug("Expected response: " + expectedResponse);
         LOG.debug("Actual response:   " + mResponse);
         return (expectedResponse.equals(mResponse));
@@ -261,7 +264,6 @@ public class DigestAuthorizationRequest
 
     private static final String PREFIX = "Digest ";
     private String mUsername;
-    private String mPassword;
     private String mUri;
     private String mNonce;
     private String mQop;

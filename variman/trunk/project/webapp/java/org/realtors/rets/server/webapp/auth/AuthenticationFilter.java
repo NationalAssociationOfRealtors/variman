@@ -20,6 +20,8 @@ import org.apache.log4j.Logger;
  *   description="Performs digest authentication"
  * @web.filter-init-param name="password-map"
  *   value="org.realtors.rets.server.webapp.auth.HibernatePasswordMap"
+ *
+ *   valuex="org.realtors.rets.server.webapp.auth.AuthenticationFilter"
  */
 public class AuthenticationFilter implements Filter, PasswordMap
 {
@@ -86,9 +88,8 @@ public class AuthenticationFilter implements Filter, PasswordMap
 
         DigestAuthorizationRequest authorizationRequest =
             new DigestAuthorizationRequest(authorizationHeader);
-        authorizationRequest.setPassword(getPassword(authorizationRequest));
         authorizationRequest.setMethod(request.getMethod());
-        if (authorizationRequest.verifyResponse())
+        if (verifyResponse(authorizationRequest))
         {
             LOG.debug("Digest auth succeeded");
             filterChain.doFilter(servletRequest, servletResponse);
@@ -100,9 +101,15 @@ public class AuthenticationFilter implements Filter, PasswordMap
         }
     }
 
-    private String getPassword(DigestAuthorizationRequest authorizationRequest)
+    private boolean verifyResponse(DigestAuthorizationRequest request)
     {
-        return mPasswordMap.getPassword(authorizationRequest.getUsername());
+        String password = mPasswordMap.getPassword(request.getUsername());
+        return request.verifyResponse(password, mPasswordMap.passwordIsA1());
+    }
+
+    public boolean passwordIsA1()
+    {
+        return false;
     }
 
     public String getPassword(String username)

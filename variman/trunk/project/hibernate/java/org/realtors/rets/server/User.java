@@ -44,20 +44,39 @@ public class User
     }
 
     /**
+     * Sets the plain text password for this user. The plain text password is
+     * not persisted into the database, only the hashed password. The hashed
+     * password is in the same format as A1 as described in the HTTP Digest
+     * Authentcation specification:
      *
-     * @return
+     *   A1 = MD5(username ":" realm ":" password).
+     *
+     * @param password Plain text password
+     *
+     * @see #REALM
+     */
+    public void setPassword(String password)
+    {
+        mA1Password = HashUtils.md5(mUsername + ":" + REALM + ":" +
+                                    password);
+    }
+
+    /**
+     * Returns the hashed password as defined by A1 in Digest Authentication.
+     *
+     * @return Hash A1 password
      *
      * @hibernate.property not-null="true"
      *   length="32"
      */
-    public String getPassword()
+    public String getA1Password()
     {
-        return mPassword;
+        return mA1Password;
     }
 
-    public void setPassword(String password)
+    public void setA1Password(String a1Password)
     {
-        mPassword = password;
+        mA1Password = a1Password;
     }
 
     public String toString()
@@ -65,11 +84,14 @@ public class User
         return new ToStringBuilder(this, Util.SHORT_STYLE)
             .append("id", mId)
             .append("username", mUsername)
-            .append("password", mPassword)
+            .append("A1 password", mA1Password)
             .toString();
     }
 
     private Long mId;
     private String mUsername;
-    private String mPassword;
+    private String mA1Password;
+
+    /** The realm used for A1 hashed password generation: "RETS Server". */
+    private static final String REALM = "RETS Server";
 }
