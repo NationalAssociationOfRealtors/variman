@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 import antlr.ANTLRException;
@@ -102,6 +103,27 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         {
             Set values = (Set) mLookups.get(lookupName);
             return values.contains(lookupValue);
+        }
+
+        public String fieldToColumn(String fieldName)
+        {
+            return isValidFieldName(fieldName) ? fieldName : null;
+        }
+
+        public String columnToField(String columnName)
+        {
+            return isValidFieldName(columnName) ? columnName : null;
+        }
+
+        public String getLookupDbValue(String lookupName, String lookupValue)
+        {
+            return isValidLookupValue(lookupName, lookupValue) ?
+                lookupValue : null;
+        }
+
+        public Collection getAllColumns()
+        {
+            return mFields;
         }
 
         private Set mFields;
