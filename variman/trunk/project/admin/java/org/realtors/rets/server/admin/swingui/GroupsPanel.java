@@ -43,8 +43,11 @@ public class GroupsPanel extends JPanel
         panel.add(tvp, BorderLayout.NORTH);
         panel.add(createRulesPanel(), BorderLayout.CENTER);
 
+        JScrollPane scrollPane = new JScrollPane(mGroupList);
+        scrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                                              mGroupList, panel);
+                                              scrollPane, panel);
         splitPane.setDividerLocation(200);
         add(splitPane, BorderLayout.CENTER);
 
