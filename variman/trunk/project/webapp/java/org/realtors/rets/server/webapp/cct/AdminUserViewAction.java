@@ -51,7 +51,6 @@ public class AdminUserViewAction extends CctAction
         UserInfo userInfo = UTILS.getUserInfo(username);
         request.setAttribute("cctAdminUserInfo", userInfo);
         
-        // todo write adminUserView.jsp
         return mapping.findForward("adminUserView");
     }
 }
