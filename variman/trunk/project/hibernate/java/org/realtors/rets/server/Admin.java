@@ -28,7 +28,7 @@ public class Admin
     private void initHibernate() throws HibernateException
     {
         mCfg = new Configuration();
-        mCfg.addJar("retsdb2-hbm-xml.jar");
+        mCfg.addJar("rex-hbm-xml.jar");
         mSessions = mCfg.buildSessionFactory();
     }
 
