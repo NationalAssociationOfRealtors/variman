@@ -8,6 +8,7 @@ public class ReplyCode extends ValuedEnum
 {
     public static final ReplyCode SUCCESSFUL =
         new ReplyCode("Operation Successful", 0);
+
     public static final ReplyCode NO_RECORDS_FOUND =
         new ReplyCode("No Records Found", 20201);
     public static final ReplyCode INVALID_SELECT =
@@ -16,6 +17,10 @@ public class ReplyCode extends ValuedEnum
         new ReplyCode("Miscellaneous Search Error", 20203);
     public static final ReplyCode INVALID_QUERY_SYNTAX =
         new ReplyCode("Invalid Query Syntax", 20206);
+
+    public static final ReplyCode NO_OBJECT_FOUND =
+        new ReplyCode("No Object Found", 20403);
+
     public static final ReplyCode INVALID_TYPE =
         new ReplyCode("Invalid Type", 20501);
     public static final ReplyCode INVALID_IDENTIFIER =
