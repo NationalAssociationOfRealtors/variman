@@ -49,6 +49,11 @@ public class InitServlet extends RetsServlet
             LOG.fatal("Caught", e);
             throw e;
         }
+        catch (RuntimeException e)
+        {
+            LOG.fatal("Caught", e);
+            throw e;
+        }
     }
 
     /**
@@ -90,7 +95,7 @@ public class InitServlet extends RetsServlet
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
             cfg.addJar("retsdb2-hbm-xml.jar");
-            setSessions(cfg.buildSessionFactory());
+            WebApp.setSessions(cfg.buildSessionFactory());
         }
         catch (HibernateException e)
         {
@@ -112,7 +117,7 @@ public class InitServlet extends RetsServlet
     private MSystem findSystem()
         throws ServletException
     {
-        SessionHelper helper = InitServlet.createHelper();
+        SessionHelper helper = WebApp.createHelper();
         MSystem system = null;
         try
         {
@@ -142,28 +147,6 @@ public class InitServlet extends RetsServlet
         return system;
     }
 
-    public static SessionHelper createHelper()
-    {
-        return new SessionHelper(sSessions);
-    }
-
-    public static SessionFactory getSessions()
-    {
-        return sSessions;
-    }
-
-    public static Session openSession() throws HibernateException
-    {
-        return sSessions.openSession();
-    }
-
-    public static void setSessions(SessionFactory sessions)
-    {
-        sSessions = sessions;
-    }
-
     private static final Logger LOG =
         Logger.getLogger(InitServlet.class);
-
-    private static SessionFactory sSessions;
 }
