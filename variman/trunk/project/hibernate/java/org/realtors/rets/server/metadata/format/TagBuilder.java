@@ -5,10 +5,13 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class TagBuilder
 {
@@ -100,15 +103,12 @@ public class TagBuilder
         return this;
     }
 
-    public TagBuilder print(String message)
-    {
-        mWriter.print(message);
-        return this;
-    }
-
     public TagBuilder print(Object message)
     {
-        mWriter.print(message);
+        if (message != null)
+        {
+            mWriter.print(StringEscapeUtils.escapeXml(message.toString()));
+        }
         return this;
     }
 
@@ -124,6 +124,58 @@ public class TagBuilder
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         return print(formatter.format(date));
+    }
+
+    public TagBuilder print(boolean b)
+    {
+        if (b)
+        {
+            mWriter.print("1");
+        }
+        else
+        {
+            mWriter.print("0");
+        }
+        return this;
+    }
+
+    public TagBuilder print(Collection collection)
+    {
+        if (collection != null)
+        {
+            List strings = FormatUtil.toSortedStringList(collection);
+            print(StringUtils.join(strings.iterator(), ","));
+        }
+        return this;
+    }
+
+    public static void simpleTag(PrintWriter writer, String tagName, int value)
+    {
+        new TagBuilder(writer, tagName).beginContent().print(value).close();
+    }
+
+    public static void simpleTag(PrintWriter writer, String tagName,
+                                 String value)
+    {
+        new TagBuilder(writer, tagName).beginContent().print(value).close();
+    }
+
+    public static void simpleTag(PrintWriter writer, String tagName,
+                                 Object value)
+    {
+        new TagBuilder(writer, tagName).beginContent().print(value).close();
+    }
+
+    public static void simpleTag(PrintWriter writer, String tagName,
+                                 boolean value)
+    {
+        new TagBuilder(writer, tagName).beginContent().print(value).close();
+    }
+
+    public static void simpleTag(PrintWriter writer, String tagName,
+                                 Collection value)
+    {
+        new TagBuilder(writer, tagName).beginContent().print(value).close();
     }
 
     private String mTagName;

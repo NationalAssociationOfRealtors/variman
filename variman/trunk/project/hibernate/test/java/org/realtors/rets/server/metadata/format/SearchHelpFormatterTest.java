@@ -29,6 +29,11 @@ public class SearchHelpFormatterTest extends FormatterTestCase
         return new CompactSearchHelpFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardSearchHelpFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -44,14 +49,23 @@ public class SearchHelpFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-SEARCH_HELP Resource=\"Property\" Version=\"" + VERSION +
-            "\" Date=\"" + DATE + "\">\n" +
+            "\" Date=\"" + DATE + "\">" + EOL +
+            "<SearchHelp>" + EOL +
+            "<SearchHelpID>LN_SEARCH_HELP</SearchHelpID>" + EOL +
+            "<Value>Listing Number (all numbers)</Value>" + EOL +
+            "</SearchHelp>" + EOL +
+            "</METADATA-SEARCH_HELP>" + EOL;
+    }
 
-            "<COLUMNS>\tSearchHelpID\tValue\t</COLUMNS>\n" +
-
-            "<DATA>\tLN_SEARCH_HELP\tListing Number (all numbers)\t</DATA>\n" +
-
-            "</METADATA-SEARCH_HELP>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

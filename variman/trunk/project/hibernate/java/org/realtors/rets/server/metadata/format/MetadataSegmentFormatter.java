@@ -16,18 +16,17 @@ import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.SearchHelp;
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.UpdateType;
 import org.realtors.rets.server.metadata.ValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.UpdateHelp;
 
 public class MetadataSegmentFormatter
 {
@@ -103,7 +102,7 @@ public class MetadataSegmentFormatter
         }
         else
         {
-            return new NullMetadataFormatter();
+            return NULL_FORMATTER;
         }
     }
 
@@ -115,27 +114,12 @@ public class MetadataSegmentFormatter
         }
         else
         {
-            return new NullMetadataFormatter();
-        }
-    }
-
-    public void format(MetadataSegment segment)
-    {
-        List dataList = segment.getDataList();
-        MetadataFormatter formatter = getFormatter(dataList);
-        formatter.setVersion(segment.getVersion(), segment.getDate());
-        formatter.setLevels(segment.getLevels());
-        formatter.format(mOut, dataList);
-    }
-
-    static class NullMetadataFormatter extends MetadataFormatter
-    {
-        public void format(FormatterContext context, Collection data,
-                           String[] levels)
-        {
+            return NULL_FORMATTER;
         }
     }
 
     protected PrintWriter mOut;
     private Map mFormmatters;
+    private static final MetadataFormatter NULL_FORMATTER =
+        new NullMetadataFormatter();
 }

@@ -29,6 +29,11 @@ public class EditMaskFormatterTest extends FormatterTestCase
         return new CompactEditMaskFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardEditMaskFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -44,14 +49,23 @@ public class EditMaskFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-EDITMASK Resource=\"Property\" Version=\"" + VERSION +
-            "\" Date=\"" + DATE + "\">\n" +
+            "\" Date=\"" + DATE + "\">" + EOL +
+            "<EditMask>" + EOL +
+            "<EditMaskID>LN_EDITMASK</EditMaskID>" + EOL +
+            "<Value>[0-9]{4,8}</Value>" + EOL +
+            "</EditMask>" + EOL +
+            "</METADATA-EDITMASK>" + EOL;
+    }
 
-            "<COLUMNS>\tEditMaskID\tValue\t</COLUMNS>\n" +
-
-            "<DATA>\tLN_EDITMASK\t[0-9]{4,8}\t</DATA>\n" +
-
-            "</METADATA-EDITMASK>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

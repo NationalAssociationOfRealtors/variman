@@ -29,6 +29,11 @@ public class UpdateHelpFormatterTest extends FormatterTestCase
         return new CompactUpdateHelpFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardUpdateHelpFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -41,11 +46,23 @@ public class UpdateHelpFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-UPDATE_HELP Resource=\"Property\" Version=\"" + VERSION +
-            "\" Date=\"" + DATE + "\">\n" +
-            "<COLUMNS>\tUpdateHelpID\tValue\t</COLUMNS>\n" +
-            "<DATA>\t1\tEnter a number\t</DATA>\n" +
-            "</METADATA-UPDATE_HELP>\n";
+            "\" Date=\"" + DATE + "\">" + EOL +
+            "<UpdateHelp>" + EOL +
+            "<UpdateHelpID>1</UpdateHelpID>" + EOL +
+            "<Value>Enter a number</Value>" + EOL +
+            "</UpdateHelp>" + EOL +
+            "</METADATA-UPDATE_HELP>" + EOL;
+    }
+
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

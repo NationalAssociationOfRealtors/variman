@@ -48,6 +48,11 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
         return new CompactValidationExternalTypeFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardValidationExternalTypeFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -66,17 +71,35 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-VALIDATION_EXTERNAL_TYPE Resource=\"Property\" " +
             "ValidationExternal=\"VET1\" Version=\"" + VERSION + "\" " +
-            "Date=\"" + DATE + "\">\n" +
+            "Date=\"" + DATE + "\">" + EOL +
+            "<ValidationExternal>" + EOL +
+            "<SearchField>AgentCode</SearchField>" + EOL +
+            "<SearchField>AgentID</SearchField>" + EOL +
+            "<DisplayField>AgentName</DisplayField>" + EOL +
+            "<DisplayField>OfficeName</DisplayField>" + EOL +
+            "<ResultFields>" + EOL +
+            "<Source>SaleAgentID</Source>" + EOL +
+            "<Target>AgentID</Target>" + EOL +
+            // Line 10
+            "</ResultFields>" + EOL +
+            "<ResultFields>" + EOL +
+            "<Source>SaleAgentName</Source>" + EOL +
+            "<Target>AgentName</Target>" + EOL +
+            "</ResultFields>" + EOL +
+            "</ValidationExternal>" + EOL +
+            "</METADATA-VALIDATION_EXTERNAL_TYPE>" + EOL;
+    }
 
-
-            "<COLUMNS>\tSearchField\tDisplayField\tResultFields\t</COLUMNS>\n" +
-
-            "<DATA>\tAgentCode,AgentID\tAgentName,OfficeName\t" +
-            "SaleAgentID=AgentID,SaleAgentName=AgentName\t</DATA>\n" +
-
-            "</METADATA-VALIDATION_EXTERNAL_TYPE>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

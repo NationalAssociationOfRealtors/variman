@@ -32,6 +32,11 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
         return new CompactValidationExpressionFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardValidationExpressionFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -48,15 +53,24 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-VALIDATION_EXPRESSION Resource=\"Property\" " +
-            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<ValidationExpression>" + EOL +
+            "<ValidationExpressionID>LD_DATE</ValidationExpressionID>" + EOL +
+            "<ValidationExpressionType>SET</ValidationExpressionType>" + EOL +
+            "<Value>LD=.TODAY.</Value>" + EOL +
+            "</ValidationExpression>" + EOL +
+            "</METADATA-VALIDATION_EXPRESSION>" + EOL;
+    }
 
-            "<COLUMNS>\tValidationExpressionID\tValidationExpressionType\t" +
-            "Value\tVersion\tDate\t</COLUMNS>\n" +
-
-            "<DATA>\tLD_DATE\tSET\tLD=.TODAY." + VERSION_DATE + "\t</DATA>\n" +
-
-            "</METADATA-VALIDATION_EXPRESSION>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

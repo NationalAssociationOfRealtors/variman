@@ -41,6 +41,11 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
         return new CompactValidationExternalFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardValidationExternalFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -69,5 +74,40 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
             "</METADATA-VALIDATION_EXTERNAL>\n" +
 
             ValidationExternalType.TABLE + "\n";
+    }
+
+    protected String getExpectedStandard()
+    {
+        return
+            "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<ValidationExternalType>" + EOL +
+            "<ValidationExternalName>VET1</ValidationExternalName>" + EOL +
+            "<SearchResource>Property</SearchResource>" + EOL +
+            "<SearchClass>RES</SearchClass>" + EOL +
+            "<ValidationExternalTypeVersion>" + VERSION +
+            "</ValidationExternalTypeVersion>" + EOL +
+            "<ValidationExternalTypeDate>" + DATE +
+            "</ValidationExternalTypeDate>" + EOL +
+            "</ValidationExternalType>" + EOL +
+            "</METADATA-VALIDATION_EXTERNAL>" + EOL;
+    }
+
+    protected String getExpectedStandardRecursive()
+    {
+        return
+            "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<ValidationExternalType>" + EOL +
+            "<ValidationExternalName>VET1</ValidationExternalName>" + EOL +
+            "<SearchResource>Property</SearchResource>" + EOL +
+            "<SearchClass>RES</SearchClass>" + EOL +
+            "<ValidationExternalTypeVersion>" + VERSION +
+            "</ValidationExternalTypeVersion>" + EOL +
+            "<ValidationExternalTypeDate>" + DATE +
+            "</ValidationExternalTypeDate>" + EOL +
+            ValidationExternalType.TABLE + EOL +
+            "</ValidationExternalType>" + EOL +
+            "</METADATA-VALIDATION_EXTERNAL>" + EOL;
     }
 }

@@ -78,6 +78,11 @@ public class ResourceFormatterTest extends FormatterTestCase
             "</METADATA-RESOURCE>\n";
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardResourceFormatter();
+    }
+
     protected String getExpectedCompactRecursive()
     {
         return
@@ -112,16 +117,9 @@ public class ResourceFormatterTest extends FormatterTestCase
             ValidationExpression.TABLE + "\n";
     }
 
-    private MetadataFormatter getStandardFormatter()
+    protected String getExpectedStandard()
     {
-        return new StandardResourceFormatter();
-    }
-
-    public void testStandardFormat()
-    {
-        String formatted = format(getStandardFormatter(), getData(),
-                                  getLevels(), FormatterContext.NOT_RECURSIVE);
-        assertLinesEqual(
+        return
             "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">" + EOL +
             "<Resource>" + EOL +
@@ -157,15 +155,12 @@ public class ResourceFormatterTest extends FormatterTestCase
             "<ValidationExternalDate>" + DATE +
             "</ValidationExternalDate>" + EOL +
             "</Resource>" + EOL +
-            "</METADATA-RESOURCE>" + EOL,
-            formatted);
+            "</METADATA-RESOURCE>" + EOL;
     }
 
-    public void testStandardFormatRecursive()
+    protected String getExpectedStandardRecursive()
     {
-        String formatted = format(getStandardFormatter(), getData(),
-                                  getLevels(), FormatterContext.RECURSIVE);
-        assertLinesEqual(
+        return
             "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">" + EOL +
             "<Resource>" + EOL +
@@ -204,6 +199,7 @@ public class ResourceFormatterTest extends FormatterTestCase
             MClass.TABLE + EOL +
             MObject.TABLE + EOL +
             SearchHelp.TABLE + EOL +
+
             EditMask.TABLE + EOL +
             Lookup.TABLE + EOL +
             UpdateHelp.TABLE + EOL +
@@ -211,7 +207,6 @@ public class ResourceFormatterTest extends FormatterTestCase
             ValidationExpression.TABLE + EOL +
             ValidationExternal.TABLE + EOL +
             "</Resource>" + EOL +
-            "</METADATA-RESOURCE>" + EOL,
-            formatted);
+            "</METADATA-RESOURCE>" + EOL;
     }
 }

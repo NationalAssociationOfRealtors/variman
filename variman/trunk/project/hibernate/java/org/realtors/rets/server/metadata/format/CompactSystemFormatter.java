@@ -29,10 +29,7 @@ public class CompactSystemFormatter extends MetadataFormatter
             .appendAttribute("SystemDescription", system.getDescription())
             .close();
 
-        new TagBuilder(out, "COMMENTS")
-            .beginContent()
-            .print(system.getComments())
-            .close();
+        TagBuilder.simpleTag(out, "COMMENTS", system.getComments());
         tag.end();
 
         if (context.isRecursive())

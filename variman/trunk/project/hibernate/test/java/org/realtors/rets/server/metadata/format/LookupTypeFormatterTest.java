@@ -30,6 +30,11 @@ public class LookupTypeFormatterTest extends FormatterTestCase
         return new CompactLookupTypeFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardLookupTypeFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -45,14 +50,24 @@ public class LookupTypeFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-LOOKUP_TYPE Resource=\"Property\" Lookup=\"E_SCHOOL\" " +
-            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<Lookup>" + EOL +
+            "<LongValue>Aurora 306</LongValue>" + EOL +
+            "<ShortValue>306</ShortValue>" + EOL +
+            "<Value>306</Value>" + EOL +
+            "</Lookup>" + EOL +
+            "</METADATA-LOOKUP_TYPE>" + EOL;
+    }
 
-            "<COLUMNS>\tLongValue\tShortValue\tValue\t</COLUMNS>\n" +
-
-            "<DATA>\tAurora 306\t306\t306\t</DATA>\n" +
-
-            "</METADATA-LOOKUP_TYPE>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

@@ -34,7 +34,7 @@ public class SystemFormatterTest extends FormatterTestCase
         return new CompactSystemFormatter();
     }
 
-    private MetadataFormatter getStandardFormatter()
+    protected MetadataFormatter getStandardFormatter()
     {
         return new StandardSystemFormatter();
     }
@@ -64,11 +64,9 @@ public class SystemFormatterTest extends FormatterTestCase
             Resource.TABLE + "\n";
     }
 
-    public void testStandardFormat()
+    protected String getExpectedStandard()
     {
-        String formatted = format(getStandardFormatter(), getData(),
-                                  getLevels(), FormatterContext.NOT_RECURSIVE);
-        assertLinesEqual(
+        return
             "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">" + EOL +
             "<System>" + EOL +
@@ -78,15 +76,12 @@ public class SystemFormatterTest extends FormatterTestCase
             "<Comments>The reference implementation of a RETS Server" +
             "</Comments>" + EOL +
             "</System>" + EOL +
-            "</METADATA-SYSTEM>" + EOL,
-            formatted);
+            "</METADATA-SYSTEM>" + EOL;
     }
 
-    public void testStandardFormatRecursive()
+    protected String getExpectedStandardRecursive()
     {
-        String formatted = format(getStandardFormatter(), getData(),
-                                  getLevels(), FormatterContext.RECURSIVE);
-        assertLinesEqual(
+        return
             "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">" + EOL +
             "<System>" + EOL +
@@ -97,7 +92,6 @@ public class SystemFormatterTest extends FormatterTestCase
             "</Comments>" + EOL +
             Resource.TABLE + EOL +
             "</System>" + EOL +
-            "</METADATA-SYSTEM>" + EOL,
-            formatted);
+            "</METADATA-SYSTEM>" + EOL;
     }
 }

@@ -32,6 +32,11 @@ public class UpdateFormatterTest extends FormatterTestCase
         return new CompactUpdateFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardUpdateFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -61,5 +66,36 @@ public class UpdateFormatterTest extends FormatterTestCase
 
             "</METADATA-UPDATE>\n" +
             UpdateType.TABLE + "\n";
+    }
+
+    protected String getExpectedStandard()
+    {
+        return
+            "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<UpdateType>" + EOL +
+            "<UpdateName>Add</UpdateName>" + EOL +
+            "<Description>Add a new Residential Listing</Description>" + EOL +
+            "<KeyField>key</KeyField>" + EOL +
+            "<UpdateTypeVersion>" + VERSION + "</UpdateTypeVersion>" + EOL +
+            "<UpdateTypeDate>" + DATE + "</UpdateTypeDate>" + EOL +
+            "</UpdateType>" + EOL +
+            "</METADATA-UPDATE>" + EOL;
+    }
+
+    protected String getExpectedStandardRecursive()
+    {
+        return
+            "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<UpdateType>" + EOL +
+            "<UpdateName>Add</UpdateName>" + EOL +
+            "<Description>Add a new Residential Listing</Description>" + EOL +
+            "<KeyField>key</KeyField>" + EOL +
+            "<UpdateTypeVersion>" + VERSION + "</UpdateTypeVersion>" + EOL +
+            "<UpdateTypeDate>" + DATE + "</UpdateTypeDate>" + EOL +
+            UpdateType.TABLE + EOL +
+            "</UpdateType>" + EOL +
+            "</METADATA-UPDATE>" + EOL;
     }
 }

@@ -20,8 +20,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
     protected List getData()
     {
         List updateTypes = new ArrayList();
-        Table table = new Table();
-        table.setId(new Long(123));
+        Table table = new Table(123);
         table.setSystemName("STATUS");
 
         UpdateType updateType = new UpdateType();
@@ -70,6 +69,11 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         return new CompactUpdateTypeFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardUpdateTypeFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -89,18 +93,30 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-UPDATE_TYPE Resource=\"Property\" Class=\"RES\" " +
             "Update=\"Change\" Version=\"" + VERSION + "\" Date=\"" + DATE +
-            "\">\n" +
+            "\">" + EOL +
+            "<UpdateField>" + EOL +
+            "<SystemName>STATUS</SystemName>" + EOL +
+            "<Sequence>12</Sequence>" + EOL +
+            "<Attributes>2,4</Attributes>" + EOL +
+            "<Default>0</Default>" + EOL +
+            "<ValidationExpressionID>VE1,VE2</ValidationExpressionID>" + EOL +
+            "<UpdateHelpID>UH1</UpdateHelpID>" + EOL +
+            "<ValidationLookupName>VL_NAME</ValidationLookupName>" + EOL +
+            "<ValidationExternalName>VE_NAME</ValidationExternalName>" + EOL +
+            "</UpdateField>" + EOL +
+            "</METADATA-UPDATE_TYPE>" + EOL;
+    }
 
-            "<COLUMNS>\tSystemName\tSequence\tAttributes\tDefault\t" +
-            "ValidationExpressionID\tUpdateHelpID\tValidationLookupName\t" +
-            "ValidationExternalName\t</COLUMNS>\n" +
-
-            "<DATA>\tSTATUS\t12\t2,4\t0\tVE1,VE2\tUH1\tVL_NAME\tVE_NAME\t" +
-            "</DATA>\n" +
-
-            "</METADATA-UPDATE_TYPE>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

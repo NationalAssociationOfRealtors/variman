@@ -30,6 +30,11 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
         return new CompactValidationLookupTypeFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardValidationLookupTypeFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -46,15 +51,25 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-VALIDATION_LOOKUP_TYPE Resource=\"Property\" " +
             "ValidationLookup=\"School\" Version=\"" + VERSION + "\" " +
-            "Date=\"" + DATE + "\">\n" +
+            "Date=\"" + DATE + "\">" + EOL +
+            "<ValidationLookup>" + EOL +
+            "<ValidText>135</ValidText>" + EOL +
+            "<Parent1Value>AREA2</Parent1Value>" + EOL +
+            "<Parent2Value></Parent2Value>" + EOL +
+            "</ValidationLookup>" + EOL +
+            "</METADATA-VALIDATION_LOOKUP_TYPE>" + EOL;
+    }
 
-            "<COLUMNS>\tValidText\tParent1Value\tParent2Value\t</COLUMNS>\n" +
-
-            "<DATA>\t135\tAREA2\t\t</DATA>\n" +
-
-            "</METADATA-VALIDATION_LOOKUP_TYPE>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

@@ -5,11 +5,8 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -83,32 +80,13 @@ public class DataRowBuilder
     {
         if (collection != null)
         {
-            List strings = toSortedStringList(collection);
+            List strings = FormatUtil.toSortedStringList(collection);
             append(StringUtils.join(strings.iterator(), ","));
         }
         else
         {
             mWriter.print("\t");
         }
-    }
-
-    /**
-     * Takes toString() of each element in the collection and puts the values
-     * into a list and then sorts the list.
-     *
-     * @param collection Collection to convert
-     * @return sorted list of toString value foreach item in collection
-     */
-    private List toSortedStringList(Collection collection)
-    {
-        List strings = new ArrayList(collection.size());
-        for (Iterator iterator = collection.iterator(); iterator.hasNext();)
-        {
-            Object o = iterator.next();
-            strings.add(o.toString());
-        }
-        Collections.sort(strings);
-        return strings;
     }
 
     private PrintWriter mWriter;

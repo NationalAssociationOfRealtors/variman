@@ -31,6 +31,11 @@ public class LookupFormatterTest extends FormatterTestCase
         return new CompactLookupFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardLookupFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -59,5 +64,34 @@ public class LookupFormatterTest extends FormatterTestCase
             "</METADATA-LOOKUP>\n" +
 
             LookupType.TABLE + "\n";
+    }
+
+    protected String getExpectedStandard()
+    {
+        return
+            "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
+            "\" Date=\"" + DATE + "\">" + EOL +
+            "<LookupType>" + EOL +
+            "<LookupName>E_SCHOOL</LookupName>" + EOL +
+            "<VisibleName>Elementary School District</VisibleName>" + EOL +
+            "<LookupTypeVersion>" + VERSION + "</LookupTypeVersion>" + EOL +
+            "<LookupTypeDate>" + DATE + "</LookupTypeDate>" + EOL +
+            "</LookupType>" + EOL +
+            "</METADATA-LOOKUP>" + EOL;
+    }
+
+    protected String getExpectedStandardRecursive()
+    {
+        return
+            "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
+            "\" Date=\"" + DATE + "\">" + EOL +
+            "<LookupType>" + EOL +
+            "<LookupName>E_SCHOOL</LookupName>" + EOL +
+            "<VisibleName>Elementary School District</VisibleName>" + EOL +
+            "<LookupTypeVersion>" + VERSION + "</LookupTypeVersion>" + EOL +
+            "<LookupTypeDate>" + DATE + "</LookupTypeDate>" + EOL +
+            LookupType.TABLE + EOL +
+            "</LookupType>" + EOL +
+            "</METADATA-LOOKUP>" + EOL;
     }
 }

@@ -91,6 +91,11 @@ public class TableFormatterTest extends FormatterTestCase
         return new CompactTableFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardTableFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -122,30 +127,74 @@ public class TableFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-TABLE Resource=\"Property\" Class=\"MOB\" " +
-            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<Field>" + EOL +
+            "<SystemName>E_SCHOOL</SystemName>" + EOL +
+            "<StandardName>ElementarySchool</StandardName>" + EOL +
+            "<LongName>Elementary School</LongName>" + EOL +
+            "<DBName>E_SCHOOL</DBName>" + EOL +
+            "<ShortName>ElemSchool</ShortName>" + EOL +
+            "<MaximumLength>4</MaximumLength>" + EOL +
+            "<DataType>Int</DataType>" + EOL +
+            // Line 10
+            "<Precision>0</Precision>" + EOL +
+            "<Searchable>1</Searchable>" + EOL +
+            "<Interpretation>Lookup</Interpretation>" + EOL +
+            "<Alignment>Left</Alignment>" + EOL +
+            "<UseSeparator>0</UseSeparator>" + EOL +
+            "<EditMaskID>EM1,EM2</EditMaskID>" + EOL +
+            "<LookupName>E_SCHOOL</LookupName>" + EOL +
+            "<MaxSelect>1</MaxSelect>" + EOL +
+            "<Units>Feet</Units>" + EOL +
+            "<Index>2</Index>" + EOL +
+            // Line 20
+            "<Minimum>3</Minimum>" + EOL +
+            "<Maximum>4</Maximum>" + EOL +
+            "<Default>5</Default>" + EOL +
+            "<Required>6</Required>" + EOL +
+            "<SearchHelpID></SearchHelpID>" + EOL +
+            "<Unique>0</Unique>" + EOL +
+            "</Field>" + EOL +
+            "<Field>" + EOL +
+            "<SystemName>AGENT_ID</SystemName>" + EOL +
+            "<StandardName>ListAgentAgentID</StandardName>" + EOL +
+            //Line 30
+            "<LongName>Listing Agent ID</LongName>" + EOL +
+            "<DBName>AGENT_ID</DBName>" + EOL +
+            "<ShortName>AgentID</ShortName>" + EOL +
+            "<MaximumLength>0</MaximumLength>" + EOL +
+            "<DataType>Character</DataType>" + EOL +
+            "<Precision>0</Precision>" + EOL +
+            "<Searchable>1</Searchable>" + EOL +
+            "<Interpretation></Interpretation>" + EOL +
+            "<Alignment>Left</Alignment>" + EOL +
+            "<UseSeparator>0</UseSeparator>" + EOL +
+            // Line 40
+            "<EditMaskID></EditMaskID>" + EOL +
+            "<LookupName></LookupName>" + EOL +
+            "<MaxSelect>0</MaxSelect>" + EOL +
+            "<Units></Units>" + EOL +
+            "<Index>0</Index>" + EOL +
+            "<Minimum>0</Minimum>" + EOL +
+            "<Maximum>0</Maximum>" + EOL +
+            "<Default>5</Default>" + EOL +
+            "<Required>0</Required>" + EOL +
+            "<SearchHelpID></SearchHelpID>" + EOL +
+            // Line 50
+            "<Unique>0</Unique>" + EOL +
+            "</Field>" + EOL +
+            "</METADATA-TABLE>" + EOL;
+    }
 
-            "<COLUMNS>\t" +
-            "SystemName\tStandardName\tLongName\tDBName\t" +
-            "ShortName\tMaximumLength\tDataType\tPrecision\tSearchable\t" +
-            "Interpretation\tAlignment\tUseSeparator\tEditMaskID\t" +
-            "LookupName\tMaxSelect\tUnits\tIndex\tMinimum\tMaximum\tDefault\t" +
-            "Required\tSearchHelpID\tUnique\t" +
-            "</COLUMNS>\n" +
-
-            "<DATA>\t" +
-            "E_SCHOOL\tElementarySchool\tElementary School\t" +
-            "E_SCHOOL\tElemSchool\t4\tInt\t0\t1\tLookup\tLeft\t0\tEM1,EM2\t" +
-            "E_SCHOOL\t1\tFeet\t2\t3\t4\t5\t6\t\t0\t" +
-            "</DATA>\n" +
-
-            "<DATA>\t" +
-            "AGENT_ID\tListAgentAgentID\tListing Agent ID\tAGENT_ID\t" +
-            "AgentID\t0\tCharacter\t0\t1\t\tLeft\t0\t\t\t0\t\t0\t0\t0\t5" +
-            "\t0\t\t0\t" +
-            "</DATA>\n" +
-
-            "</METADATA-TABLE>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

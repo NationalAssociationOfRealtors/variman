@@ -32,6 +32,11 @@ public class ObjectFormatterTest extends FormatterTestCase
         return new CompactObjectFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardObjectFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return
@@ -49,16 +54,25 @@ public class ObjectFormatterTest extends FormatterTestCase
 
     protected String getExpectedCompactRecursive()
     {
+        return getExpectedCompact();
+    }
+
+    protected String getExpectedStandard()
+    {
         return
             "<METADATA-OBJECT Resource=\"Property\" Version=\"" + VERSION +
-            "\" Date=\"" + DATE + "\">\n" +
+            "\" Date=\"" + DATE + "\">" + EOL +
+            "<Object>" + EOL +
+            "<ObjectType>Thumbnail</ObjectType>" + EOL +
+            "<StandardName></StandardName>" + EOL +
+            "<MimeType>image/jpeg</MimeType>" + EOL +
+            "<Description>A lower-resolution image</Description>" + EOL +
+            "</Object>" + EOL +
+            "</METADATA-OBJECT>" + EOL;
+    }
 
-            "<COLUMNS>\tObjectType\tMimeType\tVisibleName\tDescription\t" +
-            "</COLUMNS>\n" +
-
-            "<DATA>\tThumbnail\timage/jpeg\tSmall Photos\t" +
-            "A lower-resolution image\t</DATA>\n" +
-
-            "</METADATA-OBJECT>\n";
+    protected String getExpectedStandardRecursive()
+    {
+        return getExpectedStandard();
     }
 }

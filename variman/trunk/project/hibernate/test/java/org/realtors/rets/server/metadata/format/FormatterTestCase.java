@@ -65,6 +65,35 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
         assertLinesEqual("", formatted);
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new NullMetadataFormatter();
+    }
+
+    protected String getExpectedStandard()
+    {
+        return "";
+    }
+
+    protected String getExpectedStandardRecursive()
+    {
+        return "";
+    }
+
+    public void testStandardFormat()
+    {
+        String formatted = format(getStandardFormatter(), getData(),
+                                  getLevels(), FormatterContext.NOT_RECURSIVE);
+        assertLinesEqual(getExpectedStandard(), formatted);
+    }
+
+    public void testStandardFormatRecursive()
+    {
+        String formatted = format(getStandardFormatter(), getData(),
+                                  getLevels(), FormatterContext.RECURSIVE);
+        assertLinesEqual(getExpectedStandardRecursive(), formatted);
+    }
+
     protected static final String VERSION = "1.00.001";
     protected static final String DATE = "Wed, 01 Jan 2003 00:01:00 GMT";
     protected static final String VERSION_DATE = "\t" + VERSION +  "\t" + DATE;

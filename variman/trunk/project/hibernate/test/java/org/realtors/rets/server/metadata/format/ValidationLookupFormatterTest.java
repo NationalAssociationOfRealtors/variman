@@ -32,6 +32,11 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
         return new CompactValidationLookupFormatter();
     }
 
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardValidationLookupFormatter();
+    }
+
     protected String getExpectedCompact()
     {
         return 
@@ -60,5 +65,40 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
             "</METADATA-VALIDATION_LOOKUP>\n" +
 
             ValidationLookupType.TABLE + "\n";
+    }
+
+    protected String getExpectedStandard()
+    {
+        return
+            "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<ValidationLookupType>" + EOL +
+            "<ValidationLookupName>School</ValidationLookupName>" + EOL +
+            "<Parent1Field>Area</Parent1Field>" + EOL +
+            "<Parent2Field>Subarea</Parent2Field>" + EOL +
+            "<ValidationLookupTypeVersion>" + VERSION +
+            "</ValidationLookupTypeVersion>" + EOL +
+            "<ValidationLookupTypeDate>" + DATE +
+            "</ValidationLookupTypeDate>" + EOL +
+            "</ValidationLookupType>" + EOL +
+            "</METADATA-VALIDATION_LOOKUP>" + EOL;
+    }
+
+    protected String getExpectedStandardRecursive()
+    {
+        return
+            "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
+            "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<ValidationLookupType>" + EOL +
+            "<ValidationLookupName>School</ValidationLookupName>" + EOL +
+            "<Parent1Field>Area</Parent1Field>" + EOL +
+            "<Parent2Field>Subarea</Parent2Field>" + EOL +
+            "<ValidationLookupTypeVersion>" + VERSION +
+            "</ValidationLookupTypeVersion>" + EOL +
+            "<ValidationLookupTypeDate>" + DATE +
+            "</ValidationLookupTypeDate>" + EOL +
+            ValidationLookupType.TABLE + EOL +
+            "</ValidationLookupType>" + EOL +
+            "</METADATA-VALIDATION_LOOKUP>" + EOL;
     }
 }

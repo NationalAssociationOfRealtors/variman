@@ -73,4 +73,47 @@ public class ClassFormatterTest extends FormatterTestCase
             Table.TABLE + "\n" +
             Update.TABLE + "\n";
     }
+
+    protected MetadataFormatter getStandardFormatter()
+    {
+        return new StandardClassFormatter();
+    }
+
+    protected String getExpectedStandard()
+    {
+        return
+            "<METADATA-CLASS Resource=\"Property\" Version=\"" +
+            VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<Class>" + EOL +
+            "<ClassName>RES</ClassName>" + EOL +
+            "<StandardName>ResidentialProperty</StandardName>" + EOL +
+            "<VisibleName>Single Family</VisibleName>" + EOL +
+            "<Description>Single Family Residential</Description>" + EOL +
+            "<TableVersion>" + VERSION + "</TableVersion>" + EOL +
+            "<TableDate>" + DATE + "</TableDate>" + EOL +
+            "<UpdateVersion>" + VERSION + "</UpdateVersion>" + EOL +
+            "<UpdateDate>" + DATE + "</UpdateDate>" + EOL +
+            "</Class>" + EOL +
+            "</METADATA-CLASS>" + EOL;
+    }
+
+    protected String getExpectedStandardRecursive()
+    {
+        return
+            "<METADATA-CLASS Resource=\"Property\" Version=\"" +
+            VERSION + "\" Date=\"" + DATE + "\">" + EOL +
+            "<Class>" + EOL +
+            "<ClassName>RES</ClassName>" + EOL +
+            "<StandardName>ResidentialProperty</StandardName>" + EOL +
+            "<VisibleName>Single Family</VisibleName>" + EOL +
+            "<Description>Single Family Residential</Description>" + EOL +
+            "<TableVersion>" + VERSION + "</TableVersion>" + EOL +
+            "<TableDate>" + DATE + "</TableDate>" + EOL +
+            "<UpdateVersion>" + VERSION + "</UpdateVersion>" + EOL +
+            "<UpdateDate>" + DATE + "</UpdateDate>" + EOL +
+            Table.TABLE + EOL +
+            Update.TABLE + EOL +
+            "</Class>" + EOL +
+            "</METADATA-CLASS>" + EOL;
+    }
 }
