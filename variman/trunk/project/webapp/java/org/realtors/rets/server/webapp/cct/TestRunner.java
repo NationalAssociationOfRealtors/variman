@@ -4,6 +4,7 @@
  */
 package org.realtors.rets.server.webapp.cct;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -64,6 +65,7 @@ public class TestRunner
             mRunningTest.stop();
             result.setStatus(StatusEnum.PASSED);
             mRunningTest.validate(result);
+            result.setDate(new Date());
             mRunningTest = null;
         }
         else
