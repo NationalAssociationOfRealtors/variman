@@ -14,4 +14,7 @@ do
     CLASSPATH=$i:$CLASSPATH
 done
 
-java -cp $CLASSPATH org.realtors.rets.server.importer.MetadataImporter $*
+# Uncomment to allow remote debugging
+#DEBUG="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+
+java $DEBUG -cp $CLASSPATH org.realtors.rets.server.importer.MetadataImporter $*
