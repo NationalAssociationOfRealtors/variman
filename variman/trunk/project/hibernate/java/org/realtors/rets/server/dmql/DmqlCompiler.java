@@ -1,6 +1,5 @@
 package org.realtors.rets.server.dmql;
 
-import java.io.DataInputStream;
 import java.io.StringReader;
 
 import antlr.ANTLRException;
@@ -26,24 +25,12 @@ public class DmqlCompiler
         return ast;
     }
 
-    public static void main(String[] argv)
+    public static SqlConverter parseDmql(String dmql)
+        throws ANTLRException
     {
-        try
-        {
-            DmqlLexer lexer = new DmqlLexer(new DataInputStream(System.in));
-            DmqlParser parser = new DmqlParser(lexer);
-            DmtAST ast;
-
-            parser.setASTNodeClass("DmtAST");
-            parser.query();
-            ast = (DmtAST) parser.getAST();
-            System.out.println(new SqlBackend().compile(ast));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        DmqlLexer lexer = new DmqlLexer(new StringReader(dmql));
+        DmqlParser parser = new DmqlParser(lexer);
+        return parser.query();
     }
-
 }
 

@@ -8,6 +8,11 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.realtors.rets.server.Util;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 public class LookupList implements SqlConverter
 {
     public LookupList(LookupListType type, String field)
@@ -156,6 +161,31 @@ public class LookupList implements SqlConverter
         {
             return " ??? ";
         }
+    }
+
+    public String toString()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append("type", mType)
+            .append("looups", mLookups)
+            .toString();
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof LookupList))
+        {
+            return false;
+        }
+        LookupList rhs = (LookupList) obj;
+        return new EqualsBuilder()
+            .append(mType, rhs.mType)
+            .append(mField, rhs.mField)
+            .append(mSqlColumn, rhs.mSqlColumn)
+            .append(mLookups, rhs.mLookups)
+            .append(mLookupMulti, rhs.mLookupMulti)
+            .append(mLookupMultiTable, rhs.mLookupMultiTable)
+            .isEquals();
     }
 
     private LookupListType mType;

@@ -1,5 +1,6 @@
 header {
 package org.realtors.rets.server.dmql;
+import java.util.*;
 }
 
 class DmqlParser extends Parser;
@@ -7,86 +8,141 @@ class DmqlParser extends Parser;
 options
 {
 	exportVocab = DmqlParser;
-	buildAST = true;
 	k = 3;
 }
 
-query
-	: LPAREN! subquery RPAREN!
-			(options {greedy = true;}: COMMA^<AST=QueryNode> query)* EOF!
-	;
+{
+    public void checkFieldName(String fieldName) {
+        if (fieldName.equals("STATUS")){
+            System.out.println("Is status");
+        }
+        else {
+            System.out.println("Is not status");
+        }
+    }
 
-subquery
-	: atom_subquery
-	| disj_subquery
-	;
+    public void checkFieldType(String fieldName) {
+        if (fieldName.equals("AR")) {
+            mLastWasLookup = true;
+        }
+        else {
+            mLastWasLookup = false;
+        }
 
-atom_subquery
-	: TEXT<AST=FieldNameNode> EQUAL^<AST=SubqueryNode> field_value
-	;
+    }
 
-disj_subquery
-	: LPAREN! atom_subquery RPAREN!
-			(options {greedy = true;}: PIPE^<AST=DisjunctionNode>
-				disj_subquery)?
-	;
+    public boolean lastWasLookup() {
+        return mLastWasLookup;
+    }
 
-field_value
-	: string_list
-	| range_list
-	| lookup_list
-	;
+    private boolean mLastWasLookup = false;
+}
 
-string_list!
-	: s1:string (options {greedy = true;}: COMMA^ s2:string_list)*
-		{ #string_list = new StringListNode (#s1, #s2); }
-	;
+query returns [SqlConverter sql]
+    { sql = null; }
+//    : query_clause ((PIPE | "OR" ) query)? EOF!
+    : sql=query_element EOF!
+    ;
 
-range_list!
-	: r1:range (options {greedy = true;}: COMMA^ r2:range_list)*
-		{ #range_list = new RangeListNode (#r1, #r2); }
-	;
+query_clause
+    : boolean_element ((COMMA | "AND" ) query_clause)?
+    ;
 
-range
-	: r_a_1:range_literal PLUS^
-		{ #range = new RangeGreaterNode (#r_a_1, null); }
-	| r_b_1:range_literal MINUS^
-		{ #range = new RangeLessNode (#r_b_1, null); }
-	| r_c_1:range_literal MINUS^ r_c_2:range_literal
-		{ #range = new RangeBetweenNode (#r_c_1, #r_c_2); }
-	;
+boolean_element
+    { SqlConverter sql = null; }
+    : (NOT)? sql=query_element
+    ;
 
-range_literal
-	: TEXT<AST=TextNode>
-	| "TODAY"<AST=TodayNode>
-	| "NOW"<AST=NowNode>
-	| DATE<AST=DateNode>
-	| TIME<AST=TimeNode>
-	| DATETIME<AST=DateTimeNode>
-	;
+query_element returns [SqlConverter sql]
+    { sql = null; }
+    : sql=field_criteria
+//    | LPAREN query RPAREN
+    ;
 
-lookup_list!
-	: PLUS^ s_a:string_list
-	    { #lookup_list = new LookupAndNode (#s_a); }
-	| PIPE^ s_b:string_list
-	    { #lookup_list = new LookupOrNode (#s_b); }
-	| TILDE^ s_c:string_list
-	    { #lookup_list = new LookupNotNode (#s_c); }
-	;
+field_criteria returns [SqlConverter sql]
+    {
+        sql = null;
+        String field;
+    }
+    : LPAREN field=field_name {checkFieldType(field);} EQUAL sql=field_value[field] RPAREN
+        {
+            checkFieldName(field);
+        }
+    ;
+
+field_name returns [String field]
+    { field = null; }
+    : t:TEXT {field=t.getText();}
+    ;
+
+field_value [String name] returns [SqlConverter sql]
+    { sql = null; }
+    : {lastWasLookup()}? sql=lookup_list[name]
+//    | string_list
+    ;
+
+lookup_list [String name] returns [SqlConverter sql]
+    { sql = null;}
+    : sql=lookup_or[name]
+//    | l=lookup_and      {System.out.println(l);}
+//    | l=lookup_not      {System.out.println(l);}
+//    | l=simple_lookup   {System.out.println(l);}
+    ;
+
+simple_lookup returns [List lookups]
+    { String l; lookups = new ArrayList(); }
+    : l=lookup {lookups.add(l);}
+    ;
+
+lookup_or [String name] returns [SqlConverter sql]
+    { LookupList ll = new LookupList(LookupListType.OR, name); sql = ll; }
+    : PIPE lookups[ll]
+    ;
+
+lookup_and
+    : PLUS lookups[null]
+    ;
+
+lookup_not
+    : TILDE lookups[null]
+    ;
+
+lookups [LookupList ll]
+    { String l; }
+    : l=lookup {ll.addLookup(l);} (COMMA l=lookup {ll.addLookup(l);})*
+    ;
+
+lookup returns [String lookup]
+    { lookup = null; }
+    : t:TEXT {lookup = t.getText();}
+    ;
+
+string_list
+    : string (COMMA string)*
+    ;
 
 string
-	: TEXT<AST=StringEqNode>
-	| TEXT<AST=StringStartNode> STAR!
-	| STAR! TEXT<AST=StringContainsNode> STAR!
-	| q_a:QUESTION!
-		{ #string = new StringCharNode (null, q_a, null); }
-	| q_b:QUESTION! t_b_2:TEXT
-		{ #string = new StringCharNode (null, q_b, t_b_2); }
-	| t_c_1:TEXT q_c:QUESTION!
-		{ #string = new StringCharNode (t_c_1, q_c, null); }
-	| t_d_1:TEXT q_d:QUESTION! t_d_2:TEXT
-		{ #string = new StringCharNode (t_d_1, q_d, t_d_2); }
-	;
+    : string_eq
+    | string_start
+    | string_contains
+    | string_char
+    ;
+
+string_eq
+    : t:TEXT {System.out.println("string_eq: " + t.getText());}
+    ;
+
+string_start
+    : STAR TEXT
+    ;
+
+string_contains
+    : STAR TEXT STAR
+    ;
+
+string_char
+    : TEXT QUESTION string_char
+    ;
 
 class DmqlLexer extends Lexer;
 
@@ -106,6 +162,7 @@ MINUS : '-';
 PIPE : '|';
 TILDE : '~';
 QUESTION : ('?')+;
+SEMI : ';';
 
 DATETIME : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') 'T' ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ('.' ('0'..'9')('0'..'9'))?;
 DATE : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9');
