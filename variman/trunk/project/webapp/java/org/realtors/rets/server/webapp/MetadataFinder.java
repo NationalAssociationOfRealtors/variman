@@ -31,6 +31,7 @@ public class MetadataFinder
     }
 
     public List findMetadata(String[] levels)
+        throws RetsReplyException
     {
         assertLevelLength(levels);
         String level = StringUtils.join(levels, ":");
@@ -59,12 +60,13 @@ public class MetadataFinder
     }
 
     private void assertLevelLength(String[] levels)
+        throws RetsReplyException
     {
         if (levels.length != mExpectedLevels)
         {
-            throw new IllegalArgumentException("Invalid levels length, " +
-                                               "expected " + mExpectedLevels +
-                                               ", was " + levels.length);
+            LOG.warn("Invalid levels length, expected " + mExpectedLevels +
+                     ", was " + levels.length);
+            throw new RetsReplyException(20502, "Invalid Identifier");
         }
     }
 

@@ -39,45 +39,61 @@ public class  GetMetadataServlet extends RetsServlet
                          HttpServletResponse response)
         throws ServletException, IOException
     {
-        String type = request.getParameter("Type");
-        String id = request.getParameter("ID");
-        String formatString = request.getParameter("Format");
-        LOG.debug("type=" + type + ", id=" + id + ", format=" + formatString);
-
-        // Clean up format
-        if (formatString == null)
-        {
-            formatString = COMPACT_FORMAT;
-        }
-
-        int format = parseFormat(formatString);
-
-        String[] ids = StringUtils.split(id, ":");
-
-        // Clean up id
-        boolean recursive = false;
-        String lastId = ids[ids.length - 1];
-        if (lastId.equals("*"))
-        {
-            recursive = true;
-            // chop off "*"
-            ids = shrinkByOne(ids);
-        }
-        else if (lastId.equals("0"))
-        {
-            recursive = false;
-            // chop off "0"
-            ids = shrinkByOne(ids);
-        }
-
-        List metadataObjects = getMetadata(type, ids, recursive);
-
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
-        out.println("<RETS ReplyCode=\"0\" " +
-                    "ReplyText=\"Operation Successful\">");
-        formatOutput(out, metadataObjects, format);
-        out.println("</RETS>");
+
+        try
+        {
+            String type = request.getParameter("Type").toUpperCase();
+            String id = request.getParameter("ID");
+            String formatString = request.getParameter("Format").toUpperCase();
+            LOG.debug("type=" + type + ", id=" + id + ", format=" +
+                      formatString);
+
+            // Clean up format
+            if (formatString == null)
+            {
+                formatString = COMPACT_FORMAT;
+            }
+
+            int format = parseFormat(formatString);
+
+            String[] ids = StringUtils.split(id, ":");
+
+            // Clean up id
+            boolean recursive = false;
+            String lastId = ids[ids.length - 1];
+            if (lastId.equals("*"))
+            {
+                recursive = true;
+                // chop off "*"
+                ids = shrinkByOne(ids);
+            }
+            else if (lastId.equals("0"))
+            {
+                recursive = false;
+                // chop off "0"
+                ids = shrinkByOne(ids);
+            }
+
+            List metadataObjects = getMetadata(type, ids, recursive);
+
+            out.println("<RETS ReplyCode=\"0\" " +
+                        "ReplyText=\"Operation Successful\">");
+            formatOutput(out, metadataObjects, format);
+            out.println("</RETS>");
+        }
+        catch(RetsReplyException e)
+        {
+            out.println("<RETS ReplyCode=\"" + e.getReplyCode() +
+                        "\" ReplyText=\"" + e.getMeaning() + "\"/>\n");
+        }
+        catch(Exception e)
+        {
+            LOG.error("Caught", e);
+            out.println("<RETS ReplyCode=\"20513\" " +
+                        "ReplyText=\"Miscellaneous error\"/>\n");
+        }
     }
 
     private int parseFormat(String formatString)
@@ -115,6 +131,7 @@ public class  GetMetadataServlet extends RetsServlet
     }
 
     private List getMetadata(String type, String[] levels, boolean recursive)
+        throws RetsReplyException
     {
         // Always need system to get version and date
         LOG.debug("Getting system");
@@ -140,6 +157,7 @@ public class  GetMetadataServlet extends RetsServlet
         {
             LOG.warn("Recieved query for unknown metadataResults type: " +
                      type + ", level=" + StringUtils.join(levels, ":"));
+            throw new RetsReplyException(20501, "Invalid Type");
         }
         return metadataResults;
     }
@@ -188,7 +206,6 @@ public class  GetMetadataServlet extends RetsServlet
         }
         finally
         {
-            LOG.info("Closing helper");
             helper.close(LOG);
         }
         return system;
