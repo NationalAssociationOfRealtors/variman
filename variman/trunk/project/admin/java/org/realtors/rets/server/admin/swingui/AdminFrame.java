@@ -43,6 +43,7 @@ public class AdminFrame extends JFrame
         SwingUtils.setAdminFrame(this);
         initConfig();
 
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new OnClose());
         Container content = getContentPane();
 
@@ -107,7 +108,12 @@ public class AdminFrame extends JFrame
         {
             RetsConfig retsConfig = Admin.getRetsConfig();
             retsConfig.setPort(mConfigurationPanel.getPort());
+            retsConfig.setMetadataDir(mConfigurationPanel.getMetadataDir());
+            retsConfig.setGetObjectRoot(mConfigurationPanel.getImageRootDir());
+            retsConfig.setGetObjectPattern(
+                mConfigurationPanel.getImagePattern());
             retsConfig.toXml(Admin.getConfigFile());
+            mConfigurationPanel.setChanged(false);
         }
         catch (RetsServerException e)
         {
@@ -115,8 +121,25 @@ public class AdminFrame extends JFrame
         }
     }
 
-    public void quit()
+    private void quit()
     {
+        if (mConfigurationPanel.isChanged())
+        {
+            int result = JOptionPane.showConfirmDialog(
+                this, "Save changes?", "Confirm Save",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+            if (result == JOptionPane.CANCEL_OPTION)
+            {
+                return;
+            }
+            if (result == JOptionPane.YES_OPTION)
+            {
+                saveConfig();
+            }
+        }
+
+
         dispose();
         System.exit(0);
     }
@@ -135,7 +158,6 @@ public class AdminFrame extends JFrame
     {
         public void windowClosing(WindowEvent e)
         {
-            saveConfig();
             quit();
         }
     }
