@@ -42,7 +42,7 @@ public abstract class LinesEqualTestCase extends TestCase
         }
         catch (IOException e)
         {
-            throw new AssertionError(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
