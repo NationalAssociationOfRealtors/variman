@@ -8,17 +8,15 @@
 
 package org.realtors.rets.server.admin;
 
-import org.wxwindows.wxDialog;
-import org.wxwindows.wxWindow;
-import org.wxwindows.wxFlexGridSizer;
-import org.wxwindows.wxStaticText;
-import org.wxwindows.wxButton;
-import org.wxwindows.wxCommandEvent;
-import org.wxwindows.wxCommandListener;
-import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxBoxSizer;
-import org.wxwindows.wxStaticLine;
+import org.wxwindows.wxButton;
+import org.wxwindows.wxDialog;
+import org.wxwindows.wxFlexGridSizer;
 import org.wxwindows.wxSize;
+import org.wxwindows.wxStaticLine;
+import org.wxwindows.wxStaticText;
+import org.wxwindows.wxTextCtrl;
+import org.wxwindows.wxWindow;
 
 public class AddUserDialog extends wxDialog
 {
@@ -37,7 +35,7 @@ public class AddUserDialog extends wxDialog
         grid.Add(mFirstName, 0, wxALIGN_LEFT | wxBOTTOM, 5);
 
         label = new wxStaticText(this, -1, "Last Name:");
-        grid.Add(label, 0, wxALIGN_RIGHT| wxRIGHT | wxBOTTOM, 5);
+        grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
         mLastName = new wxTextCtrl(this, -1, "", wxDefaultPosition,
                                        textSize);
         grid.Add(mLastName, 0, wxALIGN_LEFT | wxBOTTOM, 5);
