@@ -36,6 +36,7 @@ public class GetMetadataHandler extends BaseServletHandler
         throws ServletException, IOException
     {
         super.doGet(request, response);
+        addRetsVersion(response);
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();
 

@@ -22,6 +22,7 @@ public class ActionHandler extends BaseServletHandler
         throws ServletException, IOException
     {
         super.doGet(request, response);
+        addRetsVersion(response);
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         out.println("Welcome to the RETS Compliance Tester from the Center " +

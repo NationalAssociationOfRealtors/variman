@@ -75,9 +75,10 @@ public class LoginHandler extends BaseServletHandler
         cookie.setPath("/");
         response.addCookie(cookie);
         response.setContentType("text/xml");
+        addRetsVersion(response);
         mOut = response.getWriter();
         println(mOut, "<RETS ReplyCode=\"0\" " +
-                    "ReplyText=\"Operation Successful\">");
+                      "ReplyText=\"Operation Successful\">");
         println(mOut, "<RETS-RESPONSE>");
         println(mOut, "MemberName = Joe Schmoe");
         println(mOut, "User = A123,5678,1,A123");
