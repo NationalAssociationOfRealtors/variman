@@ -50,6 +50,12 @@ public class AdminFrame extends JFrame implements ActionListener
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, mask));
         item.addActionListener(new OnQuit());
         menu.add(item);
+
+        menu = new JMenu("Database");
+        menuBar.add(menu);
+        menu.add(new InitDatabaseAction());
+        menu.add(new CreateSchemaAction());
+
         setJMenuBar(menuBar);
 
         mTabbedPane = new JTabbedPane();
