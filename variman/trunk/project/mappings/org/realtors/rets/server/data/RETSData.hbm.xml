@@ -3,19 +3,13 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSData.hbm.xml,v 1.5 2003/05/29 21:50:50 kgarner Exp $ -->
+<!-- $Id: RETSData.hbm.xml,v 1.6 2003/06/04 18:20:02 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.data.RETSData" table="rets_data">
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
-
-    <!-- The resource element -->
-    <many-to-one name="resource" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource">
-      <column name="resource" index="rets_data_resource"/>
-    </many-to-one>
 
     <!-- The class element -->
     <many-to-one name="clazz" cascade="none"
