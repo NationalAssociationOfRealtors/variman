@@ -10,6 +10,8 @@
  */
 package org.realtors.rets.server;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 public class DigestA1Method extends PasswordMethod
 {
     public String hash(String username, String plainTextPassword)
@@ -33,10 +35,25 @@ public class DigestA1Method extends PasswordMethod
 
     protected PasswordMethod deepCopy()
     {
-        PasswordMethod copy = new DigestA1Method();
+        DigestA1Method copy = new DigestA1Method();
         copy.mMethod = mMethod;
         copy.mOptions = mOptions;
+        copy.mRealm = mRealm;
         return copy;
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof DigestA1Method))
+        {
+            return false;
+        }
+        DigestA1Method rhs = (DigestA1Method) obj;
+        return new EqualsBuilder()
+            .append(mMethod, rhs.mMethod)
+            .append(mOptions, rhs.mOptions)
+            .append(mRealm, rhs.mRealm)
+            .isEquals();
     }
 
     private String mRealm;
