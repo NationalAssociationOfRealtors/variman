@@ -23,6 +23,8 @@ public class RetsHandlers
         add(new LogoutHandler());
         add(new GetMetadataHandler());
         add(new SearchHandler());
+        add(new AlternateActionHandler());
+        add(new AlternateLoginHandler());
     }
 
     private void add(ServletHandler handler)
@@ -62,6 +64,12 @@ public class RetsHandlers
         return (ActionHandler) mHandlersByName.get(ActionHandler.NAME);
     }
 
+    public AlternateActionHandler getAlternateActionHandler()
+    {
+        return (AlternateActionHandler)
+            mHandlersByName.get(AlternateActionHandler.NAME);
+    }
+
     public GetMetadataHandler getGetMetadataHandler()
     {
         return (GetMetadataHandler)
@@ -76,6 +84,12 @@ public class RetsHandlers
     public LoginHandler getLoginHandler()
     {
         return (LoginHandler) mHandlersByName.get(LoginHandler.NAME);
+    }
+
+    public AlternateLoginHandler getAlternateLoginHandler()
+    {
+        return (AlternateLoginHandler)
+            mHandlersByName.get(AlternateLoginHandler.NAME);
     }
 
     public LogoutHandler getLogoutHandler()
