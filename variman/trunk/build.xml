@@ -5,8 +5,7 @@
   <!-- set global properties for this build -->
   <property name="project.name" value="retsdb2"/>
   <property name="project.version" value="0.0.1"/>
-  <property name="project.string"
-            value="${project.name}-${project.version}" />
+  <property name="project.string" value="${project.name}-${project.version}"/>
 
   <!-- This must be done before any other propertes -->
   <property file="${basedir}/build.properties" />
@@ -171,12 +170,15 @@
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </target>
 
-  <target name="build-importer" depends="build-hibernate">
+  <target name="build-importer" depends="build-hibernate"
+          description="Builds the data and metadata importers">
     <depend srcDir="project/importer/java"
             destDir="build/importer/classes"
             cache="build/importer/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
+        <pathelement location="${rets-client.jar}"/>
+        <pathelement path="build/hibernate/final/classes"/>
       </classpath>
     </depend>
     <javac srcdir="project/importer/java"
@@ -186,15 +188,20 @@
       <classpath>
         <path refid="lib.path"/>
         <pathelement location="${rets-client.jar}"/>
+        <pathelement path="build/hibernate/final/classes"/>
       </classpath>
     </javac>
 
+    <copy file="project/importer/shell/runImporter"
+          todir="build/importer/bin"/>
+    <chmod file="build/importer/bin/runImporter" perm="ugo+rx"/>
     <copy file="${rets-client.jar}" todir="build/importer/lib"/>
     <copy file="${commons-lang.jar}" todir="build/importer/lib"/>
     <copy file="${httpclient.jar}" todir="build/importer/lib"/>
     <copy file="${commons-logging.jar}" todir="build/importer/lib"/>
     <copy file="${rets-client.jar}" todir="build/importer/lib"/>
     <copy file="${log4j.jar}" todir="build/importer/lib"/>
+    <copy file="${jdom.jar}" todir="build/importer/lib"/>
     <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
           todir="build/importer/lib"/>
 
@@ -205,14 +212,13 @@
     </copy>
     <copy todir="build/importer/lib"
           file="${hibernate.jar}"/>
-    <copy todir="build/importer/lib"
+    <copy todir="build/importer/classes"
           file="project/hibernate/config/hibernate.properties"/>
 <!--     <copy todir="build/importer/lib" -->
 <!--           file="code/hibernate/config/hibernate.properties.dist"/> -->
 
     <!-- Oh yeah, the jdbc driver would be nice. -->
-<!--     <copy todir="build/webapp/root/WEB-INF/lib" -->
-<!--           file="${jdbcdriver.jar}"/> -->
+    <copy todir="build/importer/lib" file="${jdbc.jar}"/>
   </target>
 
   <target name="build-xml" depends="prepare">
@@ -272,7 +278,8 @@
     </javac>
   </target>
 
-  <target name="generate-schema" depends="build-generated-code">
+  <target name="generate-schema" depends="build-generated-code"
+          description="generates the database schema">
     <pathconvert refid="hibernate.mapping.files"
                  property="hibernate.mappings" pathsep=" "/>
     <java classname="net.sf.hibernate.tool.hbm2ddl.SchemaExport" fork="true">
