@@ -50,7 +50,6 @@ public class CompactClassFormatter extends MetadataFormatter
         row.append(clazz.getClassName());
         row.append(clazz.getStandardName());
         row.append(clazz.getVisibleName());
-        row.append(DB_NAME);
         row.append(clazz.getDescription());
         // Table version and date
         row.append(context.getVersion());
@@ -62,9 +61,7 @@ public class CompactClassFormatter extends MetadataFormatter
     }
 
     private static final String[] COLUMNS = {
-        "ClassName", "StandardName", "VisibleName", "DBName", "Description",
+        "ClassName", "StandardName", "VisibleName", "Description",
         "TableVersion", "TableDate", "UpdateVersion", "UpdateDate",
     };
-
-    private static final String DB_NAME = "";
 }
