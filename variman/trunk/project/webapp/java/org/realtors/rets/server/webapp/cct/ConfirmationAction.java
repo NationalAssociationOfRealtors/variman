@@ -21,7 +21,6 @@ import org.apache.struts.action.ActionMapping;
  */
 public class ConfirmationAction extends Action
 {
-
     /* (non-Javadoc)
      * @see org.apache.struts.action.Action#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
@@ -30,12 +29,37 @@ public class ConfirmationAction extends Action
                                  HttpServletResponse response)
         throws Exception
     {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("RegUser");
-        UserInfo userInfo = (UserInfo) session.getAttribute("RegUserInfo");
+        if (isCancelled(request))
+        {
+            return new ActionForward(mapping.getInput());
+        }
         
+        HttpSession session = request.getSession();
+        RegistrationForm form =
+            (RegistrationForm) session.getAttribute("registrationForm");
+
+//        User user = (User) session.getAttribute("RegUser");
+//        UserInfo userInfo = (UserInfo) session.getAttribute("RegUserInfo");
+
+        User user = new User();
+        user.setUsername(form.getUsername());
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setPassword(form.getPassword());
+        
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUser(user);
+        userInfo.setAgentId(form.getAgentId());
+        userInfo.setCompany(form.getCompany());
+        userInfo.setEmail(form.getEmail());
+        userInfo.setProductName(form.getProductName());
+        userInfo.setProductVersion(form.getProductVersion());
+        userInfo.setUserAgent(form.getUserAgent());      
+
         UserUtils utils = new UserUtils();
         utils.createUser(user, userInfo);
+        
+        session.setAttribute("registrationForm", null);
         
         return mapping.findForward("userPage");
     }

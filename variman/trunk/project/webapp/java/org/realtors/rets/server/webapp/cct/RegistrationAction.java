@@ -6,12 +6,6 @@ package org.realtors.rets.server.webapp.cct;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.realtors.rets.server.User;
-import org.realtors.rets.server.cct.UserInfo;
-import org.realtors.rets.server.webapp.auth.HibernateUserMap;
-import org.realtors.rets.server.webapp.auth.UserMap;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
@@ -19,6 +13,10 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.webapp.auth.HibernateUserMap;
+import org.realtors.rets.server.webapp.auth.UserMap;
 
 /**
  * @author kgarner
@@ -65,29 +63,29 @@ public class RegistrationAction extends Action
             return new ActionForward(mapping.getInput());
         }
 
-        user = new User();
-        user.setUsername(username);
-        user.setFirstName(form.getFirstName());
-        user.setLastName(form.getLastName());
-        user.setPassword(form.getPassword());
 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUser(user);
-        userInfo.setAgentId(form.getAgentId());
-        userInfo.setCompany(form.getCompany());
-        userInfo.setEmail(form.getEmail());
-        userInfo.setProductName(form.getProductName());
-        userInfo.setProductVersion(form.getProductVersion());
-        userInfo.setUserAgent(form.getUserAgent());
-
-//        UserUtils userUtils = new UserUtils();
-//        userUtils.createUser(user, userInfo);
-
-        HttpSession session = request.getSession();
-        session.setAttribute("regUser", user);
-        session.setAttribute("regUserInfo", userInfo);
-        request.setAttribute("user", user);
-        request.setAttribute("userInfo", userInfo);
+//        request.setAttribute("registrationForm", form);
+//        user = new User();
+//        user.setUsername(username);
+//        user.setFirstName(form.getFirstName());
+//        user.setLastName(form.getLastName());
+//        user.setPassword(form.getPassword());
+//
+//        UserInfo userInfo = new UserInfo();
+//        userInfo.setUser(user);
+//        userInfo.setAgentId(form.getAgentId());
+//        userInfo.setCompany(form.getCompany());
+//        userInfo.setEmail(form.getEmail());
+//        userInfo.setProductName(form.getProductName());
+//        userInfo.setProductVersion(form.getProductVersion());
+//        userInfo.setUserAgent(form.getUserAgent());
+//
+//        HttpSession session = request.getSession();
+//        session.setAttribute("registrationForm", form);        
+//        session.setAttribute("regUser", user);
+//        session.setAttribute("regUserInfo", userInfo);
+//        request.setAttribute("RegUser", user);
+//        request.setAttribute("RegUserInfo", userInfo);
 
         return mapping.findForward("confirmPage");
     }
