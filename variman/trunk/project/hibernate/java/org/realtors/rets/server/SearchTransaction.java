@@ -233,6 +233,7 @@ public class SearchTransaction
         context.setLimit(mParameters.getLimit());
         SearchResultsFormatter formatter = getFormatter();
 
+        RetsUtils.printXmlHeader(out);
         RetsUtils.printOpenRetsSuccess(out);
         printCount(out);
         formatter.formatResults(context);
