@@ -1,5 +1,8 @@
 package org.realtors.rets.server.metadata;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import net.sf.hibernate.PersistentEnum;
 
 public class ValidationExpressionTypeEnum implements PersistentEnum
@@ -10,6 +13,16 @@ public class ValidationExpressionTypeEnum implements PersistentEnum
         new ValidationExpressionTypeEnum(1);
     public static final ValidationExpressionTypeEnum SET =
         new ValidationExpressionTypeEnum(2);
+
+    private static Map mStringMap;
+
+    static
+    {
+        mStringMap = new HashMap();
+        mStringMap.put("accept", ACCEPT);
+        mStringMap.put("reject", REJECT);
+        mStringMap.put("set", SET);
+    }
 
     private ValidationExpressionTypeEnum(int code)
     {
@@ -34,6 +47,12 @@ public class ValidationExpressionTypeEnum implements PersistentEnum
     public String toString()
     {
         return toString(mCode);
+    }
+
+    public static ValidationExpressionTypeEnum fromString(String value)
+    {
+        return
+            (ValidationExpressionTypeEnum) mStringMap.get(value.toLowerCase());
     }
 
     public static String toString(int code)
