@@ -21,7 +21,7 @@ public class Bootstrap
 {
     public Bootstrap()
     {
-        setMain("SwingMain");
+        setMain("Main");
     }
 
     private void setMain(String main)
