@@ -168,8 +168,9 @@ public class UpdateType implements Serializable
      * @return a Set of ValidationExpressions
      *
      * @hibernate.set inverse="false"
+     *   table="rets_metadata_updatetype_validationexpressions"
      * @hibernate.collection-key column="id"
-     * @hibernate.collection-one-to-many
+     * @hibernate.collection-many-to-many column="validation_expression"
      *   class="org.realtors.rets.server.metadata.ValidationExpression"
      */
     public Set getValidationExpressions()
