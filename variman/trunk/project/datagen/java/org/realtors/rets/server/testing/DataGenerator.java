@@ -1,6 +1,6 @@
 package org.realtors.rets.server.testing;
 
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,52 +25,31 @@ public class DataGenerator
 {
     public DataGenerator() throws HibernateException
     {
+        initHibernate();
+        
         mClasses = new HashMap();
         mTables = new HashMap();
         mRandom = new Random(System.currentTimeMillis());
         mRandom.nextInt();
-        initHibernate();
-    }
-    
-    private void initHibernate() throws HibernateException
-    {
-        Configuration cfg = new Configuration();
-        cfg.addJar("retsdb2-hbm-xml.jar");
-        mSessions = cfg.buildSessionFactory();
-    }
 
-    public void loadMetadata() throws HibernateException
-    {
-        Session session = mSessions.openSession();
-        Transaction tx = session.beginTransaction();
-        Query query = session.createQuery(
-                "SELECT system" +
-                "  FROM org.realtors.rets.server.metadata.MSystem system");
-        Iterator i = query.iterate();
-        while (i.hasNext())
-        {
-            MSystem system = (MSystem) i.next();
-            System.out.println("Got system" + system.getId());
-            Iterator j = system.getResources().iterator();
-            while (j.hasNext())
-            {
-                Resource res = (Resource) j.next();
-                Iterator k = res.getClasses().iterator();
-                while (k.hasNext())
-                {
-                    MClass clazz = (MClass) k.next();
-                    mClasses.put(clazz.getPath(), clazz);
-                    Iterator l = clazz.getTables().iterator();
-                    while (l.hasNext())
-                    {
-                        Table table = (Table) l.next();
-                        mTables.put(table.getPath(), table);
-                    }
-                }
-            }
-        }
-        tx.commit();
-        session.close();
+        mECount = 0;
+        mESchools = new int[] { 306, 300, 42, 304, 303 };
+        mACount = 0;
+        mAgents = new String[] { "P345", "P123", "M123" };
+        mBCount = 0;
+        mBrokers = new String[] { "Laffalot Realty", "Tex Mex Real Estate",
+            "Yellow Armadillo Realty", "Retzilla Realty" };
+
+        mDCount = 0;
+        mDate = new Date[4];
+        Calendar cal = Calendar.getInstance();
+        cal.set(2003,6,10);
+        mDate[mDCount++] = cal.getTime();
+        cal.set(2003,6,22);
+        mDate[mDCount++] = cal.getTime();
+        cal.set(2002,11,5);
+        mDate[mDCount++] = cal.getTime();
+        mDate[mDCount++] = new Date();
     }
 
     private void createData() throws HibernateException
@@ -102,12 +81,12 @@ public class DataGenerator
                 session.save(dataElement);
                 
                 dataElement =
-                    createDataElement("Property:RES:BROKER", "BrokerMan");
+                    createDataElement("Property:RES:BROKER", getNextBroker());
                 dataElements.put(dataElement.getKey(), dataElement);
                 session.save(dataElement);
                 
                 dataElement =
-                    createDataElement("Property:RES:AGENT_ID", "Agent");
+                    createDataElement("Property:RES:AGENT_ID", getNextAgent());
                 dataElements.put(dataElement.getKey(), dataElement);
                 session.save(dataElement);
                 
@@ -121,7 +100,8 @@ public class DataGenerator
                 dataElements.put(dataElement.getKey(), dataElement);
                 session.save(dataElement);
                 
-                dataElement = createDataElement("Property:RES:LD", new Date());
+                dataElement = createDataElement("Property:RES:LD",
+                                                getNextDate());
                 dataElements.put(dataElement.getKey(), dataElement);
                 session.save(dataElement);
                 
@@ -130,10 +110,26 @@ public class DataGenerator
                 dataElements.put(dataElement.getKey(), dataElement);
                 session.save(dataElement);
                 
+                dataElement = createDataElement("Property:RES:E_SCHOOL",
+                                                getNextSchool());
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+
+                dataElement = createDataElement("Property:RES:M_SCHOOL",
+                                                getNextSchool());
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+
+                dataElement = createDataElement("Property:RES:H_SCHOOL",
+                                                getNextSchool());
+                dataElements.put(dataElement.getKey(), dataElement);
+                session.save(dataElement);
+
                 retsData.setDataElements(dataElements);
                 session.saveOrUpdate(retsData);
             }
             tx.commit();
+            session.close();
         }
         catch (HibernateException e)
         {
@@ -221,6 +217,79 @@ public class DataGenerator
         session.close();
     }
 
+    /**
+     * @return
+     */
+    private String getNextAgent()
+    {
+        return mAgents[mACount++ % mAgents.length];
+    }
+
+    /**
+     * @return
+     */
+    private String getNextBroker()
+    {
+        return mBrokers[mBCount++ % mBrokers.length];
+    }
+
+    /**
+     * @return
+     */
+    private Date getNextDate()
+    {
+        return mDate[mDCount++ % mDate.length];
+    }
+
+    /**
+     * @return ant int of the next school
+     */
+    private int getNextSchool()
+    {
+        return mESchools[mECount++ % mESchools.length];
+    }
+    
+    private void initHibernate() throws HibernateException
+    {
+        Configuration cfg = new Configuration();
+        cfg.addJar("retsdb2-hbm-xml.jar");
+        mSessions = cfg.buildSessionFactory();
+    }
+
+    public void loadMetadata() throws HibernateException
+    {
+        Session session = mSessions.openSession();
+        Transaction tx = session.beginTransaction();
+        Query query = session.createQuery(
+                "SELECT system" +
+                "  FROM org.realtors.rets.server.metadata.MSystem system");
+        Iterator i = query.iterate();
+        while (i.hasNext())
+        {
+            MSystem system = (MSystem) i.next();
+            System.out.println("Got system" + system.getId());
+            Iterator j = system.getResources().iterator();
+            while (j.hasNext())
+            {
+                Resource res = (Resource) j.next();
+                Iterator k = res.getClasses().iterator();
+                while (k.hasNext())
+                {
+                    MClass clazz = (MClass) k.next();
+                    mClasses.put(clazz.getPath(), clazz);
+                    Iterator l = clazz.getTables().iterator();
+                    while (l.hasNext())
+                    {
+                        Table table = (Table) l.next();
+                        mTables.put(table.getPath(), table);
+                    }
+                }
+            }
+        }
+        tx.commit();
+        session.close();
+    }
+
     //  TODO: Add method to preload classes
 
     public static void main(String[] args) throws HibernateException
@@ -264,9 +333,18 @@ public class DataGenerator
         }
     }
 
-    /** Session Factory */
-    private SessionFactory mSessions;
+    private int mACount;
+    private String[] mAgents;
+    private int mBCount;
+    private String[] mBrokers;
     private Map mClasses;
-    private Map mTables;
+    private Date[] mDate;
+    private int mDCount;
+    private int mECount;
+    private int[] mESchools;
+    private int mHCount; 
+    private int[] mHSchools;
     private Random mRandom;
+    private SessionFactory mSessions;
+    private Map mTables;
 }
