@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.User;
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 /**
  * @web.filter name="authentication-filter"
@@ -92,10 +93,14 @@ public class AuthenticationFilter implements Filter, UserMap
         DigestAuthorizationRequest authorizationRequest =
             new DigestAuthorizationRequest(authorizationHeader);
         authorizationRequest.setMethod(request.getMethod());
-        if (verifyResponse(authorizationRequest, request.getSession()))
+        HttpSession session = request.getSession();
+        if (verifyResponse(authorizationRequest, session))
         {
             LOG.debug("Digest auth succeeded");
+            User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
+            MDC.put("user", user.getUsername());
             filterChain.doFilter(servletRequest, servletResponse);
+            MDC.remove("user");
         }
         else
         {
