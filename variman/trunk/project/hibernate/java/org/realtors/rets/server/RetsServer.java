@@ -39,6 +39,7 @@ public class RetsServer
     {
         return new SessionHelper(sSessions);
     }
+
     public static void setTableGroupFilter(TableGroupFilter tableGroupFilter)
     {
         sTableGroupFilter = tableGroupFilter;
