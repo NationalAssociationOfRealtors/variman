@@ -35,6 +35,13 @@ public class Main extends wxApp
 
     public static void main(String[] args)
     {
+        String rexHome = System.getProperty("rex.home");
+        if (rexHome == null)
+        {
+            rexHome = System.getProperty("user.dir");
+            System.setProperty("rex.home", rexHome);
+        }
+        Admin.setRexHome(rexHome);
         Main main = new Main();
         main.MainLoop();
     }
