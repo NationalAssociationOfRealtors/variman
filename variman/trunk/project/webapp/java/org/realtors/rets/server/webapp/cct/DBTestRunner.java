@@ -60,11 +60,6 @@ public class DBTestRunner extends TestRunner
         {
             LOG.error("Error getting results", e);
         }
-        catch(NullPointerException e)
-        {
-            LOG.error("Damn, boy", e);
-            throw e;
-        }
         finally
         {
             sessionHelper.close(LOG);
