@@ -447,7 +447,7 @@ public class MetadataLoader
                         lookupTableStandardName(standardName);
                 if (tsn == null)
                 {
-                    if (!standardName.equals(""))
+                    if (standardName != null && !standardName.equals(""))
                     {
                         tsn = new TableStandardName(standardName);
                         mTableStandardNames.put(standardName, tsn);
@@ -903,7 +903,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.11 2003/12/18 19:21:04 dterrell Exp $";
+        "$Id: MetadataLoader.java,v 1.12 2004/01/12 04:21:37 dterrell Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
