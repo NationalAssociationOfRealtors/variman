@@ -6,12 +6,20 @@ import org.apache.commons.lang.enum.ValuedEnum;
 
 public class ReplyCode extends ValuedEnum
 {
+    public static final ReplyCode SUCCESSFUL =
+        new ReplyCode("Operation Successful", 0);
     public static final ReplyCode NO_RECORDS_FOUND =
         new ReplyCode("No Records Found", 20201);
+    public static final ReplyCode INVALID_SELECT =
+        new ReplyCode("Invalid Select", 20202);
     public static final ReplyCode MISC_SEARCH_ERROR =
         new ReplyCode("Miscellaneous Search Error", 20203);
     public static final ReplyCode INVALID_QUERY_SYNTAX =
         new ReplyCode("Invalid Query Syntax", 20206);
+    public static final ReplyCode INVALID_TYPE =
+        new ReplyCode("Invalid Type", 20501);
+    public static final ReplyCode INVALID_IDENTIFIER =
+        new ReplyCode("Invalid Identifier", 20502);
     public static final ReplyCode MISC_ERROR =
         new ReplyCode("Miscellaneous Error", 20513);
 
