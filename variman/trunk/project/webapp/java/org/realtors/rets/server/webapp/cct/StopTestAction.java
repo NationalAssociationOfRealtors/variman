@@ -23,7 +23,7 @@ public class StopTestAction extends CctAction
         int testNo = form.getTestNumber();
         LOG.debug("Stopping test #" + testNo + ": " +
                   testRunner.getDescription(testNo));
-        testRunner.stopRunningTest(testNo);
+        testRunner.stopRunningTest();
 
         return mapping.findForward("home");
     }
