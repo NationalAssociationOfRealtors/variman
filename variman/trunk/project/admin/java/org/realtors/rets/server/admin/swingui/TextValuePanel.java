@@ -50,12 +50,18 @@ public class TextValuePanel extends JPanel
         mConstraints.gridwidth = GridBagConstraints.RELATIVE;
         mConstraints.fill = GridBagConstraints.NONE;
         mConstraints.weightx = 0.0;
+        mConstraints.weighty = 0.0;
         mConstraints.insets = leftInsets;
         add(label, mConstraints);
 
         mConstraints.gridwidth = GridBagConstraints.REMAINDER;
         mConstraints.fill = fill;
         mConstraints.weightx = 1.0;
+        if ((fill == GridBagConstraints.VERTICAL) ||
+            (fill == GridBagConstraints.BOTH))
+        {
+            mConstraints.weighty = 1.0;
+        }
         mConstraints.insets = rightInsets;
         add(component, mConstraints);
         mNumberAdded++;
