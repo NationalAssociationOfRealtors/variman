@@ -58,6 +58,27 @@ public class HibernateUtils
         }
     }
 
+    public static void delete(Object object)
+        throws HibernateException
+    {
+        SessionHelper helper = RetsServer.createSessionHelper();
+        try
+        {
+            Session session = helper.beginTransaction();
+            session.delete(object);
+            helper.commit();
+        }
+        catch (HibernateException e)
+        {
+            helper.rollback(LOG);
+            throw e;
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+    }
+
     private static final Logger LOG =
         Logger.getLogger(HibernateUtils.class);
 }
