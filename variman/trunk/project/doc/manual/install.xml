@@ -3,7 +3,7 @@
   <para>
     There are a number of installation options for &name;.  The
     easiest method is to us one of the standalone versions that use an
-    embedded version of Jakarta Tomact <xref linkend="bib-tomcat"/>.
+    embedded version of Jakarta Tomcat <xref linkend="bib-tomcat"/>.
     The only other requirements to run this version is Java <xref
     linkend="bib-java"/> and a relational database.  However, &name;
     is developed as a Java web application, so you can use your own
