@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -56,6 +58,7 @@ public class SearchFormatterContext
         mWriter = writer;
         mResultSet = resultSet;
         mColumns = new ArrayList(columns);
+        mColumnsSet = new HashSet(columns);
         mMetadata = metadata;
         mRowCount = 0;
         mLimit = Integer.MAX_VALUE;
@@ -152,7 +155,14 @@ public class SearchFormatterContext
     public String getResultString(String fieldName) throws SQLException
     {
         String column = mMetadata.fieldToColumn(fieldName);
-        return mResultSet.getString(column);
+        if (mColumnsSet.contains(column))
+        {
+            return mResultSet.getString(column);
+        }
+        else
+        {
+            return null;
+        }
     }
 
     /**
@@ -251,6 +261,7 @@ public class SearchFormatterContext
     private ResultSet mResultSet;
     /** The column names used in the SELECT statement. */
     private List /* String */ mColumns;
+    private Set /* String */ mColumnsSet;
     /** The RETS metadata. */
     private DmqlParserMetadata mMetadata;
     /** The number of rows processed. */
