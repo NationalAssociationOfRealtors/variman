@@ -43,6 +43,11 @@ public class GetObjectServlet extends RetsServlet
         transaction.execute(new Response(response));
     }
 
+    protected boolean isXmlResponse()
+    {
+        return false;
+    }
+
     private static class Response implements GetObjectResponse
     {
         public Response(HttpServletResponse httpResponse)
