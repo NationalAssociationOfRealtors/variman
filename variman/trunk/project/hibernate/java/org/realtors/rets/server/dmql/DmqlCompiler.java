@@ -6,24 +6,6 @@ import antlr.ANTLRException;
 
 public class DmqlCompiler
 {
-    public static String dmqlToSql(String dmql)
-        throws ANTLRException
-    {
-        DmtAST ast = dmqlToAst(dmql);
-        return new SqlBackend().compile(ast);
-    }
-
-    public static DmtAST dmqlToAst(String dmql)
-        throws ANTLRException
-    {
-        DmqlLexer lexer = new DmqlLexer(new StringReader(dmql));
-        DmqlParser parser = new DmqlParser(lexer);
-        parser.setASTFactory(new DmtAstFactory());
-        parser.setASTNodeClass(DmtAST.class.getName());
-        parser.query();
-        DmtAST ast = (DmtAST) parser.getAST();
-        return ast;
-    }
 
     public static SqlConverter parseDmql(String dmql,
                                          DmqlParserMetadata metadata)
@@ -32,14 +14,37 @@ public class DmqlCompiler
         return parseDmql(dmql, metadata, false, false);
     }
 
-    public static SqlConverter parseDmql(
-        String dmql, DmqlParserMetadata metadata, boolean traceParser,
-        boolean traceLexer)
+    public static SqlConverter parseDmql(String dmql,
+                                         DmqlParserMetadata metadata,
+                                         boolean traceParser,
+                                         boolean traceLexer)
         throws ANTLRException
     {
         DmqlLexer lexer = new DmqlLexer(new StringReader(dmql));
         lexer.setTrace(traceLexer);
         DmqlParser parser = new DmqlParser(lexer);
+        parser.setDmqlLexer(lexer);
+        parser.setMetadata(metadata);
+        parser.setTrace(traceParser);
+        return parser.query();
+    }
+
+    public static SqlConverter parseDmql2(String dmql,
+                                          DmqlParserMetadata metadata)
+        throws ANTLRException
+    {
+        return parseDmql2(dmql, metadata, false, false);
+    }
+
+    public static SqlConverter parseDmql2(String dmql,
+                                          DmqlParserMetadata metadata,
+                                          boolean traceParser,
+                                          boolean traceLexer)
+        throws ANTLRException
+    {
+        DmqlLexer lexer = new DmqlLexer(new StringReader(dmql));
+        lexer.setTrace(traceLexer);
+        Dmql2Parser parser = new Dmql2Parser(lexer);
         parser.setDmqlLexer(lexer);
         parser.setMetadata(metadata);
         parser.setTrace(traceParser);

@@ -92,37 +92,27 @@ query returns [SqlConverter sql]
     ;
 
 search_condition returns [SqlConverter sql]
-    { sql = null; }
-    : sql=query_clause (or query_clause)*
+    { SqlConverter sc;}
+    : sql=query_clause (or sc=query_clause)*
     ;
 
 query_clause returns [SqlConverter sql]
-    : sql=boolean_element (and boolean_element)*
-    ;
-
-boolean_element returns [SqlConverter sql]
-    : (not)? sql=query_element
+    { SqlConverter qe;}
+    : sql=query_element (and qe=query_element)*
     ;
 
 query_element returns [SqlConverter sql]
-    { sql = null; }
+    { sql = null; SqlConverter sc;}
     : sql=field_criteria
-    | LPAREN search_condition RPAREN
+    | LPAREN sc=search_condition RPAREN
     ;
 
 or
-    : OR
-    | PIPE
+    : PIPE
     ;
 
 and
-    : AND
-    | COMMA
-    ;
-
-not
-    : NOT
-    | TILDE
+    : COMMA
     ;
 
 field_criteria returns [SqlConverter sql]
@@ -142,9 +132,6 @@ field_value [String name] returns [SqlConverter sql]
     { sql = null; }
     : {isLookup(name)}? sql=lookup_list[name]
     | {isStringList(name)}? string_list
-    | {isStringList(name)}? string_literal
-    | number
-    | period
     | range_list
     ;
 
@@ -159,23 +146,33 @@ range
     ;
 
 between
-    : (period | number | string_eq) MINUS (period | number | string_eq)
+    : (period | number) MINUS (period | number)
     ;
 
 less
-    : (period | number | string_eq) MINUS
+    : (period | number) MINUS
     ;
 
 greater
-    : (period | number | string_eq) PLUS
+    : (period | number) PLUS
     ;
 
 number : n:NUMBER {print("n"); print(n);} ;
 
 period
-    : d:DATE {print("d"); print(d);}
-    | dt:DATETIME {print("dt"); print(dt);}
+    : date
+    | datetime
     | t:TIME {print("t"); print(t);}
+    ;
+
+date
+    : DATE
+    | TODAY
+    ;
+
+datetime
+    : DATETIME
+    | NOW
     ;
 
 lookup_list [String name] returns [SqlConverter sql]
@@ -264,10 +261,13 @@ string_literal
     ;
 
 text returns [Token token]
-    : t:TEXT    {token=t;}
-    | o:OR      {token=o;}
-    | a:AND     {token=a;}
-    | n:NOT     {token=n;}
+    {token=null;}
+    : text:TEXT     {token=text;}
+    | or:OR         {token=or;}
+    | and:AND       {token=and;}
+    | not:NOT       {token=not;}
+    | today:TODAY   {token=today;}
+    | now:NOW       {token=now;}
     ;
 
 class DmqlLexer extends Lexer;
@@ -327,7 +327,8 @@ YMD
 
 // Hour:Minute:Second[.Fraction]
 protected
-HMS : DIGIT DIGIT ':' DIGIT DIGIT ':' DIGIT DIGIT ('.' DIGIT DIGIT)?;
+HMS : DIGIT DIGIT ':' DIGIT DIGIT ':' DIGIT DIGIT
+        ('.' DIGIT ((DIGIT)? DIGIT)?)?;
 
 protected
 DIGIT : ('0' .. '9');
@@ -347,6 +348,8 @@ NUMBER
 protected OR : "OR" ;
 protected AND : "AND" ;
 protected NOT : "NOT" ;
+protected TODAY : "TODAY" ;
+protected NOW : "NOW" ;
 
 // Since these all basically have overlapping patterns, we need to use
 // backtracking to try them in order.
@@ -361,6 +364,8 @@ TEXT_OR_NUMBER_OR_PERIOD
     | (OR) => OR {$setType(OR);}
     | (AND) => AND {$setType(AND);}
     | (NOT) => NOT {$setType(NOT);}
+    | (TODAY) => TODAY {$setType(TODAY);}
+    | (NOW) => NOW {$setType(NOW);}
     | TEXT {$setType(TEXT);}
     ;
 

@@ -4,18 +4,19 @@ package org.realtors.rets.server.dmql;
 
 import antlr.ANTLRException;
 
-public class DmqlCompilerTest extends AbstractDmqlCompilerTest
+public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 {
-    public DmqlCompilerTest()
+    public Dmql2CompilerTest()
     {
         super();
     }
 
     protected SqlConverter parse(String dmql, boolean traceParser,
-                               boolean traceLexer)
+                                 boolean traceLexer)
         throws ANTLRException
     {
-        return DmqlCompiler.parseDmql(dmql, mMetadata, traceParser, traceLexer);
+        return DmqlCompiler.parseDmql2(dmql, mMetadata, traceParser,
+                                       traceLexer);
     }
 
     protected SqlConverter parse(String dmql) throws ANTLRException
@@ -103,25 +104,25 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testStringLiteral() throws ANTLRException
     {
-        assertInvalidParse("(OWNER=\"\")");
-        assertInvalidParse("(OWNER=\"foo\")");
-        assertInvalidParse("(OWNER=\"Foo Bar\")");
-        assertInvalidParse("(OWNER=\"Vito \"\"The Don\"\" Corleone\")");
+        parse("(OWNER=\"\")");
+        parse("(OWNER=\"foo\")");
+        parse("(OWNER=\"Foo Bar\")");
+        parse("(OWNER=\"Vito \"\"The Don\"\" Corleone\")");
     }
 
     public void testNumber() throws ANTLRException
     {
-        assertInvalidParse("(OWNER=5)");
-        assertInvalidParse("(OWNER=5.)");
-        assertInvalidParse("(OWNER=5.0)");
+        parse("(OWNER=5)");
+        parse("(OWNER=5.)");
+        parse("(OWNER=5.0)");
     }
 
     public void testPeriod() throws ANTLRException
     {
-        assertInvalidParse("(OWNER=1970-01-01)");
+        parse("(OWNER=1970-01-01)");
         parse("(OWNER=TODAY)");
-        assertInvalidParse("(OWNER=01:02:03)");
-        assertInvalidParse("(OWNER=1970-01-01T05:06:01.33)");
+        parse("(OWNER=01:02:03)");
+        parse("(OWNER=1970-01-01T05:06:01.33)");
         parse("(OWNER=NOW)");
     }
 
@@ -129,7 +130,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     {
         parse("(OWNER=1970-01-01-1980-01-01)");
         parse("(OWNER=50-100)");
-        assertInvalidParse("(OWNER=abc-xyz)");
+        parse("(OWNER=abc-xyz)");
         parse("(OWNER=1990-01-01-TODAY)");
         parse("(OWNER=1990-01-01T05:06:07.000-NOW)");
     }
@@ -138,7 +139,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     {
         parse("(OWNER=1970-01-01-)");
         parse("(OWNER=50-)");
-        assertInvalidParse("(OWNER=xyz-)");
+        parse("(OWNER=xyz-)");
         parse("(OWNER=TODAY-)");
         parse("(OWNER=NOW-)");
     }
@@ -147,7 +148,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     {
         parse("(OWNER=1970-01-01+)");
         parse("(OWNER=50+)");
-        assertInvalidParse("(OWNER=xyz+)");
+        parse("(OWNER=xyz+)");
         parse("(OWNER=TODAY+)");
         parse("(OWNER=NOW+)");
     }
@@ -156,22 +157,22 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
     {
         parse("(OWNER=1970-01-01-1980-01-01,1985-01-01-1995-01-01)");
         parse("(OWNER=50-100,150-200)");
-        assertInvalidParse("(OWNER=abc-bar,foo-xyz)");
+        parse("(OWNER=abc-bar,foo-xyz)");
 
         parse("(OWNER=1970-01-01+,1980-01-01-)");
         parse("(OWNER=50+,60-)");
-        assertInvalidParse("(OWNER=abc+,xyz-)");
+        parse("(OWNER=abc+,xyz-)");
     }
 
     public void testCompoundQueries() throws ANTLRException
     {
         parse("(AR=|BATV,GENVA)|(OWNER=foo)");
-        assertInvalidParse("(AR=|BATV,GENVA) OR (OWNER=foo)");
+        parse("(AR=|BATV,GENVA) OR (OWNER=foo)");
         parse("(AR=|BATV,GENVA),(OWNER=foo)");
-        assertInvalidParse("(AR=|BATV,GENVA) AND (OWNER=foo)");
-        assertInvalidParse("~(AR=|BATV,GENVA)");
-        assertInvalidParse("NOT (AR=|BATV,GENVA)");
-        assertInvalidParse("(AR=|BATV,GENVA) AND NOT (OWNER=foo)");
+        parse("(AR=|BATV,GENVA) AND (OWNER=foo)");
+        parse("~(AR=|BATV,GENVA)");
+        parse("NOT (AR=|BATV,GENVA)");
+        parse("(AR=|BATV,GENVA) AND NOT (OWNER=foo)");
         parse("((OWNER=foo),(OWNER=bar))");
         parse("(AR=|BATV,GENVA)|((OWNER=foo),(AND=bar))");
     }
@@ -187,8 +188,7 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         parse("(AND=foo)");
         parse("(NOT=foo)");
         parse("(OR=|OR,AND,NOT,TODAY)");
-        assertInvalidParse(
-            "~(OR=|OR,AND,NOT,TODAY)AND~(AND=NOW*,OR?AND,*NOT*)");
+        parse("~(OR=|OR,AND,NOT,TODAY)AND~(AND=NOW*,OR?AND,*NOT*)");
     }
 
     public void testSampleSubQuery() throws ANTLRException

@@ -128,9 +128,15 @@
               value="project/hibernate/java/org/realtors/rets/server/dmql"/>
     <property name="build.antlr.dir"
               value="build/hibernate/generated/org/realtors/rets/server/dmql"/>
-    <antlr target="${src.antlr.dir}/dmql.g"
+    <antlr dir="${src.antlr.dir}"
+           target="${src.antlr.dir}/dmql.g"
            outputdirectory="${build.antlr.dir}"
            trace="yes"/>
+    <antlr dir="${src.antlr.dir}"
+           target="${src.antlr.dir}/dmql2.g"
+           glib="dmql.g"
+           outputdirectory="${build.antlr.dir}"
+           traceParser="yes"/>
     <javac target="${compile.vmtarget}" destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
