@@ -45,6 +45,14 @@ public interface DmqlParserMetadata
      */
     public boolean isValidStringName(String fieldName);
 
+    /**
+     * Returns <code>true</code> if the field name is a numeric field.
+     *
+     * @param fieldName A field name
+     * @return <code>true</code> if the field name is a numeric field
+     */
+    public boolean isNumericField(String fieldName);
+
     public String getLookupDbValue(String lookupName, String lookupValue);
 
     public String fieldToColumn(String fieldName);
