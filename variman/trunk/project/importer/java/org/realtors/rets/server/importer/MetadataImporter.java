@@ -1,54 +1,33 @@
 package org.realtors.rets.server.importer;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
-
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
-import java.util.HashSet;
 
-import net.sf.hibernate.cfg.Configuration;
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.MappingException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.MappingException;
-import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Transaction;
+import net.sf.hibernate.cfg.Configuration;
 
-import org.realtors.rets.client.RetsSession;
-import org.realtors.rets.client.MetadataTable;
 import org.realtors.rets.client.Metadata;
+import org.realtors.rets.client.MetadataTable;
+import org.realtors.rets.client.RetsSession;
 
-import org.realtors.rets.server.data.RETSData;
-import org.realtors.rets.server.data.RETSDataElement;
-import org.realtors.rets.server.data.RETSHistoryData;
-import org.realtors.rets.server.data.RETSHistoryDataElement;
-import org.realtors.rets.server.data.RETSHistoryMultiSet;
-import org.realtors.rets.server.data.RETSMultiSet;
+import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.ForeignKey;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.metadata.ObjectTypeEnum;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
-import org.realtors.rets.server.metadata.ClassStandardNameEnum;
-import org.realtors.rets.server.metadata.ObjectTypeEnum;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
 
 
 public class MetadataImporter
@@ -73,7 +52,7 @@ public class MetadataImporter
         cfg.addJar("retsdb2-hbm-xml.jar");
         mSessions = cfg.buildSessionFactory();
     }
-    
+
     public void doIt()
         throws Exception
     {
@@ -99,7 +78,7 @@ public class MetadataImporter
             doResource(rSession, hSession, hSystem);
             doClasses(rSession, hSession);
             doObjects(rSession, hSession);
-        
+
             tx.commit();
             hSession.close();
         }
@@ -165,7 +144,7 @@ public class MetadataImporter
                 md.getAttribute("SearchHelpVersion"));
             hResource.setSearchHelpDate(
                 mDateFormat.parse(md.getAttribute("SearchHelpDate")));
-                    
+
             hResource.setEditMaskVersion(md.getAttribute("EditMaskVersion"));
             hResource.setEditMaskDate(
                 mDateFormat.parse(md.getAttribute("EditMaskDate")));
@@ -194,7 +173,7 @@ public class MetadataImporter
                 md.getAttribute("ValidationExternalVersion"));
             hResource.setValidationExternalDate(
                 mDateFormat.parse(md.getAttribute("ValidationExternalDate")));
-                
+
             hSession.save(hResource);
             hResources.add(hResource);
             mResources.put(resourceID, hResource);
@@ -295,7 +274,7 @@ public class MetadataImporter
     private Map mResources;
     private Map mClasses;
     private DateFormat mDateFormat;
-    
+
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.7 2003/06/27 19:19:14 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.8 2003/06/27 20:49:54 dribin Exp $";
 }
