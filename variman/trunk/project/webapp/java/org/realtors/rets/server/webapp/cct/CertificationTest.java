@@ -33,4 +33,5 @@ public interface CertificationTest
     public static final Status PASSED = new Status("passed");
     public static final Status FAILED = new Status("failed");
     public static final Status RUNNING = new Status("running");
+    public static final Status NOTRUN = new Status("not-run");
 }

@@ -11,7 +11,7 @@ public abstract class BaseCertificationTest implements CertificationTest
     {
         mValidationResults = null;
         mMessage = "Test never run";
-        mStatus = FAILED;
+        mStatus = NOTRUN;
     }
 
     public String getMessage()
