@@ -109,9 +109,8 @@ public class DatabasePropertiesDialog extends wxDialog
             DatabaseType databaseType = mDatabaseTypeObjects[i];
             mDatabaseTypes.Append(databaseType.getLongName());
         }
-        int initialIndex =
-            mDatabaseTypes.FindString(config.getDatabaseType().getLongName());
-        mDatabaseTypes.SetSelection(initialIndex);
+        mDatabaseTypes.SetStringSelection(
+            config.getDatabaseType().getLongName());
         return mDatabaseTypes;
     }
 
