@@ -28,7 +28,7 @@
        <bean:write name="displayBean" property="test.description" />
       </html:link>
      </cct:evenoddtd>
-     <cct:teststatustd name="displayBean" />
+     <cct:teststatustd name="displayBean" property="result.status" />
      <cct:evenoddtd count="counter" width="10%">
       <logic:notPresent name="cctActiveTest">
        <html:form action="/cct/start_test" method="GET" >
@@ -65,6 +65,13 @@
       <bean:message key="home.reset.tests"/>
     </html:link>
   </p>
+  <logic:present name="cctHasAdminView">
+    <p>
+      <html:link action="/cct/adminIndex">
+        <bean:message key="home.adminview.text"/>
+      </html:link>
+    </p>
+  </logic:present>
   <p>
     <html:link forward="logout">
       <bean:message key="home.logout.text"/>
