@@ -723,13 +723,13 @@
     <tar destfile="dist/${project.string}-src.tar.gz" compression="gzip">
       <tarfileset dir="${basedir}"
                   prefix="${project.string}">
-        <excludesfile name="project/build/dist-excludes"/>
+        <excludesfile name="project/build/dist-src-excludes"/>
       </tarfileset>
     </tar>
     <zip destfile="dist/${project.string}-src.zip">
       <zipfileset dir="${basedir}"
                   prefix="${project.string}">
-        <excludesfile name="project/build/dist-excludes"/>
+        <excludesfile name="project/build/dist-src-excludes"/>
       </zipfileset>
     </zip>
   </target>
@@ -737,20 +737,33 @@
   <target name="dist-bin" depends="build">
     <!-- Embedded -->
     <tar destfile="dist/${project.string}.tar.gz" compression="gzip">
-      <tarfileset dir="build/rets-server" prefix="${project.string}"/>
+      <tarfileset dir="build/rets-server" prefix="${project.string}">
+        <excludesfile name="project/build/dist-bin-excludes"/>
+      </tarfileset>
     </tar>
     <!-- Web applications -->
     <tar destfile="dist/${project.name}-webapp-${project.version}.tar.gz"
          compression="gzip">
       <tarfileset dir="build/rets-server"
                   prefix="${project.name}-webapp-${project.version}"
-                  includes="webapp/**,doc/**"/>
+                  includes="webapp/**,doc/**">
+        <excludesfile name="project/build/dist-bin-excludes"/>
+      </tarfileset>
     </tar>
     <zip destfile="dist/${project.name}-webapp-${project.version}.zip">
       <zipfileset dir="build/rets-server"
                   prefix="${project.name}-webapp-${project.version}"
-                  includes="webapp/**,doc/**"/>
+                  includes="webapp/**,doc/**">
+        <excludesfile name="project/build/dist-bin-excludes"/>
+      </zipfileset>
     </zip>
+  </target>
+
+  <target name="dist-linux" depends="build">
+    <!-- Embedded -->
+    <tar destfile="dist/${project.string}-linux.tar.gz" compression="gzip">
+      <tarfileset dir="build/rets-server" prefix="${project.string}"/>
+    </tar>
   </target>
 
   <target name="dist-win" description="Builds a Windows binary distribution">
