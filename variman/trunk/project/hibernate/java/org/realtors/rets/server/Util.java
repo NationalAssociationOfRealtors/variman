@@ -14,7 +14,7 @@ public class Util
         StandardToStringStyle style = new StandardToStringStyle();
         style.setContentStart(" [");
         style.setFieldSeparator(", ");
-        style.setShortClassName(true);
+        style.setUseShortClassName(true);
         style.setUseIdentityHashCode(false);
         SHORT_STYLE = style;
     }
