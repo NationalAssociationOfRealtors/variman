@@ -57,7 +57,7 @@ if ($opt_user ne "")
 }
 
 my $remote_host = "dargo.crt.realtors.org";
-my $remote_home = "/nar/www/sites/www.crt.realtors.org/www.crt.realtors.org/projects/rets/rex";
+my $remote_home = "/nar/www/sites/www.crt.realtors.org/www.crt.realtors.org/projects/rets/variman";
 $command = 
     "rsync ${dry_run_option} -v -rltz -e \"ssh -x\" " .
     "files ${opt_user}${remote_host}:${remote_home}";
