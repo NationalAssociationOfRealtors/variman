@@ -11,6 +11,7 @@ import com.meterware.servletunit.ServletUnitClient;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -21,8 +22,8 @@ import net.sf.hibernate.SessionFactory;
 
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
+import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.ObjectMother;
 import org.realtors.rets.server.webapp.WebApp;
 
 import org.xml.sax.SAXException;
@@ -36,7 +37,9 @@ public class GetMetadataHandlerTest extends LocalTestCase
     {
         // Create metadata for the system to use
         MetadataManager manager = new MetadataManager();
-        manager.addRecursive(ObjectMother.createSystem());
+        MSystem system = new MSystem();
+        system.setDate(new Date());
+        manager.addRecursive(system);
         WebApp.setMetadataManager(manager);
 
         ServletRunner servletRunner = new ServletRunner();
