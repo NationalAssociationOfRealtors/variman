@@ -26,8 +26,27 @@ public class StartTestAction extends CctAction
                   testRunner.getDescription(testName));
 
         testRunner.startTestByName(testName);
+        
+        ActionForward forward;
+        String done = form.getDone();
+        if (done == null || done.equals("home"))
+        {
+            forward = mapping.findForward("home");
+        }
+        else        
+        {
+            forward = mapping.findForward("showProcedure");
+            ActionForward newForward =
+                new ActionForward(forward.getName(), forward.getPath(),
+                                  forward.getRedirect(),
+                                  forward.getContextRelative());
+            StringBuffer path = new StringBuffer(newForward.getPath());
+            path.append("?testName=").append(testName);
+            newForward.setPath(path.toString());
+            forward = newForward;
+        }
 
-        return mapping.findForward("home");
+        return forward;
     }
 
     private static final Logger LOG =

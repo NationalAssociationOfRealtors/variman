@@ -34,6 +34,7 @@
        <html:form action="/cct/start_test" method="GET" >
         <html:submit>Start</html:submit>
         <html:hidden property="testName" value='<%= pageTestName %>'/>
+        <html:hidden property="done" value="home"/>
        </html:form>
       </logic:notPresent>
       <logic:present name="cctActiveTest">
@@ -41,12 +42,14 @@
         <html:form action="/cct/stop_test" method="GET" >
          <html:submit>Stop</html:submit>
          <html:hidden property="testName" value="<%= pageTestName %>" />
+         <html:hidden property="done" value="home"/>
         </html:form>
        </logic:equal>
        <logic:notEqual name="cctActiveTest" value="<%= pageTestName %>" >
         <html:form action="/cct/start_test" method="GET" >
          <html:submit disabled="true" >Start</html:submit>
          <html:hidden property="testName" value="<%= pageTestName %>" />
+         <html:hidden property="done" value="home"/>
         </html:form>
        </logic:notEqual>
       </logic:present>
