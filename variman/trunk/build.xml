@@ -10,6 +10,7 @@
   <!-- This must be done before any other propertes -->
   <property file="${basedir}/build.properties" />
   <property file="${user.home}/.build.properties" />
+  <property file="${basedir}/project/build.properties" />
 
   <fileset id="hibernate.mapping.files" dir="project/hibernate/mappings">
     <include name="**/*.hbm.xml" />
@@ -588,6 +589,8 @@
         <path refid="lib.path"/>
         <pathelement path="${java.class.path}"/>
         <path refid="hibernate.path"/>
+        <path refid="webapp.path"/>
+        <path refid="embedded.path"/>
         <pathelement path="${servlet.jar}"/>
         <pathelement path="${log4j.jar}"/>
         <pathelement path="${commons-lang.jar}"/>
