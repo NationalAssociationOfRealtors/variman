@@ -117,7 +117,7 @@ public class MetadataImporter extends MetadataHelpers
                 StringBuffer tmp = new StringBuffer("rets_");
                 tmp.append(resource.getResourceID()).append("_");
                 tmp.append(hClass.getClassName());
-                hClass.setDbTable(tmp.toString());
+                hClass.setDbTable(tmp.toString().toLowerCase());
 
                 hClass.updateLevel();
 
@@ -274,7 +274,6 @@ public class MetadataImporter extends MetadataHelpers
     /**
      * Meant to be called only from do Lookup.
      *
-     * @param rSession the rets session
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
@@ -477,7 +476,7 @@ public class MetadataImporter extends MetadataHelpers
                         
                     hTable.setLongName(md.getAttribute("LongName"));
 
-                    String tmp = md.getAttribute("DbName");
+                    String tmp = md.getAttribute("DbName").toLowerCase();
                     if (tmp.startsWith("r_"))
                     {
                         hTable.setDbName(StringUtils.substring(tmp, 0, 10));
@@ -829,7 +828,6 @@ public class MetadataImporter extends MetadataHelpers
     /**
      * Intended to be called by doValidationExternal.
      *
-     * @param rSession the rets session
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
@@ -904,7 +902,6 @@ public class MetadataImporter extends MetadataHelpers
     /**
      * Requires that Table to be done.
      *
-     * @param rSession the rets session
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
@@ -1107,7 +1104,7 @@ public class MetadataImporter extends MetadataHelpers
 
     /**
      * 
-     * @param string
+     * @param filename
      */
     private void setFile(String filename)
     {
@@ -1177,7 +1174,7 @@ public class MetadataImporter extends MetadataHelpers
 
     /**
      * 
-     * @param opts
+     * @param opt
      */
     private static void printHelp(Options opt)
     {
@@ -1191,8 +1188,8 @@ public class MetadataImporter extends MetadataHelpers
     private RetsSession mRetsSession;
     private SessionFactory mSessions;
     private String mUsername;
-    private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.36 2003/10/09 15:33:43 dribin Exp $";
+    static final String CVSID =
+        "$Id: MetadataImporter.java,v 1.37 2003/10/27 16:27:21 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
