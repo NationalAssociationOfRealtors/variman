@@ -191,7 +191,7 @@ public class DatabaseConfig implements Serializable
         properties.setProperty(Environment.DIALECT,
                                mDatabaseType.getDialectClass());
         properties.setProperty(Environment.SHOW_SQL,
-                               Boolean.toString(mShowSql));
+                               Util.toString(mShowSql));
 
         properties.setProperty(Environment.DBCP_MAXACTIVE,
                                Integer.toString(mMaxActive));

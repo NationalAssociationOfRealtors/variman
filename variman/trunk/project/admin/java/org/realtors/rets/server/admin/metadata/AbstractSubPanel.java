@@ -15,6 +15,7 @@ import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxTextValidator;
 import org.wxwindows.wxWindow;
 
+import org.realtors.rets.server.Util;
 import org.realtors.rets.server.admin.BooleanChoice;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
 
@@ -54,7 +55,7 @@ public abstract class AbstractSubPanel extends wxScrolledWindow
 
     public static void setValue(wxTextCtrl textCtrl, boolean b)
     {
-        textCtrl.SetValue(Boolean.toString(b));
+        textCtrl.SetValue(Util.toString(b));
     }
 
     public static void setValue(wxChoice choice, Object object)

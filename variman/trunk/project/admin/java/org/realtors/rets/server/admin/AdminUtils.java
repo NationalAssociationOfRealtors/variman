@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
+import org.realtors.rets.server.Util;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
@@ -43,7 +44,7 @@ public class AdminUtils
 
     public static void setValue(wxTextCtrl textCtrl, boolean b)
     {
-        textCtrl.SetValue(Boolean.toString(b));
+        textCtrl.SetValue(Util.toString(b));
     }
 
     public static void initConfig() throws RetsServerException

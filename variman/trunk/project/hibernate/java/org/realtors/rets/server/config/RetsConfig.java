@@ -143,7 +143,7 @@ public class RetsConfig
     private Element addChild(Element element, String name, boolean bool)
     {
         return element.addContent(
-            new Element(name).setText(Boolean.toString(bool)));
+            new Element(name).setText(Util.toString(bool)));
     }
 
     private Element addChild(Element element, String name, int number)
