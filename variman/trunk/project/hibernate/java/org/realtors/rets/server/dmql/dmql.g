@@ -21,23 +21,11 @@ tokens
 }
 
 {
-    public String validateFieldName(Token t)
-        throws SemanticException
-    {
-        String fieldName = t.getText();
-        if (mMetadata.isValidFieldName(fieldName)) {
-            return fieldName;
-        }
-        else {
-            throw newSemanticException("Unknown field name: " + fieldName, t);
-        }
-    }
-
-    public boolean isLookupField(String fieldName) {
+    private boolean isLookupField(String fieldName) {
         return mMetadata.isValidLookupName(fieldName);
     }
 
-    public boolean isStringField(String fieldName) {
+    private boolean isStringField(String fieldName) {
         return mMetadata.isValidStringName(fieldName);
     }
 
@@ -52,75 +40,12 @@ tokens
         }
     }
 
-    public void addLookup(LookupList list, Token t)
-        throws SemanticException
-    {
-        String lookupName = list.getField();
-        String lookupValue = t.getText();
-        if (mMetadata.isValidLookupValue(lookupName, lookupValue)) {
-            list.addLookup(lookupValue);
-        }
-        else {
-            throw newSemanticException("No such lookup value [" +
-                                       lookupName + "]: " + lookupValue, t);
-        }
-    }
-
-    private void addStringEq(DmqlStringList list, Token t) 
-        throws SemanticException
-    {
-        list.add(new DmqlString(t.getText()));
-    }
-
-    private void addStringStart(DmqlStringList list, Token t) 
-        throws SemanticException
-    {
-        DmqlString string = new DmqlString();
-        string.add(t.getText());
-        string.add(DmqlString.MATCH_ZERO_OR_MORE);
-        list.add(string);
-    }
-
-    private void addStringContains(DmqlStringList list, Token t) 
-        throws SemanticException
-    {
-        DmqlString string = new DmqlString();
-        string.add(DmqlString.MATCH_ZERO_OR_MORE);
-        string.add(t.getText());
-        string.add(DmqlString.MATCH_ZERO_OR_MORE);
-        list.add(string);
-    }
-
-    private void add(DmqlString string, Token t) {
-        string.add(t.getText());
-    }
-
-    private void add(DmqlString string, DmqlStringComponent component) {
-        string.add(component);
-    }
-
-    private void addStar(DmqlString string) {
-        string.add(DmqlString.MATCH_ZERO_OR_MORE);
-    }
-
-    private void addQuestion(DmqlString string) {
-        string.add(DmqlString.MATCH_ZERO_OR_ONE);
-    }
-
     public void setMetadata(DmqlParserMetadata metadata) {
         mMetadata = metadata;
     }
 
     public void setDmqlLexer(DmqlLexer lexer) {
         mLexer = lexer;
-    }
-
-    public void print(String s) {
-        // System.out.println(s);
-    }
-
-    public void print(Token t) {
-        // System.out.println(t);
     }
 
     public void traceIn(String text) throws TokenStreamException {
@@ -135,8 +60,7 @@ tokens
         mTrace = trace;
     }
 
-    private SemanticException newSemanticException(String message, Token t)
-    {
+    private SemanticException newSemanticException(String message, Token t) {
         return new SemanticException(message, t.getFilename(), t.getLine(),
                                      t.getColumn());
     }
@@ -173,15 +97,15 @@ field_name
     : text
     ;
 
-field_value [AST ast_name]
-    : {isLookupField(ast_name.getText())}? lookup_list[ast_name]
-    | {isStringField(ast_name.getText())}? string_list[ast_name]
-    | range_list[ast_name]
+field_value [AST name]
+    : {isLookupField(name.getText())}? lookup_list[name]
+    | {isStringField(name.getText())}? string_list[name]
+    | range_list[name]
     ;
 
-range_list [AST ast_name]
+range_list [AST name]
     : range (COMMA! range)*
-        {#range_list = #([RANGE_LIST], ast_name, #range_list);}
+        {#range_list = #([RANGE_LIST], name, #range_list);}
     ;
 
 range
@@ -202,12 +126,14 @@ greater
     : (period | number) p:PLUS^ {#p.setType(GREATER);}
     ;
 
-number : n:NUMBER {print("n"); print(n);} ;
+number
+    : NUMBER
+    ;
 
 period
     : date
     | datetime
-    | t:TIME {print("t"); print(t);}
+    | TIME
     ;
 
 date
@@ -220,43 +146,43 @@ datetime
     | NOW
     ;
 
-lookup_list [AST ast_name]
-    : o:lookup_or[ast_name]
-    | a:lookup_and[ast_name]
-    | n:lookup_not[ast_name]
+lookup_list [AST name]
+    : o:lookup_or[name]
+    | a:lookup_and[name]
+    | n:lookup_not[name]
     ;
 
-lookup_or [AST ast_name]
-    : p:PIPE! l1:lookups[ast_name]
-        {#lookup_or = #([LOOKUP_OR, "|"], ast_name, l1);}
+lookup_or [AST name]
+    : p:PIPE! l1:lookups[name]
+        {#lookup_or = #([LOOKUP_OR, "|"], name, l1);}
     // This is the "implied" OR
-    |! l2:lookup[ast_name]
-        {#lookup_or = #([LOOKUP_OR, "|"], ast_name, l2);}
+    |! l2:lookup[name]
+        {#lookup_or = #([LOOKUP_OR, "|"], name, l2);}
     ;
 
-lookup_and [AST ast_name]
-    : p:PLUS! {#p.setType(LOOKUP_AND);} l:lookups[ast_name]
-        {#lookup_and = #([LOOKUP_AND, "+"], ast_name, l);}
+lookup_and [AST name]
+    : p:PLUS! {#p.setType(LOOKUP_AND);} l:lookups[name]
+        {#lookup_and = #([LOOKUP_AND, "+"], name, l);}
     ;
 
-lookup_not [AST ast_name]
-    : t:TILDE! {#t.setType(LOOKUP_NOT);} l:lookups[ast_name]
-        {#lookup_not = #([LOOKUP_NOT, "~"], ast_name, l);}
+lookup_not [AST name]
+    : t:TILDE! {#t.setType(LOOKUP_NOT);} l:lookups[name]
+        {#lookup_not = #([LOOKUP_NOT, "~"], name, l);}
     ;
 
-lookups [AST ast_name]
-    : lookup[ast_name] (COMMA! lookup[ast_name])*
+lookups [AST name]
+    : lookup[name] (COMMA! lookup[name])*
     ;
 
-lookup [AST ast_name]
+lookup [AST name]
     { Token t; }
-    : t=t:text_token {assertValidLookupValue(ast_name,t);} {#t.setType(LOOKUP);}
-    | n:NUMBER  {assertValidLookupValue(ast_name,n);} {#n.setType(LOOKUP);}
+    : t=t:text_token {assertValidLookupValue(name,t); #t.setType(LOOKUP);}
+    | n:NUMBER       {assertValidLookupValue(name,n); #n.setType(LOOKUP);}
     ;
 
-string_list [AST ast_name]
+string_list [AST name]
     : string (COMMA! string)*
-        {#string_list = #([STRING_LIST], ast_name, #string_list);}
+        {#string_list = #([STRING_LIST], name, #string_list);}
     ;
 
 string
