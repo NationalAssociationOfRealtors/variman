@@ -7,15 +7,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForm;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
-import org.realtors.rets.server.webapp.Paths;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,6 +60,4 @@ public class IndexAction extends CctAction
 
         return mapping.findForward("home");
     }
-
-    private static final Log LOG = LogFactory.getLog(IndexAction.class);
 }
