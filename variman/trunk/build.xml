@@ -166,6 +166,11 @@
         <pathelement location="build/hibernate/classes"/>
       </classpath>
     </javac>
+    <copy todir="build/hibernate/test/classes">
+      <fileset dir="project/hibernate/test/java" includes="**/*"
+               excludes="**/*.java"/>
+    </copy>
+
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
          basedir="build/hibernate/classes"
          excludes="hibernate.properties" index="true"/>
