@@ -2,8 +2,7 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
-import org.realtors.rets.server.DigestUtils;
-import org.apache.commons.lang.RandomStringUtils;
+
 
 
 public class DigestAuthenticateResponse

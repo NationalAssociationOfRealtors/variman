@@ -81,7 +81,7 @@ public class NonceTable
         // Make an atomic copy of all entries so the lock is released while
         // iterating the entries
         List entries;
-        synchronized(this)
+        synchronized (this)
         {
             entries = new ArrayList(mNonceTable.values());
         }
@@ -92,11 +92,13 @@ public class NonceTable
         {
             Entry entry = (Entry) entries.get(i);
             if (entry.getExpirationTime() <= currentTime)
-                synchronized(this)
+            {
+                synchronized (this)
                 {
                     mNonceTable.remove(entry.getNonce());
                     LOG.debug("Removed old nonce <" + entry.getNonce() + ">");
                 }
+            }
         }
     }
 
