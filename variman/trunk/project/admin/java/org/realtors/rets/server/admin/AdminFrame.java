@@ -50,10 +50,20 @@ public class AdminFrame extends wxFrame
         databaseMenu.Append(CREATE_SCHEMA, "&Create Schema...",
                          "Create metadata schema");
 
+
         wxMenuBar menuBar = new wxMenuBar();
         menuBar.Append(fileMenu, "&File");
         menuBar.Append(databaseMenu, "&Database");
         menuBar.Append(userMenu, "&User");
+        if (System.getProperty("rex.debug") != null)
+        {
+            wxMenu debugMenu = new wxMenu();
+            debugMenu.Append(CREATE_DATA_SCHEMA, "Create Data Schema...");
+            debugMenu.Append(CREATE_PROPERTIES, "Create Properties...");
+            menuBar.Append(debugMenu, "Debug");
+            EVT_MENU(CREATE_DATA_SCHEMA, new OnCreateDataSchema());
+            EVT_MENU(CREATE_PROPERTIES, new OnCreateProperties());
+        }
         SetMenuBar(menuBar);
 
         initConfig();
@@ -187,6 +197,22 @@ public class AdminFrame extends wxFrame
         }
     }
 
+    private class OnCreateDataSchema implements wxCommandListener
+    {
+        public void handleEvent(wxCommandEvent event)
+        {
+            new CreateDataSchemaCommand().execute();
+        }
+    }
+
+    private class OnCreateProperties implements wxCommandListener
+    {
+        public void handleEvent(wxCommandEvent event)
+        {
+            new CreatePropertiesCommand(100).execute();
+        }
+    }
+
     private static final Logger LOG =
         Logger.getLogger(AdminFrame.class);
     private static final int SAVE = wxNewId();
@@ -198,6 +224,9 @@ public class AdminFrame extends wxFrame
     private static final int REMOVE_USER = wxNewId();
 
     public static final int NOTEBOOK = wxNewId();
+
+    private static final int CREATE_DATA_SCHEMA = wxNewId();
+    private static final int CREATE_PROPERTIES = wxNewId();
 
     private static final int USERS_PAGE = 1;
 
