@@ -9,6 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -1027,7 +1030,7 @@ public class MetadataImporter extends MetadataHelpers
                     standardName, Hibernate.STRING);
                 if (results.size() == 1)
                 {
-                    name = (TableStandardName) results.get(1);
+                    name = (TableStandardName) results.get(0);
                 }
             }
             catch (HibernateException e)
@@ -1056,6 +1059,7 @@ public class MetadataImporter extends MetadataHelpers
         {
             hSession = mSessions.openSession();
             tx = hSession.beginTransaction();
+            deleteExistingMetadata();
 
             MSystem hSystem = doSystem(hSession);
             doResource(hSession, hSystem);
@@ -1093,6 +1097,102 @@ public class MetadataImporter extends MetadataHelpers
             }
         }
     }
+
+    private void deleteExistingMetadata()
+        throws HibernateException, SQLException
+    {
+        // The ordering of the tables is crucial. If deletion is done in the
+        // wrong order, database constraints will be violated. This is
+        // basically walks the metadata tree from the bottom up.
+        String[] tables = new String[] {
+            "rets_metadata_foreignkey",
+            "rets_metadata_lookuptype",
+            "rets_metadata_object",
+            "rets_metadata_table_editmasks",
+            "rets_metadata_table_standard_name",
+            "rets_metadata_updatetype_attributes",
+            "rets_metadata_updatetype_validationexpressions",
+            "rets_metadata_validationexpression",
+            "rets_metadata_validationexternaltype_displayfield",
+            "rets_metadata_validationexternaltype_resultfields",
+            "rets_metadata_validationexternaltype_searchfield",
+            "rets_metadata_validationlookuptype",
+            "rets_metadata_editmask",
+            "rets_metadata_updatetype",
+            "rets_metadata_validationexternaltype",
+            "rets_metadata_validationlookup",
+            "rets_metadata_table",
+            "rets_metadata_update",
+            "rets_metadata_updatehelp",
+            "rets_metadata_validationexternal",
+            "rets_metadata_class",
+            "rets_metadata_lookup",
+            "rets_metadata_searchhelp",
+            "rets_metadata_resource",
+            "rets_metadata_system",
+        };
+
+        Session session = null;
+        Statement statement = null;
+        Connection connection = null;
+        try
+        {
+            session = mSessions.openSession();
+            connection = session.connection();
+            statement = connection.createStatement();
+            for (int i = 0; i < tables.length; i++)
+            {
+                String table = tables[i];
+                System.out.println("Deleting " + table);
+                statement.executeUpdate("DELETE FROM " + table);
+                statement.close();
+            }
+            connection.commit();
+        }
+        catch (SQLException e)
+        {
+            if (connection != null)
+            {
+                connection.rollback();
+            }
+        }
+        finally
+        {
+            close(statement);
+            close(session);
+        }
+    }
+
+    private void close(Session session)
+    {
+        try
+        {
+            if (session != null)
+            {
+                session.close();
+            }
+        }
+        catch (HibernateException e)
+        {
+            LOG.error("Caught", e);
+        }
+    }
+
+    private void close(Statement statement)
+    {
+        try
+        {
+            if (statement != null)
+            {
+                statement.close();
+            }
+        }
+        catch (SQLException e)
+        {
+            LOG.error("Caught", e);
+        }
+    }
+
     /**
      * 
      * @param string
@@ -1189,7 +1289,7 @@ public class MetadataImporter extends MetadataHelpers
     private SessionFactory mSessions;
     private String mUsername;
     static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.37 2003/10/27 16:27:21 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.38 2003/12/04 20:44:58 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
