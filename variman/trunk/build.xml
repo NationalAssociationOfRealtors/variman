@@ -120,7 +120,7 @@
   <target name="build-hibernate" depends="prepare">
     <antlr target="project/hibernate/java/org/realtors/rets/server/dmql/dmql.g"
            outputdirectory="build/hibernate/generated/org/realtors/rets/server/dmql"/>
-    <javac destdir="build/hibernate/classes"
+    <javac target="${compile.vmtarget}" destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -130,7 +130,7 @@
         <path refid="hibernate.path" />
       </classpath>
     </javac>
-    <javac srcdir="project/hibernate/test/java"
+    <javac target="${compile.vmtarget}" srcdir="project/hibernate/test/java"
            destdir="build/hibernate/test/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
@@ -275,7 +275,7 @@
         <path refid="embedded.path" />
       </classpath>
     </depend>
-    <javac srcdir="project/embedded/java"
+    <javac target="${compile.vmtarget}" srcdir="project/embedded/java"
            destdir="build/embedded/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
@@ -347,7 +347,7 @@
         <path refid="webapp.path"/>
       </classpath>
     </depend>
-    <javac srcdir="project/webapp/java"
+    <javac target="${compile.vmtarget}" srcdir="project/webapp/java"
            destdir="build/rets-server/webapp/WEB-INF/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -364,7 +364,7 @@
         <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
       </classpath>
     </depend>
-    <javac srcdir="project/webapp/test/java"
+    <javac target="${compile.vmtarget}" srcdir="project/webapp/test/java"
             destDir="build/webapp/test/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -435,7 +435,7 @@
         <path refid="datagen.path"/>
       </classpath>
     </depend>
-    <javac srcdir="project/datagen/java"
+    <javac target="${compile.vmtarget}" srcdir="project/datagen/java"
            destdir="build/datagen/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -487,7 +487,7 @@
         <path refid="importer.path"/>
       </classpath>
     </depend>
-    <javac srcdir="project/importer/java"
+    <javac target="${compile.vmtarget}" srcdir="project/importer/java"
            destdir="build/importer/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -542,7 +542,7 @@
         <path refid="admin.path"/>
       </classpath>
     </depend>
-    <javac srcdir="project/admin/java"
+    <javac target="${compile.vmtarget}" srcdir="project/admin/java"
            destdir="build/admin/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -560,7 +560,7 @@
         <pathelement location="build/admin/classes"/>
       </classpath>
     </depend>
-    <javac srcdir="project/admin/test/java"
+    <javac target="${compile.vmtarget}" srcdir="project/admin/test/java"
            destdir="build/admin/test/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
