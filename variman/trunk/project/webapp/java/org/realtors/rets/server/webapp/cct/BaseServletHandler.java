@@ -91,8 +91,7 @@ public abstract class BaseServletHandler implements ServletHandler
         while (paramNames.hasMoreElements())
         {
             String paramName = (String) paramNames.nextElement();
-            mActualParameters.put(paramName.toLowerCase(),
-                                  request.getParameter(paramName));
+            mActualParameters.put(paramName, request.getParameter(paramName));
         }
     }
 
