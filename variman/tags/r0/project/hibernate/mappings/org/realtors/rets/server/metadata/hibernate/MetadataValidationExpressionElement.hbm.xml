@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataValidationExpressionElement" table="e_validation_expression">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+    <id name="id" column="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>  
+
+    <property column="validation_expression_id" name="validationExpressionID" type="string"/>
+    <property column="validation_expression_type" name="validationExpressionType" type="string"/>
+    <property column="value" name="value" type="string"/>
+    
+  </class>
+  
+</hibernate-mapping>
