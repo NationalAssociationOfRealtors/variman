@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataSearchHelpElement" table="e_search_help">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+  
+    <id column="id" name="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>
+    
+    <property column="search_help_id" name="searchHelpID" type="string"/>
+    <property column="value" name="value" type="string"/>
+
+  </class>
+  
+</hibernate-mapping>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataTableElement" table="e_table">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+    <id name="id" column="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>  
+
+    <property column="system_name" name="systemName" type="string"/>
+    <property column="standard_name" name="standardName" type="string"/>
+    <property column="long_name" name="longName" type="string"/>
+    <property column="db_name" name="dbName" type="string"/>
+    <property column="short_name" name="shortName" type="string"/>
+    <property column="maximum_length" name="maximumLength" type="int"/>
+    <many-to-one name="dataType" class="org.nar.rets.metadata.hibernate.MetadataSystemLookupDataType" cascade="none"/>
+    <property column="rets_precision" name="precision" type="int"/>
+    <property column="searchable" name="searchable" type="boolean"/>
+    <many-to-one name="interpretation" class="org.nar.rets.metadata.hibernate.MetadataSystemLookupInterpretation" cascade="none"/>
+    <many-to-one name="alignment" class="org.nar.rets.metadata.hibernate.MetadataSystemLookupAlignment" cascade="none"/>
+    <property column="use_separator" name="useSeparator" type="boolean"/>
+    <many-to-one name="editMaskID" class="org.nar.rets.metadata.hibernate.MetadataEditMaskElement" cascade="none"/>
+    <many-to-one name="lookupName" class="org.nar.rets.metadata.hibernate.MetadataLookupElement" cascade="none"/>
+    <property column="max_select" name="maxSelect" type="int"/>
+    <many-to-one name="units" class="org.nar.rets.metadata.hibernate.MetadataSystemLookupUnits" cascade="none"/>
+    <property column="rets_index" name="index" type="int"/>
+    <property column="minumum" name="minimum" type="int"/>
+    <property column="maximum" name="maximum" type="int"/>
+    <property column="rets_default" name="rets_default" type="int"/>
+    <property column="required" name="required" type="int"/>
+    <many-to-one name="searchHelpID" class="org.nar.rets.metadata.hibernate.MetadataSearchHelpElement" cascade="none"/>
+    <property column="rets_unique" name="unique" type="boolean"/>
+
+  </class>
+  
+</hibernate-mapping>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataTable" table="m_table">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+    <id name="id" column="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>
+  
+    <many-to-one name="stamp" class="org.nar.rets.metadata.hibernate.MetadataStamp" cascade="all"/>
+
+    <set role="elements" lazy="false" readonly="false" cascade="all">
+      <key column="elements" type="long"/>
+      <one-to-many class="org.nar.rets.metadata.hibernate.MetadataTableElement"/>
+    </set>
+    
+  </class>
+  
+</hibernate-mapping>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping.dtd">
+
+<hibernate-mapping>
+  
+  <class name="org.nar.rets.metadata.hibernate.MetadataUpdateTypeElement" table="e_update_type">
+  
+    <!--<jcs-cache usage="read-write"/>-->
+    <id name="id" column="uid" type="long">
+      <generator class="hilo.long"/>
+    </id>  
+
+    <property column="system_name" name="systemName" type="string"/>
+    <property column="sequence" name="sequence" type="int"/>
+    <property column="rets_default" name="rets_default" type="int"/>
+
+    <many-to-one name="validationLookup" class="org.nar.rets.metadata.hibernate.MetadataValidationLookupElement" cascade="none"/>
+    <many-to-one name="validationExternal" class="org.nar.rets.metadata.hibernate.MetadataValidationExternalElement" cascade="none"/>
+    <many-to-one name="validationExpression" class="org.nar.rets.metadata.hibernate.MetadataValidationExpressionElement" cascade="none"/>
+    <many-to-one name="updateHelpID" class="org.nar.rets.metadata.hibernate.MetadataUpdateHelpElement" cascade="none"/>
+
+    <set role="attributes" table="lookup_attributes">
+      <key column="lookup_name"/>
+      <many-to-many column="lookup_attribute" class="org.nar.rets.metadata.hibernate.MetadataSystemLookupAttribute"/>
+    </set>
+    
+  </class>
+  
+</hibernate-mapping>
