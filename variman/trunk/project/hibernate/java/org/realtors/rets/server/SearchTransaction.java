@@ -32,46 +32,159 @@ public class SearchTransaction
     public SearchTransaction(SearchParameters parameters)
     {
         mParameters = parameters;
-        mExecuteSql = true;
+        mExecuteQuery = true;
     }
 
-    public void setExecuteSql(boolean executeSql)
+    public void setExecuteQuery(boolean executeQuery)
     {
-        mExecuteSql = executeSql;
+        mExecuteQuery = executeQuery;
     }
 
     public void execute(PrintWriter out, MetadataManager manager,
                         SessionFactory sessions)
         throws RetsServerException
     {
+        mSessions = sessions;
         MClass aClass = (MClass) manager.findByPath(
             MClass.TABLE,
             mParameters.getResourceId() + ":" + mParameters.getClassName());
-        ServerDmqlMetadata metadata =
-            new ServerDmqlMetadata(aClass, mParameters.isStandardNames());
-        Collection columns = metadata.getAllColumns();
-        String sql = generateSql(metadata, columns, aClass);
-        LOG.debug("SQL: " + sql);
-        Collection fields = columnsToFields(columns, metadata);
-        executeSql(sql, out, fields, sessions);
+        mMetadata = new ServerDmqlMetadata(aClass,
+                                           mParameters.isStandardNames());
+        mFromClause = aClass.getDbTable();
+        generateWhereClause();
+        if (!mExecuteQuery)
+        {
+            RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
+        }
+        else
+        {
+            getCount();
+            if (mParameters.getCount() == SearchParameters.COUNT_ONLY)
+            {
+                printCountOnly(out);
+            }
+            else
+            {
+                printData(out);
+            }
+        }
     }
 
-    private String generateSql(ServerDmqlMetadata metadata, Collection columns,
-                               MClass aClass)
+    /**
+     * Queries the database for the data and outputs the result.
+     *
+     * @param out
+     * @throws RetsServerException
+     */
+    private void printData(PrintWriter out)
+        throws RetsServerException
+    {
+        Collection columns = getColumns(mMetadata);
+        String sql = generateSql(StringUtils.join(columns.iterator(), ","));
+        LOG.debug("SQL: " + sql);
+        Collection fields = columnsToFields(columns, mMetadata);
+        executeSql(sql, out, fields);
+    }
+
+    /**
+     * Gets the count by querying the database. The count is the number of rows
+     * matching the DMQL query.
+     *
+     * @throws RetsServerException
+     */
+    private void getCount() throws RetsServerException
+    {
+        mCount = 0;
+        if (!mParameters.countRequested())
+        {
+            return;
+        }
+
+        String countSql = generateSql("COUNT(*)");
+        LOG.debug("Count SQL: " + countSql);
+        Session session = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try
+        {
+            session = mSessions.openSession();
+            Connection connection = session.connection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(countSql);
+            if (resultSet.next())
+            {
+                mCount = resultSet.getInt(1);
+            }
+            else
+            {
+                LOG.warn("COUNT(*) returned no rows");
+            }
+        }
+        catch (HibernateException e)
+        {
+            LOG.error("Caught", e);
+            throw new RetsServerException(e);
+        }
+        catch (SQLException e)
+        {
+            LOG.error("Caught", e);
+            throw new RetsServerException(e);
+        }
+        finally
+        {
+            close(resultSet);
+            close(statement);
+            close(session);
+        }
+    }
+
+    private Collection getColumns(ServerDmqlMetadata metadata)
+        throws RetsReplyException
+    {
+        String[] fields = mParameters.getSelect();
+        if (fields == null)
+        {
+            return metadata.getAllColumns();
+        }
+        else
+        {
+            List columns = new ArrayList();
+            for (int i = 0; i < fields.length; i++)
+            {
+                String column = metadata.fieldToColumn(fields[i]);
+                if (column == null)
+                {
+                    throw new RetsReplyException(ReplyCode.INVALID_SELECT,
+                                                 fields[i]);
+                }
+                columns.add(column);
+            }
+            return columns;
+        }
+    }
+
+    private String generateSql(String selectClause)
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("SELECT ");
+        buffer.append(selectClause);
+        buffer.append(" FROM ");
+        buffer.append(mFromClause);
+        buffer.append(" WHERE ");
+        buffer.append(mWhereCluase);
+        return buffer.toString();
+    }
+
+    private void generateWhereClause()
         throws RetsReplyException
     {
         try
         {
-            SqlConverter sqlConverter = parse(metadata);
+            SqlConverter sqlConverter = parse(mMetadata);
             StringWriter stringWriter = new StringWriter();
             PrintWriter sqlWriter = new PrintWriter(stringWriter);
-            sqlWriter.print("SELECT ");
-            sqlWriter.print(StringUtils.join(columns.iterator(), ", "));
-            sqlWriter.print(" FROM ");
-            sqlWriter.print(aClass.getDbTable());
-            sqlWriter.print(" WHERE ");
             sqlConverter.toSql(sqlWriter);
-            return stringWriter.toString();
+            mWhereCluase = stringWriter.toString();
         }
         catch (ANTLRException e)
         {
@@ -82,32 +195,36 @@ public class SearchTransaction
         }
     }
 
-    private void executeSql(String sql, PrintWriter out, Collection fields,
-                            SessionFactory sessions)
+    private void printCountOnly(PrintWriter out)
+    {
+        RetsUtils.printOpenRetsSuccess(out);
+        printCount(out);
+        RetsUtils.printCloseRets(out);
+    }
+
+    private void executeSql(String sql, PrintWriter out, Collection fields)
         throws RetsServerException
     {
-        if (!mExecuteSql)
-        {
-            RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
-            return;
-        }
-
         Session session = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try
         {
-            session = sessions.openSession();
+            session = mSessions.openSession();
             Connection connection = session.connection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery(sql.toString());
+            resultSet = statement.executeQuery(sql);
+            advance(resultSet);
             RetsUtils.printOpenRetsSuccess(out);
+            printCount(out);
             out.println("<DELIMITER value=\"09\"/>");
             out.print("<COLUMNS>\t");
             out.print(StringUtils.join(fields.iterator(), "\t"));
             out.println("\t</COLUMNS>");
-            int rowCount = 0;
-            while (resultSet.next())
+            int rowCount;
+            for (rowCount = 0;
+                 rowCount < mParameters.getLimit() && resultSet.next();
+                 rowCount++)
             {
                 out.print("<DATA>\t");
                 for (int i = 0; i < fields.size(); i++)
@@ -115,7 +232,6 @@ public class SearchTransaction
                     out.print(resultSet.getString(i+1) + "\t");
                 }
                 out.println("\t</DATA>");
-                rowCount++;
             }
             RetsUtils.printCloseRets(out);
             LOG.debug("Row count: " + rowCount);
@@ -133,6 +249,23 @@ public class SearchTransaction
             close(resultSet);
             close(statement);
             close(session);
+        }
+    }
+
+    private void printCount(PrintWriter out)
+    {
+        if (mParameters.countRequested())
+        {
+            out.println("<COUNT Records=\"" + mCount + "\"/>");
+        }
+    }
+
+    private void advance(ResultSet resultSet) throws SQLException
+    {
+        // Todo: Add scrollable ResultSet support
+        for (int i = 1; i < mParameters.getOffset(); i++)
+        {
+            resultSet.next();
         }
     }
 
@@ -211,5 +344,10 @@ public class SearchTransaction
     private static final Logger LOG =
         Logger.getLogger(SearchTransaction.class);
     private SearchParameters mParameters;
-    private boolean mExecuteSql;
+    private boolean mExecuteQuery;
+    private String mFromClause;
+    private String mWhereCluase;
+    private int mCount;
+    private SessionFactory mSessions;
+    private ServerDmqlMetadata mMetadata;
 }
