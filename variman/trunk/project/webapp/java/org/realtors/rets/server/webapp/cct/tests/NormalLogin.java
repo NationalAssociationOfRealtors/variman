@@ -22,8 +22,8 @@ public class NormalLogin extends BaseCertificationTest
     {
         ValidationResults results = new ValidationResults();
         login.validate(results);
-//        action.validate(results);
-//        logout.validate(results);
+        action.validate(results);
+        logout.validate(results);
         return results;
     }
 
@@ -38,7 +38,7 @@ public class NormalLogin extends BaseCertificationTest
         HandlerManager actionManager = HandlerManager.getInstance();
         login = actionManager.getLoginHandler(mTestContext);
         login.reset();
-        login.setSessionId("login-headers");
+        login.setSessionId(SESSION_ID);
         login.setGetInvokeCount(InvokeCount.ONE);
         login.addRequiredHeader("Accept", "^\\*/\\*$");
         login.addRequiredHeader("User-Agent", ".*");
@@ -47,16 +47,23 @@ public class NormalLogin extends BaseCertificationTest
         action = actionManager.getActionHandler();
         action.reset();
         action.setGetInvokeCount(InvokeCount.ONE);
-        action.addCookie("RETS-Session-ID", "login-headers");
+        login.addRequiredHeader("Accept", "^\\*/\\*$");
+        login.addRequiredHeader("User-Agent", ".*");
+        login.addRequiredHeader("RETS-Version", ".*");
+        action.addCookie("RETS-Session-ID", "^" + SESSION_ID + "$");
 
         logout = actionManager.getLogoutHandler();
         logout.reset();
         logout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
-//        logout.addCookie("RETS-Session-ID", "login-headers");
+        login.addRequiredHeader("Accept", "^\\*/\\*$");
+        login.addRequiredHeader("User-Agent", ".*");
+        login.addRequiredHeader("RETS-Version", ".*");
+        logout.addCookie("RETS-Session-ID", "^" + SESSION_ID + "$");
         mStatus = RUNNING;
     }
 
     private LoginHandler login;
     private ActionHandler action;
     private LogoutHandler logout;
+    public static final String SESSION_ID = "NormalLogin";
 }
