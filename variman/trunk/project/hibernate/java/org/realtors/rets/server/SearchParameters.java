@@ -1,6 +1,6 @@
 /*
  */
-package org.realtors.rets.server.webapp;
+package org.realtors.rets.server;
 
 import java.util.Map;
 
