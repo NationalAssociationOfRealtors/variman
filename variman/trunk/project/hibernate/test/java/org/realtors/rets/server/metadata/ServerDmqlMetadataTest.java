@@ -28,11 +28,11 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals("BATV", metadata.getLookupDbValue("AR", "BATV"));
         assertNull(metadata.getLookupDbValue("AR", "STC"));
         assertNull(metadata.getLookupDbValue("Area", "GENVA"));
-        assertTrue(metadata.isValidLookupName("AR"));
+        assertTrue(metadata.isLookupField("AR"));
         assertTrue(metadata.isValidLookupValue("AR", "GENVA"));
         assertTrue(metadata.isValidLookupValue("AR", "BATV"));
         assertFalse(metadata.isValidLookupValue("AR", "STC"));
-        assertFalse(metadata.isValidLookupName("Area"));
+        assertFalse(metadata.isLookupField("Area"));
 
         // -----
 
@@ -48,30 +48,30 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidFieldName("FOO"));
 
         // Check lookups
-        assertTrue(metadata.isValidLookupName("AR"));
+        assertTrue(metadata.isLookupField("AR"));
         assertTrue(metadata.isValidLookupValue("AR", "GENVA"));
         assertTrue(metadata.isValidLookupValue("AR", "BATV"));
         assertFalse(metadata.isValidLookupValue("AR", "STC"));
-        assertFalse(metadata.isValidLookupName("Area"));
+        assertFalse(metadata.isLookupField("Area"));
 
-        assertTrue(metadata.isValidLookupName("STATUS"));
+        assertTrue(metadata.isLookupField("STATUS"));
         assertTrue(metadata.isValidLookupValue("STATUS", "S"));
         assertTrue(metadata.isValidLookupValue("STATUS", "A"));
         assertTrue(metadata.isValidLookupValue("STATUS", "P"));
         assertFalse(metadata.isValidLookupValue("STATUS", "Z"));
-        assertFalse(metadata.isValidLookupName("ListingStatus"));
+        assertFalse(metadata.isLookupField("ListingStatus"));
 
-        assertFalse(metadata.isValidLookupName("OWNER"));
-        assertFalse(metadata.isValidLookupName("Owner"));
-        assertFalse(metadata.isValidLookupName("FOO"));
+        assertFalse(metadata.isLookupField("OWNER"));
+        assertFalse(metadata.isLookupField("Owner"));
+        assertFalse(metadata.isLookupField("FOO"));
 
         // Check strings
-        assertTrue(metadata.isValidStringName("OWNER"));
-        assertFalse(metadata.isValidStringName("AR"));
-        assertFalse(metadata.isValidStringName("STATUS"));
-        assertFalse(metadata.isValidStringName("LP"));
-        assertFalse(metadata.isValidStringName("FOO"));
-        assertFalse(metadata.isValidStringName("Owner"));
+        assertTrue(metadata.isCharacterField("OWNER"));
+        assertFalse(metadata.isCharacterField("AR"));
+        assertFalse(metadata.isCharacterField("STATUS"));
+        assertFalse(metadata.isCharacterField("LP"));
+        assertFalse(metadata.isCharacterField("FOO"));
+        assertFalse(metadata.isCharacterField("Owner"));
 
         // Check numerics
         assertFalse(metadata.isNumericField("OWNER"));
@@ -79,7 +79,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isNumericField("STATUS"));
         assertTrue(metadata.isNumericField("LP"));
         assertFalse(metadata.isNumericField("FOO"));
-        assertFalse(metadata.isValidStringName("ListingPrice"));
+        assertFalse(metadata.isCharacterField("ListingPrice"));
 
         // Check tables
         assertEquals(mOwner, metadata.getTable("OWNER"));
@@ -130,31 +130,31 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidFieldName("FOO"));
 
         // Check lookups
-        assertTrue(metadata.isValidLookupName("Area"));
+        assertTrue(metadata.isLookupField("Area"));
         assertTrue(metadata.isValidLookupValue("Area", "GENVA"));
         assertTrue(metadata.isValidLookupValue("Area", "BATV"));
         assertFalse(metadata.isValidLookupValue("Area", "STC"));
-        assertFalse(metadata.isValidLookupName("AR"));
+        assertFalse(metadata.isLookupField("AR"));
 
         // Check listing status uses lookup values from DTD
-        assertTrue(metadata.isValidLookupName("ListingStatus"));
+        assertTrue(metadata.isLookupField("ListingStatus"));
         assertTrue(metadata.isValidLookupValue("ListingStatus", "Pending"));
         assertTrue(metadata.isValidLookupValue("ListingStatus", "Active"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "Z"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "A"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "P"));
-        assertFalse(metadata.isValidLookupName("STATUS"));
+        assertFalse(metadata.isLookupField("STATUS"));
 
-        assertFalse(metadata.isValidLookupName("OWNER"));
-        assertFalse(metadata.isValidLookupName("Owner"));
-        assertFalse(metadata.isValidLookupName("Foo"));
+        assertFalse(metadata.isLookupField("OWNER"));
+        assertFalse(metadata.isLookupField("Owner"));
+        assertFalse(metadata.isLookupField("Foo"));
 
         // Check strings
-        assertTrue(metadata.isValidStringName("Owner"));
-        assertFalse(metadata.isValidStringName("Area"));
-        assertFalse(metadata.isValidStringName("ListingStatus"));
-        assertFalse(metadata.isValidStringName("FOO"));
-        assertFalse(metadata.isValidStringName("OWNER"));
+        assertTrue(metadata.isCharacterField("Owner"));
+        assertFalse(metadata.isCharacterField("Area"));
+        assertFalse(metadata.isCharacterField("ListingStatus"));
+        assertFalse(metadata.isCharacterField("FOO"));
+        assertFalse(metadata.isCharacterField("OWNER"));
 
         // Check numerics
         assertFalse(metadata.isNumericField("Owner"));

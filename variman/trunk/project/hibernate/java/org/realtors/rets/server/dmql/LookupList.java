@@ -131,6 +131,8 @@ public class LookupList implements SqlConverter
         return new ToStringBuilder(this, Util.SHORT_STYLE)
             .append("type", mType)
             .append("looups", mLookups)
+            .append("isLookupMulti", mLookupMulti)
+            .append("field", mField)
             .toString();
     }
 

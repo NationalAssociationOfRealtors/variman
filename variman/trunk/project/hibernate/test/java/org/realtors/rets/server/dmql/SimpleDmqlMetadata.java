@@ -71,7 +71,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         return mFieldsToColumns.containsKey(fieldName);
     }
 
-    public boolean isValidStringName(String fieldName)
+    public boolean isCharacterField(String fieldName)
     {
         return mStrings.contains(fieldName);
     }
@@ -81,7 +81,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         return mNumerics.contains(fieldName);
     }
 
-    public boolean isValidLookupName(String lookupName)
+    public boolean isLookupField(String lookupName)
     {
         return mLookups.containsKey(lookupName);
     }
