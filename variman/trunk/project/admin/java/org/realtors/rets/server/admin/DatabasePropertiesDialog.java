@@ -24,12 +24,12 @@ import org.wxwindows.wxCommandEvent;
 import org.wxwindows.wxCommandListener;
 import org.wxwindows.wxDialog;
 import org.wxwindows.wxFlexGridSizer;
+import org.wxwindows.wxJUtil;
 import org.wxwindows.wxSize;
 import org.wxwindows.wxStaticLine;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
-import org.wxwindows.wxJUtil;
 
 public class DatabasePropertiesDialog extends wxDialog
 {
@@ -46,36 +46,36 @@ public class DatabasePropertiesDialog extends wxDialog
                  wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
         createDatabaseTypes(config);
-        grid.Add(mDatabaseTypes, 0, wxEXPAND | wxBOTTOM,  5);
+        grid.Add(mDatabaseTypes, 0, wxEXPAND | wxBOTTOM, 5);
 
         grid.Add(new wxStaticText(this, -1, "Host Name:"), 0,
-                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
         mHostName = new wxTextCtrl(this, -1, config.getHostName(),
                                    wxDefaultPosition, textSize);
-        grid.Add(mHostName, 0, wxEXPAND | wxBOTTOM,  5);
+        grid.Add(mHostName, 0, wxEXPAND | wxBOTTOM, 5);
 
         grid.Add(new wxStaticText(this, -1, "Database Name:"), 0,
-                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
         mDatabaseName = new wxTextCtrl(this, -1, config.getDatabaseName(),
                                        wxDefaultPosition, textSize);
-        grid.Add(mDatabaseName, 0, wxEXPAND | wxBOTTOM,  5);
+        grid.Add(mDatabaseName, 0, wxEXPAND | wxBOTTOM, 5);
 
         grid.Add(new wxStaticText(this, -1, "Username:"), 0,
-                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
         mUsername = new wxTextCtrl(this, -1, config.getUsername(),
                                    wxDefaultPosition, textSize);
-        grid.Add(mUsername, 0, wxEXPAND | wxBOTTOM,  5);
+        grid.Add(mUsername, 0, wxEXPAND | wxBOTTOM, 5);
 
         grid.Add(new wxStaticText(this, -1, "Password:"), 0,
-                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
         mPassword = new wxTextCtrl(this, -1, config.getPassword(),
                                    wxDefaultPosition, textSize,
                                    wxTE_PASSWORD);
-        grid.Add(mPassword, 0, wxEXPAND | wxBOTTOM,  5);
+        grid.Add(mPassword, 0, wxEXPAND | wxBOTTOM, 5);
 
         wxBoxSizer buttonBox = new wxBoxSizer(wxHORIZONTAL);
         wxButton button = new wxButton(this, wxID_OK, "Ok");
@@ -84,7 +84,7 @@ public class DatabasePropertiesDialog extends wxDialog
         mCancel.SetDefault();
         buttonBox.Add(mCancel, 0, wxLEFT, 15);
         button = new wxButton(this, TEST_CONNECTION, "Test Connection...");
-        buttonBox.Add(button,  0, wxLEFT, 15);
+        buttonBox.Add(button, 0, wxLEFT, 15);
 
         box.Add(grid, 0, wxEXPAND | wxALL, 15);
         box.Add(new wxStaticLine(this, -1), 0,
@@ -101,7 +101,7 @@ public class DatabasePropertiesDialog extends wxDialog
     private wxChoice createDatabaseTypes(DatabaseConfig config)
     {
         mDatabaseTypes = new wxChoice(this, -1, wxDefaultPosition);
-        mDatabaseTypeObjects = new DatabaseType[] {
+        mDatabaseTypeObjects = new DatabaseType[]{
             DatabaseType.POSTGRESQL,
             DatabaseType.SQLSERVER_JSQL
         };

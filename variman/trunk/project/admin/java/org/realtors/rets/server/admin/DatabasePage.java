@@ -8,23 +8,23 @@
 
 package org.realtors.rets.server.admin;
 
+import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.IOUtils;
+
+import org.apache.commons.lang.math.NumberUtils;
 
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxButton;
 import org.wxwindows.wxCommandEvent;
 import org.wxwindows.wxCommandListener;
+import org.wxwindows.wxDirDialog;
 import org.wxwindows.wxFlexGridSizer;
 import org.wxwindows.wxPanel;
-import org.wxwindows.wxStaticText;
-import org.wxwindows.wxWindow;
 import org.wxwindows.wxStaticLine;
+import org.wxwindows.wxStaticText;
 import org.wxwindows.wxTextCtrl;
-import org.wxwindows.wxDirDialog;
-
-import org.apache.commons.lang.math.NumberUtils;
+import org.wxwindows.wxWindow;
 
 public class DatabasePage extends wxPanel
 {
@@ -36,6 +36,7 @@ public class DatabasePage extends wxPanel
         wxStaticText label;
         wxFlexGridSizer grid;
         wxBoxSizer hBox;
+        wxBoxSizer hBox2;
         wxBoxSizer vBox;
 
         hBox = new wxBoxSizer(wxHORIZONTAL);
@@ -58,9 +59,9 @@ public class DatabasePage extends wxPanel
 
         label = new wxStaticText(this, -1, "Metadata Directory:");
         grid.Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxRIGHT |
-                           wxBOTTOM,  5);
+                           wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1);
-        wxBoxSizer hBox2 = new wxBoxSizer(wxHORIZONTAL);
+        hBox2 = new wxBoxSizer(wxHORIZONTAL);
         mMetadataDir = new wxTextCtrl(this, -1, "", wxDefaultPosition,
                                       wxDefaultSize, wxTE_READONLY);
         hBox2.Add(mMetadataDir, 1, wxEXPAND);
@@ -84,25 +85,25 @@ public class DatabasePage extends wxPanel
         grid = new wxFlexGridSizer(0, 3, 0, 0);
         grid.AddGrowableCol(2);
 
-        label = new wxStaticText(this,  -1, "Type:");
+        label = new wxStaticText(this, -1, "Type:");
         grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1);
         mDatabaseType = new wxStaticText(this, -1, "");
         grid.Add(mDatabaseType, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
 
-        label = new wxStaticText(this,  -1, "Host Name:");
+        label = new wxStaticText(this, -1, "Host Name:");
         grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, 0);
         mHostName = new wxStaticText(this, -1, "");
-        grid.Add(mHostName, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM,  5);
+        grid.Add(mHostName, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
 
-        label = new wxStaticText(this,  -1, "Database Name:");
+        label = new wxStaticText(this, -1, "Database Name:");
         grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, 0);
         mDatabaseName = new wxStaticText(this, -1, "");
-        grid.Add(mDatabaseName, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM,  5);
+        grid.Add(mDatabaseName, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
 
-        label = new wxStaticText(this,  -1, "Username:");
+        label = new wxStaticText(this, -1, "Username:");
         grid.Add(label, 0, wxALIGN_LEFT | wxBOTTOM | wxRIGHT, 5);
         grid.Add(SPACER_WIDTH, -1);
         mUsername = new wxStaticText(this, -1, "");

@@ -18,7 +18,6 @@ package org.realtors.rets.server.admin;
 public class HibernateConfigOptions
 {
     /**
-     * 
      * @return
      */
     public int getC3P0MaxSize()
@@ -27,7 +26,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public int getC3P0MaxStatements()
@@ -36,7 +34,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public int getC3P0MinSize()
@@ -45,7 +42,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public int getC3P0Timeout()
@@ -54,7 +50,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public String getConnectionDriverClass()
@@ -63,7 +58,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public String getConnectionPassword()
@@ -72,7 +66,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public String getConnectionURL()
@@ -81,7 +74,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public String getConnectionUsername()
@@ -90,7 +82,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public String getDebug()
@@ -99,7 +90,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public String getDialect()
@@ -108,7 +98,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public int getStatementCacheSize()
@@ -117,7 +106,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param i
      */
     public void setC3P0MaxSize(int i)
@@ -126,7 +114,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param i
      */
     public void setC3P0MaxStatements(int i)
@@ -135,7 +122,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param i
      */
     public void setC3P0MinSize(int i)
@@ -144,7 +130,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param i
      */
     public void setC3P0Timeout(int i)
@@ -153,7 +138,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param string
      */
     public void setConnectionDriverClass(String string)
@@ -162,7 +146,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param string
      */
     public void setConnectionPassword(String string)
@@ -171,7 +154,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param string
      */
     public void setConnectionURL(String string)
@@ -180,7 +162,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param string
      */
     public void setConnectionUsername(String string)
@@ -189,7 +170,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param string
      */
     public void setDebug(String string)
@@ -198,7 +178,6 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param string
      */
     public void setDialect(String string)
@@ -207,14 +186,13 @@ public class HibernateConfigOptions
     }
 
     /**
-     * 
      * @param i
      */
     public void setStatementCacheSize(int i)
     {
         mStatementCacheSize = i;
     }
-    
+
     private int mC3P0MaxSize;
     private int mC3P0MaxStatements;
     private int mC3P0MinSize;

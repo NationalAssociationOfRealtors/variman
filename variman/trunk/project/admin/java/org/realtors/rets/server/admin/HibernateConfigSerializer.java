@@ -24,14 +24,14 @@ public class HibernateConfigSerializer
     public static void toProperties(HibernateConfigOptions opts, Writer writer)
     {
     }
-    
+
     public static HibernateConfigOptions fromProperties(Reader reader)
     {
         return null;
     }
- 
+
     public static HibernateConfigOptions fromProperties(Properties props)
     {
-        return null;   
+        return null;
     }
 }

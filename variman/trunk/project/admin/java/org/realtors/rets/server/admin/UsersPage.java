@@ -22,6 +22,7 @@ import org.wxwindows.wxCommandListener;
 import org.wxwindows.wxContextMenuEvent;
 import org.wxwindows.wxContextMenuListener;
 import org.wxwindows.wxFlexGridSizer;
+import org.wxwindows.wxJUtil;
 import org.wxwindows.wxJWorker;
 import org.wxwindows.wxListBox;
 import org.wxwindows.wxMenu;
@@ -31,7 +32,6 @@ import org.wxwindows.wxSplitterWindow;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
-import org.wxwindows.wxJUtil;
 
 public class UsersPage extends wxPanel
 {

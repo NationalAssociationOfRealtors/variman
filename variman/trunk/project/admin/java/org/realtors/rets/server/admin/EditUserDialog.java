@@ -8,6 +8,8 @@
 
 package org.realtors.rets.server.admin;
 
+import org.realtors.rets.server.User;
+
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxButton;
 import org.wxwindows.wxDialog;
@@ -17,8 +19,6 @@ import org.wxwindows.wxStaticLine;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
-
-import org.realtors.rets.server.User;
 
 public class EditUserDialog extends wxDialog
 {
@@ -33,13 +33,13 @@ public class EditUserDialog extends wxDialog
         label = new wxStaticText(this, -1, "First Name:");
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
         mFirstName = new wxTextCtrl(this, -1, "", wxDefaultPosition,
-                                        textSize);
+                                    textSize);
         grid.Add(mFirstName, 0, wxALIGN_LEFT | wxBOTTOM, 5);
 
         label = new wxStaticText(this, -1, "Last Name:");
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
         mLastName = new wxTextCtrl(this, -1, "", wxDefaultPosition,
-                                       textSize);
+                                   textSize);
         grid.Add(mLastName, 0, wxALIGN_LEFT, 5);
 
         wxBoxSizer buttonBox = new wxBoxSizer(wxHORIZONTAL);

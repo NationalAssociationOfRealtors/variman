@@ -18,7 +18,6 @@ package org.realtors.rets.server.admin;
 public class ConfigOptions
 {
     /**
-     * 
      * @return
      */
     public String getHostname()
@@ -27,7 +26,6 @@ public class ConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public int getPort()
@@ -36,7 +34,6 @@ public class ConfigOptions
     }
 
     /**
-     * 
      * @return
      */
     public int getSessionTimeout()
@@ -45,7 +42,6 @@ public class ConfigOptions
     }
 
     /**
-     * 
      * @param string
      */
     public void setHostname(String string)
@@ -54,7 +50,6 @@ public class ConfigOptions
     }
 
     /**
-     * 
      * @param i
      */
     public void setPort(int i)
@@ -63,14 +58,13 @@ public class ConfigOptions
     }
 
     /**
-     * 
      * @param i
      */
     public void setSessionTimeout(int i)
     {
         mSessionTimeout = i;
     }
-        
+
     private String mHostname;
     private int mPort;
     private int mSessionTimeout;

@@ -11,9 +11,9 @@ package org.realtors.rets.server.admin;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,8 @@ public class Bootstrap
         mMain = "org.realtors.rets.server.admin." + main;
     }
 
-    private void callMain(String[] args) throws Exception
+    private void callMain(String[] args)
+        throws Exception
     {
         initRexHome();
         List urlList = new ArrayList();
@@ -40,8 +41,8 @@ public class Bootstrap
         URLClassLoader classLoader = new URLClassLoader(urls);
         Thread.currentThread().setContextClassLoader(classLoader);
         Class main = classLoader.loadClass(mMain);
-        Class[] paramTypes = new Class[] { args.getClass() };
-        Object[] paramValues = new Object[] { args };
+        Class[] paramTypes = new Class[]{args.getClass()};
+        Object[] paramValues = new Object[]{args};
         Method method = main.getMethod("main", paramTypes);
         method.invoke(null, paramValues);
     }
@@ -56,7 +57,7 @@ public class Bootstrap
         }
     }
 
-    private  void addJars(List urlList, String directory)
+    private void addJars(List urlList, String directory)
         throws MalformedURLException
     {
         File libDir = new File(mRexHome, directory);

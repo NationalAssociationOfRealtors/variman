@@ -77,7 +77,7 @@ public class AddUserCommand extends wx
             wxMessageBox("A user already exists with this username.\n" +
                          "Please choose a new username.", "Error",
                          wxOK | wxICON_EXCLAMATION, Admin.getAdminFrame());
-        };
+        }
         return response;
     }
 

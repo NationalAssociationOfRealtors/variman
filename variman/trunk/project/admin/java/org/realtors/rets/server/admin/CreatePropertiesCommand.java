@@ -8,28 +8,28 @@
 
 package org.realtors.rets.server.admin;
 
-import java.util.Iterator;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import java.util.Calendar;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.Date;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 
-import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServer;
-import org.realtors.rets.server.metadata.MetadataLoader;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.metadata.MetadataLoader;
+import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
 
 import org.apache.log4j.Logger;
@@ -51,22 +51,28 @@ public class CreatePropertiesCommand
         mRandom.nextInt();
 
         mCount = 0;
-        mESchools = new int[] { 306, 300, 42, 304, 303 };
-        mAgents = new String[] { "P345", "P123", "M123" };
-        mBrokers = new String[] { "Laffalot Realty", "Tex Mex Real Estate",
-            "Yellow Armadillo Realty", "Retzilla Realty" };
-        mStreets = new String[] { "Buckingham Dr.", "Main St.",
+        mESchools = new int[]{306, 300, 42, 304, 303};
+        mAgents = new String[]{"P345", "P123", "M123"};
+        mBrokers = new String[]{
+            "Laffalot Realty", "Tex Mex Real Estate",
+            "Yellow Armadillo Realty", "Retzilla Realty"};
+        mStreets = new String[]{
+            "Buckingham Dr.", "Main St.",
             "Knoll Creek Dr.", "Randall Rd.", "Exeter Ct.", "Anderson Blvd.",
-            "Westminster Circle" };
-        mUrls = new String[] { "http://www.crt.realtors.org/",
-            "http://www.realtors.org", "http://slashdot.org/" };
-        mListingTypes = new String[] { "INC", "LND", "RENT", "RES" };
-        mLocations = new String[] { "AUR", "BATV", "ELBRN", "ELGN", "GENVA",
-            "SELGN", "STC", "WYNE", "WCHIC" };
-        mStatus = new String[] { "A", "C", "X", "L", "O", "P", "S", "T", "U",
-            "W" };
-        mOwners = new String[] { "Keith Garner", "Dave Dribin",
-            "Dave Terrell", "Mark Lesswing" };
+            "Westminster Circle"};
+        mUrls = new String[]{
+            "http://www.crt.realtors.org/",
+            "http://www.realtors.org", "http://slashdot.org/"};
+        mListingTypes = new String[]{"INC", "LND", "RENT", "RES"};
+        mLocations = new String[]{
+            "AUR", "BATV", "ELBRN", "ELGN", "GENVA",
+            "SELGN", "STC", "WYNE", "WCHIC"};
+        mStatus = new String[]{
+            "A", "C", "X", "L", "O", "P", "S", "T", "U",
+            "W"};
+        mOwners = new String[]{
+            "Keith Garner", "Dave Dribin",
+            "Dave Terrell", "Mark Lesswing"};
 
         mDate = new Date[4];
         Calendar cal = Calendar.getInstance();
@@ -93,7 +99,8 @@ public class CreatePropertiesCommand
         }
     }
 
-    private void loadMetadata() throws RetsServerException
+    private void loadMetadata()
+        throws RetsServerException
     {
         String metadataDir = Admin.getRetsConfig().getMetadataDir();
         metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
@@ -123,7 +130,8 @@ public class CreatePropertiesCommand
      *
      *
      */
-    private void dropData() throws HibernateException, SQLException
+    private void dropData()
+        throws HibernateException, SQLException
     {
         Session session = null;
         Connection con = null;
@@ -165,7 +173,8 @@ public class CreatePropertiesCommand
         }
     }
 
-    private void createData() throws HibernateException, SQLException
+    private void createData()
+        throws HibernateException, SQLException
     {
         Session session = null;
         Connection con = null;
@@ -178,15 +187,13 @@ public class CreatePropertiesCommand
 
             for (int i = 0; i < mNumProperties; i++)
             {
-                ps = con.prepareStatement(
-                    "INSERT INTO " +
-                    "rets_property_res(id,r_lp,r_broker,r_agent_id,r_ln," +
-                    "                  r_zip_code,r_ld,r_sqft,r_e_school," +
-                    "                  r_m_school,r_h_school,r_stname,r_url," +
-                    "                  r_ltyp, r_stnum, r_vew, r_ar,r_status," +
-                    "                  r_owner)" +
-                    " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
-                );
+                ps = con.prepareStatement("INSERT INTO " +
+                                          "rets_property_res(id,r_lp,r_broker,r_agent_id,r_ln," +
+                                          "                  r_zip_code,r_ld,r_sqft,r_e_school," +
+                                          "                  r_m_school,r_h_school,r_stname,r_url," +
+                                          "                  r_ltyp, r_stnum, r_vew, r_ar,r_status," +
+                                          "                  r_owner)" +
+                                          " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
                 // todo: LookupMulti EF needs to be added.
                 // todo: LookupMulti IF needs to be added.
                 mCount += mRandom.nextInt(10);

@@ -51,9 +51,10 @@ public class ChangePasswordCommand extends wx
     {
         String newPassword = null;
         String message = "Enter new password for " + mUser.getName() + ":";
-        wxTextEntryDialog dialog = new wxTextEntryDialog(
-            Admin.getAdminFrame(), message, "Change Password", "",
-            wxOK | wxCANCEL | wxCENTER | wxTE_PASSWORD);
+        wxTextEntryDialog dialog =
+            new wxTextEntryDialog(Admin.getAdminFrame(), message,
+                                  "Change Password", "",
+                                  wxOK | wxCANCEL | wxCENTER | wxTE_PASSWORD);
         if (dialog.ShowModal() == wxID_OK)
         {
             newPassword = dialog.GetValue();

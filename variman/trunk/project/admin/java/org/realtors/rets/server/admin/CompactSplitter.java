@@ -89,7 +89,7 @@ public class CompactSplitter
     private File getFile(Element element)
     {
         String name = element.getName();
-        ElementFile elementFile  =
+        ElementFile elementFile =
             (ElementFile) mFileMap.get(name);
         if (elementFile == null)
         {

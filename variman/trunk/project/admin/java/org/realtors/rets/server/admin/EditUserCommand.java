@@ -15,7 +15,6 @@ import net.sf.hibernate.HibernateException;
 
 import org.realtors.rets.server.HibernateUtils;
 import org.realtors.rets.server.User;
-import org.realtors.rets.server.UserUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

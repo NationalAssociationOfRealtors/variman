@@ -31,25 +31,25 @@ public class AddUserDialog extends wxDialog
         label = new wxStaticText(this, -1, "First Name:");
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
         mFirstName = new wxTextCtrl(this, -1, "", wxDefaultPosition,
-                                        textSize);
+                                    textSize);
         grid.Add(mFirstName, 0, wxALIGN_LEFT | wxBOTTOM, 5);
 
         label = new wxStaticText(this, -1, "Last Name:");
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
         mLastName = new wxTextCtrl(this, -1, "", wxDefaultPosition,
-                                       textSize);
+                                   textSize);
         grid.Add(mLastName, 0, wxALIGN_LEFT | wxBOTTOM, 5);
 
         label = new wxStaticText(this, -1, "Username:");
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 5);
         mUsername = new wxTextCtrl(this, -1, "", wxDefaultPosition,
-                                       textSize);
+                                   textSize);
         grid.Add(mUsername, 0, wxALIGN_LEFT | wxBOTTOM, 5);
 
         label = new wxStaticText(this, -1, "Password:");
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT, 5);
         mPassword = new wxTextCtrl(this, -1, "", wxDefaultPosition,
-                                       textSize, wxTE_PASSWORD);
+                                   textSize, wxTE_PASSWORD);
         grid.Add(mPassword, 0, wxALIGN_LEFT, 5);
 
         wxBoxSizer buttonBox = new wxBoxSizer(wxHORIZONTAL);

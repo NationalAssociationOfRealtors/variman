@@ -17,13 +17,13 @@ import org.realtors.rets.server.config.RetsConfig;
 
 import org.apache.log4j.Logger;
 
+import org.wxwindows.wx;
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxDialog;
 import org.wxwindows.wxJWorker;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
-import org.wxwindows.wx;
 
 public class InitDatabaseCommand extends wx
 {

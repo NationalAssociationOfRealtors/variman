@@ -46,9 +46,9 @@ public class AdminFrame extends wxFrame
 
         wxMenu databaseMenu = new wxMenu();
         databaseMenu.Append(INIT_DATABASE, "Re-&initialize Database...\tCtrl-I",
-                         "Re-initialize database configuration");
+                            "Re-initialize database configuration");
         databaseMenu.Append(CREATE_SCHEMA, "&Create Schema...",
-                         "Create metadata schema");
+                            "Create metadata schema");
 
 
         wxMenuBar menuBar = new wxMenuBar();
@@ -94,8 +94,8 @@ public class AdminFrame extends wxFrame
     {
         try
         {
-            File configFile = new File(
-                Admin.getRexHome() + "/webapp/WEB-INF/rex/rets-config.xml");
+            File configFile = new File(Admin.getRexHome() +
+                                       "/webapp/WEB-INF/rex/rets-config.xml");
             Admin.setConfigFile(configFile.getAbsolutePath());
             Admin.setRetsConfig(
                 RetsConfig.initFromXmlFile(Admin.getConfigFile()));

@@ -8,11 +8,11 @@
 
 package org.realtors.rets.server.admin;
 
+import org.apache.log4j.xml.DOMConfigurator;
+
 import org.wxwindows.wxApp;
 import org.wxwindows.wxPoint;
 import org.wxwindows.wxSize;
-
-import org.apache.log4j.xml.DOMConfigurator;
 
 public class Main extends wxApp
 {
@@ -26,7 +26,8 @@ public class Main extends wxApp
     {
         wxInitAllImageHandlers();
         AdminFrame frame = new AdminFrame("Rex Administration",
-                                    new wxPoint(50, 50), new wxSize(640, 480));
+                                          new wxPoint(50, 50),
+                                          new wxSize(640, 480));
         Admin.setAdminFrame(frame);
         frame.Show(true);
         new InitDatabaseCommand().execute();

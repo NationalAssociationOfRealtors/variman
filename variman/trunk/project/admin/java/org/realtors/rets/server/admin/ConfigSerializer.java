@@ -34,27 +34,27 @@ public class ConfigSerializer
     {
         Element rootElement = new Element("Retzilla-Config");
         Document doc = new Document(rootElement, null);
-        
+
         List list = new ArrayList();
 
         Element element = new Element("hostname");
         element.setText(opts.getHostname());
         list.add(element);
-        
+
         element = new Element("port");
         element.setText(Integer.toString(opts.getPort()));
         list.add(element);
-        
+
         element = new Element("timeout");
         element.setText(Integer.toString(opts.getSessionTimeout()));
         list.add(element);
 
         rootElement.setContent(list);
-        
+
         XMLOutputter out = new XMLOutputter("  ", true, "ISO-8859-1");
         out.output(doc, writer);
     }
-    
+
     public static ConfigOptions fromXML(Reader reader)
         throws JDOMException, IOException
     {
@@ -62,16 +62,16 @@ public class ConfigSerializer
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(reader);
         Element root = doc.getRootElement();
-        
+
         Element child = root.getChild("hostname");
         opts.setHostname(child.getText());
-        
+
         child = root.getChild("port");
         opts.setPort(Integer.parseInt(child.getText()));
-        
+
         child = root.getChild("timeout");
         opts.setSessionTimeout(Integer.parseInt(child.getText()));
-        
-        return opts; 
+
+        return opts;
     }
 }

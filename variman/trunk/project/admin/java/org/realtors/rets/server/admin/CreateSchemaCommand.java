@@ -8,27 +8,26 @@
 
 package org.realtors.rets.server.admin;
 
-import org.wxwindows.wx;
-import org.wxwindows.wxWindowDisabler;
-import org.wxwindows.wxJWorker;
-
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
 
 import org.apache.log4j.Logger;
 
+import org.wxwindows.wx;
+import org.wxwindows.wxJWorker;
+import org.wxwindows.wxWindowDisabler;
+
 public class CreateSchemaCommand extends wx
 {
     public void execute()
     {
-        int response = wxMessageBox(
-            "This will delete all your metadata and user " +
-            "information.\n\n" +
-            "Are you sure you would like to continue?",
-            "Create Schema",
-            wxYES_NO | wxNO_DEFAULT |
-            wxICON_EXCLAMATION,
-            Admin.getAdminFrame());
+        int response = wxMessageBox("This will delete all your metadata and user " +
+                                    "information.\n\n" +
+                                    "Are you sure you would like to continue?",
+                                    "Create Schema",
+                                    wxYES_NO | wxNO_DEFAULT |
+                                    wxICON_EXCLAMATION,
+                                    Admin.getAdminFrame());
         if (response == wxYES)
         {
             createSchemaInBg();

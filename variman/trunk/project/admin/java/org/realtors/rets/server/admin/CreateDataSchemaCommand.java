@@ -8,16 +8,16 @@
 
 package org.realtors.rets.server.admin;
 
-import java.sql.Types;
-import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Properties;
+import java.util.Set;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -25,8 +25,8 @@ import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.dialect.Dialect;
 
 import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
@@ -62,7 +62,8 @@ public class CreateDataSchemaCommand extends wx
         }
     }
 
-    private void loadMetadata() throws RetsServerException
+    private void loadMetadata()
+        throws RetsServerException
     {
         String metadataDir = Admin.getRetsConfig().getMetadataDir();
         metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
@@ -133,36 +134,36 @@ public class CreateDataSchemaCommand extends wx
                     sb.append("\t").append(table.getDbName()).append(" ");
                     switch (table.getDataType().toInt())
                     {
-                        case 0 :
+                        case 0:
                             sb.append(dialect.getTypeName(Types.BOOLEAN));
                             break;
-                        case 1 :
+                        case 1:
                             sb.append(
                                 dialect.getTypeName(Types.VARCHAR,
                                                     table.getMaximumLength()));
                             break;
-                        case 2 :
+                        case 2:
                             sb.append(dialect.getTypeName(Types.DATE));
                             break;
-                        case 3 :
+                        case 3:
                             sb.append(dialect.getTypeName(Types.TIMESTAMP));
                             break;
-                        case 4 :
+                        case 4:
                             sb.append(dialect.getTypeName(Types.TIME));
                             break;
-                        case 5 :
+                        case 5:
                             sb.append(dialect.getTypeName(Types.TINYINT));
                             break;
-                        case 6 :
+                        case 6:
                             sb.append(dialect.getTypeName(Types.SMALLINT));
                             break;
-                        case 7 :
+                        case 7:
                             sb.append(dialect.getTypeName(Types.INTEGER));
                             break;
-                        case 8 :
+                        case 8:
                             sb.append(dialect.getTypeName(Types.BIGINT));
                             break;
-                        case 9 :
+                        case 9:
                             /* Not sure if this should be DECIMAL or NUMERIC */
                             //sb.append(dialect.getTypeName(Types.DECIMAL));
                             sb.append(dialect.getTypeName(Types.NUMERIC));
@@ -184,7 +185,7 @@ public class CreateDataSchemaCommand extends wx
             sb.append(mLs).append(");").append(mLs);
             sb.append("alter table ").append(sqlTableName);
             sb.append(dialect.getAddPrimaryKeyConstraintString(
-                      sqlTableName + "_pk_id"));
+                sqlTableName + "_pk_id"));
             sb.append("(id);").append(mLs);
 
             j = needsIndex.iterator();
@@ -222,10 +223,10 @@ public class CreateDataSchemaCommand extends wx
 
                 // do the foreign key
                 sb.append("alter table ").append(lmTable);
-                sb.append(
-                    dialect.getAddForeignKeyConstraintString(lmTable + "_fk",
-                        new String[] { "parent_id" }, sqlTableName,
-                        new String[] { "id" })).append(";").append(mLs);
+                sb.append(dialect.getAddForeignKeyConstraintString(
+                    lmTable + "_fk",
+                    new String[]{"parent_id"}, sqlTableName,
+                    new String[]{"id"})).append(";").append(mLs);
             }
         }
 

@@ -8,15 +8,15 @@
 
 package org.realtors.rets.server.admin;
 
-import org.wxwindows.wxDialog;
-import org.wxwindows.wxWindow;
-import org.wxwindows.wxSize;
 import org.wxwindows.wxBoxSizer;
+import org.wxwindows.wxButton;
+import org.wxwindows.wxDialog;
 import org.wxwindows.wxFlexGridSizer;
+import org.wxwindows.wxSize;
+import org.wxwindows.wxStaticLine;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxTextCtrl;
-import org.wxwindows.wxButton;
-import org.wxwindows.wxStaticLine;
+import org.wxwindows.wxWindow;
 
 public class RemoveUserDialog extends wxDialog
 {
@@ -32,7 +32,7 @@ public class RemoveUserDialog extends wxDialog
         label = new wxStaticText(this, -1, "Username:");
         grid.Add(label, 0, wxALIGN_RIGHT | wxRIGHT, 5);
         mUsername = new wxTextCtrl(this, -1, "", wxDefaultPosition,
-                                       textSize);
+                                   textSize);
         grid.Add(mUsername, 0, wxALIGN_LEFT, 0);
 
 
