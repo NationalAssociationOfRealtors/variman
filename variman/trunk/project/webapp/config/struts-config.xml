@@ -8,6 +8,8 @@
   <form-beans>
     <form-bean name="registrationForm"
                type="org.realtors.rets.server.webapp.cct.RegistrationForm"/>
+    <form-bean name="confirmationForm"
+               type="org.realtors.rets.server.webapp.cct.NullForm"/>
   </form-beans>
 
   <global-exceptions>
@@ -25,13 +27,17 @@
     <action path="/registration"
             type="org.realtors.rets.server.webapp.cct.RegistrationAction"
             name="registrationForm"
-            scope="request"
+            scope="session"
             validate="true"
             input="/registration.jsp">
       <forward name="confirmPage" path="/confirmation.jsp"/>
     </action>
 
     <action path="/confirmation"
+            name="confirmationForm"
+            scope="request"
+            validate="false"
+            input="/registration.jsp"
             type="org.realtors.rets.server.webapp.cct.ConfirmationAction"/>
   </action-mappings>
 
