@@ -43,7 +43,6 @@ public class ValidationExpression implements Serializable
      * @hibernate.property
      * @hibernate.column name="validationExpressionID"
      *   not-null="true"
-     *   unique="true"
      *   index="rets_metadata_validationexpression_id_index"
      *   length="32"
      */
@@ -126,6 +125,11 @@ public class ValidationExpression implements Serializable
     public void updateLevel()
     {
         mLevel = mResourceid.getPath();
+    }
+
+    public String getPath()
+    {
+        return mResourceid.getPath() + ":" + mValidationExpressionID;
     }
 
     public String toString()
