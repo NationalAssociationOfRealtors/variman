@@ -63,6 +63,10 @@
     <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
   </path>
 
+  <path id="admin.path">
+    <pathelement path="${jdom.jar}"/>
+  </path>
+
   <path id="xdoclet.path">
     <pathelement path="${ant.home}/lib/ant.jar" />
     <fileset dir="${xdoclet.lib}" includes="commons-*.jar"/>
@@ -117,12 +121,14 @@
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
     <mkdir dir="build/webapp/test/classes"/>
+    <mkdir dir="build/admin/classes"/>
+    <mkdir dir="build/admin/test/classes"/>
     <mkdir dir="build/tests"/>
     <mkdir dir="dist" />
   </target>
 
-  <target name="build" depends="build-hibernate,build-webapp,build-importer"
-          description="Build all"/>
+  <target name="build" description="Build all"
+          depends="build-hibernate,build-webapp,build-importer,build-admin" />
 
   <target name="dist" depends="" />
 
@@ -464,6 +470,8 @@
           file="project/hibernate/config/cache.ccf"/>
     <copy todir="build/datagen/lib" file="${hibernate.jdbc.jar}"/>
   </target>
+
+
   
   <target name="build-importer" depends="build-hibernate"
           description="Builds the data and metadata importers">
@@ -521,6 +529,44 @@
     <copy todir="build/importer/lib" file="${hibernate.jdbc.jar}"/>
   </target>
 
+  <target name="build-admin" depends="prepare"
+          description="Builds the admin tool">
+    <depend srcDir="project/admin/java"
+            destDir="build/admin/classes"
+            cache="build/admin/depcache" closure="yes">
+      <classpath>
+        <path refid="admin.path"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/admin/java"
+           destdir="build/admin/classes"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="admin.path"/>
+      </classpath>
+    </javac>
+
+    <!-- build the test code -->
+    <depend srcDir="project/admin/test/java"
+            destDir="build/admin/test/classes"
+            cache="build/admin/test/depcache" closure="yes">
+      <classpath>
+        <path refid="admin.path"/>
+        <pathelement location="build/admin/classes"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/admin/test/java"
+           destdir="build/admin/test/classes"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="admin.path"/>
+        <pathelement location="build/admin/classes"/>
+      </classpath>
+    </javac>
+  </target>
+          
   <target name="test" description="Run all unit tests" depends="build">
     <junit printsummary="yes" haltonfailure="yes">
       <classpath>
@@ -536,7 +582,6 @@
         <pathelement location="build/webapp/test/classes"/>
         <pathelement location="build/admin/classes"/>
         <pathelement location="build/admin/test/classes"/>
-        <!-- Keith -->
       </classpath>
 
       <formatter type="plain"/>
