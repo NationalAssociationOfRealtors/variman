@@ -54,6 +54,12 @@ public class GetMetadataParameters extends TransactionParameters
      */
     public GetMetadataParameters(Map parameterMap) throws RetsReplyException
     {
+        this(parameterMap, null);
+    }
+
+    public GetMetadataParameters(Map parameterMap, User user)
+        throws RetsReplyException
+    {
         String type = getParameter(parameterMap, "Type");
         String id = getParameter(parameterMap, "ID");
         String formatString = getParameter(parameterMap, "Format");
@@ -79,6 +85,7 @@ public class GetMetadataParameters extends TransactionParameters
             // chop off "0"
             mIds = shrinkByOne(mIds);
         }
+        mUser = user;
     }
 
     private static void initValidTypes()
@@ -189,6 +196,11 @@ public class GetMetadataParameters extends TransactionParameters
         mType = type;
     }
 
+    public User getUser()
+    {
+        return mUser;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(GetMetadataParameters.class);
     private int mFormat;
@@ -196,4 +208,5 @@ public class GetMetadataParameters extends TransactionParameters
     private String[] mIds;
     private boolean mRecursive;
     private static Set sValidTypes;
+    private User mUser;
 }
