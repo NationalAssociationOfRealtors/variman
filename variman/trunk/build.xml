@@ -149,6 +149,15 @@
         <pathelement location="${antlr.jar}"/>
       </classpath>
     </antlr>
+    <antlr dir="${src.antlr.dir}"
+           target="${src.antlr.dir}/dmql-tree.g"
+           glib="dmql.g"
+           outputdirectory="${build.antlr.dir}"
+           traceParser="yes">
+      <classpath>
+        <pathelement location="${antlr.jar}"/>
+      </classpath>
+    </antlr>
     <javac target="${compile.vmtarget}" destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
