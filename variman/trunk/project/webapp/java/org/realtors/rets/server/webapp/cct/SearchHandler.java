@@ -14,9 +14,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.SearchParameters;
-import org.realtors.rets.server.SearchTransaction;
+import org.realtors.rets.server.protocol.SearchParameters;
+import org.realtors.rets.server.protocol.SearchTransaction;
 import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.protocol.SearchParameters;
+import org.realtors.rets.server.protocol.SearchTransaction;
 import org.realtors.rets.server.webapp.RetsServletRequest;
 import org.realtors.rets.server.webapp.RetsServletResponse;
 import org.realtors.rets.server.webapp.WebApp;
