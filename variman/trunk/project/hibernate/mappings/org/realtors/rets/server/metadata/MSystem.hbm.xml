@@ -3,10 +3,10 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MSystem.hbm.xml,v 1.5 2003/06/19 20:20:52 kgarner Exp $ -->
+<!-- $Id: MSystem.hbm.xml,v 1.6 2003/06/19 21:53:41 kgarner Exp $ -->
 
 <hibernate-mapping>
-  <class name="org.realtors.rets.server.metadata.System"
+  <class name="org.realtors.rets.server.metadata.MSystem"
          table="rets_metadata_system">
     <id name="id" type="long">
       <generator class="hilo"/>

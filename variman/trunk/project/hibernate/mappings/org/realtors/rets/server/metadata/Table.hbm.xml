@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Table.hbm.xml,v 1.9 2003/06/19 20:20:52 kgarner Exp $ -->
+<!-- $Id: Table.hbm.xml,v 1.10 2003/06/19 21:53:41 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.realtors.rets.server.metadata.Table"
@@ -13,7 +13,7 @@
     </id>
 
     <many-to-one name="classid" cascade="none"
-                 class="org.realtors.rets.server.metadata.Class"/>
+                 class="org.realtors.rets.server.metadata.MClass"/>
 
     <property name="systemName" type="string">
       <column name="system_name" length="32" not-null="true" unique="true"

@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: Resource.hbm.xml,v 1.7 2003/06/19 20:20:52 kgarner Exp $ -->
+<!-- $Id: Resource.hbm.xml,v 1.8 2003/06/19 21:53:41 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.realtors.rets.server.metadata.Resource"
@@ -13,7 +13,7 @@
     </id>
 
     <many-to-one name="systemid" cascade="none"
-                 class="org.realtors.rets.server.metadata.System"/>
+                 class="org.realtors.rets.server.metadata.MSystem"/>
 
     <property name="resourceID" type="string">
       <column name="resource_id" length="32" not-null="true" unique="true"
@@ -96,12 +96,12 @@
 
     <set name="classes" inverse="true">
       <key column="resourceid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.Class"/>
+      <one-to-many class="org.realtors.rets.server.metadata.MClass"/>
     </set>
 
     <set name="objects" inverse="true">
       <key column="resourceid"/>
-      <one-to-many class="org.realtors.rets.server.metadata.Object"/>
+      <one-to-many class="org.realtors.rets.server.metadata.MObject"/>
     </set>
 
     <set name="searchHelps" inverse="true">

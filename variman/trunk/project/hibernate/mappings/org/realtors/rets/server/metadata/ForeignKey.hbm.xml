@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ForeignKey.hbm.xml,v 1.5 2003/06/19 20:20:52 kgarner Exp $ -->
+<!-- $Id: ForeignKey.hbm.xml,v 1.6 2003/06/19 21:53:41 kgarner Exp $ -->
 
 <hibernate-mapping>
 
@@ -15,7 +15,7 @@
     </id>
 
     <many-to-one name="systemid" cascade="none"
-                 class="org.realtors.rets.server.metadata.System"/>
+                 class="org.realtors.rets.server.metadata.MSystem"/>
 
     <property name="foreignKeyID" type="string">
       <column name="foreign_key_id" length="32" not-null="true" unique="true"
