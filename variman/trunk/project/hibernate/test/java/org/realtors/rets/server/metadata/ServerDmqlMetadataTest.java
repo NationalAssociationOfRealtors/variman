@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata;
 
-import java.util.HashSet;
-
 import junit.framework.TestCase;
 
 public class ServerDmqlMetadataTest extends TestCase
@@ -12,6 +10,28 @@ public class ServerDmqlMetadataTest extends TestCase
     {
         ServerDmqlMetadata metadata =
             new ServerDmqlMetadata(mClazz, ServerDmqlMetadata.SYSTEM);
+
+        // Check field names
+        assertEquals("r_AR", metadata.getFieldDbColumn("AR"));
+        assertEquals("r_STATUS", metadata.getFieldDbColumn("STATUS"));
+        assertEquals("r_OWNER", metadata.getFieldDbColumn("OWNER"));
+        assertNull(metadata.getFieldDbColumn("Area"));
+        assertNull(metadata.getFieldDbColumn("ListingStatus"));
+        assertNull(metadata.getFieldDbColumn("Owner"));
+        assertNull(metadata.getFieldDbColumn("FOO"));
+
+        // Check lookups
+        assertEquals("GENVA", metadata.getLookupDbValue("AR", "GENVA"));
+        assertEquals("BATV", metadata.getLookupDbValue("AR", "BATV"));
+        assertNull(metadata.getLookupDbValue("AR", "STC"));
+        assertNull(metadata.getLookupDbValue("Area", "GENVA"));
+        assertTrue(metadata.isValidLookupName("AR"));
+        assertTrue(metadata.isValidLookupValue("AR", "GENVA"));
+        assertTrue(metadata.isValidLookupValue("AR", "BATV"));
+        assertFalse(metadata.isValidLookupValue("AR", "STC"));
+        assertFalse(metadata.isValidLookupName("Area"));
+
+        // -----
 
         // Check field names
         assertTrue(metadata.isValidFieldName("AR"));
@@ -52,6 +72,33 @@ public class ServerDmqlMetadataTest extends TestCase
     {
         ServerDmqlMetadata metadata =
             new ServerDmqlMetadata(mClazz, ServerDmqlMetadata.STANDARD);
+
+        // Check field names
+        assertEquals("r_AR", metadata.getFieldDbColumn("Area"));
+        assertEquals("r_STATUS", metadata.getFieldDbColumn("ListingStatus"));
+        assertEquals("r_OWNER", metadata.getFieldDbColumn("Owner"));
+        assertNull(metadata.getFieldDbColumn("AR"));
+        assertNull(metadata.getFieldDbColumn("STATUS"));
+        assertNull(metadata.getFieldDbColumn("OWNER"));
+        assertNull(metadata.getFieldDbColumn("FOO"));
+
+        // Check lookups
+        assertEquals("GENVA", metadata.getLookupDbValue("Area", "GENVA"));
+        assertEquals("BATV", metadata.getLookupDbValue("Area", "BATV"));
+        assertNull(metadata.getLookupDbValue("Area", "STC"));
+        assertNull(metadata.getLookupDbValue("AR", "GENVA"));
+
+        // Check listing status uses lookup values from DTD
+        assertEquals("P", metadata.getLookupDbValue("ListingStatus",
+                                                    "Pending"));
+        assertEquals("A", metadata.getLookupDbValue("ListingStatus",
+                                                    "Active"));
+        assertNull(metadata.getLookupDbValue("ListingStatus", "Z"));
+        assertNull(metadata.getLookupDbValue("ListingStatus", "A"));
+        assertNull(metadata.getLookupDbValue("ListingStatus", "P"));
+        assertNull(metadata.getLookupDbValue("STATUS", "Active"));
+
+        // -----
 
         // Check field names
         assertTrue(metadata.isValidFieldName("Area"));
@@ -99,12 +146,9 @@ public class ServerDmqlMetadataTest extends TestCase
 
         int id = 1;
         Resource resource = ObjectMother.createResource();
-        resource.setLookups(new HashSet());
-        resource.setClasses(new HashSet());
 
         Lookup area = new Lookup(id++);
         area.setLookupName("AR");
-        area.setLookupTypes(new HashSet());
         resource.addLookup(area);
 
         LookupType lookupType = new LookupType(id++);
@@ -117,7 +161,6 @@ public class ServerDmqlMetadataTest extends TestCase
 
         Lookup status = new Lookup(id++);
         status.setLookupName("LISTING_STATUS");
-        status.setLookupTypes(new HashSet());
         resource.addLookup(status);
 
         lookupType = new LookupType(id++);
@@ -134,25 +177,28 @@ public class ServerDmqlMetadataTest extends TestCase
 
         mClazz = new MClass(id++);
         mClazz.setClassName("RES");
-        mClazz.setTables(new HashSet());
+        mClazz.setDbTable("rets_Property_RES");
         resource.addClass(mClazz);
 
         Table table = new Table(id++);
         table.setSystemName("AR");
         table.setStandardName(new TableStandardName("Area"));
         table.setLookup(area);
+        table.setDbName("r_AR");
         mClazz.addTable(table);
 
         table = new Table(id++);
         table.setSystemName("STATUS");
         table.setStandardName(new TableStandardName("ListingStatus"));
         table.setLookup(status);
+        table.setDbName("r_STATUS");
         mClazz.addTable(table);
 
         // Create a table w/o a lookup
         table = new Table(id++);
         table.setSystemName("OWNER");
         table.setStandardName(new TableStandardName("Owner"));
+        table.setDbName("r_OWNER");
         mClazz.addTable(table);
     }
 
