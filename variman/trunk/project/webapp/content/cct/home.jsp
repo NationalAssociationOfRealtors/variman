@@ -27,9 +27,11 @@
       <bean:write name="displayBean" property="test.description" />
      </cct:evenoddtd>
      <cct:teststatustd name="displayBean" />
-     <!-- this has changed -->
      <cct:evenoddtd count="counter" >
-      <bean:write name="displayBean" property="result.message" />
+       <logic:iterate id="message" name="displayBean" type="String"
+                      property="result.messages" indexId="message_count">
+         <bean:write name="message_count"/>: <bean:write name="message"/><br/>
+       </logic:iterate>
      </cct:evenoddtd>
      <cct:evenoddtd count="counter">
       <logic:notPresent name="cctActiveTest">
