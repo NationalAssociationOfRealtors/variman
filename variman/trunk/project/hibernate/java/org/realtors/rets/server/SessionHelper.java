@@ -22,6 +22,7 @@ public class SessionHelper
 
     public Session beginSession() throws HibernateException
     {
+        LOG.debug("beginSession");
         mSession = mFactory.openSession();
         mTx = null;
         return mSession;
@@ -29,7 +30,7 @@ public class SessionHelper
 
     public Session beginTransaction() throws HibernateException
     {
-        LOG.debug("begin");
+        LOG.debug("beginTransaction");
         mSession = mFactory.openSession();
         mTx = mSession.beginTransaction();
         return mSession;
