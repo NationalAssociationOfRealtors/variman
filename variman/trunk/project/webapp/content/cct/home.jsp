@@ -11,7 +11,7 @@
  Welcome, <bean:write name="cctUser" property="firstName" />
  <bean:write name="cctUser" property="lastName" />
  <br>
- <table cellpadding="2" cellspacing="0" border="1">
+ <table cellpadding="2" cellspacing="0" border="0" width="99%">
   <tr>
    <td>&nbsp;</td>
    <th>Test name</th><th>Status</th><th>Show Log</th><th>Start/Stop</th>
@@ -21,7 +21,9 @@
                  type="org.realtors.rets.server.webapp.cct.CertificationTest"
                  indexId="counter">
     <tr>
-     <td><%= counter %></td>
+     <cct:evenoddtd count="counter">
+      <%= counter %></td>
+     </cct:evenoddtd>
      <cct:evenoddtd count="counter" >
       <bean:write name="test" property="description" />
      </cct:evenoddtd>
@@ -37,7 +39,7 @@
        </html:form>
       </logic:notPresent>
       <logic:present name="cctActiveTest">
-       <logic:equal name="cctActiveTest" value="<%= counter.toString() %>" >
+       <logic:equal name="cctActiveTest" value="<%=counter.toString()%>" >
         <html:form action="/cct/stop_test.do" method="GET" >
          <html:submit>Stop</html:submit>
          <html:hidden property="testNumber" value='<%=counter.toString()%>'/>
