@@ -1,5 +1,8 @@
 package org.realtors.rets.server.metadata;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import net.sf.hibernate.PersistentEnum;
 
 public class DataTypeEnum implements PersistentEnum
@@ -14,6 +17,13 @@ public class DataTypeEnum implements PersistentEnum
     public static final DataTypeEnum INT = new DataTypeEnum(7);
     public static final DataTypeEnum LONG = new DataTypeEnum(8);
     public static final DataTypeEnum DECIMAL = new DataTypeEnum(9);
+
+    private static Map mStringMap;
+
+    static
+    {
+        // todo: fill this is
+    }
 
     private DataTypeEnum(int dataType)
     {
@@ -39,6 +49,31 @@ public class DataTypeEnum implements PersistentEnum
             default: throw new RuntimeException("Unknown DataType");
         }
     }
+
+    // todo: fix this stuff
+    public static DataTypeEnum fromString(String value)
+    {
+        return (DataTypeEnum) mStringMap.get(value.toLowerCase());
+    }
+
+    public String toString()
+    {
+        return toString(toInt());
+    }
+
+    public static String toString(int code)
+    {
+        switch (code)
+        {
+            default: throw new RuntimeException("Unknown Object Type");
+        }
+    }
+
+    public static String toString(DataTypeEnum ote)
+    {
+        return toString(ote.toInt());
+    }
+
 
     private final int mDataType;
 }
