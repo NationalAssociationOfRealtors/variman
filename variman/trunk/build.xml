@@ -67,6 +67,7 @@
     <pathelement path="${hibernate.jar}"/>
     <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
     <fileset dir="${struts.lib}" includes="*.jar"/>
+    <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
     <pathelement path="${antlr.jar}"/>
   </path>
@@ -436,6 +437,7 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jdbc.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
 
     <!-- copy the struts stuff -->
     <copy todir="build/rets-server/webapp/WEB-INF"
