@@ -12,7 +12,7 @@
   <property file="${basedir}/build.properties" />
   <property file="${user.home}/.build.properties" />
 
-  <fileset id="hibernate.mapping.files" dir="project/mappings">
+  <fileset id="hibernate.mapping.files" dir="project/hibernate/mappings">
     <include name="**/*.hbm.xml" />
   </fileset>
 
@@ -71,14 +71,14 @@
   </target>
 
   <target name="build-webapp" depends="build-hibernate">
-    <depend srcDir="project/java/servlet"
+    <depend srcDir="project/webapp/java"
             destDir="build/webapp/root/WEB-INF/classes"
             cache="build/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
       </classpath>
     </depend>
-    <javac srcdir="project/java/servlet"
+    <javac srcdir="project/webapp/java"
            destdir="build/webapp/root/WEB-INF/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -94,9 +94,9 @@
 
   <target name="build-xml" depends="prepare">
     <copy todir="build/hibernate/final/classes"
-          file="project/config/hibernate.properties"/>
+          file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/hibernate/final/classes">
-      <fileset dir="project/mappings">
+      <fileset dir="project/hibernate/mappings">
         <include name="**/*.hbm.xml"/>
       </fileset>
     </copy>
@@ -104,7 +104,7 @@
 
   <target name="mapping-files-check">
     <uptodate property="generated.code.up.to.date">
-      <srcfiles dir="project/mappings" includes="**/*.hbm.xml"/>
+      <srcfiles dir="project/hibernate/mappings" includes="**/*.hbm.xml"/>
       <mapper type="glob" from="*.hbm.xml" to="${basedir}/build/hibernate/generated/*.java"/>
     </uptodate>
   </target>
@@ -132,14 +132,14 @@
   </target>
 
   <target name="compile-hibernate-enum-code" depends="prepare">
-    <depend srcDir="project/java/enums"
+    <depend srcDir="project/hibernate/java/enums"
             destDir="build/hibernate/final/classes"
             cache="build/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
       </classpath>
     </depend>
-    <javac srcdir="project/java/enums"
+    <javac srcdir="project/hibernate/java/enums"
            destdir="build/hibernate/final/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -159,7 +159,6 @@
         <path refid="lib.path"/>
         <pathelement path="build/hibernate/final/classes"/>
         <pathelement path="project/config"/>
-        <fileset dir="build/final/lib" includes="*.jar"/>
       </classpath>
     </java>
   </target>
