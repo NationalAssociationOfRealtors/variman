@@ -46,6 +46,7 @@ public class GetObjectPatternParserTest extends TestCase
     {
         GetObjectPatternContext context = createContext();
         assertEquals("foo abc bar", format("foo %3k bar", context));
+        assertEquals("foo 345 bar", format("foo %-3k bar", context));
     }
 
     public void testEmptyObjectIdPattern()

@@ -10,6 +10,8 @@
  */
 package org.realtors.rets.server.protocol;
 
+import org.apache.commons.lang.StringUtils;
+
 public class GetObjectPatternParser
 {
     public GetObjectPatternParser(String pattern)
@@ -88,7 +90,7 @@ public class GetObjectPatternParser
         {
             if (ch == 'k')
             {
-                addFormatter(new KeyFormatter(mCount));
+                addFormatter(new KeyFormatter(getCount()));
                 gotoNormalState();
             }
             else if (ch == 'i')
@@ -105,6 +107,10 @@ public class GetObjectPatternParser
             {
                 appendCountDigit(ch);
             }
+            else if (ch == '-')
+            {
+                mSign *= -1;
+            }
             else
             {
                 addFormatter(new LiteralPatternFormatter("%" + ch));
@@ -120,20 +126,23 @@ public class GetObjectPatternParser
 
         private void resetCount()
         {
-            mCount = -1;
+            mCount = 0;
+            mSign = 1;
+        }
+
+        private int getCount()
+        {
+            return mSign * mCount;
         }
 
         private void appendCountDigit(char ch)
         {
-            if (mCount == -1)
-            {
-                mCount = 0;
-            }
             mCount *= 10;
             mCount += Character.getNumericValue(ch);
         }
 
         private int mCount;
+        private int mSign;
     }
 
     // ----------------------------------------------------------------
@@ -178,9 +187,13 @@ public class GetObjectPatternParser
                                 GetObjectPatternContext context)
         {
             String key = context.getKey();
-            if (mWidth != -1)
+            if (mWidth > 0)
             {
                 key = key.substring(0, mWidth);
+            }
+            else if (mWidth < 0)
+            {
+                key = StringUtils.substring(key, mWidth);
             }
             buffer.append(key);
         }
