@@ -71,9 +71,20 @@ public class Admin
         return new SessionHelper(sSessionFactory);
     }
 
+    public static void setRexHome(String rexHome)
+    {
+        sRexHome = rexHome;
+    }
+
+    public static String getRexHome()
+    {
+        return sRexHome;
+    }
+
     private static Configuration sHibernateConfiguration;
     private static SessionFactory sSessionFactory;
     private static String sConfigFile;
     private static RetsConfig sRetsConfig;
     private static AdminFrame sAdminFrame;
+    private static String sRexHome;
 }
