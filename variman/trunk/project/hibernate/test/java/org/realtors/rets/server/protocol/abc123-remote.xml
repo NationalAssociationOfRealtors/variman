@@ -2,39 +2,40 @@
 <object-set
    xmlns="http://www.crt.realtors.org/xml/variman/object-set"
    resource-key="abc123"
-   base-path="http://example.com/objects/">
+   base-path="http://example.com/objects/"
+   remote-locations="true">
   <object-group type="Photo">
     <object>
-      <file>abc123-1.jpg</file>
+      <path>abc123-1.jpg</path>
       <description>Beautiful frontal view of home.</description>
     </object>
     <object default="true">
-      <file>abc123-2.jpg</file>
+      <path>abc123-2.jpg</path>
       <description/>
     </object>
     <object>
-      <file>abc123-1.gif</file>
+      <path>abc123-1.gif</path>
     </object>
   </object-group>
 
   <object-group type="Documents" base-path="../dirTest/">
     <object>
-      <file mimetype="">foo.xml</file>
+      <path mimetype="">foo.xml</path>
       <description>Some basic document.</description>
     </object>
     <object default="true">
-      <file mimetype="">a/bar.html</file>
+      <path mimetype="">a/bar.html</path>
       <description>Disclosure statement from current owners.</description>
     </object>
     <object>
-      <file mimetype="">2002 tax records.rtf</file>
+      <path mimetype="">2002 tax records.rtf</path>
       <description>County tax records for 2002.</description>
     </object>
   </object-group>
 
   <object-group type="Video" base-path="other/">
     <object>
-      <file mimetype="">653083_virtual_tour.mov</file>
+      <path mimetype="">653083_virtual_tour.mov</path>
       <description>Take a virtual tour of this house.</description>
     </object>
   </object-group>
