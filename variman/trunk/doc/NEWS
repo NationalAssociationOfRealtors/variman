@@ -1,3 +1,8 @@
+Version 2.1.4 - 21 January 2005
+
+  * COMPACT-DECODED decodes lookups to short value.
+  * Add per-group record limits.
+
 Version 2.1.3 - 14 January 2005
 
   * Metadata gets filtered according to group filtering rules.
