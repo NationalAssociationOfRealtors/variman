@@ -11,6 +11,8 @@ package org.realtors.rets.server.admin.swingui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.RetsServerException;
@@ -60,7 +62,9 @@ public class AdminFrame extends JFrame implements ActionListener
 
         mTabbedPane = new JTabbedPane();
         mTabbedPane.addTab("Configuration", new ConfigurationPanel());
-        mTabbedPane.addTab("Users", new JPanel());
+        mUsersPanel = new UsersPanel();
+        mTabbedPane.addTab("Users", mUsersPanel);
+        mTabbedPane.addChangeListener(new OnTabChanged());
         content.add(mTabbedPane, BorderLayout.CENTER);
 
         mStatusBar = new JLabel("Status bar");
@@ -130,10 +134,25 @@ public class AdminFrame extends JFrame implements ActionListener
         return classString.substring(dotIndex+1);
     }
 
+    private class OnTabChanged implements ChangeListener
+    {
+        public void stateChanged(ChangeEvent event)
+        {
+            int tab = mTabbedPane.getSelectedIndex();
+            if (tab == USERS_TAB)
+            {
+                mUsersPanel.populateList();
+            }
+        }
+    }
+
+    private static final int USERS_TAB = 1;
+
     private static final Logger LOG =
         Logger.getLogger(AdminFrame.class);
 
     private static AdminFrame sInstance;
     private JTabbedPane mTabbedPane;
     private JLabel mStatusBar;
+    private UsersPanel mUsersPanel;
 }
