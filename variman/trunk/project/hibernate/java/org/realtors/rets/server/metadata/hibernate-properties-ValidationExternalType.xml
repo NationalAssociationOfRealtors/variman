@@ -1,7 +1,0 @@
-    <map name="resultFields" table="rets_validationexternaltype_resultfields">
-      <key column="id"/>
-      <index-many-to-many column="key"
-                      class="org.realtors.rets.server.metadata.Table"/>
-      <many-to-many column="value"
-                    class="org.realtors.rets.server.metadata.Table"/>
-    </map>
