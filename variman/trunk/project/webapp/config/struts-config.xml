@@ -11,9 +11,9 @@
   </form-beans>
 
   <global-exceptions>
-    <exception type="java.lang.Exception"
-               key="general.exception"
-               path="/some/jsp/file"/>
+<!--     <exception type="java.lang.Exception" -->
+<!--                key="general.exception" -->
+<!--                path="/some/jsp/file"/> -->
   </global-exceptions>
 
   <global-forwards>
