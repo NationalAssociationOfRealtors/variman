@@ -612,7 +612,7 @@
         <pathelement location="build/admin/test/classes"/>
         <path refid="lib.path"/>
       </classpath>
-      <jvmarg value="-Dtest.webapp=${basedir}/build/rets-server/webapp"/>
+      <jvmarg value="-Dtest.basedir=${basedir}"/>
 
       <formatter type="plain"/>
       <test fork="yes" name="test.AllTests" outfile="build/tests/results"/>
