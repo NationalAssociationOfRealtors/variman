@@ -4,7 +4,9 @@
  */
 package org.realtors.rets.server.webapp.cct;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -82,7 +84,7 @@ public class DBTestRunner extends TestRunner
         }
     }
     
-    public static void saveResult(DBValidationResult result)
+    private static void saveResult(DBValidationResult result)
     {
         SessionHelper sessionHelper = InitServlet.createHelper();
         Session session = null;
@@ -95,14 +97,33 @@ public class DBTestRunner extends TestRunner
         catch (HibernateException e)
         {
             LOG.error(e);
-            try
+            sessionHelper.rollback(LOG);
+        }
+        finally
+        {
+            sessionHelper.close(LOG);
+        }
+    }
+    
+    private static void saveResults(List results)
+    {
+        SessionHelper sessionHelper = InitServlet.createHelper();
+        Session session = null;
+        try
+        {
+            session = sessionHelper.beginTransaction();
+            Iterator i = results.iterator();
+            while (i.hasNext())
             {
-                sessionHelper.rollback();
+                DBValidationResult result = (DBValidationResult) i.next();
+                session.saveOrUpdate(result);
             }
-            catch (HibernateException e1)
-            {
-                LOG.error(e1);
-            }
+            sessionHelper.commit();
+        }
+        catch(HibernateException e)
+        {
+            LOG.error(e);
+            sessionHelper.rollback(LOG);
         }
         finally
         {
@@ -117,13 +138,15 @@ public class DBTestRunner extends TestRunner
             stopRunningTest();
         }
 
+        List saveList = new ArrayList();
         Iterator i = mResults.iterator();
         while (i.hasNext())
         {
             DBValidationResult result = (DBValidationResult) i.next();
             result.reset();
-            saveResult(result);
+            saveList.add(result);
         }
+        saveResults(saveList);
     }
 
     public final static Logger LOG = Logger.getLogger(DBTestRunner.class);
