@@ -13,9 +13,16 @@ public class MetadataManager
     public MetadataManager()
     {
         mTables = new HashMap();
+        mTableByPath = new HashMap();
     }
 
     public void add(ServerMetadata metadata)
+    {
+        addByLevel(metadata);
+        addByPath(metadata);
+    }
+
+    private void addByLevel(ServerMetadata metadata)
     {
         Map table = (Map) mTables.get(metadata.getTableName());
         if (table == null)
@@ -30,6 +37,22 @@ public class MetadataManager
             table.put(metadata.getLevel(), data);
         }
         data.add(metadata);
+    }
+
+    private void addByPath(ServerMetadata metadata)
+    {
+        String path = metadata.getPath();
+        if (path.equals(""))
+        {
+            return;
+        }
+        Map table = (Map) mTableByPath.get(metadata.getTableName());
+        if (table == null)
+        {
+            table = new HashMap();
+            mTableByPath.put(metadata.getTableName(), table);
+        }
+        table.put(path, metadata);
     }
 
     public List find(String tableName, String level)
@@ -63,6 +86,18 @@ public class MetadataManager
         }
     }
 
+    public ServerMetadata findByPath(String tableName, String path)
+    {
+        ServerMetadata metadata = null;
+        Map table = (Map) mTableByPath.get(tableName);
+        if (table != null)
+        {
+            metadata = (ServerMetadata) table.get(path);
+        }
+
+        return metadata;
+    }
+
     /**
      * A map of maps to lists:
      *
@@ -74,4 +109,5 @@ public class MetadataManager
      *                   +-------+
      */
     private Map mTables;
+    private Map mTableByPath;
 }
