@@ -18,7 +18,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidFieldName("STATUS"));
         assertTrue(metadata.isValidFieldName("OWNER"));
         assertFalse(metadata.isValidFieldName("Area"));
-        assertFalse(metadata.isValidFieldName("Status"));
+        assertFalse(metadata.isValidFieldName("ListingStatus"));
         assertFalse(metadata.isValidFieldName("Owner"));
         assertFalse(metadata.isValidFieldName("FOO"));
 
@@ -32,8 +32,9 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidLookupName("STATUS"));
         assertTrue(metadata.isValidLookupValue("STATUS", "S"));
         assertTrue(metadata.isValidLookupValue("STATUS", "A"));
+        assertTrue(metadata.isValidLookupValue("STATUS", "P"));
         assertFalse(metadata.isValidLookupValue("STATUS", "Z"));
-        assertFalse(metadata.isValidLookupName("Status"));
+        assertFalse(metadata.isValidLookupName("ListingStatus"));
 
         assertFalse(metadata.isValidLookupName("OWNER"));
         assertFalse(metadata.isValidLookupName("Owner"));
@@ -54,7 +55,7 @@ public class ServerDmqlMetadataTest extends TestCase
 
         // Check field names
         assertTrue(metadata.isValidFieldName("Area"));
-        assertTrue(metadata.isValidFieldName("Status"));
+        assertTrue(metadata.isValidFieldName("ListingStatus"));
         assertTrue(metadata.isValidFieldName("Owner"));
         assertFalse(metadata.isValidFieldName("AR"));
         assertFalse(metadata.isValidFieldName("STATUS"));
@@ -68,10 +69,13 @@ public class ServerDmqlMetadataTest extends TestCase
         assertFalse(metadata.isValidLookupValue("Area", "STC"));
         assertFalse(metadata.isValidLookupName("AR"));
 
-        assertTrue(metadata.isValidLookupName("Status"));
-        assertTrue(metadata.isValidLookupValue("Status", "S"));
-        assertTrue(metadata.isValidLookupValue("Status", "A"));
-        assertFalse(metadata.isValidLookupValue("Status", "Z"));
+        // Check listing status uses lookup values from DTD
+        assertTrue(metadata.isValidLookupName("ListingStatus"));
+        assertTrue(metadata.isValidLookupValue("ListingStatus", "Pending"));
+        assertTrue(metadata.isValidLookupValue("ListingStatus", "Active"));
+        assertFalse(metadata.isValidLookupValue("ListingStatus", "Z"));
+        assertFalse(metadata.isValidLookupValue("ListingStatus", "A"));
+        assertFalse(metadata.isValidLookupValue("ListingStatus", "P"));
         assertFalse(metadata.isValidLookupName("STATUS"));
 
         assertFalse(metadata.isValidLookupName("OWNER"));
@@ -124,6 +128,10 @@ public class ServerDmqlMetadataTest extends TestCase
         lookupType.setValue("A");
         status.addLookupType(lookupType);
 
+        lookupType = new LookupType(id++);
+        lookupType.setValue("P");
+        status.addLookupType(lookupType);
+
         mClazz = new MClass(id++);
         mClazz.setClassName("RES");
         mClazz.setTables(new HashSet());
@@ -137,7 +145,7 @@ public class ServerDmqlMetadataTest extends TestCase
 
         table = new Table(id++);
         table.setSystemName("STATUS");
-        table.setStandardName(new TableStandardName("Status"));
+        table.setStandardName(new TableStandardName("ListingStatus"));
         table.setLookup(status);
         mClazz.addTable(table);
 

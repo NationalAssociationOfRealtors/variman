@@ -43,14 +43,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
             Lookup lookup = table.getLookup();
             if (lookup != null)
             {
-                Set values = new HashSet();
-                Set lookupTypes = lookup.getLookupTypes();
-                for (Iterator j = lookupTypes.iterator(); j.hasNext();)
-                {
-                    LookupType lookupType = (LookupType) j.next();
-                    values.add(lookupType.getValue());
-                }
-                mLookups.put(fieldName, values);
+                addLookups(fieldName, standardNames, lookup);
             }
             else
             {
@@ -69,6 +62,33 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         {
             return table.getSystemName();
         }
+    }
+
+    private void addLookups(String fieldName, boolean standardNames,
+                            Lookup lookup)
+    {
+        Set values;
+        if (fieldName.equals("ListingStatus") && standardNames)
+        {
+            values = sListingStatusValues;
+        }
+        else
+        {
+            values = getLookupValues(lookup);
+        }
+        mLookups.put(fieldName, values);
+    }
+
+    private Set getLookupValues(Lookup lookup)
+    {
+        Set values = new HashSet();
+        Set lookupTypes = lookup.getLookupTypes();
+        for (Iterator j = lookupTypes.iterator(); j.hasNext();)
+        {
+            LookupType lookupType = (LookupType) j.next();
+            values.add(lookupType.getValue());
+        }
+        return values;
     }
 
     public boolean isValidFieldName(String fieldName)
@@ -97,4 +117,17 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private Set mFields;
     private Map mLookups;
     private Set mStrings;
+    private static Set sListingStatusValues;
+    private static final String[] LISTING_STATUS_VALUES = {
+        "Active", "Closed", "Expired", "OffMarket", "Pending"
+    };
+
+    static
+    {
+        sListingStatusValues = new HashSet();
+        for (int i = 0; i < LISTING_STATUS_VALUES.length; i++)
+        {
+            sListingStatusValues.add(LISTING_STATUS_VALUES[i]);
+        }
+    }
 }
