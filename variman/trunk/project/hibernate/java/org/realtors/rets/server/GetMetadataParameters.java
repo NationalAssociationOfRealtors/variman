@@ -107,18 +107,18 @@ public class GetMetadataParameters
     }
     private String cleanUpType(String type) throws RetsReplyException
     {
-        type = type.toUpperCase();
-        if (!type.startsWith("METADATA-"))
+        String cleanType = type.toUpperCase();
+        if (!cleanType.startsWith("METADATA-"))
         {
             throw new RetsReplyException(ReplyCode.INVALID_TYPE, type);
         }
 
-        type = type.substring("METADATA-".length());
-        if (!sValidTypes.contains(type))
+        cleanType = cleanType.substring("METADATA-".length());
+        if (!sValidTypes.contains(cleanType))
         {
             throw new RetsReplyException(ReplyCode.INVALID_TYPE, type);
         }
-        return type;
+        return cleanType;
     }
 
     private int parseFormat(String formatString)
