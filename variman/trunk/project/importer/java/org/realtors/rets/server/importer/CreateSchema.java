@@ -4,8 +4,10 @@
  */
 package org.realtors.rets.server.importer;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,6 +15,12 @@ import java.util.Properties;
 
 import net.sf.hibernate.HibernateException;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.Parser;
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Table;
@@ -29,40 +37,7 @@ public class CreateSchema extends RetsHelpers
         mLineSeperator = System.getProperty("line.separator");
         mTypeMappings = new HashMap();
         loadTypeMapping();
-    }
-    
-    private void loadTypeMapping()
-    {
-        Properties props = new Properties();
-        try
-        {
-            InputStream is =
-                getClass().getResourceAsStream("retstypemappins.properties");
-            if (is != null)
-            {
-                props.load(is);
-            }
-        }
-        catch (IOException e)
-        {
-            LOG.warn("Error loading retstypemappings.properties", e);
-        }
-
-        mTypeMappings.put("boolean",
-                          props.getProperty("rets.db.boolean", "BOOL"));
-        mTypeMappings.put("character",
-                          props.getProperty("rets.db.character", "VARCHAR"));
-        mTypeMappings.put("date", props.getProperty("rets.db.date", "DATE"));
-        mTypeMappings.put("datetime",
-                          props.getProperty("rets.db.datetime", "TIMESTAMP"));
-        mTypeMappings.put("time",
-                          props.getProperty("rets.db.time", "TIME"));
-        mTypeMappings.put("tiny", props.getProperty("rets.db.tiny", "INT2"));
-        mTypeMappings.put("small", props.getProperty("rets.db.small", "INT2"));
-        mTypeMappings.put("int", props.getProperty("rets.db.int", "INT4"));
-        mTypeMappings.put("long", props.getProperty("rets.db.long", "INT8"));
-        mTypeMappings.put("decimal",
-                          props.getProperty("rets.db.decimal", "NUMERIC"));
+        mFileName = null;
     }
 
     public String createTables()
@@ -74,6 +49,7 @@ public class CreateSchema extends RetsHelpers
             MClass clazz = (MClass) i.next();
             sb.append("CREATE TABLE ").append(clazz.getClassName());
             sb.append(" (").append(mLineSeperator);
+            sb.append("\tid INT8,").append(mLineSeperator);
             Iterator j = clazz.getTables().iterator();
             while (j.hasNext())
             {
@@ -124,16 +100,116 @@ public class CreateSchema extends RetsHelpers
 
         return sb.toString();
     }
-
-    public static void main(String[] args) throws HibernateException
+    /**
+     * 
+     * @return
+     */
+    public String getFileName()
     {
+        return mFileName;
+    }
+    
+    private void loadTypeMapping()
+    {
+        Properties props = new Properties();
+        try
+        {
+            InputStream is =
+                getClass().getResourceAsStream("retstypemappings.properties");
+            if (is != null)
+            {
+                props.load(is);
+            }
+        }
+        catch (IOException e)
+        {
+            LOG.warn("Error loading retstypemappings.properties", e);
+        }
+
+        mTypeMappings.put("boolean",
+                          props.getProperty("rets.db.boolean", "BOOL"));
+        mTypeMappings.put("character",
+                          props.getProperty("rets.db.character", "VARCHAR"));
+        mTypeMappings.put("date", props.getProperty("rets.db.date", "DATE"));
+        mTypeMappings.put("datetime",
+                          props.getProperty("rets.db.datetime", "TIMESTAMP"));
+        mTypeMappings.put("time",
+                          props.getProperty("rets.db.time", "TIME"));
+        mTypeMappings.put("tiny", props.getProperty("rets.db.tiny", "INT2"));
+        mTypeMappings.put("small", props.getProperty("rets.db.small", "INT2"));
+        mTypeMappings.put("int", props.getProperty("rets.db.int", "INT4"));
+        mTypeMappings.put("long", props.getProperty("rets.db.long", "INT8"));
+        mTypeMappings.put("decimal",
+                          props.getProperty("rets.db.decimal", "NUMERIC"));
+    }
+    
+    private void parseArgs(CommandLine cmd)
+    {
+        if (cmd.hasOption('f'))
+        {
+            mFileName = cmd.getOptionValue('f', "schema.out");
+        }
+    }
+    
+    private static Options getOptions()
+    {
+        Options ops = new Options();
+        ops.addOption("f", "file", true, "output file");
+        return ops;
+    }
+    
+    public static void main(String[] args)
+        throws HibernateException, ParseException, IOException
+    {
+        Parser parser = new GnuParser();
+        Options opts = getOptions();
+        CommandLine cmdl = null;
+        try
+        {
+            cmdl = parser.parse(opts, args);
+        }
+        catch (Exception e)
+        {
+            printHelp(opts);
+            System.exit(1);
+        }
         CreateSchema cs = new CreateSchema();
+        cs.parseArgs(cmdl);
+        
         cs.loadMetadata();
         String schema = cs.createTables();
-        System.out.print(schema);
+        if (cs.getFileName() != null)
+        {
+            writeFile(cs.getFileName(), schema);
+        }
+        else
+        {
+            System.out.print(schema);
+        }
     }
 
-    private Map mTypeMappings;
+    private static void printHelp(Options opt)
+    {
+        HelpFormatter fs = new HelpFormatter();
+        fs.printHelp("CreateSchema [options]", opt);
+    }
+
+    /**
+     * 
+     * @param string
+     * @param schema
+     */
+    private static void writeFile(String fileName, String schema)
+        throws IOException
+    {
+        PrintWriter pw = new PrintWriter(new FileWriter(fileName));
+        pw.print(schema);
+        pw.close();
+    }
+
+    private String mFileName;
     private String mLineSeperator;
+    private Map mTypeMappings;
     private static Logger LOG = Logger.getLogger(CreateSchema.class);
+
 }
