@@ -6,8 +6,6 @@ package org.realtors.rets.server.webapp.cct;
 
 import java.util.Iterator;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.cct.ValidationResults;
@@ -22,32 +20,33 @@ public class TestRunner
         this(context, new CertificationTestSuite(context),
              new ValidationResults());
     }
-    
+
     public TestRunner(String context, CertificationTestSuite suite,
                       ValidationResults results)
     {
         mSuite = suite;
         mResults = results;
         mRunningTest = null;
-        mTestContext = StringUtils.EMPTY;
+        mTestContext = context;
     }
-    
+
     public void startTestByName(String name)
     {
         CertificationTest test = mSuite.getTest(name);
         startTest(test);
     }
-    
+
     public void startTestByNumber(int number)
     {
         CertificationTest test = mSuite.getTest(number);
         startTest(test);
     }
-    
+
     private void startTest(CertificationTest test)
     {
         mRunningTest = test;
         ValidationResult result = mResults.getResultByName(test.getName());
+        result.reset();
         result.setStatus(StatusEnum.RUNNING);
         test.init(mTestContext);
         test.start();
@@ -57,15 +56,16 @@ public class TestRunner
     {
         if (mRunningTest != null)
         {
-            ValidationResult result = 
+            ValidationResult result =
                 mResults.getResultByName(mRunningTest.getName());
             mRunningTest.stop();
+            result.setStatus(StatusEnum.PASSED);
             mRunningTest.validate(result);
             mRunningTest = null;
         }
         // todo Throw error?
     }
-    
+
     public void stopRunningTest(int i)
     {
         CertificationTest test = mSuite.getTest(i);
@@ -77,7 +77,7 @@ public class TestRunner
     }
 
     /**
-     * 
+     *
      * @param i
      */
     public String getDescription(int i)
@@ -86,14 +86,14 @@ public class TestRunner
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Iterator getTests()
     {
         return mSuite.getTests();
     }
-    
+
     public StatusEnum getStatus(String name)
     {
         ValidationResult result = mResults.getResultByName(name);
@@ -106,12 +106,12 @@ public class TestRunner
         ValidationResult result = mResults.getResultByName(test.getName());
         return result.getStatus();
     }
-    
+
     public ValidationResult getResult(String name)
     {
         return mResults.getResultByName(name);
     }
-    
+
     private ValidationResults mResults;
     private CertificationTest mRunningTest;
     private CertificationTestSuite mSuite;
