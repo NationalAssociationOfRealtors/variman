@@ -12,6 +12,7 @@ import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.HibernateException;
 import org.realtors.rets.server.protocol.TableGroupFilter;
+import org.realtors.rets.server.protocol.ConditionRuleSet;
 
 public class RetsServer
 {
@@ -50,6 +51,17 @@ public class RetsServer
         return sTableGroupFilter;
     }
 
+    public static void setConditionRuleSet(ConditionRuleSet conditionRuleSet)
+    {
+        sConditionRuleSet = conditionRuleSet;
+    }
+
+    public static ConditionRuleSet getConditionRuleSet()
+    {
+        return sConditionRuleSet;
+    }
+
     private static SessionFactory sSessions;
     private static TableGroupFilter sTableGroupFilter;
+    private static ConditionRuleSet sConditionRuleSet;
 }
