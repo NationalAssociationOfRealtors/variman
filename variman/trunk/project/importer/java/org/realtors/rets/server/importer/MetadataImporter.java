@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Parser;
 import org.apache.commons.lang.StringUtils;
 
 import org.apache.log4j.Logger;
@@ -214,8 +219,8 @@ public class MetadataImporter
         throws Exception
     {
         RetsSession session =
-            new RetsSession("http://demo.crt.realtors.org:6103/login");
-        session.login("Joe", "Schmoe");
+            new RetsSession(mConnectionURL);
+        session.login(mUsername, mPassword);
         parseMetadata(session);
         session.logout();
     }
@@ -1052,29 +1057,100 @@ public class MetadataImporter
             }
         }
     }
+    /**
+     * 
+     * @param string
+     */
+    public void setConnectionURL(String string)
+    {
+        mConnectionURL = string;
+    }
+
+    /**
+     * 
+     * @param string
+     */
+    public void setPassword(String string)
+    {
+        mPassword = string;
+    }
+
+    /**
+     * 
+     * @param string
+     */
+    public void setUsername(String string)
+    {
+        mUsername = string;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    private static Options getOptions()
+    {
+        Options ops = new Options();
+        ops.addOption("c", "url", true, "The URL to connect with");
+        ops.addOption("u", "username", true, "username to connect with");
+        ops.addOption("p", "password", true, "password to connect with");
+        return ops;
+    }
 
     public static final void main(String args[])
         throws Exception
     {
+        Parser parser = new GnuParser();
+        Options opts = getOptions();
+        CommandLine cmdl = null;
+        try
+        {
+            cmdl = parser.parse(opts, args);
+        }
+        catch (Exception e)
+        {
+            printHelp(opts);
+            System.exit(1);
+        }
+        
         MetadataImporter mi = new MetadataImporter();
+        mi.setConnectionURL(
+            cmdl.getOptionValue('c',
+                                "http://demo.crt.realtors.org:6103/login"));
+        mi.setUsername(cmdl.getOptionValue('u', "Joe"));
+        mi.setPassword(cmdl.getOptionValue('p', "Schmoe"));
         mi.doIt();
     }
 
+    /**
+     * 
+     * @param opts
+     */
+    private static void printHelp(Options opt)
+    {
+        HelpFormatter fs = new HelpFormatter();
+        fs.printHelp("MetadataImporter [options]", opt);
+    }
+
     private Map mClasses;
+    private String mConnectionURL;
     private Map mEditMasks;
     private Map mLookups;
+    private String mPassword;
     private Map mResources;
     private Map mSearchHelps;
     private SessionFactory mSessions;
     private Map mTables;
     private Map mUpdateHelps;
     private Map mUpdates;
+    private String mUsername;
     private Map mValidationExpressions;
     private Map mValidationExternals;
     private Map mValidationLookups;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.30 2003/08/19 20:36:54 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.31 2003/08/22 19:33:11 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
+
 }
