@@ -10,16 +10,13 @@ public abstract class BaseCertificationTest implements CertificationTest
     public BaseCertificationTest()
     {
         mValidationResults = null;
+        mMessage = "Test never run";
         mStatus = FAILED;
     }
 
     public String getMessage()
     {
-        if (mValidationResults == null)
-        {
-            return "Test never run";
-        }
-        return mValidationResults.getMessage();
+        return mMessage;
     }
 
     public Status getStatus()
@@ -34,6 +31,11 @@ public abstract class BaseCertificationTest implements CertificationTest
         {
             mStatus = PASSED;
         }
+        else
+        {
+            mStatus = FAILED;
+        }
+        mMessage = mValidationResults.getMessage();
     }
 
     protected abstract ValidationResults validate();
@@ -51,4 +53,5 @@ public abstract class BaseCertificationTest implements CertificationTest
     protected Status mStatus;
     private ValidationResults mValidationResults;
     protected String mTestContext;
+    private String mMessage;
 }
