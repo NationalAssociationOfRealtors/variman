@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /***
  * Helper class to facilitate building rows in compact format. Each append()
@@ -40,7 +41,7 @@ public class DataRowBuilder
     {
         if (object != null)
         {
-            mWriter.print(EscapeUtils.escapeXml(object.toString()));
+            mWriter.print(StringEscapeUtils.escapeXml(object.toString()));
         }
         mWriter.print("\t");
     }
