@@ -11,25 +11,30 @@
 package org.realtors.rets.server.protocol;
 
 import java.io.PrintWriter;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.enum.Enum;
+
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 import org.realtors.rets.server.metadata.format.DataRowBuilder;
 import org.realtors.rets.server.metadata.format.TagBuilder;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Formats results in COMPACT format.
  */
 public class CompactFormatter implements SearchResultsFormatter
 {
+    public CompactFormatter(LookupDecoding lookupDecoding)
+    {
+        mLookupDecoding = lookupDecoding;
+    }
+
     /**
      * Formats results in COMPACT format
      *
@@ -43,15 +48,8 @@ public class CompactFormatter implements SearchResultsFormatter
         {
             PrintWriter out = context.getWriter();
             out.println("<DELIMITER value=\"09\"/>");
-            TagBuilder columnsTag = new TagBuilder(out, "COLUMNS")
-                .beginContent();
-            columnsTag.print("\t");
-            Collection fields = columnsToFields(context.getColumns(),
-                                                context.getMetadata());
-            columnsTag.print(StringUtils.join(fields.iterator(), "\t"));
-            columnsTag.print("\t");
-            columnsTag.close();
-            int numColumns = context.getColumns().size();
+            formatColumns(context);
+            int numColumns = context.getNumberOfColumns();
             while (context.hasNext())
             {
                 formatRow(context, numColumns);
@@ -61,6 +59,18 @@ public class CompactFormatter implements SearchResultsFormatter
         {
             throw new RetsServerException(e);
         }
+    }
+
+    private void formatColumns(SearchFormatterContext context)
+    {
+        TagBuilder columnsTag = new TagBuilder(context.getWriter(), "COLUMNS")
+            .beginContent();
+        columnsTag.print(DELIMITER);
+        Collection fields = columnsToFields(context.getColumns(),
+                                            context.getMetadata());
+        columnsTag.print(StringUtils.join(fields.iterator(), "\t"));
+        columnsTag.print(DELIMITER);
+        columnsTag.close();
     }
 
     /**
@@ -73,12 +83,17 @@ public class CompactFormatter implements SearchResultsFormatter
     private void formatRow(SearchFormatterContext context, int numColumns)
         throws SQLException
     {
-        DataRowBuilder row = new DataRowBuilder(context.getWriter());
-        ResultSet results = context.getResultSet();
+        DataRowBuilder row = new DataRowBuilder(context.getWriter(), DELIMITER);
         row.begin();
         for (int i = 1; i <= numColumns; i++)
         {
-            row.append(results.getString(i));
+            String value = context.getResultString(i);
+            if ((mLookupDecoding == DECODE_TO_SHORT_VALUE) &&
+                context.isColumnALookup(i))
+            {
+                value = context.getLookupShortValue(i, value);
+            }
+            row.append(value);
         }
         row.end();
     }
@@ -101,4 +116,20 @@ public class CompactFormatter implements SearchResultsFormatter
         }
         return fields;
     }
+
+    public static final class LookupDecoding extends Enum
+    {
+        private LookupDecoding(String s)
+        {
+            super(s);
+        }
+    }
+
+    public static final LookupDecoding NO_DECODING =
+        new LookupDecoding("no decoding");
+    public static final LookupDecoding DECODE_TO_SHORT_VALUE =
+        new LookupDecoding("decode to short value");
+
+    private static final String DELIMITER = "\t";
+    private LookupDecoding mLookupDecoding;
 }
