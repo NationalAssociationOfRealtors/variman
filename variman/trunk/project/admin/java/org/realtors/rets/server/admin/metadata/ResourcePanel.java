@@ -10,9 +10,11 @@ package org.realtors.rets.server.admin.metadata;
 
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
+import org.wxwindows.wxChoice;
 
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
 import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 
 public class ResourcePanel extends AbstractSubPanel
 {
@@ -32,20 +34,38 @@ public class ResourcePanel extends AbstractSubPanel
         mDescription = new wxTextCtrl(this, -1);
         grid.addRow("Description:", mDescription, wxEXPAND);
 
-        mStandardName = new wxTextCtrl(this, -1);
-        grid.addRow("Standard Name:", mStandardName, wxEXPAND);
+        mStandardName = createStandardName();
+        grid.addRow("Standard Name:", mStandardName);
+    }
+
+    private wxChoice createStandardName()
+    {
+        String[] standardNames = {
+            "<none>",
+            ResourceStandardNameEnum.ACTIVE_AGENT.toString(),
+            ResourceStandardNameEnum.AGENT.toString(),
+            ResourceStandardNameEnum.HISTORY.toString(),
+            ResourceStandardNameEnum.OFFICE.toString(),
+            ResourceStandardNameEnum.OPEN_HOUSE.toString(),
+            ResourceStandardNameEnum.PROPERTY.toString(),
+            ResourceStandardNameEnum.PROSPECT.toString(),
+            ResourceStandardNameEnum.TAX.toString(),
+            ResourceStandardNameEnum.TOUR.toString()
+        };
+        return new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize,
+                            standardNames);
     }
 
     public void populateFrom(Resource resource)
     {
-        mResourceId.SetValue(resource.getResourceID());
-        mVisibleName.SetValue(resource.getVisibleName());
-        mDescription.SetValue(resource.getDescription());
-        mStandardName.SetValue(resource.getStandardName().toString());
+        setValue(mResourceId, resource.getResourceID());
+        setValue(mVisibleName, resource.getVisibleName());
+        setValue(mDescription, resource.getDescription());
+        setValue(mStandardName, resource.getStandardName());
     }
 
     private wxTextCtrl mResourceId;
     private wxTextCtrl mVisibleName;
     private wxTextCtrl mDescription;
-    private wxTextCtrl mStandardName;
+    private wxChoice mStandardName;
 }
