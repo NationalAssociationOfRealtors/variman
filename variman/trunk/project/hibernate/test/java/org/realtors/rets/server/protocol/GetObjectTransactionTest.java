@@ -2,17 +2,17 @@
  */
 package org.realtors.rets.server.protocol;
 
-import java.net.URL;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServerException;
 
 import junit.framework.TestCase;
 
@@ -28,7 +28,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("1.0", response.getHeader("MIME-Version"));
 
         byte[] expected =
-            readStream(getClass().getResourceAsStream(GIF_FILE));
+            IOUtils.readBytes(getClass().getResourceAsStream(GIF_FILE));
         byte[] actual = response.getByteArray();
         assertTrue(Arrays.equals(expected, actual));
     }
@@ -43,7 +43,7 @@ public class GetObjectTransactionTest extends TestCase
         assertEquals("1.0", response.getHeader("MIME-Version"));
 
         byte[] expected =
-            readStream(getClass().getResourceAsStream(JPEG_FILE));
+            IOUtils.readBytes(getClass().getResourceAsStream(JPEG_FILE));
         byte[] actual = response.getByteArray();
         assertTrue(Arrays.equals(expected, actual));
     }
@@ -83,18 +83,6 @@ public class GetObjectTransactionTest extends TestCase
         String imageDirectory =
             imagePath.substring(0, imagePath.lastIndexOf(resourceName) - 1);
         return imageDirectory;
-    }
-
-    private static byte[] readStream(InputStream input) throws IOException
-    {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while((bytesRead = input.read(buffer)) != -1)
-        {
-            output.write(buffer, 0, bytesRead);
-        }
-        return output.toByteArray();
     }
 
     private static class TestResponse implements GetObjectResponse
