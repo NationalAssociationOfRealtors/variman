@@ -51,6 +51,10 @@ options
         mMetadata = metadata;
     }
 
+    public void print(Token t) {
+        System.out.println(t);
+    }
+
     private SemanticException newSemanticException(String message, Token t)
     {
         return new SemanticException(message, t.getFilename(), t.getLine(),
@@ -98,6 +102,12 @@ field_value [String name] returns [SqlConverter sql]
     { sql = null; }
     : {isLookup(name)}? sql=lookup_list[name]
     | {isStringList(name)}? string_list
+    | {isStringList(name)}? string_literal
+    | number
+    ;
+
+number
+    : NUMBER
     ;
 
 lookup_list [String name] returns [SqlConverter sql]
@@ -113,6 +123,7 @@ lookup_or [String name] returns [SqlConverter sql]
     // This is the "implied" OR
     | lookup[list]
     ;
+
 lookup_and [String name] returns [SqlConverter sql]
     { LookupList list = new LookupList(LookupListType.AND, name); sql = list; }
     : PLUS lookups[list]
@@ -143,7 +154,7 @@ string
     ;
 
 string_eq
-    : t:TEXT
+    : TEXT
     ;
 
 string_start
@@ -158,11 +169,15 @@ string_char
     : TEXT QUESTION TEXT
     ;
 
+string_literal
+    : STRING_LITERAL
+    ;
+
 class DmqlLexer extends Lexer;
 
 options
 {
-	k = 11;
+    k = 11;
 	testLiterals = false;
 }
 
@@ -177,16 +192,46 @@ PIPE : '|';
 TILDE : '~';
 QUESTION : ('?')+;
 SEMI : ';';
+DATETIME
+    : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-'
+        ('0'..'9')('0'..'9')
+        'T' ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ':'
+        ('0'..'9')('0'..'9') ('.' ('0'..'9')('0'..'9'))?;
+DATE
+    : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-'
+        ('0'..'9')('0'..'9');
+TIME
+    : ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ':'
+        ('0'..'9')('0'..'9') ('.' ('0'..'9')('0'..'9'))?;
 
-DATETIME : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') 'T' ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ('.' ('0'..'9')('0'..'9'))?;
-DATE : ('0'..'9')('0'..'9')('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9') '-' ('0'..'9')('0'..'9');
-TIME : ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ':' ('0'..'9')('0'..'9') ('.' ('0'..'9')('0'..'9'))?;
+// Not sure why these don't quite work:
+//DATETIME : YMD 'T' HMS;
+//DATE : YMD;
+//TIME : HMS;
+
+// Year-Month-Day
+//protected
+//YMD 
+//    : DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT DIGIT DIGIT;
+
+// Hour:Minute:Second[.fraction]
+//protected
+//HMS : DIGIT DIGIT ':' DIGIT DIGIT ':' DIGIT DIGIT ('.' DIGIT DIGIT)?;
+
+protected
+DIGIT : ('0' .. '9');
 
 TEXT
 	options { testLiterals = true; }
 	: ('a'..'z' | 'A'..'Z' | '0'..'9')+;
 
+//NUMBER
+//    : ('0'..'9')+ ('.' ('0'..'9')*)* ;
+
+STRING_LITERAL
+	options { testLiterals = true; }
+    : '"'! (~'"')* ('"'! '"' (~'"')*)* '"'!;
+
 WS  :   (' ' | '\t' | '\n' | '\r')
         { _ttype = Token.SKIP; }
     ;
-

@@ -24,8 +24,7 @@ public class DmqlCompilerTest extends TestCase
 
     public void testLookupOr() throws ANTLRException
     {
-        SqlConverter sql = DmqlCompiler.parseDmql("(AR=|GENVA,BATV)",
-                                                  mMetadata);
+        SqlConverter sql = parse("(AR=|GENVA,BATV)");
         LookupList lookup = new LookupList(LookupListType.OR, "AR");
         lookup.addLookup("GENVA");
         lookup.addLookup("BATV");
@@ -34,7 +33,7 @@ public class DmqlCompilerTest extends TestCase
 
     public void testImpliedLookupOr() throws ANTLRException
     {
-        SqlConverter sql = DmqlCompiler.parseDmql("(STATUS=A)", mMetadata);
+        SqlConverter sql = parse("(STATUS=A)");
         LookupList lookup = new LookupList(LookupListType.OR, "STATUS");
         lookup.addLookup("A");
         assertEquals(lookup, sql);
@@ -44,7 +43,7 @@ public class DmqlCompilerTest extends TestCase
     {
         try
         {
-            DmqlCompiler.parseDmql("(AR=GENVA,BATV)", mMetadata);
+            parse("(AR=GENVA,BATV)");
             fail("Should have thrown an exception");
         }
         catch (ANTLRException e)
@@ -56,7 +55,7 @@ public class DmqlCompilerTest extends TestCase
 
     public void testLookupAnd() throws ANTLRException
     {
-        SqlConverter sql = DmqlCompiler.parseDmql("(STATUS=+A,S)", mMetadata);
+        SqlConverter sql = parse("(STATUS=+A,S)");
         LookupList lookup = new LookupList(LookupListType.AND, "STATUS");
         lookup.addLookup("A");
         lookup.addLookup("S");
@@ -65,7 +64,7 @@ public class DmqlCompilerTest extends TestCase
 
     public void testLookupNot() throws ANTLRException
     {
-        SqlConverter sql = DmqlCompiler.parseDmql("(STATUS=~A,S)", mMetadata);
+        SqlConverter sql = parse("(STATUS=~A,S)");
         LookupList lookup = new LookupList(LookupListType.NOT, "STATUS");
         lookup.addLookup("A");
         lookup.addLookup("S");
@@ -76,7 +75,7 @@ public class DmqlCompilerTest extends TestCase
     {
         try
         {
-            DmqlCompiler.parseDmql("(XX=|A,S)", mMetadata);
+            parse("(XX=|A,S)");
             fail("Should have thrown exception");
         }
         catch (ANTLRException e)
@@ -90,7 +89,7 @@ public class DmqlCompilerTest extends TestCase
     {
         try
         {
-            DmqlCompiler.parseDmql("(AR=|A,S)", mMetadata);
+            parse("(AR=|A,S)");
             fail("Should have thrown exception");
         }
         catch (ANTLRException e)
@@ -102,22 +101,45 @@ public class DmqlCompilerTest extends TestCase
 
     public void testStringEquals() throws ANTLRException
     {
-        DmqlCompiler.parseDmql("(owner=foo)", mMetadata);
+        parse("(owner=foo)");
     }
 
     public void testStringStart() throws ANTLRException
     {
-        DmqlCompiler.parseDmql("(owner=f*)", mMetadata);
+        parse("(owner=f*)");
     }
 
     public void testStringContains() throws ANTLRException
     {
-        DmqlCompiler.parseDmql("(owner=*foo*)", mMetadata);
+        parse("(owner=*foo*)");
     }
 
     public void testStringChar() throws ANTLRException
     {
-        DmqlCompiler.parseDmql("(owner=f?o)", mMetadata);
+        parse("(owner=f?o)");
+    }
+
+    public void testStringList() throws ANTLRException
+    {
+        parse("(owner=foo,f*,*foo*,f?o)");
+    }
+
+    public void testStringLiteral() throws ANTLRException
+    {
+        parse("(owner=\"\")");
+        parse("(owner=\"foo\")");
+        parse("(owner=\"Foo Bar\")");
+        parse("(owner=\"Vito \"\"The Don\"\" Corleone\")");
+    }
+
+    public void testNumber() throws ANTLRException
+    {
+//        parse("(owner=1.0)");
+    }
+
+    private SqlConverter parse(String dmql) throws ANTLRException
+    {
+        return DmqlCompiler.parseDmql(dmql, mMetadata);
     }
 
     static class SimpleDmqlMetadataValidator implements DmqlParserMetadata
