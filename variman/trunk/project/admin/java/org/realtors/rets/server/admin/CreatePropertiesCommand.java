@@ -26,6 +26,7 @@ import net.sf.hibernate.SessionFactory;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
@@ -106,7 +107,6 @@ public class CreatePropertiesCommand
         metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
         MetadataLoader loader = new MetadataLoader();
         MSystem system = loader.parseMetadataDirectory(metadataDir);
-        System.out.println("Got system" + system.getId());
         Iterator j = system.getResources().iterator();
         while (j.hasNext())
         {
@@ -133,43 +133,43 @@ public class CreatePropertiesCommand
     private void dropData()
         throws HibernateException, SQLException
     {
-        Session session = null;
-        Connection con = null;
-        Statement stmt = null;
+        SessionHelper helper = RetsServer.createSessionHelper();
+        Connection connection = null;
+        Statement statement = null;
         try
         {
-            session = mSessions.openSession();
-            con = session.connection();
-            stmt = con.createStatement();
+            Session session = helper.beginSession();
+            connection = session.connection();
+            statement = connection.createStatement();
 
-            stmt.execute("delete from rets_property_res");
+            statement.execute("delete from rets_property_res");
 
-            con.commit();
+            connection.commit();
         }
         catch (HibernateException e)
         {
-            if (con != null)
+            if (connection != null)
             {
-                con.rollback();
-            }
-            if (session != null)
-            {
-                session.close();
+                connection.rollback();
             }
             throw e;
         }
         catch (SQLException e)
         {
-            System.out.println(stmt);
-            if (con != null)
+            System.out.println(statement);
+            if (connection != null)
             {
-                con.rollback();
-            }
-            if (session != null)
-            {
-                session.close();
+                connection.rollback();
             }
             throw e;
+        }
+        finally
+        {
+            if (statement != null)
+            {
+                statement.close();
+            }
+            helper.close(LOG);
         }
     }
 
