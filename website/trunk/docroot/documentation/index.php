@@ -8,4 +8,8 @@ $tmpl_location = "Documentation";
       distribution.
     </p>
 
+    <p>
+      The <a href="manual/">manual</a>.
+    </p>
+
     <?php include("../footer.php"); ?>
