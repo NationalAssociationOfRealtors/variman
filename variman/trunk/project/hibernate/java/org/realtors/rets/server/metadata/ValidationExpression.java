@@ -63,14 +63,15 @@ public class ValidationExpression implements Serializable
      *
      * @hibernate.property
      */
-    public ValidationExpressionTypeEnum getValidationExpression()
+    public ValidationExpressionTypeEnum getValidationExpressionType()
     {
-        return mValidationExpression;
+        return mValidationExpressionType;
     }
 
-    public void setValidationExpression(ValidationExpressionTypeEnum validationExpression)
+    public void setValidationExpressionType(
+        ValidationExpressionTypeEnum validationExpressionType)
     {
-        mValidationExpression = validationExpression;
+        mValidationExpressionType = validationExpressionType;
     }
 
     /**
@@ -155,7 +156,7 @@ public class ValidationExpression implements Serializable
     private String mValidationExpressionID;
 
     /** nullable persistent field */
-    private ValidationExpressionTypeEnum mValidationExpression;
+    private ValidationExpressionTypeEnum mValidationExpressionType;
 
     /** nullable persistent field */
     private String mValue;
