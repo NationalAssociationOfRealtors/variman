@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author kgarner
  */
-public class InMemoryValidationResults
+public class InMemoryValidationResults implements ValidationResults
 {
     public InMemoryValidationResults()
     {

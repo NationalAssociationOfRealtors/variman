@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import org.realtors.rets.server.cct.InMemoryValidationResults;
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.cct.ValidationResults;
@@ -20,7 +21,7 @@ public class TestRunner
     public TestRunner(String context)
     {
         this(context, new CertificationTestSuite(context),
-             new ValidationResults());
+             new InMemoryValidationResults());
     }
 
     public TestRunner(String context, CertificationTestSuite suite,
