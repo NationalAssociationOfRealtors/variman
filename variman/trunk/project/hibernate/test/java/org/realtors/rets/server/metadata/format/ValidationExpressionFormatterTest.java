@@ -49,5 +49,15 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormat()
+    {
+        ValidationExpressionFormatter formatter =
+            getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted),
+                         new ValidationExpression[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private ValidationExpression[] mValidationExpressions;
 }

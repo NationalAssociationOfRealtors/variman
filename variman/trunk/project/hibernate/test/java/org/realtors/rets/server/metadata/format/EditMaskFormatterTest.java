@@ -43,5 +43,13 @@ public class EditMaskFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormatEditMask()
+    {
+        EditMaskFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new EditMask[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private EditMask[] mEditMasks;
 }

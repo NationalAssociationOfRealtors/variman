@@ -44,5 +44,13 @@ public class LookupFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormatLookup()
+    {
+        LookupFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new Lookup[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private Lookup[] mLookups;
 }

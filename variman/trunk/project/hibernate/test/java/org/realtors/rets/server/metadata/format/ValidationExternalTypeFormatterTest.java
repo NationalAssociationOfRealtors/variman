@@ -69,5 +69,15 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormat()
+    {
+        ValidationExternalTypeFormatter formatter =
+            getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted),
+                         new ValidationExternalType[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private ValidationExternalType[] mValidationExternalTypes;
 }

@@ -63,5 +63,13 @@ public class ResourceFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormatResource()
+    {
+        ResourceFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new Resource[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private Resource[] mResources;
 }

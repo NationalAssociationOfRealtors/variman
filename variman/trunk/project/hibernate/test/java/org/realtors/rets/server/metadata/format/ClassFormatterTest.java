@@ -20,12 +20,18 @@ public class ClassFormatterTest extends FormatterTestCase
         mClasses = new MClass[] {clazz};
     }
 
-    public void testCompactFormatClass()
+    private ClassFormatter getFormatter(int format)
     {
         ClassFormatter formatter =
-            ClassFormatter.getInstance(MetadataFormatter.COMPACT);
+            ClassFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        formatter.setResource("Property");
+        formatter.setResourceName("Property");
+        return formatter;
+    }
+
+    public void testCompactFormatClass()
+    {
+        ClassFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
         StringWriter formatted = new StringWriter();
         formatter.format(new PrintWriter(formatted), mClasses);
         assertEquals(
@@ -44,6 +50,14 @@ public class ClassFormatterTest extends FormatterTestCase
             "</METADATA-CLASS>\n",
             formatted.toString()
         );
+    }
+
+    public void testEmptyCompactyFormatClass()
+    {
+        ClassFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new MClass[0]);
+        assertEquals("", formatted.toString());
     }
 
     private MClass[] mClasses;

@@ -20,7 +20,9 @@ public class TableFormatterTest extends FormatterTestCase
 {
     protected void setUp()
     {
-        Table table = new Table();
+        mTables = new Table[2];
+
+        Table table = new Table(1);
         table.setSystemName("E_SCHOOL");
         table.setStandardName(new TableStandardName("ElementarySchool"));
         table.setLongName("Elementary School");
@@ -46,6 +48,7 @@ public class TableFormatterTest extends FormatterTestCase
         Lookup lookup = new Lookup();
         lookup.setLookupName("E_SCHOOL");
         table.setLookup(lookup);
+
         table.setMaxSelect(1);
         table.setUnits(UnitEnum.FEET);
         table.setIndex(2);
@@ -54,7 +57,27 @@ public class TableFormatterTest extends FormatterTestCase
         table.setDefault(5);
         table.setRequired(6);
         table.setUnique(false);
-        mTables = new Table[] {table};
+        mTables[0] = table;
+
+        table = new Table(2);
+        table.setSystemName("AGENT_ID");
+        table.setStandardName(new TableStandardName("ListAgentAgentID"));
+        table.setLongName("Listing Agent ID");
+        table.setShortName("AgentID");
+        table.setDbName("AGENT_ID");
+        table.setMaximum(6);
+        table.setDataType(DataTypeEnum.CHARACTER);
+        table.setPrecision(0);
+        table.setSearchable(true);
+        table.setAlignment(AlignmentEnum.LEFT);
+        table.setMaxSelect(0);
+        table.setIndex(0);
+        table.setMinimum(0);
+        table.setMaximum(0);
+        table.setDefault(5);
+        table.setRequired(0);
+        table.setUnique(false);
+        mTables[1] = table;
     }
 
     public void testCompactFormatTable()
@@ -80,8 +103,22 @@ public class TableFormatterTest extends FormatterTestCase
             "E_SCHOOL\t1\tFeet\t2\t3\t4\t5\t6\t\t0\t" +
             "</DATA>\n" +
 
+            "<DATA>\t" +
+            "AGENT_ID\tListAgentAgentID\tListing Agent ID\tAGENT_ID\t" +
+            "AgentID\t0\tCharacter\t0\t1\t\tLeft\t0\t\t\t0\t\t0\t0\t0\t5" +
+            "\t0\t\t0\t" +
+            "</DATA>\n" +
+
             "</METADATA-TABLE>\n",
             formatted.toString());
+    }
+
+    public void testEmptyCompactFormatTable()
+    {
+        TableFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new Table[0]);
+        assertEquals("", formatted.toString());
     }
 
     private TableFormatter getFormatter(int format)

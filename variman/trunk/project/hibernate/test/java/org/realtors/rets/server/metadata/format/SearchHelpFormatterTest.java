@@ -45,5 +45,14 @@ public class SearchHelpFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormatSearchHelp()
+    {
+        SearchHelpFormatter formatter =
+            getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new SearchHelp[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private SearchHelp[] mSearchHelps;
 }

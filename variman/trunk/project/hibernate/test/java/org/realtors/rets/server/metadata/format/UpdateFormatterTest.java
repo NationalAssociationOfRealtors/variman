@@ -46,5 +46,13 @@ public class UpdateFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormatUpdate()
+    {
+        UpdateFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new Update[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private Update[] mUpdates;
 }

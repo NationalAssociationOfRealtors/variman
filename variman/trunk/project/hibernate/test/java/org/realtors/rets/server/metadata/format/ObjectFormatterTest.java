@@ -47,5 +47,13 @@ public class ObjectFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormatObject()
+    {
+        ObjectFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new MObject[0]);
+        assertEquals("", formatted.toString());
+    }
+
     private MObject[] mObjects;
 }

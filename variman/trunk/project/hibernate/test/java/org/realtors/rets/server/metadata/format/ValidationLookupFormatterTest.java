@@ -46,5 +46,14 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
             formatted.toString());
     }
 
+    public void testEmptyCompactFormat()
+    {
+        ValidationLookupFormatter formatter =
+            getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), new ValidationLookup[0]);
+        assertEquals("", formatted.toString());
+    }
+
     protected ValidationLookup[] mValidationLookups;
 }
