@@ -151,13 +151,17 @@ public class RetsConfig
     private Element getSecurityContraintsElement()
     {
         Element securityContraints = new Element(SECURITY_CONSTRAINTS);
-        List allConstraints = mSecurityConstraints.getAllConstraints();
-        for (int i = 0; i < allConstraints.size(); i++)
+        List allGroupRules = mSecurityConstraints.getAllGroupRules();
+        for (int i = 0; i < allGroupRules.size(); i++)
         {
-            GroupRules groupRules = (GroupRules) allConstraints.get(i);
+            GroupRules groupRules = (GroupRules) allGroupRules.get(i);
+            List rules = groupRules.getRules();
+            if (rules.size() == 0)
+            {
+                continue;
+            }
             Element groupRulesElement = new Element(GROUP_RULES);
             groupRulesElement.setAttribute(GROUP, groupRules.getGroupName());
-            List rules = groupRules.getRules();
             for (int j = 0; j < rules.size(); j++)
             {
                 RuleDescription ruleDescription =
@@ -457,10 +461,10 @@ public class RetsConfig
 
     public List getAllGroupRules()
     {
-        return mSecurityConstraints.getAllConstraints();
+        return mSecurityConstraints.getAllGroupRules();
     }
 
-    public SecurityConstraints getSEcSecurityConstraints()
+    public SecurityConstraints getSecurityConstraints()
     {
         return mSecurityConstraints;
     }
