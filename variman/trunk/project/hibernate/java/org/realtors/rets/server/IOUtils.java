@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -230,6 +232,23 @@ public class IOUtils
             lines.add(line);
         }
         return lines;
+    }
+
+    public static void copyFile(File source, File destination)
+        throws IOException
+    {
+        copyFile(source, destination, DEFAULT_BUFFER_SIZE);
+    }
+
+    public static void copyFile(File source, File destination, int bufferSize)
+        throws IOException
+    {
+        if (destination.isDirectory())
+        {
+            destination = new File(destination, source.getName());
+        }
+        copyStream(new FileInputStream(source),
+                   new FileOutputStream(destination), bufferSize);
     }
 
     /**
