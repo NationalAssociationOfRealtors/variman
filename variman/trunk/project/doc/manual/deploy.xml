@@ -111,34 +111,7 @@
       <para>
         From the main Configuration panel, as seen in <xref
         linkend="fig-config"/>, you can configure various RETS
-        parameters.  The Listening Port is the TCP port number that
-        the Rex server listens on.  6103 is the standard, well-known
-        port number for RETS.  The Metadata Directory points to the
-        root directory of the metadata hierarchy.  Configuring
-        metadata is explained in ###.  The Image Root and Image
-        Pattern parameters are used to allow Rex to serve up images
-        for the GetObject transaction.  The Image Root is a directory
-        where the images are located.  The Image Pattern is a '%'
-        substitution pattern that describes the format of the actual
-        file names.  The possible patterns and their substitutions are
-        listed in <xref linkend="tab-image-pattern"/>.  An example of
-        this may help.  If you have pictures
-        in <filename>/home/rex/pictures/</filename>.  The key is used
-        as the base file name, with each image given a number.  Say
-        there are 3 picture for the property
-        ID <literal>LN1001</literal>, the full paths for these
-        pictures are:
-        <itemizedlist>
-          <listitem>
-            <literal>/home/rex/pictures/LN1001_1.jpg</literal>
-          </listitem>
-          <listitem>
-            <literal>/home/rex/pictures/LN1001_2.jpg</literal>
-          </listitem>
-          <listitem>
-            <literal>/home/rex/pictures/LN1001_3.jpg</literal>
-          </listitem>
-        </itemizedlist>
+        parameters.
       </para>
       <figure id="fig-config">
         <title>Configuration Tab</title>
@@ -148,7 +121,20 @@
           </imageobject>
         </mediaobject>
       </figure>
-      
+      <para>
+        The Listening Port is the TCP port number that the Rex server
+        listens on.  6103 is the standard, well-known port number for
+        RETS.  The Metadata Directory points to the root directory of
+        the metadata hierarchy.  Configuring metadata is explained in
+        ###.  The Image Root and Image Pattern parameters are used to
+        allow Rex to serve up images for the GetObject transaction.
+        The Image Root is a directory where the images are located.
+        The Image Pattern is a percent substitution pattern that
+        describes the format of the actual file names.  The possible
+        patterns and their substitutions are listed in <xref
+        linkend="tab-image-pattern"/>.
+      </para>
+
       <table frame="all" id="tab-image-pattern">
         <title>Image Patterns</title>
         <tgroup cols="2">
@@ -174,6 +160,56 @@
           </tbody>
         </tgroup>
       </table>
+
+      <para>
+        For example, if you have pictures
+        in <filename>/home/rex/pictures/</filename>.  The key is used
+        as the base file name, with each image given a number.  Say
+        there are three pictures for the property
+        ID <literal>LN1001</literal>, the full paths for these
+        pictures are:
+        <itemizedlist>
+          <listitem>
+            <literal>/home/rex/pictures/LN1001_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/rex/pictures/LN1001_2.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/rex/pictures/LN1001_3.jpg</literal>
+          </listitem>
+        </itemizedlist>
+        The, you could set the Image Root
+        to <filename>/home/rex/pictures</filename> and the Image
+        Pattern to <literal>%k_%i.jpg</literal>.
+        The <literal>%k</literal> gets replaced with the object ID,
+        and the <literal>%i</literal> gets replaced with the image
+        number.
+      </para>
+      <para>
+        The <literal>%k</literal> percent pattern may be proceeded by
+        a number modifier that truncates the number of characters used
+        during substitution.  This allows files to be split up into
+        multiple directories for large installations.  If the number
+        is positive, the characters are taken from the front, where if
+        the number is negative, the characters are taken from the
+        end. So, with a pattern of <literal>%-2k/%k_%i.jpg</literal>,
+        the first picture
+        for <literal>LN1001</literal>, <literal>LN1002</literal>, <literal>LN1101</literal>
+        would be at the following paths:
+        <itemizedlist>
+          <listitem>
+            <literal>/home/rex/pictures/01/LN1001_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/rex/pictures/02/LN1002_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/rex/pictures/01/LN1101_1.jpg</literal>
+          </listitem>
+        </itemizedlist>
+      </para>
+      
     </section>
   </section>
 </section>
