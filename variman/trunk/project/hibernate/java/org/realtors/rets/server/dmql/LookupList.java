@@ -73,6 +73,7 @@ public class LookupList implements SqlConverter
             mLookupMultiTable = null;
         }
     }
+
     public void setLookupMulti(boolean lookupMulti)
     {
         mLookupMulti = lookupMulti;
@@ -85,9 +86,9 @@ public class LookupList implements SqlConverter
 
     public void toSql(PrintWriter out)
     {
-        if (mLookupMulti)
+        if (mLookupMulti && (mLookupMultiTable != null))
         {
-            toSqlLookupMulti(out);
+            toSqlLookupMultiTable(out);
         }
         else
         {
@@ -103,16 +104,49 @@ public class LookupList implements SqlConverter
         {
             String lookup = (String) mLookups.get(i);
             out.print(sqlOperator);
-            out.print(mSqlColumn);
-            out.print(" = '");
-            out.print(lookup);
-            out.print("'");
+            if (mLookupMulti)
+            {
+                printLookupMultiCondition(out, lookup);
+            }
+            else
+            {
+                printLookupCondition(out, lookup);
+            }
             sqlOperator = mType.getSqlOperator();
         }
         out.print(mType.getLookupSuffix());
     }
 
-    private void toSqlLookupMulti(PrintWriter out)
+    private void printLookupMultiCondition(PrintWriter out, String lookup)
+    {
+        out.print("(");
+        out.print(mSqlColumn);
+        out.print(" = '");
+        out.print(lookup);
+        out.print("' OR ");
+        out.print(mSqlColumn);
+        out.print(" LIKE '");
+        out.print(lookup);
+        out.print(",%' OR ");
+        out.print(mSqlColumn);
+        out.print(" LIKE '%,");
+        out.print(lookup);
+        out.print("' OR ");
+        out.print(mSqlColumn);
+        out.print(" LIKE '%,");
+        out.print(lookup);
+        out.print(",%')");
+    }
+
+    private void printLookupCondition(PrintWriter out, String lookup)
+    {
+        out.print(mSqlColumn);
+        out.print(" = '");
+        out.print(lookup);
+        out.print("'");
+    }
+
+    private void toSqlLookupMultiTable(PrintWriter out)
     {
         out.print("id ");
         out.print(mType.getLookupMultiPrefix());
