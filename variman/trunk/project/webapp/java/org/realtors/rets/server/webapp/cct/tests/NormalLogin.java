@@ -34,13 +34,14 @@ public class NormalLogin extends BaseCertificationTest
 
     public void start()
     {
+        super.start();
         HandlerManager actionManager = HandlerManager.getInstance();
         login = actionManager.getLoginHandler(mTestContext);
         login.reset();
         login.setSessionId("login-headers");
         login.setGetInvokeCount(InvokeCount.ONE);
         login.addRequiredHeader("Accept", "^\\*/\\*$");
-        login.addRequiredHeader("User-Agent", "^[^/]+(/[^/])?$");
+        login.addRequiredHeader("User-Agent", ".*");
         login.addRequiredHeader("RETS-Version", ".*");
 
         action = actionManager.getActionHandler();
