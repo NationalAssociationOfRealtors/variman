@@ -9,22 +9,20 @@ import java.util.Set;
 
 import org.realtors.rets.server.GetMetadataParameters;
 import org.realtors.rets.server.GetMetadataTransaction;
-import org.realtors.rets.server.ManagerMetadataFetcher;
 import org.realtors.rets.server.MetadataFetcher;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
-import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.RetsServletRequest;
 import org.realtors.rets.server.webapp.RetsServletResponse;
-import org.realtors.rets.server.webapp.WebApp;
+import org.realtors.rets.server.webapp.WebAppMetadataFetcher;
 
 public class GetMetadataHandler extends BaseServletHandler
 {
     public GetMetadataHandler()
     {
         mTransaction = new GetMetadataTransaction();
-        mMetadataFetcher = new ServletMetadataFetcher();
+        mMetadataFetcher = new WebAppMetadataFetcher();
         if (sMetadataTypes == null)
         {
             sMetadataTypes = new HashSet();
@@ -61,17 +59,6 @@ public class GetMetadataHandler extends BaseServletHandler
         mTransaction.execute(out, parameters, mMetadataFetcher);
     }
 
-    /**
-     * Gets the metadata manager from the servlet request.
-     */
-    class ServletMetadataFetcher extends ManagerMetadataFetcher
-    {
-        protected MetadataManager getMetadataManager()
-        {
-            return WebApp.getMetadataManager();
-        }
-    }
-    
     protected void validateParameters(ValidationResult result)
     {
         super.validateParameters(result);
