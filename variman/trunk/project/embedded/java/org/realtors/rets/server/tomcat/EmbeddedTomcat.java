@@ -44,6 +44,7 @@ public class EmbeddedTomcat
     {
         // Set the home directory
         System.setProperty("catalina.home", mPath);
+        System.setProperty("catalina.base", mPath);
 
         // Create an embedded server
         mEmbedded = new Embedded();
