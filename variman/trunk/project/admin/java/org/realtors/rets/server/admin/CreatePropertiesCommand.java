@@ -25,6 +25,7 @@ import net.sf.hibernate.SessionFactory;
 
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.Resource;
@@ -39,7 +40,7 @@ public class CreatePropertiesCommand
     {
         mClasses = new HashMap();
         mTables = new HashMap();
-        mSessions = Admin.getSessionFactory();
+        mSessions = RetsServer.getSessions();
         mNumProperties = numProperties;
         initData();
     }
@@ -95,7 +96,7 @@ public class CreatePropertiesCommand
     private void loadMetadata() throws RetsServerException
     {
         String metadataDir = Admin.getRetsConfig().getMetadataDir();
-        metadataDir = IOUtils.resolve(Admin.getWebappRoot(), metadataDir);
+        metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
         MetadataLoader loader = new MetadataLoader();
         MSystem system = loader.parseMetadataDirectory(metadataDir);
         System.out.println("Got system" + system.getId());

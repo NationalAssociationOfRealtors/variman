@@ -26,6 +26,7 @@ import net.sf.hibernate.dialect.Dialect;
 
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
@@ -44,7 +45,7 @@ public class CreateDataSchemaCommand extends wx
         mClasses = new HashMap();
         mTables = new HashMap();
         mLs = System.getProperty("line.separator");
-        mSessions = Admin.getSessionFactory();
+        mSessions = RetsServer.getSessions();
     }
 
     public void execute()
@@ -64,7 +65,7 @@ public class CreateDataSchemaCommand extends wx
     private void loadMetadata() throws RetsServerException
     {
         String metadataDir = Admin.getRetsConfig().getMetadataDir();
-        metadataDir = IOUtils.resolve(Admin.getWebappRoot(), metadataDir);
+        metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
         MetadataLoader loader = new MetadataLoader();
         MSystem system = loader.parseMetadataDirectory(metadataDir);
         System.out.println("Got system" + system.getId());
