@@ -36,6 +36,17 @@ public class DatabaseTypeTest extends TestCase
                      type.getUrl("localhost", "rex"));
     }
 
+    public void testSQLServerjTDSType()
+    {
+        DatabaseType type = DatabaseType.getType("sqlserver-jtds");
+        assertNotNull(type);
+        assertEquals("net.sourceforge.jtds.jdbc.Driver", type.getDriverClass());
+        assertEquals("net.sf.hibernate.dialect.SQLServerDialect",
+                     type.getDialectClass());
+        assertEquals("jdbc:jtds:sqlserver://localhost/rex",
+                     type.getUrl("localhost", "rex"));
+    }
+
     public void testUnknowType()
     {
         assertNull(DatabaseType.getType("foo"));

@@ -30,6 +30,7 @@ public abstract class DatabaseType
 
     public static final DatabaseType POSTGRESQL = new PostgreSQLType();
     public static final DatabaseType SQLSERVER_JSQL = new SQLServerJSQLType();
+    public static final DatabaseType SQLSERVER_JTDS = new SQLServerjTDSType();
 
     private static Map sKnownTypes;
 
@@ -38,6 +39,7 @@ public abstract class DatabaseType
         sKnownTypes = new HashMap();
         registerType(POSTGRESQL);
         registerType(SQLSERVER_JSQL);
+        registerType(SQLSERVER_JTDS);
     }
 
     public static void registerType(DatabaseType databaseType)
