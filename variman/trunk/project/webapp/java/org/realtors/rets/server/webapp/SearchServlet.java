@@ -13,12 +13,12 @@ package org.realtors.rets.server.webapp;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.SearchParameters;
-import org.realtors.rets.server.SearchTransaction;
-import org.realtors.rets.server.RetsServer;
-
 import org.apache.log4j.Logger;
+
+import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.protocol.SearchParameters;
+import org.realtors.rets.server.protocol.SearchTransaction;
 
 /**
  * @web.servlet name="search-servlet"
