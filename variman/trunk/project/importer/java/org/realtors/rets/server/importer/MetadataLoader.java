@@ -1,3 +1,11 @@
+/*
+ * Rex RETS Server
+ *
+ * Author: Dave Dribin
+ * Copyright (c) 2004, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
 package org.realtors.rets.server.importer;
 
 import java.io.InputStream;
@@ -903,7 +911,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.13 2004/01/15 21:24:10 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.14 2004/01/15 22:06:32 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;

@@ -63,12 +63,12 @@
     <module name="JavadocType"/>
     <module name="JavadocMethod"/>
     <module name="JavadocVariable"/>
+    -->
 
     <module name="RegexpHeader">
       <property name="headerFile"
                 value="${basedir}/project/build/license_header.checkstyle"/>
     </module>
-    -->
   </module>
 
   <!-- JavaDoc checks -->

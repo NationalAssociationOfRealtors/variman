@@ -1,3 +1,11 @@
+/*
+ * Rex RETS Server
+ *
+ * Author: Dave Dribin
+ * Copyright (c) 2004, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
 package org.realtors.rets.server.tomcat;
 
 
@@ -29,7 +37,7 @@ public final class Bootstrap
             packed[0] = new File("common/lib");
             commonLoader =
                 ClassLoaderFactory.createClassLoader(null, packed, null);
-//            ((StandardClassLoader) commonLoader).setDebug(10);
+//            ((StandardClassLoader) commonLoader).setDebug(10) ;
 
             packed[0] = new File("server/lib");
             serverLoader = ClassLoaderFactory.createClassLoader(null, packed,

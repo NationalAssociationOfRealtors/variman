@@ -1,3 +1,11 @@
+/*
+ * Rex RETS Server
+ *
+ * Author: Dave Dribin
+ * Copyright (c) 2004, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
 /*57
  * Created on Aug 27, 2003
  *
