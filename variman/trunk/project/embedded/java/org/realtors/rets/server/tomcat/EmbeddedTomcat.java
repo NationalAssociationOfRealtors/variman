@@ -112,7 +112,7 @@ public class EmbeddedTomcat
         // all sorts of problems. In any case, we only need the port parameter,
         // so it's easy enough just to use DOM and grab that one XML tag.
         String configFile =
-            mRexHome + "/webapp/WEB-INF/classes/rets-config.xml";
+            mRexHome + "/webapp/WEB-INF/rex/rets-config.xml";
         DocumentBuilder builder =
             DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = builder.parse(new File(configFile));
