@@ -19,7 +19,17 @@
       <th align="left"><bean:write name="test" property="description" /> </th>
       <td><bean:write name="test" property="status.name" /></td>
       <td><bean:write name="test" property="message" /></td>
-      <td><bean:write name="counter"/></td>
+      <td><bean:write name="counter"/>, <%= counter %>
+        <html:form action="/cct/start_test.do" method="GET" >
+          <html:submit>Start</html:submit>
+          <html:hidden property="testNumber" value='<%=counter.toString()%>'/>
+        </html:form>
+        <br/>
+        <html:form action="/cct/stop_test.do" method="GET" >
+          <html:submit>Stop</html:submit>
+          <html:hidden property="testNumber" value='<%=counter.toString()%>'/>
+        </html:form>
+      </td>
     </tr>
   </logic:iterate>
   </table>
