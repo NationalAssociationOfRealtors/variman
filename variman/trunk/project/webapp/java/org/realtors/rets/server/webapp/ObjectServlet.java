@@ -2,16 +2,15 @@ package org.realtors.rets.server.webapp;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.protocol.GetObjectParameters;
 import org.realtors.rets.server.protocol.GetObjectTransaction;
 import org.realtors.rets.server.protocol.ObjectDescriptor;
 import org.realtors.rets.server.protocol.ObjectStream;
@@ -22,6 +21,11 @@ import org.realtors.rets.server.protocol.ObjectStream;
  */
 public class ObjectServlet extends RetsServlet
 {
+    protected boolean isXmlResponse()
+    {
+        return false;
+    }
+
     protected void doRets(RetsServletRequest request,
                           RetsServletResponse response)
         throws RetsServerException, IOException
@@ -50,29 +54,21 @@ public class ObjectServlet extends RetsServlet
         String resource = pathComponents[0];
         String type = pathComponents[1];
         String key = pathComponents[2];
-        String id = pathComponents[3];
+        int id = NumberUtils.stringToInt(pathComponents[3]);
 
-        GetObjectParameters getObjectParameters =
-            new GetObjectParameters(resource, type, key + ":" + id);
         GetObjectTransaction transaction =
-            new GetObjectTransaction(getObjectParameters);
+            new GetObjectTransaction(resource, type);
         transaction.setRootDirectory(WebApp.getGetObjectRoot());
         transaction.setImagePattern(WebApp.getGetObjectPattern());
         transaction.setObjectSetPattern("%k.xml");
-        List allFiles = transaction.findAllObjectDescriptors();
-        if (allFiles.size() == 0)
+        ObjectDescriptor objectDescriptor =
+            transaction.findObjectDescriptor(key, id);
+        if (objectDescriptor == null)
         {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, uri);
             return;
         }
-        else if (allFiles.size() > 1)
-        {
-            LOG.error("Too many files: URI: " + uri + ", " + allFiles);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        }
 
-        ObjectDescriptor objectDescriptor = (ObjectDescriptor) allFiles.get(0);
         LOG.debug("Object URL: " + objectDescriptor.getUrl());
         ObjectStream objectStream = objectDescriptor.openObjectStream();
         response.setContentType(objectStream.getMimeType());
