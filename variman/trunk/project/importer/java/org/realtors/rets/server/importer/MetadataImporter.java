@@ -28,6 +28,8 @@ import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.ObjectTypeEnum;
 import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 
@@ -184,7 +186,7 @@ public class MetadataImporter
         hSession.saveOrUpdate(hSystem);
     }
 
-    public void doClasses(RetsSession rSession, Session hSession)
+    private void doClasses(RetsSession rSession, Session hSession)
         throws HibernateException,ParseException
     {
         MetadataTable tClass =
@@ -226,7 +228,7 @@ public class MetadataImporter
         }
     }
 
-    public void doObjects(RetsSession rSession, Session hSession)
+    private void doObjects(RetsSession rSession, Session hSession)
         throws HibernateException,ParseException
     {
         MetadataTable tObject =
@@ -266,6 +268,68 @@ public class MetadataImporter
         }
     }
 
+    private void doSearchHelp(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tSearchHelp =
+            rSession.getMetadataTable(MetadataTable.SEARCH_HELP);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hSearchHelps = new HashSet();
+            List searchHelps =
+                tSearchHelp.getDataRows(resource.getResourceID());
+            if (searchHelps != null)
+            {
+                Iterator j = searchHelps.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    SearchHelp hSearchHelp = new SearchHelp();
+
+                    hSearchHelp.setResourceid(resource);
+                    hSearchHelp.setSearchHelpID(
+                        md.getAttribute("SearchHelpID"));
+                    hSearchHelp.setValue(md.getAttribute("Value"));
+
+                    hSession.save(hSearchHelp);
+                    hSearchHelps.add(hSearchHelp);
+                }
+            }
+
+            resource.setSearchHelps(hSearchHelps);
+            hSession.saveOrUpdate(resource);
+        }
+    }
+
+    private void doEditMask(RetsSession rSession, Session hSession)
+        throws HibernateException
+    {
+        MetadataTable tEditMask =
+            rSession.getMetadataTable(MetadataTable.EDITMASK);
+
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hEditMasks = new HashSet();
+            List editMasks = tEditMask.getDataRows(resource.getResourceID());
+            if (editMasks != null)
+            {
+                Iterator j = editMasks.iterator();
+                while (j.hasNext())
+                {
+                    Metadata md = (Metadata) j.next();
+                    EditMask hEditMask = new EditMask();
+
+                    
+                }
+            }
+        }
+    }
+
     public static final void main(String args[])
         throws Exception
     {
@@ -279,5 +343,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.9 2003/06/27 21:17:04 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.10 2003/06/30 19:11:35 kgarner Exp $";
 }
