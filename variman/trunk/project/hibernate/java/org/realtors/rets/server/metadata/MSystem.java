@@ -154,7 +154,7 @@ public class MSystem extends ServerMetadata implements Serializable
      * @return a Set of ForeignKey objects
      *
      * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="systemid"
+     * @hibernate.collection-key column="system"
      * @hibernate.collection-one-to-many
      *   class="org.realtors.rets.server.metadata.ForeignKey"
      */
