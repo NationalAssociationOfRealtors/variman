@@ -360,7 +360,13 @@
         <include name="commons-beanutils.jar"/>
         <include name="servlets-common.jar"/>
         <include name="servlets-default.jar"/>
+        <include name="mx4j-jmx.jar"/>
       </fileset>
+    </copy>
+    <!-- Rename jakarta-regexp to not have version number in it -->
+    <copy tofile="build/rets-server/lib/jakarta-regexp.jar">
+      <fileset dir="${tomcat.home}/server/lib"
+               includes="jakarta-regexp-*.jar"/>
     </copy>
     <copy tofile="build/rets-server/lib/tools.jar" file="${jdk.tools.jar}"/>
 
