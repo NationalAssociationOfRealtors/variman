@@ -65,6 +65,17 @@ public class EmbeddedTomcat
         mEmbedded.addEngine(engine);
 
         // Assembled and install a default HTTP connector
+        Connector connector = mEmbedded.createConnector(null, getPort(), false);
+        mEmbedded.addConnector(connector);
+
+        // Start the embedded server
+        mEmbedded.start();
+
+        Runtime.getRuntime().addShutdownHook(new Shutdown());
+    }
+
+    private int getPort()
+    {
         int port = 0;
 
         String myport = System.getProperty("retszilla.port");
@@ -83,13 +94,7 @@ public class EmbeddedTomcat
         {
             port = 6103;
         }
-        Connector connector = mEmbedded.createConnector(null, port, false);
-        mEmbedded.addConnector(connector);
-
-        // Start the embedded server
-        mEmbedded.start();
-
-        Runtime.getRuntime().addShutdownHook(new Shutdown());
+        return port;
     }
 
     public void stopTomcat() throws Exception
