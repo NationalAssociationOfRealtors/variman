@@ -8,13 +8,6 @@
 
 package org.realtors.rets.server.admin;
 
-import java.io.File;
-
-import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.config.RetsConfig;
-
-import org.apache.log4j.Logger;
-
 import org.wxwindows.wxCloseEvent;
 import org.wxwindows.wxCloseListener;
 import org.wxwindows.wxCommandEvent;
@@ -28,11 +21,19 @@ import org.wxwindows.wxNotebookListener;
 import org.wxwindows.wxPoint;
 import org.wxwindows.wxSize;
 
+import org.apache.log4j.Logger;
+
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.config.RetsConfig;
+
 public class AdminFrame extends wxFrame
 {
     public AdminFrame(String title, wxPoint pos, wxSize size)
     {
         super(null, -1, title, pos, size, wxDEFAULT_FRAME_STYLE);
+
+        initConfig();
+
         Centre(wxBOTH);
 
         wxMenu fileMenu = new wxMenu();
@@ -75,8 +76,6 @@ public class AdminFrame extends wxFrame
         mMenuBar.EnableTop(USERS_MENU, false);
         mMenuBar.EnableTop(METADATA_MENU, false);
 
-        initConfig();
-
         mNotebook = new wxNotebook(this, NOTEBOOK);
 
         mDatabasePage = new DatabasePage(mNotebook);
@@ -109,11 +108,7 @@ public class AdminFrame extends wxFrame
     {
         try
         {
-            File configFile = new File(Admin.getRexHome() +
-                                       "/webapp/WEB-INF/rex/rets-config.xml");
-            Admin.setConfigFile(configFile.getAbsolutePath());
-            Admin.setRetsConfig(
-                RetsConfig.initFromXmlFile(Admin.getConfigFile()));
+            AdminUtils.initConfig();
         }
         catch (RetsServerException e)
         {
