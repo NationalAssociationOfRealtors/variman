@@ -4,7 +4,10 @@
  */
 package org.realtors.rets.server.cct;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.Util;
 
 /**
  * @hibernate.class table="rets_cct_userinfo"
@@ -146,6 +149,19 @@ public class UserInfo
     public void setUserAgent(String string)
     {
         mUserAgent = string;
+    }
+
+    public String toString()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append("id", mId)
+            .append("AgentID", mAgentId)
+            .append("Company", mCompany)
+            .append("Email", mEmail)
+            .append("ProductName", mProductName)
+            .append("ProductVersion", mProductVersion)
+            .append("user.Username", mUser.getUsername())
+            .append("UserAgent", mUserAgent).toString();
     }
 
     private String mAgentId;
