@@ -26,11 +26,15 @@
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${hibernatetools.jar}"/>
     <pathelement path="${jdom.jar}"/>
-    <pathelement path="${servlet.jar}"/>
   </path>
 
   <path id="embedded.path">
     <fileset dir="${tomcat.home}/server/lib" includes="*.jar"/>
+  </path>
+
+  <path id="webapp.path">
+    <pathelement path="${servlet.jar}"/>
+    <pathelement path="${log4j.jar}"/>
   </path>
 
 
@@ -133,6 +137,7 @@
         <include name="servlets-default.jar"/>
       </fileset>
     </copy>
+    <copy tofile="build/rets-server/lib/log4j.jar" file="${log4j.jar}"/>
   </target>
 
   <target name="build-webapp" depends="build-hibernate,build-embedded"
@@ -141,7 +146,7 @@
             destDir="build/rets-server/webapp/WEB-INF/classes"
             cache="build/depcache" closure="yes">
       <classpath>
-        <path refid="lib.path"/>
+        <path refid="webapp.path"/>
         <pathelement location="build/embedded/classes"/>
       </classpath>
     </depend>
@@ -150,13 +155,17 @@
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
-        <path refid="lib.path"/>
+        <path refid="webapp.path"/>
         <pathelement location="build/embedded/classes"/>
       </classpath>
     </javac>
 
     <copy todir="build/rets-server/webapp">
       <fileset dir="project/webapp/content" includes="**/*"/>
+    </copy>
+
+    <copy todir="build/rets-server/webapp/WEB-INF/classes">
+      <fileset dir="project/webapp/java" includes="**/*" excludes="**/*.java"/>
     </copy>
 
     <copy file="project/webapp/config/web.xml"
