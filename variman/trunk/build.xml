@@ -124,8 +124,12 @@
   <target name="dist" depends="" />
 
   <target name="build-hibernate" depends="prepare">
-    <antlr target="project/hibernate/java/org/realtors/rets/server/dmql/dmql.g"
-           outputdirectory="build/hibernate/generated/org/realtors/rets/server/dmql"
+    <property name="src.antlr.dir"
+              value="project/hibernate/java/org/realtors/rets/server/dmql"/>
+    <property name="build.antlr.dir"
+              value="build/hibernate/generated/org/realtors/rets/server/dmql"/>
+    <antlr target="${src.antlr.dir}/dmql.g"
+           outputdirectory="${build.antlr.dir}"
            trace="yes"/>
     <javac target="${compile.vmtarget}" destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
