@@ -2,14 +2,15 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.UpdateType;
 
 public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
 {
-    public String format(UpdateType[] updateTypes)
+    public void format(PrintWriter out, UpdateType[] updateTypes)
     {
-        StringBuffer buffer = new StringBuffer();
-        TagBuilder tag = new TagBuilder(buffer);
+        TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-UPDATE_TYPE");
         tag.appendAttribute("Resource", mResourceName);
         tag.appendAttribute("Class", mClassName);
@@ -21,15 +22,14 @@ public class CompactUpdateTypeFormatter extends UpdateTypeFormatter
         for (int i = 0; i < updateTypes.length; i++)
         {
             UpdateType updateType = updateTypes[i];
-            apppendDataRow(buffer, updateType);
+            apppendDataRow(out, updateType);
         }
         tag.end();
-        return buffer.toString();
     }
 
-    private void apppendDataRow(StringBuffer buffer, UpdateType updateType)
+    private void apppendDataRow(PrintWriter out, UpdateType updateType)
     {
-        DataRowBuilder row = new DataRowBuilder(buffer);
+        DataRowBuilder row = new DataRowBuilder(out);
         row.begin();
         row.append(updateType.getSystemName());
         row.append(updateType.getSequence());

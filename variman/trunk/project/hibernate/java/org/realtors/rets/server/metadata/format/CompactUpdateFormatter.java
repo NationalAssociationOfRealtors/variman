@@ -2,14 +2,15 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.Update;
 
 public class CompactUpdateFormatter extends UpdateFormatter
 {
-    public String format(Update[] updates)
+    public void format(PrintWriter out, Update[] updates)
     {
-        StringBuffer buffer = new StringBuffer();
-        TagBuilder tag = new TagBuilder(buffer);
+        TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-UPDATE");
         tag.appendAttribute("Resource", mResourceName);
         tag.appendAttribute("Class", mClassName);
@@ -20,15 +21,14 @@ public class CompactUpdateFormatter extends UpdateFormatter
         for (int i = 0; i < updates.length; i++)
         {
             Update update = updates[i];
-            appendDataRow(buffer, update);
+            appendDataRow(out, update);
         }
         tag.end();
-        return buffer.toString();
     }
 
-    private void appendDataRow(StringBuffer buffer, Update update)
+    private void appendDataRow(PrintWriter out, Update update)
     {
-        DataRowBuilder row = new DataRowBuilder(buffer);
+        DataRowBuilder row = new DataRowBuilder(out);
         row.begin();
         row.append(update.getUpdateName());
         row.append(update.getDescription());

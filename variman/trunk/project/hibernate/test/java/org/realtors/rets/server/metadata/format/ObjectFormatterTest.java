@@ -2,6 +2,9 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.ObjectTypeEnum;
 
@@ -28,7 +31,8 @@ public class ObjectFormatterTest extends FormatterTestCase
     public void testCompactFormatObject()
     {
         ObjectFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
-        String formatted = formatter.format(mObjects);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), mObjects);
         assertEquals(
             "<METADATA-OBJECT Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
@@ -40,7 +44,7 @@ public class ObjectFormatterTest extends FormatterTestCase
             "A lower-resolution image\t</DATA>\n" +
 
             "</METADATA-OBJECT>\n",
-            formatted);
+            formatted.toString());
     }
 
     private MObject[] mObjects;

@@ -2,11 +2,13 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
 
+import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
-import org.realtors.rets.server.metadata.MClass;
 
 public class ResourceFormatterTest extends FormatterTestCase
 {
@@ -25,15 +27,23 @@ public class ResourceFormatterTest extends FormatterTestCase
         mResources = new Resource[] {resource};
     }
 
-    public void testCompactFormatResource()
+    private ResourceFormatter getFormatter(int format)
     {
         ResourceFormatter formatter =
-            ResourceFormatter.getInstance(MetadataFormatter.COMPACT);
+            ResourceFormatter.getInstance(format);
         formatter.setVersion("1.00.001", getDate());
-        String formatted = formatter.format(mResources);
+        return formatter;
+    }
+
+    public void testCompactFormatResource()
+    {
+        ResourceFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), mResources);
         assertEquals(
             "<METADATA-RESOURCE Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
+
             "<COLUMNS>\tResourceID\tStandardName\tVisibleName\tDescription\t" +
             "KeyField\tClassCount\tClassVersion\tClassDate\tObjectVersion\t" +
             "ObjectDate\tSearchHelpVersion\tSearchHelpDate\tEditMaskVersion\t" +
@@ -42,13 +52,15 @@ public class ResourceFormatterTest extends FormatterTestCase
             "ValidationExpressionDate\tValidationLookupVersion\t" +
             "ValidationLookupDate\tValidationExternalVersion\t" +
             "ValidationExternalDate\t</COLUMNS>\n" +
+
             "<DATA>\tPropertyID\tProperty\tProp\tProperty Database\t" +
             "LN\t2" +
             VERSION_DATE + VERSION_DATE + VERSION_DATE + VERSION_DATE +
             VERSION_DATE + VERSION_DATE + VERSION_DATE + VERSION_DATE +
             VERSION_DATE + "\t</DATA>\n" +
+
             "</METADATA-RESOURCE>\n",
-            formatted);
+            formatted.toString());
     }
 
     private Resource[] mResources;

@@ -2,15 +2,16 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -20,56 +21,50 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DataRowBuilder
 {
-    public DataRowBuilder(StringBuffer buffer)
+
+    public DataRowBuilder(PrintWriter writer)
     {
-        mBuffer = buffer;
+        mWriter = writer;
     }
 
-    public String toString()
+    public void begin()
     {
-        return mBuffer.toString();
-    }
-
-    public DataRowBuilder begin()
-    {
-        mBuffer.append("<DATA>\t");
-        return this;
+        mWriter.print("<DATA>\t");
     }
 
     public void end()
     {
-        mBuffer.append("</DATA>\n");
+        mWriter.print("</DATA>\n");
     }
 
-    public DataRowBuilder append(String string)
+    public void append(String string)
     {
-        mBuffer.append(string).append("\t");
-        return this;
+        mWriter.print(string);
+        mWriter.print("\t");
     }
 
-    public DataRowBuilder append(Object object)
+    public void append(Object object)
     {
         if (object != null)
         {
-            mBuffer.append(object.toString());
+            mWriter.print(object.toString());
         }
-        mBuffer.append("\t");
-        return this;
+        mWriter.print("\t");
     }
 
-    public DataRowBuilder append(Date date)
+    public void append(Date date)
     {
         DateFormat formatter =
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        mBuffer.append(formatter.format(date)).append("\t");
-        return this;
+        mWriter.print(formatter.format(date));
+        mWriter.print("\t");
     }
 
-    public DataRowBuilder append(int number)
+    public void append(int number)
     {
-        mBuffer.append(number).append("\t");
-        return this;
+        mWriter.print(number);
+        mWriter.print("\t");
     }
 
     /**
@@ -77,29 +72,27 @@ public class DataRowBuilder
      *
      * @param b boolean value
      */
-    public DataRowBuilder append(boolean b)
+    public void append(boolean b)
     {
         if (b)
         {
-            mBuffer.append("1");
+            mWriter.print("1");
         }
         else
         {
-            mBuffer.append("0");
+            mWriter.print("0");
         }
-        mBuffer.append("\t");
-        return this;
+        mWriter.print("\t");
     }
 
-    public DataRowBuilder append(Collection collection)
+    public void append(Collection collection)
     {
         if (collection != null)
         {
             List strings = toSortedStringList(collection);
-            mBuffer.append(StringUtils.join(strings.iterator(), ","));
+            mWriter.print(StringUtils.join(strings.iterator(), ","));
         }
-        mBuffer.append("\t");
-        return this;
+        mWriter.print("\t");
     }
 
     /**
@@ -121,5 +114,5 @@ public class DataRowBuilder
         return strings;
     }
 
-    private StringBuffer mBuffer;
+    private PrintWriter mWriter;
 }

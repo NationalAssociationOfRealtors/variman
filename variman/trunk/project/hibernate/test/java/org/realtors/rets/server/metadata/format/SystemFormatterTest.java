@@ -2,6 +2,9 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.realtors.rets.server.metadata.MSystem;
 
 public class SystemFormatterTest extends FormatterTestCase
@@ -20,7 +23,8 @@ public class SystemFormatterTest extends FormatterTestCase
     {
         SystemFormatter formatter =
             SystemFormatter.getInstance(MetadataFormatter.COMPACT);
-        String formatted = formatter.format(mSystem);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), mSystem);
         assertEquals(
             "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
@@ -29,7 +33,7 @@ public class SystemFormatterTest extends FormatterTestCase
             "<COMMENTS>The reference implementation of a RETS Server" +
             "</COMMENTS>\n" +
             "</METADATA-SYSTEM>\n",
-            formatted);
+            formatted.toString());
     }
 
     private MSystem mSystem;

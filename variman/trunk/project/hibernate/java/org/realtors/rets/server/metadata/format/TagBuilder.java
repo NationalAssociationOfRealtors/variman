@@ -2,6 +2,7 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,26 +12,33 @@ import org.apache.commons.lang.StringUtils;
 
 public class TagBuilder
 {
-    public TagBuilder(StringBuffer buffer)
+
+    public TagBuilder(PrintWriter writer)
     {
-        mBuffer = buffer;
+        mWriter = writer;
     }
 
     public void begin(String tagName)
     {
         mTagName = tagName;
-        mBuffer.append("<").append(mTagName);
+        mWriter.print("<");
+        mWriter.print(mTagName);
     }
 
     public void end()
     {
-        mBuffer.append("</").append(mTagName).append(">\n");
+        mWriter.print("</");
+        mWriter.print(mTagName);
+        mWriter.print(">\n");
     }
 
     public void appendAttribute(String attribute, String value)
     {
-        mBuffer.append(" ").append(attribute);
-        mBuffer.append("=\"").append(value).append("\"");
+        mWriter.print(" ");
+        mWriter.print(attribute);
+        mWriter.print("=\"");
+        mWriter.print(value);
+        mWriter.print("\"");
     }
 
     public void appendAttribute(String attribute, Date date)
@@ -43,15 +51,16 @@ public class TagBuilder
 
     public void endAttributes()
     {
-        mBuffer.append(">\n");
+        mWriter.print(">\n");
     }
 
     public void appendColumns(String[] columns)
     {
-        mBuffer.append("<COLUMNS>\t").append(StringUtils.join(columns, "\t"))
-            .append("\t</COLUMNS>\n");
+        mWriter.print("<COLUMNS>\t");
+        mWriter.print(StringUtils.join(columns, "\t"));
+        mWriter.print("\t</COLUMNS>\n");
     }
 
-    private StringBuffer mBuffer;
     private String mTagName;
+    private PrintWriter mWriter;
 }

@@ -2,15 +2,16 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.Resource;
 
 public class CompactResourceFormatter
     extends ResourceFormatter
 {
-    public String format(Resource[] resources)
+    public void format(PrintWriter out, Resource[] resources)
     {
-        StringBuffer buffer = new StringBuffer();
-        TagBuilder tag = new TagBuilder(buffer);
+        TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-RESOURCE");
         tag.appendAttribute("Version", mVersion);
         tag.appendAttribute("Date", mDate);
@@ -19,15 +20,14 @@ public class CompactResourceFormatter
         for (int i = 0; i < resources.length; i++)
         {
             Resource resource = resources[i];
-            appendDataRow(buffer, resource);
+            appendDataRow(out, resource);
         }
         tag.end();
-        return buffer.toString();
     }
 
-    private void appendDataRow(StringBuffer buffer, Resource resource)
+    private void appendDataRow(PrintWriter out, Resource resource)
     {
-        DataRowBuilder row = new DataRowBuilder(buffer);
+        DataRowBuilder row = new DataRowBuilder(out);
         row.begin();
         row.append(resource.getResourceID());
         row.append(resource.getStandardName());

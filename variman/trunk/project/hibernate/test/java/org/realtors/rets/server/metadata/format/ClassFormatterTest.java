@@ -2,6 +2,9 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.MClass;
 
@@ -23,7 +26,8 @@ public class ClassFormatterTest extends FormatterTestCase
             ClassFormatter.getInstance(MetadataFormatter.COMPACT);
         formatter.setVersion("1.00.001", getDate());
         formatter.setResource("Property");
-        String formatted = formatter.format(mClasses);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), mClasses);
         assertEquals(
             "<METADATA-CLASS Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" " +
@@ -38,7 +42,7 @@ public class ClassFormatterTest extends FormatterTestCase
             "\t</DATA>\n" +
 
             "</METADATA-CLASS>\n",
-            formatted
+            formatted.toString()
         );
     }
 

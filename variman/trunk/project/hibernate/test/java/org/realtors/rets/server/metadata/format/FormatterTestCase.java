@@ -3,8 +3,8 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 

@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.Update;
 
 public abstract class UpdateFormatter extends MetadataFormatter
@@ -23,7 +25,7 @@ public abstract class UpdateFormatter extends MetadataFormatter
         }
     }
 
-    public abstract String format(Update[] updates);
+    public abstract void format(PrintWriter out, Update[] updates);
 
     public void setClassName(String className)
     {

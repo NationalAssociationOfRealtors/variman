@@ -2,14 +2,15 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.Table;
 
 public class CompactTableFormatter extends TableFormatter
 {
-    public String format(Table[] tables)
+    public void format(PrintWriter out, Table[] tables)
     {
-        StringBuffer buffer = new StringBuffer();
-        TagBuilder tag = new TagBuilder(buffer);
+        TagBuilder tag = new TagBuilder(out);
         tag.begin("METADATA-TABLE");
         tag.appendAttribute("Resource", mResourceName);
         tag.appendAttribute("Class", mClassName);
@@ -20,15 +21,14 @@ public class CompactTableFormatter extends TableFormatter
         for (int i = 0; i < tables.length; i++)
         {
             Table table = tables[i];
-            appendDataRow(buffer, table);
+            appendDataRow(out, table);
         }
         tag.end();
-        return buffer.toString();
     }
 
-    private void appendDataRow(StringBuffer buffer, Table table)
+    private void appendDataRow(PrintWriter out, Table table)
     {
-        DataRowBuilder row = new DataRowBuilder(buffer);
+        DataRowBuilder row = new DataRowBuilder(out);
         row.begin();
         row.append(table.getSystemName());
         row.append(table.getStandardName());

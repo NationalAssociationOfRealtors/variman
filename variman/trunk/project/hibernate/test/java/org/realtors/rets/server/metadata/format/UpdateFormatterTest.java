@@ -2,6 +2,9 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.realtors.rets.server.metadata.Update;
 
 public class UpdateFormatterTest extends FormatterTestCase
@@ -27,7 +30,8 @@ public class UpdateFormatterTest extends FormatterTestCase
     public void testCompactFormatUpdate()
     {
         UpdateFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
-        String formatted = formatter.format(mUpdates);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), mUpdates);
         assertEquals(
             "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
@@ -39,7 +43,7 @@ public class UpdateFormatterTest extends FormatterTestCase
             "\t</DATA>\n" +
 
             "</METADATA-UPDATE>\n",
-            formatted);
+            formatted.toString());
     }
 
     private Update[] mUpdates;

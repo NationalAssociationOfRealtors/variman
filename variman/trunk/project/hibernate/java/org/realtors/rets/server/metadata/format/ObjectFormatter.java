@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.MObject;
 
 public abstract class ObjectFormatter extends MetadataFormatter
@@ -28,7 +30,7 @@ public abstract class ObjectFormatter extends MetadataFormatter
         mResourceName = resourceName;
     }
 
-    public abstract String format(MObject[] objects);
+    public abstract void format(PrintWriter out, MObject[] objects);
 
     protected String mResourceName;
 }

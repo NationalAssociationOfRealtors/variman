@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.Resource;
 
 public abstract class ResourceFormatter extends MetadataFormatter
@@ -23,5 +25,5 @@ public abstract class ResourceFormatter extends MetadataFormatter
         }
     }
 
-    public abstract String format(Resource[] resources);
+    public abstract void format(PrintWriter out, Resource[] resources);
 }

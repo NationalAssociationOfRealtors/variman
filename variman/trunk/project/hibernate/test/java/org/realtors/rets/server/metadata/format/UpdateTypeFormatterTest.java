@@ -2,15 +2,17 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.Set;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
+import java.util.Set;
 
+import org.realtors.rets.server.metadata.UpdateHelp;
 import org.realtors.rets.server.metadata.UpdateType;
 import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
 import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationExternal;
+import org.realtors.rets.server.metadata.ValidationLookup;
 
 public class UpdateTypeFormatterTest extends FormatterTestCase
 {
@@ -64,7 +66,8 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
     public void testCompactFormatUpdateType()
     {
         UpdateTypeFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
-        String formatted = formatter.format(mUpdateTypes);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), mUpdateTypes);
         assertEquals(
             "<METADATA-UPDATE_TYPE Resource=\"Property\" Class=\"RES\" " +
             "Update=\"Change\" Version=\"" + VERSION + "\" Date=\"" + DATE +
@@ -79,7 +82,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 
             "</METADATA-UPDATE_TYPE>\n",
 
-            formatted);
+            formatted.toString());
     }
 
     private UpdateType[] mUpdateTypes;

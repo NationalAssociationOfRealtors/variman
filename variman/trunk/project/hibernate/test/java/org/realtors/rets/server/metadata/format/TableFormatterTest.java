@@ -2,17 +2,19 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.realtors.rets.server.metadata.AlignmentEnum;
+import org.realtors.rets.server.metadata.DataTypeEnum;
+import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.InterpretationEnum;
+import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.TableStandardName;
-import org.realtors.rets.server.metadata.DataTypeEnum;
-import org.realtors.rets.server.metadata.InterpretationEnum;
-import org.realtors.rets.server.metadata.AlignmentEnum;
-import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.UnitEnum;
-import org.realtors.rets.server.metadata.EditMask;
 
 public class TableFormatterTest extends FormatterTestCase
 {
@@ -58,7 +60,8 @@ public class TableFormatterTest extends FormatterTestCase
     public void testCompactFormatTable()
     {
         TableFormatter formatter = getFormatter(MetadataFormatter.COMPACT);
-        String formatted = formatter.format(mTables);
+        StringWriter formatted = new StringWriter();
+        formatter.format(new PrintWriter(formatted), mTables);
         assertEquals(
             "<METADATA-TABLE Resource=\"Property\" Class=\"MOB\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
@@ -78,7 +81,7 @@ public class TableFormatterTest extends FormatterTestCase
             "</DATA>\n" +
 
             "</METADATA-TABLE>\n",
-            formatted);
+            formatted.toString());
     }
 
     private TableFormatter getFormatter(int format)

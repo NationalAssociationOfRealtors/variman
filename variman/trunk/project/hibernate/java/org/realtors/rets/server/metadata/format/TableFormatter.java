@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.io.PrintWriter;
+
 import org.realtors.rets.server.metadata.Table;
 
 public abstract class TableFormatter extends MetadataFormatter
@@ -18,7 +20,7 @@ public abstract class TableFormatter extends MetadataFormatter
         }
     }
 
-    public abstract String format(Table[] tables);
+    public abstract void format(PrintWriter out, Table[] tables);
 
     public void setClassName(String className)
     {
