@@ -11,6 +11,7 @@
 package org.realtors.rets.server.webapp.auth;
 
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.RetsServerException;
 
 public interface UserMap
 {
@@ -21,6 +22,8 @@ public interface UserMap
      *
      * @param username The username to find
      * @return The matching user object, or <code>null</code>
+     * @throws RetsServerException if an error occurs
      */
-    User findUser(String username);
+    User findUser(String username)
+        throws RetsServerException;
 }
