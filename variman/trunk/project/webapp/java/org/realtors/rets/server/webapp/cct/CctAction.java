@@ -3,6 +3,8 @@ package org.realtors.rets.server.webapp.cct;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
@@ -23,6 +25,13 @@ public abstract class CctAction extends Action
         UserInfo info = (UserInfo) session.getAttribute(USERINFO_KEY);
         CertificationTestSuite suite =
             (CertificationTestSuite) session.getAttribute(TESTSUITE_KEY);
+        if (user != null &&
+            !user.getUsername().equals(getUser(session).getUsername()))
+        {
+            user = null;
+            info = null;
+            suite = null;
+        }
         if (user == null)
         {
             user = getUser(session);
@@ -49,6 +58,11 @@ public abstract class CctAction extends Action
     protected UserInfo getUserInfo(HttpSession session)
     {
         User user = getUser(session);
+        if (user.getUsername() == null)
+        {
+            LOG.warn(user);
+            return null;
+        }
         return UTILS.getUserInfo(user.getUsername());
     }
 
@@ -57,8 +71,11 @@ public abstract class CctAction extends Action
         return (CertificationTestSuite) session.getAttribute(TESTSUITE_KEY);
     }
 
-    public static final String USER_KEY = "user";
-    public static final String USERINFO_KEY = "userInfo";
-    public static final String TESTSUITE_KEY = "suite";
+
+    public static final String USER_KEY = "cctUser";
+    public static final String USERINFO_KEY = "cctUserInfo";
+    public static final String TESTSUITE_KEY = "cctSuite";
+
     private static final UserUtils UTILS = new UserUtils();
+    private static final Log LOG = LogFactory.getLog(CctAction.class);
 }
