@@ -63,7 +63,25 @@ public class EmbeddedTomcat
         mEmbedded.addEngine(engine);
 
         // Assembled and install a default HTTP connector
-        Connector connector = mEmbedded.createConnector(null, 6103, false);
+        int port = 0;
+
+        String myport = System.getProperty("retszilla.port");
+        if (myport != null)
+        {
+            try
+            {
+                port = Integer.parseInt(myport);
+            }
+            catch (NumberFormatException e)
+            {
+                port = 6103;
+            }
+        }
+        if (port == 0)
+        {
+            port = 6103;
+        }
+        Connector connector = mEmbedded.createConnector(null, port, false);
         mEmbedded.addConnector(connector);
 
         // Start the embedded server
@@ -111,6 +129,8 @@ public class EmbeddedTomcat
         try
         {
             EmbeddedTomcat tomcat = EmbeddedTomcat.getInstance();
+//            String workingDir = System.getProperty("catalina.realhome",
+//                System.getProperty("user.dir"));
             String workingDir = System.getProperty("user.dir");
             tomcat.setPath(workingDir);
             tomcat.startTomcat();
