@@ -13,7 +13,7 @@ public class DigestAuthorizationRequest
         mUsername = null;
         mUri = null;
         mNonce = null;
-        mQop = "auth";
+        mQop = null;
         mAlgorithm = "HashUtils";
         mNonceCount = "";
         mCnonce = "";
@@ -30,24 +30,13 @@ public class DigestAuthorizationRequest
     public DigestAuthorizationRequest(String header)
         throws IllegalArgumentException
     {
+        this();
         if (!header.startsWith(PREFIX))
         {
             throw new IllegalArgumentException("Incorrect prefix [" + header +
                                                "]");
         }
         String authorization = header.substring(PREFIX.length());
-
-        // Setup default values
-        mUsername = null;
-        mRealm = null;
-        mNonce = null;
-        mUri = null;
-        mResponse = null;
-        mAlgorithm = "HashUtils";
-        mCnonce = "";
-        mOpaque = "";
-        mQop = "auth";
-        mNonceCount = "";
 
         String[] tokens = StringUtils.split(authorization, ",");
         for (int i = 0; i < tokens.length; i++)
@@ -254,12 +243,30 @@ public class DigestAuthorizationRequest
             a1 = HashUtils.md5(mUsername + ":" + mRealm + ":" + password);
         }
         String a2 = HashUtils.md5(mMethod + ":" + mUri);
-        String expectedResponse =
-            HashUtils.md5(a1 + ":" + mNonce + ":" + mNonceCount +
-                          ":" + mCnonce + ":" + mQop + ":" + a2);
+        String expectedResponse = getRequestDigest(a1, a2);
         LOG.debug("Expected response: " + expectedResponse);
         LOG.debug("Actual response:   " + mResponse);
         return (expectedResponse.equals(mResponse));
+    }
+
+    /**
+     * See RFC 2617, Section 3.2.2.1
+     *
+     * @param a1
+     * @param a2
+     * @return
+     */
+    private String getRequestDigest(String a1, String a2)
+    {
+        if (mQop == null)
+        {
+            return HashUtils.md5(a1 + ":" + mNonce + ":" + a2);
+        }
+        else
+        {
+            return HashUtils.md5(a1 + ":" + mNonce + ":" + mNonceCount +
+                                 ":" + mCnonce + ":" + mQop + ":" + a2);
+        }
     }
 
     private static final String PREFIX = "Digest ";
