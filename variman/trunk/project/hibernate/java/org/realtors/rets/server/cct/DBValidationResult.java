@@ -25,15 +25,6 @@ public class DBValidationResult extends ValidationResult
         return mUsername;
     }
 
-//    /**
-//     * @hibernate.component
-//     *   class="org.realtors.rets.server.cct.ValidationResult" 
-//     */
-//    public ValidationResult getValidationResult()
-//    {
-//        return mValidationResult;
-//    }
-
     /**
      * @param id The identifier
      */
@@ -50,12 +41,6 @@ public class DBValidationResult extends ValidationResult
         mUsername = username;
     }
 
-//    public void setValidationResult(ValidationResult result)
-//    {
-//        mValidationResult = result;
-//    }
-
     private Long mId;
     private String mUsername;
-//    private ValidationResult mValidationResult;
 }
