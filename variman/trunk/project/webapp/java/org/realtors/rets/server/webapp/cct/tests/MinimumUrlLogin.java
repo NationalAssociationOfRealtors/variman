@@ -2,7 +2,6 @@
  */
 package org.realtors.rets.server.webapp.cct.tests;
 
-import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.webapp.cct.ActionHandler;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
 import org.realtors.rets.server.webapp.cct.CapabilityUrlLevel;
@@ -55,8 +54,6 @@ public class MinimumUrlLogin extends BaseCertificationTest
         LogoutHandler logout = handlers.getLogoutHandler();
         logout.reset();
         logout.setGetInvokeCount(InvokeCount.ZERO);
-
-        mStatus = StatusEnum.RUNNING;
     }
 
     public static final String SESSION_ID = "MinimalUrlLogin";

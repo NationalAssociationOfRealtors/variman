@@ -2,7 +2,6 @@
  */
 package org.realtors.rets.server.webapp.cct.tests;
 
-import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.webapp.cct.ActionHandler;
 import org.realtors.rets.server.webapp.cct.BaseCertificationTest;
 import org.realtors.rets.server.webapp.cct.GetMetadataHandler;
@@ -57,8 +56,6 @@ public class RelativeUrlLogin extends BaseCertificationTest
         logout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
         logout.addStandardHeaders();
         logout.addStandardCookies(SESSION_ID);
-
-        mStatus = StatusEnum.RUNNING;
     }
 
     public static final String SESSION_ID = "RelativeUrlLogin";
