@@ -27,4 +27,22 @@ public class DmqlStringListTest extends TestCase
                      "OR owner LIKE '% Duck'",
                      TestUtil.toSql(stringList));
     }
+
+    public void testEquals()
+    {
+        DmqlStringList list1 = new DmqlStringList("field");
+        list1.add(new DmqlString("foo"));
+
+        DmqlStringList list2 = new DmqlStringList("field");
+        list2.add(new DmqlString("foo"));
+
+        assertEquals(list1, list2);
+
+        list1.setSqlColumn("f");
+        assertFalse(list1.equals(list2));
+
+        list1.setSqlColumn("field");
+        list1.add(new DmqlString("bar"));
+        assertFalse(list1.equals(list2));
+    }
 }
