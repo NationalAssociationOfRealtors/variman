@@ -12,13 +12,16 @@ public class ServerDmqlMetadataTest extends TestCase
             new ServerDmqlMetadata(mClazz, ServerDmqlMetadata.SYSTEM);
 
         // Check field names
-        assertEquals("r_AR", metadata.getFieldDbColumn("AR"));
-        assertEquals("r_STATUS", metadata.getFieldDbColumn("STATUS"));
-        assertEquals("r_OWNER", metadata.getFieldDbColumn("OWNER"));
-        assertNull(metadata.getFieldDbColumn("Area"));
-        assertNull(metadata.getFieldDbColumn("ListingStatus"));
-        assertNull(metadata.getFieldDbColumn("Owner"));
-        assertNull(metadata.getFieldDbColumn("FOO"));
+        assertEquals("r_AR", metadata.fieldToColumn("AR"));
+        assertEquals("r_STATUS", metadata.fieldToColumn("STATUS"));
+        assertEquals("r_OWNER", metadata.fieldToColumn("OWNER"));
+        assertEquals("AR", metadata.columnToField("r_AR"));
+        assertEquals("STATUS", metadata.columnToField("r_STATUS"));
+        assertEquals("OWNER", metadata.columnToField("r_OWNER"));
+        assertNull(metadata.fieldToColumn("Area"));
+        assertNull(metadata.fieldToColumn("ListingStatus"));
+        assertNull(metadata.fieldToColumn("Owner"));
+        assertNull(metadata.fieldToColumn("FOO"));
 
         // Check lookups
         assertEquals("GENVA", metadata.getLookupDbValue("AR", "GENVA"));
@@ -74,13 +77,13 @@ public class ServerDmqlMetadataTest extends TestCase
             new ServerDmqlMetadata(mClazz, ServerDmqlMetadata.STANDARD);
 
         // Check field names
-        assertEquals("r_AR", metadata.getFieldDbColumn("Area"));
-        assertEquals("r_STATUS", metadata.getFieldDbColumn("ListingStatus"));
-        assertEquals("r_OWNER", metadata.getFieldDbColumn("Owner"));
-        assertNull(metadata.getFieldDbColumn("AR"));
-        assertNull(metadata.getFieldDbColumn("STATUS"));
-        assertNull(metadata.getFieldDbColumn("OWNER"));
-        assertNull(metadata.getFieldDbColumn("FOO"));
+        assertEquals("r_AR", metadata.fieldToColumn("Area"));
+        assertEquals("r_STATUS", metadata.fieldToColumn("ListingStatus"));
+        assertEquals("r_OWNER", metadata.fieldToColumn("Owner"));
+        assertNull(metadata.fieldToColumn("AR"));
+        assertNull(metadata.fieldToColumn("STATUS"));
+        assertNull(metadata.fieldToColumn("OWNER"));
+        assertNull(metadata.fieldToColumn("FOO"));
 
         // Check lookups
         assertEquals("GENVA", metadata.getLookupDbValue("Area", "GENVA"));
