@@ -3,6 +3,7 @@ package org.realtors.rets.server.admin.swingui;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,21 +69,22 @@ public class GroupsPanel extends JPanel
         mRulesListModel.setFormatter(RULE_FORMAETTER);
         mRulesList = new JList(mRulesListModel);
         mRulesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//        mRulesList.getSelectionModel().addListSelectionListener(
-//            new OnGroupSelectionChanged());
+        mRulesList.getSelectionModel().addListSelectionListener(
+            new OnRuleSelectionChanged());
         box.add(mRulesList);
         box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         panel.add(box, BorderLayout.CENTER);
 
         Box buttonBox = Box.createHorizontalBox();
         buttonBox.add(Box.createHorizontalGlue());
-//        mAddGroupButtonAction = new AddGroupButtonAction(this);
-        buttonBox.add(new JButton("New Rule..."));
+        mRuleAddButtonAction = new RuleAddButtonAction(this);
+        buttonBox.add(new JButton(mRuleAddButtonAction));
         buttonBox.add(Box.createHorizontalStrut(5));
-//        mRemoveGroupButtonAction = new RemoveGroupButtonAction(this);
-        buttonBox.add(new JButton("Remove Rule..."));
+        mRuleRemoveButtonAction = new RuleRemoveButtonAction(this);
+        buttonBox.add(new JButton(mRuleRemoveButtonAction));
         buttonBox.add(Box.createHorizontalStrut(5));
-        buttonBox.add(new JButton("Edit Rule..."));
+        mRuleEditButtonAction = new RuleEditButtonAction(this);
+        buttonBox.add(new JButton(mRuleEditButtonAction));
         buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(buttonBox, BorderLayout.SOUTH);
         return panel;
@@ -114,6 +116,10 @@ public class GroupsPanel extends JPanel
             mName.setText("");
             mDescription.setText("");
             mRemoveGroupAction.setEnabled(false);
+
+            mRuleAddButtonAction.setEnabled(false);
+            mRuleEditButtonAction.setEnabled(false);
+            mRuleRemoveButtonAction.setEnabled(false);
             mRulesListModel.setList(Collections.EMPTY_LIST);
         }
     }
@@ -133,7 +139,23 @@ public class GroupsPanel extends JPanel
             }
         }
         mRulesListModel.setList(ruleDescriptions);
-        mRulesList.setSelectedIndex(-1);
+        mRulesList.clearSelection();
+        updateRulesButtons();
+    }
+
+    private void updateRulesButtons()
+    {
+        mRuleAddButtonAction.setEnabled(true);
+        if (mRulesList.getSelectedIndex() != -1)
+        {
+            mRuleEditButtonAction.setEnabled(true);
+            mRuleRemoveButtonAction.setEnabled(true);
+        }
+        else
+        {
+            mRuleEditButtonAction.setEnabled(false);
+            mRuleRemoveButtonAction.setEnabled(false);
+        }
     }
 
     public void populateList()
@@ -236,6 +258,70 @@ public class GroupsPanel extends JPanel
         }
     }
 
+    private class OnRuleSelectionChanged implements ListSelectionListener
+    {
+        public void valueChanged(ListSelectionEvent event)
+        {
+            updateRulesButtons();
+        }
+    }
+
+    private static class RuleAddButtonAction extends AbstractAction
+    {
+        public RuleAddButtonAction(GroupsPanel groupsPanel)
+        {
+            super("New Rule...");
+            mGroupsPanel = groupsPanel;
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            RuleAddDialog dialog = new RuleAddDialog();
+            try
+            {
+                dialog.show();
+            }
+            finally
+            {
+                dialog.dispose();
+            }
+        }
+
+        private GroupsPanel mGroupsPanel;
+    }
+
+    private static class RuleRemoveButtonAction extends AbstractAction
+    {
+        public RuleRemoveButtonAction(GroupsPanel groupsPanel)
+        {
+            super("Remove Rule...");
+            mGroupsPanel = groupsPanel;
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            System.out.println("Remove rule...");
+        }
+
+        private GroupsPanel mGroupsPanel;
+    }
+
+    private static class RuleEditButtonAction extends AbstractAction
+    {
+        public RuleEditButtonAction(GroupsPanel groupsPanel)
+        {
+            super("Edit Rule...");
+            mGroupsPanel = groupsPanel;
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            System.out.println("Edit rule...");
+        }
+
+        private GroupsPanel mGroupsPanel;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(GroupsPanel.class);
     private static final ListElementFormatter RULE_FORMAETTER =
@@ -250,4 +336,7 @@ public class GroupsPanel extends JPanel
     private RemoveGroupAction mRemoveGroupAction;
     private JList mRulesList;
     private ListListModel mRulesListModel;
+    private RuleAddButtonAction mRuleAddButtonAction;
+    private RuleEditButtonAction mRuleEditButtonAction;
+    private RuleRemoveButtonAction mRuleRemoveButtonAction;
 }
