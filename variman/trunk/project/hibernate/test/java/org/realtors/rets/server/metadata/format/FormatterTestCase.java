@@ -9,9 +9,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.realtors.rets.server.LinesEqualTestCase;
+import org.realtors.rets.server.protocol.TableGroupFilter;
 
 public abstract class FormatterTestCase extends LinesEqualTestCase
 {
@@ -23,17 +25,37 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     protected String format(MetadataFormatter formatter, Collection data,
                             String[] levels, boolean recursive)
     {
+        TableGroupFilter groupFilter = getGroupFilter();
+        Set groups = getGroups();
+        return format(formatter, data, levels, recursive, groupFilter, groups);
+    }
+
+    protected String format(MetadataFormatter formatter, Collection data,
+                            String[] levels, boolean recursive,
+                            TableGroupFilter groupFilter, Set groups)
+    {
         FormatterLookup lookup = new TestFormatterLookup();
         StringWriter formatted = new StringWriter();
         PrintWriter writer = new PrintWriter(formatted);
-        FormatterContext context =
-            new FormatterContext("1.00.001", DATE_OBJECT, recursive, writer,
-                                 lookup);
+        MutableFormatterContext context =
+            new MutableFormatterContext("1.00.001", DATE_OBJECT, recursive,
+                                        writer, lookup);
+        context.setTableFilter(groupFilter, groups);
         formatter.format(context, data, levels);
         return formatted.toString();
     }
 
     protected abstract List getData();
+
+    protected Set getGroups()
+    {
+        return Collections.EMPTY_SET;
+    }
+
+    protected TableGroupFilter getGroupFilter()
+    {
+        return null;
+    }
 
     protected abstract String[] getLevels();
 
