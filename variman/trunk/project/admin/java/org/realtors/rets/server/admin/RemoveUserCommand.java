@@ -23,17 +23,23 @@ import org.wxwindows.wx;
 
 public class RemoveUserCommand extends wx
 {
+    public RemoveUserCommand()
+    {
+        mUser = null;
+    }
+
+    public RemoveUserCommand(User user)
+    {
+        mUser = user;
+    }
+
     public void execute()
     {
         try
         {
             AdminFrame frame = Admin.getAdminFrame();
-            RemoveUserDialog dialog =
-                new RemoveUserDialog(frame);
-            int response = dialog.ShowModal();
-            String username = dialog.getUsername();
-            dialog.Destroy();
-            if (response == wxID_CANCEL)
+            String username = getUsername();
+            if (username == null)
             {
                 return;
             }
@@ -61,10 +67,37 @@ public class RemoveUserCommand extends wx
             String stackTrace = stackTraceWriter.toString();
             stackTrace = StringUtils.replace(stackTrace, "\t", "    ");
             wxLogMessage(stackTrace);
-            wxLogError("Could not add user.");
+            wxLogError("Could not remove user.");
         }
+    }
+
+    private String getUsername()
+    {
+        AdminFrame frame = Admin.getAdminFrame();
+        if (mUser != null)
+        {
+            int response = wxMessageBox(
+                "Are you sure you want to delete " + mUser.getName() + "?",
+                "Confirm Delete", wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                frame);
+            if (response != wxYES)
+            {
+                return null;
+            }
+            return mUser.getUsername();
+        }
+
+        String username = null;    
+        RemoveUserDialog dialog = new RemoveUserDialog(frame);
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            username = dialog.getUsername();
+        }
+        dialog.Destroy();
+        return username;
     }
 
     private static final Logger LOG =
         Logger.getLogger(RemoveUserCommand.class);
+    private User mUser;
 }
