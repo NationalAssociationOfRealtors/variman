@@ -63,6 +63,8 @@
     <mkdir dir="build/hibernate/jar"/>
     <mkdir dir="build/embedded/classes"/>
     <mkdir dir="build/importer/classes"/>
+    <mkdir dir="build/importer/lib"/>
+    <mkdir dir="build/importer/bin"/>
     <mkdir dir="build/rets-server/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
@@ -76,7 +78,8 @@
 
   <target name="build-hibernate" depends="build-generated-code,build-xml">
     <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
-         basedir="build/hibernate/final/classes" index="true"/>
+         basedir="build/hibernate/final/classes"
+         excludes="hibernate.properties" index="true"/>
   </target>
 
   <target name="build-embedded" depends="prepare">
@@ -171,6 +174,31 @@
         <pathelement location="${rets-client.jar}"/>
       </classpath>
     </javac>
+
+    <copy file="${rets-client.jar}" todir="build/importer/lib"/>
+    <copy file="${commons-lang.jar}" todir="build/importer/lib"/>
+    <copy file="${httpclient.jar}" todir="build/importer/lib"/>
+    <copy file="${commons-logging.jar}" todir="build/importer/lib"/>
+    <copy file="${rets-client.jar}" todir="build/importer/lib"/>
+    <copy file="${log4j.jar}" todir="build/importer/lib"/>
+    <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
+          todir="build/importer/lib"/>
+
+    <!-- this copies the hibernate stuff we need -->
+    <copy todir="build/importer/lib">
+      <fileset dir="${hibernate.lib}" includes="*.jar"
+               excludes="j2ee.jar,xerces.jar" />
+    </copy>
+    <copy todir="build/importer/lib"
+          file="${hibernate.jar}"/>
+    <copy todir="build/importer/lib"
+          file="project/hibernate/config/hibernate.properties"/>
+<!--     <copy todir="build/importer/lib" -->
+<!--           file="code/hibernate/config/hibernate.properties.dist"/> -->
+
+    <!-- Oh yeah, the jdbc driver would be nice. -->
+<!--     <copy todir="build/webapp/root/WEB-INF/lib" -->
+<!--           file="${jdbcdriver.jar}"/> -->
   </target>
 
   <target name="build-xml" depends="prepare">
