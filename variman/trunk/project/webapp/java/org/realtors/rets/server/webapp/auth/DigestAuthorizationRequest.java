@@ -28,10 +28,12 @@ public class DigestAuthorizationRequest
      *
      * @param header HTTP "Authorization" header
      * @param method HTTP method, i.e. GET, POST, etc.
-     * @throws IllegalArgumentException if the header is unparsable
+     * @param requestUri HTTP Request-URI
+     * @throws IllegalArgumentException if the header does not adhere to RFC
+     * 2617
      */
-    public DigestAuthorizationRequest(String header, String method)
-        throws IllegalArgumentException
+    public DigestAuthorizationRequest(String header, String method,
+                                      String requestUri)
     {
         this();
         mMethod = method;
@@ -106,6 +108,13 @@ public class DigestAuthorizationRequest
             (mUri == null) || (mResponse == null))
         {
             throw new IllegalArgumentException("Required fields not set");
+        }
+
+        if (!mUri.equals(requestUri))
+        {
+            throw new IllegalArgumentException(
+                "URI from header <" + mUri + "> does not match Request-URI <" +
+                requestUri + ">");
         }
     }
 
