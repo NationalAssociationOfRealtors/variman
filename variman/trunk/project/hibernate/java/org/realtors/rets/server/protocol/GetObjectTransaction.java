@@ -3,15 +3,15 @@
 package org.realtors.rets.server.protocol;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
-import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.ReplyCode;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServerException;
 
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -51,14 +51,8 @@ public class GetObjectTransaction
             String file = fileBuffer.toString();
             response.setContentType(getContentType(file));
             response.setHeader("MIME-Version", "1.0");
-            FileInputStream inputStream = new FileInputStream(file);
-            OutputStream outputStream = response.getOutputStream();
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1)
-            {
-                outputStream.write(buffer, 0, bytesRead);
-            }
+            IOUtils.copyStream(new FileInputStream(file),
+                               response.getOutputStream());
         }
         catch (FileNotFoundException e)
         {
