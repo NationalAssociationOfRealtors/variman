@@ -1,8 +1,7 @@
 package org.realtors.rets.server.protocol;
 
-import java.net.URL;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -23,7 +22,7 @@ public class ObjectDescriptor
         mObjectKey = objectKey;
         mObjectId = objectId;
         mUrl = url;
-        if (url.getProtocol() == "file")
+        if (url.getProtocol().equals("file"))
         {
             mIsLocal = true;
         }
@@ -32,6 +31,7 @@ public class ObjectDescriptor
             mIsLocal = false;
         }
         mDescription = description;
+        mRemoteLocationAllowable = false;
     }
 
     public String getObjectKey()
@@ -74,6 +74,30 @@ public class ObjectDescriptor
         mDescription = description;
     }
 
+    public void setRemoteLocationAllowable(boolean remoteLocationAllowable)
+    {
+        mRemoteLocationAllowable = remoteLocationAllowable;
+    }
+
+    public boolean isRemoteLocationAllowable()
+    {
+        return mRemoteLocationAllowable;
+    }
+
+    public String getLocationUrl(String  baseUrl)
+    {
+        if (mRemoteLocationAllowable && !mIsLocal)
+        {
+            return mUrl.toString();
+        }
+        else
+        {
+            StringBuffer buffer = new StringBuffer(baseUrl);
+            buffer.append(mObjectKey).append("/").append(mObjectId);
+            return buffer.toString();
+        }
+    }
+
     public ObjectStream openObjectStream() throws IOException
     {
         if (mIsLocal)
@@ -94,6 +118,7 @@ public class ObjectDescriptor
             .append(mUrl)
             .append(mIsLocal)
             .append(mDescription)
+            .append(mRemoteLocationAllowable)
             .toString();
     }
 
@@ -110,6 +135,7 @@ public class ObjectDescriptor
             .append(mUrl, rhs.mUrl)
             .append(mIsLocal, rhs.mIsLocal)
             .append(mDescription, rhs.mDescription)
+            .append(mRemoteLocationAllowable, rhs.mRemoteLocationAllowable)
             .isEquals();
     }
 
@@ -121,14 +147,14 @@ public class ObjectDescriptor
             .append(mUrl)
             .append(mIsLocal)
             .append(mDescription)
+            .append(mRemoteLocationAllowable)
             .toHashCode();
     }
-
-
 
     private String mObjectKey;
     private int mObjectId;
     private URL mUrl;
     private boolean mIsLocal;
     private String mDescription;
+    private boolean mRemoteLocationAllowable;
 }
