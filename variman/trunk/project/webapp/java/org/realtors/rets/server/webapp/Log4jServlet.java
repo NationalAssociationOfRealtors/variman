@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * @web.servlet name="log4j-servlet"
  * @web.servlet-mapping url-pattern="/log4j"
@@ -22,5 +24,9 @@ public class Log4jServlet extends RetsServlet
         resp.setContentType("text/plain");
         PrintWriter out = resp.getWriter();
         out.println("Done");
+        LOG.warn("Log4j reloaded");
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(Log4jServlet.class);
 }
