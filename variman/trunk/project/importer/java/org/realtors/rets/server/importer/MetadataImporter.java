@@ -3,6 +3,7 @@ package org.realtors.rets.server.importer;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -93,7 +94,7 @@ public class MetadataImporter
             hSession = mSessions.openSession();
             tx = hSession.beginTransaction();
 
-            MSystem hSystem = system(rSession, hSession);
+            MSystem hSystem = doSystem(rSession, hSession);
             doResource(rSession, hSession, hSystem);
             doClasses(rSession, hSession);
             doObjects(rSession, hSession);
@@ -123,12 +124,14 @@ public class MetadataImporter
         }
     }
 
-    private MSystem system(RetsSession rSession, Session hSession)
+    private MSystem doSystem(RetsSession rSession, Session hSession)
         throws HibernateException
     {
         MetadataTable tSystem =
             rSession.getMetadataTable(MetadataTable.SYSTEM);
         MSystem hSystem = new MSystem();
+        hSystem.setVersion(10101);
+        hSystem.setDate(Calendar.getInstance().getTime());
 
         hSession.save(hSystem);
         return hSystem;
@@ -157,48 +160,6 @@ public class MetadataImporter
             hResource.setVisibleName(md.getAttribute("VisibleName"));
             hResource.setDescription(md.getAttribute("Description"));
             hResource.setKeyField(md.getAttribute("KeyField"));
-            hResource.setClassVersion(md.getAttribute("ClassVersion"));
-
-            hResource.setClassDate(
-                mDateFormat.parse(md.getAttribute("ClassDate")));
-
-            hResource.setObjectVersion(md.getAttribute("ObjectVersion"));
-            hResource.setObjectDate(
-                mDateFormat.parse(md.getAttribute("ObjectDate")));
-
-            hResource.setSearchHelpVersion(
-                md.getAttribute("SearchHelpVersion"));
-            hResource.setSearchHelpDate(
-                mDateFormat.parse(md.getAttribute("SearchHelpDate")));
-
-            hResource.setEditMaskVersion(md.getAttribute("EditMaskVersion"));
-            hResource.setEditMaskDate(
-                mDateFormat.parse(md.getAttribute("EditMaskDate")));
-
-            hResource.setLookupVersion(md.getAttribute("LookupVersion"));
-            hResource.setLookupDate(
-                mDateFormat.parse(md.getAttribute("LookupDate")));
-
-            hResource.setUpdateHelpVersion(
-                md.getAttribute("UpdateHelpVersion"));
-            hResource.setUpdateHelpDate(
-                mDateFormat.parse(md.getAttribute("UpdateHelpDate")));
-
-            hResource.setValidationExpressionVersion(
-                md.getAttribute("ValidationExpressionVersion"));
-            hResource.setValidationExpressionDate(
-                mDateFormat.parse(
-                    md.getAttribute("ValidationExpressionDate")));
-
-            hResource.setValidationLookupVersion(
-                md.getAttribute("ValidationLookupVersion"));
-            hResource.setValidationLookupDate(
-                mDateFormat.parse(md.getAttribute("ValidationLookupDate")));
-
-            hResource.setValidationExternalVersion(
-                md.getAttribute("ValidationExternalVersion"));
-            hResource.setValidationExternalDate(
-                mDateFormat.parse(md.getAttribute("ValidationExternalDate")));
 
             hSession.save(hResource);
             hResources.add(hResource);
@@ -234,12 +195,6 @@ public class MetadataImporter
                                            md.getAttribute("StandardName")));
                 hClass.setVisibleName(md.getAttribute("VisibleName"));
                 hClass.setDescription(md.getAttribute("Description"));
-                hClass.setTableVersion(md.getAttribute("TableVersion"));
-                hClass.setTableDate(
-                    mDateFormat.parse(md.getAttribute("TableDate")));
-                hClass.setUpdateVersion(md.getAttribute("UpdateVersion"));
-                hClass.setUpdateDate(
-                    mDateFormat.parse(md.getAttribute("UpdateDate")));
 
                 hSession.save(hClass);
                 hClasses.add(hClass);
@@ -388,9 +343,6 @@ public class MetadataImporter
                     hLookup.setLookupName(lookupName);
                     
                     hLookup.setVisibleName(md.getAttribute("VisibleName"));
-                    hLookup.setVersion(md.getAttribute("Version"));
-                    hLookup.setDate(
-                        mDateFormat.parse(md.getAttribute("Date")));
 
                     doLookupTypes(hLookup, rSession, hSession);
                     
@@ -513,10 +465,6 @@ public class MetadataImporter
                     MClass clazz = (MClass) mClasses.get(path);
                     hValidationExternal.setSearchClass(clazz);
                     
-                    hValidationExternal.setVersion(md.getAttribute("Version"));
-                    hValidationExternal.setDate(
-                        mDateFormat.parse(md.getAttribute("Date")));
-
                     hSession.save(hValidationExternal);
                     hValidationExternals.add(hValidationExternal);
                     mValidationExternals.put(hValidationExternal.getPath(),
@@ -592,9 +540,6 @@ public class MetadataImporter
                     hUpdate.setUpdateName(md.getAttribute("UpdateName"));
                     hUpdate.setDescription(md.getAttribute("Description"));
                     hUpdate.setKeyField(md.getAttribute("KeyField"));
-                    hUpdate.setVersion(md.getAttribute("Version"));
-                    hUpdate.setDate(
-                        mDateFormat.parse(md.getAttribute("Date")));
 
                     hSession.save(hUpdate);
                     hUpdates.add(hUpdate);
@@ -632,7 +577,9 @@ public class MetadataImporter
                         TableStandardNameEnum.fromString(
                             md.getAttribute("StandardName")));
                     hTable.setLongName(md.getAttribute("LongName"));
-                    hTable.setDbName(md.getAttribute("DbName"));
+
+                    hTable.setDbName(
+                        StringUtils.substring(md.getAttribute("DbName"),0,9));
                     hTable.setShortName(md.getAttribute("ShortName"));
                     hTable.setMaximumLength(
                         Integer.parseInt(md.getAttribute("MaximumLength")));
@@ -736,5 +683,5 @@ public class MetadataImporter
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.15 2003/07/07 21:47:54 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.16 2003/07/08 21:09:14 kgarner Exp $";
 }
