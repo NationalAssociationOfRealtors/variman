@@ -116,7 +116,7 @@ public class GetObjectTransactionTest extends TestCase
         try
         {
             GetObjectTransaction transaction = createTransaction("xyz:1");
-            transaction.setImagePattern("");
+            transaction.setPhotoPattern("");
             transaction.execute(new TestResponse());
             fail("Should throw an exception");
         }
@@ -130,7 +130,7 @@ public class GetObjectTransactionTest extends TestCase
     public void testSingleGif() throws IOException, RetsServerException
     {
         GetObjectTransaction transaction = createTransaction("abc123:1");
-        transaction.setImagePattern("%k-%i.gif");
+        transaction.setPhotoPattern("%k-%i.gif");
         TestResponse response = new TestResponse();
         transaction.execute(response);
         assertEquals("image/gif", response.getContentType());
@@ -366,16 +366,63 @@ public class GetObjectTransactionTest extends TestCase
 
     public void testFindObjectDescriptor() throws RetsServerException
     {
-        GetObjectTransaction transaction =
-            new GetObjectTransaction("Property", "Photo");
-        setupTransaction(transaction);
+        GetObjectTransaction transaction = createTransaction();
+
         ObjectDescriptor expected = new ObjectDescriptor(
             "abc126", 1, localUrl(JPEG_FILE_1),
             "Beautiful frontal view of home.");
         expected.setRemoteLocationAllowable(true);
+
         ObjectDescriptor actual =
             transaction.findObjectDescriptor("abc126", 1);
         assertEquals(expected, actual);
+    }
+
+    public void testNullOrBlankObjectSetPattern()
+        throws RetsServerException, IOException
+    {
+        GetObjectTransaction transaction = createTransaction();
+        // This should skip the XML file, and fall back to abc126-1.jpg
+        transaction.setObjectSetPattern(null);
+
+        ObjectDescriptor expected = new ObjectDescriptor(
+            "abc126", 1, localUrl(JPEG_FILE_4));
+
+        assertEquals(expected, transaction.findObjectDescriptor("abc126", 1));
+
+        // Now try it with a blank pattern
+        transaction.setObjectSetPattern("");
+        assertEquals(expected, transaction.findObjectDescriptor("abc126", 1));
+    }
+
+    public void testNullPatterns() throws RetsServerException
+    {
+        GetObjectTransaction transaction = createTransaction();
+        transaction.setObjectSetPattern(null);
+        transaction.setPhotoPattern(null);
+        assertNull(transaction.findObjectDescriptor("abc126", 1));
+        assertNull(transaction.findObjectDescriptor("abc123", 1));
+    }
+
+    public void testNullOrBlankRootDirectory() throws RetsServerException
+    {
+        GetObjectTransaction transaction = createTransaction();
+        transaction.setRootDirectory(null);
+        assertNull(transaction.findObjectDescriptor("abc123", 1));
+        assertNull(transaction.findObjectDescriptor("abc126", 1));
+
+        // Now try it with a blank pattern
+        transaction.setObjectSetPattern("");
+        assertNull(transaction.findObjectDescriptor("abc123", 1));
+        assertNull(transaction.findObjectDescriptor("abc126", 1));
+    }
+
+    private GetObjectTransaction createTransaction()
+    {
+        GetObjectTransaction transaction =
+            new GetObjectTransaction("Property", "Photo");
+        setupTransaction(transaction);
+        return transaction;
     }
 
     private GetObjectTransaction createTransaction(String id)
@@ -400,7 +447,7 @@ public class GetObjectTransactionTest extends TestCase
         // exists.
         String imageDirectory = directoryOfResource(GIF_FILE);
         transaction.setRootDirectory(imageDirectory);
-        transaction.setImagePattern("%k-%i.jpg");
+        transaction.setPhotoPattern("%k-%i.jpg");
         transaction.setObjectSetPattern("%k.xml");
         transaction.setBaseLocationUrl(BASE_LOCATION_URL);
     }
@@ -479,6 +526,7 @@ public class GetObjectTransactionTest extends TestCase
     public static final String JPEG_FILE_1 = "abc123-1.jpg";
     public static final String JPEG_FILE_2 = "abc123-2.jpg";
     public static final String JPEG_FILE_3 = "abc124-1.jpg";
+    public static final String JPEG_FILE_4 = "abc126-1.jpg";
     public static final String CRLF = "\r\n";
     private static final String BOUNDARY = "simple boundary";
     private static final String BASE_LOCATION_URL =
