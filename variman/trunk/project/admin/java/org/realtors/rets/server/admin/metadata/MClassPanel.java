@@ -8,14 +8,13 @@
 
 package org.realtors.rets.server.admin.metadata;
 
+import org.wxwindows.wxChoice;
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
-import org.wxwindows.wxChoice;
 
-import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
-import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
+import org.realtors.rets.server.metadata.MClass;
 
 public class MClassPanel extends AbstractSubPanel
 {

@@ -11,7 +11,6 @@ package org.realtors.rets.server.admin.metadata;
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxPanel;
 import org.wxwindows.wxWindow;
-import org.wxwindows.wxSplitterWindow;
 
 import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.ForeignKey;
@@ -20,6 +19,7 @@ import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.MetadataVisitor;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.SearchHelp;
@@ -33,7 +33,6 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
-import org.realtors.rets.server.metadata.MetadataManager;
 
 /**
  * A panel that provides detailed and editable information for a metadata

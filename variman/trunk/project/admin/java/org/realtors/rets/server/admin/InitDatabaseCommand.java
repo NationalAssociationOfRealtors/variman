@@ -8,15 +8,6 @@
 
 package org.realtors.rets.server.admin;
 
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.cfg.Configuration;
-
-import org.realtors.rets.server.PasswordMethod;
-import org.realtors.rets.server.RetsServer;
-import org.realtors.rets.server.config.RetsConfig;
-
-import org.apache.log4j.Logger;
-
 import org.wxwindows.wx;
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxDialog;
@@ -24,6 +15,8 @@ import org.wxwindows.wxJWorker;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
+
+import org.apache.log4j.Logger;
 
 public class InitDatabaseCommand extends wx
 {

@@ -21,13 +21,14 @@ public class CreateSchemaCommand extends wx
 {
     public void execute()
     {
-        int response = wxMessageBox("This will delete all your metadata and user " +
-                                    "information.\n\n" +
-                                    "Are you sure you would like to continue?",
-                                    "Create Schema",
-                                    wxYES_NO | wxNO_DEFAULT |
-                                    wxICON_EXCLAMATION,
-                                    Admin.getAdminFrame());
+        int response = wxMessageBox(
+            "This will delete all your metadata and user " +
+            "information.\n\n" +
+            "Are you sure you would like to continue?",
+            "Create Schema",
+            wxYES_NO | wxNO_DEFAULT |
+            wxICON_EXCLAMATION,
+            Admin.getAdminFrame());
         if (response == wxYES)
         {
             createSchemaInBg();

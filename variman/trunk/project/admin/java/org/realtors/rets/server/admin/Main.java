@@ -101,7 +101,7 @@ public class Main extends wxApp
         }
 
         String subCommand = args[0];
-        String[] subArgs = new String[args.length-1];
+        String[] subArgs = new String[args.length - 1];
         System.arraycopy(args, 1, subArgs, 0, subArgs.length);
         if (subCommand.equals("show-users"))
         {

@@ -8,11 +8,10 @@
 
 package org.realtors.rets.server;
 
+import org.apache.log4j.Logger;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
-
-import org.apache.log4j.Logger;
 
 public class AccountingStatisticsUtils
 {

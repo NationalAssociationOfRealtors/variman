@@ -39,7 +39,7 @@ public class UsersPage extends wxPanel
         wxSplitterWindow splitter = new wxSplitterWindow(this, -1);
         mListBox = new wxListBox(splitter, USERS_BOX);
 
-        panel = new wxPanel(splitter);
+        wxPanel panel = new wxPanel(splitter);
         wxBoxSizer pBox = new wxBoxSizer(wxVERTICAL);
         TwoColumnGridSizer grid = new TwoColumnGridSizer(panel);
         mFirstName = new wxStaticText(panel, -1, "");
@@ -244,5 +244,4 @@ public class UsersPage extends wxPanel
     private wxStaticText mFirstName;
     private wxStaticText mLastName;
     private wxStaticText mUsername;
-    private wxPanel panel;
 }

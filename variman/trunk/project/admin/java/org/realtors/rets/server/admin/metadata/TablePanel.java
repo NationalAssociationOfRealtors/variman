@@ -13,8 +13,6 @@ import java.util.List;
 import org.wxwindows.wxChoice;
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
-import org.wxwindows.wxTextValidator;
-import org.wxwindows.wxValidator;
 
 import org.realtors.rets.server.admin.BooleanChoice;
 import org.realtors.rets.server.admin.TwoColumnGridSizer;
