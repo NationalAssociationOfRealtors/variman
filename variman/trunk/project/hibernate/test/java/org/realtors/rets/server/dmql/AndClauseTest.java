@@ -9,8 +9,8 @@ public class AndClauseTest extends TestCase
     public void testAndClause()
     {
         AndClause andClause = new AndClause();
-        andClause.setLeft(new DmqlString("left"));
-        andClause.setRight(new DmqlString("right"));
-        assertEquals("'left' AND 'right'", TestUtil.toSql(andClause));
+        andClause.setLeft(new TestSqlConverter("left"));
+        andClause.setRight(new TestSqlConverter("right"));
+        assertEquals("left AND right", TestUtil.toSql(andClause));
     }
 }

@@ -9,7 +9,7 @@ public class NotClauseTest extends TestCase
     public void testNotClause()
     {
         NotClause notClause = new NotClause();
-        notClause.setNegation(new DmqlString("expr"));
-        assertEquals("NOT 'expr'", TestUtil.toSql(notClause));
+        notClause.setNegation(new TestSqlConverter("expr"));
+        assertEquals("NOT expr", TestUtil.toSql(notClause));
     }
 }
