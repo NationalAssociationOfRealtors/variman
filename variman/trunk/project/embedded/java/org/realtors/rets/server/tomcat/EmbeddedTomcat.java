@@ -8,8 +8,13 @@
 
 package org.realtors.rets.server.tomcat;
 
-import java.net.URL;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.catalina.Connector;
 import org.apache.catalina.Context;
@@ -19,6 +24,10 @@ import org.apache.catalina.Host;
 import org.apache.catalina.logger.SystemOutLogger;
 import org.apache.catalina.realm.MemoryRealm;
 import org.apache.catalina.startup.Embedded;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 public class EmbeddedTomcat
 {
@@ -38,22 +47,24 @@ public class EmbeddedTomcat
     {
     }
 
-    public void setPath(String path)
+    public void setRexHome(String path)
     {
-        mPath = path;
+        mRexHome = path;
+        mCatalinaHome = mRexHome + File.separator + "server";
     }
 
-    public String getPath()
+    public String getRexHome()
     {
-        return mPath;
+        return mCatalinaHome;
     }
 
     public void startTomcat()
         throws Exception
     {
-        // Set the home directory
-        System.setProperty("catalina.home", mPath);
-        System.setProperty("catalina.base", mPath);
+        readRetsConfig();
+        // Set the Tomcat home directory
+        System.setProperty("catalina.home", mCatalinaHome);
+        System.setProperty("catalina.base", mCatalinaHome);
 
         // Create an embedded server
         mEmbedded = new Embedded();
@@ -66,7 +77,7 @@ public class EmbeddedTomcat
         engine.setDefaultHost("localhost");
 
         // Create a default virtual host
-        mHost = mEmbedded.createHost("localhost", mPath + "/webapps");
+        mHost = mEmbedded.createHost("localhost", mCatalinaHome + "/webapps");
         engine.addChild(mHost);
         engine.setRealm(new MemoryRealm());
 
@@ -83,27 +94,28 @@ public class EmbeddedTomcat
         Runtime.getRuntime().addShutdownHook(new Shutdown());
     }
 
+    private void readRetsConfig()
+        throws ParserConfigurationException, SAXException, IOException
+    {
+        // Use standard DOM rather than RetsConfig to parse the XML file.
+        // Moving the Rex jar file into the Tomcat classpath messes up the
+        // classloader, and then it cannot be used inside the webapp. I really
+        // don't know what games Tomcat plays with classloaders, but it causes
+        // all sorts of problems. In any case, we only need the port parameter,
+        // so it's easy enough just to use DOM and grab that one XML tag.
+        String configFile =
+            mRexHome + "/webapp/WEB-INF/classes/rets-config.xml";
+        DocumentBuilder builder =
+            DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = builder.parse(new File(configFile));
+        Element root = document.getDocumentElement();
+        Node portTag = root.getElementsByTagName("port").item(0);
+        mPort = Integer.parseInt(portTag.getFirstChild().getNodeValue());
+    }
+
     private int getPort()
     {
-        int port = 0;
-
-        String myport = System.getProperty("retszilla.port");
-        if (myport != null)
-        {
-            try
-            {
-                port = Integer.parseInt(myport);
-            }
-            catch (NumberFormatException e)
-            {
-                port = 6103;
-            }
-        }
-        if (port == 0)
-        {
-            port = 6103;
-        }
-        return port;
+        return mPort;
     }
 
     public void stopTomcat() throws Exception
@@ -146,14 +158,18 @@ public class EmbeddedTomcat
     {
         try
         {
+            String rexHome = System.getProperty("rex.home");
+            if (rexHome == null)
+            {
+                rexHome = System.getProperty("user.dir");
+                System.setProperty("rex.home", rexHome);
+            }
             EmbeddedTomcat tomcat = EmbeddedTomcat.getInstance();
-            String pwd = System.getProperty("user.dir");
-            String workingDir = pwd + File.separator + "server";
-            tomcat.setPath(workingDir);
+            tomcat.setRexHome(rexHome);
 
             tomcat.startTomcat();
 
-            URL url = new URL("file:" + pwd + "/webapp");
+            URL url = new URL("file:" + rexHome + "/webapp");
             tomcat.registerWebapp("/", url);
 
             tomcat.waitUntilStopped();
@@ -180,7 +196,9 @@ public class EmbeddedTomcat
         }
     }
 
-    private String mPath;
+    private String mRexHome;
+    private String mCatalinaHome;
     private Embedded mEmbedded;
     private Host mHost;
+    private int mPort;
 }
