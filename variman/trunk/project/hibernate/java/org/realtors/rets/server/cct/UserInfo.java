@@ -8,7 +8,6 @@ import org.realtors.rets.server.User;
 
 /**
  * @hibernate.class table="rets_cct_userinfo"
- *                  proxy="org.realtors.rets.server.cct.UserInfo"
  */
 public class UserInfo
 {

@@ -6,7 +6,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_user"
- *   proxy="org.realtors.rets.server.User"
  */
 public class User
 {
