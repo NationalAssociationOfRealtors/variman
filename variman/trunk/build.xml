@@ -31,6 +31,7 @@
   </path>
 
   <path id="lib.path">
+    <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${hibernate.jdbc.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
@@ -532,7 +533,7 @@
     <!-- this copies the hibernate stuff we need -->
     <copy todir="build/importer/lib">
       <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar" />
+               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar,commons-lang.jar" />
     </copy>
     <copy todir="build/importer/lib"
           file="${hibernate.jar}"/>
