@@ -33,7 +33,7 @@ public class CompactValidationExpressionFormatter
         DataRowBuilder row = new DataRowBuilder(out);
         row.begin();
         row.append(validationExpression.getValidationExpressionID());
-        row.append(validationExpression.getValidationExpression());
+        row.append(validationExpression.getValidationExpressionType());
         row.append(validationExpression.getValue());
         row.append(mVersion);
         row.append(mDate);
