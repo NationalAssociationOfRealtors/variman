@@ -22,9 +22,11 @@ public class StandardTableFormatter extends BaseStandardFormatter
                        String[] levels)
     {
         PrintWriter out = context.getWriter();
+        String resource = levels[RESOURCE_LEVEL];
+        String retsClass = levels[CLASS_LEVEL];
         TagBuilder metadata = new TagBuilder(out, "METADATA-TABLE")
-            .appendAttribute("Resource", levels[RESOURCE_LEVEL])
-            .appendAttribute("Class", levels[CLASS_LEVEL])
+            .appendAttribute("Resource", resource)
+            .appendAttribute("Class", retsClass)
             .appendAttribute("Version", context.getVersion())
             .appendAttribute("Date", context.getDate())
             .beginContentOnNewLine();
@@ -32,6 +34,10 @@ public class StandardTableFormatter extends BaseStandardFormatter
         for (Iterator i = tables.iterator(); i.hasNext();)
         {
             Table table = (Table) i.next();
+            if (!context.isValidTable(table, resource, retsClass))
+            {
+                continue;
+            }
             TagBuilder tag = new TagBuilder(out, "Field").
                 beginContentOnNewLine();
 

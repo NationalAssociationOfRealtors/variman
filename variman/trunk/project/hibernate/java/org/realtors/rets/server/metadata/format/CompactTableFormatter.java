@@ -12,14 +12,34 @@ package org.realtors.rets.server.metadata.format;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.realtors.rets.server.metadata.Table;
 
 public class CompactTableFormatter extends MetadataFormatter
 {
+    private Collection filterInvalidTables(FormatterContext context,
+                                           Collection tables, String[] levels)
+    {
+        String resource = levels[RESOURCE_LEVEL];
+        String retsClass = levels[CLASS_LEVEL];
+        List filteredTables = new ArrayList();
+        for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+        {
+            Table table = (Table) iterator.next();
+            if (context.isValidTable(table, resource, retsClass))
+            {
+                filteredTables.add(table);
+            }
+        }
+        return filteredTables;
+    }
+
     public void format(FormatterContext context, Collection tables,
                        String[] levels)
     {
+        tables = filterInvalidTables(context, tables, levels);
         if (tables.size() == 0)
         {
             return;
