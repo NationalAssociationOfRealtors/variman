@@ -19,13 +19,13 @@ import java.util.List;
 
 public class Bootstrap
 {
-    public static void main(String[] args)
-        throws Exception
+    private void callMain(String[] args) throws Exception
     {
+        initRexHome();
         List urlList = new ArrayList();
         addJars(urlList, "admin/lib");
         addJars(urlList, "webapp/WEB-INF/lib");
-        urlList.add(new File("admin/classes/").toURL());
+        urlList.add(new File(mRexHome, "admin/classes/").toURL());
         URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);
         URLClassLoader classLoader = new URLClassLoader(urls);
         Thread.currentThread().setContextClassLoader(classLoader);
@@ -37,10 +37,20 @@ public class Bootstrap
         method.invoke(null, paramValues);
     }
 
-    private static void addJars(List urlList, String directory)
+    private void initRexHome()
+    {
+        mRexHome = System.getProperty("rex.home");
+        if (mRexHome == null)
+        {
+            mRexHome = System.getProperty("user.dir");
+            System.setProperty("rex.home", mRexHome);
+        }
+    }
+
+    private  void addJars(List urlList, String directory)
         throws MalformedURLException
     {
-        File libDir = new File(directory);
+        File libDir = new File(mRexHome, directory);
         File[] jars = libDir.listFiles(new FilenameFilter()
         {
             public boolean accept(File dir, String name)
@@ -59,4 +69,14 @@ public class Bootstrap
             urlList.add(jar.toURL());
         }
     }
+
+    public static void main(String[] args)
+        throws Exception
+    {
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.callMain(args);
+
+    }
+
+    private String mRexHome;
 }
