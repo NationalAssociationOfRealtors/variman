@@ -36,6 +36,7 @@ public class DatabasePage extends wxPanel
         wxStaticText label;
         wxFlexGridSizer grid;
         wxBoxSizer hBox;
+        wxBoxSizer vBox;
 
         hBox = new wxBoxSizer(wxHORIZONTAL);
         hBox.Add(new wxStaticText(this, -1, "RETS"), 0, wxALL, 5);
@@ -49,13 +50,15 @@ public class DatabasePage extends wxPanel
         grid = new wxFlexGridSizer(0, 3, 0, 0);
         grid.AddGrowableCol(2);
         label = new wxStaticText(this, -1, "Listening Port:");
-        grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
+        grid.Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxRIGHT |
+                           wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1);
         mPort = new wxTextCtrl(this, -1, "");
         grid.Add(mPort, 0, wxBOTTOM, 5);
 
         label = new wxStaticText(this, -1, "Metadata Directory:");
-        grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM,  5);
+        grid.Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxRIGHT |
+                           wxBOTTOM,  5);
         grid.Add(SPACER_WIDTH, -1);
         wxBoxSizer hBox2 = new wxBoxSizer(wxHORIZONTAL);
         mMetadataDir = new wxTextCtrl(this, -1, "", wxDefaultPosition,
@@ -76,20 +79,28 @@ public class DatabasePage extends wxPanel
 
         hBox = new wxBoxSizer(wxHORIZONTAL);
         hBox.Add(20, 20);
+        vBox = new wxBoxSizer(wxVERTICAL);
+
         grid = new wxFlexGridSizer(0, 3, 0, 0);
         grid.AddGrowableCol(2);
 
-        label = new wxStaticText(this,  -1, "Driver class:");
+        label = new wxStaticText(this,  -1, "Type:");
         grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1);
-        mDriverClass = new wxStaticText(this, -1, "");
-        grid.Add(mDriverClass, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
+        mDatabaseType = new wxStaticText(this, -1, "");
+        grid.Add(mDatabaseType, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
 
-        label = new wxStaticText(this,  -1, "JDBC URL:");
+        label = new wxStaticText(this,  -1, "Host Name:");
         grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, 0);
-        mUrl = new wxStaticText(this, -1, "");
-        grid.Add(mUrl, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM,  5);
+        mHostName = new wxStaticText(this, -1, "");
+        grid.Add(mHostName, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM,  5);
+
+        label = new wxStaticText(this,  -1, "Database Name:");
+        grid.Add(label, 0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, 5);
+        grid.Add(SPACER_WIDTH, -1, 0);
+        mDatabaseName = new wxStaticText(this, -1, "");
+        grid.Add(mDatabaseName, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM,  5);
 
         label = new wxStaticText(this,  -1, "Username:");
         grid.Add(label, 0, wxALIGN_LEFT | wxBOTTOM | wxRIGHT, 5);
@@ -97,11 +108,9 @@ public class DatabasePage extends wxPanel
         mUsername = new wxStaticText(this, -1, "");
         grid.Add(mUsername, 0, wxEXPAND | wxALIGN_LEFT | wxBOTTOM, 5);
 
-        grid.Add(-1, -1, 0);
-        grid.Add(SPACER_WIDTH, -1);
-        grid.Add(new wxButton(this, EDIT_PROPERTIES, "Edit Properties..."), 0);
-
-        hBox.Add(grid, 1, wxALL | wxEXPAND, 10);
+        vBox.Add(grid, 1, wxEXPAND, 0);
+        vBox.Add(new wxButton(this, EDIT_PROPERTIES, "Edit..."), 0);
+        hBox.Add(vBox, 1, wxALL | wxEXPAND, 10);
         box.Add(hBox, 0, wxEXPAND, 0);
 
 
@@ -116,8 +125,9 @@ public class DatabasePage extends wxPanel
     {
         RetsConfig config = Admin.getRetsConfig();
         DatabaseConfig dbConfig = config.getDatabase();
-        mDriverClass.SetLabel(dbConfig.getDriver());
-        mUrl.SetLabel(dbConfig.getUrl());
+        mDatabaseType.SetLabel(dbConfig.getDatabaseType().getLongName());
+        mHostName.SetLabel(dbConfig.getHostName());
+        mDatabaseName.SetLabel(dbConfig.getDatabaseName());
         mUsername.SetLabel(dbConfig.getUsername());
         mPort.SetValue("" + config.getPort());
         String webappRoot = Admin.getWebappRoot();
@@ -200,9 +210,10 @@ public class DatabasePage extends wxPanel
     private static final int CHOOSE_METADATA_DIR = wxNewId();
     private static final int SPACER_WIDTH = 10;
 
-    private wxStaticText mDriverClass;
-    private wxStaticText mUrl;
     private wxStaticText mUsername;
     private wxTextCtrl mPort;
     private wxTextCtrl mMetadataDir;
+    private wxStaticText mDatabaseType;
+    private wxStaticText mHostName;
+    private wxStaticText mDatabaseName;
 }

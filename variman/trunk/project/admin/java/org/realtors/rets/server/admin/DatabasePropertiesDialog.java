@@ -12,21 +12,23 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.wxwindows.wxWindow;
-import org.wxwindows.wxDialog;
-import org.wxwindows.wxBoxSizer;
-import org.wxwindows.wxFlexGridSizer;
-import org.wxwindows.wxStaticText;
-import org.wxwindows.wxTextCtrl;
-import org.wxwindows.wxButton;
-import org.wxwindows.wxStaticLine;
-import org.wxwindows.wxCommandEvent;
-import org.wxwindows.wxCommandListener;
-import org.wxwindows.wxSize;
-
 import org.realtors.rets.server.config.DatabaseConfig;
+import org.realtors.rets.server.config.DatabaseType;
 
 import org.apache.log4j.Logger;
+
+import org.wxwindows.wxBoxSizer;
+import org.wxwindows.wxButton;
+import org.wxwindows.wxChoice;
+import org.wxwindows.wxCommandEvent;
+import org.wxwindows.wxCommandListener;
+import org.wxwindows.wxDialog;
+import org.wxwindows.wxFlexGridSizer;
+import org.wxwindows.wxSize;
+import org.wxwindows.wxStaticLine;
+import org.wxwindows.wxStaticText;
+import org.wxwindows.wxTextCtrl;
+import org.wxwindows.wxWindow;
 
 public class DatabasePropertiesDialog extends wxDialog
 {
@@ -39,25 +41,35 @@ public class DatabasePropertiesDialog extends wxDialog
         grid.AddGrowableCol(2);
         wxSize textSize = new wxSize(300, -1);
 
-        grid.Add(new wxStaticText(this, -1, "Driver Class:"), 0, wxBOTTOM, 5);
+        grid.Add(new wxStaticText(this, -1, "Database Type:"), 0,
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM, 5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
-        mDriverClass = new wxTextCtrl(this, -1, config.getDriver(),
-                                      wxDefaultPosition, textSize);
-        grid.Add(mDriverClass, 0, wxEXPAND | wxBOTTOM,  5);
+        createDatabaseTypes(config);
+        grid.Add(mDatabaseTypes, 0, wxEXPAND | wxBOTTOM,  5);
 
-        grid.Add(new wxStaticText(this, -1, "JDBC URL:"), 0, wxBOTTOM,  5);
+        grid.Add(new wxStaticText(this, -1, "Host Name:"), 0,
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
-        mUrl = new wxTextCtrl(this, -1, config.getUrl(), wxDefaultPosition,
-                              textSize);
-        grid.Add(mUrl, 0, wxEXPAND | wxBOTTOM,  5);
+        mHostName = new wxTextCtrl(this, -1, config.getHostName(),
+                                   wxDefaultPosition, textSize);
+        grid.Add(mHostName, 0, wxEXPAND | wxBOTTOM,  5);
 
-        grid.Add(new wxStaticText(this, -1, "Username:"), 0, wxBOTTOM,  5);
+        grid.Add(new wxStaticText(this, -1, "Database Name:"), 0,
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
+        grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
+        mDatabaseName = new wxTextCtrl(this, -1, config.getDatabaseName(),
+                                       wxDefaultPosition, textSize);
+        grid.Add(mDatabaseName, 0, wxEXPAND | wxBOTTOM,  5);
+
+        grid.Add(new wxStaticText(this, -1, "Username:"), 0,
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
         mUsername = new wxTextCtrl(this, -1, config.getUsername(),
                                    wxDefaultPosition, textSize);
         grid.Add(mUsername, 0, wxEXPAND | wxBOTTOM,  5);
 
-        grid.Add(new wxStaticText(this, -1, "Password:"), 0, wxBOTTOM,  5);
+        grid.Add(new wxStaticText(this, -1, "Password:"), 0,
+                 wxALIGN_CENTER_VERTICAL | wxBOTTOM,  5);
         grid.Add(SPACER_WIDTH, -1, wxBOTTOM, 5);
         mPassword = new wxTextCtrl(this, -1, config.getPassword(),
                                    wxDefaultPosition, textSize,
@@ -85,10 +97,34 @@ public class DatabasePropertiesDialog extends wxDialog
         EVT_BUTTON(TEST_CONNECTION, new OnTestConnection());
     }
 
+    private wxChoice createDatabaseTypes(DatabaseConfig config)
+    {
+        mDatabaseTypes = new wxChoice(this, -1, wxDefaultPosition);
+        mDatabaseTypeObjects = new DatabaseType[] {
+            DatabaseType.POSTGRESQL,
+            DatabaseType.SQLSERVER_JSQL
+        };
+        for (int i = 0; i < mDatabaseTypeObjects.length; i++)
+        {
+            DatabaseType databaseType = mDatabaseTypeObjects[i];
+            mDatabaseTypes.Append(databaseType.getLongName());
+        }
+        int initialIndex =
+            mDatabaseTypes.FindString(config.getDatabaseType().getLongName());
+        mDatabaseTypes.SetSelection(initialIndex);
+        return mDatabaseTypes;
+    }
+
+    private DatabaseType getDatabaseType()
+    {
+        return mDatabaseTypeObjects[mDatabaseTypes.GetSelection()];
+    }
+
     public void updateConfig(DatabaseConfig config)
     {
-        config.setDriver(mDriverClass.GetValue());
-        config.setUrl(mUrl.GetValue());
+        config.setDatabaseType(getDatabaseType());
+        config.setHostName(mHostName.GetValue());
+        config.setDatabaseName(mDatabaseName.GetValue());
         config.setUsername(mUsername.GetValue());
         config.setPassword(mPassword.GetValue());
     }
@@ -109,8 +145,11 @@ public class DatabasePropertiesDialog extends wxDialog
         String errorMessage = "Database connection failed.";
         try
         {
-            String driver = mDriverClass.GetValue();
-            String url = mUrl.GetValue();
+            DatabaseType type = getDatabaseType();
+            String driver = type.getDriverClass();
+            String hostName = mHostName.GetValue();
+            String databaseName = mDatabaseName.GetValue();
+            String url = type.getUrl(hostName, databaseName);
             String username = mUsername.GetValue();
             String password = mPassword.GetValue();
 
@@ -164,9 +203,11 @@ public class DatabasePropertiesDialog extends wxDialog
     private static final int SPACER_WIDTH = 10;
     private static final int TEST_CONNECTION = wxNewId();
 
-    private wxTextCtrl mDriverClass;
-    private wxTextCtrl mUrl;
+    private wxChoice mDatabaseTypes;
+    private wxTextCtrl mHostName;
+    private wxTextCtrl mDatabaseName;
     private wxTextCtrl mUsername;
     private wxTextCtrl mPassword;
     private wxButton mCancel;
+    private DatabaseType[] mDatabaseTypeObjects;
 }
