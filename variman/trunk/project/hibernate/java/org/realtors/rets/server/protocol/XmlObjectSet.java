@@ -86,14 +86,14 @@ public class XmlObjectSet implements ObjectSet
         mResourceKey = objectSet.getAttributeValue("resource-key");
         mAreRemoteLocationsAllowable =
             getAttributeBoolean(objectSet, "remote-locations");
-        String basePath = objectSet.getAttributeValue("base-path");
-        if (basePath == null)
+        String baseUrl = objectSet.getAttributeValue("base");
+        if (baseUrl == null)
         {
-            mBasePath = mRootUrl;
+            mBaseUrl = mRootUrl;
         }
         else
         {
-            mBasePath = new URL(mRootUrl, basePath);
+            mBaseUrl = new URL(mRootUrl, baseUrl);
         }
         Namespace namespace = objectSet.getNamespace();
         Iterator objectGroups =
@@ -109,11 +109,11 @@ public class XmlObjectSet implements ObjectSet
         throws IOException
     {
         String type = objectGroup.getAttributeValue("type");
-        URL basePath = mBasePath;
-        String groupBasePath = objectGroup.getAttributeValue("base-path");
-        if (groupBasePath != null)
+        URL baseUrl = mBaseUrl;
+        String groupBaseUrl = objectGroup.getAttributeValue("base");
+        if (groupBaseUrl != null)
         {
-            basePath = new URL(basePath, groupBasePath);
+            baseUrl = new URL(baseUrl, groupBaseUrl);
         }
         List objectDescriptors = new ArrayList();
         Namespace namespace = objectGroup.getNamespace();
@@ -124,18 +124,23 @@ public class XmlObjectSet implements ObjectSet
         while (objects.hasNext())
         {
             Element object = (Element) objects.next();
-            Element path = object.getChild("path", namespace);
+            String url = object.getAttributeValue("src");
+            if (StringUtils.isBlank(url))
+            {
+                LOG.warn("Blank url for objectId [" + objectId + "], type [" +
+                         type + "], resource key [" + mResourceKey + "]");
+                continue;
+            }
             if(getAttributeBoolean(object, "default"))
             {
                 defaultObjectId = objectId;
             }
-            URL objectUrl = new URL(basePath, path.getTextTrim());
+            URL objectUrl = new URL(baseUrl, url);
             ObjectDescriptor objectDescriptor =
                 new ObjectDescriptor(mResourceKey, objectId, objectUrl);
             objectDescriptor.setRemoteLocationAllowable(
                 mAreRemoteLocationsAllowable);
-            String description = object.getChildTextTrim("description",
-                                                         namespace);
+            String description = object.getAttributeValue("description");
             if (StringUtils.isNotBlank(description))
             {
                 objectDescriptor.setDescription(description);
@@ -202,7 +207,7 @@ public class XmlObjectSet implements ObjectSet
         Logger.getLogger(XmlObjectSet.class);
     private String mResourceKey;
     private URL mRootUrl;
-    private URL mBasePath;
+    private URL mBaseUrl;
     private Map mObjectDescriptorsByType;
     private Map mDefaultObjectIdsByType;
     private boolean mAreRemoteLocationsAllowable;
