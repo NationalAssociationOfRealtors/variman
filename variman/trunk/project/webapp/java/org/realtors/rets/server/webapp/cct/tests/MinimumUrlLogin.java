@@ -16,7 +16,7 @@ public class MinimumUrlLogin extends BaseCertificationTest
 
     public String getName()
     {
-        return MinimumUrlLogin.class.getName();
+        return "MinimumUrlLogin";
     }
 
     public static final String[] PROCEDURE = { "Login.", "Logout." }; 

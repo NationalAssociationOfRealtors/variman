@@ -15,7 +15,7 @@ public class BasicSearch extends BaseCertificationTest
 {
     public String getName()
     {
-        return BasicSearch.class.getName();
+        return "BasicSearch";
     }
 
     private static final String[] PROCEDURE = {

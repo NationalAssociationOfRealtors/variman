@@ -14,7 +14,7 @@ public class RelativeUrlLogin extends BaseCertificationTest
 {
     public String getName()
     {
-        return RelativeUrlLogin.class.getName();
+        return "RelativeUrlLogin";
     }
 
     public String getDescription()

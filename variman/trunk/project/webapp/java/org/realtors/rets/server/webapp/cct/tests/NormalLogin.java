@@ -14,7 +14,7 @@ public class NormalLogin extends BaseCertificationTest
 {
     public String getName()
     {
-        return NormalLogin.class.getName();
+        return "NormalLogin";
     }
 
     public static final String PROCEDURE[] = { "Login.", "Logout." };
