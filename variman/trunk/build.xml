@@ -40,6 +40,8 @@
   <path id="webapp.path">
     <pathelement path="${servlet.jar}"/>
     <pathelement path="${log4j.jar}"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement location="build/embedded/classes"/>
   </path>
 
   <!-- Add the checkstyle task -->
@@ -81,6 +83,7 @@
     <mkdir dir="build/rets-server/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
+    <mkdir dir="build/webapp/test/classes"/>
     <mkdir dir="dist" />
   </target>
 
@@ -179,7 +182,6 @@
             cache="build/depcache" closure="yes">
       <classpath>
         <path refid="webapp.path"/>
-        <pathelement location="build/embedded/classes"/>
       </classpath>
     </depend>
     <javac srcdir="project/webapp/java"
@@ -188,7 +190,24 @@
            deprecation="${compile.deprecation}">
       <classpath>
         <path refid="webapp.path"/>
-        <pathelement location="build/embedded/classes"/>
+      </classpath>
+    </javac>
+
+    <depend srcDir="project/webapp/test/java"
+            destDir="build/webapp/test/classes"
+            cache="build/depcache" closure="yes">
+      <classpath>
+        <path refid="webapp.path"/>
+        <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/webapp/test/java"
+            destDir="build/webapp/test/classes"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="webapp.path"/>
+        <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
       </classpath>
     </javac>
 
@@ -209,6 +228,8 @@
           todir="build/rets-server/conf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${commons-lang.jar}"/>
   </target>
 
   <target name="build-importer" depends="build-hibernate"
