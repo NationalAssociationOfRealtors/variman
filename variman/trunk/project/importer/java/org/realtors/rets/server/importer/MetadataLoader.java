@@ -64,7 +64,7 @@ public class MetadataLoader
      *
      */
     public MetadataLoader()
-        throws Exception
+        throws RetsException
     {
         mResources = new HashMap();
         mClasses = new HashMap();
@@ -933,7 +933,8 @@ public class MetadataLoader
                 throw new RuntimeException(e1);
             }
             String path =
-                RetsSession.pathFromAttributes(segment, table.getPathAttributes());
+                RetsSession.pathFromAttributes(segment,
+                                               table.getPathAttributes());
 
             List columns = segment.getColumns();
             List dataRows = segment.getData();
@@ -992,7 +993,7 @@ public class MetadataLoader
         
         return mSystem;
     }
-    
+
     private Map mClasses;
     private Map mEditMasks;
     private Map mLookups;
@@ -1008,7 +1009,7 @@ public class MetadataLoader
     private Map mValidationLookups;
 
     private static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.1 2003/08/19 20:34:19 kgarner Exp $";
+        "$Id: MetadataLoader.java,v 1.2 2003/08/21 19:51:52 kgarner Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
 }
