@@ -85,9 +85,9 @@ public class Main extends wxApp
                 cliMain(args);
             }
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            e.printStackTrace();
+            LOG.error("Caught exception", t);
         }
     }
 
@@ -174,65 +174,46 @@ public class Main extends wxApp
     }
 
     private static void addUser(String[] args)
+        throws Exception
     {
-        try
+        if (args.length != 4)
         {
-            if (args.length != 4)
-            {
-                System.err.println("Usage: add-user <username> <firstname> " +
-                                   "<lastname> <password>");
-                return;
-            }
-            AdminUtils.initConfig();
-            AdminUtils.initDatabase();
+            System.err.println("Usage: add-user <username> <firstname> " +
+                               "<lastname> <password>");
+            return;
+        }
+        AdminUtils.initConfig();
+        AdminUtils.initDatabase();
 
-            User user = new User();
-            user.setUsername(args[0]);
-            user.setFirstName(args[1]);
-            user.setLastName(args[2]);
-            user.changePassword(args[3]);
-            HibernateUtils.save(user);
-            System.out.println("Added user " + user.getUsername());
-        }
-        catch (HibernateException e)
-        {
-            LOG.error("Could not add user", e);
-        }
-        catch (RetsServerException e)
-        {
-            LOG.error("Caught exception", e);
-        }
+        User user = new User();
+        user.setUsername(args[0]);
+        user.setFirstName(args[1]);
+        user.setLastName(args[2]);
+        user.changePassword(args[3]);
+        HibernateUtils.save(user);
+        System.out.println("Added user " + user.getUsername());
     }
 
     private static void removeUser(String[] args)
+        throws Exception
     {
-        try
+        if (args.length != 1)
         {
-            if (args.length != 1)
-            {
-                System.err.println("Usage: remove-user <username>");
-                return;
-            }
-            AdminUtils.initConfig();
-            AdminUtils.initDatabase();
+            System.err.println("Usage: remove-user <username>");
+            return;
+        }
+        AdminUtils.initConfig();
+        AdminUtils.initDatabase();
 
-            String userName = args[0];
-            User user = UserUtils.findByUsername(userName);
-            if (user == null)
-            {
-                System.out.println("User not found: " + userName);
-                return;
-            }
-            UserUtils.delete(user);
-        }
-        catch (RetsServerException e)
+        String userName = args[0];
+        User user = UserUtils.findByUsername(userName);
+        if (user == null)
         {
-            LOG.error("Caught exception", e);
+            System.out.println("User not found: " + userName);
+            return;
         }
-        catch (HibernateException e)
-        {
-            LOG.error("Caught exception", e);
-        }
+        UserUtils.delete(user);
+        System.out.println("Removed user " + userName);
     }
 
     private static void createSchema(String[] args)
