@@ -11,14 +11,17 @@
 package org.realtors.rets.server;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.SortedSet;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_user"
  */
-public class User implements Serializable
+public class User implements Serializable, Comparable
 {
     public User()
     {
@@ -200,16 +203,17 @@ public class User implements Serializable
 
     /**
      * @hibernate.set table="rets_user_groups" lazy="true"
+     *   sort="natural"
      * @hibernate.collection-key column="user_id"
      * @hibernate.collection-many-to-many column="group_id"
      *   class="org.realtors.rets.server.Group"
      */
-    protected Set getGroups()
+    protected SortedSet getGroups()
     {
         return mGroups;
     }
 
-    protected void setGroups(Set groups)
+    protected void setGroups(SortedSet groups)
     {
         mGroups = groups;
     }
@@ -224,6 +228,37 @@ public class User implements Serializable
             .toString();
     }
 
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof User))
+        {
+            return false;
+        }
+        User rhs = (User) obj;
+        return new EqualsBuilder()
+            .append(mLastName, rhs.mLastName)
+            .append(mFirstName, rhs.mFirstName)
+            .append(mUsername, rhs.mUsername)
+            .isEquals();
+    }
+
+    public int hashCode()
+    {
+        return new HashCodeBuilder()
+            .append(mUsername)
+            .toHashCode();
+    }
+
+    public int compareTo(Object obj)
+    {
+        User rhs = (User) obj;
+        return new CompareToBuilder()
+            .append(mLastName, rhs.mLastName)
+            .append(mFirstName, rhs.mFirstName)
+            .append(mUsername, rhs.mUsername)
+            .toComparison();
+    }
+
     private Long mId;
     private String mFirstName;
     private String mLastName;
@@ -232,5 +267,5 @@ public class User implements Serializable
     private PasswordMethod mPasswordMethod;
     private String mAgentCode;
     private String mBrokerCode;
-    private Set mGroups;
+    private SortedSet mGroups;
 }
