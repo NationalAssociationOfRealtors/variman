@@ -40,7 +40,7 @@ public class InitDatabaseCommand
                 String message = "";
                 try
                 {
-                    LOG.info("Initializing Hibernate configuration");
+                    LOG.debug("Initializing Hibernate configuration");
                     RetsConfig retsConfig = Admin.getRetsConfig();
                     Configuration config = new Configuration()
                         .addJar("rex-hbm-xml.jar")
@@ -49,7 +49,7 @@ public class InitDatabaseCommand
                         config.buildSessionFactory();
                     PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
                                                     PasswordMethod.RETS_REALM);
-                    LOG.info("Hibernate initialized");
+                    LOG.debug("Hibernate initialized");
                     Admin.setHibernateConfiguration(config);
                     RetsServer.setSessions(sessionFactory);
                 }
