@@ -11,74 +11,28 @@ package org.realtors.rets.server.admin;
 import java.io.PrintStream;
 import java.util.List;
 
-import org.wxwindows.wxApp;
-import org.wxwindows.wxPoint;
-import org.wxwindows.wxSize;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.realtors.rets.server.HibernateUtils;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.UserUtils;
 
-public class Main extends wxApp
+public class Main
 {
-    public Main()
-    {
-        DOMConfigurator.configure(
-            getClass().getResource("/rex-admin-log4j.xml"));
-    }
-
-    public boolean OnInit()
-    {
-        wxInitAllImageHandlers();
-        AdminFrame frame = new AdminFrame("Rex Administration",
-                                          new wxPoint(50, 50),
-                                          new wxSize(640, 480));
-        Admin.setAdminFrame(frame);
-        frame.Show(true);
-        if (!Admin.isDebugEnabled())
-        {
-            new InitDatabaseCommand().execute();
-        }
-        return true;
-    }
-
-    private static boolean loadWxLibararies()
-    {
-        try
-        {
-            loadLibraries();
-            return true;
-        }
-        catch (UnsatisfiedLinkError e)
-        {
-            return false;
-        }
-    }
-
     public static void main(String[] args)
     {
         try
         {
+            initLog4J();
             Admin.initSystemProperties();
             if (args.length == 0)
             {
-                if (loadWxLibararies())
-                {
-                    Main main = new Main();
-                    main.MainLoop();
-                }
-                else
-                {
-                    cliMain(args);
-                }
+                SwingMain.main(args);
             }
             else
             {
@@ -89,6 +43,14 @@ public class Main extends wxApp
         {
             LOG.error("Caught exception", t);
         }
+    }
+
+    private static void initLog4J()
+    {
+        ClassLoader contextClassLoader =
+            Thread.currentThread().getContextClassLoader();
+        DOMConfigurator.configure(
+            contextClassLoader.getResource("rex-admin-log4j.xml"));
     }
 
     private static void cliMain(String[] args)
