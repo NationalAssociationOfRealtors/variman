@@ -67,8 +67,7 @@ public class LoginAction extends CctAction
 
         HttpSession session = request.getSession();
 
-        session.setAttribute(FormAuthenticationFilter.AUTHENTICATION_KEY,
-                             "true");
+        session.setAttribute(AUTHENTICATION_KEY, "true");
         session.setAttribute(USERINFO_KEY, userInfo);
         session.setAttribute(USER_KEY, user);
 
