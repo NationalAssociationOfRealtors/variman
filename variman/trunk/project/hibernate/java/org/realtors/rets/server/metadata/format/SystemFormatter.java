@@ -2,7 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import org.realtors.rets.server.metadata.format.MetadataFormatter;
 import org.realtors.rets.server.metadata.MSystem;
 
 public abstract class SystemFormatter extends MetadataFormatter

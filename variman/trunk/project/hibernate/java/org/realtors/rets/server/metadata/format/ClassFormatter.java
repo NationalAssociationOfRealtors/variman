@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.Date;
-
 import org.realtors.rets.server.metadata.MClass;
 
 public abstract class ClassFormatter extends MetadataFormatter
