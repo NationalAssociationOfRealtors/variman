@@ -97,7 +97,7 @@ public class MetadataImporter extends MetadataLoader
     {
         mRetsSession = new RetsSession(mConnectionURL);
         mRetsSession.login(mUsername, mPassword);
-        mMetadata = mRetsSession.getMetadata2();
+        mMetadata = mRetsSession.getMetadata();
     }
 
     private void initHibernate()
@@ -389,7 +389,7 @@ public class MetadataImporter extends MetadataLoader
     private Session mSession;
     private String mUsername;
     static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.41 2004/01/20 21:38:52 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.42 2004/01/26 18:00:01 dterrell Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
