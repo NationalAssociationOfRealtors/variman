@@ -144,6 +144,11 @@ public class ValidationExternal implements Serializable
         mValidationExternalTypes = validationExternalTypes;
     }
 
+    public String getPath()
+    {
+        return mResourceid.getPath() + ":" + mValidationExternalName;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
