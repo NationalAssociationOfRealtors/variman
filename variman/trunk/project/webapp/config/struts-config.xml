@@ -10,11 +10,11 @@
                type="org.realtors.rets.server.webapp.cct.RegistrationForm"/>
   </form-beans>
 
-  <global-excpetions>
+  <global-exceptions>
     <exception type="java.lang.Exception"
                key="general.exception"
                path="/some/jsp/file"/>
-  </global-excpetions>
+  </global-exceptions>
 
   <global-forwards>
     <forward name="registration" path="/registration.jsp"/>
