@@ -9,11 +9,15 @@
 package org.realtors.rets.server;
 
 import java.util.List;
+import java.util.Set;
+import java.util.Collection;
+import java.util.SortedSet;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.LockMode;
+import net.sf.hibernate.Hibernate;
 
 import org.apache.log4j.Logger;
 
@@ -90,6 +94,40 @@ public class UserUtils
         {
             helper.rollback(LOG);
             throw e;
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+    }
+
+    public static SortedSet getGroups(User user) throws HibernateException
+    {
+        SessionHelper helper = RetsServer.createSessionHelper();
+        try
+        {
+            Session session = helper.beginSession();
+            session.lock(user, LockMode.NONE);
+            SortedSet groups = user.getGroups();
+            Hibernate.initialize(groups);
+            return groups;
+        }
+        finally
+        {
+            helper.close(LOG);
+        }
+    }
+
+    public static void updateGroups(User user, SortedSet groups)
+        throws HibernateException
+    {
+        SessionHelper helper = RetsServer.createSessionHelper();
+        try
+        {
+            helper.beginTransaction();
+            user.setGroups(groups);
+            HibernateUtils.update(user);
+            helper.commit();
         }
         finally
         {
