@@ -8,18 +8,15 @@
 
 package org.realtors.rets.server.admin;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import net.sf.hibernate.HibernateException;
 
 import org.realtors.rets.server.HibernateUtils;
 import org.realtors.rets.server.User;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.wxwindows.wx;
+import org.wxwindows.wxJUtil;
 
 public class EditUserCommand extends wx
 {
@@ -50,19 +47,11 @@ public class EditUserCommand extends wx
         catch (HibernateException e)
         {
             LOG.error("Caught exception", e);
-            StringWriter stackTraceWriter = new StringWriter();
-            e.printStackTrace(new PrintWriter(stackTraceWriter));
-            String stackTrace = stackTraceWriter.toString();
-            stackTrace = StringUtils.replace(stackTrace, "\t", "    ");
-            wxLogMessage(stackTrace);
-            wxLogError("Could not change user.");
+            wxJUtil.logError("Could not edit user", e);
         }
         finally
         {
-            if (dialog != null)
-            {
-                dialog.Destroy();
-            }
+            Destroy(dialog);
         }
     }
 
