@@ -44,15 +44,16 @@
     </ul>
 
     <para>
-      The current version is 2.1.3.  View the complete <a
-      href="NEWS">version history</a>.
+      The current version is <b><?php print_ver()?></b>.  View the
+      complete <a href="NEWS">version history</a>.
     </para>
 
     <h3>News</h3>
     <ul>
-      <li>
-        <b>14 Jan 2005</b>: Version 2.1.3 released.
-      </li>
+      <li> <b>21 Jan 2005</b>: Version 2.1.4 released. </li>
+    </ul>
+    <ul>
+      <li> <b>14 Jan 2005</b>: Version 2.1.3 released. </li>
     </ul>
     <ul>
       <li>

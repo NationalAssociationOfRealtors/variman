@@ -2,16 +2,6 @@
       $tmpl_location = "Downloads";
       include("../header.php");
 
-function ver()
-{
-    return "2.1.3";
-}
-
-function print_ver()
-{
-    echo ver();
-}
-
 function dl_file($file)
 {
     $url = $GLOBALS["ROOT"] . "/files/" . $file;

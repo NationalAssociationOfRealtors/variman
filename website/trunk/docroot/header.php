@@ -46,6 +46,16 @@ function enav($name)
     }
 }
 
+function ver()
+{
+    return "2.1.4";
+}
+
+function print_ver()
+{
+    echo ver();
+}
+
 ?> -->
 <html>
   <head>
