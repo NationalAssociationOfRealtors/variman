@@ -8,6 +8,9 @@
 
 package org.realtors.rets.server.admin.metadata;
 
+import java.util.List;
+import java.util.Collections;
+
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxChoice;
@@ -19,6 +22,10 @@ import org.realtors.rets.server.metadata.DataTypeEnum;
 import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.AlignmentEnum;
 import org.realtors.rets.server.metadata.UnitEnum;
+import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.Lookup;
+import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.EditMask;
 
 public class TablePanel extends AbstractSubPanel
 {
@@ -91,10 +98,10 @@ public class TablePanel extends AbstractSubPanel
 
         // Todo: TablePanel.TablePanel EditMasks
 
-        mLookup = new wxTextCtrl(this, -1);
+        mLookup = new wxChoice(this, -1);
         grid.addRow("Lookup:", mLookup, wxEXPAND);
 
-        mSearchHelp = new wxTextCtrl(this, -1);
+        mSearchHelp = new wxChoice(this, -1);
         grid.addRow("Search Help:", mSearchHelp, wxEXPAND);
     }
 
@@ -160,6 +167,10 @@ public class TablePanel extends AbstractSubPanel
 
     public void setModel(Table table)
     {
+        String path = table.getMClass().getResource().getPath();
+        findLookups(path);
+        findSeachHelps(path);
+
         setValue(mSystemName, table.getSystemName());
         setValue(mStandardName, table.getStandardName());
         setValue(mLongName, table.getLongName());
@@ -182,6 +193,69 @@ public class TablePanel extends AbstractSubPanel
         setValue(mSearchHelp,  table.getSearchHelp());
     }
 
+    private void findLookups(String path)
+    {
+        mLookups = mManager.find(Lookup.TABLE, path);
+        mLookup.Clear();
+        mLookup.Append("<none>");
+        for (int i = 0; i < mLookups.size(); i++)
+        {
+            Lookup lookup = (Lookup) mLookups.get(i);
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(lookup.getVisibleName());
+            buffer.append(" (").append(lookup.getLookupName()).append(")");
+            mLookup.Append(buffer.toString(), lookup);
+        }
+    }
+
+    private void findSeachHelps(String path)
+    {
+        mSearchHelps = mManager.find(SearchHelp.TABLE, path);
+        mSearchHelp.Clear();
+        mSearchHelp.Append("<none>");
+        for (int i = 0; i < mSearchHelps.size(); i++)
+        {
+            SearchHelp searchHelp = (SearchHelp) mSearchHelps.get(i);
+            mSearchHelp.Append(searchHelp.getSearchHelpID(), searchHelp);
+        }
+    }
+
+    private void findEditMasks(String path)
+    {
+        mEditMasks = mManager.find(EditMask.TABLE, path);
+    }
+
+    private void setValue(wxChoice choice, Lookup lookup)
+    {
+        int index = mLookups.indexOf(lookup);
+        if (index == -1)
+        {
+            choice.SetSelection(0);
+        }
+        else
+        {
+            choice.SetSelection(index + 1);
+        }
+    }
+
+    private void setValue(wxChoice choice, SearchHelp searchHelp)
+    {
+        int index = mSearchHelps.indexOf(searchHelp);
+        if (index == -1)
+        {
+            choice.SetSelection(0);
+        }
+        else
+        {
+            choice.SetSelection(index + 1);
+        }
+    }
+
+    public void setManager(MetadataManager manager)
+    {
+        mManager = manager;
+    }
+
     private wxTextCtrl mSystemName;
     private wxTextCtrl mStandardName;
     private wxTextCtrl mLongName;
@@ -202,6 +276,10 @@ public class TablePanel extends AbstractSubPanel
     private wxTextCtrl mDefault;
     private wxTextCtrl mRequired;
     private BooleanChoice mUnique;
-    private wxTextCtrl mLookup;
-    private wxTextCtrl mSearchHelp;
+    private wxChoice mLookup;
+    private wxChoice mSearchHelp;
+    private MetadataManager mManager;
+    private List mLookups;
+    private List mSearchHelps;
+    private List mEditMasks;
 }
