@@ -8,11 +8,12 @@
 
 package org.realtors.rets.server;
 
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Session;
 import net.sf.hibernate.HibernateException;
-import org.realtors.rets.server.protocol.TableGroupFilter;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.SessionFactory;
+import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
+import org.realtors.rets.server.protocol.TableGroupFilter;
 
 public class RetsServer
 {
@@ -61,7 +62,19 @@ public class RetsServer
         return sConditionRuleSet;
     }
 
+    public static void setSecurityConstraints(
+        SecurityConstraints securityConstraints)
+    {
+        sSecurityConstraints = securityConstraints;
+    }
+
+    public static SecurityConstraints getSecurityConstraints()
+    {
+        return sSecurityConstraints;
+    }
+
     private static SessionFactory sSessions;
     private static TableGroupFilter sTableGroupFilter;
     private static ConditionRuleSet sConditionRuleSet;
+    private static SecurityConstraints sSecurityConstraints;
 }

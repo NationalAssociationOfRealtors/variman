@@ -193,6 +193,8 @@ public class InitServlet extends RetsServlet
                 mRetsConfig.getGetObjectPattern("pictures/%k-%i.jpg");
             WebApp.setGetObjectPattern(getObjectPattern);
             LOG.debug("GetObject pattern: " + getObjectPattern);
+            RetsServer.setSecurityConstraints(
+                mRetsConfig.getSecurityConstraints());
         }
         catch (IOException e)
         {
