@@ -400,6 +400,10 @@ options
         return list;
     }
 
+    private String fieldToColumn(String field) {
+        return mMetadata.fieldToColumn(field);
+    }
+
     private boolean mTrace = false;
     private DmqlParserMetadata mMetadata;
 }
@@ -472,17 +476,18 @@ range_list returns [OrClause or]
     ;
 
 range [String field] returns [SqlConverter sql]
-    { sql = null; SqlConverter c1; SqlConverter c2;}
+    { sql = null; SqlConverter c1; SqlConverter c2;
+      String column = fieldToColumn(field); }
     : #(BETWEEN c1=range_component c2=range_component)
-        {sql = new BetweenClause(field, c1, c2);}
-    | #(LESS c1=range_component)
-    | #(GREATER c1=range_component)
+                                    {sql = new BetweenClause(column, c1, c2);}
+    | #(LESS c1=range_component)    {sql = new LessThanClause(column, c1);}
+    | #(GREATER c1=range_component) {sql = new GreaterThanClause(column, c1);}
     ;
 
 range_component returns [SqlConverter sql]
     : p:period  {sql = new StringSqlConverter(p.getText());}
     | n:NUMBER  {sql = new StringSqlConverter(n.getText());}
-    | TEXT      {sql = null;}
+    | t:TEXT    {sql = new QuotedSqlConverter(t.getText());}
     ;
 
 period
