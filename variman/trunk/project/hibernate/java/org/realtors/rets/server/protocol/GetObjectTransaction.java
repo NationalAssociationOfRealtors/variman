@@ -27,9 +27,24 @@ import org.realtors.rets.server.RetsServerException;
 
 public class GetObjectTransaction
 {
+    public GetObjectTransaction(String resource, String type)
+    {
+        mParameters = null;
+        mResource = resource;
+        mType = type;
+        init();
+    }
+
     public GetObjectTransaction(GetObjectParameters parameters)
     {
         mParameters = parameters;
+        mResource = mParameters.getResource();
+        mType = mParameters.getType();
+        init();
+    }
+
+    private void init()
+    {
         mBoundaryGenerator = DEFAULT_BOUNDARY_GENERATOR;
         mBaseLocationUrl = "http://images.invalid/";
         mBlockLocation = false;
@@ -149,24 +164,6 @@ public class GetObjectTransaction
         out.close();
     }
 
-    public String getContentType(String file)
-    {
-        if (file.endsWith(".gif"))
-        {
-            return "image/gif";
-        }
-        else if (file.endsWith(".jpg"))
-        {
-            return "image/jpeg";
-        }
-        else
-        {
-            // Todo: Throw an HTTP exception?
-            LOG.warn("Unknown file type: " + file);
-            return "";
-        }
-    }
-
     private boolean useLocation()
     {
         return (!mBlockLocation) && mParameters.getUseLocation();
@@ -176,39 +173,18 @@ public class GetObjectTransaction
     {
         StringBuffer location = new StringBuffer();
         location.append(mBaseLocationUrl);
-        location.append(mParameters.getResource()).append("/");
-        location.append(mParameters.getType()).append("/");
+        location.append(mResource).append("/");
+        location.append(mType).append("/");
         location.append(objectDescriptor.getObjectKey()).append("/");
         location.append(objectDescriptor.getObjectId());
         return location.toString();
     }
 
-    public List /* File */ findAllFileObjects()
-    {
-        try
-        {
-            List allFiles = findAllObjectDescriptors();
-            List fileObjects = new ArrayList(allFiles.size());
-            for (int i = 0; i < allFiles.size(); i++)
-            {
-                FileDescriptor descriptor = (FileDescriptor) allFiles.get(i);
-                fileObjects.add(descriptor.file);
-            }
-            return fileObjects;
-        }
-        catch (RetsServerException e)
-        {
-            LOG.error("Caught", e);
-        }
-        return new ArrayList();
-    }
-
-    public List /* ObjectDescriptor */ findAllObjectDescriptors()
+    private List /* ObjectDescriptor */ findAllObjectDescriptors()
         throws RetsServerException
     {
         List objects = new ArrayList();
         int numberOfResources = mParameters.numberOfResources();
-        String type = mParameters.getType();
         for (int i = 0; i < numberOfResources; i++)
         {
             String resourceEntity = mParameters.getResourceEntity(i);
@@ -219,13 +195,13 @@ public class GetObjectTransaction
                 String objectIdString = (String) objectIdList.get(j);
                 if (objectIdString.equals("*"))
                 {
-                    objects.addAll(objectSet.findAllObjects(type));
+                    objects.addAll(objectSet.findAllObjects(mType));
                 }
                 else
                 {
                     int objectId = NumberUtils.stringToInt(objectIdString);
                     ObjectDescriptor object =
-                        objectSet.findObject(type, objectId);
+                        objectSet.findObject(mType, objectId);
                     if (object != null)
                     {
                         objects.add(object);
@@ -234,6 +210,14 @@ public class GetObjectTransaction
             }
         }
         return objects;
+    }
+    
+    public ObjectDescriptor findObjectDescriptor(String resourceEntity,
+                                                 int objectId)
+        throws RetsServerException
+    {
+        ObjectSet objectSet = getObjectSet(resourceEntity);
+        return objectSet.findObject(mType, objectId);
     }
 
     private ObjectSet getObjectSet(String resourceEntity)
@@ -274,20 +258,6 @@ public class GetObjectTransaction
         mObjectSetPattern = objectSetPattern;
     }
 
-    private static class FileDescriptor
-    {
-        public FileDescriptor(String objectKey, int objectId, File file)
-        {
-            this.objectKey = objectKey;
-            this.objectId = objectId;
-            this.file = file;
-        }
-
-        public String objectKey;
-        public int objectId;
-        public File file;
-    }
-
     private static class BoundaryGenerator implements MultipartBoundaryGenerator
     {
         public String generateBoundary()
@@ -308,4 +278,6 @@ public class GetObjectTransaction
     private boolean mBlockLocation;
     private String mImagePattern;
     private String mObjectSetPattern;
+    private String mResource;
+    private String mType;
 }
