@@ -17,7 +17,7 @@
       </field>
       <field property="password" depends="required,minlength,identical">
         <arg0 key="registration.field.password"/>
-        <arg1 name="minlength" key="{$var:minlength}" resource="false"/>
+        <arg1 name="minlength" key="${var:minlength}" resource="false"/>
         <var>
           <var-name>secondProperty</var-name>
           <var-value>verifyPassword</var-value>
@@ -28,19 +28,19 @@
         </var>
       </field>
       <field property="productName" depends="required">
-        <arg0 key="registration.field.productname"/>
+        <arg0 key="registration.field.productName"/>
       </field>
       <field property="productVersion" depends="required">
-        <arg0 key="registration.field.productversion"/>
+        <arg0 key="registration.field.productVersion"/>
       </field>
       <field property="company" depends="required">
         <arg0 key="registration.field.company"/>
       </field>
       <field property="email" depends="required,email">
-        <arg0 key="registration.field.e-mail"/>
+        <arg0 key="registration.field.email"/>
       </field>
       <field property="agentId" depends="required">
-        <arg0 key="registration.field.agentid"/>
+        <arg0 key="registration.field.agentId"/>
       </field>
       <field property="firstName" depends="required">
         <arg0 key="registration.field.firstName"/>
