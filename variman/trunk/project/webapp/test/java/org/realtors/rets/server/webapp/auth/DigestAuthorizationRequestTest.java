@@ -161,4 +161,38 @@ public class DigestAuthorizationRequestTest extends TestCase
         request.setResponse("16620f100bad0abee21864791b2ff1e5");
         assertFalse(request.verifyResponse(null));
     }
+
+    public void testNoQop()
+    {
+        DigestAuthorizationRequest request = new DigestAuthorizationRequest();
+        request.setUsername("Joe");
+        request.setRealm("RETS Server");
+        request.setMethod("GET");
+        request.setUri("/rets/login");
+        request.setNonce("e19ef455409e9663b384d837453c74fd");
+        request.setResponse("ddd25f230a426925b4a467e186718094");
+        assertTrue(request.verifyResponse("Schmoe"));
+    }
+
+    public void testCurlHeader()
+    {
+        DigestAuthorizationRequest request = new DigestAuthorizationRequest(
+            "Digest username=\"Joe\", realm=\"RETS Server\", " +
+            "nonce=\"e19ef455409e9663b384d837453c74fd\", " +
+            "uri=\"/rets/login\", " +
+            "response=\"ddd25f230a426925b4a467e186718094\"");
+        assertEquals("Joe", request.getUsername());
+        assertEquals("RETS Server", request.getRealm());
+        assertEquals("e19ef455409e9663b384d837453c74fd", request.getNonce());
+        assertEquals("/rets/login", request.getUri());
+        assertNull(request.getQop());
+        assertEquals("HashUtils", request.getAlgorithm());
+        assertEquals("", request.getNonceCount());
+        assertEquals("", request.getCnonce());
+        assertEquals("ddd25f230a426925b4a467e186718094", request.getResponse());
+        assertEquals("", request.getOpaque());
+
+        request.setMethod("GET");
+        assertTrue(request.verifyResponse("Schmoe"));
+    }
 }
