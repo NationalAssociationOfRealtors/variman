@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: ForeignKey.hbm.xml,v 1.1 2003/06/03 20:24:34 kgarner Exp $ -->
+
+<hibernate-mapping>
+
+  <class name="org.nar.rets.metadata.newdb.MetadataForeignKey"
+    table="rets_metadata_foreignkey">
+
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="foreignKeyID" type="string">
+      <column name="foreign_key_id" length="32" not-null="true" unique="true"
+        index="rets_metadata_foreignkey_id_index"/>
+    </property>
+
+    <many-to-one name="parentResource" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+
+    <many-to-one name="parentClass" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataClass"/>
+
+    <many-to-one name="parentTable" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataTable"/>
+
+    <many-to-one name="childResource" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataResource"/>
+
+    <many-to-one name="childClass" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataClass"/>
+
+    <many-to-one name="childTable" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataTable"/>
+
+  </class>
+</hibernate-mapping>
