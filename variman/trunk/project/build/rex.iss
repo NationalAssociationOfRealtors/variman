@@ -125,7 +125,7 @@ end;
 function InstallServiceParams(Default: String): String;
 begin
   Result := '-install "' + ServiceName + '" "' + JavaJvmDll +
-    '" "-Djava.class.path={app}\rets-server.jar" ' +
+    '" "-Djava.class.path={app}\rex.jar" ' +
     '-start org.realtors.rets.server.tomcat.EmbeddedTomcat ' +
     '-params start -out "{app}\logs\stdout.log" -err "{app}\logs\stderr.log" ' +
     '-current "{app}"';
