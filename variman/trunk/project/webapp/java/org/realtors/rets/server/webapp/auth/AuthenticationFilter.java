@@ -12,9 +12,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.realtors.rets.server.User;
 import org.realtors.rets.server.PasswordMethod;
+import org.realtors.rets.server.User;
 import org.apache.log4j.Logger;
 
 /**
@@ -91,7 +92,7 @@ public class AuthenticationFilter implements Filter, UserMap
         DigestAuthorizationRequest authorizationRequest =
             new DigestAuthorizationRequest(authorizationHeader);
         authorizationRequest.setMethod(request.getMethod());
-        if (verifyResponse(authorizationRequest))
+        if (verifyResponse(authorizationRequest, request.getSession()))
         {
             LOG.debug("Digest auth succeeded");
             filterChain.doFilter(servletRequest, servletResponse);
@@ -103,15 +104,35 @@ public class AuthenticationFilter implements Filter, UserMap
         }
     }
 
-    private boolean verifyResponse(DigestAuthorizationRequest request)
+    private boolean verifyResponse(DigestAuthorizationRequest request,
+                                   HttpSession session)
     {
-        User user = mUserMap.findUser(request.getUsername());
-        if (user == null)
+        User athorizedUser = findAuthorizedUser(request);
+        if (athorizedUser != null)
         {
+            session.setAttribute(AUTHORIZED_USER_KEY, athorizedUser);
+            return true;
+        }
+        else
+        {
+            session.removeAttribute(AUTHORIZED_USER_KEY);
             return false;
         }
-        boolean passwordIsA1 = user.isPasswordMethod(PasswordMethod.DIGEST_A1);
-        return request.verifyResponse(user.getPassword(), passwordIsA1);
+    }
+
+    private User findAuthorizedUser(DigestAuthorizationRequest request)
+    {
+        User user = mUserMap.findUser(request.getUsername());
+        if (user != null)
+        {
+            boolean passwordIsA1 =
+                user.isPasswordMethod(PasswordMethod.DIGEST_A1);
+            if (!request.verifyResponse(user.getPassword(), passwordIsA1))
+            {
+                user = null;
+            }
+        }
+        return user;
     }
 
     public User findUser(String username)
@@ -150,5 +171,6 @@ public class AuthenticationFilter implements Filter, UserMap
 
     private static final Logger LOG =
         Logger.getLogger(AuthenticationFilter.class);
+    public static final String AUTHORIZED_USER_KEY = "authorized_user";
     private UserMap mUserMap;
 }
