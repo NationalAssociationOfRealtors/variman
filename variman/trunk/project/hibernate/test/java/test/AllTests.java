@@ -47,6 +47,10 @@ public class AllTests
             // Rip off trailing ".class"
             className = className.substring(
                 0, className.length() - ".class".length());
+            if (!className.endsWith("Test"))
+            {
+                continue;
+            }
             className = appendPackage(pkg, className);
             try
             {
