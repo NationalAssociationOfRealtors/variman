@@ -15,27 +15,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Properties;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
-import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.Util;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.Util;
 
 public class RetsConfig
 {
@@ -281,7 +280,7 @@ public class RetsConfig
     {
         if (element == null)
         {
-            config.setSecurityConstraints(Collections.EMPTY_LIST);
+            config.setSecurityConstraints(new ArrayList());
             return;
         }
         List securityConstraints = new ArrayList();
