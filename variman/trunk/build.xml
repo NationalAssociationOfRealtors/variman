@@ -49,6 +49,8 @@
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
     <pathelement location="build/embedded/classes"/>
+    <pathelement path="${hibernate.jar}"/>
+    <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
   </path>
 
   <path id="xdoclet.path">
@@ -156,6 +158,21 @@
         <include name="**/*.hbm.xml"/>
       </fileset>
     </schemaexport>
+  </target>
+
+  <target name="hibernate-run">
+    <copy todir="build/hibernate/jar"
+          file="project/hibernate/config/hibernate.properties"/>
+    <java classname="org.realtors.rets.server.Admin"
+          fork="true">
+      <classpath>
+        <path refid="hibernate.path" />
+        <pathelement location="build/hibernate/jar/retsdb2-hibernate.jar"/>
+        <pathelement location="build/hibernate/jar"/>
+        <pathelement location="${hibernate.jdbc.jar}"/>
+        <fileset dir="${hibernate.lib}" includes="*.jar"/>
+      </classpath>
+    </java>
   </target>
 
   <target name="build-hibernate-old" depends="build-generated-code,build-xml">
@@ -314,8 +331,17 @@
           todir="build/rets-server/conf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/classes"
+          file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/classes"
+          file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${commons-lang.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib">
+      <fileset dir="${hibernate.lib}" includes="*.jar"/>
+    </copy>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${hibernate.jdbc.jar}"/>
   </target>
 
   <target name="build-importer" depends="build-hibernate"

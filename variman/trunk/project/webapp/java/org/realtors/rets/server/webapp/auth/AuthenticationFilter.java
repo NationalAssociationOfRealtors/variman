@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  * @web.filter name="authentication-filter"
  *   description="Performs digest authentication"
  * @web.filter-init-param name="password-map"
- *   value="org.realtors.rets.server.webapp.auth.AuthenticationFilter"
+ *   value="org.realtors.rets.server.webapp.auth.HibernatePasswordMap"
  */
 public class AuthenticationFilter implements Filter, PasswordMap
 {

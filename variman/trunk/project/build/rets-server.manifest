@@ -14,3 +14,4 @@ Class-Path: bootstrap.jar
   servlets-common.jar
   servlets-default.jar
   log4j.jar
+  hibernate2.jar
