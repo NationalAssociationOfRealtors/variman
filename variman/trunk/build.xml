@@ -117,11 +117,11 @@
       </classpath>
     </taskdef>
     <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="true"
-                     mergedir="project/hibernate/merge">
-      <fileset dir="project/hibernate/javax" includes="**/*.java"/>
+                     mergedir="project/hibernate/java">
+      <fileset dir="project/hibernate/java" includes="**/*.java"/>
       <hibernate version="2.0"/>
     </hibernatedoclet>
-    <javac srcdir="project/hibernate/javax"
+    <javac srcdir="project/hibernate/java"
            destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
