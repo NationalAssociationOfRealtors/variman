@@ -43,7 +43,7 @@ public class InitServlet extends RetsServlet
         initLog4J();
         try
         {
-            LOG.debug("Running init servlet");
+            LOG.info("Running init servlet");
             WebApp.setServletContext(getServletContext());
             PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
                                             PasswordMethod.RETS_REALM);
