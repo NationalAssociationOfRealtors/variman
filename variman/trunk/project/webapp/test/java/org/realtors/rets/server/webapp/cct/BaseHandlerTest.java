@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 
 import org.realtors.rets.server.cct.ValidationResult;
 
+import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.InvocationContext;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
@@ -194,6 +195,21 @@ public class BaseHandlerTest extends LocalTestCase
         ValidationResult result = mTest.validate();
         assertTrue(result.wasSuccessful());
         assertEquals("", result.getMessage());
+    }
+
+    public void testNotRetsVersion() throws IOException, SAXException
+    {
+        mClient.setHeaderField("RETS-Version", null);
+        WebResponse response = mClient.getResponse(TEST_URL);
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
+
+        mClient.setHeaderField("RETS-Version", "RETS/1.0");
+        response = mClient.getResponse(TEST_URL);
+        assertEquals("RETS/1.0", response.getHeaderField("RETS-Version"));
+
+        mClient.setHeaderField("RETS-Version", "RETS/1.5");
+        response = mClient.getResponse(TEST_URL);
+        assertEquals("RETS/1.5", response.getHeaderField("RETS-Version"));
     }
 
     public static final String TEST_URL = "http://localhost/test";
