@@ -5,17 +5,30 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.log4j.Logger;
 
-import org.realtors.rets.client.Metadata;
-import org.realtors.rets.client.MetadataTable;
-import org.realtors.rets.client.RetsException;
+import org.realtors.rets.common.metadata.JDomCompactBuilder;
+import org.realtors.rets.common.metadata.Metadata;
+import org.realtors.rets.common.metadata.MetadataException;
+import org.realtors.rets.common.metadata.types.MEditMask;
+import org.realtors.rets.common.metadata.types.MForeignKey;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdate;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
+import org.realtors.rets.common.metadata.types.MUpdateType;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 import org.realtors.rets.server.metadata.AlignmentEnum;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
@@ -44,850 +57,46 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.xml.sax.InputSource;
 
 
 /**
  * Helper method to load Metadata from a file.
- * 
+ *
  * @author kgarner
  */
-public class MetadataLoader extends MetadataHelpers
+public class MetadataLoader
 {
     /**
      * Creates a new <code>MetadataImporter</code> instance.
      *
      */
     public MetadataLoader()
-        throws RetsException
     {
-        super();
+        mResources = new HashMap();
+        mClasses = new HashMap();
+        mEditMasks = new HashMap();
+        mTables = new HashMap();
+        mLookups = new HashMap();
+        mSearchHelps = new HashMap();
+        mValidationExternals = new HashMap();
+        mValidationExpressions = new HashMap();
+        mValidationLookups = new HashMap();
+        mUpdates = new HashMap();
+        mUpdateHelps = new HashMap();
+        mTableStandardNames = new HashMap();
     }
 
-    private boolean boolValue(String bString)
+    protected void save(Object object)
     {
-        return bString.equalsIgnoreCase("true") || 
-               bString.equalsIgnoreCase("1");
-    }
-
-    private void doClasses()
-    {
-        MetadataTable tClass = mMetadataTables.getTable(MetadataTable.CLASS);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hClasses = new HashSet();
-            List classes = tClass.getDataRows(resource.getPath());
-            Iterator j = classes.iterator();
-            while (j.hasNext())
-            {
-                Metadata md = (Metadata) j.next();
-                MClass hClass = new MClass();
-
-                hClass.setResource(resource);
-                String className = md.getAttribute("ClassName");
-                hClass.setClassName(className);
-                hClass.setStandardName(ClassStandardNameEnum.fromString(
-                                           md.getAttribute("StandardName")));
-                hClass.setVisibleName(md.getAttribute("VisibleName"));
-                hClass.setDescription(md.getAttribute("Description"));
-                
-                StringBuffer tmp = new StringBuffer("rets_");
-                tmp.append(resource.getResourceID()).append("_");
-                tmp.append(hClass.getClassName());
-                hClass.setDbTable(tmp.toString());
-
-                hClass.updateLevel();
-
-                hClasses.add(hClass);
-                mClasses.put(hClass.getPath(), hClass);
-            }
-
-            resource.setClasses(hClasses);
-        }
-    }
-
-    private void doEditMask()
-    {
-        MetadataTable tEditMask =
-            mMetadataTables.getTable(MetadataTable.EDITMASK);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hEditMasks = new HashSet();
-            List editMasks = tEditMask.getDataRows(resource.getPath());
-            if (editMasks != null)
-            {
-                Iterator j = editMasks.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    EditMask hEditMask = new EditMask();
-
-                    hEditMask.setResource(resource);
-                    hEditMask.setEditMaskID(md.getAttribute("EditMaskID"));
-                    hEditMask.setValue(md.getAttribute("Value"));
-
-                    hEditMask.updateLevel();
-
-                    hEditMasks.add(hEditMask);
-                    mEditMasks.put(hEditMask.getPath(), hEditMask);
-                }
-            }
-            resource.setEditMasks(hEditMasks);
-        }
-    }
-
-    private void doForeignKey(MSystem hSystem)
-    {
-        MetadataTable tForeignKeys =
-            mMetadataTables.getTable(MetadataTable.FOREIGN_KEYS);
-
-        Set hForeignKeys = new HashSet();
-        List foreignKeys = tForeignKeys.getDataRows("");
-        if (foreignKeys != null)
-        {
-            Iterator i = foreignKeys.iterator();
-            while (i.hasNext())
-            {
-                Metadata md = (Metadata) i.next();
-                ForeignKey hFk = new ForeignKey();
-
-                hFk.setSystem(hSystem);
-
-                hFk.setForeignKeyID(md.getAttribute("ForeignKeyID"));
-                String path[] = new String[3];
-                path[0] = md.getAttribute("ParentResourceID");
-                path[1] = md.getAttribute("ParentClassID");
-                path[2] = md.getAttribute("ParentSystemName");
-                String tablePath = StringUtils.join(path, ":");
-                Table table = (Table) mTables.get(tablePath);
-                hFk.setParentTable(table);
-
-                path[0] = md.getAttribute("ChildResourceID");
-                path[1] = md.getAttribute("ChildClassID");
-                path[2] = md.getAttribute("ChildSystemName");
-                tablePath = StringUtils.join(path, ":");
-                table = (Table) mTables.get(tablePath);
-                hFk.setChildTable(table);
-                if (table == null)
-                {
-                    LOG.error("table is null for path: " + tablePath);
-                }
-
-                hForeignKeys.add(hFk);
-            }
-        }
-        hSystem.setForeignKeys(hForeignKeys);
-    }
-
-    private void doLookup()
-    {
-        MetadataTable tLookup =
-            mMetadataTables.getTable(MetadataTable.LOOKUP);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hLookups = new HashSet();
-            List lookups = tLookup.getDataRows(resource.getPath());
-            if (lookups != null)
-            {
-                Iterator j = lookups.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    Lookup hLookup = new Lookup();
-
-                    hLookup.setResource(resource);
-
-                    String lookupName = md.getAttribute("LookupName");
-                    hLookup.setLookupName(lookupName);
-
-                    hLookup.setVisibleName(md.getAttribute("VisibleName"));
-
-                    hLookup.updateLevel();
-                    hLookups.add(hLookup);
-                    mLookups.put(hLookup.getPath(), hLookup);
-                }
-            }
-            resource.setLookups(hLookups);
-        }
-    }
-
-    /**
-     * Meant to be called only from do Lookup.
-     */
-    private void doLookupTypes()
-    {
-        MetadataTable tLookupTypes =
-            mMetadataTables.getTable(MetadataTable.LOOKUP_TYPE);
-
-        Iterator i = mLookups.values().iterator();
-        while (i.hasNext())
-        {
-            Lookup lookup = (Lookup) i.next();
-            List lookupTypes = tLookupTypes.getDataRows(lookup.getPath());
-            Set hLookupTypes = new HashSet();
-            if (lookupTypes != null)
-            {
-                Iterator j = lookupTypes.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    LookupType hLookupType = new LookupType();
-
-                    hLookupType.setLookup(lookup);
-
-                    hLookupType.setLongValue(md.getAttribute("LongValue"));
-                    hLookupType.setShortValue(md.getAttribute("ShortValue"));
-                    hLookupType.setValue(md.getAttribute("Value"));
-
-                    hLookupType.updateLevel();
-
-                    hLookupTypes.add(hLookupType);
-                }
-            }
-            lookup.setLookupTypes(hLookupTypes);
-        }
-    }
-
-    private void doObjects()
-    {
-        MetadataTable tObject =
-            mMetadataTables.getTable(MetadataTable.OBJECT);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hObjects = new HashSet();
-            List objects = tObject.getDataRows(resource.getPath());
-            if (objects != null)
-            {
-                Iterator j = objects.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    MObject hObject = new MObject();
-
-                    hObject.setResource(resource);
-
-                    hObject.setObjectType(ObjectTypeEnum.fromString(
-                                              md.getAttribute("ObjectType")));
-                    hObject.setMimeType(md.getAttribute("MimeType"));
-                    hObject.setVisibleName(md.getAttribute("VisibleName"));
-                    hObject.setDescription(
-                        StringUtils.substring(
-                            md.getAttribute("Description"), 0, 64));
-
-                    hObjects.add(hObject);
-                }
-            }
-
-            resource.setObjects(hObjects);
-        }
-    }
-
-    private void doResource(MSystem hSystem)
-    {
-        MetadataTable tResource =
-            mMetadataTables.getTable(MetadataTable.RESOURCE);
-
-        Set hResources = new HashSet();
-        List resources = tResource.getDataRows("");
-        Iterator i = resources.iterator();
-        while (i.hasNext())
-        {
-            Metadata md = (Metadata) i.next();
-            Resource hResource = new Resource();
-
-            hResource.setSystem(hSystem);
-            String resourceID = md.getAttribute("ResourceID");
-            hResource.setResourceID(resourceID);
-            hResource.setStandardName(ResourceStandardNameEnum.fromString(
-                                          md.getAttribute("StandardName")));
-            hResource.setVisibleName(md.getAttribute("VisibleName"));
-            hResource.setDescription(md.getAttribute("Description"));
-            hResource.setKeyField(md.getAttribute("KeyField"));
-
-            hResource.updateLevel();
-
-            hResources.add(hResource);
-            mResources.put(hResource.getPath(), hResource);
-        }
-
-        hSystem.setResources(hResources);
-    }
-
-    private void doSearchHelp()
-    {
-        MetadataTable tSearchHelp =
-            mMetadataTables.getTable(MetadataTable.SEARCH_HELP);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hSearchHelps = new HashSet();
-            List searchHelps =
-                tSearchHelp.getDataRows(resource.getPath());
-            if (searchHelps != null)
-            {
-                Iterator j = searchHelps.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    SearchHelp hSearchHelp = new SearchHelp();
-
-                    hSearchHelp.setResource(resource);
-                    hSearchHelp.setSearchHelpID(
-                        md.getAttribute("SearchHelpID"));
-                    hSearchHelp.setValue(md.getAttribute("Value"));
-
-                    hSearchHelp.updateLevel();
-
-                    hSearchHelps.add(hSearchHelp);
-                    mSearchHelps.put(hSearchHelp.getPath(), hSearchHelp);
-                }
-            }
-
-            resource.setSearchHelps(hSearchHelps);
-        }
-    }
-
-    private MSystem doSystem()
-    {
-        MSystem hSystem = new MSystem();
-        hSystem.setVersion(101001);
-        hSystem.setDate(Calendar.getInstance().getTime());
-        return hSystem;
-    }
-
-    private void doTable()
-    {
-        MetadataTable tTables =
-            mMetadataTables.getTable(MetadataTable.TABLE);
-
-        Iterator i = mClasses.values().iterator();
-        while (i.hasNext())
-        {
-            MClass hClass = (MClass) i.next();
-            Set hTables = new HashSet();
-            List tables = tTables.getDataRows(hClass.getPath());
-            if (tables != null)
-            {
-                Iterator j = tables.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    Table hTable = new Table();
-
-                    hTable.setMClass(hClass);
-
-                    hTable.setSystemName(md.getAttribute("SystemName"));
-
-                    String standardName = md.getAttribute("StandardName");
-                    TableStandardName tsn =
-                        lookupTableStandardName(standardName);
-                    if (tsn == null)
-                    {
-                        if (!standardName.equals(""))
-                        {
-                            tsn = new TableStandardName(standardName);
-                            mTableStandardNames.put(standardName, tsn);
-                        }
-                    }
-                    hTable.setStandardName(tsn);
-
-                    hTable.setLongName(md.getAttribute("LongName"));
-
-                    String tmp = md.getAttribute("DbName");
-                    if (tmp.startsWith("r_"))
-                    {
-                        hTable.setDbName(StringUtils.substring(tmp, 0, 10));
-                    }
-                    else
-                    {
-                        hTable.setDbName(
-                            StringUtils.substring("r_" + tmp, 0, 10));
-                    }                        
-                        
-                    hTable.setShortName(md.getAttribute("ShortName"));
-                    hTable.setMaximumLength(
-                        Integer.parseInt(md.getAttribute("MaximumLength")));
-                    hTable.setDataType(
-                        DataTypeEnum.fromString(md.getAttribute("DataType")));
-                    hTable.setPrecision(
-                        Integer.parseInt(md.getAttribute("Precision")));
-                    hTable.setSearchable(
-                        boolValue(md.getAttribute("Searchable")));
-                    hTable.setInterpretation(
-                        InterpretationEnum.fromString(
-                            md.getAttribute("Interpretation")));
-                    hTable.setAlignment(
-                        AlignmentEnum.fromString(
-                            md.getAttribute("Alignment")));
-                    hTable.setUseSeparator(
-                        boolValue(md.getAttribute("UseSeparator")));
-
-                    String editMasksJoined = md.getAttribute("EditMaskID");
-                    String resourcePath =  hClass.getResource().getPath();
-                    String path = null;
-                    Set hEditMasks = new HashSet();
-                    if (editMasksJoined != null)
-                    {
-                        String editMasks[] =
-                            StringUtils.split(editMasksJoined, ",");
-
-                        for (int c = 0; c < editMasks.length; c++)
-                        {
-                            path = resourcePath + ":" +
-                                StringUtils.trimToEmpty(editMasks[c]);
-                            EditMask em = (EditMask) mEditMasks.get(path);
-                            hEditMasks.add(em);
-                            if (em == null)
-                            {
-                                LOG.error("edit mask null for path: " + path);
-                            }
-                        }
-                    }
-                    hTable.setEditMasks(hEditMasks);
-
-                    String lookupName = md.getAttribute("LookupName");
-                    path = resourcePath + ":" + lookupName;
-                    Lookup lookup = (Lookup) mLookups.get(path);
-                    hTable.setLookup(lookup);
-
-                    hTable.setMaxSelect(
-                        Integer.parseInt(md.getAttribute("MaxSelect")));
-
-                    hTable.setUnits(
-                        UnitEnum.fromString(md.getAttribute("Units")));
-
-                    hTable.setIndex(
-                        Integer.parseInt(md.getAttribute("Index")));
-
-                    hTable.setMinimum(
-                        Integer.parseInt(md.getAttribute("Minimum")));
-
-                    hTable.setMaximum(
-                        Integer.parseInt(md.getAttribute("Maximum")));
-
-                    hTable.setDefault(
-                        Integer.parseInt(md.getAttribute("Default")));
-
-                    hTable.setRequired(
-                        Integer.parseInt(md.getAttribute("Required")));
-
-                    String searchHelpID = md.getAttribute("SearchHelpID");
-                    path = resourcePath + ":" + searchHelpID;
-                    SearchHelp searchHelp =
-                        (SearchHelp) mSearchHelps.get(path);
-                    hTable.setSearchHelp(searchHelp);
-
-                    // String = md.getAttribute("unique");
-                    hTable.setUnique(boolValue(md.getAttribute("Unique")));
-
-                    hTable.updateLevel();
-
-                    hTables.add(hTable);
-                    mTables.put(hTable.getPath(), hTable);
-                }
-                hClass.setTables(hTables);
-            }
-        }
-    }
-
-    private void doUpdate()
-    {
-        MetadataTable tUpdates =
-            mMetadataTables.getTable(MetadataTable.UPDATE);
-
-        Iterator i = mClasses.values().iterator();
-        while (i.hasNext())
-        {
-            MClass clazz = (MClass) i.next();
-            Set hUpdates = new HashSet();
-            List updates = tUpdates.getDataRows(clazz.getPath());
-            if (updates != null)
-            {
-                Iterator j = updates.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    Update hUpdate = new Update();
-
-                    hUpdate.setMClass(clazz);
-
-                    hUpdate.setUpdateName(md.getAttribute("UpdateName"));
-                    hUpdate.setDescription(md.getAttribute("Description"));
-                    hUpdate.setKeyField(md.getAttribute("KeyField"));
-
-                    hUpdate.updateLevel();
-
-                    hUpdates.add(hUpdate);
-                    mUpdates.put(hUpdate.getPath(), hUpdate);
-                }
-            }
-            clazz.setUpdates(hUpdates);
-        }
-    }
-
-    private void doUpdateHelp()
-    {
-        MetadataTable tUpdateHelps =
-            mMetadataTables.getTable(MetadataTable.UPDATE_HELP);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hUpdateHelps = new HashSet();
-            List updateHelps =
-                tUpdateHelps.getDataRows(resource.getPath());
-            if (updateHelps != null)
-            {
-                Iterator j = updateHelps.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    UpdateHelp hUpdateHelp = new UpdateHelp();
-
-                    hUpdateHelp.setResource(resource);
-                    hUpdateHelp.setUpdateHelpID(
-                        md.getAttribute("UpdateHelpID"));
-                    hUpdateHelp.setValue(md.getAttribute("Value"));
-
-                    hUpdateHelp.updateLevel();
-
-                    hUpdateHelps.add(hUpdateHelp);
-                    mUpdateHelps.put(hUpdateHelp.getPath(), hUpdateHelp);
-                }
-            }
-            resource.setUpdateHelps(hUpdateHelps);
-        }
-    }
-
-    private void doUpdateType()
-    {
-        MetadataTable tUpdateTypes =
-            mMetadataTables.getTable(MetadataTable.UPDATE_TYPE);
-
-        Iterator i = mUpdates.values().iterator();
-        while (i.hasNext())
-        {
-            Update update = (Update) i.next();
-            Set hUpdateTypes = new HashSet();
-            List updateTypes = tUpdateTypes.getDataRows(update.getPath());
-            if (updateTypes != null)
-            {
-                Iterator j = updateTypes.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    UpdateType updateType = new UpdateType();
-
-                    updateType.setUpdate(update);
-                    String level = update.getLevel();
-                    String systemName = md.getAttribute("SystemName");
-                    String tablePath = level + ":" + systemName;
-                    Table table = (Table) mTables.get(tablePath);
-                    updateType.setTable(table);
-                    // Hack to get around metadata bug
-                    if (table == null)
-                    {
-                        LOG.error("null table for path: " + tablePath);
-                        System.exit(1);
-                    }
-
-                    updateType.setSequence(
-                        Integer.parseInt(md.getAttribute("Sequence")));
-
-                    String joinedAttributes = md.getAttribute("Attributes");
-                    String attributes[] =
-                        StringUtils.split(joinedAttributes, ",");
-                    Set attributeSet = new HashSet();
-                    for (int c = 0; c < attributes.length; c++)
-                    {
-                        attributeSet.add(UpdateTypeAttributeEnum.fromInt(
-                                             Integer.parseInt(attributes[c])));
-                    }
-                    updateType.setAttributes(attributeSet);
-
-                    updateType.setDefault(md.getAttribute("Default"));
-
-                    String valExp[] = StringUtils.split(
-                        md.getAttribute("ValidationExpressionID"), ",");
-                    Set valExpSet = new HashSet();
-                    String resourcePath =
-                        update.getMClass().getResource().getPath();
-                    for (int c = 0; c < valExp.length; c++)
-                    {
-                        String vePath = resourcePath + ":" + valExp[c];
-                        ValidationExpression ve = (ValidationExpression)
-                            mValidationExpressions.get(vePath);
-                        valExpSet.add(ve);
-                    }
-                    updateType.setValidationExpressions(valExpSet);
-
-                    String updateHelpPath = resourcePath + ":" +
-                        md.getAttribute("UpdateHelpID");
-                    updateType.setUpdateHelp(
-                        (UpdateHelp) mUpdateHelps.get(updateHelpPath));
-
-                    String vlPath = resourcePath + ":" +
-                        md.getAttribute("ValdiationLookupName");
-                    updateType.setValidationLookup(
-                        (ValidationLookup) mValidationLookups.get(vlPath));
-
-                    String vePath = resourcePath + ":" +
-                        md.getAttribute("ValdationExternalName");
-                    updateType.setValidationExternal(
-                        (ValidationExternal) mValidationExternals.get(vePath));
-
-                    hUpdateTypes.add(updateType);
-                }
-            }
-            update.setUpdateTypes(hUpdateTypes);
-        }
-    }
-
-    private void doValidationExpression()
-    {
-        MetadataTable tValidationExpressions =
-            mMetadataTables.getTable(MetadataTable.VALIDATION_EXPRESSION);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hValidationExpressions = new HashSet();
-            List validationExpressions =
-                tValidationExpressions.getDataRows(resource.getPath());
-            if (validationExpressions != null)
-            {
-                Iterator j = validationExpressions.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    ValidationExpression ve = new ValidationExpression();
-
-                    ve.setResource(resource);
-                    ve.setValidationExpressionID(
-                        md.getAttribute("ValidationExpressionID"));
-                    ve.setValidationExpressionType(
-                        ValidationExpressionTypeEnum.fromString(
-                            md.getAttribute("ValidationExpressionType")));
-                    ve.setValue(md.getAttribute("value"));
-
-                    ve.updateLevel();
-
-                    hValidationExpressions.add(ve);
-                    mValidationExpressions.put(ve.getPath(), ve);
-                }
-            }
-            resource.setValidationExpressions(hValidationExpressions);
-        }
-    }
-
-    private void doValidationExternal()
-    {
-        MetadataTable tValidationExternals =
-            mMetadataTables.getTable(MetadataTable.VALIDATION_EXTERNAL);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hValidationExternals = new HashSet();
-            List validationExternals =
-                tValidationExternals.getDataRows(resource.getPath());
-            if (validationExternals != null)
-            {
-                Iterator j = validationExternals.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    ValidationExternal hValidationExternal =
-                        new ValidationExternal();
-
-                    hValidationExternal.setResource(resource);
-
-                    hValidationExternal.setValidationExternalName(
-                        md.getAttribute("ValidationExternalName"));
-
-                    // get the search class
-                    String path = md.getAttribute("SearchResource") + ":" +
-                        md.getAttribute("SearchClass");
-                    MClass clazz = (MClass) mClasses.get(path);
-                    hValidationExternal.setSearchClass(clazz);
-
-                    hValidationExternal.updateLevel();
-
-                    hValidationExternals.add(hValidationExternal);
-                    mValidationExternals.put(hValidationExternal.getPath(),
-                                             hValidationExternal);
-                }
-            }
-            resource.setValidationExternals(hValidationExternals);
-        }
+        return;
     }
 
 
-    /**
-     * Intended to be called by doValidationExternal.
-     */
-    private void doValidationExternalType()
-    {
-        MetadataTable tValidationExternalTypes =
-            mMetadataTables.getTable(MetadataTable.VALIDATION_EXTERNAL_TYPE);
-
-        Iterator i = mValidationExternals.values().iterator();
-        while (i.hasNext())
-        {
-            ValidationExternal ve = (ValidationExternal) i.next();
-            Set hValdationExternalTypes = new HashSet();
-            List validationExternalTypes =
-                tValidationExternalTypes.getDataRows(ve.getPath());
-            if (validationExternalTypes != null)
-            {
-                Iterator j = validationExternalTypes.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    ValidationExternalType vet = new ValidationExternalType();
-
-                    vet.setValidationExternal(ve);
-
-                    String joinedSearchField = md.getAttribute("SearchField");
-                    String searchField[] =
-                        StringUtils.split(joinedSearchField, ",");
-                    Set searchFieldSet = new HashSet();
-                    for (int c = 0; c < searchField.length; c++)
-                    {
-                        searchFieldSet.add(
-                            StringUtils.trimToEmpty(searchField[c]));
-                    }
-                    vet.setSearchField(searchFieldSet);
-
-                    String joinedDisplayField =
-                        md.getAttribute("DisplayField");
-                    String displayFields[] =
-                        StringUtils.split(joinedDisplayField, ",");
-                    Set displayFieldSet = new HashSet();
-                    for (int c = 0; c < displayFields.length; c++)
-                    {
-                        displayFieldSet.add(
-                            StringUtils.trimToEmpty(displayFields[c]));
-                    }
-                    vet.setDisplayField(displayFieldSet);
-
-                    String joinedResultField =
-                        md.getAttribute("ResultFields");
-                    String resultFields[] =
-                        StringUtils.split(joinedResultField, ",");
-                    Map resultFieldMap = new HashMap();
-                    for (int c = 0; c < resultFields.length; c++)
-                    {
-                        String split[] =
-                            StringUtils.split(resultFields[c], "=", 2);
-                        resultFieldMap.put(StringUtils.trimToEmpty(split[0]),
-                                           StringUtils.trimToEmpty(split[1]));
-                    }
-                    vet.setResultFields(resultFieldMap);
-
-                    vet.updateLevel();
-                }
-                ve.setValidationExternalTypes(hValdationExternalTypes);
-            }
-        }
-    }
-
-    /**
-     * Requires that Table to be done.
-     */
-    private void doValidationLookup()
-    {
-        MetadataTable tValidationLookups =
-            mMetadataTables.getTable(MetadataTable.VALIDATION_LOOKUP);
-
-        Iterator i = mResources.values().iterator();
-        while (i.hasNext())
-        {
-            Resource resource = (Resource) i.next();
-            Set hValidationLookups = new HashSet();
-            String resourcePath = resource.getPath();
-            List validationLookups =
-                tValidationLookups.getDataRows(resourcePath);
-            if (validationLookups != null)
-            {
-                Iterator j = validationLookups.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    ValidationLookup hvl = new ValidationLookup();
-
-                    hvl.setResource(resource);
-
-                    hvl.setValidationLookupName(
-                        md.getAttribute("ValidationLookupName"));
-
-                    hvl.setParent1Field(md.getAttribute("Parent1Field"));
-                    hvl.setParent2Field(md.getAttribute("Parent2Field"));
-
-                    hvl.updateLevel();
-
-                    hValidationLookups.add(hvl);
-                    mValidationLookups.put(hvl.getPath(), hvl);
-                }
-                resource.setValidationLookups(hValidationLookups);
-            }
-        }
-    }
-
-    private void doValidationLookupType()
-    {
-        MetadataTable tValidationLookupTypes =
-            mMetadataTables.getTable(MetadataTable.VALIDATION_LOOKUP_TYPE);
-
-        Iterator i = mValidationLookups.values().iterator();
-        while (i.hasNext())
-        {
-            ValidationLookup vl = (ValidationLookup) i.next();
-            Set hValdationLookupTypes = new HashSet();
-            List validationLookupTypes =
-                tValidationLookupTypes.getDataRows(vl.getPath());
-            if (validationLookupTypes != null)
-            {
-                Iterator j = validationLookupTypes.iterator();
-                while (j.hasNext())
-                {
-                    Metadata md = (Metadata) j.next();
-                    ValidationLookupType vlt = new ValidationLookupType();
-
-                    vlt.setValidationLookup(vl);
-                    vlt.setValidText(md.getAttribute("ValidText"));
-                    vlt.setParent1Value(md.getAttribute("Parent1Value"));
-                    vlt.setParent2Value(md.getAttribute("Parent2Value"));
-
-                    vlt.updateLevel();
-
-                    hValdationLookupTypes.add(vlt);
-                }
-            }
-            vl.setValidationLookupTypes(hValdationLookupTypes);
-        }
-    }
-    
     /**
      * Reads a metadata defintion in XML from the InputStream and returns
      * the head MSystem object.
-     * 
+     *
      * @param in an InputStream with the XML to be parsed.
      * @return an MSystem object.
      */
@@ -912,13 +121,794 @@ public class MetadataLoader extends MetadataHelpers
         doValidationExpression();
         doUpdateType();
         doForeignKey(mSystem);
-        
+
         return mSystem;
+    }
+
+    private void loadMetadataTables(InputStream in)
+    {
+        JDomCompactBuilder builder = new JDomCompactBuilder();
+        try
+        {
+            mMetadata = builder.build(new InputSource(in));
+        }
+        catch (MetadataException e)
+        {
+            throw new RuntimeException(e);
+
+        }
+    }
+
+    protected TableStandardName lookupTableStandardName(String standardName)
+    {
+        return (TableStandardName) mTableStandardNames.get(standardName);
+    }
+
+    protected void doClasses()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hClasses = new HashSet();
+            org.realtors.rets.common.metadata.types.MClass[] classes =
+                    mMetadata.getResource(resource.getResourceID())
+                    .getMClasses();
+            for (int j = 0; j < classes.length; j++)
+            {
+                org.realtors.rets.common.metadata.types.MClass in = classes[j];
+                MClass hClass = new MClass();
+
+                hClass.setResource(resource);
+                hClass.setClassName(in.getClassName());
+                hClass.setStandardName(ClassStandardNameEnum.fromString(
+                                           in.getStandardName()));
+                hClass.setVisibleName(in.getVisibleName());
+                hClass.setDescription(in.getDescription());
+
+                StringBuffer tmp = new StringBuffer("rets_");
+                tmp.append(resource.getResourceID()).append("_");
+                tmp.append(hClass.getClassName());
+                hClass.setDbTable(tmp.toString().toLowerCase());
+
+                hClass.updateLevel();
+
+                save(hClass);
+                hClasses.add(hClass);
+                mClasses.put(hClass.getPath(), hClass);
+            }
+
+            resource.setClasses(hClasses);
+            save(resource);
+        }
+    }
+
+    protected void doEditMask()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hEditMasks = new HashSet();
+            MEditMask[] editMasks = mMetadata.getResource(
+                    resource.getResourceID()).getMEditMasks();
+            for (int j = 0; j < editMasks.length; j++)
+            {
+                MEditMask in = editMasks[j];
+                EditMask hEditMask = new EditMask();
+
+                hEditMask.setResource(resource);
+                hEditMask.setEditMaskID(in.getEditMaskID());
+                hEditMask.setValue(in.getValue());
+
+                hEditMask.updateLevel();
+
+                save(hEditMask);
+                hEditMasks.add(hEditMask);
+                mEditMasks.put(hEditMask.getPath(), hEditMask);
+            }
+            resource.setEditMasks(hEditMasks);
+            save(resource);
+        }
+    }
+
+    protected void doForeignKey(MSystem hSystem)
+    {
+        MForeignKey[] foreignKeys = mMetadata.getSystem().getMForeignKeys();
+
+        Set hForeignKeys = new HashSet();
+        for (int i = 0; i < foreignKeys.length; i++)
+        {
+            MForeignKey in = foreignKeys[i];
+            ForeignKey hFk = new ForeignKey();
+
+            hFk.setSystem(hSystem);
+
+            hFk.setForeignKeyID(in.getForeignKeyID());
+            String path[] = new String[3];
+            path[0] = in.getParentResourceID();
+            path[1] = in.getParentClassID();
+            path[2] = in.getParentSystemName();
+            String tablePath = StringUtils.join(path, ":");
+            Table table = (Table) mTables.get(tablePath);
+            hFk.setParentTable(table);
+
+            path[0] = in.getChildResourceID();
+            path[1] = in.getChildClassID();
+            path[2] = in.getChildSystemName();
+            tablePath = StringUtils.join(path, ":");
+            table = (Table) mTables.get(tablePath);
+            hFk.setChildTable(table);
+            if (table == null)
+            {
+                LOG.error("table is null for path: " + tablePath);
+            }
+
+            save(hFk);
+            hForeignKeys.add(hFk);
+        }
+        hSystem.setForeignKeys(hForeignKeys);
+        save(hSystem);
+    }
+
+    protected void doLookup()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hLookups = new HashSet();
+            MLookup[] lookups =
+                    mMetadata.getResource(resource.getResourceID()).getMLookups();
+            for (int j = 0; j < lookups.length; j++)
+            {
+                MLookup in = lookups[j];
+                Lookup hLookup = new Lookup();
+
+                hLookup.setResource(resource);
+
+                hLookup.setLookupName(in.getLookupName());
+
+                hLookup.setVisibleName(in.getVisibleName());
+
+                hLookup.updateLevel();
+                save(hLookup);
+                // doLookupTypes(hLookup, rSession, hSession);
+                hLookups.add(hLookup);
+                mLookups.put(hLookup.getPath(), hLookup);
+
+            }
+            resource.setLookups(hLookups);
+            save(resource);
+        }
+    }
+
+    /**
+     * Meant to be called only from do Lookup.
+     *
+     */
+    protected void doLookupTypes()
+    {
+        Iterator i = mLookups.values().iterator();
+        while (i.hasNext())
+        {
+            Lookup lookup = (Lookup) i.next();
+
+            MLookupType[] lookupTypes =
+                    mMetadata.getLookup(lookup.getResource().getResourceID(),
+                                        lookup.getLookupName())
+                    .getMLookupTypes();
+            Set hLookupTypes = new HashSet();
+            for (int j = 0; j < lookupTypes.length; j++)
+            {
+                MLookupType in = lookupTypes[j];
+                LookupType hLookupType = new LookupType();
+
+                hLookupType.setLookup(lookup);
+
+                hLookupType.setLongValue(in.getLongValue());
+                hLookupType.setShortValue(in.getShortValue());
+                hLookupType.setValue(in.getValue());
+
+                hLookupType.updateLevel();
+
+                save(hLookupType);
+                hLookupTypes.add(hLookupType);
+            }
+            lookup.setLookupTypes(hLookupTypes);
+            save(lookup);
+        }
+    }
+
+    protected void doObjects()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hObjects = new HashSet();
+            org.realtors.rets.common.metadata.types.MObject[] objects =
+                    mMetadata.getResource(resource.getResourceID())
+                    .getMObjects();
+            for (int j = 0; j < objects.length; j++)
+            {
+                org.realtors.rets.common.metadata.types.MObject in = objects[j];
+                MObject hObject = new MObject();
+
+                hObject.setResource(resource);
+
+                hObject.setObjectType(ObjectTypeEnum.fromString(
+                        in.getObjectType()));
+                hObject.setMimeType(in.getMIMEType());
+                hObject.setVisibleName(in.getVisibleName());
+                hObject.setDescription(
+                        StringUtils.substring(
+                                in.getDescription(), 0, 64));
+                // Should we have an updateLevel?
+                save(hObject);
+                hObjects.add(hObject);
+            }
+
+            resource.setObjects(hObjects);
+            save(resource);
+        }
+    }
+
+    protected void doResource(MSystem hSystem)
+    {
+
+        MResource[] resources = mMetadata.getSystem().getMResources();
+        Set hResources = new HashSet();
+        for (int i = 0; i < resources.length; i++)
+        {
+            MResource in = resources[i];
+            Resource hResource = new Resource();
+
+            hResource.setSystem(hSystem);
+            String resourceID = in.getResourceID();
+            hResource.setResourceID(resourceID);
+            hResource.setStandardName(ResourceStandardNameEnum.fromString(
+                                          in.getStandardName()));
+            hResource.setVisibleName(in.getVisibleName());
+            hResource.setDescription(in.getDescription());
+            hResource.setKeyField(in.getKeyField());
+
+            hResource.updateLevel();
+
+            save(hResource);
+            hResources.add(hResource);
+            mResources.put(hResource.getPath(), hResource);
+        }
+
+        hSystem.setResources(hResources);
+        save(hSystem);
+    }
+
+    protected void doSearchHelp()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hSearchHelps = new HashSet();
+            MSearchHelp[] searchHelps = mMetadata
+                    .getResource(resource.getResourceID())
+                    .getMSearchHelps();
+            for (int j = 0; j < searchHelps.length; j++)
+            {
+                MSearchHelp in = searchHelps[j];
+                SearchHelp hSearchHelp = new SearchHelp();
+
+                hSearchHelp.setResource(resource);
+                hSearchHelp.setSearchHelpID(in.getSearchHelpID());
+                hSearchHelp.setValue(in.getValue());
+
+                hSearchHelp.updateLevel();
+
+                save(hSearchHelp);
+                hSearchHelps.add(hSearchHelp);
+                mSearchHelps.put(hSearchHelp.getPath(), hSearchHelp);
+            }
+            resource.setSearchHelps(hSearchHelps);
+            save(resource);
+        }
+    }
+
+    protected MSystem doSystem()
+    {
+        MSystem hSystem = new MSystem();
+        hSystem.setVersion(101001);
+        hSystem.setDate(Calendar.getInstance().getTime());
+        save(hSystem);
+        return hSystem;
+    }
+
+    protected void doTable()
+    {
+        Iterator i = mClasses.values().iterator();
+        while (i.hasNext())
+        {
+            MClass hClass = (MClass) i.next();
+            Set hTables = new HashSet();
+            MTable[] tables = mMetadata.getMClass(
+                    hClass.getResource().getResourceID(),
+                    hClass.getClassName()).getMTables();
+            for (int j = 0; j < tables.length; j++)
+            {
+                MTable in = tables[j];
+                Table hTable = new Table();
+
+                hTable.setMClass(hClass);
+
+                hTable.setSystemName(in.getSystemName());
+
+                String standardName = in.getStandardName();
+                TableStandardName tsn =
+                        lookupTableStandardName(standardName);
+                if (tsn == null)
+                {
+                    if (!standardName.equals(""))
+                    {
+                        tsn = new TableStandardName(standardName);
+                        mTableStandardNames.put(standardName, tsn);
+                        save(tsn);
+                    }
+                }
+                hTable.setStandardName(tsn);
+
+                hTable.setLongName(in.getLongName());
+
+                String tmp = in.getDBName().toLowerCase();
+                if (tmp.startsWith("r_"))
+                {
+                    hTable.setDbName(StringUtils.substring(tmp, 0, 10));
+                }
+                else
+                {
+                    hTable.setDbName(
+                            StringUtils.substring("r_" + tmp, 0, 10));
+                }
+
+                hTable.setShortName(in.getShortName());
+                hTable.setMaximumLength(in.getMaximumLength());
+                hTable.setDataType(DataTypeEnum.fromString(in.getDataType()));
+                hTable.setPrecision(in.getPrecision());
+                hTable.setSearchable(in.getSearchable());
+                hTable.setInterpretation(
+                        InterpretationEnum.fromString(
+                                in.getInterpretation()));
+                hTable.setAlignment(
+                        AlignmentEnum.fromString(
+                               in.getAlignment()));
+                hTable.setUseSeparator(in.getUseSeparator());
+                String editMasksJoined = in.getEditMaskID();
+                String resourcePath =  hClass.getResource().getPath();
+                String path = null;
+                Set hEditMasks = new HashSet();
+                if (editMasksJoined != null)
+                {
+                    String editMasks[] =
+                            StringUtils.split(editMasksJoined, ",");
+
+                    for (int c = 0; c < editMasks.length; c++)
+                    {
+                        path = resourcePath + ":" +
+                                StringUtils.trimToEmpty(editMasks[c]);
+                        EditMask em = (EditMask) mEditMasks.get(path);
+                        hEditMasks.add(em);
+                        if (em == null)
+                        {
+                            LOG.error("edit mask null for path: " + path);
+                        }
+                    }
+                }
+                hTable.setEditMasks(hEditMasks);
+
+                String lookupName = in.getLookupName();
+                path = resourcePath + ":" + lookupName;
+                Lookup lookup = (Lookup) mLookups.get(path);
+                hTable.setLookup(lookup);
+
+                hTable.setMaxSelect(in.getMaxSelect());
+                hTable.setUnits(UnitEnum.fromString(in.getUnits()));
+                hTable.setIndex(in.getIndex());
+                hTable.setMinimum(in.getMinimum());
+                hTable.setMaximum(in.getMaximum());
+                hTable.setDefault(in.getDefault());
+                hTable.setRequired(in.getRequired());
+
+                String searchHelpID = in.getSearchHelpID();
+                path = resourcePath + ":" + searchHelpID;
+                SearchHelp searchHelp =
+                        (SearchHelp) mSearchHelps.get(path);
+                hTable.setSearchHelp(searchHelp);
+                // String = md.getAttribute("unique");
+                hTable.setUnique(in.getUnique());
+                hTable.updateLevel();
+
+                save(hTable);
+                hTables.add(hTable);
+                mTables.put(hTable.getPath(), hTable);
+            }
+            hClass.setTables(hTables);
+            save(hClass);
+        }
+    }
+
+    protected void doUpdate()
+    {
+        Iterator i = mClasses.values().iterator();
+        while (i.hasNext())
+        {
+            MClass clazz = (MClass) i.next();
+            Set hUpdates = new HashSet();
+            MUpdate[] updates = mMetadata.getMClass(
+                    clazz.getResource().getResourceID(),
+                    clazz.getClassName()).getMUpdates();
+            for (int j = 0; j < updates.length; j++)
+            {
+                MUpdate in = updates[j];
+                Update hUpdate = new Update();
+
+                hUpdate.setMClass(clazz);
+
+                hUpdate.setUpdateName(in.getUpdateName());
+                hUpdate.setDescription(in.getDescription());
+                hUpdate.setKeyField(in.getKeyField());
+
+                hUpdate.updateLevel();
+
+                save(hUpdate);
+                hUpdates.add(hUpdate);
+                mUpdates.put(hUpdate.getPath(), hUpdate);
+            }
+            clazz.setUpdates(hUpdates);
+            save(clazz);
+        }
+    }
+
+    protected void doUpdateHelp()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hUpdateHelps = new HashSet();
+            MUpdateHelp[] updateHelps = mMetadata.getResource(
+                    resource.getResourceID()).getMUpdateHelps();
+
+            for (int j = 0; j < updateHelps.length; j++)
+            {
+                MUpdateHelp in = updateHelps[j];
+                UpdateHelp hUpdateHelp = new UpdateHelp();
+
+                hUpdateHelp.setResource(resource);
+                hUpdateHelp.setUpdateHelpID(in.getUpdateHelpID());
+                hUpdateHelp.setValue(in.getValue());
+
+                hUpdateHelp.updateLevel();
+
+                save(hUpdateHelp);
+                hUpdateHelps.add(hUpdateHelp);
+                mUpdateHelps.put(hUpdateHelp.getPath(), hUpdateHelp);
+            }
+
+            resource.setUpdateHelps(hUpdateHelps);
+            save(resource);
+        }
+    }
+
+    public void doUpdateType()
+    {
+        Iterator i = mUpdates.values().iterator();
+        while (i.hasNext())
+        {
+            Update update = (Update) i.next();
+            Set hUpdateTypes = new HashSet();
+            MUpdateType[] updateTypes = mMetadata.getUpdate(
+                    update.getMClass().getResource().getResourceID(),
+                    update.getMClass().getClassName(),
+                    update.getUpdateName()).getMUpdateTypes();
+            for (int j = 0; j < updateTypes.length; j++)
+            {
+                MUpdateType in = updateTypes[j];
+                UpdateType updateType = new UpdateType();
+
+                updateType.setUpdate(update);
+                String level = update.getLevel();
+                String systemName = in.getSystemName();
+                String tablePath = level + ":" + systemName;
+                Table table = (Table) mTables.get(tablePath);
+                updateType.setTable(table);
+                // Hack to get around metadata bug
+                if (table == null)
+                {
+                    LOG.error("null table for path: " + tablePath);
+                    throw new RuntimeException("bail:  null path");
+                }
+
+                updateType.setSequence(in.getSequence());
+
+                String joinedAttributes = in.getAttributes();
+                String attributes[] =
+                        StringUtils.split(joinedAttributes, ",");
+                Set attributeSet = new HashSet();
+                for (int c = 0; c < attributes.length; c++)
+                {
+                    attributeSet.add(UpdateTypeAttributeEnum.fromInt(
+                            Integer.parseInt(attributes[c])));
+                }
+                updateType.setAttributes(attributeSet);
+
+                updateType.setDefault(in.getDefault());
+
+                String valExp[] = StringUtils.split(
+                        in.getValidationExpressionID(), ",");
+                Set valExpSet = new HashSet();
+                String resourcePath =
+                        update.getMClass().getResource().getPath();
+                if (valExp != null)
+                {
+                    for (int c = 0; c < valExp.length; c++)
+                    {
+                        String vePath = resourcePath + ":" + valExp[c];
+                        ValidationExpression ve = (ValidationExpression)
+                                mValidationExpressions.get(vePath);
+                        valExpSet.add(ve);
+                    }
+                }
+                updateType.setValidationExpressions(valExpSet);
+
+                String updateHelpPath = resourcePath + ":" +
+                        in.getUpdateHelpID();
+                updateType.setUpdateHelp(
+                        (UpdateHelp) mUpdateHelps.get(updateHelpPath));
+
+                String vlPath = resourcePath + ":" +
+                        in.getValidationLookupName();
+                updateType.setValidationLookup(
+                        (ValidationLookup) mValidationLookups.get(vlPath));
+
+                String vePath = resourcePath + ":" +
+                        in.getValidationExternalName();
+                updateType.setValidationExternal(
+                        (ValidationExternal) mValidationExternals.get(vePath));
+
+                save(updateType);
+                hUpdateTypes.add(updateType);
+            }
+            update.setUpdateTypes(hUpdateTypes);
+            save(update);
+        }
+    }
+
+    protected void doValidationExpression()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hValidationExpressions = new HashSet();
+            MValidationExpression[] validationExpressions =
+                    mMetadata.getResource(resource.getResourceID())
+                    .getMValidationExpressions();
+            for (int j = 0; j < validationExpressions.length; j++)
+            {
+                MValidationExpression in = validationExpressions[j];
+                ValidationExpression ve = new ValidationExpression();
+
+                ve.setResource(resource);
+                ve.setValidationExpressionID(
+                        in.getValidationExpressionID());
+                ve.setValidationExpressionType(
+                        ValidationExpressionTypeEnum.fromString(
+                                in.getValidationExpressionType()));
+                ve.setValue(in.getValue());
+
+                ve.updateLevel();
+                save(ve);
+                hValidationExpressions.add(ve);
+                mValidationExpressions.put(ve.getPath(), ve);
+            }
+            resource.setValidationExpressions(hValidationExpressions);
+            save(resource);
+        }
+    }
+
+    protected void doValidationExternal()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hValidationExternals = new HashSet();
+            MValidationExternal[] validationExternals =
+                    mMetadata.getResource(resource.getResourceID())
+                    .getMValidationExternal();
+            for (int j = 0; j < validationExternals.length; j++)
+            {
+                MValidationExternal in = validationExternals[j];
+                ValidationExternal hValidationExternal =
+                        new ValidationExternal();
+
+                hValidationExternal.setResource(resource);
+
+                hValidationExternal.setValidationExternalName(
+                        in.getValidationExternalName());
+
+                // get the search class
+                String path = in.getSearchResource() + ":" +
+                        in.getSearchClass();
+                MClass clazz = (MClass) mClasses.get(path);
+                hValidationExternal.setSearchClass(clazz);
+
+                hValidationExternal.updateLevel();
+
+                save(hValidationExternal);
+                hValidationExternals.add(hValidationExternal);
+                mValidationExternals.put(hValidationExternal.getPath(),
+                                         hValidationExternal);
+            }
+            resource.setValidationExternals(hValidationExternals);
+            save(resource);
+        }
+    }
+
+    /**
+     * Intended to be called by doValidationExternal.
+     *
+     */
+    protected void doValidationExternalType()
+    {
+        Iterator i = mValidationExternals.values().iterator();
+        while (i.hasNext())
+        {
+            ValidationExternal ve = (ValidationExternal) i.next();
+            Set hValdationExternalTypes = new HashSet();
+            MValidationExternalType[] validationExternalTypes =
+                    mMetadata.getValidationExternal(
+                            ve.getResource().getResourceID(),
+                            ve.getValidationExternalName())
+                    .getMValidationExternalTypes();
+
+            for (int j = 0; j < validationExternalTypes.length; j++)
+            {
+                MValidationExternalType in = validationExternalTypes[j];
+                ValidationExternalType vet = new ValidationExternalType();
+
+                vet.setValidationExternal(ve);
+
+                String joinedSearchField = in.getSearchField();
+                String searchField[] =
+                        StringUtils.split(joinedSearchField, ",");
+                Set searchFieldSet = new HashSet();
+                for (int c = 0; c < searchField.length; c++)
+                {
+                    searchFieldSet.add(
+                            StringUtils.trimToEmpty(searchField[c]));
+                }
+                vet.setSearchField(searchFieldSet);
+
+                String joinedDisplayField =
+                        in.getDisplayField();
+                String displayFields[] =
+                        StringUtils.split(joinedDisplayField, ",");
+                Set displayFieldSet = new HashSet();
+                for (int c = 0; c < displayFields.length; c++)
+                {
+                    displayFieldSet.add(
+                            StringUtils.trimToEmpty(displayFields[c]));
+                }
+                vet.setDisplayField(displayFieldSet);
+
+                String joinedResultField =
+                        in.getResultFields();
+                String resultFields[] =
+                        StringUtils.split(joinedResultField, ",");
+                Map resultFieldMap = new HashMap();
+                for (int c = 0; c < resultFields.length; c++)
+                {
+                    String split[] =
+                            StringUtils.split(resultFields[c], "=", 2);
+                    resultFieldMap.put(StringUtils.trimToEmpty(split[0]),
+                                       StringUtils.trimToEmpty(split[1]));
+                }
+                vet.setResultFields(resultFieldMap);
+
+                vet.updateLevel();
+                save(vet);
+            }
+            ve.setValidationExternalTypes(hValdationExternalTypes);
+            save(ve);
+        }
+    }
+
+    /**
+     * Requires that Table to be done.
+     *
+     */
+    protected void doValidationLookup()
+    {
+        Iterator i = mResources.values().iterator();
+        while (i.hasNext())
+        {
+            Resource resource = (Resource) i.next();
+            Set hValidationLookups = new HashSet();
+            MValidationLookup[] validationLookups =
+                mMetadata.getResource(resource.getResourceID())
+                    .getMValidationLookups();
+            for (int j = 0; j < validationLookups.length; j++)
+            {
+                MValidationLookup in = validationLookups[j];
+                ValidationLookup hvl = new ValidationLookup();
+
+                hvl.setResource(resource);
+
+                hvl.setValidationLookupName(in.getValidationLookupName());
+
+                hvl.setParent1Field(in.getParent1Field());
+                hvl.setParent2Field(in.getParent2Field());
+
+                hvl.updateLevel();
+
+                save(hvl);
+                hValidationLookups.add(hvl);
+                mValidationLookups.put(hvl.getPath(), hvl);
+            }
+            resource.setValidationLookups(hValidationLookups);
+            save(resource);
+        }
+    }
+
+    protected void doValidationLookupType()
+    {
+        Iterator i = mValidationLookups.values().iterator();
+        while (i.hasNext())
+        {
+            ValidationLookup vl = (ValidationLookup) i.next();
+            Set hValdationLookupTypes = new HashSet();
+            MValidationLookupType[] validationLookupTypes =
+                    mMetadata.getValidationLookup(
+                            vl.getResource().getResourceID(),
+                            vl.getValidationLookupName())
+                    .getMValidationLookupTypes();
+
+            for (int j = 0; j < validationLookupTypes.length; j++)
+            {
+                MValidationLookupType in = validationLookupTypes[j];
+                ValidationLookupType vlt = new ValidationLookupType();
+
+                vlt.setValidationLookup(vl);
+                vlt.setValidText(in.getValidText());
+                vlt.setParent1Value(in.getParent1Value());
+                vlt.setParent2Value(in.getParent2Value());
+
+                vlt.updateLevel();
+
+                save(vlt);
+                hValdationLookupTypes.add(vlt);
+            }
+            vl.setValidationLookupTypes(hValdationLookupTypes);
+            save(vl);
+        }
     }
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.9 2003/12/04 20:42:36 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.10 2003/12/18 19:10:15 dterrell Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
+    protected Map mClasses;
+    protected Map mEditMasks;
+    protected Map mLookups;
+    protected Map mResources;
+    protected Map mSearchHelps;
+    protected Map mTables;
+    protected Map mUpdateHelps;
+    protected Map mUpdates;
+    protected Map mValidationExpressions;
+    protected Map mValidationExternals;
+    protected Map mValidationLookups;
+    protected Map mTableStandardNames;
+    protected Metadata mMetadata;
 }
