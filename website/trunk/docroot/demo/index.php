@@ -13,7 +13,7 @@
         <tr>
           <td class="demo-param">URL:</td>
           <td class="demo-value">
-            http://demo.crt.realtors.org:7104/rets/login
+            http://demo.crt.realtors.org:6103/rets/login
           </td>
         </tr>
         <tr>
