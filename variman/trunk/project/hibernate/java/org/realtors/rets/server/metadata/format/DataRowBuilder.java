@@ -30,12 +30,19 @@ public class DataRowBuilder
 
     public DataRowBuilder(PrintWriter writer)
     {
+        this(writer, "\t");
+    }
+
+    public DataRowBuilder(PrintWriter writer, String delimiter)
+    {
         mWriter = writer;
+        mDelimiter = delimiter;
     }
 
     public void begin()
     {
-        mWriter.print("<DATA>\t");
+        mWriter.print("<DATA>");
+        mWriter.print(mDelimiter);
     }
 
     public void end()
@@ -48,7 +55,7 @@ public class DataRowBuilder
         {
             mWriter.print(StringEscapeUtils.escapeXml(object.toString()));
         }
-        mWriter.print("\t");
+        mWriter.print(mDelimiter);
     }
 
     public void append(Date date)
@@ -57,13 +64,13 @@ public class DataRowBuilder
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         mWriter.print(formatter.format(date));
-        mWriter.print("\t");
+        mWriter.print(mDelimiter);
     }
 
     public void append(int number)
     {
         mWriter.print(number);
-        mWriter.print("\t");
+        mWriter.print(mDelimiter);
     }
 
     /**
@@ -81,7 +88,7 @@ public class DataRowBuilder
         {
             mWriter.print("0");
         }
-        mWriter.print("\t");
+        mWriter.print(mDelimiter);
     }
 
     public void append(Collection collection)
@@ -93,9 +100,10 @@ public class DataRowBuilder
         }
         else
         {
-            mWriter.print("\t");
+            mWriter.print(mDelimiter);
         }
     }
 
     private PrintWriter mWriter;
+    private String mDelimiter;
 }
