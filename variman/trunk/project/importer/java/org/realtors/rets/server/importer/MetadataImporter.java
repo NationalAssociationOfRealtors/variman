@@ -148,10 +148,8 @@ public class MetadataImporter
     private MSystem doSystem(RetsSession rSession, Session hSession)
         throws HibernateException
     {
-        MetadataTable tSystem =
-            rSession.getMetadataTable(MetadataTable.SYSTEM);
         MSystem hSystem = new MSystem();
-        hSystem.setVersion(10101);
+        hSystem.setVersion(101001);
         hSystem.setDate(Calendar.getInstance().getTime());
         hSession.save(hSystem);
         return hSystem;
@@ -182,7 +180,7 @@ public class MetadataImporter
             hResource.setKeyField(md.getAttribute("KeyField"));
 
             hResource.updateLevel();
-            
+
             hSession.save(hResource);
             hResources.add(hResource);
             mResources.put(hResource.getPath(), hResource);
@@ -336,7 +334,7 @@ public class MetadataImporter
                     hEditMask.setValue(md.getAttribute("Value"));
 
                     hEditMask.updateLevel();
-                    
+
                     hSession.save(hEditMask);
                     hEditMasks.add(hEditMask);
                     mEditMasks.put(hEditMask.getPath(), hEditMask);
@@ -389,7 +387,6 @@ public class MetadataImporter
     /**
      * Meant to be called only from do Lookup.
      *
-     * @param hLookup the Lookup object to get the types for
      * @param rSession the rets session
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
@@ -711,7 +708,7 @@ public class MetadataImporter
                         LOG.error("null table for path: " + tablePath);
                         System.exit(1);
                     }
-                    
+
                     updateType.setSequence(
                         Integer.parseInt(md.getAttribute("Sequence")));
 
@@ -964,7 +961,7 @@ public class MetadataImporter
                         }
                     }
                     hTable.setEditMasks(hEditMasks);
-                    
+
                     String lookupName = md.getAttribute("LookupName");
                     path = resourcePath + ":" + lookupName;
                     Lookup lookup = (Lookup) mLookups.get(path);
@@ -1064,5 +1061,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.23 2003/07/17 20:00:33 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.24 2003/07/18 15:59:42 dribin Exp $";
 }
