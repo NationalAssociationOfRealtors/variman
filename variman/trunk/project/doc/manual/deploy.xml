@@ -96,23 +96,68 @@
       </figure>
     </section>
 
-    <para>
-      <itemizedlist>
-        <listitem>
-          Install the JDBC driver.
-        </listitem>
-        <listitem>
-          Configure REX to connect to the database.
-        </listitem>
-      </itemizedlist>
-    </para>
-  </section>
+    <section>
+      <title>Creating the Schema</title>
+      <para>
+        Rex needs tables for it's own use, such as user information.
+        Before you create users and groups, you need to create these
+        tables by chosing the Create Schema command from the Database
+        menu.
+      </para>
+    </section>
 
-  <section>
-    <title>Configuring Rex using the GUI Tool</title>
-    <para>
+    <section>
+      <title>Configuring RETS Parameters</title>
+      <para>
+        From the main Configuration panel, as seen in <xref
+        linkend="fig-config"/>, you can configure various RETS
+        parameters.  The Listening Port is the TCP port number that
+        the Rex server listens on.  6103 is the standard, well-known
+        port number for RETS.  The Metadata Directory points to the
+        root directory of the metadata hierarchy.  Configuring
+        metadata is explained in ###.  The Image Root and Image
+        Pattern parameters are used to allow Rex to serve up images
+        for the GetObject transaction.  The Image Root is a directory
+        where the images are located.  The Image Pattern is a '%'
+        substitution pattern that describes the format of the actual
+        file names.  The possible patterns and their substitutions are
+        listed in <xref linkend="tab-image-pattern"/>.
+      </para>
+      <figure id="fig-config">
+        <title>Configuration Tab</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="config.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
       
-    </para>
+      <table frame="all" id="tab-image-pattern">
+        <title>Image Patterns</title>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Pattern</entry>
+              <entry>Substitution</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>%k</entry>
+              <entry>Object Key</entry>
+            </row>
+            <row>
+              <entry>%i</entry>
+              <entry>Object Index</entry>
+            </row>
+            <row>
+              <entry>%I</entry>
+              <entry>Object Index, or empty if index is 0.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
   </section>
 </section>
 
