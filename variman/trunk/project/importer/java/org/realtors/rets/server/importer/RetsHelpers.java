@@ -44,7 +44,7 @@ public abstract class RetsHelpers
     private void initHibernate() throws HibernateException
     {
         Configuration cfg = new Configuration();
-        cfg.addJar("retsdb2-hbm-xml.jar");
+        cfg.addJar("rex-hbm-xml.jar");
         mSessions = cfg.buildSessionFactory();
     }
 

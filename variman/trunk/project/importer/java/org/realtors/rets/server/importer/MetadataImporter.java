@@ -104,7 +104,7 @@ public class MetadataImporter extends MetadataLoader
         throws MappingException, HibernateException
     {
         Configuration cfg = new Configuration();
-        cfg.addJar("retsdb2-hbm-xml.jar");
+        cfg.addJar("rex-hbm-xml.jar");
         mSessions = cfg.buildSessionFactory();
     }
     
@@ -389,7 +389,7 @@ public class MetadataImporter extends MetadataLoader
     private Session mSession;
     private String mUsername;
     static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.40 2004/01/15 22:06:32 dribin Exp $";
+        "$Id: MetadataImporter.java,v 1.41 2004/01/20 21:38:52 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
