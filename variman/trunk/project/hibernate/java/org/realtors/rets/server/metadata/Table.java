@@ -14,6 +14,7 @@ import java.util.Set;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.realtors.rets.server.Group;
 
 /**
  * @hibernate.class table="rets_metadata_table"
@@ -28,6 +29,12 @@ public class Table extends ServerMetadata implements Serializable
     public Table()
     {
         mId = null;
+    }
+
+    public Table(String systemName)
+    {
+        mId = null;
+        mSystemName = systemName;
     }
 
     /**
@@ -445,6 +452,41 @@ public class Table extends ServerMetadata implements Serializable
         mSearchHelp = searchHelp;
     }
 
+    public Set getExcludeGroups()
+    {
+        return mExcludeGroups;
+    }
+
+    public void setExcludeGroups(Set excludeGroups)
+    {
+        mExcludeGroups = excludeGroups;
+    }
+
+    public Set getIncludeGroups()
+    {
+        return mIncludeGroups;
+    }
+
+    public void setIncludeGroups(Set includeGroups)
+    {
+        mIncludeGroups = includeGroups;
+    }
+
+    public boolean isGroupReadable(Group group)
+    {
+        if (mIncludeGroups != null)
+        {
+            return mIncludeGroups.contains(group);
+        }
+
+        if (mExcludeGroups != null)
+        {
+            return !mExcludeGroups.contains(group);
+        }
+
+        return true;
+    }
+
     /**
      * Returns the hierarchy level for this metadata object.
      *
@@ -587,6 +629,10 @@ public class Table extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private SearchHelp mSearchHelp;
+
+    private Set mExcludeGroups;
+
+    private Set mIncludeGroups;
 
     private String mLevel;
 
