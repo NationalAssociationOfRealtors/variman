@@ -13,21 +13,19 @@ public class DmqlStringTest extends TestCase
     public void testConstantString()
     {
         DmqlString string = new DmqlString("foo");
-        assertFalse(string.containsWildcards());
 
         List components = new ArrayList();
         components.add(new ConstantStringComponent("foo"));
         assertEquals(components, string.getComponents());
-        assertEquals("'foo'", TestUtil.toSql(string));
+        assertEquals(" = 'foo'", TestUtil.toSql(string));
 
         string = new DmqlString();
         string.add("bar");
-        assertFalse(string.containsWildcards());
 
         components = new ArrayList();
         components.add(new ConstantStringComponent("bar"));
         assertEquals(components, string.getComponents());
-        assertEquals("'bar'", TestUtil.toSql(string));
+        assertEquals(" = 'bar'", TestUtil.toSql(string));
     }
 
     public void testStartsWith()
@@ -35,8 +33,7 @@ public class DmqlStringTest extends TestCase
         DmqlString string = new DmqlString();
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
         string.add("foo");
-        assertTrue(string.containsWildcards());
-        assertEquals("'%foo'", TestUtil.toSql(string));
+        assertEquals(" LIKE '%foo'", TestUtil.toSql(string));
     }
 
     public void testContains()
@@ -45,8 +42,7 @@ public class DmqlStringTest extends TestCase
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
         string.add("foo");
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
-        assertTrue(string.containsWildcards());
-        assertEquals("'%foo%'", TestUtil.toSql(string));
+        assertEquals(" LIKE '%foo%'", TestUtil.toSql(string));
     }
 
     public void testEndsWith()
@@ -54,8 +50,7 @@ public class DmqlStringTest extends TestCase
         DmqlString string = new DmqlString();
         string.add("foo");
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
-        assertTrue(string.containsWildcards());
-        assertEquals("'foo%'", TestUtil.toSql(string));
+        assertEquals(" LIKE 'foo%'", TestUtil.toSql(string));
     }
 
     public void testSingle()
@@ -64,8 +59,7 @@ public class DmqlStringTest extends TestCase
         string.add("f");
         string.add(DmqlString.MATCH_ZERO_OR_ONE);
         string.add("o");
-        assertTrue(string.containsWildcards());
-        assertEquals("'f_o'", TestUtil.toSql(string));
+        assertEquals(" LIKE 'f_o'", TestUtil.toSql(string));
     }
 
     public void testComplexPattern()
@@ -78,7 +72,29 @@ public class DmqlStringTest extends TestCase
         string.add(DmqlString.MATCH_ZERO_OR_ONE);
         string.add("r");
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
-        assertTrue(string.containsWildcards());
-        assertEquals("'%foo%b_r%'", TestUtil.toSql(string));
+        assertEquals(" LIKE '%foo%b_r%'", TestUtil.toSql(string));
+    }
+
+    public void testEquals()
+    {
+        DmqlString string1 = new DmqlString();
+        string1.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string1.add("foo");
+        string1.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string1.add("b");
+        string1.add(DmqlString.MATCH_ZERO_OR_ONE);
+        string1.add("r");
+        string1.add(DmqlString.MATCH_ZERO_OR_MORE);
+
+        DmqlString string2 = new DmqlString();
+        string2.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string2.add("foo");
+        string2.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string2.add("b");
+        string2.add(DmqlString.MATCH_ZERO_OR_ONE);
+        string2.add("r");
+        string2.add(DmqlString.MATCH_ZERO_OR_MORE);
+
+        assertEquals(string1, string2);
     }
 }
