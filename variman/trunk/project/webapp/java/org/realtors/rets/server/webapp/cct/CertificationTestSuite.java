@@ -13,6 +13,7 @@ import org.realtors.rets.server.webapp.cct.tests.RelativeUrlLogin;
 import org.realtors.rets.server.webapp.cct.tests.MinimumUrlLogin;
 import org.realtors.rets.server.webapp.cct.tests.MaximumUrlLogin;
 import org.realtors.rets.server.webapp.cct.tests.BasicSearch;
+import org.realtors.rets.server.webapp.cct.tests.LoginUrlLogin;
 
 public class CertificationTestSuite
 {
@@ -25,6 +26,7 @@ public class CertificationTestSuite
         addTest(new RelativeUrlLogin());
         addTest(new MinimumUrlLogin());
         addTest(new MaximumUrlLogin());
+        addTest(new LoginUrlLogin());
         addTest(new BasicSearch());
 
         for (int i = 0; i < mTests.size(); i++)
