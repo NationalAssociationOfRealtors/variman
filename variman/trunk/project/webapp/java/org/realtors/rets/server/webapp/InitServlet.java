@@ -23,6 +23,7 @@ public class InitServlet extends RetsServlet
         PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
                                         PasswordMethod.RETS_REALM);
         initHibernate();
+        LOG.debug("Init servlet completed successfully");
     }
 
     private void initHibernate() throws ServletException
