@@ -249,6 +249,7 @@ public class RegistrationForm extends ValidatorActionForm
             .toString();
     }
     
+    // todo update validation for fullname->(first,last) change
     private String mAgentID;
     private String mCompany;
     private String mEmail;
