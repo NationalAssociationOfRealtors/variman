@@ -47,6 +47,7 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.MetadataManager;
 
 public class MetadataPanel extends wxPanel
 {
@@ -58,7 +59,8 @@ public class MetadataPanel extends wxPanel
         mTree = new wxTreeCtrl(splitter, METADATA_TREE, wxDefaultPosition,
                                wxDefaultSize, wxTR_DEFAULT_STYLE);
 
-        mDetailPanel = new DetailPanel(splitter);
+        mMetadataManager = new MetadataManager();
+        mDetailPanel = new DetailPanel(splitter, mMetadataManager);
         splitter.SplitVertically(mTree, mDetailPanel, 300);
 
         box.Add(splitter, 1, wxEXPAND);
@@ -103,6 +105,8 @@ public class MetadataPanel extends wxPanel
                     mTree.SetJData(root, system);
                     recursivelyAddMetadata(root, system);
                     mTree.UnselectAll();
+                    mMetadataManager.clear();
+                    mMetadataManager.addRecursive(system);
                 }
                 disabler.delete();
                 wxEndBusyCursor();
@@ -256,4 +260,5 @@ public class MetadataPanel extends wxPanel
     private wxTreeCtrl mTree;
     private NodeTextVisitor mNodeTextVisitor;
     private DetailPanel mDetailPanel;
+    private MetadataManager mMetadataManager;
 }
