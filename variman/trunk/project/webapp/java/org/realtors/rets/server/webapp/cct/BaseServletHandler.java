@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
 import org.realtors.rets.server.webapp.RetsServletRequest;
@@ -156,7 +157,7 @@ public abstract class BaseServletHandler implements ServletHandler
      */
     protected void serviceRets(RetsServletRequest request,
                                RetsServletResponse response)
-        throws RetsReplyException, IOException
+        throws RetsServerException, IOException
     {
         // Should be overridden
     }
