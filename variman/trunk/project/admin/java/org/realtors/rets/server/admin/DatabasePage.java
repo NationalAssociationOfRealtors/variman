@@ -134,16 +134,17 @@ public class DatabasePage extends wxPanel
     {
         public void handleEvent(wxCommandEvent event)
         {
-            DatabaseConfig dbConfig = Admin.getRetsConfig().getDatabase();
-            DatabasePropertiesDialog dialog =
-                new DatabasePropertiesDialog(Admin.getAdminFrame(), dbConfig);
+            DatabasePropertiesDialog dialog = null;
             try
             {
-                int response = dialog.ShowModal();
-                if (response != wxID_OK)
+                DatabaseConfig dbConfig = Admin.getRetsConfig().getDatabase();
+                dialog = new DatabasePropertiesDialog(Admin.getAdminFrame(),
+                                                      dbConfig);
+                if (dialog.ShowModal() != wxID_OK)
                 {
                     return;
                 }
+
                 dialog.updateConfig(dbConfig);
                 updateLabels();
                 // Re-initialize Hibernate with new parameters
@@ -151,7 +152,7 @@ public class DatabasePage extends wxPanel
             }
             finally
             {
-                dialog.Destroy();
+                destroy(dialog);
             }
         }
     }
@@ -160,22 +161,38 @@ public class DatabasePage extends wxPanel
     {
         public void handleEvent(wxCommandEvent event)
         {
-            RetsConfig config = Admin.getRetsConfig();
-            String webappRoot = Admin.getWebappRoot();
-            String metadataDir = config.getMetadataDir();
-            metadataDir = IOUtils.resolve(webappRoot, metadataDir);
-            wxDirDialog dirDialog =
-                new wxDirDialog(Admin.getAdminFrame(),
-                                "Choose Metadata Directory",
-                                metadataDir);
-            if (dirDialog.ShowModal() == wxID_OK)
+            wxDirDialog dirDialog = null;
+            try
             {
+                RetsConfig config = Admin.getRetsConfig();
+                String webappRoot = Admin.getWebappRoot();
+                String metadataDir = config.getMetadataDir();
+                metadataDir = IOUtils.resolve(webappRoot, metadataDir);
+                dirDialog =
+                    new wxDirDialog(Admin.getAdminFrame(),
+                                    "Choose Metadata Directory", metadataDir);
+                if (dirDialog.ShowModal() != wxID_OK)
+                {
+                    return;
+                }
+
                 metadataDir = dirDialog.GetPath();
                 metadataDir = IOUtils.relativize(webappRoot, metadataDir);
                 config.setMetadataDir(metadataDir);
                 updateLabels();
             }
-            dirDialog.Destroy();
+            finally
+            {
+                destroy(dirDialog);
+            }
+        }
+    }
+
+    private static void destroy(wxWindow window)
+    {
+        if (window != null)
+        {
+            window.Destroy();
         }
     }
 
