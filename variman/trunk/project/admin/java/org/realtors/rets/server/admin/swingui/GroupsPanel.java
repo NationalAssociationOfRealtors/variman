@@ -19,6 +19,7 @@ import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.RuleDescription;
+import org.realtors.rets.server.config.SecurityConstraints;
 
 public class GroupsPanel extends JPanel
 {
@@ -139,16 +140,12 @@ public class GroupsPanel extends JPanel
     {
         RetsConfig retsConfig = Admin.getRetsConfig();
         List ruleDescriptions = Collections.EMPTY_LIST;
-        List securityConstraints = retsConfig.getAllGroupRules();
-        for (int i = 0; i < securityConstraints.size(); i++)
+        SecurityConstraints securityConstraints =
+            retsConfig.getSecurityConstraints();
+        mGroupRules = securityConstraints.getRulesForGroup(group.getName());
+        if (mGroupRules != null)
         {
-            GroupRules rules = (GroupRules) securityConstraints.get(i);
-            if (rules.getGroupName().equals(group.getName()))
-            {
-                mGroupRules = rules;
-                ruleDescriptions = rules.getRules();
-                break;
-            }
+            ruleDescriptions = mGroupRules.getRules();
         }
         mRulesListModel.setList(ruleDescriptions);
         mRulesList.clearSelection();
