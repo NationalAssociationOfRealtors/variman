@@ -2,6 +2,7 @@
  */
 package org.realtors.rets.server.metadata;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ public class ObjectMother
     public static MSystem createSystem()
     {
         MSystem system = new MSystem();
+        system.setDate(new Date());
         return system;
     }
 
