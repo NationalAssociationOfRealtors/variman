@@ -267,7 +267,7 @@ public class MClass extends ServerMetadata implements Serializable
 
     public String getRetsId()
     {
-        return super.getRetsId();
+        return mVisibleName;
     }
 
     public String getTableName()
@@ -299,6 +299,11 @@ public class MClass extends ServerMetadata implements Serializable
             .toHashCode();
     }
 
+    public Object accept(MetadataVisitor visitor)
+    {
+        return visitor.visit(this);
+    }
+
     /** identifier field */
     private Long mId;
 
@@ -328,5 +333,4 @@ public class MClass extends ServerMetadata implements Serializable
     private String mDbTable;
 
     public static final String TABLE = "CLASS";
-
 }

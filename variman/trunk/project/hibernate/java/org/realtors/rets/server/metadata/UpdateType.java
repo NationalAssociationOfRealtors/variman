@@ -230,6 +230,11 @@ public class UpdateType extends ServerMetadata implements Serializable
         return TABLE;
     }
 
+    public String getRetsId()
+    {
+        return mTable.getSystemName();
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -254,6 +259,11 @@ public class UpdateType extends ServerMetadata implements Serializable
         return new HashCodeBuilder()
             .append(getId())
             .toHashCode();
+    }
+
+    public Object accept(MetadataVisitor visitor)
+    {
+        return visitor.visit(this);
     }
 
     /** identifier field */

@@ -37,6 +37,8 @@ public abstract class ServerMetadata implements Identifiable
         return "";
     }
 
+    public abstract Object accept(MetadataVisitor visitor);
+
     public abstract String getTableName();
 
     public abstract String getLevel();

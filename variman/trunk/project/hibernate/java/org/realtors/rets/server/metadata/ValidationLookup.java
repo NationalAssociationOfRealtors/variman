@@ -217,6 +217,11 @@ public class ValidationLookup extends ServerMetadata implements Serializable
             .toHashCode();
     }
 
+    public Object accept(MetadataVisitor visitor)
+    {
+        return visitor.visit(this);
+    }
+
     /** identifier field */
     private Long mId;
 

@@ -34,21 +34,7 @@ import org.jdom.input.SAXBuilder;
 import org.realtors.rets.common.metadata.JDomCompactBuilder;
 import org.realtors.rets.common.metadata.Metadata;
 import org.realtors.rets.common.metadata.MetadataException;
-import org.realtors.rets.common.metadata.types.MEditMask;
-import org.realtors.rets.common.metadata.types.MForeignKey;
-import org.realtors.rets.common.metadata.types.MLookup;
-import org.realtors.rets.common.metadata.types.MLookupType;
-import org.realtors.rets.common.metadata.types.MResource;
-import org.realtors.rets.common.metadata.types.MSearchHelp;
-import org.realtors.rets.common.metadata.types.MTable;
-import org.realtors.rets.common.metadata.types.MUpdate;
-import org.realtors.rets.common.metadata.types.MUpdateHelp;
-import org.realtors.rets.common.metadata.types.MUpdateType;
-import org.realtors.rets.common.metadata.types.MValidationExpression;
-import org.realtors.rets.common.metadata.types.MValidationExternal;
-import org.realtors.rets.common.metadata.types.MValidationExternalType;
-import org.realtors.rets.common.metadata.types.MValidationLookup;
-import org.realtors.rets.common.metadata.types.MValidationLookupType;
+import org.realtors.rets.common.metadata.types.*;
 import org.xml.sax.InputSource;
 
 
@@ -503,9 +489,14 @@ public class MetadataLoader
 
     protected MSystem doSystem()
     {
+        org.realtors.rets.common.metadata.types.MSystem system =
+            mMetadata.getSystem();
         MSystem hSystem = new MSystem();
-        hSystem.setVersion(101001);
-        hSystem.setDate(Calendar.getInstance().getTime());
+        hSystem.setVersion(system.getVersion());
+        hSystem.setDate(system.getDate());
+        hSystem.setSystemID(system.getSystemID());
+        hSystem.setDescription(system.getSystemDescription());
+        hSystem.setComments(system.getComment());
         save(hSystem);
         return hSystem;
     }
@@ -990,7 +981,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.2 2004/02/09 22:32:20 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.3 2004/02/24 16:54:40 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;

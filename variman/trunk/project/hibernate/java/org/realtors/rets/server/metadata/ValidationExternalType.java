@@ -180,6 +180,12 @@ public class ValidationExternalType
             .toHashCode();
     }
 
+    public Object accept(MetadataVisitor visitor)
+    {
+        return visitor.visit(this);
+    }
+
+
     /** identifier field */
     private Long mId;
 

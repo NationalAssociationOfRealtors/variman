@@ -157,6 +157,11 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
             .isEquals();
     }
 
+    public Object accept(MetadataVisitor visitor)
+    {
+        return visitor.visit(this);
+    }
+
     public int hashCode()
     {
         return new HashCodeBuilder()

@@ -472,6 +472,11 @@ public class Table extends ServerMetadata implements Serializable
         return mLevel + ":" + mSystemName;
     }
 
+    public String getRetsId()
+    {
+        return mLongName;
+    }
+
     public String getTableName()
     {
         return TABLE;
@@ -501,6 +506,11 @@ public class Table extends ServerMetadata implements Serializable
         return new HashCodeBuilder()
             .append(getId())
             .toHashCode();
+    }
+
+    public Object accept(MetadataVisitor visitor)
+    {
+        return visitor.visit(this);
     }
 
     /** identifier field */
