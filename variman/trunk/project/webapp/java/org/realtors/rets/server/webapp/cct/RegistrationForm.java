@@ -11,12 +11,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.realtors.rets.server.Util;
 
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.validator.ValidatorActionForm;
+import org.apache.struts.validator.ValidatorForm;
 
 /**
  * @author kgarner
  */
-public class RegistrationForm extends ValidatorActionForm
+public class RegistrationForm extends ValidatorForm
 {
     /**
      *
@@ -130,6 +130,7 @@ public class RegistrationForm extends ValidatorActionForm
      */
     public void reset(ActionMapping mapping, HttpServletRequest request)
     {
+        mAcceptedLegalese = false;
         mAgentId = "";
         mCompany = "";
         mEmail = "";
