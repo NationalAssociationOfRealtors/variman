@@ -24,6 +24,7 @@ import org.realtors.rets.client.MetadataTable;
 import org.realtors.rets.client.RetsSession;
 
 import org.realtors.rets.server.metadata.AlignmentEnum;
+import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
 import org.realtors.rets.server.metadata.TableStandardNameEnum;
@@ -57,6 +58,9 @@ public class MetadataImporter
         mClasses = new HashMap();
         mEditMasks = new HashMap();
         mTables = new HashMap();
+        mLookups = new HashMap();
+        mSearchHelps = new HashMap();
+        mValidationExternals = new HashMap();
         mDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
     }
 
@@ -315,6 +319,7 @@ public class MetadataImporter
 
                     hSession.save(hSearchHelp);
                     hSearchHelps.add(hSearchHelp);
+                    mSearchHelps.put(hSearchHelp.getPath(), hSearchHelp);
                 }
             }
 
@@ -391,6 +396,7 @@ public class MetadataImporter
                     
                     hSession.save(hLookup);
                     hLookups.add(hLookup);
+                    mLookups.put(hLookup.getPath(), hLookup);
                 }
             }
             resource.setLookups(hLookups);
@@ -513,8 +519,10 @@ public class MetadataImporter
 
                     hSession.save(hValidationExternal);
                     hValidationExternals.add(hValidationExternal);
-                    doValidationExternalType(hValidationExternal, rSession,
-                                             hSession);
+                    mValidationExternals.put(hValidationExternal.getPath(),
+                                             hValidationExternal);
+//                     doValidationExternalType(hValidationExternal, rSession,
+//                                              hSession);
                 }
             }
             resource.setValidationExternals(hValidationExternals);
@@ -534,11 +542,17 @@ public class MetadataImporter
      * @param hSession the hibernate session
      * @exception HibernateException if an error occurs
      */
-    private void doValidationExternalType(ValidationExternal parent,
-                                          RetsSession rSession,
+    private void doValidationExternalType(RetsSession rSession,
                                           Session hSession)
         throws HibernateException
     {
+        MetadataTable tValidationExternalTypes =
+            rSession.getMetadataTable(MetadataTable.VALIDATION_EXTERNAL_TYPE);
+
+        Iterator i = mValidationExternals.values().iterator();
+        while (i.hasNext())
+        {
+        }
         // todo: Fill in doValidationExternalType
     }
 
@@ -640,6 +654,8 @@ public class MetadataImporter
                             md.getAttribute("UseSeparator")).booleanValue());
 
                     String editMasksJoined = md.getAttribute("EditMaskID");
+                    String resourcePath =  hClass.getResourceid().getPath();
+                    String path = null;
                     if (editMasksJoined != null)
                     {
                         String editMasks[] =
@@ -648,15 +664,49 @@ public class MetadataImporter
                         for (int c = 0; c < editMasks.length; c++)
                         {
                             Resource resource = hClass.getResourceid();
-                            String path = hClass.getResourceid().getPath() +
-                                ":" + editMasks[c];
+                            path = resourcePath + ":" + editMasks[c];
                             EditMask em = (EditMask) mEditMasks.get(path);
                             hEditMasks.add(em);
                         }
                         hTable.setEditMasks(hEditMasks);
                     }
 
-                    // todo: pick up after editmasks
+                    String lookupName = md.getAttribute("LookupName");
+                    path = resourcePath + ":" + lookupName;
+                    Lookup lookup = (Lookup) mLookups.get(path);
+                    hTable.setLookup(lookup);
+
+                    hTable.setMaxSelect(
+                        Integer.parseInt(md.getAttribute("MaxSelect")));
+
+                    hTable.setUnits(
+                        UnitEnum.fromString(md.getAttribute("Units")));
+
+                    hTable.setIndex(
+                        Integer.parseInt(md.getAttribute("Index")));
+
+                    hTable.setMinimum(
+                        Integer.parseInt(md.getAttribute("Minimum")));
+
+                    hTable.setMaximum(
+                        Integer.parseInt(md.getAttribute("Maximum")));
+
+                    hTable.setDefault(
+                        Integer.parseInt(md.getAttribute("Default")));
+
+                    hTable.setRequired(
+                        Integer.parseInt(md.getAttribute("Required")));
+
+                    // todo: search help
+                    String searchHelpID = md.getAttribute("SearchHelpID");
+                    path = resourcePath + ":" + searchHelpID;
+                    SearchHelp searchHelp =
+                        (SearchHelp) mSearchHelps.get(path);
+                    hTable.setSearchHelp(searchHelp);
+
+                    hTable.setUnique(
+                        Boolean.valueOf(
+                            md.getAttribute("Unique")).booleanValue());
 
                     hSession.save(hTable);
                     hTables.add(hTable);
@@ -680,8 +730,11 @@ public class MetadataImporter
     private Map mClasses;
     private Map mEditMasks;
     private Map mTables;
+    private Map mLookups;
+    private Map mSearchHelps;
+    private Map mValidationExternals;
     private DateFormat mDateFormat;
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.14 2003/07/03 20:09:09 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.15 2003/07/07 21:47:54 kgarner Exp $";
 }
