@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.enum.Enum;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
@@ -16,16 +15,16 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.RollingFileAppender;
 import org.apache.log4j.config.PropertySetter;
 import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.PatternConverter;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * Splits output into multiple file appenders using an MDC value as a part of
- * the filename. The same result could be a achieved with filters, but this
- * is much more effecient and scalable.
+ * Splits output into multiple file appenders using filename patterns. This
+ * allows separate files to be created for MDC values, thread name, or level.
  */
-public class MdcSplitFileAppender extends AppenderSkeleton
+public class SplitFileAppender extends AppenderSkeleton
 {
-    public MdcSplitFileAppender()
+    public SplitFileAppender()
     {
         super();
         mDelegatedAppenders = new HashMap();
@@ -34,29 +33,44 @@ public class MdcSplitFileAppender extends AppenderSkeleton
 
     protected void append(LoggingEvent event)
     {
-        String mdcValue = (String) event.getMDC(mMdcName);
-        Appender delegate = getDelegate(mdcValue);
+        Appender delegate = getDelegate(event);
         delegate.doAppend(event);
     }
 
-    private Appender getDelegate(String mdcValue)
+    private Appender getDelegate(LoggingEvent event)
     {
+        String formattedFile = format(event);
         Appender delegate =
-            (Appender) mDelegatedAppenders.get(mdcValue);
+            (Appender) mDelegatedAppenders.get(formattedFile);
         if (delegate == null)
         {
-            delegate = createAppender(mdcValue);
-            mDelegatedAppenders.put(mdcValue, delegate);
+            delegate = createAppender(formattedFile);
+            mDelegatedAppenders.put(formattedFile, delegate);
         }
         return delegate;
     }
 
-    private Appender createAppender(String mdcValue)
+    private String format(LoggingEvent event)
     {
-        String formattedFile = StringUtils.replace(mFile, "%X", mdcValue);
+        StringBuffer buffer = new StringBuffer();
+        PatternConverter converter = mHead;
+        while (converter != null)
+        {
+            converter.format(buffer, event);
+            converter = converter.next;
+        }
+        return buffer.toString();
+    }
+
+    private Appender createAppender(String formattedFile)
+    {
+        String delegateName = this.name + "." + mDelegateId;
+        mDelegateId++;
+        LogLog.debug("Creating appender " + delegateName + " for: " +
+                     formattedFile);
         FileAppender appender = instantiateDelegate();
         PropertySetter setter = new PropertySetter(appender);
-        appender.setName(this.name + "." + mdcValue);
+        appender.setName(delegateName);
         appender.setLayout(this.layout);
         appender.setThreshold(this.threshold);
         setProperty(setter, "Encoding", mEncoding);
@@ -116,7 +130,7 @@ public class MdcSplitFileAppender extends AppenderSkeleton
         }
     }
 
-    public void close()
+    public synchronized void close()
     {
         Collection appenders = mDelegatedAppenders.values();
         for (Iterator i = appenders.iterator(); i.hasNext();)
@@ -125,6 +139,7 @@ public class MdcSplitFileAppender extends AppenderSkeleton
             LogLog.debug("Closing delegate: " + appender.getName());
             appender.close();
         }
+        mDelegatedAppenders.clear();
     }
 
     public boolean requiresLayout()
@@ -193,14 +208,15 @@ public class MdcSplitFileAppender extends AppenderSkeleton
         mEncoding = encoding;
     }
 
-    public String getFile()
+    public String getFilePattern()
     {
-        return mFile;
+        return mFilePattern;
     }
 
-    public void setFile(String file)
+    public void setFilePattern(String filePattern)
     {
-        mFile = file;
+        mFilePattern = filePattern;
+        mHead = new SplitFilePatternParser(filePattern).parse();
     }
 
     public String getImmediateFlush()
@@ -233,17 +249,7 @@ public class MdcSplitFileAppender extends AppenderSkeleton
         mMaxFileSize = maxFileSize;
     }
 
-    public String getMdcName()
-    {
-        return mMdcName;
-    }
-
-    public void setMdcName(String mdcName)
-    {
-        mMdcName = mdcName;
-    }
-
-    static class Delegate extends Enum
+    private static class Delegate extends Enum
     {
         private Delegate(String name)
         {
@@ -269,14 +275,15 @@ public class MdcSplitFileAppender extends AppenderSkeleton
 
     private Map mDelegatedAppenders;
     private Delegate mDelegate;
+    private int mDelegateId;
     private String mEncoding;
     private String mImmediateFlush;
     private String mAppend;
-    private String mFile;
+    private String mFilePattern;
     private String mBufferedIO;
     private String mBufferSize;
     private String mDatePattern;
-    private String mMdcName;
     private String mMaxBackupIndex;
     private String mMaxFileSize;
+    private PatternConverter mHead;
 }
