@@ -589,10 +589,13 @@ public class MetadataLoader
                         path = resourcePath + ":" +
                                 StringUtils.trimToEmpty(editMasks[c]);
                         EditMask em = (EditMask) mEditMasks.get(path);
-                        hEditMasks.add(em);
-                        if (em == null)
+                        if (em != null)
                         {
-                            LOG.error("edit mask null for path: " + path);
+                            hEditMasks.add(em);
+                        }
+                        else
+                        {
+                            LOG.error("Edit mask null for path: " + path);
                         }
                     }
                 }
@@ -993,7 +996,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.7 2004/04/23 22:12:54 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.8 2004/07/20 20:15:49 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
