@@ -31,6 +31,8 @@ public abstract class DatabaseType
     public static final DatabaseType POSTGRESQL = new PostgreSQLType();
     public static final DatabaseType SQLSERVER_JSQL = new SQLServerJSQLType();
 
+    private static Map sKnownTypes;
+
     static
     {
         sKnownTypes = new HashMap();
@@ -42,6 +44,4 @@ public abstract class DatabaseType
     {
         sKnownTypes.put(databaseType.getName(), databaseType);
     }
-
-    private static Map sKnownTypes;
 }
