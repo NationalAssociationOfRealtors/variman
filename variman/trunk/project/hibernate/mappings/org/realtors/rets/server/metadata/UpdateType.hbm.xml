@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: UpdateType.hbm.xml,v 1.3 2003/06/03 20:22:36 kgarner Exp $ -->
+<!-- $Id: UpdateType.hbm.xml,v 1.4 2003/06/04 20:32:45 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataUpdateType"
@@ -12,6 +12,9 @@
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
+
+    <many-to-one name="updateid" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataUpdate"/>
 
     <property name="systemName" type="string">
       <column name="system_name" length="32" not-null="true" unique="true"

@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MClass.hbm.xml,v 1.3 2003/06/02 21:48:13 kgarner Exp $ -->
+<!-- $Id: MClass.hbm.xml,v 1.4 2003/06/04 20:32:45 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataClass"
@@ -11,6 +11,9 @@
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
+
+    <many-to-one name="resourceid" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataResource"/>
 
     <property name="className" type="string">
       <column name="class_name" length="32" not-null="true" unique="true"
@@ -43,13 +46,13 @@
 
     <property name="updateDate" type="date"/>
 
-    <set name="tables">
-      <key column="id"/>
+    <set name="tables" inverse="true">
+      <key column="classid"/>
       <one-to-many class="org.nar.rets.metadata.newdb.MetadataTable"/>
     </set>
 
-    <set name="updates">
-      <key column="id"/>
+    <set name="updates" inverse="true">
+      <key column="classid"/>
       <one-to-many class="org.nar.rets.metadata.newdb.MetadataUpdate"/>
     </set>
 

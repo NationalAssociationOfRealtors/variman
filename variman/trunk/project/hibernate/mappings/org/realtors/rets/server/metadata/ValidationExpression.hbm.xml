@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: ValidationExpression.hbm.xml,v 1.1 2003/06/02 21:48:13 kgarner Exp $ -->
+<!-- $Id: ValidationExpression.hbm.xml,v 1.2 2003/06/04 20:32:45 kgarner Exp $ -->
 
 <hibernate-mapping>
 
@@ -13,6 +13,9 @@
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
+
+    <many-to-one name="resourceid" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataResource"/>
 
     <property name="validationExpressionID" type="string">
       <column name="validation_expression_id" length="32" unique="true"

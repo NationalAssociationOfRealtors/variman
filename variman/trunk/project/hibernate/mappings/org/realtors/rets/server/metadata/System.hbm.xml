@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: System.hbm.xml,v 1.2 2003/05/29 21:51:21 kgarner Exp $ -->
+<!-- $Id: System.hbm.xml,v 1.3 2003/06/04 20:32:45 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataSystem"
@@ -28,9 +28,14 @@
     
     <property name="date" type="date"/>
 
-    <set name="resources">
-      <key column="id"/>
+    <set name="resources" inverse="true">
+      <key column="systemid"/>
       <one-to-many class="org.nar.rets.metadata.newdb.MetadataResource"/>
+    </set>
+
+    <set name="foreignKeys" inverse="true">
+      <key column="systemid"/>
+      <one-to-many class="org.nar.rets.metadata.newdb.MetadataForeignKey"/>
     </set>
        
   </class>

@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataValidationExternal.hbm.xml,v 1.1 2003/06/02 21:48:13 kgarner Exp $ -->
+<!-- $Id: MetadataValidationExternal.hbm.xml,v 1.2 2003/06/04 20:32:45 kgarner Exp $ -->
 
 <hibernate-mapping>
 
@@ -13,6 +13,9 @@
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
+
+    <many-to-one name="resourceid" cascade="none"
+      class="org.nar.rets.metadata.newdb.MetadataResource"/>
 
     <property name="validationExternalName" type="string">
       <column name="validation_external_name" length="32" unique="true"
@@ -34,7 +37,7 @@
     </property>
 
     <set name="validationExternalTypes">
-      <key column="id"/>
+      <key column="validationExternalID"/>
       <one-to-many
         class="org.nar.rets.metadata.newdb.MetadataValidationExternalType"/>
     </set>
