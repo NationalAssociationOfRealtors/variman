@@ -1,5 +1,5 @@
 build
 dist
-build.properties
+build.properties*
 tmp
 .ant-targets-build.xml
