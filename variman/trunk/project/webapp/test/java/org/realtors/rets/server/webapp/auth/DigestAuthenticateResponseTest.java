@@ -20,7 +20,7 @@ public class DigestAuthenticateResponseTest extends TestCase
                      "opaque=\"121d932ad13ff598b0df1d700e422812\"", header);
     }
 
-    public void testResponseHedaerGenerateNonce()
+    public void testResponseHeaderGenerateNonce()
     {
         DigestAuthenticateResponse response1 =
             new DigestAuthenticateResponse("RETS Server");
