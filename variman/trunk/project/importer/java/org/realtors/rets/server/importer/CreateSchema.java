@@ -79,65 +79,76 @@ public class CreateSchema extends RetsHelpers
             while (j.hasNext())
             {
                 Table table = (Table) j.next();
-                sb.append("\t").append(table.getDbName()).append(" ");
-                switch (table.getDataType().toInt())
-                {
-                    case 0 :
-                        sb.append(dialect.getTypeName(Types.BOOLEAN));
-                        break;
-                    case 1 :
-                        sb.append(
-                            dialect.getTypeName(Types.VARCHAR,
-                                                table.getMaximumLength()));
-                        break;
-                    case 2 :
-                        sb.append(dialect.getTypeName(Types.DATE));
-                        break;
-                    case 3 :
-                        sb.append(dialect.getTypeName(Types.TIMESTAMP));
-                        break;
-                    case 4 :
-                        sb.append(dialect.getTypeName(Types.TIME));
-                        break;
-                    case 5 :
-                        sb.append(dialect.getTypeName(Types.TINYINT));
-                        break;
-                    case 6 :
-                        sb.append(dialect.getTypeName(Types.SMALLINT));
-                        break;
-                    case 7 :
-                        sb.append(dialect.getTypeName(Types.INTEGER));
-                        break;
-                    case 8 :
-                        sb.append(dialect.getTypeName(Types.BIGINT));
-                        break;
-                    case 9 :
-                        /* Not sure if this should be DECIMAL or NUMERIC */
-                        //sb.append(dialect.getTypeName(Types.DECIMAL));
-                        sb.append(dialect.getTypeName(Types.NUMERIC));
-                        break;
-                }
-
                 if (table.getInterpretation() ==
                     InterpretationEnum.LOOKUPMULTI)
                 {
                     needsLookupMultiTable = true;
                 }
-                
-                if (table.isUnique() && dialect.supportsUnique())
+                else
                 {
-                    sb.append(" unique");
-                }
-                if (j.hasNext())
-                {
-                    sb.append(",").append(mLs);
-                }
-
-                if (table.getIndex() > 0)
-                {
-                    needsIndex.add(table);
+                    sb.append("\t").append(table.getDbName()).append(" ");
+                    switch (table.getDataType().toInt())
+                    {
+                        case 0 :
+                            sb.append(dialect.getTypeName(Types.BOOLEAN));
+                            break;
+                        case 1 :
+                            sb.append(
+                                dialect.getTypeName(Types.VARCHAR,
+                                                    table.getMaximumLength()));
+                            break;
+                        case 2 :
+                            sb.append(dialect.getTypeName(Types.DATE));
+                            break;
+                        case 3 :
+                            sb.append(dialect.getTypeName(Types.TIMESTAMP));
+                            break;
+                        case 4 :
+                            sb.append(dialect.getTypeName(Types.TIME));
+                            break;
+                        case 5 :
+                            sb.append(dialect.getTypeName(Types.TINYINT));
+                            break;
+                        case 6 :
+                            sb.append(dialect.getTypeName(Types.SMALLINT));
+                            break;
+                        case 7 :
+                            sb.append(dialect.getTypeName(Types.INTEGER));
+                            break;
+                        case 8 :
+                            sb.append(dialect.getTypeName(Types.BIGINT));
+                            break;
+                        case 9 :
+                            /* Not sure if this should be DECIMAL or NUMERIC */
+                            //sb.append(dialect.getTypeName(Types.DECIMAL));
+                            sb.append(dialect.getTypeName(Types.NUMERIC));
+                            break;
+                    }
+                    
+                    if (table.isUnique() && dialect.supportsUnique())
+                    {
+                        sb.append(" unique");
+                    }
+                    //todo fix last item is multi problem
+                    // table def could end with comma if last item is
+                    // lookupmult.  Works with our dataset so this is low
+                    // priority to fix.
+                    if (j.hasNext())
+                    {
+                        sb.append(",").append(mLs);
+                    }
+                    else
+                    {
+                        sb.append(mLs);
+                    }
+    
+                    if (table.getIndex() > 0)
+                    {
+                        needsIndex.add(table);
+                    }
                 }
             }
+            
             sb.append(");").append(mLs);
             sb.append("alter table ").append(sqlTableName);
             sb.append(dialect.getAddPrimaryKeyConstraintString(
@@ -171,6 +182,13 @@ public class CreateSchema extends RetsHelpers
                 sb.append(dialect.getTypeName(Types.VARCHAR, 32)).append(mLs);
                 sb.append(");").append(mLs);
                 
+                // Do the primary key
+                sb.append("alter table ").append(lmTable);
+                sb.append(dialect.getAddPrimaryKeyConstraintString(
+                    lmTable + "_pk_id"));
+                sb.append("(id);").append(mLs);
+                
+                // do the foreign key
                 sb.append("alter table ").append(lmTable);
                 sb.append(
                     dialect.getAddForeignKeyConstraintString(lmTable + "_fk",
