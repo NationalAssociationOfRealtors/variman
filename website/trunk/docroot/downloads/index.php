@@ -4,7 +4,7 @@
 
 function ver()
 {
-    return "2.0.0";
+    return "2.0.1";
 }
 
 function print_ver()
