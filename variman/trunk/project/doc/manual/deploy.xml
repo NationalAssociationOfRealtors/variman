@@ -56,11 +56,11 @@
         <listitem><literal>db_datawriter</literal></listitem>
       </itemizedlist>
       <para>
-        There are currently no free or Open Source SQL Server JDBC
-        drivers, so none is included with &name;.  The one that
-        Microsoft offers is buggy and does not work with &name;.  The
-        only supported driver is the commercial JSQLConnect driver
-        from JNetDirect <xref linkend="bib-jnetdirect"/>.
+        The Open Source jTDS <xref linkend="bib-jtds"/> driver is
+        included with &name;.  The only other supported driver is the
+        commrecial JSQLConnect driver from JNetDirect <xref
+        linkend="bib-jnetdirect"/>.  The driver that Microsoft offers
+        is buggy and does not work with &name;.
       </para>
     </section>
 

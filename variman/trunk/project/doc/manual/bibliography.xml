@@ -31,6 +31,14 @@
     </releaseinfo>
   </biblioentry>
 
+  <biblioentry id="bib-jtds">
+    <abbrev>jTDS</abbrev>
+    <title>jTDS Web Site</title>
+    <releaseinfo>
+      <ulink url="http://jtds.sourceforge.net/">http://jtds.sourceforge.net/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
   <biblioentry id="bib-postgres">
     <abbrev>Postgres</abbrev>
     <title>PostgreSQL Web Site</title>
