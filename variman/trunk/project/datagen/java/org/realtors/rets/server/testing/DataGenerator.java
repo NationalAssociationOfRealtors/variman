@@ -7,6 +7,12 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Random;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Parser;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 
@@ -129,6 +135,8 @@ public class DataGenerator extends DataGenBase
         }
     }
 
+
+
     /**
      * @return a String from the agent array
      */
@@ -208,11 +216,30 @@ public class DataGenerator extends DataGenBase
     {
         return mUrls[mCount++ % mUrls.length];
     }
-    
+
+    private static Options getOptions()
+    {
+        Options ops = new Options();
+        ops.addOption("p", "props", true, "number of props to create");
+        return ops;
+    }
+
     public static void main(String[] args)
         throws HibernateException, SQLException
     {
-
+        Parser parser = new GnuParser();
+        Options opts = getOptions();
+        CommandLine cmdl = null;
+        try
+        {
+            cmdl = parser.parse(opts, args);
+        }
+        catch (Exception e)
+        {
+            printHelp(opts);
+            System.exit(1);
+        }
+                
         DataGenerator dg = new DataGenerator();
         long before = System.currentTimeMillis();
         dg.loadMetadata();
@@ -222,13 +249,19 @@ public class DataGenerator extends DataGenBase
         System.out.println("ms");
 
         before = System.currentTimeMillis();
-        String tmp = System.getProperty("prop.count", "10");
+        String tmp = cmdl.getOptionValue('p', "10");
         dg.createData(Integer.parseInt(tmp));
         after = System.currentTimeMillis();
         System.out.print("Time to create data:");
         System.out.print(after - before);
         System.out.println("ms");
 
+    }
+
+    private static void printHelp(Options opt)
+    {
+        HelpFormatter fs = new HelpFormatter();
+        fs.printHelp("CreateSchema [options]", opt);
     }
 
     private String[] mAgents;
