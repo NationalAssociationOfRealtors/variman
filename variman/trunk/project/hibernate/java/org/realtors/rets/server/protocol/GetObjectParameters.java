@@ -26,7 +26,12 @@ public class GetObjectParameters extends TransactionParameters
         LOG.debug("Resource:" + mResource);
         mType = getParameter(parameterMap, "Type");
         LOG.debug("Type: " + mType);
-        initID(getParameter(parameterMap, "ID"));
+        String id = getParameter(parameterMap, "ID");
+        if (id == null)
+        {
+            id = getParameter(parameterMap, "Id");
+        }
+        initID(id);
     }
 
     public GetObjectParameters(String resource, String type, String id)

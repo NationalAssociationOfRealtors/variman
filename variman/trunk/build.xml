@@ -3,7 +3,7 @@
 
   <!-- set global properties for this build -->
   <property name="project.name" value="rex"/>
-  <property name="project.version" value="2.0.3b1"/>
+  <property name="project.version" value="2.0.3b2"/>
   <property name="project.string" value="${project.name}-${project.version}"/>
 
   <!-- This must be done before any other propertes -->
@@ -87,7 +87,6 @@
 
   <path id="admin.path">
     <pathelement path="${jdom.jar}"/>
-    <pathelement path="${wx4j.jar}"/>
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
@@ -688,13 +687,6 @@
 
     <copy file="project/admin/shell/rex" todir="build/admin/bin"/>
     <chmod file="build/admin/bin/rex" perm="ugo+rx"/>
-    <copy file="${wx4j.jar}" todir="build/rets-server/admin/lib"/>
-    <copy file="${wx4j.lib}" todir="build/rets-server"/>
-    <antcall target="copy-msvcr7"/>
-  </target>
-
-  <target name="copy-msvcr7" if="wx4j.msvcr7">
-    <copy file="${wx4j.msvcr7}" todir="build/rets-server"/>
   </target>
 
   <target name="build-full" description="Full build from clean"
@@ -767,15 +759,6 @@
         <excludesfile name="project/build/dist-bin-excludes"/>
       </zipfileset>
     </zip>
-  </target>
-
-  <target name="dist-linux" depends="build">
-    <!-- Embedded -->
-    <tar destfile="dist/${project.string}-linux.tar.gz" compression="gzip">
-      <tarfileset dir="build/rets-server" prefix="${project.string}">
-        <excludesfile name="project/build/dist-linux-excludes"/>
-      </tarfileset>
-    </tar>
   </target>
 
   <target name="dist-win" description="Builds a Windows binary distribution">
