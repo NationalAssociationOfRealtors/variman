@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 import org.realtors.rets.server.dmql.DmqlFieldType;
 
@@ -190,7 +192,25 @@ public class SearchFormatterContext
     public String getLookupShortValue(String column, String value)
     {
         String lookupName = mMetadata.columnToField(column);
-        return mMetadata.getLookupShortValue(lookupName, value);
+        if (mMetadata.getFieldType(lookupName) == DmqlFieldType.LOOKUP)
+        {
+            return mMetadata.getLookupShortValue(lookupName, value);
+        }
+        else
+        {
+            String[] values = StringUtils.split(value, ",");
+            StringBuffer shortValues = new StringBuffer();
+            String separator = "";
+            for (int i = 0; i < values.length; i++)
+            {
+                shortValues.append(separator);
+                String shortValue =
+                    mMetadata.getLookupShortValue(lookupName, values[i]);
+                shortValues.append(shortValue);
+                separator = ",";
+            }
+            return shortValues.toString();
+        }
     }
 
     /**
@@ -214,7 +234,9 @@ public class SearchFormatterContext
     public boolean isColumnALookup(String column)
     {
         String field = mMetadata.columnToField(column);
-        return (mMetadata.getFieldType(field) == DmqlFieldType.LOOKUP);
+        DmqlFieldType fieldType = mMetadata.getFieldType(field);
+        return ((fieldType == DmqlFieldType.LOOKUP) ||
+                (fieldType == DmqlFieldType.LOOKUP_MULTI));
     }
 
     /** The writer to print to. */
