@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+          PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+          "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <display-name>CRT RETS Server</display-name>
+  <description>CRT RETS Server</description>
+
+  <filter>
+    <filter-name>authentication-filter</filter-name>
+    <filter-class>org.realtors.rets.server.webapp.auth.AuthenticationFilter</filter-class>
+    <init-param>
+      <param-name>password-map</param-name>
+      <param-value>org.realtors.rets.server.webapp.auth.AuthenticationFilter</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>accounting-filter</filter-name>
+    <filter-class>org.realtors.rets.server.webapp.AccountingFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>authentication-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>accounting-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
+    
+  <servlet>
+    <servlet-name>stop-servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.StopServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>login-servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.LoginServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>logout-servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>get-metadata-servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.GetMetadataServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>reset-servlet</servlet-name>
+    <servlet-class>org.realtors.rets.server.webapp.auth.ResetServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>stop-servlet</servlet-name>
+    <url-pattern>/rets/stop</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>login-servlet</servlet-name>
+    <url-pattern>/rets/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>logout-servlet</servlet-name>
+    <url-pattern>/rets/logout</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>get-metadata-servlet</servlet-name>
+    <url-pattern>/rets/getMetadata</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>reset-servlet</servlet-name>
+    <url-pattern>/reset</url-pattern>
+  </servlet-mapping>
+
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+<!--
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>RETS Server</web-resource-name>
+      <url-pattern>/rets/*</url-pattern>
+      <http-method>DELETE</http-method>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+      <http-method>PUT</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>rets-user</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>DIGEST</auth-method>
+    <realm-name>RETS Server</realm-name>
+  </login-config>
+
+  <security-role>
+    <role-name>rets-user</role-name>
+  </security-role>
+-->
+
+</web-app>
