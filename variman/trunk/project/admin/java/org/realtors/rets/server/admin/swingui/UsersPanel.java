@@ -121,7 +121,7 @@ public class UsersPanel extends JPanel
             public void finished()
             {
                 List users = (List) get();
-                setUserLiseModel(new UserListModel(users));
+                setUserListModel(new UserListModel(users));
                 int newSelection = selection;
                 if (newSelection >= users.size())
                 {
@@ -134,7 +134,7 @@ public class UsersPanel extends JPanel
         worker.start();
     }
 
-    private void setUserLiseModel(UserListModel model)
+    private void setUserListModel(UserListModel model)
     {
         mUserListModel = model;
         mUserList.setModel(model);
