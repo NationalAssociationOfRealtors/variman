@@ -179,7 +179,7 @@
     </java>
   </target>
 
-  <target name="doc" depends="prepare">
+  <target name="doc-api" depends="prepare">
     <javadoc packagenames="org.realtors.rets.*"
              destdir="build/doc/api"
              author="true"
@@ -229,6 +229,9 @@
            description="Filter Init-Param"/>
     </javadoc>
   </target>
+
+  <target name="doc" depends="doc-api"
+          description="Build generated documentation"/>
 
   <target name="build-embedded" depends="prepare">
     <depend srcDir="project/embedded/java"
