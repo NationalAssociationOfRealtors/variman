@@ -54,14 +54,14 @@ public class ValidationLookup implements Serializable
      *
      * @return
      *
-     * @hibernate.property length="32"
+     * @hibernate.many-to-one
      */
-    public String getParent1Field()
+    public Table getParent1Field()
     {
         return mParent1Field;
     }
 
-    public void setParent1Field(String parent1Field)
+    public void setParent1Field(Table parent1Field)
     {
         mParent1Field = parent1Field;
     }
@@ -70,14 +70,14 @@ public class ValidationLookup implements Serializable
      *
      * @return
      *
-     * @hibernate.property length="32"
+     * @hibernate.many-to-one
      */
-    public String getParent2Field()
+    public Table getParent2Field()
     {
         return mParent2Field;
     }
 
-    public void setParent2Field(String parent2Field)
+    public void setParent2Field(Table parent2Field)
     {
         mParent2Field = parent2Field;
     }
@@ -180,10 +180,10 @@ public class ValidationLookup implements Serializable
     private String mValidationLookupName;
 
     /** nullable persistent field */
-    private String mParent1Field;
+    private Table mParent1Field;
 
     /** nullable persistent field */
-    private String mParent2Field;
+    private Table mParent2Field;
 
     /** nullable persistent field */
     private String version;
