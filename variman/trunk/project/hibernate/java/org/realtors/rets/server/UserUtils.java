@@ -18,27 +18,6 @@ import org.apache.log4j.Logger;
 
 public class UserUtils
 {
-    public static Long save(User user) throws HibernateException
-    {
-        SessionHelper helper = RetsServer.createSessionHelper();
-        try
-        {
-            Session session = helper.beginTransaction();
-            Long id = (Long) session.save(user);
-            helper.commit();
-            return id;
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
-        }
-        finally
-        {
-            helper.close(LOG);
-        }
-    }
-
     public static User findByUsername(String username)
         throws HibernateException
     {
@@ -79,7 +58,6 @@ public class UserUtils
     public static List findAll(SessionHelper helper) throws HibernateException
     {
         Query query = helper.createQuery(
-            "SELECT user " +
             "  FROM User user " +
             "ORDER BY user.lastName, user.firstName");
         return query.list();
