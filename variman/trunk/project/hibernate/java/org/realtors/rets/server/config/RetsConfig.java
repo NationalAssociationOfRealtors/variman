@@ -10,26 +10,25 @@
  */
 package org.realtors.rets.server.config;
 
-import java.beans.IntrospectionException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
 import java.util.Properties;
 
-import org.realtors.rets.server.Util;
-import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.Util;
 
-import org.apache.commons.betwixt.XMLIntrospector;
-import org.apache.commons.betwixt.io.BeanReader;
-import org.apache.commons.betwixt.io.BeanWriter;
-import org.apache.commons.betwixt.strategy.HyphenatedNameMapper;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.xml.sax.SAXException;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
 
 public class RetsConfig
 {
@@ -100,39 +99,40 @@ public class RetsConfig
             .toString();
     }
 
-    public String toXml()
-        throws RetsServerException
+    public String toXml() throws RetsServerException
     {
-        try
-        {
-            StringWriter xml = new StringWriter();
+        Element retsConfig = new Element(RETS_CONFIG);
+        addChild(retsConfig,  GET_OBJECT_PATTERN, mGetObjectPattern);
+        addChild(retsConfig, GET_OBJECT_ROOT, mGetObjectRoot);
+        addChild(retsConfig, NONCE_INITIAL_TIMEOUT, mNonceInitialTimeout);
+        addChild(retsConfig, NONCE_SUCCESS_TIMEOUT, mNonceSuccessTimeout);
+        Element database = new Element(DATABASE);
+        addChild(database, DRIVER, mDatabase.getDriver());
+        addChild(database, URL, mDatabase.getUrl());
+        addChild(database, USERNAME, mDatabase.getUsername());
+        addChild(database, PASSWORD, mDatabase.getPassword());
+        addChild(database, MAX_ACTIVE, mDatabase.getMaxActive());
+        addChild(database, MAX_IDLE, mDatabase.getMaxIdle());
+        addChild(database, MAX_WAIT, mDatabase.getMaxWait());
+        addChild(database, MAX_PS_ACTIVE, mDatabase.getMaxPsActive());
+        addChild(database, MAX_PS_IDLE, mDatabase.getMaxPsIdle());
+        addChild(database, MAX_PS_WAIT, mDatabase.getMaxPsWait());
+        retsConfig.addContent(database);
 
-            // Betwixt just writes out the bean as a fragment So if we want
-            // well-formed xml, we need to add the prolog
-            xml.write("<?xml version='1.0' ?>");
+        XMLOutputter xmlOutputter = new XMLOutputter("  ", true);
+        xmlOutputter.setLineSeparator(SystemUtils.LINE_SEPARATOR);
+        return xmlOutputter.outputString(new Document(retsConfig));
+    }
 
-            BeanWriter beanWriter = new BeanWriter(xml);
-            beanWriter.setWriteIDs(false);
-            beanWriter.enablePrettyPrint();
-            XMLIntrospector introspector = beanWriter.getXMLIntrospector();
-            introspector.setAttributesForPrimitives(false);
-            introspector.setElementNameMapper(new HyphenatedNameMapper());
+    private Element addChild(Element element, String name, int number)
+    {
+        return element.addContent(
+            new Element(name).setText(Integer.toString(number)));
+    }
 
-            beanWriter.write(this);
-            return xml.toString();
-        }
-        catch (IOException e)
-        {
-            throw new RetsServerException(e);
-        }
-        catch (SAXException e)
-        {
-            throw new RetsServerException(e);
-        }
-        catch (IntrospectionException e)
-        {
-            throw new RetsServerException(e);
-        }
+    private Element addChild(Element element, String name, String text)
+    {
+        return element.addContent(new Element(name).setText(text));
     }
 
     public void toXml(String file) throws RetsServerException
@@ -150,7 +150,69 @@ public class RetsConfig
     public static RetsConfig initFromXml(String xml)
         throws RetsServerException
     {
-        return initFromXml(new StringReader(xml));
+        try
+        {
+            SAXBuilder saxBuilder = new SAXBuilder();
+            Document document = saxBuilder.build(new StringReader(xml));
+            return elementToConfig(document.getRootElement());
+        }
+        catch (JDOMException e)
+        {
+            throw new RetsServerException(e);
+        }
+        catch (IOException e)
+        {
+            throw new RetsServerException(e);
+        }
+    }
+
+    private static RetsConfig elementToConfig(Element element)
+    {
+        RetsConfig config = new RetsConfig();
+        config.mGetObjectPattern = getString(element,  GET_OBJECT_PATTERN);
+        config.mGetObjectRoot = getString(element, GET_OBJECT_ROOT);
+        config.mNonceInitialTimeout = getInt(element, NONCE_INITIAL_TIMEOUT);
+        config.mNonceSuccessTimeout = getInt(element,  NONCE_SUCCESS_TIMEOUT);
+
+        element = element.getChild(DATABASE);
+        DatabaseConfig database = new DatabaseConfig();
+        database.setDriver(getString(element,  DRIVER));
+        database.setUrl(getString(element, URL));
+        database.setUsername(getString(element, USERNAME));
+        database.setPassword(getString(element, PASSWORD));
+        database.setMaxActive(getInt(element, MAX_ACTIVE));
+        database.setMaxIdle(getInt(element, MAX_IDLE));
+        database.setMaxWait(getInt(element, MAX_WAIT));
+        database.setMaxPsActive(getInt(element, MAX_PS_ACTIVE));
+        database.setMaxPsIdle(getInt(element, MAX_PS_IDLE));
+        database.setMaxPsWait(getInt(element, MAX_PS_WAIT));
+        config.setDatabase(database);
+
+        return config;
+    }
+
+    private static String getString(Element element, String name)
+    {
+        if (element == null)
+        {
+            return null;
+        }
+        else
+        {
+            return element.getChildTextTrim(name);
+        }
+    }
+
+    private static int getInt(Element element, String name)
+    {
+        if (element == null)
+        {
+            return -1;
+        }
+        else
+        {
+            return NumberUtils.stringToInt(element.getChildTextTrim(name), -1);
+        }
     }
 
     public static RetsConfig initFromXmlFile(String file)
@@ -171,71 +233,18 @@ public class RetsConfig
     {
         try
         {
-            return createIfNull(createBeanReader().parse(xml));
+            SAXBuilder saxBuilder = new SAXBuilder();
+            Document document = saxBuilder.build(xml);
+            return elementToConfig(document.getRootElement());
         }
         catch (IOException e)
         {
             throw new RetsServerException(e);
         }
-        catch (SAXException e)
+        catch (JDOMException e)
         {
             throw new RetsServerException(e);
         }
-        catch (IntrospectionException e)
-        {
-            throw new RetsServerException(e);
-        }
-    }
-
-    public static RetsConfig initFromXml(InputStream xml)
-        throws RetsServerException
-    {
-        if (xml == null)
-        {
-            return new RetsConfig();
-        }
-        else
-        {
-            try
-            {
-                return createIfNull(createBeanReader().parse(xml));
-            }
-            catch (IOException e)
-            {
-                throw new RetsServerException(e);
-            }
-            catch (SAXException e)
-            {
-                throw new RetsServerException(e);
-            }
-            catch (IntrospectionException e)
-            {
-                throw new RetsServerException(e);
-            }
-        }
-    }
-
-    private static RetsConfig createIfNull(Object config)
-    {
-        if (config == null)
-        {
-            return new RetsConfig();
-        }
-        else
-        {
-            return (RetsConfig) config;
-        }
-    }
-
-    private static BeanReader createBeanReader() throws IntrospectionException
-    {
-        BeanReader beanReader = new BeanReader();
-        beanReader.setMatchIDs(false);
-        XMLIntrospector introspector = beanReader.getXMLIntrospector();
-        introspector.setAttributesForPrimitives(false);
-        introspector.setElementNameMapper(new HyphenatedNameMapper());
-        beanReader.registerBeanClass(RetsConfig.class);
-        return beanReader;
     }
 
     public String getGetObjectPattern(String defaultValue)
@@ -288,9 +297,25 @@ public class RetsConfig
 
     public Properties createHibernateProperties()
     {
-        return mDatabase.getHibernateProperties();
+        return mDatabase.createHibernateProperties();
     }
 
+    private static final String RETS_CONFIG = "rets-config";
+    private static final String GET_OBJECT_PATTERN = "get-object-pattern";
+    private static final String GET_OBJECT_ROOT = "get-object-root";
+    private static final String NONCE_INITIAL_TIMEOUT = "nonce-initial-timeout";
+    private static final String NONCE_SUCCESS_TIMEOUT = "nonce-success-timeout";
+    private static final String DRIVER = "driver";
+    private static final String URL = "url";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String MAX_ACTIVE = "max-active";
+    private static final String MAX_IDLE = "max-idle";
+    private static final String MAX_WAIT = "max-wait";
+    private static final String MAX_PS_ACTIVE = "max-ps-active";
+    private static final String MAX_PS_IDLE = "max-ps-idle";
+    private static final String MAX_PS_WAIT = "max-ps-wait";
+    private static final String DATABASE = "database";
     private String mGetObjectRoot;
     private String mGetObjectPattern;
     private int mNonceInitialTimeout;

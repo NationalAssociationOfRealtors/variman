@@ -27,8 +27,7 @@
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${antlr.jar}"/>
-    <pathelement path="${commons-digester.jar}"/>
-    <pathelement path="${commons-betwixt.jar}"/>
+    <pathelement path="${jdom.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -477,8 +476,6 @@
           file="${hibernate.jdbc.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
-          file="${commons-betwixt.jar}"/>
 
     <!-- copy the struts stuff -->
     <copy todir="build/rets-server/webapp/WEB-INF"
@@ -645,9 +642,7 @@
     <copy file="${wx4j.lib}" todir="build/admin/lib"/>
     <copy file="${log4j.jar}" todir="build/admin/lib"/>
     <copy file="${commons-lang.jar}" todir="build/admin/lib"/>
-    <copy file="${commons-beanutils.jar}" todir="build/admin/lib"/>
-    <copy file="${commons-digester.jar}" todir="build/admin/lib"/>
-    <copy file="${commons-betwixt.jar}" todir="build/admin/lib"/>
+    <copy file="${jdom.jar}" todir="build/admin/lib"/>
     <copy todir="build/admin/lib" file="${hibernate.jdbc.jar}"/>
     <copy file="${hibernate.jar}" todir="build/admin/lib"/>
     <copy todir="build/admin/lib">
@@ -686,6 +681,7 @@
         <pathelement location="build/admin/classes"/>
       </classpath>
       <jvmarg value="-Dtest.basedir=${basedir}"/>
+      <jvmarg value="-Dlog4j.configuration=rex-test-log4j.xml"/>
 
       <formatter type="plain"/>
       <test fork="yes" name="test.AllTests" outfile="build/tests/results"/>
