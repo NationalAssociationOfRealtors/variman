@@ -56,6 +56,11 @@ public class TestRunner
         test.start();
     }
     
+    public CertificationTest getRunningTest()
+    {
+        return mRunningTest;
+    }
+    
     public void stopRunningTest()
     {
         if (mRunningTest != null)
