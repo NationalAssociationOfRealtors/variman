@@ -17,9 +17,9 @@ public class NormalLogin extends BaseCertificationTest
         return NormalLogin.class.getName();
     }
 
-    public String getProcedure()
+    public String[] getProcedure()
     {
-        return "Login, then logout.";
+        return PROCEDURE;
     }
 
     public String getDescription()
@@ -62,4 +62,5 @@ public class NormalLogin extends BaseCertificationTest
     }
     
     public static final String SESSION_ID = "NormalLogin";
+    private static final String PROCEDURE[] = { "Login.", "Logout." };
 }

@@ -12,7 +12,7 @@ public interface CertificationTest
 
     public String getDescription();
 
-    public String getProcedure();
+    public String[] getProcedure();
 
     public void validate(ValidationResult results);
 

@@ -19,9 +19,9 @@ public class MinimumUrlLogin extends BaseCertificationTest
         return MinimumUrlLogin.class.getName();
     }
 
-    public String getProcedure()
+    public String[] getProcedure()
     {
-        return "Login, then logout.";
+        return PROCEDURE;
     }
 
     public String getDescription()
@@ -64,4 +64,5 @@ public class MinimumUrlLogin extends BaseCertificationTest
     }
 
     public static final String SESSION_ID = "MinimalUrlLogin";
+    private static final String[] PROCEDURE = { "Login.", "Logout." }; 
 }
