@@ -32,7 +32,9 @@ public class OrClause implements SqlConverter
         {
             SqlConverter converter = (SqlConverter) mElements.get(i);
             out.print(separator);
+            out.print("(");
             converter.toSql(out);
+            out.print(")");
             separator = " OR ";
         }
     }

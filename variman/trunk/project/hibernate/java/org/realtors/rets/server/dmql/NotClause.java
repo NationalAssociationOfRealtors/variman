@@ -23,8 +23,9 @@ public class NotClause implements SqlConverter
 
     public void toSql(PrintWriter out)
     {
-        out.print("NOT ");
+        out.print("NOT (");
         mNegation.toSql(out);
+        out.print(")");
     }
 
     private SqlConverter mNegation;
