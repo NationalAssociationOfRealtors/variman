@@ -10,12 +10,8 @@
  */
 package org.realtors.rets.server.webapp;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,7 +20,6 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.JdomUtils;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
@@ -34,13 +29,8 @@ import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 
 /**
  * @web.servlet name="init-servlet"
@@ -181,74 +171,11 @@ public class InitServlet extends RetsServlet
             metadataDir = resolveFromConextRoot(metadataDir);
             LOG.info("Reading metadata from: " + metadataDir);
             MetadataLoader loader = new MetadataLoader();
-            List files = IOUtils.listFilesRecursive(
-                new File(metadataDir), new MetadataFileFilter());
-            List documents = parseAllFiles(files);
-            Document merged =
-                JdomUtils.mergeDocuments(documents, new Element("RETS"));
-            return loader.parseMetadata(merged);
+            return loader.parseMetadataDirectory(metadataDir);
         }
-        catch (JDOMException e)
+        catch (RetsServerException e)
         {
             throw new ServletException(e);
-        }
-        catch (IOException e)
-        {
-            throw new ServletException(e);
-        }
-    }
-
-    /**
-     * Parses all files, returning a list of JDOM Document objects.
-     *
-     * @param files list of File objects
-     * @return a list of Document objects
-     * @throws JDOMException if a JDOM error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    private static List /* Document */ parseAllFiles(List /* File */ files)
-        throws JDOMException, IOException
-    {
-        List documents = new ArrayList();
-        SAXBuilder builder = new SAXBuilder();
-        for (int i = 0; i < files.size(); i++)
-        {
-            File file = (File) files.get(i);
-            documents.add(builder.build(file));
-        }
-        return documents;
-    }
-
-    /**
-     * Filters out directories and files that are not metadata, in particular
-     * files used by the 1.0 version of the RETS server. Metadata files must
-     * have a ".xml" extension. Certain directories, like Notices, Roles, and
-     * Template do not contain any metadata, so they are skipped completely.
-     */
-    private class MetadataFileFilter implements FileFilter
-    {
-        public boolean accept(File file)
-        {
-            if (file.isDirectory())
-            {
-                return false;
-            }
-
-            // These directories do not contain metadata
-            String parent = file.getParent();
-            if (StringUtils.contains(parent, "Notices") ||
-                StringUtils.contains(parent, "Roles") ||
-                StringUtils.contains(parent, "Template"))
-            {
-                return false;
-            }
-
-            if (file.getName().endsWith(".xml"))
-            {
-                return true;
-            }
-            // Everything else is not considered metadata
-            return false;
         }
     }
 
