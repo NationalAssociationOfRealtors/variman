@@ -60,9 +60,10 @@ public class AdminFrame extends wxFrame
         mMenuBar.Append(fileMenu, "&File");
         mMenuBar.Append(databaseMenu, "&Database");
         mMenuBar.Append(userMenu, "&User");
-        mMenuBar.Append(metadataMenu, "&Metadata");
         if (Admin.isDebugEnabled())
         {
+            mMenuBar.Append(metadataMenu, "&Metadata");
+
             wxMenu debugMenu = new wxMenu();
             debugMenu.Append(CREATE_DATA_SCHEMA, "Create Data Schema...");
             debugMenu.Append(CREATE_PROPERTIES, "Create Properties...");
@@ -84,8 +85,11 @@ public class AdminFrame extends wxFrame
         mUsersPage = new UsersPage(mNotebook);
         mNotebook.AddPage(mUsersPage, "Users");
 
-        mMetadataPage = new MetadataPanel(mNotebook);
-        mNotebook.AddPage(mMetadataPage, "Metadata");
+        if (Admin.isDebugEnabled())
+        {
+            mMetadataPage = new MetadataPanel(mNotebook);
+            mNotebook.AddPage(mMetadataPage, "Metadata");
+        }
 
         CreateStatusBar();
 
