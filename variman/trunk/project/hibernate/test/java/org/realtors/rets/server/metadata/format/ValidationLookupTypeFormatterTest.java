@@ -28,6 +28,7 @@ public class ValidationLookupTypeFormatterTest extends FormatterTestCase
         formatter.setResourceName("Property");
         return formatter;
     }
+    
     public void testCompactFormatLookupType()
     {
         ValidationLookupTypeFormatter formatter =
