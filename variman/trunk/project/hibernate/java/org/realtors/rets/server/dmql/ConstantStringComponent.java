@@ -14,7 +14,7 @@ public class ConstantStringComponent extends Object
 
     public String toString()
     {
-        return mConstant;
+        return "'" + mConstant + "'";
     }
 
     public String toSql()
