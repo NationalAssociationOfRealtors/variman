@@ -122,7 +122,8 @@ public abstract class BaseServletHandler implements ServletHandler
         {
             String message = getName() + " get invoke count was " +
                 mDoGetInvokeCount + ", expected " + mInvokeCount.getName();
-            results.addFailure(message);
+            results.setStatus(StatusEnum.FAILED);
+            results.addMessage(message);
             LOG.debug("Failed: " + message);
         }
     }
@@ -139,7 +140,8 @@ public abstract class BaseServletHandler implements ServletHandler
             {
                 String message = getName() + " HTTP header [" + name +
                     "] was " + header + ", expected " + regexp;
-                result.addFailure(message);
+                result.setStatus(StatusEnum.FAILED);
+                result.addMessage(message);
                 LOG.debug("Failed: " + message);
             }
         }
@@ -157,7 +159,8 @@ public abstract class BaseServletHandler implements ServletHandler
             {
                 String message = getName() + " HTTP cookie [" + name +
                     "] was " + value + ", expected " + regexp;
-                results.addFailure(message);
+                results.setStatus(StatusEnum.FAILED);
+                results.addMessage(message);
                 LOG.debug("Failed: " + message);
             }
         }
