@@ -8,6 +8,7 @@ import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.SessionFactory;
 
+import org.realtors.rets.server.PasswordMethod;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,6 +20,8 @@ public class InitServlet extends RetsServlet
     public void init() throws ServletException
     {
         LOG.debug("Running init servlet");
+        PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
+                                        PasswordMethod.RETS_REALM);
         initHibernate();
     }
 

@@ -42,7 +42,7 @@ public class Admin
 
                 User joe = new User();
                 joe.setUsername("Joe");
-                joe.setPassword("Schmoe");
+                joe.changePassword("Schmoe");
                 Long id = (Long) session.save(joe);
                 tx.commit();
                 System.out.println("New id: " + id);
@@ -66,6 +66,8 @@ public class Admin
     public static void main(String[] args)
         throws Exception
     {
+        PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
+                                        PasswordMethod.RETS_REALM);
         Admin admin = new Admin();
         if ("sch".equals(args[0]))
         {

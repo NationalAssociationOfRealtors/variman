@@ -49,17 +49,22 @@ public abstract class PasswordMethod
         return buffer.toString();
     }
 
+    public static PasswordMethod getInstance(String method)
+    {
+        return getInstance(method, "");
+    }
+
     public static synchronized PasswordMethod getInstance(String method,
                                                           String options)
     {
         String id = makeId(method, options);
         PasswordMethod passwordMethod =
-            (PasswordMethod) mCachedMethods.get(id);
+            (PasswordMethod) sCachedMethods.get(id);
         if (passwordMethod == null)
         {
             try
             {
-                Class clazz = (Class) mRegisteredMethods.get(method);
+                Class clazz = (Class) sRegisteredMethods.get(method);
                 LOG.debug("Instantiating " + clazz.getName());
                 passwordMethod = (PasswordMethod) clazz.newInstance();
                 passwordMethod.mMethod = method;
@@ -67,7 +72,7 @@ public abstract class PasswordMethod
                 if (passwordMethod.parseOptions(options))
                 {
                     LOG.debug("Adding id [" + id + "] to cache");
-                    mCachedMethods.put(id, passwordMethod);
+                    sCachedMethods.put(id, passwordMethod);
                 }
                 else
                 {
@@ -91,7 +96,26 @@ public abstract class PasswordMethod
 
     public static synchronized void registerMethod(String method, Class clazz)
     {
-        mRegisteredMethods.put(method, clazz);
+        sRegisteredMethods.put(method, clazz);
+    }
+
+    public static void setDefaultMethod(String method)
+    {
+        setDefaultMethod(method, "");
+    }
+
+    public static synchronized void setDefaultMethod(String method,
+                                                     String options)
+    {
+        sDefaultMethod = method;
+        sDefaultOptions = options;
+        LOG.debug("Set default method to <" + method + ">, options = <" + 
+                  options + ">");
+    }
+
+    public static PasswordMethod getDefaultMethod()
+    {
+        return getInstance(sDefaultMethod, sDefaultOptions);
     }
 
     public static synchronized void initMethods()
@@ -100,18 +124,35 @@ public abstract class PasswordMethod
         // just insures the static block gets loaded.
     }
 
-    static
-    {
-        mCachedMethods = new HashMap();
-        mRegisteredMethods = new HashMap();
-        registerMethod("", PlainTextMethod.class);
-        registerMethod("A1", DigestA1Method.class);
-    }
+    public static final String PLAIN_TEXT = "";
+
+    /**
+     * Store the password as A1 from HTTP Digest Authentication. Use the
+     * option to set the realm to use in the hash.
+      */
+    public static final String DIGEST_A1 = "A1";
+
+    /**
+     * The realm to use for A1 hashed password generation: "RETS Server".
+     */
+    public static final String RETS_REALM = "RETS Server";
 
     private static final Logger LOG =
         Logger.getLogger(PasswordMethod.class);
-    private static Map mCachedMethods;
-    private static Map mRegisteredMethods;
+    private static Map sCachedMethods;
+    private static Map sRegisteredMethods;
+    private static String sDefaultMethod;
+    private static String sDefaultOptions;
     protected String mMethod;
     protected String mOptions;
+
+    static
+    {
+        sCachedMethods = new HashMap();
+        sRegisteredMethods = new HashMap();
+        sDefaultMethod = PLAIN_TEXT;
+        sDefaultOptions = "";
+        registerMethod("", PlainTextMethod.class);
+        registerMethod("A1", DigestA1Method.class);
+    }
 }

@@ -11,8 +11,9 @@ public class User
 {
     public User()
     {
-        mPasswordMethod = PasswordMethod.getInstance("A1",  REALM);
+        mPasswordMethod = PasswordMethod.getDefaultMethod();
     }
+
     /**
      *
      * @return
@@ -54,40 +55,49 @@ public class User
      * @hibernate.property
      *   type="org.realtors.rets.server.PasswordMethodType"
      */
-
     public PasswordMethod getPasswordMethod()
     {
         return mPasswordMethod;
     }
 
+    /**
+     * Sets the method used to hash the password for backend storage. The
+     * default method is plain text, i.e. no hashing.
+     *
+     * @param passwordMethod
+     */
     public void setPasswordMethod(PasswordMethod passwordMethod)
     {
         mPasswordMethod = passwordMethod;
     }
 
     /**
-     * Sets the plain text password for this user. The plain text password is
-     * not persisted into the database, only the hashed password. The hashed
-     * password is in the same format as A1 as described in the HTTP Digest
-     * Authentcation specification:
-     *
-     *   A1 = MD5(username ":" realm ":" password).
-     *
-     * @see #REALM
+     * @return The hashed password
      *
      * @hibernate.property length="80"
      */
-
     public String getPassword()
     {
         return mPassword;
     }
 
+    /**
+     * Sets the hashed password. This should only be called by hibernate when
+     * loaded from the database.
+     *
+     *  @param password Hashed password
+     */
     protected void setPassword(String password)
     {
         mPassword = password;
     }
 
+    /**
+     * Changes this user's password. The plain text password may be hashed so
+     * getPassword() may not be the same as passed in here.
+     *
+     * @param plainTextPassword New password, in plain text
+     */
     public void changePassword(String plainTextPassword)
     {
         mPassword = mPasswordMethod.hash(mUsername, plainTextPassword);
@@ -111,8 +121,5 @@ public class User
     private Long mId;
     private String mUsername;
     private String mPassword;
-
-    /** The realm used for A1 hashed password generation: "RETS Server". */
-    private static final String REALM = "RETS Server";
     private PasswordMethod mPasswordMethod;
 }
