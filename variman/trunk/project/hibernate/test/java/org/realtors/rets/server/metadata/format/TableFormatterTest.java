@@ -78,8 +78,7 @@ public class TableFormatterTest extends FormatterTestCase
             "</DATA>\n" +
 
             "</METADATA-TABLE>\n",
-            formatted
-        );
+            formatted);
     }
 
     private TableFormatter getFormatter(int format)
