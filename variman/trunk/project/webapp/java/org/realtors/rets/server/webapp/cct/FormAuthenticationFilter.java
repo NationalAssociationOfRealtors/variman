@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.realtors.rets.server.User;
+
+import org.apache.log4j.MDC;
+
 /**
  * This filter makes sure that people are authenticated before they
  * enter into the private area.  It redirects to "/login.jsp" with
@@ -20,7 +24,7 @@ import javax.servlet.http.HttpSession;
  * @web:filter name="Form Authentication Filter"
  * @web:filter-mapping url-pattern="/cct/*"
  */
-public class FormAuthenticationFilter implements Filter
+public class FormAuthenticationFilter implements Filter, CctConstants
 {
     /**
      * initializes the authentication filter.
@@ -61,34 +65,39 @@ public class FormAuthenticationFilter implements Filter
                          FilterChain chain)
         throws IOException, ServletException
     {
-        if (servletRequest instanceof HttpServletRequest)
+        if (!(servletRequest instanceof HttpServletRequest))
         {
-            HttpServletRequest request = (HttpServletRequest) servletRequest;
-            HttpServletResponse response =
-                (HttpServletResponse) servletResponse;
-            HttpSession session = request.getSession();
+            chain.doFilter(servletRequest, servletResponse);
+        }
 
-            if ((session == null) ||
-                (session.getAttribute(AUTHENTICATION_KEY) == null))
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response =
+            (HttpServletResponse) servletResponse;
+        HttpSession session = request.getSession();
+
+        if ((session == null) ||
+            (session.getAttribute(AUTHENTICATION_KEY) == null))
+        {
+            StringBuffer done = new StringBuffer(request.getServletPath());
+            String query = request.getQueryString();
+            if (query != null)
             {
-                StringBuffer done = new StringBuffer(request.getServletPath());
-                String query = request.getQueryString();
-                if (query != null)
-                {
-                    done.append("?").append(query);
-                }
-                response.sendRedirect(request.getContextPath() +
-                                      "/login.jsp?done=" + done.toString());
-                return;
+                done.append("?").append(query);
             }
+            response.sendRedirect(request.getContextPath() +
+                                  "/login.jsp?done=" + done.toString());
+            return;
         }
 
         // User is authenticated
+        User user = (User) session.getAttribute(USER_KEY);
+        MDC.put("user", user.getUsername());
+        MDC.put("addr", request.getRemoteAddr());
         chain.doFilter(servletRequest, servletResponse);
+        MDC.remove("user");
+        MDC.remove("addr");
     }
 
     /** The configuration for the filter. */
     private FilterConfig mConfig;
-    /** The static string for use in the session attributes. */
-    public static final String AUTHENTICATION_KEY = "cctIsAuthenticated";
 }
