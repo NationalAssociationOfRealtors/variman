@@ -62,6 +62,7 @@
     <mkdir dir="build/hibernate/schema"/>
     <mkdir dir="build/hibernate/jar"/>
     <mkdir dir="build/embedded/classes"/>
+    <mkdir dir="build/importer/classes"/>
     <mkdir dir="build/rets-server/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
@@ -151,6 +152,25 @@
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </target>
 
+  <target name="build-importer" depends="build-hibernate">
+    <depend srcDir="project/importer/java"
+            destDir="build/importer/classes"
+            cache="build/importer/depcache" closure="yes">
+      <classpath>
+        <path refid="lib.path"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/importer/java"
+           destdir="build/importer/classes"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement location="${rets-client.jar}"/>
+      </classpath>
+    </javac>
+  </target>
+
   <target name="build-xml" depends="prepare">
     <copy todir="build/hibernate/final/classes"
           file="project/hibernate/config/hibernate.properties"/>
@@ -207,7 +227,7 @@
       </classpath>
     </javac>
   </target>
-  
+
   <target name="generate-schema" depends="build-generated-code">
     <pathconvert refid="hibernate.mapping.files"
                  property="hibernate.mappings" pathsep=" "/>
@@ -221,6 +241,7 @@
       </classpath>
     </java>
   </target>
+  
 
   <target name="clean">
     <delete dir="build" />
