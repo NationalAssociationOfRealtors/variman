@@ -2,7 +2,7 @@
  */
 package org.realtors.rets.server.webapp.cct;
 
-import org.realtors.rets.server.cct.StatusEnum;
+// import org.realtors.rets.server.cct.StatusEnum;
 import org.realtors.rets.server.cct.ValidationResult;
 
 
@@ -14,12 +14,7 @@ public interface CertificationTest
 
     public String getProcedure();
 
-    public String getMessage();
-
-    public StatusEnum getStatus();
-
-    //public ValidationResult validate(ValidationResult result);
-    public ValidationResult validate();
+    public void validate(ValidationResult results);
 
     public void start();
 
