@@ -398,7 +398,8 @@
                             displayname="CRT RETS Server"
                             description="CRT RETS Server">
       </deploymentdescriptor>
-      <jsptaglib jspversion="1.2" destdir="build/rets-server/webapp/WEB-INF/tld"
+      <jsptaglib jspversion="1.2"
+                 destdir="build/rets-server/webapp/WEB-INF/tld"
                  shortname="cct" filename="cct.tld" />
     </webdoclet>
   </target>
