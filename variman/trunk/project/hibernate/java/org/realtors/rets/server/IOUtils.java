@@ -47,7 +47,7 @@ public class IOUtils
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         byte[] buffer = new byte[bufferSize];
         int bytesRead;
-        while((bytesRead = input.read(buffer)) != -1)
+        while ((bytesRead = input.read(buffer)) != -1)
         {
             bytes.write(buffer, 0, bytesRead);
         }
@@ -162,5 +162,5 @@ public class IOUtils
     }
 
     /** The default buffer size is 8k. */
-    public static final int DEFAULT_BUFFER_SIZE = 8*1024;
+    public static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
 }

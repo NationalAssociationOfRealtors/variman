@@ -21,5 +21,5 @@ public abstract class GetObjectPatternFormatter
         mNext = next;
     }
 
-    GetObjectPatternFormatter mNext;
+    private GetObjectPatternFormatter mNext;
 }

@@ -39,7 +39,8 @@ public class GetObjectTransaction
         try
         {
             List objectIdList = mParameters.getObjectIdList(0);
-            int objectId = NumberUtils.stringToInt((String) objectIdList.get(0));
+            int objectId =
+                NumberUtils.stringToInt((String) objectIdList.get(0));
             GetObjectPatternContext context =
                 new GetObjectPatternContext(mParameters.getResource(),
                                             mParameters.getType(),
