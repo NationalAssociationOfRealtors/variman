@@ -15,6 +15,7 @@ public class RetsServletResponse extends HttpServletResponseWrapper
     public RetsServletResponse(HttpServletResponse response)
     {
         super(response);
+        mRetsVersionheader = null;
     }
 
     /**
@@ -39,11 +40,28 @@ public class RetsServletResponse extends HttpServletResponseWrapper
     {
         if (retsVersion == RetsVersion.RETS_1_0)
         {
-            setHeader("RETS-Version", "RETS/1.0");
+            mRetsVersionheader = "RETS/1.0";
         }
         else if (retsVersion == RetsVersion.RETS_1_5)
         {
-            setHeader("RETS-Version", "RETS/1.5");
+            mRetsVersionheader = "RETS/1.5";
+        }
+        setRetsVersionHeader();
+    }
+
+    private void setRetsVersionHeader()
+    {
+        if (mRetsVersionheader != null)
+        {
+            setHeader("RETS-Version", mRetsVersionheader);
         }
     }
+
+    public void reset()
+    {
+        super.reset();
+        setRetsVersionHeader();
+    }
+
+    private String mRetsVersionheader;
 }
