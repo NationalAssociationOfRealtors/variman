@@ -479,6 +479,9 @@
     <copy file="project/importer/shell/runImporter"
           todir="build/importer/bin"/>
     <chmod file="build/importer/bin/runImporter" perm="ugo+rx"/>
+    <copy file="project/importer/shell/runSchema"
+          todir="build/importer/bin"/>
+    <chmod file="build/importer/bin/runSchema" perm="ugo+rx"/>
     <copy file="${rets-client.jar}" todir="build/importer/lib"/>
     <copy file="${commons-lang.jar}" todir="build/importer/lib"/>
     <copy file="${httpclient.jar}" todir="build/importer/lib"/>
