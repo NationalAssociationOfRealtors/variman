@@ -8,15 +8,23 @@
 
 package org.realtors.rets.server.admin.swingui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.AdminUtils;
+import org.realtors.rets.server.config.RetsConfig;
 
 public class AdminFrame extends JFrame
 {
@@ -57,7 +65,8 @@ public class AdminFrame extends JFrame
         setJMenuBar(menuBar);
 
         mTabbedPane = new JTabbedPane();
-        mTabbedPane.addTab("Configuration", new ConfigurationPanel());
+        mConfigurationPanel = new ConfigurationPanel();
+        mTabbedPane.addTab("Configuration", mConfigurationPanel);
         mUsersPanel = new UsersPanel();
         mTabbedPane.addTab("Users", mUsersPanel);
         mTabbedPane.addChangeListener(new OnTabChanged());
@@ -92,6 +101,20 @@ public class AdminFrame extends JFrame
         }
     }
 
+    private void saveConfig()
+    {
+        try
+        {
+            RetsConfig retsConfig = Admin.getRetsConfig();
+            retsConfig.setPort(mConfigurationPanel.getPort());
+            retsConfig.toXml(Admin.getConfigFile());
+        }
+        catch (RetsServerException e)
+        {
+            LOG.error("Caught", e);
+        }
+    }
+
     public void quit()
     {
         dispose();
@@ -112,6 +135,7 @@ public class AdminFrame extends JFrame
     {
         public void windowClosing(WindowEvent e)
         {
+            saveConfig();
             quit();
         }
     }
@@ -128,7 +152,7 @@ public class AdminFrame extends JFrame
 
         public void actionPerformed(ActionEvent event)
         {
-            System.out.println("Save...");
+            saveConfig();
         }
 
     }
@@ -140,7 +164,7 @@ public class AdminFrame extends JFrame
             super("Quit");
             putValue(ACCELERATOR_KEY,
                      KeyStroke.getKeyStroke(KeyEvent.VK_Q,
-                                            mMenuShortcutKeyMask))            ;
+                                            mMenuShortcutKeyMask));
         }
 
         public void actionPerformed(ActionEvent e)
@@ -185,4 +209,5 @@ public class AdminFrame extends JFrame
     private UsersPanel mUsersPanel;
     private JMenu mUserMenu;
     private int mMenuShortcutKeyMask;
+    private ConfigurationPanel mConfigurationPanel;
 }
