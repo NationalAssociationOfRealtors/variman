@@ -21,8 +21,7 @@
       </tr>
       <tr>
         <td>Status:</td>
-        <cct:teststatustd name="cctDisplayBean" />
-        <%-- <bean:write name="cctDisplayBean" property="result.status.name"/> --%>
+        <cct:teststatustd name="cctDisplayBean" property="result.status"/>
       </tr>
 
       <tr>
