@@ -43,19 +43,19 @@ public class EvenOddTd extends BodyTagSupport
         Integer counter = (Integer) RequestUtils.lookup(pageContext, mCount,
                                                         null);
         int count = counter.intValue();
-        String style;
+        String tdclass;
         if ((count % 2) == 1)
         {
-            style = "odd";
+            tdclass = "odd";
         }
         else
         {
-            style = "even";
+            tdclass = "even";
         }
         try
         {
-            out.write("<td style=\"");
-            out.write(style);
+            out.write("<td class=\"");
+            out.write(tdclass);
             out.write("\">");
         }
         catch (IOException e)
