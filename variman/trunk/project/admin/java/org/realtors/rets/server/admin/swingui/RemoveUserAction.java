@@ -4,6 +4,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.UserUtils;
+import org.apache.log4j.Logger;
+import net.sf.hibernate.HibernateException;
+
 /**
  * Created by IntelliJ IDEA.
  * User: dave
@@ -13,13 +18,46 @@ import javax.swing.*;
  */
 public class RemoveUserAction extends AbstractAction
 {
-    public RemoveUserAction()
+    public RemoveUserAction(UsersPanel usersPanel)
     {
         super("Remove User...");
+        mUsersPanel = usersPanel;
     }
     
     public void actionPerformed(ActionEvent event)
     {
-        System.out.println("Removing user...");
+        try
+        {
+            User user = mUsersPanel.getSelectedUser();
+            if (user == null)
+            {
+                LOG.warn("Remove user on null user");
+                return;
+            }
+
+            AdminFrame frame = SwingUtils.getAdminFrame();
+            int response = JOptionPane.showConfirmDialog(
+                frame,
+                "Are you sure you wnat to delete " + user.getName() + "?",
+                "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            if (response != JOptionPane.YES_OPTION)
+            {
+                return;
+            }
+
+            UserUtils.delete(user);
+            LOG.debug("User deleted: " + user);
+            frame.setStatusText("User " + user.getName() + " removed.");
+            frame.refreshUsers();
+        }
+        catch (HibernateException e)
+        {
+            LOG.error("Caught", e);
+        }
+
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(RemoveUserAction.class);
+    private UsersPanel mUsersPanel;
 }
