@@ -38,24 +38,29 @@ public class RetsConfigTest extends LinesEqualTestCase
 
         List securityConstraints = new ArrayList();
         GroupRules groupRules = new GroupRules("newspaper");
-        RuleDescription ruleDescription = new RuleDescription();
-        ruleDescription.setType(RuleDescription.INCLUDE);
-        ruleDescription.setResource("Property");
-        ruleDescription.setRetsClass("RES");
+        FilterRule filterRule = new FilterRule();
+        filterRule.setType(FilterRule.INCLUDE);
+        filterRule.setResource("Property");
+        filterRule.setRetsClass("RES");
         List systemNames = new ArrayList();
         systemNames.add("LP");
         systemNames.add("LN");
-        ruleDescription.setSystemNames(systemNames);
-        groupRules.addRule(ruleDescription);
-        ruleDescription = new RuleDescription();
-        ruleDescription.setType(RuleDescription.EXCLUDE);
-        ruleDescription.setResource("Property");
-        ruleDescription.setRetsClass("COM");
+        filterRule.setSystemNames(systemNames);
+        groupRules.addFilterRule(filterRule);
+        filterRule = new FilterRule();
+        filterRule.setType(FilterRule.EXCLUDE);
+        filterRule.setResource("Property");
+        filterRule.setRetsClass("COM");
         systemNames = new ArrayList();
         systemNames.add("EF");
-        ruleDescription.setSystemNames(systemNames);
-        groupRules.addRule(ruleDescription);
+        filterRule.setSystemNames(systemNames);
+        groupRules.addFilterRule(filterRule);
         securityConstraints.add(groupRules);
+        ConditionRule conditionRule = new ConditionRule();
+        conditionRule.setResource("Property");
+        conditionRule.setRetsClass("RES");
+        conditionRule.setSqlConstraint("r_lp < 500000");
+        groupRules.addConditionRule(conditionRule);
         retsConfig.setSecurityConstraints(securityConstraints);
 
         String xml = retsConfig.toXml();
@@ -90,6 +95,9 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
             "        <system-names>EF</system-names>\n" +
             "      </exclude-rule>\n" +
+            "      <condition-rule resource=\"Property\" class=\"RES\">\n" +
+            "        <sql-constraint>r_lp &lt; 500000</sql-constraint>\n" +
+            "      </condition-rule>\n" +
             "    </group-rules>\n" +
             "  </security-constraints>\n" +
             "</rets-config>\n" +
@@ -129,12 +137,12 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      <include-rule resource=\"Property\" class=\"RES\">\n" +
             "        <system-names>LN LP\nEF</system-names>\n" +
             "      </include-rule>\n" +
-            "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
-            "        <system-names>LN</system-names>\n" +
-            "      </exclude-rule>\n" +
             "      <condition-rule resource=\"Property\" class=\"RES\">\n" +
             "        <sql-constraint>r_lp &lt; 500000</sql-constraint>\n" +
             "      </condition-rule>\n" +
+            "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
+            "        <system-names>LN</system-names>\n" +
+            "      </exclude-rule>\n" +
             "    </group-rules>\n" +
             "    <group-rules group=\"agent\">\n" +
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
@@ -173,26 +181,26 @@ public class RetsConfigTest extends LinesEqualTestCase
 
         GroupRules groupRules = (GroupRules) securityConstraints.get(0);
         assertEquals("newspaper", groupRules.getGroupName());
-        List rules = groupRules.getRules();
+        List rules = groupRules.getFilterRules();
         assertEquals(2, rules.size());
-        RuleDescription ruleDescription = (RuleDescription) rules.get(0);
-        assertEquals(RuleDescription.INCLUDE, ruleDescription.getType());
-        assertEquals("Property", ruleDescription.getResource());
-        assertEquals("RES", ruleDescription.getRetsClass());
+        FilterRule filterRule = (FilterRule) rules.get(0);
+        assertEquals(FilterRule.INCLUDE, filterRule.getType());
+        assertEquals("Property", filterRule.getResource());
+        assertEquals("RES", filterRule.getRetsClass());
         List expected = new ArrayList();
         expected.add("LN");
         expected.add("LP");
         expected.add("EF");
-        List systemNames = ruleDescription.getSystemNames();
+        List systemNames = filterRule.getSystemNames();
         assertEquals(expected, systemNames);
 
-        ruleDescription = (RuleDescription) rules.get(1);
-        assertEquals(RuleDescription.EXCLUDE, ruleDescription.getType());
-        assertEquals("Property", ruleDescription.getResource());
-        assertEquals("COM", ruleDescription.getRetsClass());
+        filterRule = (FilterRule) rules.get(1);
+        assertEquals(FilterRule.EXCLUDE, filterRule.getType());
+        assertEquals("Property", filterRule.getResource());
+        assertEquals("COM", filterRule.getRetsClass());
         expected.clear();
         expected.add("LN");
-        systemNames = ruleDescription.getSystemNames();
+        systemNames = filterRule.getSystemNames();
         assertEquals(expected, systemNames);
 
         /* Check condition rules */
@@ -205,12 +213,12 @@ public class RetsConfigTest extends LinesEqualTestCase
         
         groupRules = (GroupRules) securityConstraints.get(1);
         assertEquals("agent", groupRules.getGroupName());
-        rules = groupRules.getRules();
+        rules = groupRules.getFilterRules();
         assertEquals(1, rules.size());
-        ruleDescription = (RuleDescription) rules.get(0);
-        assertEquals(RuleDescription.EXCLUDE, ruleDescription.getType());
-        assertEquals("Property", ruleDescription.getResource());
-        assertEquals("COM", ruleDescription.getRetsClass());
+        filterRule = (FilterRule) rules.get(0);
+        assertEquals(FilterRule.EXCLUDE, filterRule.getType());
+        assertEquals("Property", filterRule.getResource());
+        assertEquals("COM", filterRule.getRetsClass());
         expected.clear();
         expected.add("LN");
         expected.add("LF");
