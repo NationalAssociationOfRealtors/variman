@@ -106,7 +106,7 @@ public class InitServlet extends RetsServlet
     }
 
     /**
-     * Sets the <code>rex.log.home</code> system properly so it can be used in
+     * Sets the <code>rex.log.home</code> system property so it can be used in
      * the log4j config file.
      */
     private void initRexLogHome()
