@@ -21,6 +21,7 @@ import org.realtors.rets.server.metadata.ValidationExternal;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.server.metadata.ForeignKey;
 
 import junit.framework.TestCase;
 
@@ -64,5 +65,7 @@ public class MetadataSegmentFormatterTest extends TestCase
                    instanceof CompactValidationExternalTypeFormatter);
         assertTrue(visitor.getFormatter(ValidationExpression.class) instanceof
                    CompactValidationExpressionFormatter);
+        assertTrue(visitor.getFormatter(ForeignKey.class) instanceof
+                   CompactForeignKeyFormatter);
     }
 }
