@@ -131,12 +131,20 @@
     <antlr dir="${src.antlr.dir}"
            target="${src.antlr.dir}/dmql.g"
            outputdirectory="${build.antlr.dir}"
-           trace="yes"/>
+           trace="yes">
+      <classpath>
+        <pathelement location="${antlr.jar}"/>
+      </classpath>
+    </antlr>
     <antlr dir="${src.antlr.dir}"
            target="${src.antlr.dir}/dmql2.g"
            glib="dmql.g"
            outputdirectory="${build.antlr.dir}"
-           traceParser="yes"/>
+           traceParser="yes">
+      <classpath>
+        <pathelement location="${antlr.jar}"/>
+      </classpath>
+    </antlr>
     <javac target="${compile.vmtarget}" destdir="build/hibernate/classes"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
@@ -271,7 +279,7 @@
 	  <tag name="hibernate.jcs-cache" scope="all"
 	       description="Hibernate JCD Cache"/>
 	  <tag name="hibernate.collection-jcs-cache" scope="all"
-	       description="Hibernate Collection JCD Cache"/>	     
+	       description="Hibernate Collection JCD Cache"/>
       <tag name="web.servlet-mapping" scope="all"
            description="Servlet Mapping"/>
       <tag name="web.servlet" scope="all" description="Servlet"/>
@@ -504,7 +512,7 @@
   </target>
 
 
-  
+
   <target name="build-importer" depends="build-hibernate"
           description="Builds the data and metadata importers">
     <depend srcDir="project/importer/java"
@@ -596,7 +604,7 @@
       </classpath>
     </javac>
   </target>
-          
+
   <target name="build-full" description="Full build from clean"
           depends="build-hibernate-xdoclet,build"/>
 
