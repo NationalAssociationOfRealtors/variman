@@ -18,6 +18,23 @@ public class RetsTransaction
                     "ReplyText=\"" + replyText + "\">");
     }
 
+    protected void printOpenRets(PrintWriter out, ReplyCode replyCode)
+    {
+        printOpenRets(out, replyCode.getValue(), replyCode.getName());
+    }
+
+    protected void printEmptyRets(PrintWriter out, int replyCode,
+                                 String replyText)
+    {
+        out.println("<RETS ReplyCode=\"" + replyCode + "\" " +
+                    "ReplyText=\"" + replyText + "\"/>");
+    }
+
+    protected void printEmptyRets(PrintWriter out, ReplyCode replyCode)
+    {
+        printOpenRets(out, replyCode.getValue(), replyCode.getName());
+    }
+
     protected void printCloseRets(PrintWriter out)
     {
         out.println("</RETS>");
