@@ -65,28 +65,36 @@ public class RemoveUserCommand extends wx
 
     private String getUsername()
     {
-        AdminFrame frame = Admin.getAdminFrame();
-        if (mUser != null)
+        RemoveUserDialog dialog = null;
+        try
         {
-            int response = wxMessageBox(
-                "Are you sure you want to delete " + mUser.getName() + "?",
-                "Confirm Delete", wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
-                frame);
-            if (response != wxYES)
+            AdminFrame frame = Admin.getAdminFrame();
+            if (mUser != null)
             {
-                return null;
+                int response = wxMessageBox(
+                    "Are you sure you want to delete " + mUser.getName() + "?",
+                    "Confirm Delete", wxYES_NO | wxNO_DEFAULT |
+                                      wxICON_QUESTION,
+                    frame);
+                if (response != wxYES)
+                {
+                    return null;
+                }
+                return mUser.getUsername();
             }
-            return mUser.getUsername();
-        }
 
-        String username = null;
-        RemoveUserDialog dialog = new RemoveUserDialog(frame);
-        if (dialog.ShowModal() == wxID_OK)
-        {
-            username = dialog.getUsername();
+            String username = null;
+            dialog = new RemoveUserDialog(frame);
+            if (dialog.ShowModal() == wxID_OK)
+            {
+                username = dialog.getUsername();
+            }
+            return username;
         }
-        dialog.Destroy();
-        return username;
+        finally
+        {
+            Destroy(dialog);
+        }
     }
 
     private static final Logger LOG =
