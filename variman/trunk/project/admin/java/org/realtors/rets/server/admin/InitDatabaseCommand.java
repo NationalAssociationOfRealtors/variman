@@ -41,18 +41,7 @@ public class InitDatabaseCommand extends wx
             {
                 try
                 {
-                    LOG.debug("Initializing Hibernate configuration");
-                    RetsConfig retsConfig = Admin.getRetsConfig();
-                    Configuration config = new Configuration()
-                        .addJar("rex-hbm-xml.jar")
-                        .setProperties(retsConfig.createHibernateProperties());
-                    SessionFactory sessionFactory =
-                        config.buildSessionFactory();
-                    PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
-                                                    PasswordMethod.RETS_REALM);
-                    LOG.debug("Hibernate initialized");
-                    Admin.setHibernateConfiguration(config);
-                    RetsServer.setSessions(sessionFactory);
+                    AdminUtils.initDatabase();
                 }
                 catch (Throwable e)
                 {
