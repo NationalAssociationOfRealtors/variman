@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server;
 
+import java.io.Serializable;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +15,7 @@ import net.sf.hibernate.UserType;
 
 import org.apache.commons.lang.StringUtils;
 
-public class PasswordMethodType implements UserType
+public class PasswordMethodType implements Serializable, UserType
 {
     public int[] sqlTypes()
     {
