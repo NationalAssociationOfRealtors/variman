@@ -1,0 +1,18 @@
+Version 2.2.2 - xxx
+
+  * Renamed to Variman
+
+Version 2.1.1 - 12 November 2004
+
+  * Location support in GetObject.
+  * Update multipart GetObject behavior to reflect 1.7.
+  * Fix DMQL parsing error for numbers.
+
+Version 2.1.0 - 12 October 2004
+
+  * Groups support.
+  * Support for larger data sets on  SQLServer.
+  * Full GetObject support (including multipart).
+  * Improved stability.
+  * New reference manual.
+  * Improved administration tool.
