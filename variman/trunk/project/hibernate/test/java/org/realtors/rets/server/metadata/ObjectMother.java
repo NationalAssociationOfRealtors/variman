@@ -34,13 +34,9 @@ public class ObjectMother
     {
         MClass clazz = new MClass();
         Resource resource = createResource();
-        clazz.setResource(resource);
         clazz.setClassName("RES");
-        clazz.updateLevel();
-
-        Set classes = new HashSet();
-        classes.add(clazz);
-        resource.setClasses(classes);
+        resource.setClasses(new HashSet());
+        resource.addClass(clazz);
         return clazz;
     }
 
@@ -48,13 +44,9 @@ public class ObjectMother
     {
         Table table = new Table();
         MClass clazz = createClass();
-        table.setMClass(clazz);
         table.setSystemName("E_SCHOOL");
-        table.updateLevel();
-
-        Set tables = new HashSet();
-        tables.add(table);
-        clazz.setTables(tables);
+        clazz.setTables(new HashSet());
+        clazz.addTable(table);
         return table;
     }
 
@@ -100,18 +92,21 @@ public class ObjectMother
 
     public static Lookup createLookup()
     {
+        Resource resource = createResource();
         Lookup lookup = new Lookup();
-        lookup.setResource(createResource());
         lookup.setLookupName("E_SCHOOL");
-        lookup.updateLevel();
+        resource.setLookups(new HashSet());
+        resource.addLookup(lookup);
         return lookup;
     }
 
     public static LookupType createLookupType()
     {
+        Lookup lookup = createLookup();
         LookupType lookupType = new LookupType();
-        lookupType.setLookup(createLookup());
-        lookupType.updateLevel();
+        lookupType.setValue("303");
+        lookup.setLookupTypes(new HashSet());
+        lookup.addLookupType(lookupType);
         return lookupType;
     }
 
