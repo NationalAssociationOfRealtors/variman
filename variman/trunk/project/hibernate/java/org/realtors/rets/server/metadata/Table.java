@@ -12,6 +12,16 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class Table implements Serializable
 {
+    public Table(long id)
+    {
+        mId = new Long(id);
+    }
+
+    public Table()
+    {
+        mId = null;
+    }
+
     /**
      *
      * @return a Long object
