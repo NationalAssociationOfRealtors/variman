@@ -50,10 +50,10 @@ public class IOUtilsTest extends TestCase
         Collections.sort(files);
         List expected = new ArrayList();
         expected.add(new File(file, "a"));
-        expected.add(new File(file, "a/bar.ex2"));
+        expected.add(new File(file, "a/bar.html"));
         expected.add(new File(file, "b"));
-        expected.add(new File(file, "b/baz.ex3"));
-        expected.add(new File(file, "foo.ex1"));
+        expected.add(new File(file, "b/baz.txt"));
+        expected.add(new File(file, "foo.xml"));
         assertEquals(expected, files);
     }
 
@@ -62,10 +62,10 @@ public class IOUtilsTest extends TestCase
         String file = getClass().getResource("foo.txt").getFile();
         file = StringUtils.replace(file, "foo.txt", "dirTest");
         List files = IOUtils.listFilesRecursive(
-            new File(file), new IOUtils.ExtensionFilter(".ex2"));
+            new File(file), new IOUtils.ExtensionFilter(".html"));
         Collections.sort(files);
         List expected = new ArrayList();
-        expected.add(new File(file, "a/bar.ex2"));
+        expected.add(new File(file, "a/bar.html"));
         assertEquals(expected, files);
     }
 
@@ -77,9 +77,9 @@ public class IOUtilsTest extends TestCase
             new File(file), new IOUtils.NotDirectoryFilter());
         Collections.sort(files);
         List expected = new ArrayList();
-        expected.add(new File(file, "a/bar.ex2"));
-        expected.add(new File(file, "b/baz.ex3"));
-        expected.add(new File(file, "foo.ex1"));
+        expected.add(new File(file, "a/bar.html"));
+        expected.add(new File(file, "b/baz.txt"));
+        expected.add(new File(file, "foo.xml"));
         assertEquals(expected, files);
     }
 
