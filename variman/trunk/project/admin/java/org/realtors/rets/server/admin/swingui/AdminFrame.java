@@ -32,6 +32,7 @@ public class AdminFrame extends JFrame implements ActionListener
     private AdminFrame(String title)
     {
         super(title);
+        SwingUtils.setAdminFrame(this);
         initConfig();
 
         addWindowListener(new OnClose());
@@ -57,6 +58,14 @@ public class AdminFrame extends JFrame implements ActionListener
         menuBar.add(menu);
         menu.add(new InitDatabaseAction());
         menu.add(new CreateSchemaAction());
+
+        mUserMenu = new JMenu("User");
+        menuBar.add(mUserMenu);
+        mAddUserAction = new AddUserAction();
+        mUserMenu.add(mAddUserAction);
+        mRemoveUserAction = new RemoveUserAction();
+        mUserMenu.add(mRemoveUserAction);
+        mUserMenu.setEnabled(false);
 
         setJMenuBar(menuBar);
 
@@ -99,6 +108,11 @@ public class AdminFrame extends JFrame implements ActionListener
         mStatusBar.setText(text);
     }
 
+    public void refreshUsers()
+    {
+        mUsersPanel.populateList();
+    }
+
     private class OnClose extends WindowAdapter
     {
         public void windowClosing(WindowEvent e)
@@ -134,6 +148,16 @@ public class AdminFrame extends JFrame implements ActionListener
         return classString.substring(dotIndex+1);
     }
 
+    public AddUserAction getAddUserAction()
+    {
+        return mAddUserAction;
+    }
+
+    public Action getRemoveUserAction()
+    {
+        return mRemoveUserAction;
+    }
+
     private class OnTabChanged implements ChangeListener
     {
         public void stateChanged(ChangeEvent event)
@@ -142,6 +166,11 @@ public class AdminFrame extends JFrame implements ActionListener
             if (tab == USERS_TAB)
             {
                 mUsersPanel.populateList();
+                mUserMenu.setEnabled(true);
+            }
+            else
+            {
+                mUserMenu.setEnabled(false);
             }
         }
     }
@@ -155,4 +184,7 @@ public class AdminFrame extends JFrame implements ActionListener
     private JTabbedPane mTabbedPane;
     private JLabel mStatusBar;
     private UsersPanel mUsersPanel;
+    private AddUserAction mAddUserAction;
+    private RemoveUserAction mRemoveUserAction;
+    private JMenu mUserMenu;
 }
