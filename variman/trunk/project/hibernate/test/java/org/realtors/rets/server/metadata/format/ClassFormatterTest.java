@@ -20,6 +20,7 @@ public class ClassFormatterTest extends FormatterTestCase
         clazz.setStandardName(ClassStandardNameEnum.RESIDENTIAL);
         clazz.setVisibleName("Single Family");
         clazz.setDescription("Single Family Residential");
+        clazz.setDbTable("rets_Property_RES");
         clazz.addTable(new Table(1));
         clazz.addUpdate(new Update(1));
         classes.add(clazz);
@@ -43,11 +44,11 @@ public class ClassFormatterTest extends FormatterTestCase
             "Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tClassName\tStandardName\tVisibleName\tDBName\t" +
+            "<COLUMNS>\tClassName\tStandardName\tVisibleName\t" +
             "Description\tTableVersion\tTableDate\tUpdateVersion\t" +
             "UpdateDate\t</COLUMNS>\n" +
 
-            "<DATA>\tRES\tResidentialProperty\tSingle Family\t\t" +
+            "<DATA>\tRES\tResidentialProperty\tSingle Family\t" +
             "Single Family Residential" + VERSION_DATE + VERSION_DATE +
             "\t</DATA>\n" +
 
@@ -61,11 +62,11 @@ public class ClassFormatterTest extends FormatterTestCase
             "Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tClassName\tStandardName\tVisibleName\tDBName\t" +
+            "<COLUMNS>\tClassName\tStandardName\tVisibleName\t" +
             "Description\tTableVersion\tTableDate\tUpdateVersion\t" +
             "UpdateDate\t</COLUMNS>\n" +
 
-            "<DATA>\tRES\tResidentialProperty\tSingle Family\t\t" +
+            "<DATA>\tRES\tResidentialProperty\tSingle Family\t" +
             "Single Family Residential" + VERSION_DATE + VERSION_DATE +
             "\t</DATA>\n" +
 
