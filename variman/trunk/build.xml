@@ -686,6 +686,11 @@
     <chmod file="build/admin/bin/rex" perm="ugo+rx"/>
     <copy file="${wx4j.jar}" todir="build/rets-server/admin/lib"/>
     <copy file="${wx4j.lib}" todir="build/rets-server"/>
+    <antcall target="copy-msvcr7"/>
+  </target>
+
+  <target name="copy-msvcr7" if="wx4j.msvcr7">
+    <copy file="${wx4j.msvcr7}" todir="build/rets-server"/>
   </target>
 
   <target name="build-full" description="Full build from clean"
