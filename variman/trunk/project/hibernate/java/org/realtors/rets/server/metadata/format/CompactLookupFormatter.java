@@ -16,7 +16,7 @@ public class CompactLookupFormatter extends MetadataFormatter
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(context.getWriter(),"METADATA-LOOKUP")
+        TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-LOOKUP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
             .appendAttribute("Date", context.getDate())
