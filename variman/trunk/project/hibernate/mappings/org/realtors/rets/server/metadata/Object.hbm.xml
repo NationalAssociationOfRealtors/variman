@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: Object.hbm.xml,v 1.1 2003/05/30 21:36:57 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.metadata.newdb.MetadataObject"
+    table="rets_metadata_object">
+
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+  </class>
+</hibernate-mapping>
