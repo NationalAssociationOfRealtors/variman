@@ -76,7 +76,7 @@ public class AdminFrame extends wxFrame
         mUsersPage = new UsersPage(mNotebook);
         mNotebook.AddPage(mUsersPage, "Users");
 
-        mMetadataPage = new MetadataPage(mNotebook);
+        mMetadataPage = new MetadataPanel(mNotebook);
         mNotebook.AddPage(mMetadataPage, "Metadata");
 
         CreateStatusBar();
@@ -239,8 +239,8 @@ public class AdminFrame extends wxFrame
     private static final int USERS_PAGE = 1;
     private static final int METADATA_PAGE = 2;
 
+    private wxNotebook mNotebook;
     private DatabasePage mDatabasePage;
     private UsersPage mUsersPage;
-    private wxNotebook mNotebook;
-    private MetadataPage mMetadataPage;
+    private MetadataPanel mMetadataPage;
 }
