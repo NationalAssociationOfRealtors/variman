@@ -15,7 +15,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 {
     private ServerDmqlMetadata()
     {
-        mFields = new HashSet();
+        mFields = new HashMap();
         mLookups = new HashMap();
         mStrings = new HashSet();
     }
@@ -38,7 +38,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         {
             Table table = (Table) i.next();
             String fieldName = getTableName(table,  standardNames);
-            mFields.add(fieldName);
+            mFields.put(fieldName, table.getDbName());
 
             Lookup lookup = table.getLookup();
             if (lookup != null)
@@ -67,7 +67,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private void addLookups(String fieldName, boolean standardNames,
                             Lookup lookup)
     {
-        Set values;
+        Map values;
         if (fieldName.equals("ListingStatus") && standardNames)
         {
             values = sListingStatusValues;
@@ -79,21 +79,21 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         mLookups.put(fieldName, values);
     }
 
-    private Set getLookupValues(Lookup lookup)
+    private Map getLookupValues(Lookup lookup)
     {
-        Set values = new HashSet();
+        Map values = new HashMap();
         Set lookupTypes = lookup.getLookupTypes();
         for (Iterator j = lookupTypes.iterator(); j.hasNext();)
         {
             LookupType lookupType = (LookupType) j.next();
-            values.add(lookupType.getValue());
+            values.put(lookupType.getValue(), lookupType.getValue());
         }
         return values;
     }
 
     public boolean isValidFieldName(String fieldName)
     {
-        return mFields.contains(fieldName);
+        return mFields.containsKey(fieldName);
     }
 
     public boolean isValidStringName(String fieldName)
@@ -108,26 +108,42 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public boolean isValidLookupValue(String lookupName, String lookupValue)
     {
-        Set values = (Set) mLookups.get(lookupName);
-        return values.contains(lookupValue);
+        Map values = (Map) mLookups.get(lookupName);
+        return values.containsKey(lookupValue);
+    }
+
+    public String getFieldDbColumn(String fieldName)
+    {
+        return (String) mFields.get(fieldName);
+    }
+
+    public String getLookupDbValue(String lookupName, String lookupValue)
+    {
+        Map values = (Map) mLookups.get(lookupName);
+        if (values == null)
+        {
+            return null;
+        }
+        else
+        {
+            return (String) values.get(lookupValue);
+        }
     }
 
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
-    private Set mFields;
+    private Map mFields;
     private Map mLookups;
     private Set mStrings;
-    private static Set sListingStatusValues;
-    private static final String[] LISTING_STATUS_VALUES = {
-        "Active", "Closed", "Expired", "OffMarket", "Pending"
-    };
+    private static final Map sListingStatusValues;
 
     static
     {
-        sListingStatusValues = new HashSet();
-        for (int i = 0; i < LISTING_STATUS_VALUES.length; i++)
-        {
-            sListingStatusValues.add(LISTING_STATUS_VALUES[i]);
-        }
+        sListingStatusValues = new HashMap();
+        sListingStatusValues.put("Active", "A");
+        sListingStatusValues.put("Closed", "C");
+        sListingStatusValues.put("Expired", "X");
+        sListingStatusValues.put("OffMarket", "O");
+        sListingStatusValues.put("Pending", "P");
     }
 }
