@@ -9,8 +9,14 @@
 package org.realtors.rets.server.admin.swingui;
 
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 import java.io.File;
 
 import org.realtors.rets.server.config.RetsConfig;
@@ -29,6 +35,7 @@ public class ConfigurationPanel extends JPanel
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
         content.add(new HeaderPanel("RETS"));
+        ConfigChangeListener changeListener = new ConfigChangeListener();
 
         TextValuePanel retsConfig = new TextValuePanel();
         mPort = new JTextField(5);
@@ -38,17 +45,36 @@ public class ConfigurationPanel extends JPanel
         // at all sure why the two fields are even linked, but whatever, this
         // fixes it.
         mPort.setMinimumSize(mPort.getPreferredSize());
+        mPort.getDocument().addDocumentListener(changeListener);
         retsConfig.addRow("Listening Port:", mPort, GridBagConstraints.NONE);
+
+        RetsConfig config = Admin.getRetsConfig();
 
         JPanel box = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
-        mMetadataDir = new JTextField("blah");
+        String webappRoot = Admin.getWebAppRoot();
+        mMetadataDir = new JTextField(IOUtils.resolve(webappRoot,
+                                              config.getMetadataDir()));
+        mMetadataDir.getDocument().addDocumentListener(changeListener);
         box.add(mMetadataDir, c);
         c.weightx = 0.0;
         box.add(new JButton(new ChooseMetadataAction()), c);
         retsConfig.addRow("Metadatata Directory:", box);
+
+        box = new JPanel(new GridBagLayout());
+        c.weightx = 1.0;
+        mImageRootDir = new JTextField(config.getGetObjectRoot());
+        mImageRootDir.getDocument().addDocumentListener(changeListener);
+        box.add(mImageRootDir, c);
+        c.weightx = 0.0;
+        box.add(new JButton(new ChooseImageRootAction()), c);
+        retsConfig.addRow("Image Root:", box);
+
+        mImagePattern = new JTextField(config.getGetObjectPattern());
+        mImagePattern.getDocument().addDocumentListener(changeListener);
+        retsConfig.addRow("Image Pattern:", mImagePattern);
 
         retsConfig.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         content.add(retsConfig);
@@ -81,6 +107,11 @@ public class ConfigurationPanel extends JPanel
         add(content, BorderLayout.NORTH);
 
         updateLabels();
+
+        // It's important to set this flag at the end of the constructor, as
+        // events may trigger false changes during various setup during
+        // construction.
+        mChanged = false;
     }
 
     private void updateLabels()
@@ -92,14 +123,36 @@ public class ConfigurationPanel extends JPanel
         mDatabaseName.setText(dbConfig.getDatabaseName());
         mUsername.setText(dbConfig.getUsername());
         mPort.setText("" + config.getPort());
-        String webappRoot = Admin.getWebAppRoot();
-        mMetadataDir.setText(IOUtils.resolve(webappRoot,
-                                              config.getMetadataDir()));
+    }
+
+    public boolean isChanged()
+    {
+        return mChanged;
+    }
+
+    public void setChanged(boolean changed)
+    {
+        mChanged = changed;
     }
 
     public int getPort()
     {
         return NumberUtils.stringToInt(mPort.getText());
+    }
+
+    public String getMetadataDir()
+    {
+        return mMetadataDir.getText();
+    }
+
+    public String getImageRootDir()
+    {
+        return mImageRootDir.getText();
+    }
+
+    public String getImagePattern()
+    {
+        return mImagePattern.getText();
     }
 
     private class ChooseMetadataAction extends AbstractAction
@@ -127,8 +180,37 @@ public class ConfigurationPanel extends JPanel
 
             metadataDir = dirDialog.getSelectedFile().getPath();
             metadataDir = IOUtils.relativize(webappRoot, metadataDir);
-            config.setMetadataDir(metadataDir);
-            updateLabels();
+            mMetadataDir.setText(metadataDir);
+            mChanged = true;
+        }
+    }
+
+    private class ChooseImageRootAction extends AbstractAction
+    {
+        public ChooseImageRootAction()
+        {
+            super("Choose...");
+        }
+
+        public void actionPerformed(ActionEvent event)
+        {
+            RetsConfig config = Admin.getRetsConfig();
+            String webappRoot = Admin.getWebAppRoot();
+            String getObjectRoot = config.getGetObjectRoot();
+            getObjectRoot = IOUtils.resolve(webappRoot, getObjectRoot);
+
+            JFileChooser dirDialog = new JFileChooser();
+            dirDialog.setSelectedFile(new File(getObjectRoot));
+            dirDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (dirDialog.showOpenDialog(ConfigurationPanel.this) !=
+                JFileChooser.APPROVE_OPTION)
+            {
+                return;
+            }
+
+            getObjectRoot = dirDialog.getSelectedFile().getPath();
+            getObjectRoot = IOUtils.relativize(webappRoot, getObjectRoot);
+            mImageRootDir.setText(getObjectRoot);
         }
     }
 
@@ -165,6 +247,41 @@ public class ConfigurationPanel extends JPanel
 
     }
 
+    private class ConfigChangeListener implements DocumentListener
+    {
+        public void insertUpdate(DocumentEvent event)
+        {
+            updateEdited();
+        }
+
+        public void removeUpdate(DocumentEvent event)
+        {
+            updateEdited();
+        }
+
+        public void changedUpdate(DocumentEvent event)
+        {
+            updateEdited();
+        }
+
+        private void updateEdited()
+        {
+            mChanged = true;
+        }
+    }
+
+    private class MyFocusListener implements FocusListener
+    {
+        public void focusGained(FocusEvent event)
+        {
+
+        }
+
+        public void focusLost(FocusEvent event)
+        {
+            System.out.println("Focus lost: " + event);
+        }
+    }
 
     private JTextField mPort;
     private JTextField mMetadataDir;
@@ -172,4 +289,7 @@ public class ConfigurationPanel extends JPanel
     private JLabel mHostName;
     private JLabel mDatabaseName;
     private JLabel mUsername;
+    private JTextField mImageRootDir;
+    private JTextField mImagePattern;
+    private boolean mChanged;
 }
