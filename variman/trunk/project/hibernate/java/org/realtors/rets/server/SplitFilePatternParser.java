@@ -38,19 +38,19 @@ public class SplitFilePatternParser extends PatternParser
     {
         LiteralPatternConverter(String value)
         {
-            literal = value;
+            mLiteral = value;
         }
 
         public final void format(StringBuffer sbuf, LoggingEvent event)
         {
-            sbuf.append(literal);
+            sbuf.append(mLiteral);
         }
 
         public String convert(LoggingEvent event)
         {
-            return literal;
+            return mLiteral;
         }
 
-        private String literal;
+        private String mLiteral;
     }
 }

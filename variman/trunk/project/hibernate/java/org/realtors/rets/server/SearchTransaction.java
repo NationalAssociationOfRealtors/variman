@@ -229,7 +229,7 @@ public class SearchTransaction
                 out.print("<DATA>\t");
                 for (int i = 0; i < fields.size(); i++)
                 {
-                    out.print(resultSet.getString(i+1) + "\t");
+                    out.print(resultSet.getString(i + 1) + "\t");
                 }
                 out.println("\t</DATA>");
             }
