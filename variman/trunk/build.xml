@@ -74,6 +74,7 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
     <pathelement path="${antlr.jar}"/>
+    <pathelement path="${commons-betwixt.jar}"/>
   </path>
 
   <path id="webapp.test.path">
@@ -451,6 +452,8 @@
           file="${hibernate.jdbc.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${commons-betwixt.jar}"/>
 
     <!-- copy the struts stuff -->
     <copy todir="build/rets-server/webapp/WEB-INF"
