@@ -2,12 +2,14 @@
  */
 package org.realtors.rets.server;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_user"
  */
-public class User
+public class User implements Serializable
 {
     public User()
     {
