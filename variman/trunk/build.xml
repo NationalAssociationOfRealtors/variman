@@ -320,24 +320,25 @@
   </target>
 
   <target name="doc-manual" description="Builds DocBook manual">
+    <property name="dest-dir" value="build/rets-server/doc/manual" />
     <copy todir="build/doc/xsl" overwrite="true">
       <fileset dir="project/doc/xsl"/>
       <filterset>
         <filter token="DOCBOOK_XSL_HOME" value="${docbook-xsl.home}"/>
       </filterset>
     </copy>
-    <delete dir="build/doc/manual"/>
-    <xslt basedir="project/doc/manual" destdir="build/doc/manual"
+    <delete dir="${dest-dir}"/>
+    <xslt basedir="project/doc/manual" destdir="${dest-dir}"
           style="build/doc/xsl/ldp-html-chunk.xsl" includes="manual.xml">
-      <param name="base.dir" expression="${basedir}/build/doc/manual/"/>
+      <param name="base.dir" expression="${basedir}/${dest-dir}/"/>
     </xslt>
-    <copy todir="build/doc/manual">
+    <copy todir="${dest-dir}">
       <fileset dir="project/doc/manual" excludes="*.xml"/>
     </copy>
 
     <!-- Not sure why this file gets generated, but it's empty, so get
     rid of it -->
-    <delete file="build/doc/manual/manual.html"/>
+    <delete file="${dest-dir}/manual.html"/>
   </target>
 
   <target name="doc" depends="doc-api"
