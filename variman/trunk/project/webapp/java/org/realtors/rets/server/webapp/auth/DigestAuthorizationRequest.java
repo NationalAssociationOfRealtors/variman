@@ -2,7 +2,7 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
-import org.realtors.rets.server.HashUtils;
+import org.realtors.rets.server.DigestUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -15,7 +15,8 @@ public class DigestAuthorizationRequest
         mUri = null;
         mNonce = null;
         mQop = null;
-        mAlgorithm = "HashUtils";
+        mMethod = null;
+        mAlgorithm = "MD5";
         mNonceCount = "";
         mCnonce = "";
         mResponse = "";
@@ -25,13 +26,16 @@ public class DigestAuthorizationRequest
     /**
      * Initialize a request from an HTTP "Authorization" header line.
      *
-     * @param header HTTP "Authorizatoin" header
+     * @param header HTTP "Authorization" header
+     * @param method HTTP method, i.e. GET, POST, etc.
      * @throws IllegalArgumentException if the header is unparsable
      */
-    public DigestAuthorizationRequest(String header)
+    public DigestAuthorizationRequest(String header, String method)
         throws IllegalArgumentException
     {
         this();
+        mMethod = method;
+        LOG.debug("Authorization header: <" + header + ">");
         // Valid header, but verify should always fail
         if (header == null)
         {
@@ -39,8 +43,8 @@ public class DigestAuthorizationRequest
         }
         if (!header.startsWith(PREFIX))
         {
-            throw new IllegalArgumentException("Incorrect prefix [" + header +
-                                               "]");
+            throw new IllegalArgumentException("Incorrect prefix <" + header +
+                                               ">");
         }
         String authorization = header.substring(PREFIX.length());
 
@@ -51,8 +55,8 @@ public class DigestAuthorizationRequest
             String[] keyValue = StringUtils.split(token, "=", 2);
             if (keyValue.length != 2)
             {
-                throw new IllegalArgumentException("Invalid key/value pair: " +
-                                                   token + "[" + header + "]");
+                throw new IllegalArgumentException(
+                    "Invalid key/value pair: <" + token + "> <" + header + ">");
             }
             String key = keyValue[0].trim();
             String value = keyValue[1].trim();
@@ -234,7 +238,9 @@ public class DigestAuthorizationRequest
 
     public boolean verifyResponse(String password, boolean passwordIsA1)
     {
-        if (absoluteFailure(password))
+        // Check for absolute failures, i.e. cases that should fail no matter
+        // what the digest turns out to be.
+        if ((password == null) || (mUsername == null))
         {
             return false;
         }
@@ -263,45 +269,19 @@ public class DigestAuthorizationRequest
         }
         else
         {
-            a1 = HashUtils.md5(mUsername + ":" + mRealm + ":" + password);
+            a1 = DigestUtils.md5Hex(mUsername + ":" + mRealm + ":" + password);
         }
-        String a2 = HashUtils.md5(mMethod + ":" + mUri);
+        String a2 = DigestUtils.md5Hex(mMethod + ":" + mUri);
 
         if (mQop == null)
         {
-            return HashUtils.md5(a1 + ":" + mNonce + ":" + a2);
+            return DigestUtils.md5Hex(a1 + ":" + mNonce + ":" + a2);
         }
         else
         {
-            return HashUtils.md5(a1 + ":" + mNonce + ":" + mNonceCount + ":" +
-                                 mCnonce + ":" + mQop + ":" + a2);
+            return DigestUtils.md5Hex(a1 + ":" + mNonce + ":" + mNonceCount +
+                                      ":" + mCnonce + ":" + mQop + ":" + a2);
         }
-    }
-
-    /**
-     * Returns <code>true</code> for cases that should <b>always</b> fail
-     * verification regardless of if the digest hash happens to match. The
-     * current implementation checks for a null username or null password. In
-     * the case of a null password, it means the user never supplied a
-     * password. In the case of a null username, it means a valid digest
-     * header was never parsed.
-
-     * @param password The plain text password
-     * @return <code>true</code> if verification should always fail.
-     */
-    private boolean absoluteFailure(String password)
-    {
-        if (password == null)
-        {
-            LOG.debug("Null password always fails");
-            return true;
-        }
-        if (mUsername == null)
-        {
-            LOG.debug("Null username always fails");
-            return true;
-        }
-        return false;
     }
 
     private static final String PREFIX = "Digest ";
