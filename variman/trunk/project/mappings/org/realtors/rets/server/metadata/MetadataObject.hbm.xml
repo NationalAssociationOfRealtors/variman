@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: MetadataObject.hbm.xml,v 1.1 2003/05/30 21:36:57 kgarner Exp $ -->
+<!-- $Id: MetadataObject.hbm.xml,v 1.2 2003/06/02 16:14:43 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.metadata.newdb.MetadataObject"
@@ -12,6 +12,23 @@
     <id name="id" type="long">
       <generator class="hilo"/>
     </id>
+
+    <many-to-one name="objectType"
+      type="org.nar.rets.metadata.newdb.ObjectTypeEnum">
+      <column name="object_type" index="rets_metadata_objectype_index"/>
+    </many-to-one>
+
+    <property name="mimeType" type="string">
+      <column name="mime_type" length="24"/>
+    </property>
+
+    <property name="visibleName" type="string">
+      <column name="visible_name" length="32"/>
+    </property>
+
+    <property name="description" type="string">
+      <column name="description" length="64"/>
+    </property>
 
   </class>
 </hibernate-mapping>
