@@ -74,6 +74,7 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
     <pathelement path="${antlr.jar}"/>
+    <pathelement location="${rets-client.jar}"/>
   </path>
 
   <path id="webapp.test.path">
@@ -88,6 +89,7 @@
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${rets-client.jar}"/>
     <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </path>
 
@@ -119,6 +121,7 @@
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/tld"/>
+    <mkdir dir="build/rets-server/webapp/WEB-INF/rex"/>
     <mkdir dir="build/rets-server/admin/lib"/>
     <mkdir dir="build/rets-server/admin/classes"/>
     <mkdir dir="build/webapp/test/classes"/>
@@ -208,7 +211,8 @@
       <hibernate version="2.0"/>
     </hibernatedoclet>
     <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
-         basedir="build/hibernate/xdoclet" index="true"/>
+         basedir="build/hibernate/xdoclet" index="true"
+         excludes="**/metadata/*"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
   </target>
@@ -472,6 +476,8 @@
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="project/hibernate/config/cache.ccf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${rets-client.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${commons-lang.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${log4j.jar}"/>
@@ -666,20 +672,6 @@
     <chmod file="build/admin/bin/rex" perm="ugo+rx"/>
     <copy file="${wx4j.jar}" todir="build/rets-server/admin/lib"/>
     <copy file="${wx4j.lib}" todir="build/rets-server"/>
-    <!--
-    <copy file="${log4j.jar}" todir="build/rets-server/admin/lib"/>
-    <copy file="${commons-lang.jar}" todir="build/rets-server/admin/lib"/>
-    <copy file="${jdom.jar}" todir="build/rets-server/admin/lib"/>
-    <copy todir="build/rets-server/admin/lib" file="${hibernate.jdbc.jar}"/>
-    <copy file="${hibernate.jar}" todir="build/rets-server/admin/lib"/>
-    <copy todir="build/rets-server/admin/lib">
-      <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar,
-                         commons-lang.jar" />
-    </copy>
-    <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
-          todir="build/rets-server/admin/lib"/>
-    -->
   </target>
 
   <target name="build-full" description="Full build from clean"
