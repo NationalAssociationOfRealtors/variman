@@ -63,14 +63,14 @@
   <target name="dist" depends="generate-schema" />
 
   <target name="build-test" depends="build-generated-code">
-    <depend srcDir="project/java" destDir="build/final/classes"
+    <depend srcDir="project/java/misc" destDir="build/final/classes"
             cache="build/final/depcache" closure="yes">
       <classpath>
         <path refid="lib.path"/>
         <pathelement location="build/final/classes"/>
       </classpath>
     </depend>
-    <javac srcdir="project/java" destdir="build/final/classes"
+    <javac srcdir="project/java/misc" destdir="build/final/classes"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -96,15 +96,37 @@
   
   <target name="build-generated-code"
           unless="generated.code.up.to.date"
-          depends="mapping-files-check, prepare">
+          depends="mapping-files-check, compile-hibernate-enum-code, prepare">
     <pathconvert refid="hibernate.mapping.files"
                  property="hibernate.mappings" pathsep=" "/>
     <java classname="net.sf.hibernate.tool.hbm2java.CodeGenerator"
       fork="true">
       <arg line="--output=build/generated ${hibernate.mappings}"/>
-      <classpath refid="lib.path" />
+      <classpath>
+        <path refid="lib.path" />
+        <pathelement location="build/final/classes" />
+      </classpath>
     </java>
     <javac srcdir="build/generated" destdir="build/final/classes">
+      <classpath>
+        <path refid="lib.path"/>
+        <pathelement location="build/final/classes" />
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="compile-hibernate-enum-code" depends="prepare">
+        <depend srcDir="project/java/enums"
+            destDir="build/final/classes"
+            cache="build/final/depcache" closure="yes">
+      <classpath>
+        <path refid="lib.path"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/java/enums"
+           destdir="build/final/classes"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
       <classpath>
         <path refid="lib.path"/>
       </classpath>
