@@ -11,7 +11,7 @@ package org.realtors.rets.server.admin;
 import javax.swing.*;
 
 import org.realtors.rets.server.admin.swingui.AdminFrame;
-import org.apache.commons.lang.SystemUtils;
+//import org.apache.commons.lang.SystemUtils;
 
 public class SwingMain
 {
@@ -37,16 +37,7 @@ public class SwingMain
     {
         try
         {
-            String lookAndFeel;
-            if (SystemUtils.IS_OS_LINUX &&
-                SystemUtils.isJavaVersionAtLeast(1.42f))
-            {
-                lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-            }
-            else
-            {
-                lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-            }
+            String lookAndFeel = UIManager.getSystemLookAndFeelClassName();
             UIManager.setLookAndFeel(lookAndFeel);
         }
         catch (Exception e)
