@@ -4,12 +4,16 @@
  */
 package org.realtors.rets.server.webapp.cct;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
+import org.realtors.rets.server.cct.UserRoles;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
@@ -21,7 +25,9 @@ import org.apache.struts.action.ActionMapping;
 /**
  * @author kgarner
  */
-public class ConfirmationAction extends Action
+public class ConfirmationAction
+    extends Action
+    implements UserRoles
 {
     public ActionForward execute(ActionMapping mapping, ActionForm actionForm,
                                  HttpServletRequest request,
@@ -58,7 +64,10 @@ public class ConfirmationAction extends Action
         userInfo.setEmail(form.getEmail());
         userInfo.setProductName(form.getProductName());
         userInfo.setProductVersion(form.getProductVersion());
-        userInfo.setUserAgent(form.getUserAgent());      
+        userInfo.setUserAgent(form.getUserAgent());  
+        Set set = new HashSet();
+        set.add(CLIENT_TESTER);
+        userInfo.setRoles(set);
 
         UserUtils utils = new UserUtils();
         utils.createUser(user, userInfo);
