@@ -115,13 +115,14 @@
     <mkdir dir="build/datagen/classes"/>
     <mkdir dir="build/datagen/lib"/>
     <mkdir dir="build/datagen/bin"/>
-    <mkdir dir="build/rets-server/lib"/>
+    <mkdir dir="build/rets-server/server/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
     <mkdir dir="build/rets-server/webapp/WEB-INF/tld"/>
+    <mkdir dir="build/rets-server/admin/lib"/>
+    <mkdir dir="build/rets-server/admin/classes"/>
     <mkdir dir="build/webapp/test/classes"/>
     <mkdir dir="build/admin/classes"/>
-    <mkdir dir="build/admin/lib"/>
     <mkdir dir="build/admin/bin"/>
     <mkdir dir="build/admin/test/classes"/>
     <mkdir dir="build/tests"/>
@@ -337,17 +338,22 @@
              classpath="build/hibernate/classes"/>
     <jar-manifest main="org.realtors.rets.server.tomcat.EmbeddedTomcat"
                   destfile="build/embedded/rex-server.manifest">
-      <classpath dir="build/rets-server" includes="lib/*.jar"/>
+      <classpath dir="build/rets-server" includes="server/lib/*.jar"/>
     </jar-manifest>
     <jar jarfile="build/rets-server/${project.name}.jar"
          basedir="build/embedded/classes"
          manifest="build/embedded/rex-server.manifest"/>
-    <copy todir="build/rets-server/lib">
+    <copy todir="build/rets-server/server/conf">
+      <fileset dir="project/embedded/config" includes="*"/>
+    </copy>
+    <copy file="project/webapp/config/tomcat-users.xml"
+          todir="build/rets-server/server/conf"/>
+    <copy todir="build/rets-server/server/lib">
       <fileset dir="${tomcat.home}/bin">
         <include name="bootstrap.jar"/>
       </fileset>
     </copy>
-    <copy todir="build/rets-server/lib">
+    <copy todir="build/rets-server/server/lib">
       <fileset dir="${tomcat.home}/common/lib">
         <include name="servlet.jar"/>
         <include name="naming-common.jar"/>
@@ -358,7 +364,7 @@
         <include name="ant.jar"/>
       </fileset>
     </copy>
-    <copy todir="build/rets-server/lib">
+    <copy todir="build/rets-server/server/lib">
       <fileset dir="${tomcat.home}/server/lib">
         <include name="catalina.jar"/>
         <include name="commons-digester.jar"/>
@@ -373,18 +379,19 @@
       </fileset>
     </copy>
     <!-- Rename jakarta-regexp to not have version number in it -->
-    <copy tofile="build/rets-server/lib/jakarta-regexp.jar">
+    <copy tofile="build/rets-server/server/lib/jakarta-regexp.jar">
       <fileset dir="${tomcat.home}/server/lib"
                includes="jakarta-regexp-*.jar"/>
     </copy>
     <!--
-    <copy tofile="build/rets-server/lib/tools.jar" file="${jdk.tools.jar}"/>
+    <copy tofile="build/rets-server/server/lib/tools.jar"
+          file="${jdk.tools.jar}"/>
     -->
     <copy todir="build/rets-server/doc">
       <fileset dir="doc" includes="**/*"/>
     </copy>
     <copy todir="build/rets-server" file="LICENSE.TXT"/>
-    <copy tofile="build/rets-server/lib/log4j.jar" file="${log4j.jar}"/>
+    <copy tofile="build/rets-server/server/lib/log4j.jar" file="${log4j.jar}"/>
   </target>
 
   <target name="build-webapp-webdoclet">
@@ -458,17 +465,10 @@
     </copy>
 
     <antcall target="build-webapp-webdoclet"/>
-    <copy todir="build/rets-server/conf">
-      <fileset dir="project/embedded/config" includes="*"/>
-    </copy>
-    <copy file="project/webapp/config/tomcat-users.xml"
-          todir="build/rets-server/conf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/classes"
-          file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/rets-server/webapp/WEB-INF/classes"
           file="project/hibernate/config/cache.ccf"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
@@ -629,17 +629,19 @@
     </copy>
     <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
           todir="build/rets-server/admin/classes"/>
-    <taskdef name="jar-manifest"
-             classname="org.realtors.rets.server.JarManifestTask"
-             classpath="build/hibernate/classes"/>
-    <jar-manifest main="org.realtors.rets.server.admin.Main"
-                  destfile="build/admin/rex-admin.manifest">
-      <classpath dir="build/rets-server" includes="admin/classes"/>
-      <classpath dir="build/rets-server" includes="admin/lib/*.jar"/>
-    </jar-manifest>
+    <!-- Put Bootstrap class in its own jar.  This is necessary for
+         the classloader games -->
+    <jar destfile="build/rets-server/admin/lib/${project.name}-admin-core.jar"
+         basedir="build/admin/classes"
+         excludes="org/realtors/rets/server/admin/Bootstrap*.class"/>
     <jar destfile="build/rets-server/${project.name}-admin.jar"
          basedir="build/admin/classes"
-         manifest="build/admin/rex-admin.manifest"/>
+         includes="org/realtors/rets/server/admin/Bootstrap*.class">
+      <manifest>
+        <attribute name="Main-Class"
+                   value="org.realtors.rets.server.admin.Bootstrap"/>
+      </manifest>
+    </jar>
 
     <!-- build the test code -->
     <depend srcDir="project/admin/test/java"
@@ -663,7 +665,8 @@
     <copy file="project/admin/shell/rex" todir="build/admin/bin"/>
     <chmod file="build/admin/bin/rex" perm="ugo+rx"/>
     <copy file="${wx4j.jar}" todir="build/rets-server/admin/lib"/>
-    <copy file="${wx4j.lib}" todir="build/rets-server/admin/lib"/>
+    <copy file="${wx4j.lib}" todir="build/rets-server"/>
+    <!--
     <copy file="${log4j.jar}" todir="build/rets-server/admin/lib"/>
     <copy file="${commons-lang.jar}" todir="build/rets-server/admin/lib"/>
     <copy file="${jdom.jar}" todir="build/rets-server/admin/lib"/>
@@ -676,6 +679,7 @@
     </copy>
     <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
           todir="build/rets-server/admin/lib"/>
+    -->
   </target>
 
   <target name="build-full" description="Full build from clean"
