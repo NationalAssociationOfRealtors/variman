@@ -30,7 +30,7 @@ public class GroupsPanel extends JPanel
         mName = new JLabel();
         tvp.addRow("Name:", mName);
         mDescription = new JLabel();
-        tvp.addRow("Ddescription:", mDescription);
+        tvp.addRow("Description:", mDescription);
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(tvp, BorderLayout.NORTH);
 
@@ -59,7 +59,7 @@ public class GroupsPanel extends JPanel
         int selection = mGroupList.getSelectedIndex();
         if (selection != -1)
         {
-            Group group = mGroupListModel.getGroupAt(selection);
+            Group group = (Group) mGroupListModel.getElementAt(selection);
             mName.setText(group.getName());
             mDescription.setText(group.getDescription());
         }
@@ -93,7 +93,7 @@ public class GroupsPanel extends JPanel
             public void finished()
             {
                 List groups = (List) get();
-                setGroupListModel(new GroupListModel(groups));
+                setGroupListModel(new ListListModel(groups));
                 int newSelection = selection;
                 if (newSelection >= groups.size())
                 {
@@ -106,37 +106,12 @@ public class GroupsPanel extends JPanel
         worker.start();
     }
 
-    private void setGroupListModel(GroupListModel model)
+    private void setGroupListModel(ListListModel model)
     {
         mGroupListModel = model;
         mGroupList.setModel(model);
     }
 
-    private class GroupListModel extends AbstractListModel
-    {
-        public GroupListModel(List groups)
-        {
-            mGroups = groups;
-        }
-
-        public int getSize()
-        {
-            return mGroups.size();
-        }
-
-        public Object getElementAt(int i)
-        {
-            Group group = (Group) mGroups.get(i);
-            return group.getName();
-        }
-
-        public Group getGroupAt(int i)
-        {
-            return (Group) mGroups.get(i);
-        }
-
-        List mGroups;
-    }
 
     private class OnSelectionChanged implements ListSelectionListener
     {
@@ -184,5 +159,5 @@ public class GroupsPanel extends JPanel
     private JLabel mName;
     private JLabel mDescription;
     private JPopupMenu mPopup;
-    private GroupListModel mGroupListModel;
+    private ListListModel mGroupListModel;
 }
