@@ -251,11 +251,21 @@ public class MetadataLoader
                                            in.getStandardName()));
                 hClass.setVisibleName(in.getVisibleName());
                 hClass.setDescription(in.getDescription());
-
-                StringBuffer tmp = new StringBuffer("rets_");
-                tmp.append(resource.getResourceID()).append("_");
-                tmp.append(hClass.getClassName());
-                hClass.setDbTable(tmp.toString().toLowerCase());
+                String dbName = (String) in.getAttribute("DBName");
+                LOG.info("class: " + hClass.getClassName() + ", dbname: " +
+                         dbName);
+                if (dbName != null)
+                {
+                    hClass.setDbTable(dbName);
+                }
+                else
+                {
+                    StringBuffer tmp = new StringBuffer("rets_");
+                    tmp.append(resource.getResourceID()).append("_");
+                    tmp.append(hClass.getClassName());
+                    hClass.setDbTable(tmp.toString().toLowerCase());
+                }
+                LOG.info("readl dbname: " + hClass.getDbTable());
 
                 hClass.updateLevel();
 
@@ -994,7 +1004,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.4 2004/03/31 15:59:30 dribin Exp $";
+        "$Id: MetadataLoader.java,v 1.5 2004/04/13 22:12:58 dribin Exp $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
