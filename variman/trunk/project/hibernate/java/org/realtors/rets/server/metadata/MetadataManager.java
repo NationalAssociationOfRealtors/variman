@@ -5,20 +5,19 @@ package org.realtors.rets.server.metadata;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 
 public class MetadataManager
 {
     public MetadataManager()
     {
-        mTables = new HashMap();
-        mTableByPath = new HashMap();
+        mTablesByLevel = new HashMap();
+        mTablesByPath = new HashMap();
     }
 
     public void add(ServerMetadata metadata)
@@ -27,29 +26,33 @@ public class MetadataManager
         addByPath(metadata);
     }
 
-    private void addByLevel(ServerMetadata metadata)
+    private static Map getMap(Map map, String key)
     {
-        Map table = (Map) mTables.get(metadata.getTableName());
-        if (table == null)
+        Map subMap = (Map) map.get(key);
+        if (subMap == null)
         {
-            table = new HashMap();
-            mTables.put(metadata.getTableName(), table);
+            subMap = new HashMap();
+            map.put(key, subMap);
         }
-        List data = getList(table, metadata.getLevel());
-        data.add(metadata);
-//        data = getList(table, "*");
-//        data.add(metadata);
+        return subMap;
     }
 
-    private List getList(Map table, String key)
+    private static List getList(Map map, String key)
     {
-        List data = (List) table.get(key);
-        if (data == null)
+        List subList = (List) map.get(key);
+        if (subList == null)
         {
-            data = new ArrayList();
-            table.put(key, data);
+            subList = new ArrayList();
+            map.put(key, subList);
         }
-        return data;
+        return subList;
+    }
+
+    private void addByLevel(ServerMetadata metadata)
+    {
+        Map table = getMap(mTablesByLevel, metadata.getTableName());
+        List data = getList(table, metadata.getLevel());
+        data.add(metadata);
     }
 
     private void addByPath(ServerMetadata metadata)
@@ -59,20 +62,14 @@ public class MetadataManager
         {
             return;
         }
-        Map table = (Map) mTableByPath.get(metadata.getTableName());
-        if (table == null)
-        {
-            table = new HashMap();
-            mTableByPath.put(metadata.getTableName(), table);
-        }
+        Map table = getMap(mTablesByPath, metadata.getTableName());
         table.put(path, metadata);
     }
 
     public List find(String tableName, String level)
     {
-        LOG.debug("find: " + tableName + ", level: " + level);
         List found = Collections.EMPTY_LIST;
-        Map table = (Map) mTables.get(tableName);
+        Map table = (Map) mTablesByLevel.get(tableName);
         if (table != null)
         {
             List data = (List) table.get(level);
@@ -103,7 +100,7 @@ public class MetadataManager
     public ServerMetadata findByPath(String tableName, String path)
     {
         ServerMetadata metadata = null;
-        Map table = (Map) mTableByPath.get(tableName);
+        Map table = (Map) mTablesByPath.get(tableName);
         if (table != null)
         {
             metadata = (ServerMetadata) table.get(path);
@@ -122,7 +119,7 @@ public class MetadataManager
     {
         Map found = new HashMap();
 
-        Map table = (Map) mTables.get(tableName);
+        Map table = (Map) mTablesByLevel.get(tableName);
         if (table != null)
         {
             Set levels = table.keySet();
@@ -134,21 +131,17 @@ public class MetadataManager
                     found.put(level, table.get(level));
                 }
             }
-
-//            List data = getList(table, "*");
-//            for (int i = 0; i < data.size(); i++)
-//            {
-//                ServerMetadata metadata = (ServerMetadata) data.get(i);
-//                if (levelsMatch(metadata.getLevel(), patternElements))
-//                {
-//                    List atLevel = getList(found, metadata.getLevel());
-//                    atLevel.add(metadata);
-//                }
-//            }
         }
         return found;
     }
 
+    /**
+     * Matches a level to a level pattern.
+     *
+     * @param level level to test
+     * @param pattern pattern to match against
+     * @return true if level matches the pattern
+     */
     public static boolean levelsMatch(String level, String pattern)
     {
         String[] patternElements = StringUtils.split(pattern, ":");
@@ -158,31 +151,14 @@ public class MetadataManager
     private static boolean levelsMatch(String level, String[] patternElements)
     {
         String[] levelElements = StringUtils.split(level, ":");
-        if (levelElements.length < patternElements.length)
+        int levelLength = levelElements.length;
+        if (levelLength < patternElements.length)
         {
             return false;
         }
 
-        // Pad "*" on front of short patterns so that the lenghts are equals
-        if (patternElements.length < levelElements.length)
-        {
-            String[] newPattern = new String[levelElements.length];
-            int numStarsToAdd = newPattern.length - patternElements.length;
-            for (int i = 0; i < newPattern.length; i++)
-            {
-                if (i < numStarsToAdd)
-                {
-                    newPattern[i] = "*";
-                }
-                else
-                {
-                    newPattern[i] = patternElements[i - numStarsToAdd];
-                }
-            }
-        }
-
         boolean match = true;
-        for (int i = 0; i < levelElements.length && i < patternElements.length;
+        for (int i = 0; i < levelLength && i < patternElements.length;
              i++)
         {
             String levelElement = levelElements[i];
@@ -198,8 +174,6 @@ public class MetadataManager
         return match;
     }
 
-    private static final Logger LOG =
-        Logger.getLogger(MetadataManager.class);
     /**
      * A map of maps to lists:
      *
@@ -210,6 +184,6 @@ public class MetadataManager
      * +------------+    |  ...  |
      *                   +-------+
      */
-    private Map mTables;
-    private Map mTableByPath;
+    private Map mTablesByLevel;
+    private Map mTablesByPath;
 }
