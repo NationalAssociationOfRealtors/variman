@@ -1,7 +1,6 @@
 package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -117,6 +116,33 @@ public class Update implements Serializable
         mUpdateTypes = updateTypes;
     }
 
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mClassid.getPath();
+    }
+
+    public String getPath()
+    {
+        return mLevel + ":" + mUpdateName;
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -140,7 +166,6 @@ public class Update implements Serializable
             .toHashCode();
     }
 
-
     /** identifier field */
     private Long mId;
 
@@ -158,4 +183,6 @@ public class Update implements Serializable
 
     /** persistent field */
     private Set mUpdateTypes;
+
+    private String mLevel;
 }

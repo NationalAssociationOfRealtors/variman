@@ -106,6 +106,28 @@ public class ValidationExpression implements Serializable
         mResourceid = resourceid;
     }
 
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mResourceid.getPath();
+    }
+
     public String toString()
     {
         return mValidationExpressionID;
@@ -141,4 +163,6 @@ public class ValidationExpression implements Serializable
 
     /** nullable persistent field */
     private Resource mResourceid;
+
+    private String mLevel;
 }

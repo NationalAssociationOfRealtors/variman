@@ -435,9 +435,31 @@ public class Table implements Serializable
         mSearchHelp = searchHelp;
     }
 
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mClassid.getPath();
+    }
+
     public String getPath()
     {
-        return mClassid.getPath() + ":" + mSystemName;
+        return mLevel + ":" + mSystemName;
     }
 
     public String toString()
@@ -537,4 +559,6 @@ public class Table implements Serializable
 
     /** nullable persistent field */
     private SearchHelp mSearchHelp;
+
+    private String mLevel;
 }

@@ -169,14 +169,35 @@ public class MClass implements Serializable
     }
 
     /**
-     * Returns the path to the metadata object.  Similar to how the
-     * RETS Client does it.
+     * Returns the level of this metadata object.
+     *
+     * @return the level of this metadata object
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mResourceid.getPath();
+    }
+
+    /**
+     * Returns the path to this metadata object.
      *
      * @return a string with the path.
      */
     public String getPath()
     {
-        return mResourceid.getPath() + ":" + mClassName;
+        return mLevel + ":" + mClassName;
     }
 
     public String toString()
@@ -223,4 +244,6 @@ public class MClass implements Serializable
 
     /** persistent field */
     private Set mUpdates;
+
+    private String mLevel;
 }

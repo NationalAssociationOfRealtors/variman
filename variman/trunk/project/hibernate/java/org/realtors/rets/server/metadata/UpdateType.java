@@ -184,6 +184,28 @@ public class UpdateType implements Serializable
         mValidationExpressions = validationExpressions;
     }
 
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mUpdateid.getPath();
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -236,4 +258,6 @@ public class UpdateType implements Serializable
 
     /** persistent field */
     private Set mValidationExpressions;
+
+    private String mLevel;
 }

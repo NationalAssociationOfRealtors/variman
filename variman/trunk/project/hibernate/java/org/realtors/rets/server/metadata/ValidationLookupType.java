@@ -91,6 +91,28 @@ public class ValidationLookupType implements Serializable
         mValidationLookupID = validationLookupID;
     }
 
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mValidationLookupID.getPath();
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -128,4 +150,6 @@ public class ValidationLookupType implements Serializable
 
     /** nullable persistent field */
     private ValidationLookup mValidationLookupID;
+
+    private String mLevel;
 }

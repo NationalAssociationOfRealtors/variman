@@ -105,6 +105,28 @@ public class ValidationExternalType implements Serializable
         mDisplayField = displayField;
     }
 
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mValidationExternalID.getPath();
+    }
+
     public String toString()
     {
         return new ToStringBuilder(this)
@@ -128,7 +150,6 @@ public class ValidationExternalType implements Serializable
             .toHashCode();
     }
 
-
     /** identifier field */
     private Long mId;
 
@@ -143,4 +164,6 @@ public class ValidationExternalType implements Serializable
 
     /** persistent field */
     private Set mDisplayField;
+
+    private String mLevel;
 }

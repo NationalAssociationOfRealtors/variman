@@ -1,7 +1,6 @@
 package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -101,9 +100,31 @@ public class Lookup implements Serializable
         mLookupTypes = lookupTypes;
     }
 
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     * @hibernate.property length="64"
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mResourceid.getPath();
+    }
+
     public String getPath()
     {
-        return mResourceid.getPath() + ":" + mLookupName;
+        return mLevel + ":" + mLookupName;
     }
 
     public String toString()
@@ -143,4 +164,6 @@ public class Lookup implements Serializable
 
     /** persistent field */
     private Set mLookupTypes;
+
+    private String mLevel;
 }
