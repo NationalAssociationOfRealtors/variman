@@ -1,19 +1,27 @@
 package org.realtors.rets.server.metadata;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @hibernate.class table="rets_metadata_resource"
  */
 public class Resource implements Serializable
 {
+    public Resource(long id)
+    {
+        mId = new Long(id);
+    }
+
+    public Resource()
+    {
+        mId = null;
+    }
+
     /**
      *
      * @return a Long object
@@ -327,9 +335,7 @@ public class Resource implements Serializable
 
     public String toString()
     {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .toString();
+        return mResourceID;
     }
 
     public boolean equals(Object other)
