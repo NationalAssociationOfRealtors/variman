@@ -30,5 +30,6 @@ public class HeaderPanel extends JPanel
         horizontalRule.add(Box.createVerticalStrut(0));
 
         add(horizontalRule);
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     }
 }
