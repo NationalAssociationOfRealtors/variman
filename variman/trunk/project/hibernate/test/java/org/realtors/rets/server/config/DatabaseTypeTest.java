@@ -30,7 +30,9 @@ public class DatabaseTypeTest extends TestCase
         assertEquals("com.jnetdirect.jsql.JSQLDriver", type.getDriverClass());
         assertEquals("net.sf.hibernate.dialect.SQLServerDialect",
                      type.getDialectClass());
-        assertEquals("jdbc:JSQLConnect://localhost/database=rex",
+        assertEquals("jdbc:JSQLConnect://localhost" +
+                     "/selectMethod=cursor" +
+                     "/database=rex",
                      type.getUrl("localhost", "rex"));
     }
 
