@@ -132,6 +132,9 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
             "        <system-names>LN</system-names>\n" +
             "      </exclude-rule>\n" +
+            "      <condition-rule resource=\"Property\" class=\"RES\">\n" +
+            "        <sql-constraint>r_lp &lt; 500000</sql-constraint>\n" +
+            "      </condition-rule>\n" +
             "    </group-rules>\n" +
             "    <group-rules group=\"agent\">\n" +
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
@@ -192,6 +195,14 @@ public class RetsConfigTest extends LinesEqualTestCase
         systemNames = ruleDescription.getSystemNames();
         assertEquals(expected, systemNames);
 
+        /* Check condition rules */
+        rules = groupRules.getConditionRules();
+        assertEquals(1, rules.size());
+        ConditionRule conditionRule = (ConditionRule) rules.get(0);
+        assertEquals("Property", conditionRule.getResource());
+        assertEquals("RES", conditionRule.getRetsClass());
+        assertEquals("r_lp < 500000", conditionRule.getSqlConstraint());
+        
         groupRules = (GroupRules) securityConstraints.get(1);
         assertEquals("agent", groupRules.getGroupName());
         rules = groupRules.getRules();
