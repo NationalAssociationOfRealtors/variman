@@ -30,13 +30,16 @@ public class Main extends wxApp
                                           new wxSize(640, 480));
         Admin.setAdminFrame(frame);
         frame.Show(true);
-        new InitDatabaseCommand().execute();
+        if (!Admin.isDebugEnabled())
+        {
+            new InitDatabaseCommand().execute();
+        }
         return true;
     }
 
     public static void main(String[] args)
     {
-        Admin.findRexHome();
+        Admin.initSystemProperties();
         Main main = new Main();
         main.MainLoop();
     }
