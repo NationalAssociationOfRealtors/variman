@@ -29,8 +29,27 @@
 
     <p>
       Dummy metadata and data have been loaded into the server.  For a
-      simple query, try: <code>(LP=300000-)</code>.  If you do not have
-      a RETS client, try out <a
+      simple standard names query, try:
+    </p>
+
+    <table border="1" cellspacing="0" cellpadding="5">
+      <tr>
+        <td class="demo-param">Resource:</td>
+        <td class="demo-value">Property</td>
+      </tr>
+      <tr>
+        <td class="demo-param">Class:</td>
+        <td class="demo-value">ResidentialProperty</td>
+      </tr>
+      <tr>
+        <td class="demo-param">DMQL:</td>
+        <td class="demo-value">(ListPrice=300000-)</td>
+      </tr>
+    </table>
+    
+    
+    <p>
+      If you do not have a RETS client, try out <a
       href="http://cart.sourceforge.net/">Cart</a>.
     </p>
 
