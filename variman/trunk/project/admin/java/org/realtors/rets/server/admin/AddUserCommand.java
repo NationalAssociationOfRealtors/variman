@@ -38,6 +38,9 @@ public class AddUserCommand extends wx
             user.setLastName(dialog.getLastName());
             user.setUsername(dialog.getUsername());
             user.changePassword(dialog.getPassword());
+            user.setAgentCode(dialog.getAgentCode());
+            user.setBrokerCode(dialog.getBrokerCode());
+
             HibernateUtils.save(user);
             frame.SetStatusText("User " + user.getName() + " added");
             frame.refreshUsers();

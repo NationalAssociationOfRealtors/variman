@@ -39,6 +39,8 @@ public class EditUserCommand extends wx
 
             mUser.setFirstName(dialog.getFirstName());
             mUser.setLastName(dialog.getLastName());
+            mUser.setAgentCode(dialog.getAgentCode());
+            mUser.setBrokerCode(dialog.getBrokerCode());
             HibernateUtils.update(mUser);
             frame.SetStatusText("User " + mUser.getName() + " changed");
             frame.refreshUsers();
