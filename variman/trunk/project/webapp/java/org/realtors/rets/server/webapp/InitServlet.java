@@ -18,6 +18,8 @@ import net.sf.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.webapp.auth.NonceTable;
+import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
 
@@ -43,6 +45,7 @@ public class InitServlet extends RetsServlet
             initRetsConfiguration();
             initHibernate();
             initMetadata();
+            initNonceTable();
             LOG.debug("Init servlet completed successfully");
         }
         catch (ServletException e)
@@ -174,6 +177,21 @@ public class InitServlet extends RetsServlet
             helper.close(LOG);
         }
         return system;
+    }
+
+    private void initNonceTable()
+    {
+        NonceTable nonceTable = new NonceTable();
+        WebApp.setNonceTable(nonceTable);
+        NonceReaper reaper = new NonceReaper(nonceTable);
+        reaper.start();
+        WebApp.setNonceReaper(reaper);
+    }
+
+    public void destroy()
+    {
+        NonceReaper reaper = WebApp.getReaper();
+        reaper.stop();
     }
 
     private static final Logger LOG =
