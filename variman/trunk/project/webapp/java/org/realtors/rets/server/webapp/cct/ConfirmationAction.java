@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.cct.UserInfo;
-import org.realtors.rets.server.cct.UserUtils;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;

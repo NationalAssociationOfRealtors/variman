@@ -2,7 +2,7 @@
  * Created on Aug 25, 2003
  *
  */
-package org.realtors.rets.server.cct;
+package org.realtors.rets.server.webapp.cct;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 
 import org.realtors.rets.server.User;
+import org.realtors.rets.server.cct.UserInfo;
 import org.realtors.rets.server.webapp.InitServlet;
 
 /**
