@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!-- $Id: UpdateType.hbm.xml,v 1.1 2003/05/30 20:52:15 kgarner Exp $ -->
+
+<hibernate-mapping>
+  <class name="org.nar.rets.metadata.newdb.MetadataUpdateType"
+    table="rets_metadata_updatetype">
+
+    <id name="id" type="long">
+      <generator class="hilo"/>
+    </id>
+
+    <property name="systemName" type="string">
+      <column name="system_name" length="32" not-null="true" unique="true"
+        index="updatetype_system_name_index"/>
+    </property>
+
+    <property name="sequence" type="int"/>
+
+    <set name="attributes" table="rets_metadata_updatetype_attributes">
+      <key column="id"/>
+      <element column="attributes" type="int"/>
+    </set>
+
+    <property name="Default" type="string">
+      <column name="r_default"/>
+    </property>
+
+<!--     <set name="validationExpressions" -->
+<!--       table="rets_metadata_updatetype_validationexpressions"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many -->
+<!--         class="org.nar.rets.metadata.newdb.MetadataValidationExpression"/> -->
+<!--     </set> -->
+
+<!--     <set name="updateHelps" table="rets_metadata_updatetype_updatehelps"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many class="org.nar.rets.metadata.newdb.MetadataUpdateHelp"/> -->
+<!--     </set> -->
+
+<!--     <set name="validationLookups" -->
+<!--       table="rets_metadata_updatetype_validationlookups"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many -->
+<!--         class="org.nar.rets.metadata.newdb.MetadataValidationLookup"/> -->
+<!--     </set> -->
+
+<!--     <set name="validationExternals" -->
+<!--       table="rets_metadata_updatetype_validationexternals"> -->
+<!--       <key column="id"/> -->
+<!--       <one-to-many -->
+<!--         class="org.nar.rets.metadata.newdb.MetadataValidationExternal"/> -->
+<!--     </set> -->
+    
+  </class>
+</hibernate-mapping>
+    
