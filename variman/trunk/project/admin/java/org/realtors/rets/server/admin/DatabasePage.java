@@ -22,10 +22,10 @@ import org.wxwindows.wxWindow;
 
 public class DatabasePage extends wxPanel
 {
-    public DatabasePage(wxWindow parent, RetsConfig config)
+    public DatabasePage(wxWindow parent)
     {
         super(parent);
-        mConfig = config.getDatabase();
+        mConfig = Admin.getRetsConfig().getDatabase();
         wxBoxSizer box = new wxBoxSizer(wxVERTICAL);
         wxFlexGridSizer grid = new wxFlexGridSizer(0, 3, 0, 0);
         grid.AddGrowableCol(2);
@@ -84,6 +84,8 @@ public class DatabasePage extends wxPanel
                 }
                 dialog.updateConfig(mConfig);
                 updateLabels();
+                // Re-initialize Hibernate with new parameters
+                new InitDatabaseCommand().execute();
             }
             finally
             {
