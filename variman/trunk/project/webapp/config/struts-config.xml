@@ -10,6 +10,8 @@
                type="org.realtors.rets.server.webapp.cct.RegistrationForm"/>
     <form-bean name="cctConfirmationForm"
                type="org.realtors.rets.server.webapp.cct.NullForm"/>
+    <form-bean name="cctLoginForm"
+               type="org.realtors.rets.server.webapp.cct.LoginForm"/>
     <form-bean name="cctTestForm"
                type="org.realtors.rets.server.webapp.cct.TestForm"/>
   </form-beans>
@@ -23,6 +25,7 @@
   <global-forwards>
     <forward name="registration" path="/registration.jsp"/>
     <forward name="userPage" path="/cct/index.jsp" redirect="true"/>
+    <forward name="logout" path="/logout.do" />
   </global-forwards>
 
   <action-mappings>
@@ -42,6 +45,16 @@
             input="/registration.jsp"
             type="org.realtors.rets.server.webapp.cct.ConfirmationAction"/>
 
+    <action path="/login"
+            name="cctLoginForm"
+            scope="request"
+            validate="true"
+            input="/login.jsp"
+            type="org.realtors.rets.server.webapp.cct.LoginAction"/>
+
+    <action path="/logout"
+            type="org.realtors.rets.server.webapp.cct.LogoutAction"/>
+            
       <action path="/cct/index"
               type="org.realtors.rets.server.webapp.cct.IndexAction">
           <forward name="home" path="/cct/home.jsp" />
