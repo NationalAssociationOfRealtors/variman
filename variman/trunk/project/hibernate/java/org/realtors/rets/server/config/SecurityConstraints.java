@@ -1,12 +1,25 @@
 package org.realtors.rets.server.config;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class SecurityConstraints
 {
+    public SecurityConstraints()
+    {
+        mGroupRulesByName = new HashMap();
+    }
+
     public void setAllConstraints(List constraints)
     {
         mGroupRules = constraints;
+        mGroupRulesByName.clear();
+        for (int i = 0; i < mGroupRules.size(); i++)
+        {
+            GroupRules groupRules = (GroupRules) mGroupRules.get(i);
+            mGroupRulesByName.put(groupRules.getGroupName(), groupRules);
+        }
     }
 
     public List getAllGroupRules()
@@ -21,19 +34,16 @@ public class SecurityConstraints
 
     public GroupRules getRulesForGroup(String groupName)
     {
-        for (int i = 0; i < mGroupRules.size(); i++)
+        GroupRules groupRules = (GroupRules) mGroupRulesByName.get(groupName);
+        if (groupRules == null)
         {
-            GroupRules groupRules = (GroupRules) mGroupRules.get(i);
-            if (groupRules.getGroupName().equals(groupName))
-            {
-                return groupRules;
-            }
+            groupRules = new GroupRules(groupName);
+            mGroupRules.add(groupRules);
+            mGroupRulesByName.put(groupName, groupRules);
         }
-
-        GroupRules groupRules = new GroupRules(groupName);
-        mGroupRules.add(groupRules);
         return groupRules;
     }
 
     private List mGroupRules;
+    private Map mGroupRulesByName;
 }
