@@ -223,6 +223,7 @@ public class CreatePropertiesCommand
                 ps.setString(18, getNextStatus());
                 ps.setString(19, getNextOwner());
                 ps.execute();
+		ps.close();
             }
             con.commit();
             session.close();
