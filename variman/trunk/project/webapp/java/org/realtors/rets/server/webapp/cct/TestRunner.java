@@ -97,6 +97,11 @@ public class TestRunner
     {
         return mSuite.getTest(i).getDescription();
     }
+    
+    public String getDescription(String testName)
+    {
+        return mSuite.getTest(testName).getDescription(); 
+    }
 
     /**
      *
@@ -110,6 +115,11 @@ public class TestRunner
     public CertificationTest getTest(int testNo)
     {
         return mSuite.getTest(testNo);
+    }
+    
+    public CertificationTest getTest(String testName)
+    {
+        return mSuite.getTest(testName);
     }
 
     public StatusEnum getStatus(String name)
