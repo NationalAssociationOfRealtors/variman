@@ -51,6 +51,7 @@ public class XmlObjectSet implements ObjectSet
         {
             mObjectDescriptorsByType = new HashMap();
             mDefaultObjectIdsByType = new HashMap();
+            mAreRemoteLocationsAllowable = false;
             mRootUrl = new File(rootPath).toURL();
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(reader);
@@ -67,9 +68,24 @@ public class XmlObjectSet implements ObjectSet
         }
     }
 
+    private boolean getAttributeBoolean(Element element, String attributeName)
+    {
+        String value = element.getAttributeValue(attributeName);
+        if ((value != null) && (value.equals("true")))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private void parseObjectSet(Element objectSet) throws IOException
     {
         mResourceKey = objectSet.getAttributeValue("resource-key");
+        mAreRemoteLocationsAllowable =
+            getAttributeBoolean(objectSet, "remote-locations");
         String basePath = objectSet.getAttributeValue("base-path");
         if (basePath == null)
         {
@@ -108,15 +124,16 @@ public class XmlObjectSet implements ObjectSet
         while (objects.hasNext())
         {
             Element object = (Element) objects.next();
-            Element file = object.getChild("file", namespace);
-            String defaultString = object.getAttributeValue("default");
-            if ("true".equals(defaultString))
+            Element path = object.getChild("path", namespace);
+            if(getAttributeBoolean(object, "default"))
             {
                 defaultObjectId = objectId;
             }
-            URL fileUrl = new URL(basePath, file.getTextTrim());
+            URL objectUrl = new URL(basePath, path.getTextTrim());
             ObjectDescriptor objectDescriptor =
-                new ObjectDescriptor(mResourceKey, objectId, fileUrl);
+                new ObjectDescriptor(mResourceKey, objectId, objectUrl);
+            objectDescriptor.setRemoteLocationAllowable(
+                mAreRemoteLocationsAllowable);
             String description = object.getChildTextTrim("description",
                                                          namespace);
             if (StringUtils.isNotBlank(description))
@@ -176,6 +193,11 @@ public class XmlObjectSet implements ObjectSet
         }
     }
 
+    public boolean areRemoteLocationsAllowable()
+    {
+        return mAreRemoteLocationsAllowable;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(XmlObjectSet.class);
     private String mResourceKey;
@@ -183,4 +205,5 @@ public class XmlObjectSet implements ObjectSet
     private URL mBasePath;
     private Map mObjectDescriptorsByType;
     private Map mDefaultObjectIdsByType;
+    private boolean mAreRemoteLocationsAllowable;
 }
