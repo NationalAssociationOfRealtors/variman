@@ -6,11 +6,12 @@ package org.realtors.rets.server.webapp.cct;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsVersion;
+import org.realtors.rets.server.webapp.RetsServletRequest;
+import org.realtors.rets.server.webapp.RetsServletResponse;
 import org.realtors.rets.server.webapp.SessionFilter;
 
 public class LoginHandler extends BaseServletHandler
@@ -58,11 +59,10 @@ public class LoginHandler extends BaseServletHandler
         mAlternateLoginUrl = alternateLoginUrl;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
+    protected void serviceRets(RetsServletRequest request,
+                               RetsServletResponse response)
+        throws RetsReplyException, IOException
     {
-        super.doGet(request, response);
-
         SessionFilter.validateSession(request.getSession());
 
         mContextPath = new StringBuffer();
@@ -74,12 +74,13 @@ public class LoginHandler extends BaseServletHandler
         Cookie cookie = new Cookie("RETS-Session-ID", mSessionId);
         cookie.setPath("/");
         response.addCookie(cookie);
-        response.setContentType("text/xml");
-        addRetsVersion(response);
-        mOut = response.getWriter();
+        mOut = response.getXmlWriter();
         println(mOut, "<RETS ReplyCode=\"0\" " +
                       "ReplyText=\"Operation Successful\">");
-        println(mOut, "<RETS-RESPONSE>");
+        if (request.getRetsVersion() != RetsVersion.RETS_1_0)
+        {
+            println(mOut, "<RETS-RESPONSE>");
+        }
         println(mOut, "MemberName = Joe Schmoe");
         println(mOut, "User = A123,5678,1,A123");
         println(mOut, "Broker = B123");
@@ -94,7 +95,10 @@ public class LoginHandler extends BaseServletHandler
         printMinimalUrl(mOut, "Search", "cct/search");
         printMinimalUrl(mOut, "GetMetadata", "cct/getMetadata");
         printMaximalUrl(mOut, "Update", "update");
-        println(mOut, "</RETS-RESPONSE>");
+        if (request.getRetsVersion() != RetsVersion.RETS_1_0)
+        {
+            println(mOut, "</RETS-RESPONSE>");
+        }
         println(mOut, "</RETS>");
     }
 
