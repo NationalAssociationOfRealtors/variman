@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -46,6 +47,14 @@ public class GetObjectParameters extends TransactionParameters
         LOG.debug("ID: " + id);    
         mResourceSets = new ArrayList();
         String[] resourceSets = StringUtils.split(id, ",");
+        if (resourceSets.length > 1)
+        {
+            mMultipartId = true;
+        }
+        else
+        {
+            mMultipartId = false;
+        }
         for (int i = 0; i < resourceSets.length; i++)
         {
             String stringResourceSet = resourceSets[i];
@@ -57,6 +66,10 @@ public class GetObjectParameters extends TransactionParameters
             // Split object-id-list into object-id
             String[] objectIds =
                 StringUtils.split(resourceSetParameter[1], ":");
+            if ((objectIds.length > 1) || ArrayUtils.contains(objectIds, "*"))
+            {
+                mMultipartId = true;
+            }
             resourceSet.addObjectIds(objectIds);
             mResourceSets.add(resourceSet);
         }
@@ -89,6 +102,11 @@ public class GetObjectParameters extends TransactionParameters
         ResourceSet resourceSet =
             (ResourceSet) mResourceSets.get(resourceIndex);
         return resourceSet.getObjectIds();
+    }
+
+    public boolean isMultipartId()
+    {
+        return mMultipartId;
     }
 
     private static class ResourceSet
@@ -132,4 +150,5 @@ public class GetObjectParameters extends TransactionParameters
     private String mType;
     private String mResource;
     private List mResourceSets;
+    private boolean mMultipartId;
 }
