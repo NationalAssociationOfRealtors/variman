@@ -12,8 +12,11 @@ package org.realtors.rets.server.protocol;
 
 public class GetObjectPatternContext
 {
-    public GetObjectPatternContext(String resource, String type,
-                                   String key, int objectId)
+    public GetObjectPatternContext()
+    {
+    }
+
+    public GetObjectPatternContext(String key, int objectId)
     {
         mKey = key;
         mObjectId = objectId;
@@ -24,9 +27,19 @@ public class GetObjectPatternContext
         return mKey;
     }
 
+    public void setKey(String key)
+    {
+        mKey = key;
+    }
+
     public int getObjectId()
     {
         return mObjectId;
+    }
+
+    public void setObjectId(int objectId)
+    {
+        mObjectId = objectId;
     }
 
     private String mKey;
