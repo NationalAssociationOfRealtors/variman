@@ -4,7 +4,7 @@
 
 function ver()
 {
-    return "1.0.0-beta1";
+    return "2.0.0";
 }
 
 function print_ver()
@@ -41,7 +41,7 @@ function dl_file($file)
         <td>
           <?php dl_file("rex-" . ver() . "-setup.exe")?>
         </td>
-        <td>14M</td>
+        <td>16M</td>
         <td>
           Embedded Tomcat Windows installer.  Installs a Service to
           start and stop Rex.
@@ -49,10 +49,20 @@ function dl_file($file)
       </tr>
       <tr>
         <td>
+          <?php dl_file("rex-" . ver() . "-linux.tar.gz")?>
+        </td>
+        <td>17M</td>
+        <td>Embedded Tomcat archive Linux i386 platforms.</td>
+      </tr>
+      <tr>
+        <td>
           <?php dl_file("rex-" . ver() . ".tar.gz")?>
         </td>
-        <td>14M</td>
-        <td>Embedded Tomcat archive for non-Windows platforms.</td>
+        <td>15M</td>
+        <td>
+            Embedded Tomcat archive for all other platforms.  Command
+            line administration only.
+        </td>
       </tr>
       <tr>
         <td class="dl-group" colspan="3">Web Application Binary Downloads</td>
@@ -78,15 +88,24 @@ function dl_file($file)
         <td>
           <?php dl_file("rex-" . ver() . "-src.tar.gz")?>
         </td>
-        <td>255k</td>
+        <td>225k</td>
         <td>Source archive, tar+gzipped</td>
       </tr>
       <tr>
         <td>
           <?php dl_file("rex-" . ver() . "-src.zip")?>
         </td>
-        <td>485k</td>
+        <td>486k</td>
         <td>Source archive, zipped</td>
+      </tr>
+      <tr>
+        <td class="dl-group" colspan="3">Miscellaneous Downloads</td>
+      </tr>
+      <tr>
+        <td><?php dl_file("sample-metadata.zip")?>
+        </td>
+        <td>33k</td>
+        <td>Sample metadata</td>
       </tr>
     </table>
 

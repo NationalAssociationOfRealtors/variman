@@ -26,18 +26,23 @@
       </li>
       <li>
         Cross platform.  Runs on Microsoft Windows, Linux, Unix, Mac
-        OS X, and anywhere else a 1.4 version of Java is available.
+        OS X, and anywhere else a 1.3 version of Java is available.
       </li>
       <li>
         Minimal external intallation requirements.  Embedded Tomcat
         version requires only Java and a relational database.
       </li>
       <li>
-        Supports PostgreSQL and planned support for Microsoft SQLServer.
+        Supports PostgreSQL and Microsoft SQLServer with the <a
+        href="http://www.jnetdirect.com/products.php?op=jsqlconnect">JNetDirect
+        JSQLConnect driver</a>.
       </li>
     </ul>
 
     <h3>News</h3>
+    <ul>
+      <li><b>02 Apr 2004</b>: Version 2.0.0 released.</li>
+    </ul>
     <ul>
       <li><b>21 Jan 2004</b>: Version 1.0 Beta 1 released.</li>
     </ul>
