@@ -29,6 +29,7 @@ import org.wxwindows.wxStaticLine;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxTextCtrl;
 import org.wxwindows.wxWindow;
+import org.wxwindows.wxJUtil;
 
 public class DatabasePropertiesDialog extends wxDialog
 {
@@ -140,8 +141,6 @@ public class DatabasePropertiesDialog extends wxDialog
     private void testConnection()
     {
         Connection connection = null;
-        boolean connectionSucceeded = false;
-        String errorMessage = "Database connection failed.";
         try
         {
             DatabaseType type = getDatabaseType();
@@ -158,27 +157,28 @@ public class DatabasePropertiesDialog extends wxDialog
             LOG.debug("password = " + password);
             Class.forName(driver);
             connection = DriverManager.getConnection(url, username, password);
-            connectionSucceeded = !connection.isClosed();
+            if (!connection.isClosed())
+            {
+                wxMessageBox("Database connection succeeded.", "Test Database",
+                             wxOK | wxICON_INFORMATION, this);
+            }
+            else
+            {
+                // Most likely, an exception will get thrown before we ever get
+                // here, but just in case...
+                wxMessageBox("Database connection failed.", "Test Database",
+                             wxOK | wxICON_EXCLAMATION, this);
+            }
         }
         catch (Exception e)
         {
             LOG.error("Caught exception", e);
-            errorMessage = errorMessage + "\n\n" + e.getMessage();
+            wxJUtil.logError("Database connection failed.\n" +
+                             e.getMessage(), e);
         }
         finally
         {
             closeConnection(connection);
-        }
-
-        if (connectionSucceeded)
-        {
-            wxMessageBox("Database connection succeeded.", "Test Database",
-                         wxOK | wxICON_INFORMATION, this);
-        }
-        else
-        {
-            wxMessageBox(errorMessage, "Test Database",
-                         wxOK | wxICON_EXCLAMATION, this);
         }
     }
 
