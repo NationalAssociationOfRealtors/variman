@@ -4,7 +4,12 @@ package org.realtors.rets.server.webapp;
 
 import javax.servlet.ServletContext;
 
+import net.sf.hibernate.SessionFactory;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.HibernateException;
+
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.SessionHelper;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.log4j.PropertyConfigurator;
@@ -53,7 +58,28 @@ public class WebApp
         }
     }
 
+    public static void setSessions(SessionFactory sessionFactory)
+    {
+        sSessions = sessionFactory;
+    }
+
+    public static SessionHelper createHelper()
+    {
+        return new SessionHelper(sSessions);
+    }
+
+    public static SessionFactory getSessions()
+    {
+        return sSessions;
+    }
+
+    public static Session openSession() throws HibernateException
+    {
+        return sSessions.openSession();
+    }
+
     private static ServletContext sServletContext;
     private static MetadataManager sMetadataManager;
+    private static SessionFactory sSessions;
     private static String sLog4jFile;
 }
