@@ -130,7 +130,7 @@ public class DatabasePage extends wxPanel
         mDatabaseName.SetLabel(dbConfig.getDatabaseName());
         mUsername.SetLabel(dbConfig.getUsername());
         mPort.SetValue("" + config.getPort());
-        String webappRoot = Admin.getWebappRoot();
+        String webappRoot = Admin.getWebAppRoot();
         mMetadataDir.SetValue(IOUtils.resolve(webappRoot,
                                               config.getMetadataDir()));
     }
@@ -175,7 +175,7 @@ public class DatabasePage extends wxPanel
             try
             {
                 RetsConfig config = Admin.getRetsConfig();
-                String webappRoot = Admin.getWebappRoot();
+                String webappRoot = Admin.getWebAppRoot();
                 String metadataDir = config.getMetadataDir();
                 metadataDir = IOUtils.resolve(webappRoot, metadataDir);
                 dirDialog =
