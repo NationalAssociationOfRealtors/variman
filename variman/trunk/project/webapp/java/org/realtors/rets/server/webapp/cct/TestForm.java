@@ -10,9 +10,27 @@ public class TestForm extends ActionForm
      * 
      * @return
      */
+    public String getDone()
+    {
+        return mDone;
+    }
+
+    /**
+     * 
+     * @return
+     */
     public String getTestName()
     {
         return mTestName;
+    }
+
+    /**
+     * 
+     * @param string
+     */
+    public void setDone(String string)
+    {
+        mDone = string;
     }
 
     /**
@@ -24,5 +42,6 @@ public class TestForm extends ActionForm
         mTestName = string;
     }
 
+    private String mDone;
     private String mTestName;
 }
