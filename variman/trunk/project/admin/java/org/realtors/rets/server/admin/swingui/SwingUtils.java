@@ -34,4 +34,16 @@ public class SwingUtils
         component.setLocation((x - (componentSize.width / 2)),
                               (y - (componentSize.height / 2)));
     }
+
+    public static AdminFrame getAdminFrame()
+    {
+        return sAdminFrame;
+    }
+
+    public static void setAdminFrame(AdminFrame adminFrame)
+    {
+        sAdminFrame = adminFrame;
+    }
+
+    private static AdminFrame sAdminFrame;
 }
