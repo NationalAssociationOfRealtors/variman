@@ -186,7 +186,7 @@ public class DataGenerator extends DataGenBase
     }
 
     /**
-     * @return
+     * @return a String from the agent array
      */
     private String getNextAgent()
     {
@@ -194,7 +194,7 @@ public class DataGenerator extends DataGenBase
     }
 
     /**
-     * @return
+     * @return a String from the broker array
      */
     private String getNextBroker()
     {
@@ -202,7 +202,7 @@ public class DataGenerator extends DataGenBase
     }
 
     /**
-     * @return
+     * @return a Date from the date array
      */
     private Date getNextDate()
     {
@@ -217,8 +217,6 @@ public class DataGenerator extends DataGenBase
         return mESchools[mECount++ % mESchools.length];
     }
     
-    //  TODO: Add method to preload classes
-
     public static void main(String[] args) throws HibernateException
     {
 
