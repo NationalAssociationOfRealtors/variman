@@ -30,6 +30,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         database.setMaxPsActive(50);
         database.setMaxPsWait(60000);
         database.setMaxPsIdle(5);
+        database.setShowSql(true);
         retsConfig.setDatabase(database);
         String xml = retsConfig.toXml();
         assertLinesEqual(
@@ -53,6 +54,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    <max-ps-active>50</max-ps-active>\n" +
             "    <max-ps-idle>5</max-ps-idle>\n" +
             "    <max-ps-wait>60000</max-ps-wait>\n" +
+            "    <show-sql>true</show-sql>\n" +
             "  </database>\n" +
             "</rets-config>\n" +
             "\n",
@@ -84,6 +86,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    <max-ps-active>50</max-ps-active>\n" +
             "    <max-ps-wait>60000</max-ps-wait>\n" +
             "    <max-ps-idle>5</max-ps-idle>\n" +
+            "    <show-sql>true</show-sql>\n" +
             "  </database>\n" +
             "</rets-config>";
         RetsConfig retsConfig = RetsConfig.initFromXml(xml);
@@ -109,6 +112,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertEquals(50, database.getMaxPsActive());
         assertEquals(60000, database.getMaxPsWait());
         assertEquals(5, database.getMaxPsIdle());
+        assertTrue(database.getShowSql());
     }
 
     public void testFromXmlDefaults()

@@ -43,6 +43,7 @@ public class DatabaseConfigTest extends TestCase
         config.setMaxPsActive(50);
         config.setMaxPsWait(60000);
         config.setMaxPsIdle(5);
+        config.setShowSql(true);
 
         Properties properties = config.createHibernateProperties();
         assertEquals("org.postgresql.Driver",
@@ -53,7 +54,7 @@ public class DatabaseConfigTest extends TestCase
         assertEquals("", properties.getProperty(Environment.PASS));
         assertEquals("net.sf.hibernate.dialect.PostgreSQLDialect",
                      properties.getProperty(Environment.DIALECT));
-        assertEquals("false", properties.getProperty(Environment.SHOW_SQL));
+        assertEquals("true", properties.getProperty(Environment.SHOW_SQL));
 
         assertEquals("100", properties.getProperty(Environment.DBCP_MAXACTIVE));
         assertEquals(
