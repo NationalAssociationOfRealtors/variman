@@ -48,5 +48,6 @@ public class LogoutServlet extends RetsServlet
 
         AccountingStatistics stats = getStatistics(request.getSession());
         System.out.println("Duration: " + stats.getDuration());
+        session.removeAttribute(SessionFilter.SESSION_VALID_KEY);
     }
 }

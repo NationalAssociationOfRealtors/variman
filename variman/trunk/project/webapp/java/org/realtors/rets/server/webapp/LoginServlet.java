@@ -31,6 +31,7 @@ public class LoginServlet extends RetsServlet
         LOG.debug("context=" + contextPath);
 
         HttpSession session = request.getSession();
+        session.setAttribute(SessionFilter.SESSION_VALID_KEY, "true");
         session.setAttribute(LOGGED_IN_KEY, Boolean.TRUE);
         AccountingStatistics statitics =
             (AccountingStatistics) session.getAttribute(ACCOUNTING_KEY);
