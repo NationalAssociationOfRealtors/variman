@@ -59,8 +59,8 @@ public class ObjectServlet extends RetsServlet
         GetObjectTransaction transaction =
             new GetObjectTransaction(resource, type);
         transaction.setRootDirectory(WebApp.getGetObjectRoot());
-        transaction.setImagePattern(WebApp.getGetObjectPattern());
-        transaction.setObjectSetPattern("%k.xml");
+        transaction.setPhotoPattern(WebApp.getPhotoPattern());
+        transaction.setObjectSetPattern(WebApp.getObjectSetPattern());
         ObjectDescriptor objectDescriptor =
             transaction.findObjectDescriptor(key, id);
         if (objectDescriptor == null)
