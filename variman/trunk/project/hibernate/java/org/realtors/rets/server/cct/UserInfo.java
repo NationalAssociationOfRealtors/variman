@@ -144,7 +144,6 @@ public class UserInfo implements Serializable
 
     /**
      * 
-     * @param list
      */
     public void setRoles(Set set)
     {
