@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
-<!-- $Id: RETSHistoryData.hbm.xml,v 1.2 2003/06/03 21:13:51 kgarner Exp $ -->
+<!-- $Id: RETSHistoryData.hbm.xml,v 1.3 2003/06/04 18:20:19 kgarner Exp $ -->
 
 <hibernate-mapping>
   <class name="org.nar.rets.data.RETSHistoryData" table="rets_history_data">
@@ -12,16 +12,10 @@
     </id>
 
     <many-to-one name="originalData" cascade="none"
-      class="org.nar.rets.data.RETSData.hbm.xml"/>
+      class="org.nar.rets.data.RETSData"/>
 
     <property name="dateChanged" type="date"/>
     
-    <!-- The resource element -->
-    <many-to-one name="resource" cascade="none"
-      class="org.nar.rets.metadata.newdb.MetadataResource">
-      <column name="resource" index="rets_history_data_resource"/>
-    </many-to-one>
-
     <!-- The class element -->
     <many-to-one name="clazz" cascade="none"
       class="org.nar.rets.metadata.newdb.MetadataClass">
