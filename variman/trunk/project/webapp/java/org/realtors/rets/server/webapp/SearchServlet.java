@@ -33,7 +33,8 @@ public class SearchServlet extends RetsServlet
         PrintWriter out = response.getXmlWriter();
         SearchParameters parameters =
             new SearchParameters(request.getParameterMap(),
-                                 request.getRetsVersion());
+                                 request.getRetsVersion(),
+                                 getUser(request.getSession()));
         LOG.debug(parameters);
         SearchTransaction search = new SearchTransaction(parameters);
         search.execute(out, WebApp.getMetadataManager(),
