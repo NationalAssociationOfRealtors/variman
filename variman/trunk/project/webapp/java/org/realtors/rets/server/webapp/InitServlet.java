@@ -42,6 +42,7 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
@@ -67,6 +68,7 @@ public class InitServlet extends RetsServlet
             initMetadata();
             initNonceTable();
             initGroupFilter();
+            initConditionRuleSet();
             LOG.info("Init servlet completed successfully");
         }
         catch (ServletException e)
@@ -330,6 +332,20 @@ public class InitServlet extends RetsServlet
         }
 
         RetsServer.setTableGroupFilter(groupFilter);
+    }
+
+    private void initConditionRuleSet()
+    {
+        LOG.debug("Initializing condition rule set");
+        ConditionRuleSet ruleSet = new ConditionRuleSet();
+        List securityConstraints = mRetsConfig.getAllGroupRules();
+        for (int i = 0; i < securityConstraints.size(); i++)
+        {
+            GroupRules rules = (GroupRules) securityConstraints.get(i);
+            LOG.debug("Adding condition rules for " + rules.getGroupName());
+            ruleSet.addRules(rules);
+        }
+        RetsServer.setConditionRuleSet(ruleSet);
     }
 
     public void destroy()
