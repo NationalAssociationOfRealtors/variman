@@ -113,12 +113,11 @@ public class LoginHandlerTest
             "Broker = B123" + EOL +
             "MetadataVersion = 1.00.000" + EOL +
             "MinMetadataVersion = 1.00.000" + EOL +
-            // Todo: LoginHandlerTest.testRelativeUrls: Action url
             "Action = /rets/cct/action" + EOL +
-            // Login must always be absolute
+            // Login must always be absolute?
             "Login = http://localhost:0/rets/cct/login" + EOL +
             "Logout = /rets/cct/logout" + EOL +
-            "Search = /rets/search" + EOL +
+            "Search = /rets/cct/search" + EOL +
             "GetMetadata = /rets/cct/getMetadata" + EOL +
             "</RETS-RESPONSE>" + EOL +
             "</RETS>" + EOL;
@@ -182,7 +181,7 @@ public class LoginHandlerTest
     public static final String ABS_LOGIN_ALT = ABS + "cct/loginAlt";
     public static final String ABS_LOGIN_COMPLETE = ABS + "loginComplete";
     public static final String ABS_LOGOUT = ABS + "cct/logout";
-    public static final String ABS_SEARCH = ABS + "search";
+    public static final String ABS_SEARCH = ABS + "cct/search";
     public static final String ABS_METADATA = ABS + "cct/getMetadata";
     public static final String ABS_UPDATE = ABS + "update";
     private ServletUnitClient mClient;

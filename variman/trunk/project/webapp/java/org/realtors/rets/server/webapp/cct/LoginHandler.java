@@ -91,7 +91,7 @@ public class LoginHandler extends BaseServletHandler
         printAbsoluteCapabilityUrl(mOut, "Login", getLoginUrl());
         printMaximalUrl(mOut, "LoginComplete", "loginComplete");
         printNormalUrl(mOut, "Logout", "cct/logout");
-        printMinimalUrl(mOut, "Search", "search");
+        printMinimalUrl(mOut, "Search", "cct/search");
         printMinimalUrl(mOut, "GetMetadata", "cct/getMetadata");
         printMaximalUrl(mOut, "Update", "update");
         println(mOut, "</RETS-RESPONSE>");
