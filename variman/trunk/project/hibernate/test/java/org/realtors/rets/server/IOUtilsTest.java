@@ -41,10 +41,10 @@ public class IOUtilsTest extends TestCase
         assertEquals(expected, IOUtils.readString(file));
     }
 
-    public void testListRecursive()
+    public void testListRecursive() throws IOException
     {
         String file = getClass().getResource("foo.txt").getFile();
-        file = StringUtils.replace(file, "foo.txt", "dirTree");
+        file = StringUtils.replace(file, "foo.txt", "dirTest");
         List files = IOUtils.listFilesRecursive(new File(file));
         Collections.sort(files);
         List expected = new ArrayList();
@@ -56,10 +56,10 @@ public class IOUtilsTest extends TestCase
         assertEquals(expected, files);
     }
 
-    public void testListRecursiveFilenameFilter()
+    public void testListRecursiveFilenameFilter() throws IOException
     {
         String file = getClass().getResource("foo.txt").getFile();
-        file = StringUtils.replace(file, "foo.txt", "dirTree");
+        file = StringUtils.replace(file, "foo.txt", "dirTest");
         List files = IOUtils.listFilesRecursive(
             new File(file), new IOUtils.ExtensionFilter(".ex2"));
         Collections.sort(files);
@@ -68,10 +68,10 @@ public class IOUtilsTest extends TestCase
         assertEquals(expected, files);
     }
 
-    public void testListRecursiveFileFilter()
+    public void testListRecursiveFileFilter() throws IOException
     {
         String file = getClass().getResource("foo.txt").getFile();
-        file = StringUtils.replace(file, "foo.txt", "dirTree");
+        file = StringUtils.replace(file, "foo.txt", "dirTest");
         List files = IOUtils.listFilesRecursive(
             new File(file), new IOUtils.NotDirectoryFilter());
         Collections.sort(files);
