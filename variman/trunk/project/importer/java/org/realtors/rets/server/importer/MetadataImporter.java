@@ -925,8 +925,7 @@ public class MetadataImporter
                     hTable.setPrecision(
                         Integer.parseInt(md.getAttribute("Precision")));
                     hTable.setSearchable(
-                        Boolean.valueOf(
-                            md.getAttribute("Searchable")).booleanValue());
+                        boolValue(md.getAttribute("Searchable")));
                     hTable.setInterpretation(
                         InterpretationEnum.fromString(
                             md.getAttribute("Interpretation")));
@@ -934,8 +933,7 @@ public class MetadataImporter
                         AlignmentEnum.fromString(
                             md.getAttribute("Alignment")));
                     hTable.setUseSeparator(
-                        Boolean.valueOf(
-                            md.getAttribute("UseSeparator")).booleanValue());
+                        boolValue(md.getAttribute("UseSeparator")));
 
                     String editMasksJoined = md.getAttribute("EditMaskID");
                     String resourcePath =  hClass.getResource().getPath();
@@ -992,9 +990,8 @@ public class MetadataImporter
                         (SearchHelp) mSearchHelps.get(path);
                     hTable.setSearchHelp(searchHelp);
 
-                    hTable.setUnique(
-                        Boolean.valueOf(
-                            md.getAttribute("Unique")).booleanValue());
+                    // String = md.getAttribute("unique");
+                    hTable.setUnique(boolValue(md.getAttribute("Unique")));
 
                     hTable.updateLevel();
 
@@ -1008,6 +1005,12 @@ public class MetadataImporter
         }
     }
 
+    private boolean boolValue(String bString)
+    {
+        return bString.equalsIgnoreCase("true") || 
+               bString.equalsIgnoreCase("1");
+    }
+    
     private TableStandardName lookupTableStandardName(String standardName)
     {
         TableStandardName name = null;
@@ -1059,5 +1062,5 @@ public class MetadataImporter
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 
     private static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.26 2003/07/23 20:38:21 kgarner Exp $";
+        "$Id: MetadataImporter.java,v 1.27 2003/07/30 20:20:52 kgarner Exp $";
 }
