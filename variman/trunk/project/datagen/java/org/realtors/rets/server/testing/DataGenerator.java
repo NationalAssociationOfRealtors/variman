@@ -86,9 +86,7 @@ public class DataGenerator extends DataGenBase
                 ps.setString(3, getNextBroker());
                 ps.setString(4, getNextAgent());
 
-                String tmp = Long.toHexString(System.currentTimeMillis()) +
-                             Long.toHexString(mCount);
-                ps.setString(5, tmp);
+                ps.setString(5, "LN" + Long.toHexString(i));
                 
                 ps.setInt(6, mRandom.nextInt(99999));
                 ps.setDate(7, getNextDate());
