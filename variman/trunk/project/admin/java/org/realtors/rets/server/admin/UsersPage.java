@@ -8,20 +8,14 @@
 
 package org.realtors.rets.server.admin;
 
-import java.util.Collections;
-import java.util.List;
-
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.UserUtils;
-
-import org.apache.log4j.Logger;
-
 import org.wxwindows.wxBoxSizer;
 import org.wxwindows.wxCommandEvent;
 import org.wxwindows.wxCommandListener;
 import org.wxwindows.wxContextMenuEvent;
 import org.wxwindows.wxContextMenuListener;
-import org.wxwindows.wxFlexGridSizer;
 import org.wxwindows.wxJUtil;
 import org.wxwindows.wxJWorker;
 import org.wxwindows.wxListBox;
@@ -32,6 +26,9 @@ import org.wxwindows.wxSplitterWindow;
 import org.wxwindows.wxStaticText;
 import org.wxwindows.wxWindow;
 import org.wxwindows.wxWindowDisabler;
+
+import java.util.Collections;
+import java.util.List;
 
 public class UsersPage extends wxPanel
 {
@@ -44,31 +41,14 @@ public class UsersPage extends wxPanel
 
         panel = new wxPanel(splitter);
         wxBoxSizer pBox = new wxBoxSizer(wxVERTICAL);
-        wxFlexGridSizer grid = new wxFlexGridSizer(0, 3, 0, 0);
-        grid.AddGrowableCol(2);
-
-        wxStaticText label;
-
-        label = new wxStaticText(panel, -1, "First Name:");
-        grid.Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxRIGHT |
-                           wxBOTTOM, 5);
-        grid.Add(SPACER_WIDTH, -1);
+        TwoColumnGridSizer grid = new TwoColumnGridSizer(panel);
         mFirstName = new wxStaticText(panel, -1, "");
-        grid.Add(mFirstName, 0, wxBOTTOM, 5);
-
-        label = new wxStaticText(panel, -1, "Last Name:");
-        grid.Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxRIGHT |
-                           wxBOTTOM, 5);
-        grid.Add(SPACER_WIDTH, -1);
+        grid.addRow("First Name:", mFirstName);
         mLastName = new wxStaticText(panel, -1, "");
-        grid.Add(mLastName, 0, wxBOTTOM, 5);
-
-        label = new wxStaticText(panel, -1, "Username:");
-        grid.Add(label, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxRIGHT |
-                           wxBOTTOM, 5);
-        grid.Add(SPACER_WIDTH, -1);
+        grid.addRow("Last Name:", mLastName);
         mUsername = new wxStaticText(panel, -1, "");
-        grid.Add(mUsername, 0, wxBOTTOM, 5);
+        grid.addRow("username:", mUsername);
+
         pBox.Add(grid, 0, wxALL, 5);
         panel.SetSizer(pBox);
 
@@ -254,7 +234,6 @@ public class UsersPage extends wxPanel
 
     private static final Logger LOG =
         Logger.getLogger(UsersPage.class);
-    private static final int SPACER_WIDTH = 10;
     private static final int USERS_BOX = wxNewId();
     private static final int ADD_USER = wxNewId();
     private static final int REMOVE_USER = wxNewId();
