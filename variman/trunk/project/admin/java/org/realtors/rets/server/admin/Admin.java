@@ -46,6 +46,16 @@ public class Admin
         sRetsConfig = retsConfig;
     }
 
+    public static boolean isRetsConfigChanged()
+    {
+        return sRetsConfigChanged;
+    }
+
+    public static void setRetsConfigChanged(boolean retsConfigChanged)
+    {
+        sRetsConfigChanged = retsConfigChanged;
+    }
+
     public static void setRexHome(String rexHome)
     {
         sRexHome = rexHome;
@@ -97,6 +107,7 @@ public class Admin
     private static Configuration sHibernateConfiguration;
     private static String sConfigFile;
     private static RetsConfig sRetsConfig;
+    private static boolean sRetsConfigChanged;
     private static String sRexHome;
     private static boolean sDebugEnabled;
 }
