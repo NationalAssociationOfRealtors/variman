@@ -9,6 +9,11 @@ public class MatchZeroOrMore implements DmqlStringComponent
         return true;
     }
 
+    public String toSql()
+    {
+        return "%";
+    }
+
     public boolean equals(Object o)
     {
         return (o instanceof MatchZeroOrMore);

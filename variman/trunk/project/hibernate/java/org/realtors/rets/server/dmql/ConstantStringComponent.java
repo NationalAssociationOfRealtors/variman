@@ -17,6 +17,11 @@ public class ConstantStringComponent extends Object
         return mConstant;
     }
 
+    public String toSql()
+    {
+        return mConstant;
+    }
+
     public boolean conatinsWildcards()
     {
         return false;
