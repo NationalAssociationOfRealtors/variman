@@ -64,10 +64,12 @@ public class CreateSchema extends RetsHelpers
             MClass clazz = (MClass) i.next();
             Resource resource = clazz.getResource();
 
-            StringBuffer tmp = new StringBuffer("rets_");
-            tmp.append(resource.getResourceID()).append("_");
-            tmp.append(clazz.getClassName());
-            String sqlTableName = tmp.toString();
+//            StringBuffer tmp = new StringBuffer("rets_");
+//            tmp.append(resource.getResourceID()).append("_");
+//            tmp.append(clazz.getClassName());
+//            String sqlTableName = tmp.toString();
+
+            String sqlTableName = clazz.getDbTable();
 
             sb.append("CREATE TABLE ").append(sqlTableName);
             sb.append(" (").append(mLs);
@@ -249,28 +251,21 @@ public class CreateSchema extends RetsHelpers
 
         cs.loadMetadata();
         String schema = cs.createTables();
+
         if (cmdl.hasOption('f'))
         {
             writeFile(cmdl.getOptionValue('f', "schema.out"), schema);
-            if (cmdl.hasOption('v'))
-            {
-                System.out.print(schema);
-            }
         }
-        else
+
+        if (cmdl.hasOption('d'))
         {
-            if (cmdl.hasOption('d'))
-            {
-                cs.writeToDB(schema);
-                if (cmdl.hasOption('v'))
-                {
-                    System.out.print(schema);
-                }
-            }
-            else
-            {
-                System.out.print(schema);
-            }
+            cs.writeToDB(schema);
+        }
+
+        if (cmdl.hasOption('v') ||
+            !(cmdl.hasOption('f') || cmdl.hasOption('d')))
+        {
+            System.out.print(schema);
         }
     }
 
