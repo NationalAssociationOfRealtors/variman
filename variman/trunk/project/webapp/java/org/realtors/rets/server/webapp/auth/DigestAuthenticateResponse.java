@@ -17,20 +17,9 @@ public class DigestAuthenticateResponse
     {
         mRealm = realm;
         mQop = qop;
-        generateNonce();
-        generateOpaque();
-    }
-
-    private void generateNonce()
-    {
-        String nonce = "" + System.currentTimeMillis() +
-            RandomStringUtils.randomAlphanumeric(5);
-        mNonce = DigestUtils.md5Hex(nonce);
-    }
-
-    private void generateOpaque()
-    {
-        mOpaque = mNonce;
+        mStale = false;
+        mNonce = null;
+        mOpaque = null;
     }
 
     public String getRealm()
@@ -73,6 +62,11 @@ public class DigestAuthenticateResponse
         mOpaque = opaque;
     }
 
+    public void setStale(boolean stale)
+    {
+        mStale = stale;
+    }
+
     /**
      * Returns a header suitable for a "WWW-Authenticate" HTTP header.
      *
@@ -81,11 +75,18 @@ public class DigestAuthenticateResponse
     public String getHeader()
     {
         StringBuffer header = new StringBuffer();
-        header.append("Digest ");
-        header.append("realm=\"").append(mRealm).append("\", ");
-        header.append("qop=\"").append(mQop).append("\", ");
-        header.append("nonce=\"").append(mNonce).append("\", ");
-        header.append("opaque=\"").append(mOpaque).append("\"");
+        header.append("Digest");
+        String separator = " ";
+        header.append(separator).append("realm=\"").append(mRealm).append("\"");
+        separator = ", ";
+        header.append(separator).append("qop=\"").append(mQop).append("\"");
+        header.append(separator).append("nonce=\"").append(mNonce).append("\"");
+        header.append(separator).append("opaque=\"").append(mOpaque)
+            .append("\"");
+        if (mStale)
+        {
+            header.append(separator).append("stale=true");
+        }
         return header.toString();
     }
 
@@ -93,4 +94,5 @@ public class DigestAuthenticateResponse
     private String mQop;
     private String mNonce;
     private String mOpaque;
+    private boolean mStale;
 }
