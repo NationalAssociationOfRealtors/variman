@@ -95,6 +95,11 @@ public class HibernateMetadataFetcher implements MetadataFetcher
         }
     }
 
+    public List fetchAllMetadata(String type, String[] levels)
+    {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
     private MSystem findSystemFromHibernate()
     {
         SessionHelper helper = new SessionHelper(mSessions);
