@@ -105,114 +105,169 @@
         menu.
       </para>
     </section>
+  </section> <!-- First Time -->
 
-    <section>
-      <title>Configuring RETS Parameters</title>
-      <para>
-        From the main Configuration panel, as seen in <xref
-        linkend="fig-config"/>, you can configure various RETS
-        parameters.
-      </para>
-      <figure id="fig-config">
-        <title>Configuration Tab</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="config.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
-      <para>
-        The Listening Port is the TCP port number that the Rex server
-        listens on.  6103 is the standard, well-known port number for
-        RETS.  The Metadata Directory points to the root directory of
-        the metadata hierarchy.  Configuring metadata is explained in
-        ###.  The Image Root and Image Pattern parameters are used to
-        allow Rex to serve up images for the GetObject transaction.
-        The Image Root is a directory where the images are located.
-        The Image Pattern is a percent substitution pattern that
-        describes the format of the actual file names.  The possible
-        patterns and their substitutions are listed in <xref
-        linkend="tab-image-pattern"/>.
-      </para>
+  <section>
+    <title>Configuring RETS Parameters</title>
+    <para>
+      From the main Configuration panel, as seen in <xref
+                                                       linkend="fig-config"/>, you can configure various RETS
+      parameters.
+    </para>
+    <figure id="fig-config">
+      <title>Configuration Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="config.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    <para>
+      The Listening Port is the TCP port number that the Rex server
+      listens on.  6103 is the standard, well-known port number for
+      RETS.  The Metadata Directory points to the root directory of
+      the metadata hierarchy.  Configuring metadata is explained in
+      ###.  The Image Root and Image Pattern parameters are used to
+      allow Rex to serve up images for the GetObject transaction.
+      The Image Root is a directory where the images are located.
+      The Image Pattern is a percent substitution pattern that
+      describes the format of the actual file names.  The possible
+      patterns and their substitutions are listed in <xref
+                                                        linkend="tab-image-pattern"/>.
+    </para>
 
-      <table frame="all" id="tab-image-pattern">
-        <title>Image Patterns</title>
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Pattern</entry>
-              <entry>Substitution</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry>%k</entry>
-              <entry>Object Key</entry>
-            </row>
-            <row>
-              <entry>%i</entry>
-              <entry>Object Index</entry>
-            </row>
-            <row>
-              <entry>%I</entry>
-              <entry>Object Index, or empty if index is 0.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+    <table frame="all" id="tab-image-pattern">
+      <title>Image Patterns</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Pattern</entry>
+            <entry>Substitution</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>%k</entry>
+            <entry>Object Key</entry>
+          </row>
+          <row>
+            <entry>%i</entry>
+            <entry>Object Index</entry>
+          </row>
+          <row>
+            <entry>%I</entry>
+            <entry>Object Index, or empty if index is 0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
 
-      <para>
-        For example, if you have pictures
-        in <filename>/home/rex/pictures/</filename>.  The key is used
-        as the base file name, with each image given a number.  Say
-        there are three pictures for the property
-        ID <literal>LN1001</literal>, the full paths for these
-        pictures are:
-        <itemizedlist>
-          <listitem>
-            <literal>/home/rex/pictures/LN1001_1.jpg</literal>
-          </listitem>
-          <listitem>
-            <literal>/home/rex/pictures/LN1001_2.jpg</literal>
-          </listitem>
-          <listitem>
-            <literal>/home/rex/pictures/LN1001_3.jpg</literal>
-          </listitem>
-        </itemizedlist>
-        The, you could set the Image Root
-        to <filename>/home/rex/pictures</filename> and the Image
-        Pattern to <literal>%k_%i.jpg</literal>.
-        The <literal>%k</literal> gets replaced with the object ID,
-        and the <literal>%i</literal> gets replaced with the image
-        number.
-      </para>
-      <para>
-        The <literal>%k</literal> percent pattern may be proceeded by
-        a number modifier that truncates the number of characters used
-        during substitution.  This allows files to be split up into
-        multiple directories for large installations.  If the number
-        is positive, the characters are taken from the front, where if
-        the number is negative, the characters are taken from the
-        end. So, with a pattern of <literal>%-2k/%k_%i.jpg</literal>,
-        the first picture
-        for <literal>LN1001</literal>, <literal>LN1002</literal>, <literal>LN1101</literal>
-        would be at the following paths:
-        <itemizedlist>
-          <listitem>
-            <literal>/home/rex/pictures/01/LN1001_1.jpg</literal>
-          </listitem>
-          <listitem>
-            <literal>/home/rex/pictures/02/LN1002_1.jpg</literal>
-          </listitem>
-          <listitem>
-            <literal>/home/rex/pictures/01/LN1101_1.jpg</literal>
-          </listitem>
-        </itemizedlist>
-      </para>
-      
-    </section>
+    <para>
+      For example, if you have pictures
+      in <filename>/home/rex/pictures/</filename>.  The key is used as
+      the base file name, with each image given a number.  Say there
+      are three pictures for the property
+      ID <literal>LN1001</literal>, the full paths for these pictures
+      are:
+      <itemizedlist>
+        <listitem>
+          <literal>/home/rex/pictures/LN1001_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/LN1001_2.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/LN1001_3.jpg</literal>
+        </listitem>
+      </itemizedlist>
+      The, you could set the Image Root
+      to <filename>/home/rex/pictures</filename> and the Image Pattern
+      to <literal>%k_%i.jpg</literal>.  The <literal>%k</literal> gets
+      replaced with the object ID, and the <literal>%i</literal> gets
+      replaced with the image number.
+    </para>
+    <para>
+      The <literal>%k</literal> percent pattern may be proceeded by a
+      number modifier that truncates the number of characters used
+      during substitution.  This allows files to be split up into
+      multiple directories for large installations.  If the number is
+      positive, the characters are taken from the front, where if the
+      number is negative, the characters are taken from the end. So,
+      with a pattern of <literal>%-2k/%k_%i.jpg</literal>, the first
+      picture
+      for <literal>LN1001</literal>, <literal>LN1002</literal>, <literal>LN1101</literal>
+      would be at the following paths:
+      <itemizedlist>
+        <listitem>
+          <literal>/home/rex/pictures/01/LN1001_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/02/LN1002_1.jpg</literal>
+        </listitem>
+        <listitem>
+          <literal>/home/rex/pictures/01/LN1101_1.jpg</literal>
+        </listitem>
+      </itemizedlist>
+    </para>
+    
   </section>
-</section>
+
+  <section>
+    <title>Users</title>
+    <para>
+      Users are managed through the Users Tab as seen in <xref
+                                                            linkend="fig-users"/>.  Users may be created, removed, and
+      edited from the User menu or contextual menu.  Users may also
+      be added and removed from groups.
+    </para>
+
+    <figure id="fig-users">
+      <title>Users Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="users.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section>
+    <title>Groups</title>
+    <para>
+      Groups are manged through the Groups Tab as seen in <xref
+      linkend="fig-groups"/>. Groups may be created and removed from
+      the Group menu or contextual menu.
+    </para>
+
+    <figure id="fig-groups">
+      <title>Groups Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="groups.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+      Group rules allow access to fields to be restricted for members
+      of this group.  Rules are written for a particular resource and
+      class.  There two types of rules: include and exlude.  Include
+      rules includes on the fields listed.  Exclude rules includes all
+      fields except the ones listed.  An example rule is shown in
+      <xref linkend="fig-rule"/>.  The individual fields are listed
+      with spaces between them.
+    </para>
+
+    <figure id="fig-rule">
+      <title>Rule Dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="rule.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section> <!-- Groups -->
+</section> <!-- deploy -->
 
 <!--
 Local Variables:
