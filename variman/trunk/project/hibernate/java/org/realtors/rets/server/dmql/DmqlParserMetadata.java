@@ -1,0 +1,27 @@
+/*
+ */
+package org.realtors.rets.server.dmql;
+
+/**
+ * The DMQL parser's interface to the RETS metadata
+ */
+public interface DmqlParserMetadata
+{
+    /**
+     * Returns <code>true</code> if the lookup name is a valid lookup name.
+     *
+     * @param lookupName The lookup name to validate
+     * @return <code>true</code> if the lookup name is valid
+     */
+    public boolean isValidLookupName(String lookupName);
+
+    /**
+     * Returns <code>true</code> if the lookup value is valid for the lookups
+     * in lookup name.  The lookup name must be valid.
+     *
+     * @param lookupName The lookup name to use for the specified lookup
+     * @param lookupValue The value to validate
+     * @return <code>true</code> if the lookup value is valid
+     */
+    public boolean isValidLookupValue(String lookupName, String lookupValue);
+}

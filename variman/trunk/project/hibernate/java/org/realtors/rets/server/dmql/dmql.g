@@ -7,35 +7,43 @@ class DmqlParser extends Parser;
 
 options
 {
+    defaultErrorHandler = false;
 	exportVocab = DmqlParser;
 	k = 3;
 }
 
 {
-    public void checkFieldName(String fieldName) {
-        if (fieldName.equals("STATUS")){
-            System.out.println("Is status");
+    public void checkFieldType(String fieldName) {
+        if (mMetadata.isValidLookupName(fieldName)) {
+            mLastLookupName = fieldName;
         }
         else {
-            System.out.println("Is not status");
+            mLastLookupName = null;
         }
     }
 
-    public void checkFieldType(String fieldName) {
-        if (fieldName.equals("AR")) {
-            mLastWasLookup = true;
+    public void addLookup(LookupList list, String lookupValue)
+        throws RecognitionException
+    {
+        if (mMetadata.isValidLookupValue(mLastLookupName, lookupValue)) {
+            list.addLookup(lookupValue);
         }
         else {
-            mLastWasLookup = false;
+            throw new SemanticException("No such lookup value [" +
+                                        mLastLookupName + "]: " + lookupValue);
         }
-
     }
 
     public boolean lastWasLookup() {
-        return mLastWasLookup;
+        return (mLastLookupName != null);
     }
 
-    private boolean mLastWasLookup = false;
+    public void setMetadata(DmqlParserMetadata metadata) {
+        mMetadata = metadata;
+    }
+
+    private String mLastLookupName = null;
+    private DmqlParserMetadata mMetadata;
 }
 
 query returns [SqlConverter sql]
@@ -65,9 +73,6 @@ field_criteria returns [SqlConverter sql]
         String field;
     }
     : LPAREN field=field_name {checkFieldType(field);} EQUAL sql=field_value[field] RPAREN
-        {
-            checkFieldName(field);
-        }
     ;
 
 field_name returns [String field]
@@ -84,9 +89,8 @@ field_value [String name] returns [SqlConverter sql]
 lookup_list [String name] returns [SqlConverter sql]
     { sql = null;}
     : sql=lookup_or[name]
-//    | l=lookup_and      {System.out.println(l);}
-//    | l=lookup_not      {System.out.println(l);}
-//    | l=simple_lookup   {System.out.println(l);}
+    | sql=lookup_and[name]
+    | sql=lookup_not[name]
     ;
 
 simple_lookup returns [List lookups]
@@ -97,19 +101,26 @@ simple_lookup returns [List lookups]
 lookup_or [String name] returns [SqlConverter sql]
     { LookupList ll = new LookupList(LookupListType.OR, name); sql = ll; }
     : PIPE lookups[ll]
+    | single_lookup[ll]
+    ;
+lookup_and [String name] returns [SqlConverter sql]
+    { LookupList ll = new LookupList(LookupListType.AND, name); sql = ll; }
+    : PLUS lookups[ll]
     ;
 
-lookup_and
-    : PLUS lookups[null]
+lookup_not [String name] returns [SqlConverter sql]
+    { LookupList ll = new LookupList(LookupListType.NOT, name); sql = ll; }
+    : TILDE lookups[ll]
     ;
 
-lookup_not
-    : TILDE lookups[null]
-    ;
-
-lookups [LookupList ll]
+lookups [LookupList list]
     { String l; }
-    : l=lookup {ll.addLookup(l);} (COMMA l=lookup {ll.addLookup(l);})*
+    : l=lookup {addLookup(list, l);} (COMMA l=lookup {addLookup(list, l);})*
+    ;
+
+single_lookup [LookupList list]
+    { String l; }
+    : l=lookup {addLookup(list, l);}
     ;
 
 lookup returns [String lookup]

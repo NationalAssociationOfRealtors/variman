@@ -1,6 +1,9 @@
 package org.realtors.rets.server.dmql;
 
 import java.io.StringReader;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Map;
 
 import antlr.ANTLRException;
 
@@ -25,11 +28,13 @@ public class DmqlCompiler
         return ast;
     }
 
-    public static SqlConverter parseDmql(String dmql)
+    public static SqlConverter parseDmql(String dmql,
+                                         DmqlParserMetadata metadata)
         throws ANTLRException
     {
         DmqlLexer lexer = new DmqlLexer(new StringReader(dmql));
         DmqlParser parser = new DmqlParser(lexer);
+        parser.setMetadata(metadata);
         return parser.query();
     }
 }
