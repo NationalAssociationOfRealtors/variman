@@ -46,16 +46,6 @@ public class Admin
         sRetsConfig = retsConfig;
     }
 
-    public static AdminFrame getAdminFrame()
-    {
-        return sAdminFrame;
-    }
-
-    public static void setAdminFrame(AdminFrame adminFrame)
-    {
-        sAdminFrame = adminFrame;
-    }
-
     public static void setRexHome(String rexHome)
     {
         sRexHome = rexHome;
@@ -107,7 +97,6 @@ public class Admin
     private static Configuration sHibernateConfiguration;
     private static String sConfigFile;
     private static RetsConfig sRetsConfig;
-    private static AdminFrame sAdminFrame;
     private static String sRexHome;
     private static boolean sDebugEnabled;
 }
