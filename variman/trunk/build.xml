@@ -95,6 +95,7 @@
     <mkdir dir="build/hibernate/schema"/>
     <mkdir dir="build/hibernate/jar"/>
     <mkdir dir="build/hibernate/classes"/>
+    <mkdir dir="build/hibernate/test/classes"/>
     <mkdir dir="build/hibernate/doc"/>
     <mkdir dir="build/embedded/classes"/>
     <mkdir dir="build/importer/classes"/>
@@ -127,6 +128,16 @@
            deprecation="${compile.deprecation}">
       <classpath>
         <path refid="hibernate.path" />
+      </classpath>
+    </javac>
+    <javac srcdir="project/hibernate/test/java"
+           destdir="build/hibernate/test/classes"
+           optimize="${compile.optimize}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="hibernate.path" />
+        <pathelement location="build/hibernate/classes"/>
       </classpath>
     </javac>
     <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false"
@@ -425,6 +436,15 @@
   <target name="build-xml" depends="prepare">
     <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
          basedir="project/hibernate/mappings" index="true"/>
+  </target>
+
+  <target name="test" description="Run all unit tests">
+    <pathconvert pathsep="\n" property="tests">
+      <path>
+        <fileset dir="project/hibernate/test/java" includes="**/*Test.java"/>
+      </path>
+    </pathconvert>
+    <echo message="${tests}"/>
   </target>
 
   <target name="clean" description="Cleans all ant targets">
