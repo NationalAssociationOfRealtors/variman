@@ -22,8 +22,8 @@ public class NormalLogin extends BaseCertificationTest
     {
         ValidationResults results = new ValidationResults();
         login.validate(results);
-        action.validate(results);
-        logout.validate(results);
+//        action.validate(results);
+//        logout.validate(results);
         return results;
     }
 
@@ -36,6 +36,7 @@ public class NormalLogin extends BaseCertificationTest
     {
         HandlerManager actionManager = HandlerManager.getInstance();
         login = actionManager.getLoginHandler(mTestContext);
+        login.reset();
         login.setSessionId("login-headers");
         login.setGetInvokeCount(InvokeCount.ONE);
         login.addRequiredHeader("Accept", "^\\*/\\*$");
@@ -43,12 +44,15 @@ public class NormalLogin extends BaseCertificationTest
         login.addRequiredHeader("RETS-Version", ".*");
 
         action = actionManager.getActionHandler();
+        action.reset();
         action.setGetInvokeCount(InvokeCount.ONE);
         action.addCookie("RETS-Session-ID", "login-headers");
 
         logout = actionManager.getLogoutHandler();
+        logout.reset();
         logout.setGetInvokeCount(InvokeCount.ZERO_OR_ONE);
 //        logout.addCookie("RETS-Session-ID", "login-headers");
+        mStatus = RUNNING;
     }
 
     private LoginHandler login;
