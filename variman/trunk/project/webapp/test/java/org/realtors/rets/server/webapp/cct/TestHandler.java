@@ -5,10 +5,9 @@ package org.realtors.rets.server.webapp.cct;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.webapp.RetsServletRequest;
 import org.realtors.rets.server.webapp.RetsServletResponse;
-import org.realtors.rets.server.RetsReplyException;
-import org.realtors.rets.server.ReplyCode;
 
 import org.apache.commons.lang.enum.Enum;
 
@@ -55,7 +54,7 @@ class TestHandler extends BaseServletHandler
 
         if (mExceptionMode == RETS_EXCEPTION)
         {
-            throw new RetsReplyException(ReplyCode.MISC_ERROR);
+            throw new RetsReplyException(10, "Error");
         }
         else if (mExceptionMode == RUNTIME_EXCEPTION)
         {
