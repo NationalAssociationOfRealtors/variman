@@ -158,6 +158,9 @@ public class DigestAuthorizationRequestTest extends TestCase
         request.setCnonce("f151926f19d2566706621616d29f257c");
         request.setNonceCount("00000001");
         // Response if password is interpreted as 'n', 'u', 'l', 'l'
+        assertEquals("16620f100bad0abee21864791b2ff1e5",
+                     request.calculateRequestDigest(null, false));
+        // Response should fail, even though the response matches.
         request.setResponse("16620f100bad0abee21864791b2ff1e5");
         assertFalse(request.verifyResponse(null));
     }
@@ -194,5 +197,32 @@ public class DigestAuthorizationRequestTest extends TestCase
 
         request.setMethod("GET");
         assertTrue(request.verifyResponse("Schmoe"));
+    }
+
+    public void testNullHeader()
+    {
+        DigestAuthorizationRequest request =
+            new DigestAuthorizationRequest(null);
+        assertNull(request.getUsername());
+
+        request.setMethod("GET");
+        // Check correct response, but that verification still fails
+        assertEquals("5d3e49c0a3f8aaee371e3a4dc99bc462",
+                     request.calculateRequestDigest("yo", false));
+        request.setResponse("5d3e49c0a3f8aaee371e3a4dc99bc462");
+        assertFalse(request.verifyResponse("yo"));
+    }
+
+    public void testIllegalHeaders()
+    {
+        try
+        {
+            new DigestAuthorizationRequest("Digest");
+            fail("Should have thrown exception");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Expected
+        }
     }
 }
