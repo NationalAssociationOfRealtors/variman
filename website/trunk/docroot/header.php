@@ -49,7 +49,7 @@ function enav($name)
 ?> -->
 <html>
   <head>
-    <title><?php echo "Rex: $tmpl_title"; ?></title>
+    <title><?php echo "Variman: $tmpl_title"; ?></title>
     <link href="<?php ROOT() ?>/main.css" type="text/css"
           rel="STYLESHEET">
     </style>
@@ -58,7 +58,7 @@ function enav($name)
   <body bgcolor="#ffffff">
     <table width="100%"class="header">
         <tr>
-          <td class="hleft">Rex RETS Server</td>
+          <td class="hleft">Variman RETS Server</td>
           <td class="hright">
         <?php enav("Home") ?> |
         <?php enav("Demo") ?> |

@@ -4,7 +4,7 @@
 
 function ver()
 {
-    return "2.1.1";
+    return "2.1.2";
 }
 
 function print_ver()
@@ -39,17 +39,17 @@ function dl_file($file)
       </tr>
       <tr>
         <td>
-          <?php dl_file("rex-" . ver() . "-setup.exe")?>
+          <?php dl_file("variman-" . ver() . "-setup.exe")?>
         </td>
         <td>16M</td>
         <td>
           Embedded Tomcat Windows installer.  Installs a Service to
-          start and stop Rex.
+          start and stop Variman.
         </td>
       </tr>
       <tr>
         <td>
-          <?php dl_file("rex-" . ver() . ".tar.gz")?>
+          <?php dl_file("variman-" . ver() . ".tar.gz")?>
         </td>
         <td>15M</td>
         <td>
@@ -62,14 +62,14 @@ function dl_file($file)
       </tr>
       <tr>
         <td>
-          <?php dl_file("rex-webapp-" . ver() . ".tar.gz")?>
+          <?php dl_file("variman-webapp-" . ver() . ".tar.gz")?>
         </td>
         <td>11M</td>
         <td> Web application archive, tar+gzipped. </td>
       </tr>
       <tr>
         <td>
-          <?php dl_file("rex-webapp-" . ver() . ".zip")?>
+          <?php dl_file("variman-webapp-" . ver() . ".zip")?>
         </td>
         <td>11M</td>
         <td> Web application archive, zipped. </td>
@@ -79,14 +79,14 @@ function dl_file($file)
       </tr>
       <tr>
         <td>
-          <?php dl_file("rex-" . ver() . "-src.tar.gz")?>
+          <?php dl_file("variman-" . ver() . "-src.tar.gz")?>
         </td>
         <td>225k</td>
         <td>Source archive, tar+gzipped</td>
       </tr>
       <tr>
         <td>
-          <?php dl_file("rex-" . ver() . "-src.zip")?>
+          <?php dl_file("variman-" . ver() . "-src.zip")?>
         </td>
         <td>486k</td>
         <td>Source archive, zipped</td>

@@ -1,24 +1,24 @@
 <?php $tmpl_title = "An Open Source RETS Server";
-      $tmpl_header = "Rex: An Open Source RETS Server";
+      $tmpl_header = "Variman: An Open Source RETS Server";
       $tmpl_location = "Home";
       include("header.php");
 ?>
     <div class="logo">
-    <img src="rex_logo.gif" alt="Rex Logo">
+    <img src="variman_logo.gif" alt="Variman Logo">
     </div>
 
     <div class="body">
     <h3>Introduction</h3>
 
     <p>
-      Rex is a <a href="http://www.rets.org/">RETS</a> 1.0 and 1.5
-      compliant server.  Rex is developed under a <a
+      Variman is a <a href="http://www.rets.org/">RETS</a> 1.0 and 1.5
+      compliant server.  Variman is developed under a <a
       href="LICENSE.TXT">BSD-style license</a> at the Center for
       REALTOR(R) Technology.
     </p>
 
     <p>
-      Rex is built on <a href="http://java.sun.com/">Java
+      Variman is built on <a href="http://java.sun.com/">Java
       technology</a> as a web application using <a
       href="http://java.sun.com/products/servlet/">servlets</a>.
     </p>
