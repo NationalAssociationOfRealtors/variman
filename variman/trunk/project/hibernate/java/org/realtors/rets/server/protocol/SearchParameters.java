@@ -16,6 +16,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.enum.Enum;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
+
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsVersion;
@@ -33,6 +35,7 @@ public class SearchParameters
     public SearchParameters(Map parameterMap, RetsVersion version, User user)
         throws RetsReplyException
     {
+        LOG.debug("Parameters: " + parameterMap);
         mResourceId = getParameter(parameterMap, "SearchType");
         mClassName = getParameter(parameterMap, "Class");
         initQueryType(getParameter(parameterMap, "QueryType"), version);
@@ -229,6 +232,9 @@ public class SearchParameters
             return (Count) getEnum(Count.class, name);
         }
     }
+
+    private static final Logger LOG =
+        Logger.getLogger(SearchParameters.class);
 
     public static final String DMQL = "DMQL";
     public static final String DMQL2 = "DMQL2";
