@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -136,6 +137,52 @@ public class DataGenerator extends DataGenBase
         }
     }
 
+    /**
+     * 
+     * 
+     */
+    private void dropData() throws HibernateException, SQLException
+    {
+        Session session = null;
+        Connection con = null;
+        Statement stmt = null;
+        try
+        {
+            session = mSessions.openSession();
+            con = session.connection();
+            stmt = con.createStatement();
+            
+            stmt.execute("delete from rets_property_res");
+            
+            con.commit();
+        }
+        catch(HibernateException e)
+        {
+            if (con != null)
+            {
+                con.rollback();
+            }
+            if (session != null)
+            {
+                session.close();
+            }
+            throw e;
+        }         
+        catch (SQLException e)
+        {
+            System.out.println(stmt);
+            if (con != null)
+            {
+                con.rollback();
+            }
+            if (session != null)
+            {
+                session.close();
+            }
+            throw e;
+        }
+    }
+
 
 
     /**
@@ -222,6 +269,7 @@ public class DataGenerator extends DataGenBase
     {
         Options ops = new Options();
         ops.addOption("p", "props", true, "number of props to create");
+        ops.addOption("d", "drop", false, "delete existing data");
         return ops;
     }
 
@@ -249,6 +297,10 @@ public class DataGenerator extends DataGenBase
         System.out.print(after - before);
         System.out.println("ms");
 
+        if (cmdl.hasOption('d'))
+        {
+            dg.dropData();
+        }
         before = System.currentTimeMillis();
         String tmp = cmdl.getOptionValue('p', "10");
         dg.createData(Integer.parseInt(tmp));
