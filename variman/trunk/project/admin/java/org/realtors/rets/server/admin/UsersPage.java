@@ -76,9 +76,12 @@ public class UsersPage extends wxPanel
 
         SetSizer(box);
         EVT_LISTBOX(USERS_BOX, new OnSelectUser());
+        EVT_LISTBOX_DCLICK(USERS_BOX, new OnDoubleClickUser());
         EVT_CONTEXT_MENU(new OnContextMenu());
         EVT_MENU(ADD_USER, new OnAddUser());
         EVT_MENU(REMOVE_USER, new OnRemoveUser());
+        EVT_MENU(EDIT_USER, new OnEditUser());
+        EVT_MENU(CHANGE_PASSWORD, new OnChangePassword());
     }
 
     private void updateDetailedInfo()
@@ -153,6 +156,30 @@ public class UsersPage extends wxPanel
         popup.delete();
     }
 
+    private User getSelectedUser()
+    {
+        int selection = mListBox.GetSelection();
+        if (selection != -1)
+        {
+            return (User) mListBox.GetClientData(selection);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private void editUser()
+    {
+        User user = getSelectedUser();
+        if (user == null)
+        {
+            LOG.warn("Selection should not be empty");
+            return;
+        }
+        new EditUserCommand(user).execute();
+    }
+
     private class OnSelectUser implements wxCommandListener
     {
         public void handleEvent(wxCommandEvent event)
@@ -181,13 +208,43 @@ public class UsersPage extends wxPanel
     {
         public void handleEvent(wxCommandEvent event)
         {
-            int selection = mListBox.GetSelection();
-            if (selection == -1)
+            User user = getSelectedUser();
+            if (user == null)
             {
+                LOG.warn("Selection should not be empty");
                 return;
             }
-            User user = (User) mListBox.GetClientData(selection);
             new RemoveUserCommand(user).execute();
+        }
+    }
+
+    private class OnEditUser implements wxCommandListener
+    {
+        public void handleEvent(wxCommandEvent event)
+        {
+            editUser();
+        }
+    }
+
+    private class OnDoubleClickUser implements wxCommandListener
+    {
+        public void handleEvent(wxCommandEvent event)
+        {
+            editUser();
+        }
+    }
+
+    private class OnChangePassword implements wxCommandListener
+    {
+        public void handleEvent(wxCommandEvent event)
+        {
+            User user = getSelectedUser();
+            if (user == null)
+            {
+                LOG.warn("Selection should not be empty");
+                return;
+            }
+            new ChangePasswordCommand(user).execute();
         }
     }
 
