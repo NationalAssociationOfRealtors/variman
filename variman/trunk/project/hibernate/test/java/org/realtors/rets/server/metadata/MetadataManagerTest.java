@@ -42,5 +42,14 @@ public class MetadataManagerTest extends TestCase
         List found = manager.find(Table.TABLE, "Property:RES");
         assertEquals(1, found.size());
         assertSame(table, found.get(0));
+
+        MClass aClass = table.getMClass();
+        ServerMetadata metadata = manager.findByPath(MClass.TABLE,
+                                                     "Property:RES");
+        assertNotNull(metadata);
+        assertSame(aClass, metadata);
+
+        metadata = manager.findByPath(MSystem.TABLE, "");
+        assertNull(metadata);
     }
 }
