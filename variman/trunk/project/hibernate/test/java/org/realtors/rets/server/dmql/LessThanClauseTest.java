@@ -10,7 +10,7 @@ public class LessThanClauseTest extends TestCase
     {
         LessThanClause clause =
             new LessThanClause("LP", new StringSqlConverter("100000"));
-        assertEquals("LP < 100000", TestUtil.toSql(clause));
+        assertEquals("LP <= 100000", TestUtil.toSql(clause));
     }
 
     public void testEquals()
