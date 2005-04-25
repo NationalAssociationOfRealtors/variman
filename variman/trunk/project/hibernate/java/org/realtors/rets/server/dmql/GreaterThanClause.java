@@ -28,7 +28,7 @@ public class GreaterThanClause implements SqlConverter
     public void toSql(PrintWriter out)
     {
         out.print(mField);
-        out.print(" > ");
+        out.print(" >= ");
         mSqlConverter.toSql(out);
     }
 
