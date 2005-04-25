@@ -10,7 +10,7 @@ public class GreaterThanClauseTest extends TestCase
     {
         GreaterThanClause clause =
             new GreaterThanClause("LP", new StringSqlConverter("100000"));
-        assertEquals("LP > 100000", TestUtil.toSql(clause));
+        assertEquals("LP >= 100000", TestUtil.toSql(clause));
     }
 
     public void testEquals()
