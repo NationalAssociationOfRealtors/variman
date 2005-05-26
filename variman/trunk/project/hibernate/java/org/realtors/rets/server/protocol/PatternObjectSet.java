@@ -2,8 +2,11 @@ package org.realtors.rets.server.protocol;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -24,20 +27,36 @@ public class PatternObjectSet implements ObjectSet
     public List findAllObjects(String type) throws RetsServerException
     {
         List objects = new ArrayList();
+        // Keep track of URLs to detect infinite loops
+        Set urls = new HashSet();
         int objectId = 1;
-        while (addIfNotNull(findObject(type, objectId), objects))
+        while (addIfNotNull(findObject(type, objectId), objects, urls))
         {
             objectId++;
         }
         return objects;
     }
 
-    private boolean addIfNotNull(ObjectDescriptor object, List objects)
+    private boolean addIfNotNull(ObjectDescriptor object, List objects,
+                                 Set urls)
     {
         if (object != null)
         {
-            objects.add(object);
-            return true;
+            URL url = object.getUrl();
+            if (!urls.contains(url))
+            {
+                objects.add(object);
+                urls.add(url);
+                return true;
+            }
+            else
+            {
+                // If this URL was already used, assume pattern results in an
+                // infinite loop and stop
+                LOG.warn("Infinite loop detected for URL: " + url +
+                         ", URLs: " + urls);
+                return false;
+            }
         }
         else
         {

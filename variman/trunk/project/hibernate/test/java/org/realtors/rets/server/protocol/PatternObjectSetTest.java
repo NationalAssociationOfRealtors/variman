@@ -54,13 +54,29 @@ public class PatternObjectSetTest extends TestCase
         assertEquals(expected, actual);
     }
 
+    public void testFindAllObjectsWithInfiniteLoop() throws RetsServerException
+    {
+        List expected = new ArrayList();
+        expected.add(
+            new ObjectDescriptor("abc123", 1, localUrl("abc123-1.jpg")));
+
+        PatternObjectSet objectSet = createObjectSet("%k-1.jpg");
+        List actual = objectSet.findAllObjects("Photo");
+        assertEquals(expected, actual);
+    }
+
     private PatternObjectSet createObjectSet()
+    {
+        return createObjectSet("%k-%i.jpg");
+    }
+
+    private PatternObjectSet createObjectSet(String pattern)
     {
         // The file name will get stripped off, so all that's import is that it
         // exists.
         String imageDirectory = directoryOfResource(GIF_FILE);
         PatternObjectSet objectSet =
-            new PatternObjectSet(imageDirectory, "%k-%i.jpg", "abc123");
+            new PatternObjectSet(imageDirectory, pattern, "abc123");
         return objectSet;
     }
 
