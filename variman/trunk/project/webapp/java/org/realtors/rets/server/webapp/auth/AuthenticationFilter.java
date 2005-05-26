@@ -118,7 +118,9 @@ public class AuthenticationFilter implements Filter, UserMap
         String query = request.getQueryString();
         String method = request.getMethod();
         LOG.debug("Authorizing URI: " + method + " " + uri + " " + query);
-        if (!uri.startsWith("/rets") && !uri.startsWith("/cct"))
+        String retsPrefix = request.getContextPath() + "/rets";
+        String cctPrefix = request.getContextPath() + "/cct";
+        if (!uri.startsWith(retsPrefix) && !uri.startsWith(cctPrefix))
         {
             filterChain.doFilter(request, response);
             return;
