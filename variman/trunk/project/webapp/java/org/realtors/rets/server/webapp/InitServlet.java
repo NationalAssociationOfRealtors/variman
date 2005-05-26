@@ -183,9 +183,7 @@ public class InitServlet extends RetsServlet
             configFile = resolveFromConextRoot(configFile);
             mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
 
-            ServletContext context = getServletContext();
-            String getObjectRoot =
-                mRetsConfig.getGetObjectRoot(context.getRealPath("/"));
+            String getObjectRoot = getGetObjectRoot();
             WebApp.setGetObjectRoot(getObjectRoot);
             LOG.debug("GetObject root: " + getObjectRoot);
 
@@ -208,6 +206,31 @@ public class InitServlet extends RetsServlet
         {
             throw new ServletException(e);
         }
+    }
+
+    private String getGetObjectRoot()
+    {
+        ServletContext context = getServletContext();
+        String getObjectRoot =
+            mRetsConfig.getGetObjectRoot(context.getRealPath("/"));
+        File getObjectRootFile = new File(getObjectRoot);
+        if (!getObjectRootFile.exists())
+        {
+            LOG.warn("GetObject root does not exist: " + getObjectRoot);
+            getObjectRoot = "";
+        }
+        else if (!getObjectRootFile.isDirectory())
+        {
+            LOG.warn("GetObject root is not a directory: " +
+                     getObjectRoot);
+            getObjectRoot = "";
+        }
+        else if (!getObjectRootFile.canRead())
+        {
+            LOG.warn("GetObject root is not readable: " + getObjectRoot);
+            getObjectRoot = "";
+        }
+        return getObjectRoot;
     }
 
     private void initHibernate() throws ServletException
