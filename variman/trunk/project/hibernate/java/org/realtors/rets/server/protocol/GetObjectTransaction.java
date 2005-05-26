@@ -259,6 +259,7 @@ public class GetObjectTransaction
         if (StringUtils.isBlank(mObjectSetPattern) ||
             StringUtils.isBlank(mRootDirectory))
         {
+            LOG.debug("No XML object set available");
             return null;
         }
 
@@ -288,6 +289,7 @@ public class GetObjectTransaction
         if (StringUtils.isBlank(mPhotoPattern) ||
             StringUtils.isBlank(mRootDirectory))
         {
+            LOG.debug("No pattern object set available");
             return null;
         }
 
