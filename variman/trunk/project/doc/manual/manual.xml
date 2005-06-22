@@ -5,6 +5,7 @@
 <!ENTITY intro SYSTEM "intro.xml">
 <!ENTITY install SYSTEM "install.xml">
 <!ENTITY deploy SYSTEM "deploy.xml">
+<!ENTITY object-set-example SYSTEM "LN1-example.xml">
 <!ENTITY bibliography SYSTEM "bibliography.xml">
 ]>
 

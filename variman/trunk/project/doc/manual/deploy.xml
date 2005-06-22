@@ -1,5 +1,5 @@
 <section id="deploy">
-  <title>Deploying &name;</title>
+  <title>Configuration</title>
   <para>
     This chapter describes how to configure and run &name;.
   </para>
@@ -127,89 +127,179 @@
       listens on.  6103 is the standard, well-known port number for
       RETS.  The Metadata Directory points to the root directory of
       the metadata hierarchy.  Configuring metadata is explained in
-      <xref linkend="deploy-metadata"/>.  The Image Root and Image
-      Pattern parameters are used to allow &name; to serve up images
-      for the GetObject transaction.  The Image Root is a directory
-      where the images are located.  The Image Pattern is a percent
-      substitution pattern that describes the format of the actual
-      file names.  The possible patterns and their substitutions are
-      listed in <xref linkend="tab-image-pattern"/>.
+      <xref linkend="deploy-metadata"/>.
+    </para>
+  </section>
+      
+  <section id="deploy-getobject">
+    <title>Configuring GetObject for Multimedia</title>
+    <para>
+      The RETS GetObject transaction allows you to associate
+      multimedia objects with a property listing.  As per the RETS
+      specification, &name; requires that listing IDs be unique across
+      all classes in the property resource.  &name; also requires that
+      these multimedia objects be accessible from the filesystem or
+      HTTP.  Multimedia object configuration is done by the Get Object
+      Root, Photo Pattern, and Object Set Pattern parameters in <xref
+      linkend="fig-config"/>.  There two ways to map multimedia
+      objects to a listing ID> The first is using photo patterns,
+      described in <xref linkend="deploy-getobject-photo-patterns"/>
+      and the second is using object sets, described in <xref
+      linkend="deploy-getobject-object-sets"/>.  Object sets far more
+      customizable, but require more work to implement.
     </para>
 
-    <table frame="all" id="tab-image-pattern">
-      <title>Image Patterns</title>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Pattern</entry>
-            <entry>Substitution</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry>%k</entry>
-            <entry>Object Key</entry>
-          </row>
-          <row>
-            <entry>%i</entry>
-            <entry>Object Index</entry>
-          </row>
-          <row>
-            <entry>%I</entry>
-            <entry>Object Index, or empty if index is 0</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </table>
+    <section id="deploy-getobject-photo-patterns">
+      <title>Using Photo Patterns</title>
 
-    <para>
-      For example, if you have pictures
-      in <filename>/home/variman/pictures/</filename>.  The key is
-      used as the base file name, with each image given a number.  Say
-      there are three pictures for the property
-      ID <literal>LN1001</literal>, the full paths for these pictures
-      are:
-      <itemizedlist>
-        <listitem>
-          <literal>/home/variman/pictures/LN1001_1.jpg</literal>
-        </listitem>
-        <listitem>
-          <literal>/home/variman/pictures/LN1001_2.jpg</literal>
-        </listitem>
-        <listitem>
-          <literal>/home/variman/pictures/LN1001_3.jpg</literal>
-        </listitem>
-      </itemizedlist>
-      The, you could set the Image Root
-      to <filename>/home/variman/pictures</filename> and the Image
-      Pattern to <literal>%k_%i.jpg</literal>.
-      The <literal>%k</literal> gets replaced with the object ID, and
-      the <literal>%i</literal> gets replaced with the image number.
-    </para>
-    <para>
-      The <literal>%k</literal> percent pattern may be proceeded by a
-      number modifier that truncates the number of characters used
-      during substitution.  This allows files to be split up into
-      multiple directories for large installations.  If the number is
-      positive, the characters are taken from the front, where if the
-      number is negative, the characters are taken from the end. So,
-      with a pattern of <literal>%-2k/%k_%i.jpg</literal>, the first
-      picture
-      for <literal>LN1001</literal>, <literal>LN1002</literal>, <literal>LN1101</literal>
-      would be at the following paths:
-      <itemizedlist>
-        <listitem>
-          <literal>/home/variman/pictures/01/LN1001_1.jpg</literal>
-        </listitem>
-        <listitem>
-          <literal>/home/variman/pictures/02/LN1002_1.jpg</literal>
-        </listitem>
-        <listitem>
-          <literal>/home/variman/pictures/01/LN1101_1.jpg</literal>
-        </listitem>
-      </itemizedlist>
-    </para>
+      <para>
+        Photo patterns use pattern substitutions to locate files on
+        the local files system.  It uses only the the Get Object Root
+        and Photo Pattern parameters.  The Get Object Root is a
+        directory where the photos are located.  The Photo Pattern is
+        a percent substitution pattern that describes the format of
+        the actual file names.  The possible patterns and their
+        substitutions are listed in <xref
+        linkend="tab-photo-pattern"/>.
+      </para>
+      
+      <table frame="all" id="tab-photo-pattern">
+        <title>Photo Patterns</title>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Pattern</entry>
+              <entry>Substitution</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>%k</entry>
+              <entry>Object Key</entry>
+            </row>
+            <row>
+              <entry>%i</entry>
+              <entry>Object Index</entry>
+            </row>
+            <row>
+              <entry>%I</entry>
+              <entry>Object Index, or empty if index is 0</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>
+        For example, if you have pictures
+        in <filename>/home/variman/pictures/</filename>.  The key is
+        used as the base file name, with each photo given a number.
+        Say there are three pictures for the property
+        ID <literal>LN1001</literal>, the full paths for these
+        pictures are:
+        <itemizedlist>
+          <listitem>
+            <literal>/home/variman/pictures/LN1001_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/LN1001_2.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/LN1001_3.jpg</literal>
+          </listitem>
+        </itemizedlist>
+        The, you could set the Get Object Root
+        to <filename>/home/variman/pictures</filename> and the Photo
+        Pattern to <literal>%k_%i.jpg</literal>.
+        The <literal>%k</literal> gets replaced with the object ID,
+        and the <literal>%i</literal> gets replaced with the photo
+        number.
+      </para>
+      <para>
+        The <literal>%k</literal> percent pattern may be proceeded by
+        a number modifier that truncates the number of characters used
+        during substitution.  This allows files to be split up into
+        multiple directories for large installations.  If the number
+        is positive, the characters are taken from the front, where if
+        the number is negative, the characters are taken from the
+        end. So, with a pattern of <literal>%-2k/%k_%i.jpg</literal>,
+        the first picture
+        for <literal>LN1001</literal>, <literal>LN1002</literal>,
+        <literal>LN1101</literal> would be at the following paths:
+        <itemizedlist>
+          <listitem>
+            <literal>/home/variman/pictures/01/LN1001_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/02/LN1002_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/01/LN1101_1.jpg</literal>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </section>
     
+    <section id="deploy-getobject-object-sets">
+      <title>Using Object Sets</title>
+      <para>
+        Instead of using a pattern to map to the photos themselves, an
+        object set pattern may be used to locate an object set file,
+        which is just an XML file describing all the multimedia files.
+        This approach is more flexible for the following reasons:
+        <itemizedlist>
+          <listitem>
+            Object file names do not need to match any pattern and may
+            be contain non-sequential indexes.
+          </listitem>
+          <listitem>
+            The default object is configurable.  It need not be the
+            first object.
+          </listitem>
+          <listitem>
+            Multimedia objects other than photos, such as documents
+            and video can, be provided.
+          </listitem>
+          <listitem>
+            Text descriptions may be supplied with objects.
+          </listitem>
+          <listitem>
+            Objects need not be stored on a local filesystem.  An
+            external media server could be used, and &name; will
+            access these objects using HTTP.
+          </listitem>
+        </itemizedlist>
+        As described above, there must be one oject set file per
+        listing ID.  The Object Set Pattern field in <xref
+        linkend="fig-config"/> is used to locate object sets.  Only
+        the <literal>%k</literal> pattern listed in <xref
+        linkend="tab-photo-pattern"/> is available, and the Get Object
+        Root is still used as the root directory.  For example, if the
+        Get Object Root is set
+        to <literal>/home/variman/objects</literal>, and the Object
+        Set Pattern is <literal>%k.xml</literal>, then the file for
+        listing ID <literal>LN1</literal> would
+        be <literal>/home/variman/objects/LN1.xml</literal>.
+      </para>
+      <para>
+        Before getting into the details, here is what an object set
+        file may look like for the <literal>LN1</literal>
+        property, <literal>LN1.xml</literal>:
+      </para>
+      <programlisting>&object-set-example;</programlisting>
+      <para>
+        The main tag is <literal>object-set</literal>.
+        The <literal>resource</literal> attribute is required and must
+        match the listing ID.  Following
+        the <literal>object-set</literal> tag must be one or
+        more <literal>object-group</literal> tags.  There should be
+        one object group for each type of multimedia object.
+        The <literal>type</literal> attribute must match
+        the <literal>Type</literal> parameter used by the RETS client.
+        Well known types must be used where appropriate.  See Section
+        11.4.1 of the RETS specification for a list of well known
+        types.
+      </para>
+    </section>
   </section>
 
   <section id="users">
