@@ -71,6 +71,12 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
                 continue;
             }
 
+            if (dbName == null)
+            {
+                LOG.warn("Column name for " + fieldName + " is null.");
+                continue;
+            }
+
             mFields.put(fieldName, table);
             if (defaultOrder > 0)
             {

@@ -344,6 +344,11 @@ public class ServerDmqlMetadataTest extends TestCase
         mHiddenTable.setDataType(DataTypeEnum.CHARACTER);
         mHiddenTable.setDefault(-1);
         mClazz.addTable(mHiddenTable);
+
+        mNullDbNameTable = new Table(id++);
+        mNullDbNameTable.setSystemName("NULL_DBNAME");
+        mNullDbNameTable.setDataType(DataTypeEnum.CHARACTER);
+        mClazz.addTable(mNullDbNameTable);
     }
 
     private MClass mClazz = null;
@@ -356,4 +361,5 @@ public class ServerDmqlMetadataTest extends TestCase
     private Table mListDateTime;
     private Table mHiddenTable;
     private Table mInteriorFeatures;
+    private Table mNullDbNameTable;
 }
