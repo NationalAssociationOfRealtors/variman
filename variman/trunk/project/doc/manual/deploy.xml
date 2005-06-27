@@ -132,21 +132,108 @@
   </section>
       
   <section id="deploy-getobject">
-    <title>Configuring GetObject for Multimedia</title>
+    <title>Configuring GetObject for Multimedia Objects</title>
     <para>
       The RETS GetObject transaction allows you to associate
-      multimedia objects with a property listing.  As per the RETS
-      specification, &name; requires that listing IDs be unique across
-      all classes in the property resource.  &name; also requires that
-      these multimedia objects be accessible from the filesystem or
-      HTTP.  Multimedia object configuration is done by the Get Object
+      multimedia objects with a property listing.  These multimedia
+      objects, called <firstterm>objects</firstterm> from now on, are
+      grouped into <firstterm>types</firstterm>.  The most common type
+      of object is a photograph.  However, you are not limited to only
+      photos for RETS object types.  RETS provides some well-known
+      object types, as described in <xref linkend="tab-object-types"
+      />, but this list is only a starting point.  If you have objects
+      that do not fall into any of these well-known types, you may use
+      your own type.  You should always one of the well-known types,
+      if possible, so that RETS clients can properly access the
+      objects automatically.
+    </para>
+
+    <para>
+      A RETS client may only retreive objects of the same type in a
+      single transaction.  Each transaction must also include at least
+      one listing ID, called the <firstterm>resource key</firstterm>
+      in RETS terminology.  For each resource key, there may be zero
+      or more objects within a type, all numbered sequentially
+      beginning with 1.  The object number is called
+      the <firstterm>object ID</firstterm>.  A RETS client may request
+      a specific object by ID, a range of objects by ID, or all of the
+      objects for a given resource key.  Each object may also include
+      a text description which a RETS client should provide to the
+      user.  The object ID 0 is special and designates
+      the <firstterm>default object</firstterm>.  For example, some
+      RETS clients may only present the user with a single photo, and
+      the default object allows you to configure which photo is used
+      in these circumstances.
+    </para>
+
+    <table frame="all" id="tab-object-types">
+      <title>Well-Known Object Types</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Object Type</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><literal>Photo</literal></entry>
+            <entry>
+              An image, usually a photograph for the ojbect key.
+            </entry>
+          </row>
+          <row>
+            <entry><literal>Thumbnail</literal></entry>
+            <entry>A lower-resolution image.</entry>
+          </row>
+          <row>
+            <entry><literal>Plat</literal></entry>
+            <entry>
+              An image of the property boundaries.
+            </entry>
+          </row>
+          <row>
+            <entry><literal>Video</literal></entry>
+            <entry>A short video or movie.</entry>
+          </row>
+          <row>
+            <entry><literal>Audio</literal></entry>
+            <entry>A sound clip.</entry>
+          </row>
+          <row>
+            <entry><literal>Map</literal></entry>
+            <entry>An image showing a map of the property.</entry>
+          </row>
+          <row>
+            <entry><literal>VRImage</literal></entry>
+            <entry>
+              A multiple-view, possibly interactive image related
+              to the property.
+            </entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+    
+    <para>
+      The usual behavior is for all objects matching the RETS client's
+      criteria to be sent back to the client in a single GetObject
+      response.  For a request that returns a large number of objects,
+      however, this may be impracticle.  The RETS specification allows
+      the RETS server to return only a URL, instead of the object
+      itself.  This URL is called a <firstterm>location
+      URL</firstterm>.
+    </para>
+    
+    <para>
+      GetObject configuration in &name; is done by the Get Object
       Root, Photo Pattern, and Object Set Pattern parameters in <xref
       linkend="fig-config"/>.  There two ways to map multimedia
       objects to a listing ID> The first is using photo patterns,
       described in <xref linkend="deploy-getobject-photo-patterns"/>
       and the second is using object sets, described in <xref
-      linkend="deploy-getobject-object-sets"/>.  Object sets far more
-      customizable, but require more work to implement.
+      linkend="deploy-getobject-object-sets"/>.  Object sets are far
+      more customizable, but require more work to implement.
     </para>
 
     <section id="deploy-getobject-photo-patterns">
@@ -175,15 +262,15 @@
           <tbody>
             <row>
               <entry>%k</entry>
-              <entry>Object Key</entry>
+              <entry>Resource Key</entry>
             </row>
             <row>
               <entry>%i</entry>
-              <entry>Object Index</entry>
+              <entry>Object ID</entry>
             </row>
             <row>
               <entry>%I</entry>
-              <entry>Object Index, or empty if index is 0</entry>
+              <entry>Object ID, or empty if the ID is 0</entry>
             </row>
           </tbody>
         </tgroup>
@@ -237,6 +324,12 @@
           </listitem>
         </itemizedlist>
       </para>
+      <para>
+        Location URLs given for objects that match a photo pattern
+        always point back to &name;.  These are specially coded URLs
+        that &name; uses to decode which object to provide to the
+        client.
+      </para>
     </section>
     
     <section id="deploy-getobject-object-sets">
@@ -248,24 +341,27 @@
         This approach is more flexible for the following reasons:
         <itemizedlist>
           <listitem>
-            Object file names do not need to match any pattern and may
-            be contain non-sequential indexes.
+            Object file names do not need to match any pattern.  This
+            is useful where object IDs embedded in file names may not
+            be sequential.  This often happens when an object is
+            deleted, but the other objects are not renumbered.
           </listitem>
           <listitem>
             The default object is configurable.  It need not be the
-            first object.
+            first object ID.
           </listitem>
           <listitem>
-            Multimedia objects other than photos, such as documents
-            and video can, be provided.
+            Types of objects other than photos, such as documents and
+            video can be provided.
           </listitem>
           <listitem>
             Text descriptions may be supplied with objects.
           </listitem>
           <listitem>
-            Objects need not be stored on a local filesystem.  An
+            Objects need not be stored on the local filesystem.  An
             external media server could be used, and &name; will
-            access these objects using HTTP.
+            access these objects using HTTP.  Location URLs may
+            optionally point directly to the media server.
           </listitem>
         </itemizedlist>
         As described above, there must be one oject set file per
@@ -281,24 +377,204 @@
         be <literal>/home/variman/objects/LN1.xml</literal>.
       </para>
       <para>
-        Before getting into the details, here is what an object set
-        file may look like for the <literal>LN1</literal>
+        The default behavior for &name; is to provide location URLs
+        that point back to the RETS server.  However, if an external
+        media server exists, &name; may provide URLs directly to the
+        media server.  These location URLs to an external media server
+        are called <firstterm>remote URLs</firstterm>, since the URLs
+        point to a remote server, not locally to &name;.  This remote
+        URL behavior is optional, though.  You can have a media
+        server, and not use remote URLs.  In this case, &name; acts as
+        a proxy between the RETS client and the media server.  Also
+        note that if location URLs are not requested by the RETS
+        client, &name; also acts as a proxy.  There is no way to tell
+        a RETS client to use location URLs exclusively, so there is no
+        way to disable this proxying.
+      </para>
+      <para>
+        Before getting into the details, here is an example object set
+        file for a hypothetical <literal>LN1</literal>
         property, <literal>LN1.xml</literal>:
       </para>
       <programlisting>&object-set-example;</programlisting>
       <para>
-        The main tag is <literal>object-set</literal>.
-        The <literal>resource</literal> attribute is required and must
-        match the listing ID.  Following
-        the <literal>object-set</literal> tag must be one or
-        more <literal>object-group</literal> tags.  There should be
-        one object group for each type of multimedia object.
+        The main tag is <literal>&lt;object-set&gt;</literal>.
+        The <literal>resource-key</literal> attribute is required and
+        must match the listing ID.  Following
+        the <literal>&lt;object-set&gt;</literal> tag must be one or
+        more <literal>&lt;object-group&gt;</literal> tags.  There
+        should be one object group for each type of multimedia object.
         The <literal>type</literal> attribute must match
         the <literal>Type</literal> parameter used by the RETS client.
         Well known types must be used where appropriate.  See Section
         11.4.1 of the RETS specification for a list of well known
         types.
       </para>
+      <section id="deploy-getobject-objectset-object-set">
+        <title>The &lt;object-set&gt; Tag</title>
+        <para>
+          The <literal>&lt;object-set&gt;</literal> tag is the top
+          level tag.  It has the following attributes:
+        </para>
+        <table frame="all" id="tab-object-set">
+          <title>&lt;object-set&gt; Attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Description</entry>
+                <entry>Default</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>xmlns</entry>
+                <entry>
+                  The XML namespace URL. It must be set
+                  to <literal>http://www.crt.realtors.org/xml/variman/object-set/1</literal>
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>resource-key</entry>
+                <entry>
+                  The resource key, which is usually the listing ID for
+                  properties.  This must match the listing ID in the
+                  file name.
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>base</entry>
+                <entry>
+                  The base URL to use for resolving subsequent relative
+                  URLs.
+                </entry>
+                <entry>
+                  A <literal>file://</literal> URL to the location of
+                  this object set file.
+                </entry>
+              </row>
+              <row>
+                <entry>remote-locations</entry>
+                <entry>
+                  If set to <literal>true</literal>, then &name; will
+                  provide a URL directly to the multimedia server, if
+                  requested by the client.  If set
+                  to <literal>false</literal>, all location URLs
+                  provided will point back to &name;.  If the object
+                  does not point to an external media server (i.e. it
+                  is a local URL), then a local location URL is used.
+                </entry>
+                <entry> <literal>false</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <section id="deploy-getobject-objectset-object-group">
+        <title>The &lt;object-group&gt; Tag</title>
+        <para>
+          The <literal>&lt;object-group&gt;</literal> tag represents a
+          group of multimedia objects of the same type.  A RETS client
+          specifies an object type during the GetObject transaction,
+          and object groups map one-to-one to these object types.
+        </para>
+        <table frame="all" id="tab-object-group">
+          <title>&lt;object-group&gt; Attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Description</entry>
+                <entry>Default</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>type</entry>
+                <entry>
+                  The type of multimedia object in this group.  A
+                  well-known object type must be used, if appropriate.
+                  RETS well-known types
+                  are: <literal>Photo</literal>, <literal>Plat</literal>,
+                  <literal>Video</literal>, <literal>Audio</literal>,
+                  <literal>Thumbnail</literal>, <literal>Map</literal>,
+                  <literal>VRImage</literal>.
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>base</entry>
+                <entry>
+                  The base URL to use for resolving relative URLs in
+                  child <literal>&lt;object&gt;</literal> tags.
+                </entry>
+                <entry>
+                  The base URL of
+                  the <literal>&lt;object-set&gt;</literal>
+                  tag.
+                </entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <section id="deploy-getobject-objectset-object">
+        <title>The &lt;object&gt; Tag</title>
+        <para>
+          The <literal>&lt;object&gt;</literal> tag represents a
+          single multimedia object.  In terms of RETS, every
+          multimedia type has zero or more individual objects.  These
+          objects are numbered sequentially, starting from 1.  RETS
+          also has the concept of a default object.
+        </para>
+        <table frame="all" id="tab-object">
+          <title>&lt;object&gt; Attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Description</entry>
+                <entry>Default</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>src</entry>
+                <entry>
+                  The URL to the actual object.  This may be, and
+                  usually is, a relative URL, which is resolved
+                  against the previous <literal>base</literal>
+                  attributes.  This works in a very similar way to
+                  the <literal>src</literal> attribute of the
+                  HTML <literal>&gt;img&lt;</literal> tag.
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>description</entry>
+                <entry>
+                  A text description of this object.
+                </entry>
+                <entry>No description.</entry>
+              </row>
+              <row>
+                <entry>default</entry>
+                <entry>
+                  If set to <literal>true</literal>, use this as the
+                  default object.  Only one object may be marked as
+                  default.  If more than one is marked as default, the
+                  first one marked will be used.
+                </entry>
+                <entry><literal>false</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
     </section>
   </section>
 
