@@ -49,6 +49,14 @@
           Add group record limits.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>1.4</revnumber>
+        <date>2005-06-27</date>
+        <revremark>
+          Add more documentation on GetObject and object set
+          configuration.
+        </revremark>
+      </revision>
     </revhistory>
     
     <abstract>
