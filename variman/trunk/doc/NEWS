@@ -1,4 +1,4 @@
-Version 2.1.6 - xxx
+Version 2.1.6 - 28 June 2005
 
   * Fixed digest authorization for URIs with query strings.
   * Added scroll bars to various lists in the admin tool.
