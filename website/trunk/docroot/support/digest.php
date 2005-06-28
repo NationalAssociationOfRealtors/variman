@@ -62,12 +62,12 @@
         <td><?php text("nonce", $nonce) ?></td>
       </tr>
       <tr>
-        <td>URI:</td>
-        <td><?php text("uri", $uri) ?></td>
-      </tr>
-      <tr>
         <td>Method:</td>
         <td><?php text("method", $method) ?></td>
+      </tr>
+      <tr>
+        <td>URI:</td>
+        <td><?php text("uri", $uri) ?></td>
       </tr>
       <tr>
         <td>cnonce:</td>
