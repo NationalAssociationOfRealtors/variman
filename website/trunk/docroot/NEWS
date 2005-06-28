@@ -1,3 +1,16 @@
+Version 2.1.6 - 28 June 2005
+
+  * Fixed digest authorization for URIs with query strings.
+  * Added scroll bars to various lists in the admin tool.
+  * Fixed SQL generation for string literals.
+  * Honor default ordering.
+  * Implemented SQL generation for lookup multi fields.
+  * Add object set feature for flexible GetObject file naming using an
+    XML mapping file.
+  * Fixed null pointer when webapp is not installed as default (root) webapp.
+  * Add infinite loop detection to photo patterns.
+  * Add more error checking on GetObject root directory.
+
 Version 2.1.5 - 1 February 2005
 
   * Fixed SQL generation for date fields.

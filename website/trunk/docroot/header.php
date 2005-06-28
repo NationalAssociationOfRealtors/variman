@@ -48,7 +48,7 @@ function enav($name)
 
 function ver()
 {
-    return "2.1.5";
+    return "2.1.6";
 }
 
 function print_ver()

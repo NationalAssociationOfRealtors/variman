@@ -74,7 +74,7 @@
         <td><?php text("cnonce", $cnonce) ?></td>
       </tr>
       <tr>
-        <td>Nonce Count (nc):</td>
+        <td>nc:</td>
         <td><?php text("nc", $nc) ?></td>
       </tr>
       <tr>
