@@ -35,31 +35,6 @@ public class GetMetadataTransaction
         mFetcher = fetcher;
     }
 
-    /**
-     * Gets metadata and formats it. Only throws an exception if an error
-     * occured while getting metadata. This guarantees the print writer is
-     * clear from output if an error occurs.
-     *
-     * @param out Formats output to this writer.
-     * @param parameters Get metadata parameters.
-     * @param fetcher Used to get the metadata.
-     * @throws RetsReplyException If an error occured while getting the
-     * metadata.
-     */
-    public void execute(PrintWriter out, GetMetadataParameters parameters,
-                        MetadataFetcher fetcher)
-        throws RetsServerException
-    {
-        // Fetch metadata before starting to print, so any exceptions can be
-        // handled and reported to the user better.
-        List segments = fetcher.fetchMetadata(parameters.getType(),
-                                              parameters.getIds());
-
-        printHeaders();
-        printMetadata(segments);
-        printFooters();
-    }
-
     public void execute()
         throws RetsServerException
     {
