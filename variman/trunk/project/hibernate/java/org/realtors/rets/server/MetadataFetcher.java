@@ -11,6 +11,7 @@
 package org.realtors.rets.server;
 
 import java.util.List;
+import java.util.Date;
 
 public interface MetadataFetcher
 {
@@ -23,6 +24,11 @@ public interface MetadataFetcher
      * @return A list of MetadataSegment objects
      * @throws RetsServerException if an error occurs
      */
-    public List fetchMetadata(String type, String[] levels)
+    public List /* MetadataSegment */ fetchMetadata(String type,
+                                                    String[] levels)
         throws RetsServerException;
+
+    public String getSystemVersion() throws RetsServerException;
+
+    public Date getSysetmDate() throws RetsServerException;
 }

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataManager;
@@ -55,6 +56,18 @@ public class ManagerMetadataFetcher implements MetadataFetcher
                                              system.getDate()));
         }
         return segments;
+    }
+
+    public String getSystemVersion() throws RetsServerException
+    {
+        MetadataManager manager = getMetadataManager();
+        return findSystem(manager).getVersionString();
+    }
+
+    public Date getSysetmDate() throws RetsServerException
+    {
+        MetadataManager manager = getMetadataManager();
+        return findSystem(manager).getDate();
     }
 
     /**

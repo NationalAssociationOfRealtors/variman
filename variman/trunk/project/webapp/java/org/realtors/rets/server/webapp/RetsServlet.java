@@ -19,15 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.realtors.rets.server.AccountingStatistics;
-import org.realtors.rets.server.RetsReplyException;
-import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.User;
-import org.realtors.rets.server.RetsUtils;
-import org.realtors.rets.server.ReplyCode;
-import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
-
 import org.apache.log4j.Logger;
+
+import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.HibernateMetadataFetcher;
+import org.realtors.rets.server.MetadataFetcher;
+import org.realtors.rets.server.ReplyCode;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.RetsUtils;
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
 public class RetsServlet extends HttpServlet implements Constants
 {
@@ -178,6 +181,22 @@ public class RetsServlet extends HttpServlet implements Constants
         out.println("</RETS-RESPONSE></RETS>");
     }
 
+    protected MetadataFetcher getMetadataFetcher()
+    {
+        MetadataFetcher metadataFetcher;
+        if (USE_CACHE)
+        {
+            metadataFetcher = new WebAppMetadataFetcher();
+        }
+        else
+        {
+            metadataFetcher =
+                new HibernateMetadataFetcher(RetsServer.getSessions());
+        }
+        return metadataFetcher;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(RetsServlet.class);
+    private static final boolean USE_CACHE = true;
 }

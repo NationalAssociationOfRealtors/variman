@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -104,6 +105,16 @@ public class HibernateMetadataFetcher implements MetadataFetcher
     }
 
     public List fetchMetadata(String type, String[] levels)
+    {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    public String getSystemVersion() throws RetsServerException
+    {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    public Date getSysetmDate() throws RetsServerException
     {
         throw new UnsupportedOperationException("not implemented");
     }
