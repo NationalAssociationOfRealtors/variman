@@ -54,22 +54,25 @@ public class RetsServletResponse extends HttpServletResponseWrapper
         {
             mRetsVersionheader = "RETS/1.5";
         }
-        setRetsVersionHeader();
+        setRetsHttpHeaders();
     }
 
-    private void setRetsVersionHeader()
+    private void setRetsHttpHeaders()
     {
         if (mRetsVersionheader != null)
         {
             setHeader("RETS-Version", mRetsVersionheader);
         }
+        setHeader("RETS-Server", sRetServerHeader);
     }
 
     public void reset()
     {
         super.reset();
-        setRetsVersionHeader();
+        setRetsHttpHeaders();
     }
 
     private String mRetsVersionheader;
+    public static final String sRetServerHeader =
+        WebApp.SERVER_NAME + "/" + WebApp.getVersion();
 }
