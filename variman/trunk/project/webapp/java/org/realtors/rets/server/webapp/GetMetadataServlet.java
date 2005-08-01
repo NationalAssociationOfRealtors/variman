@@ -17,10 +17,8 @@ import javax.servlet.ServletException;
 
 import org.realtors.rets.server.GetMetadataParameters;
 import org.realtors.rets.server.GetMetadataTransaction;
-import org.realtors.rets.server.HibernateMetadataFetcher;
 import org.realtors.rets.server.MetadataFetcher;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.RetsServer;
 
 /**
  * @web.servlet name="get-metadata-servlet"
@@ -30,15 +28,7 @@ public class  GetMetadataServlet extends RetsServlet
 {
     public void init() throws ServletException
     {
-        if (USE_CACHE)
-        {
-            mMetadataFetcher = new WebAppMetadataFetcher();
-        }
-        else
-        {
-            mMetadataFetcher =
-                new HibernateMetadataFetcher(RetsServer.getSessions());
-        }
+        mMetadataFetcher = getMetadataFetcher();
     }
 
     protected void doRets(RetsServletRequest request,
@@ -55,5 +45,4 @@ public class  GetMetadataServlet extends RetsServlet
     }
 
     private MetadataFetcher mMetadataFetcher;
-    private static final boolean USE_CACHE = true;
 }

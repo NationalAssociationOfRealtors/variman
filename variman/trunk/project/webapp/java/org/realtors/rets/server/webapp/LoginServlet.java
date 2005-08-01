@@ -12,12 +12,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletException;
 
 import org.realtors.rets.server.AccountingStatistics;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.RetsVersion;
 import org.realtors.rets.server.RetsUtils;
+import org.realtors.rets.server.MetadataFetcher;
 
 import org.apache.log4j.Logger;
 
@@ -30,6 +32,11 @@ import org.apache.log4j.Logger;
  */
 public class LoginServlet extends RetsServlet
 {
+    public void init() throws ServletException
+    {
+        mMetadataFetcher = getMetadataFetcher();
+    }
+
     protected void doRets(RetsServletRequest request,
                           RetsServletResponse response)
         throws RetsServerException, IOException
@@ -42,6 +49,7 @@ public class LoginServlet extends RetsServlet
         AccountingStatistics statitics = getStatistics(session);
         statitics.startSession();
         User user = getUser(session);
+        String version = mMetadataFetcher.getSystemVersion();
 
         PrintWriter out = response.getXmlWriter();
         RetsUtils.printOpenRetsSuccess(out);
@@ -51,8 +59,8 @@ public class LoginServlet extends RetsServlet
         }
         out.println("Broker = " + user.getBrokerCode());
         out.println("MemberName = " + user.getName());
-        out.println("MetadataVersion = 1.0.000");
-        out.println("MinMetadataVersion = 1.00.000");
+        out.println("MetadataVersion = " + version);
+        out.println("MinMetadataVersion = " + version);
         out.println("User = " + user.getUsername() + ",NULL,NULL,NULL");
         out.println("Login = " + contextPath + Paths.LOGIN);
         out.println("Logout = " + contextPath + Paths.LOGOUT);
@@ -71,4 +79,5 @@ public class LoginServlet extends RetsServlet
 
     private static final Logger LOG =
         Logger.getLogger(LoginServlet.class);
+    private MetadataFetcher mMetadataFetcher;
 }
