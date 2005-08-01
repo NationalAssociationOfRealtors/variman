@@ -117,7 +117,12 @@ public class AuthenticationFilter implements Filter, UserMap
         String uri = request.getRequestURI();
         String query = request.getQueryString();
         String method = request.getMethod();
-        LOG.debug("Authorizing URI: " + method + " " + uri + " " + query);
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug(WebApp.SERVER_NAME + " version " + WebApp.getVersion());
+            LOG.debug("Authorizing URI: " + method + " " + uri + " " + query);
+            LOG.debug("User-Agent: " + request.getHeader("User-Agent"));
+        }
         String retsPrefix = request.getContextPath() + "/rets";
         String cctPrefix = request.getContextPath() + "/cct";
         if (!uri.startsWith(retsPrefix) && !uri.startsWith(cctPrefix))
