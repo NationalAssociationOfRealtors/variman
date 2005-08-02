@@ -84,11 +84,11 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals("Batavia, Illinois, USA",
                      metadata.getLookupLongValue("AR", "BATV"));
         assertNull(metadata.getLookupDbValue("AR", "STC"));
-        assertEquals("STC", metadata.getLookupShortValue("AR", "STC"));
-        assertEquals("STC", metadata.getLookupLongValue("AR", "STC"));
+        assertNull(metadata.getLookupShortValue("AR", "STC"));
+        assertNull(metadata.getLookupLongValue("AR", "STC"));
         assertNull(metadata.getLookupDbValue("Area", "GENVA"));
-        assertEquals("GENVA", metadata.getLookupShortValue("Area", "GENVA"));
-        assertEquals("GENVA", metadata.getLookupLongValue("Area", "GENVA"));
+        assertNull(metadata.getLookupShortValue("Area", "GENVA"));
+        assertNull(metadata.getLookupLongValue("Area", "GENVA"));
 
         assertTrue(metadata.isValidLookupValue("STATUS", "S"));
         assertTrue(metadata.isValidLookupValue("STATUS", "A"));
@@ -187,11 +187,11 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals("Batavia, Illinois, USA",
                      metadata.getLookupLongValue("Area", "BATV"));
         assertNull(metadata.getLookupDbValue("Area", "STC"));
-        assertEquals("STC", metadata.getLookupShortValue("Area", "STC"));
-        assertEquals("STC", metadata.getLookupLongValue("Area", "STC"));
+        assertNull(metadata.getLookupShortValue("Area", "STC"));
+        assertNull( metadata.getLookupLongValue("Area", "STC"));
         assertNull(metadata.getLookupDbValue("AR", "GENVA"));
-        assertEquals("GENVA", metadata.getLookupShortValue("AR", "GENVA"));
-        assertEquals("GENVA", metadata.getLookupLongValue("AR", "GENVA"));
+        assertNull(metadata.getLookupShortValue("AR", "GENVA"));
+        assertNull(metadata.getLookupLongValue("AR", "GENVA"));
 
         // Check listing status uses lookup values from DTD
         assertTrue(metadata.isValidLookupValue("ListingStatus", "Pending"));

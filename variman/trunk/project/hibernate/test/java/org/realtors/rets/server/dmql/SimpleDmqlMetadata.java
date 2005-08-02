@@ -16,40 +16,54 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         mFieldsToColumns = new HashMap();
         mColumnsToFields = new HashMap();
         mLookupShortValues = new HashMap();
+        mLookupLongValues = new HashMap();
         mFieldTypes = new HashMap();
         mTables = new HashMap();
     }
 
     public void addLookup(String name, String[] values)
     {
-        addLookup(name, DmqlFieldType.LOOKUP, values, values);
+        addLookup(name, DmqlFieldType.LOOKUP, values, values, values);
     }
 
     public void addLookup(String name, String[] values, String[] shortValues)
     {
-        addLookup(name, DmqlFieldType.LOOKUP, values, shortValues);
+        addLookup(name, DmqlFieldType.LOOKUP, values, shortValues,
+                  shortValues);
+    }
+    
+    public void addLookup(String name, String[] values, String[] shortValues,
+                         String[] longValues)
+    {
+        addLookup(name, DmqlFieldType.LOOKUP, values, shortValues, longValues);
     }
 
     public void addLookupMulti(String name, String[] values)
     {
-        addLookup(name, DmqlFieldType.LOOKUP_MULTI, values, values);
+        addLookup(name, DmqlFieldType.LOOKUP_MULTI, values, values,
+                  values);
     }
 
     public void addLookupMulti(String name, String[] values,
                                String[] shortValues)
     {
-        addLookup(name, DmqlFieldType.LOOKUP_MULTI, values, shortValues);
+        addLookup(name, DmqlFieldType.LOOKUP_MULTI, values, shortValues,
+                  shortValues);
     }
 
     private void addLookup(String name, DmqlFieldType fieldType,
-                           String[] values, String[] shortValues)
+                           String[] values, String[] shortValues,
+                           String[] longValues)
     {
-        Map valueMap = new HashMap();
+        Map shortValueMap = new HashMap();
+        Map longValueMap = new HashMap();
         for (int i = 0; i < values.length; i++)
         {
-            valueMap.put(values[i], shortValues[i]);
+            shortValueMap.put(values[i], shortValues[i]);
+            longValueMap.put(values[i], longValues[i]);
         }
-        mLookupShortValues.put(name, valueMap);
+        mLookupShortValues.put(name, shortValueMap);
+        mLookupLongValues.put(name, longValueMap);
         addType(name, PREFIX + name, fieldType);
     }
 
@@ -145,22 +159,19 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
 
     public String getLookupLongValue(String lookupName, String value)
     {
-        return "Long " + getLookupShortValue(lookupName, value);
+        Map values = (Map) mLookupLongValues.get(lookupName);
+        return (String) values.get(value);
     }
 
     public String getLookupShortValue(String lookupName, String value)
     {
         Map values = (Map) mLookupShortValues.get(lookupName);
-        String shortValue = (String) values.get(value);
-        if (shortValue == null)
-        {
-            shortValue = value;
-        }
-        return shortValue;
+        return (String) values.get(value);
     }
 
     private static final String PREFIX = "r_";
     private Map mLookupShortValues;
+    private Map mLookupLongValues;
     private Map mFieldsToColumns;
     private Map mColumnsToFields;
     private Map mTables;

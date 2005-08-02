@@ -339,7 +339,7 @@ public class SearchTransaction
         else if (searchFormat == SearchFormat.COMPACT_DECODED)
         {
             formatter =
-                new CompactFormatter(CompactFormatter.DECODE_TO_SHORT_VALUE);
+                new CompactFormatter(CompactFormatter.DECODE_LOOKUPS);
         }
         else if (searchFormat == SearchFormat.COMPACT)
         {

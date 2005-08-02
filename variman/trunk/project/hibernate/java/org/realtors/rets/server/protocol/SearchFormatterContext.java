@@ -181,30 +181,34 @@ public class SearchFormatterContext
     }
 
     /**
-     * Get the short value for a lookup at the specified clolum.
+     * Decode the value for a lookup at the specified clolum.  The decoded
+     * value is the long value if not null, then the short value if not
+     * null, and finally just the original value if both are null.
      *
      * @param columnIndex 1-based column index
      * @param value lookup value
      * @return short value of the lookup
      */
-    public String getLookupShortValue(int columnIndex, String value)
+    public String decodeLookupValue(int columnIndex, String value)
     {
-        return getLookupShortValue(getColumn(columnIndex), value);
+        return decodeLookupValue(getColumn(columnIndex), value);
     }
 
     /**
-     * Get the short value for a lookup at the specified clolum.
+     * Decode the value for a lookup at the specified clolum.  The decoded
+     * value is the long value if not null, then the short value if not
+     * null, and finally just the original value if both are null.
      *
      * @param column column name
      * @param value lookup value
      * @return short value of the lookup
      */
-    public String getLookupShortValue(String column, String value)
+    public String decodeLookupValue(String column, String value)
     {
         String lookupName = mMetadata.columnToField(column);
         if (mMetadata.getFieldType(lookupName) == DmqlFieldType.LOOKUP)
         {
-            return mMetadata.getLookupShortValue(lookupName, value);
+            return decodeSingleLookup(lookupName, value);
         }
         else
         {
@@ -215,18 +219,31 @@ public class SearchFormatterContext
                 return null;
             }
             String[] values = StringUtils.split(value, ",");
-            StringBuffer shortValues = new StringBuffer();
+            StringBuffer decodedValues = new StringBuffer();
             String separator = "";
             for (int i = 0; i < values.length; i++)
             {
-                shortValues.append(separator);
-                String shortValue =
-                    mMetadata.getLookupShortValue(lookupName, values[i]);
-                shortValues.append(shortValue);
+                decodedValues.append(separator);
+                String decodedValue = decodeSingleLookup(lookupName, values[i]);
+                decodedValues.append(decodedValue);
                 separator = ",";
             }
-            return shortValues.toString();
+            return decodedValues.toString();
         }
+    }
+
+    private String decodeSingleLookup(String lookupName, String value)
+    {
+        String decodedValue = mMetadata.getLookupLongValue(lookupName, value);
+        if (decodedValue == null)
+        {
+            decodedValue = mMetadata.getLookupShortValue(lookupName, value);
+            if (decodedValue == null)
+            {
+                decodedValue = value;
+            }
+        }
+        return decodedValue;
     }
 
     /**

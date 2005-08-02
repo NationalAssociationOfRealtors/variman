@@ -29,10 +29,10 @@ public class CompactFormatterTest extends LinesEqualTestCase
             "<DELIMITER value=\"09\"/>\n" +
             "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\tIF\t</COLUMNS>\n" +
             "<DATA>\tMain St.\t12345\tActive\t\t</DATA>\n" +
-            "<DATA>\tMichigan Ave.\t60605\tInactive\tDishwasher,Freezer\t" +
+            "<DATA>\tMichigan Ave.\t60605\tINACT\tDishwasher,Freezer\t" +
             "</DATA>\n" +
             "<DATA>\tState St.\t60601\t\tDw\t</DATA>\n",
-            format(CompactFormatter.DECODE_TO_SHORT_VALUE));
+            format(CompactFormatter.DECODE_LOOKUPS));
     }
 
     private String format(CompactFormatter.LookupDecoding lookupDecoding)
@@ -48,10 +48,11 @@ public class CompactFormatterTest extends LinesEqualTestCase
         SimpleDmqlMetadata metadata = new SimpleDmqlMetadata();
         metadata.addString("STNAME");
         metadata.addString("ZIP_CODE");
-        metadata.addLookup("STATUS", new String[]{"0", "1"},
-                           new String[]{"Active", "Inactive"});
-        metadata.addLookupMulti("IF", new String[]{"FR", "DW"},
-                                new String[]{"Freezer", "Dishwasher"});
+        metadata.addLookup("STATUS", new String[] {"0", "1"},
+                           new String[] {"ACT", "INACT"},
+                           new String[] {"Active", null});
+        metadata.addLookupMulti("IF", new String[] {"FR", "DW"},
+                                new String[] {"Freezer", "Dishwasher"});
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
             new SearchFormatterContext(

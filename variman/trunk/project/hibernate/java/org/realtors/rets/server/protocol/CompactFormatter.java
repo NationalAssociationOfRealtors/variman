@@ -88,10 +88,10 @@ public class CompactFormatter implements SearchResultsFormatter
         for (int i = 0; i < numColumns; i++)
         {
             String value = context.getResultString(i);
-            if ((mLookupDecoding == DECODE_TO_SHORT_VALUE) &&
+            if ((mLookupDecoding == DECODE_LOOKUPS) &&
                 context.isColumnALookup(i))
             {
-                value = context.getLookupShortValue(i, value);
+                value = context.decodeLookupValue(i, value);
             }
             row.append(value);
         }
@@ -127,8 +127,8 @@ public class CompactFormatter implements SearchResultsFormatter
 
     public static final LookupDecoding NO_DECODING =
         new LookupDecoding("no decoding");
-    public static final LookupDecoding DECODE_TO_SHORT_VALUE =
-        new LookupDecoding("decode to short value");
+    public static final LookupDecoding DECODE_LOOKUPS =
+        new LookupDecoding("decode lookups");
 
     private static final String DELIMITER = "\t";
     private LookupDecoding mLookupDecoding;
