@@ -1,3 +1,9 @@
+Version 2.1.7 - xxx
+
+  * Update rets-client to warn on metadata parse errors.
+  * Report proper SYSTEM metadata version in Login transaction.
+  * Decode to long values, then short values for COMPACT-DECODED.
+
 Version 2.1.6 - 28 June 2005
 
   * Fixed digest authorization for URIs with query strings.
