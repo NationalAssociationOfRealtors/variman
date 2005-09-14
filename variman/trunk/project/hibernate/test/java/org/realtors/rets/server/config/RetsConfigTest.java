@@ -64,6 +64,16 @@ public class RetsConfigTest extends LinesEqualTestCase
         groupRules.addConditionRule(conditionRule);
         securityConstraints.add(groupRules);
 
+        groupRules = new GroupRules("aggregators");
+        groupRules.setTimeRestriction(
+            new TimeRestriction(TimeRestriction.DENY, 9, 0, 17, 30));
+        securityConstraints.add(groupRules);
+
+        groupRules = new GroupRules("admins");
+        groupRules.setTimeRestriction(
+            new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 30));
+        securityConstraints.add(groupRules);
+
         // Test empty group rules
         securityConstraints.add(new GroupRules("agent"));
         retsConfig.setSecurityConstraints(securityConstraints);
@@ -105,6 +115,14 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      <condition-rule resource=\"Property\" class=\"RES\">\n" +
             "        <sql-constraint>r_lp &lt; 500000</sql-constraint>\n" +
             "      </condition-rule>\n" +
+            "    </group-rules>\n" +
+            "    <group-rules group=\"aggregators\">\n" +
+            "      <time-restriction policy=\"deny\" " +
+            "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
+            "    </group-rules>\n" +
+            "    <group-rules group=\"admins\">\n" +
+            "      <time-restriction policy=\"allow\" " +
+            "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
             "    </group-rules>\n" +
             "  </security-constraints>\n" +
             "</rets-config>\n" +
@@ -151,12 +169,18 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
             "        <system-names>LN</system-names>\n" +
             "      </exclude-rule>\n" +
+            "      <time-restriction policy=\"allow\" " +
+            "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
             "    </group-rules>\n" +
             "    <group-rules group=\"agent\">\n" +
             "      <record-limit>25</record-limit>\n" +
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
             "        <system-names>LN\nEF</system-names>\n" +
             "      </exclude-rule>" +
+            "    </group-rules>\n" +
+            "    <group-rules group=\"aggregators\">\n" +
+            "      <time-restriction policy=\"deny\" " +
+            "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
             "    </group-rules>\n" +
             "  </security-constraints>\n" +
             "</rets-config>";
@@ -187,7 +211,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertTrue(database.getShowSql());
 
         List securityConstraints = retsConfig.getAllGroupRules();
-        assertEquals(2, securityConstraints.size());
+        assertEquals(3, securityConstraints.size());
 
         GroupRules groupRules = (GroupRules) securityConstraints.get(0);
         assertEquals("newspaper", groupRules.getGroupName());
@@ -223,10 +247,15 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertEquals("Property", conditionRule.getResource());
         assertEquals("RES", conditionRule.getRetsClass());
         assertEquals("r_lp < 500000", conditionRule.getSqlConstraint());
-        
+
+        TimeRestriction timeRestriction =
+            new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 30);
+        assertEquals(timeRestriction, groupRules.getTimeRestriction());
+
         groupRules = (GroupRules) securityConstraints.get(1);
         assertEquals("agent", groupRules.getGroupName());
         assertEquals(25, groupRules.getRecordLimit());
+        assertNull(groupRules.getTimeRestriction());
         rules = groupRules.getFilterRules();
         assertEquals(1, rules.size());
         filterRule = (FilterRule) rules.get(0);
@@ -236,6 +265,15 @@ public class RetsConfigTest extends LinesEqualTestCase
         expected.clear();
         expected.add("LN");
         expected.add("LF");
+
+        groupRules = (GroupRules) securityConstraints.get(2);
+        assertEquals("aggregators", groupRules.getGroupName());
+        assertEquals(0, groupRules.getRecordLimit());
+        assertEquals(0, groupRules.getFilterRules().size());
+        assertEquals(0, groupRules.getConditionRules().size());
+        timeRestriction =
+            new TimeRestriction(TimeRestriction.DENY, 9, 0, 17, 30);
+        assertEquals(timeRestriction, groupRules.getTimeRestriction());
     }
 
     public void testFromXmlDefaults()

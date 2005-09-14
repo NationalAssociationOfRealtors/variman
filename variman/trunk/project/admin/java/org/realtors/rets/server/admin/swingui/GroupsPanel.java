@@ -1,11 +1,12 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
+import java.text.DateFormat;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +20,7 @@ import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.config.TimeRestriction;
 
 public class GroupsPanel extends JPanel
 {
@@ -39,6 +41,8 @@ public class GroupsPanel extends JPanel
         tvp.addRow("Description:", mDescription);
         mRecordLimit = new JLabel("None");
         tvp.addRow("Record Limit:", mRecordLimit);
+        mTimeRestriction = new JLabel("");
+        tvp.addRow("Time Restriction:", mTimeRestriction);
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(tvp, BorderLayout.NORTH);
         panel.add(createRulesPanel(), BorderLayout.CENTER);
@@ -65,15 +69,14 @@ public class GroupsPanel extends JPanel
 
     }
 
-    private JPanel createRulesPanel()
+    private JComponent createRulesPanel()
     {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(0, 1));
+        JTabbedPane tabbedPane = new JTabbedPane();
         mFilterRulesPanel = new FilterRulesPanel(this);
-        panel.add(mFilterRulesPanel);
+        tabbedPane.addTab("Filter Rules", mFilterRulesPanel);
         mConditionRulesPanel = new ConditionRulesPanel(this);
-        panel.add(mConditionRulesPanel);
-        return panel;
+        tabbedPane.addTab("Condition Rules", mConditionRulesPanel);
+        return tabbedPane;
     }
 
     public Action getAddGroupAction()
@@ -114,6 +117,7 @@ public class GroupsPanel extends JPanel
             mName.setText("");
             mDescription.setText("");
             mRecordLimit.setText("");
+            mTimeRestriction.setText("");
             mRemoveGroupAction.setEnabled(false);
             mEditGroupAction.setEnabled(false);
             mFilterRulesPanel.unselectGroup();
@@ -135,6 +139,29 @@ public class GroupsPanel extends JPanel
         else
         {
             mRecordLimit.setText(Integer.toString(recordLimit));
+        }
+        TimeRestriction timeRestriction = mGroupRules.getTimeRestriction();
+        if (timeRestriction == null)
+        {
+            mTimeRestriction.setText("None");
+        }
+        else
+        {
+            StringBuffer text = new StringBuffer();
+            if (timeRestriction.getPolicy() == TimeRestriction.ALLOW)
+            {
+                text.append("Allow between ");
+            }
+            else
+            {
+                text.append("Deny between ");
+            }
+            DateFormat formatter = DateFormat.getTimeInstance(DateFormat.SHORT);
+            Date date = timeRestriction.getStartAsCalendar().getTime();
+            text.append(formatter.format(date)).append(" and ");
+            date = timeRestriction.getEndAsCalendar().getTime();
+            text.append(formatter.format(date));
+            mTimeRestriction.setText(text.toString());
         }
         mFilterRulesPanel.updateRulesList(mGroupRules.getFilterRules());
         mConditionRulesPanel.updateRulesList(mGroupRules.getConditionRules());
@@ -201,6 +228,10 @@ public class GroupsPanel extends JPanel
         {
             if (event.getClickCount() == 2)
             {
+                int index = mGroupList.locationToIndex(event.getPoint());
+                mGroupList.ensureIndexIsVisible(index);
+                mGroupList.setSelectedIndex(index);
+                mEditGroupAction.actionPerformed(null);
             }
         }
     }
@@ -241,4 +272,5 @@ public class GroupsPanel extends JPanel
     private GroupRules mGroupRules;
     private FilterRulesPanel mFilterRulesPanel;
     private ConditionRulesPanel mConditionRulesPanel;
+    private JLabel mTimeRestriction;
 }

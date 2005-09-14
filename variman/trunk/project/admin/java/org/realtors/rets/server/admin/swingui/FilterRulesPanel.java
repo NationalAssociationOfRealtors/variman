@@ -22,8 +22,6 @@ public class FilterRulesPanel extends JPanel
     public FilterRulesPanel(GroupsPanel groupsPanel)
     {
         setLayout(new BorderLayout());
-        add(new HeaderPanel("Filter Rules"), BorderLayout.NORTH);
-
         JPanel box = new JPanel(new BorderLayout());
         mRulesListModel = new ListListModel();
         mRulesListModel.setFormatter(FILTER_RULE_FORMATTER);
@@ -35,7 +33,7 @@ public class FilterRulesPanel extends JPanel
         scrollPane.setVerticalScrollBarPolicy(
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         box.add(scrollPane);
-        box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
+        box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(box, BorderLayout.CENTER);
 
         Box buttonBox = Box.createHorizontalBox();

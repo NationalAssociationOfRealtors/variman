@@ -60,10 +60,21 @@ public class GroupRules
         mRecordLimit = recordLimit;
     }
 
+    public TimeRestriction getTimeRestriction()
+    {
+        return mTimeRestriction;
+    }
+
+    public void setTimeRestriction(TimeRestriction timeRestriction)
+    {
+        mTimeRestriction = timeRestriction;
+    }
+
     private String mGroupName;
     private List mFilterRules;
     private List mReadOnlyFilterRules;
     private List mConditionRules;
     private List mReadOnlyConditionRules;
     private int mRecordLimit;
+    private TimeRestriction mTimeRestriction;
 }

@@ -19,11 +19,28 @@ public class WholeNumberField extends JTextField
 {
     public WholeNumberField(int value, int columns)
     {
+        this(value, columns, NumberFormat.getNumberInstance(Locale.US));
+    }
+
+    public WholeNumberField(int value, int columns, NumberFormat format)
+    {
         super(columns);
-        toolkit = Toolkit.getDefaultToolkit();
-        integerFormatter = NumberFormat.getNumberInstance(Locale.US);
-        integerFormatter.setParseIntegerOnly(true);
+        mToolkit = Toolkit.getDefaultToolkit();
+        mIntegerFormatter = format;
+        mIntegerFormatter.setParseIntegerOnly(true);
+        mMinValue = Integer.MIN_VALUE;
+        mMaxValue = Integer.MAX_VALUE;
         setValue(value);
+    }
+
+    public void setMinValue(int minValue)
+    {
+        mMinValue = minValue;
+    }
+
+    public void setMaxValue(int maxValue)
+    {
+        mMaxValue = maxValue;
     }
 
     public int getValue()
@@ -31,13 +48,13 @@ public class WholeNumberField extends JTextField
         int retVal = 0;
         try
         {
-            retVal = integerFormatter.parse(getText()).intValue();
+            retVal = mIntegerFormatter.parse(getText()).intValue();
         }
         catch (ParseException e)
         {
             // This should never happen because insertString allows
             // only properly formatted data to get in the field.
-            toolkit.beep();
+            mToolkit.beep();
             LOG.error("Unable to parse integer: " + getText());
         }
         return retVal;
@@ -45,7 +62,12 @@ public class WholeNumberField extends JTextField
 
     public void setValue(int value)
     {
-        setText(integerFormatter.format(value));
+        setText(mIntegerFormatter.format(value));
+    }
+
+    public void reformatValue()
+    {
+        setValue(getValue());
     }
 
     protected Document createDefaultModel()
@@ -60,10 +82,15 @@ public class WholeNumberField extends JTextField
                                  AttributeSet a)
             throws BadLocationException
         {
+            String currentText = getText(0, getLength());
+            String beforeOffset = currentText.substring(0, offs);
+            String afterOffset = currentText.substring(offs,
+                                                       currentText.length());
             char[] source = str.toCharArray();
             char[] result = new char[source.length];
             int j = 0;
 
+            boolean doInsert = true;
             for (int i = 0; i < result.length; i++)
             {
                 if (Character.isDigit(source[i]))
@@ -72,16 +99,42 @@ public class WholeNumberField extends JTextField
                 }
                 else
                 {
-                    toolkit.beep();
+                    doInsert = false;
                 }
             }
-            super.insertString(offs, new String(result, 0, j), a);
+
+            String insertedText = new String(result, 0, j);
+            String proposedResult = beforeOffset + insertedText + afterOffset;
+
+            try
+            {
+                int value = mIntegerFormatter.parse(proposedResult).intValue();
+                if ((value < mMinValue) || (value > mMaxValue))
+                {
+                    doInsert = false;
+                }
+            }
+            catch (ParseException e)
+            {
+                doInsert = false;
+            }
+
+            if (doInsert)
+            {
+                super.insertString(offs, insertedText, a);
+            }
+            else
+            {
+                mToolkit.beep();
+            }
         }
     }
 
     private static final Logger LOG =
         Logger.getLogger(WholeNumberField.class);
 
-    private Toolkit toolkit;
-    private NumberFormat integerFormatter;
+    private Toolkit mToolkit;
+    private NumberFormat mIntegerFormatter;
+    private int mMinValue;
+    private int mMaxValue;
 }

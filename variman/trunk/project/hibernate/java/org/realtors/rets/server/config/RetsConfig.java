@@ -15,10 +15,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Date;
+import java.util.Calendar;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -171,12 +175,30 @@ public class RetsConfig
             addRecordLimit(groupRules, groupRulesElement);
             addFilterRules(groupRules, groupRulesElement);
             addConditionRules(groupRules, groupRulesElement);
+            addTimeRestriction(groupRules, groupRulesElement);
             if (groupRulesElement.getChildren().size() != 0)
             {
                 securityContraints.addContent(groupRulesElement);
             }
         }
         return securityContraints;
+    }
+
+    private void addTimeRestriction(GroupRules groupRules,
+                                    Element groupRulesElement)
+    {
+        TimeRestriction timeRestriction = groupRules.getTimeRestriction();
+        if (timeRestriction == null)
+            return;
+        Element element = new Element(TIME_RESTRICTION);
+        element.setAttribute(
+            POLICY, timeRestriction.getPolicy().getName());
+        Date time = timeRestriction.getStartAsCalendar().getTime();
+        DateFormat formatter = DateFormat.getTimeInstance(DateFormat.SHORT);
+        element.setAttribute(START, formatter.format(time));
+        time = timeRestriction.getEndAsCalendar().getTime();
+        element.setAttribute(END, formatter.format(time));
+        groupRulesElement.addContent(element);
     }
 
     private void addRecordLimit(GroupRules groupRules,
@@ -367,6 +389,10 @@ public class RetsConfig
                     groupRules.setRecordLimit(
                         NumberUtils.stringToInt(grandChild.getTextTrim()));
                 }
+                else if (ruleName.equals(TIME_RESTRICTION))
+                {
+                    createAndAddTimeRestriction(groupRules, grandChild);
+                }
                 else
                 {
                     LOG.warn("Unknown rule" + grandChild.toString());
@@ -376,6 +402,62 @@ public class RetsConfig
             securityConstraints.add(groupRules);
         }
         config.setSecurityConstraints(securityConstraints);
+    }
+
+    private static void createAndAddTimeRestriction(GroupRules groupRules,
+                                                    Element element)
+    {
+        String policyString = element.getAttributeValue(POLICY);
+        String startString = element.getAttributeValue(START);
+        String endString  = element.getAttributeValue(END);
+
+        TimeRestriction.Policy policy;
+        if (policyString.equals("allow"))
+        {
+            policy = TimeRestriction.ALLOW;
+        }
+        else if (policyString.equals("deny"))
+        {
+            policy = TimeRestriction.DENY;
+        }
+        else
+        {
+            LOG.warn("Unknown time restriction policy: " + policyString);
+            return;
+        }
+        Calendar start = timeStringToCalendar(startString);
+        if (start == null)
+        {
+            LOG.warn("Unparseable start time: " + startString);
+            return;
+        }
+        Calendar end = timeStringToCalendar(endString);
+        if (end == null)
+        {
+            LOG.warn("Unparseable end time: " + endString);
+        }
+
+        TimeRestriction timeRestriction =
+            new TimeRestriction(policy,
+                                start.get(Calendar.HOUR_OF_DAY),
+                                start.get(Calendar.MINUTE),
+                                end.get(Calendar.HOUR_OF_DAY),
+                                end.get(Calendar.MINUTE));
+        groupRules.setTimeRestriction(timeRestriction);
+    }
+
+    private static Calendar timeStringToCalendar(String string)
+    {
+        DateFormat parser = DateFormat.getTimeInstance(DateFormat.SHORT);
+        try
+        {
+            parser.parse(string);
+            return parser.getCalendar();
+        }
+        catch (ParseException e)
+        {
+            return null;
+        }
     }
 
     private static void addFilterRule(GroupRules groupRules,
@@ -599,6 +681,10 @@ public class RetsConfig
     private static final String CONDITION_RULE = "condition-rule";
     private static final String SQL_CONSTRAINT = "sql-constraint";
     private static final String RECORD_LIMIT = "record-limit";
+    private static final String TIME_RESTRICTION = "time-restriction";
+    private static final String POLICY = "policy";
+    private static final String START = "start";
+    private static final String END = "end";
 
     private int mPort;
     private String mGetObjectRoot;

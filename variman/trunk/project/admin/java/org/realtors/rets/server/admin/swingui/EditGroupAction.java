@@ -43,6 +43,7 @@ public class EditGroupAction extends AbstractAction
             HibernateUtils.update(group);
             // Update this after hibernate, just in case of DB failure
             rules.setRecordLimit(dialog.getRecordLimit());
+            rules.setTimeRestriction(dialog.getTimeRestriction());
             frame.setStatusText("Group " + group.getName() + " changed");
             frame.refreshGroups();
             // Group rules are stored in RetsConfig

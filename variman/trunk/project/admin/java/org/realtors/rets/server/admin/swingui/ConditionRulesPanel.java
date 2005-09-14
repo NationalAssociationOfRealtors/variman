@@ -20,7 +20,6 @@ public class ConditionRulesPanel extends JPanel
     public ConditionRulesPanel(GroupsPanel groupsPanel)
     {
         setLayout(new BorderLayout());
-        add(new HeaderPanel("Condition Rules"), BorderLayout.NORTH);
 
         JPanel box = new JPanel(new BorderLayout());
         mRulesListModel = new ListListModel();
@@ -33,16 +32,18 @@ public class ConditionRulesPanel extends JPanel
         scrollPane.setVerticalScrollBarPolicy(
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         box.add(scrollPane);
-        box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
+        box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(box, BorderLayout.CENTER);
 
         Box buttonBox = Box.createHorizontalBox();
         buttonBox.add(Box.createHorizontalGlue());
         mRuleAddButtonAction = new ConditionRuleAddButtonAction(groupsPanel);
         buttonBox.add(new JButton(mRuleAddButtonAction));
+        buttonBox.add(Box.createHorizontalStrut(5));
         mRuleRemoveButtonAction =
             new ConditionRuleRemoveButtonAction(groupsPanel);
         buttonBox.add(new JButton(mRuleRemoveButtonAction));
+        buttonBox.add(Box.createHorizontalStrut(5));
         mRuleEditButtonAction = new ConditionRuleEditButtonAction(groupsPanel);
         buttonBox.add(new JButton(mRuleEditButtonAction));
         buttonBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
