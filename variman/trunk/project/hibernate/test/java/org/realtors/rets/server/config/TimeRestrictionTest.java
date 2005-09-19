@@ -3,53 +3,55 @@ package org.realtors.rets.server.config;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
+import org.realtors.rets.server.CalendarUtils;
 
 public class TimeRestrictionTest extends TestCase
 {
+    private static final int AM = Calendar.AM;
+    private static final int PM = Calendar.PM;
+
+    private Calendar time(int hour, int minutes, int amPm)
+    {
+        return CalendarUtils.createCalendar(hour, minutes, amPm);
+    }
+
     public void testAllowPolicy()
     {
         TimeRestriction restriction = new TimeRestriction(TimeRestriction.ALLOW,
-                                                         9, 0, 17, 30);
-        assertFalse(restriction.isAllowed(0, 0));
-        assertFalse(restriction.isAllowed(8, 59));
-        assertTrue(restriction.isAllowed(9, 0));
-        assertTrue(restriction.isAllowed(12, 0));
-        assertTrue(restriction.isAllowed(17, 30));
-        assertFalse(restriction.isAllowed(17, 31));
-        assertFalse(restriction.isAllowed(23, 59));
+                                                         9, 00, 17, 30);
+        assertFalse(restriction.isAllowed(time(12, 00, AM)));
+        assertFalse(restriction.isAllowed(time(8, 59, AM)));
+        assertTrue(restriction.isAllowed(time(9, 00, AM)));
+        assertTrue(restriction.isAllowed(time(12, 00, PM)));
+        assertTrue(restriction.isAllowed(time(5, 30, PM)));
+        assertFalse(restriction.isAllowed(time(5, 31, PM)));
+        assertFalse(restriction.isAllowed(time(11, 59, PM)));
     }
 
     public void testDenyPolicy()
     {
         TimeRestriction restriction = new TimeRestriction(TimeRestriction.DENY,
                                                          9, 0, 17, 30);
-        assertTrue(restriction.isAllowed(0, 0));
-        assertTrue(restriction.isAllowed(8, 59));
-        assertFalse(restriction.isAllowed(9, 0));
-        assertFalse(restriction.isAllowed(12, 0));
-        assertFalse(restriction.isAllowed(17, 30));
-        assertTrue(restriction.isAllowed(17, 31));
-        assertTrue(restriction.isAllowed(23, 59));
+        assertTrue(restriction.isAllowed(time(12, 00, AM)));
+        assertTrue(restriction.isAllowed(time(8, 59, AM)));
+        assertFalse(restriction.isAllowed(time(9, 00, AM)));
+        assertFalse(restriction.isAllowed(time(12, 00, PM)));
+        assertFalse(restriction.isAllowed(time(5, 30, PM)));
+        assertTrue(restriction.isAllowed(time(5, 31, PM)));
+        assertTrue(restriction.isAllowed(time(11, 59, PM)));
     }
 
     public void testCalendarGetters()
     {
         TimeRestriction restriction = new TimeRestriction(TimeRestriction.ALLOW,
-                                                         9, 0, 17, 30);
+                                                         9, 00, 17, 30);
 
         Calendar start = restriction.getStartAsCalendar();
-        // Clone to make sure second and millisecond stay the same
-        Calendar expected = (Calendar) start.clone();
-        expected.set(Calendar.HOUR, 9);
-        expected.set(Calendar.MINUTE, 0);
-        expected.set(Calendar.AM_PM, Calendar.AM);
+        Calendar expected = time(9, 00, AM);
         assertEquals(expected, start);
 
         Calendar end = restriction.getEndAsCalendar();
-        expected = (Calendar) end.clone();
-        expected.set(Calendar.HOUR, 5);
-        expected.set(Calendar.MINUTE, 30);
-        expected.set(Calendar.AM_PM, Calendar.PM);
+        expected = time(5, 30, PM);
         assertEquals(expected, end);
     }
 
@@ -58,18 +60,18 @@ public class TimeRestrictionTest extends TestCase
         TimeRestriction a;
         TimeRestriction b;
 
-        a = new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 0);
-        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 0);
+        a = new TimeRestriction(TimeRestriction.ALLOW, 9, 00, 17, 00);
+        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 00, 17, 00);
         assertTrue(a.equals(b));
-        b = new TimeRestriction(TimeRestriction.DENY, 9, 0, 17, 0);
+        b = new TimeRestriction(TimeRestriction.DENY, 9, 00, 17, 00);
         assertFalse(a.equals(b));
-        b = new TimeRestriction(TimeRestriction.ALLOW, 8, 0, 17, 0);
+        b = new TimeRestriction(TimeRestriction.ALLOW, 8, 00, 17, 00);
         assertFalse(a.equals(b));
-        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 30, 17, 0);
+        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 30, 17, 00);
         assertFalse(a.equals(b));
-        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 18, 0);
+        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 00, 18, 00);
         assertFalse(a.equals(b));
-        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 30);
+        b = new TimeRestriction(TimeRestriction.ALLOW, 9, 00, 17, 30);
         assertFalse(a.equals(b));
     }
 }

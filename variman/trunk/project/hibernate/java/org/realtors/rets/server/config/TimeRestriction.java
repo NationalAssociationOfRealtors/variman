@@ -28,6 +28,18 @@ public class TimeRestriction
         return mPolicy;
     }
 
+    public boolean isAllowedNow()
+    {
+        return isAllowed(Calendar.getInstance());
+    }
+
+    public boolean isAllowed(Calendar time)
+    {
+        int hour = time.get(Calendar.HOUR_OF_DAY);
+        int minute = time.get(Calendar.MINUTE);
+        return isAllowed(hour, minute);
+    }
+
     public boolean isAllowed(int hour, int minute)
     {
         int absoluteMinute = hourAndMinuteToAbsoluteMinute(hour, minute);

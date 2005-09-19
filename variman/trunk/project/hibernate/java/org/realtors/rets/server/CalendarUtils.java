@@ -73,4 +73,11 @@ public class CalendarUtils
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
     }
+
+    public static Calendar createCalendar(int hours, int minutes, int amPm)
+    {
+        Calendar calendar = Calendar.getInstance();
+        setTime(calendar, hours, minutes, amPm);
+        return calendar;
+    }
 }

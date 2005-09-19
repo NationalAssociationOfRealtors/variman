@@ -11,6 +11,8 @@
 package org.realtors.rets.server.webapp.auth;
 
 import java.io.IOException;
+import java.util.SortedSet;
+import java.util.Iterator;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -25,10 +27,18 @@ import javax.servlet.http.HttpSession;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.UserUtils;
+import org.realtors.rets.server.Group;
+import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.TimeRestriction;
 import org.realtors.rets.server.webapp.WebApp;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+
+import net.sf.hibernate.HibernateException;
 
 /**
  * @web.filter name="authentication-filter"
@@ -160,6 +170,7 @@ public class AuthenticationFilter implements Filter, UserMap
             LOG.debug("Digest auth succeeded");
             User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
             MDC.put("user", user.getUsername());
+
             filterChain.doFilter(request, response);
         }
         catch (IllegalArgumentException e)
@@ -174,17 +185,23 @@ public class AuthenticationFilter implements Filter, UserMap
                                    HttpSession session)
         throws RetsServerException
     {
-        User athorizedUser = findAuthorizedUser(request);
-        if (athorizedUser != null)
-        {
-            session.setAttribute(AUTHORIZED_USER_KEY, athorizedUser);
-            return true;
-        }
-        else
+        User authorizedUser = findAuthorizedUser(request);
+        if (authorizedUser == null)
         {
             session.removeAttribute(AUTHORIZED_USER_KEY);
             return false;
         }
+
+        if (!verifyTimeRestriction(authorizedUser))
+        {
+            LOG.info("User <" + authorizedUser.getUsername() +
+                     "> does not have access during this time period");
+            session.removeAttribute(AUTHORIZED_USER_KEY);
+            return false;
+        }
+
+        session.setAttribute(AUTHORIZED_USER_KEY, authorizedUser);
+        return true;
     }
 
     private User findAuthorizedUser(DigestAuthorizationRequest request)
@@ -226,6 +243,38 @@ public class AuthenticationFilter implements Filter, UserMap
             user = null;
         }
         return user;
+    }
+
+    private boolean verifyTimeRestriction(User user)
+        throws RetsServerException
+    {
+        try
+        {
+            boolean allowed = true;
+            SortedSet groups = UserUtils.getGroups(user);
+            SecurityConstraints securityConstraints =
+                RetsServer.getSecurityConstraints();
+            for (Iterator iterator = groups.iterator(); iterator.hasNext();)
+            {
+                Group group = (Group) iterator.next();
+                GroupRules rules =
+                    securityConstraints.getRulesForGroup(group.getName());
+                TimeRestriction timeRestriction = rules.getTimeRestriction();
+                if ((timeRestriction != null) &&
+                    !timeRestriction.isAllowedNow())
+                {
+                    LOG.debug("Group <" + group.getName() + "> does not " +
+                              "allow access at this time.");
+                    allowed = false;
+                    break;
+                }
+            }
+            return allowed;
+        }
+        catch (HibernateException e)
+        {
+            throw new RetsServerException(e);
+        }
     }
 
     private void send401(boolean stale, HttpServletResponse response)
