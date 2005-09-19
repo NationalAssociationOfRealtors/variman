@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
+import org.realtors.rets.server.config.TimeRestriction;
+
 public class AddGroupDialog extends JDialog
 {
     public AddGroupDialog()
@@ -23,6 +25,8 @@ public class AddGroupDialog extends JDialog
         tvp.addRow("Description:", mDescription);
         mRecordLimit = new WholeNumberField(0, TEXT_WIDTH);
         tvp.addRow("Record Limit:", mRecordLimit);
+        mTimeRestriction = new TimeRestrictionPanel(null);
+        tvp.addRow("Time Restriction:", mTimeRestriction);
 
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         content.add(tvp);
@@ -62,6 +66,11 @@ public class AddGroupDialog extends JDialog
         return mRecordLimit.getValue();
     }
 
+    public TimeRestriction getTimeRestriction()
+    {
+        return mTimeRestriction.getTimeRestriction();
+    }
+
     private class AddGroupButtonAction extends AbstractAction
     {
         public AddGroupButtonAction()
@@ -96,4 +105,5 @@ public class AddGroupDialog extends JDialog
     private JTextField mGroupName;
     private JTextField mDescription;
     private WholeNumberField mRecordLimit;
+    private TimeRestrictionPanel mTimeRestriction;
 }

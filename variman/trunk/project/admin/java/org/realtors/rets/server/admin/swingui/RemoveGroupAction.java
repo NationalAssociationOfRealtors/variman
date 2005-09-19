@@ -8,6 +8,10 @@ import javax.swing.*;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.admin.Admin;
+
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 import net.sf.hibernate.HibernateException;
@@ -53,6 +57,14 @@ public class RemoveGroupAction extends AbstractAction
             }
 
             HibernateUtils.delete(group);
+
+            // Group rules are stored in RetsConfig
+            RetsConfig retsConfig = Admin.getRetsConfig();
+            SecurityConstraints securityConstraints =
+                retsConfig.getSecurityConstraints();
+            securityConstraints.removeRulesForGroup(group.getName());
+            Admin.setRetsConfigChanged(true);
+
             mGroupsPanel.populateList();
         }
         catch (HibernateException e)

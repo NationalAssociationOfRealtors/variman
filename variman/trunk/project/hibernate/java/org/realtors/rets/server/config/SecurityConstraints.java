@@ -44,6 +44,16 @@ public class SecurityConstraints
         return groupRules;
     }
 
+    public void removeRulesForGroup(String groupName)
+    {
+        GroupRules groupRules = (GroupRules) mGroupRulesByName.get(groupName);
+        if (groupRules != null)
+        {
+            mGroupRules.remove(groupRules);
+            mGroupRulesByName.remove(groupName);
+        }
+    }
+
     private List mGroupRules;
     private Map mGroupRulesByName;
 }

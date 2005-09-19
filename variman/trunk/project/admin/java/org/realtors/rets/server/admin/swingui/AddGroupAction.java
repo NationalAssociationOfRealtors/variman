@@ -44,6 +44,7 @@ public class AddGroupAction extends AbstractAction
             GroupRules rules =
                 securityConstraints.getRulesForGroup(group.getName());
             rules.setRecordLimit(dialog.getRecordLimit());
+            rules.setTimeRestriction(dialog.getTimeRestriction());
 
             AdminFrame frame = SwingUtils.getAdminFrame();
             frame.setStatusText("Group " + group.getName() + " added");
