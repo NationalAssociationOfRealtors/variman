@@ -1,15 +1,16 @@
 package org.realtors.rets.server.admin.swingui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Calendar;
+import java.util.Locale;
 
 import javax.swing.*;
 
+import org.realtors.rets.server.CalendarUtils;
 import org.realtors.rets.server.config.TimeRestriction;
 
 public class TimeRestrictionPanel extends JPanel
@@ -35,7 +36,7 @@ public class TimeRestrictionPanel extends JPanel
         mStartAmPm.setSelectedItem(AM);
         add(mStartAmPm);
         add(new JLabel(" to "));
-        mEndHour = createHourField(12);
+        mEndHour = createHourField(11);
         add(mEndHour);
         add(new JLabel(":"));
         mEndMinute = createMinuteField(59);
@@ -123,34 +124,48 @@ public class TimeRestrictionPanel extends JPanel
     private Calendar getEndCalendar()
     {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, mEndHour.getValue());
-        calendar.set(Calendar.MINUTE, mEndMinute.getValue());
-        calendar.set(Calendar.AM_PM, toAmPm(mEndAmPm));
+        CalendarUtils.setTime(calendar, mEndHour.getValue(),
+                              mEndMinute.getValue(),
+                              toAmPm(mEndAmPm));
         return calendar;
     }
 
     private Calendar getStartCalendar()
     {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, mStartHour.getValue());
-        calendar.set(Calendar.MINUTE, mStartMinutes.getValue());
-        calendar.set(Calendar.AM_PM, toAmPm(mStartAmPm));
+        CalendarUtils.setTime(calendar, mStartHour.getValue(),
+                              mStartMinutes.getValue(),
+                              toAmPm(mStartAmPm));
         return calendar;
     }
 
     public boolean isValidContent()
     {
-        Calendar startCalendar = getStartCalendar();
-        Calendar endCalendar = getEndCalendar();
-        if (!startCalendar.before(endCalendar))
-            return false;
-        else
+        TimeRestriction timeRestriction = getTimeRestriction();
+        if (timeRestriction == null)
+        {
             return true;
+        }
+
+        Calendar start = timeRestriction.getStartAsCalendar();
+        Calendar end = timeRestriction.getEndAsCalendar();
+        if  (!start.before(end))
+        {
+            JOptionPane.showMessageDialog(
+                SwingUtils.getAdminFrame(),
+                "The time restriction start time must come before the end " +
+                "time.",
+                "Validation Error",
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 
     private void setToHour(WholeNumberField field, Calendar calendar)
     {
-        field.setValue(calendar.get(Calendar.HOUR));
+        field.setValue(CalendarUtils.getHour(calendar));
     }
 
     private void setToMinutes(WholeNumberField field, Calendar calendar)

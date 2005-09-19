@@ -45,17 +45,21 @@ public class TimeRestriction
 
     public Calendar getStartAsCalendar()
     {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, mStartHour);
-        calendar.set(Calendar.MINUTE, mStartMinute);
-        return calendar;
+        return createCalendar(mStartHour, mStartMinute);
     }
 
     public Calendar getEndAsCalendar()
     {
+        return createCalendar(mEndHour, mEndMinute);
+    }
+
+    private Calendar createCalendar(int hourOfDay, int minute)
+    {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, mEndHour);
-        calendar.set(Calendar.MINUTE, mEndMinute);
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar;
     }
 

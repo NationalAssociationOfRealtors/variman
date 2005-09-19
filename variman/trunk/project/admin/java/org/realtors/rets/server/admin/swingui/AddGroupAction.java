@@ -75,18 +75,10 @@ public class AddGroupAction extends AbstractAction
             {
                 break;
             }
-
-            String groupName = dialog.getGroupName();
-            if (GroupUtils.findByName(groupName) == null)
+            if (dialog.validateFields())
             {
                 break;
             }
-
-            JOptionPane.showMessageDialog(
-                SwingUtils.getAdminFrame(),
-                "A group already exists with this name.\n" +
-                "Please choose a new name.", "Error",
-                JOptionPane.ERROR_MESSAGE);
         }
         return response;
     }

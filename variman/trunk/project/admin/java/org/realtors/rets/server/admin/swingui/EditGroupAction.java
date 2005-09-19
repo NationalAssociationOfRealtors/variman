@@ -33,8 +33,7 @@ public class EditGroupAction extends AbstractAction
 
             AdminFrame frame = SwingUtils.getAdminFrame();
             EditGroupDialog dialog = new EditGroupDialog(frame, group, rules);
-            dialog.show();
-            if (dialog.getResponse() != JOptionPane.OK_OPTION)
+            if (showUntilCancelOrValid(dialog) != JOptionPane.OK_OPTION)
             {
                 return;
             }
@@ -55,6 +54,25 @@ public class EditGroupAction extends AbstractAction
         {
             LOG.error("Caught", e);
         }
+    }
+
+    private int showUntilCancelOrValid(EditGroupDialog dialog)
+    {
+        int response = JOptionPane.CANCEL_OPTION;
+        while (true)
+        {
+            dialog.show();
+            response = dialog.getResponse();
+            if (response == JOptionPane.CANCEL_OPTION)
+            {
+                break;
+            }
+            if (dialog.validateFields())
+            {
+                break;
+            }
+        }
+        return response;
     }
 
     private static final Logger LOG =

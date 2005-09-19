@@ -71,6 +71,11 @@ public class EditGroupDialog extends JDialog
         return mTimeRestriction.isValidContent();
     }
 
+    public boolean validateFields()
+    {
+        return mTimeRestriction.isValidContent();
+    }
+
     private class SaveChangesButtonAction extends AbstractAction
     {
         public SaveChangesButtonAction()

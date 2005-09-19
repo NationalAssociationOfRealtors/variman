@@ -4,6 +4,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
+import org.apache.commons.lang.StringUtils;
+
+import net.sf.hibernate.HibernateException;
+import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.config.TimeRestriction;
 
 public class AddGroupDialog extends JDialog
@@ -69,6 +73,45 @@ public class AddGroupDialog extends JDialog
     public TimeRestriction getTimeRestriction()
     {
         return mTimeRestriction.getTimeRestriction();
+    }
+
+    public boolean validateFields() throws HibernateException
+    {
+        boolean isValid = isValidGroupName() && isValidTimeRestriction();
+        return isValid;
+
+    }
+
+    private boolean isValidGroupName()
+        throws HibernateException
+    {
+        String groupName = getGroupName();
+        if (StringUtils.isEmpty(groupName))
+        {
+            JOptionPane.showMessageDialog(
+                SwingUtils.getAdminFrame(),
+                "The group must not be empty.\n" +
+                "Please choose a new name.", "Validation Error",
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (GroupUtils.findByName(groupName) != null)
+        {
+            JOptionPane.showMessageDialog(
+                SwingUtils.getAdminFrame(),
+                "A group already exists with this name.\n" +
+                "Please choose a new name.", "Validation Error",
+                JOptionPane.ERROR_MESSAGE);
+            return  false;
+        }
+
+        return true;
+    }
+
+    private boolean isValidTimeRestriction()
+    {
+        return mTimeRestriction.isValidContent();
     }
 
     private class AddGroupButtonAction extends AbstractAction
