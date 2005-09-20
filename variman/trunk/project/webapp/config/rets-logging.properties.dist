@@ -1,0 +1,2 @@
+variman.log.level = debug
+variman.log.sql_level = all

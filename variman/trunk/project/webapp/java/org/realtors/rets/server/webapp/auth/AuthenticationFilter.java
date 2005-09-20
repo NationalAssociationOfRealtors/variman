@@ -124,6 +124,8 @@ public class AuthenticationFilter implements Filter, UserMap
         throws IOException, ServletException, RetsServerException
     {
         MDC.put("addr", request.getRemoteAddr());
+        String userAgent = request.getHeader("User-Agent");
+        MDC.put("user-agent", userAgent);
         String uri = request.getRequestURI();
         String query = request.getQueryString();
         String method = request.getMethod();
@@ -131,7 +133,7 @@ public class AuthenticationFilter implements Filter, UserMap
         {
             LOG.debug(WebApp.SERVER_NAME + " version " + WebApp.getVersion());
             LOG.debug("Authorizing URI: " + method + " " + uri + " " + query);
-            LOG.debug("User-Agent: " + request.getHeader("User-Agent"));
+            LOG.debug("User-Agent: " + userAgent);
         }
         String retsPrefix = request.getContextPath() + "/rets";
         String cctPrefix = request.getContextPath() + "/cct";
@@ -167,9 +169,9 @@ public class AuthenticationFilter implements Filter, UserMap
                 return;
             }
 
-            LOG.debug("Digest auth succeeded");
             User user = (User) session.getAttribute(AUTHORIZED_USER_KEY);
             MDC.put("user", user.getUsername());
+            LOG.info("Digest auth succeeded for URI: " + method + " " + uri);
 
             filterChain.doFilter(request, response);
         }
@@ -263,8 +265,8 @@ public class AuthenticationFilter implements Filter, UserMap
                 if ((timeRestriction != null) &&
                     !timeRestriction.isAllowedNow())
                 {
-                    LOG.debug("Group <" + group.getName() + "> does not " +
-                              "allow access at this time.");
+                    LOG.info("Group <" + group.getName() + "> does not " +
+                             "allow access at this time.");
                     allowed = false;
                     break;
                 }

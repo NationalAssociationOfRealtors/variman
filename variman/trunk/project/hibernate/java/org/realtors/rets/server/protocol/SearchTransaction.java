@@ -182,6 +182,7 @@ public class SearchTransaction
         ResultSet resultSet = null;
         try
         {
+            logSql(countSql);
             session = mSessions.openSession();
             Connection connection = session.connection();
             statement = connection.createStatement();
@@ -287,6 +288,7 @@ public class SearchTransaction
         ResultSet resultSet = null;
         try
         {
+            logSql(sql);
             session = mSessions.openSession();
             Connection connection = session.connection();
             statement = connection.createStatement();
@@ -308,6 +310,18 @@ public class SearchTransaction
             close(statement);
             close(session);
         }
+    }
+
+    private void logSql(String sql)
+    {
+        String select = StringUtils.join(mParameters.getSelect(), ",");
+        if (select == null)
+        {
+            select = "<empty>";
+        }
+        SQL_LOG.info("SELECT: " + select + " " +
+                     "DMQL: " + mParameters.getQuery() + " " +
+                     "SQL: " + sql);
     }
 
     private void printResults(PrintWriter out, List columns,
@@ -446,6 +460,10 @@ public class SearchTransaction
 
     private static final Logger LOG =
         Logger.getLogger(SearchTransaction.class);
+    private static final String SQL_LOG_NAME =
+        "org.realtors.rets.server.sql_log";
+    private static final Logger SQL_LOG = Logger.getLogger(SQL_LOG_NAME);
+
     private SearchParameters mParameters;
     private SortedSet mGroups;
     private MClass mClass;

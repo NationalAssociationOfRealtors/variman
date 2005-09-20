@@ -534,6 +534,10 @@
           file="project/webapp/config/rets-config.xml"/>
     <copy todir="build/rets-server/webapp/WEB-INF/rets"
           file="project/webapp/config/rets-config.xml.dist"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/rets"
+          file="project/webapp/config/rets-logging.properties"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/rets"
+          file="project/webapp/config/rets-logging.properties.dist"/>
     <!-- copy the struts stuff -->
     <copy todir="build/rets-server/webapp/WEB-INF"
           file="project/webapp/config/struts-config.xml"/>

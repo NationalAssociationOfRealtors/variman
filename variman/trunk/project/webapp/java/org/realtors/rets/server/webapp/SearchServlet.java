@@ -35,7 +35,7 @@ public class SearchServlet extends RetsServlet
             new SearchParameters(request.getParameterMap(),
                                  request.getRetsVersion(),
                                  getUser(request.getSession()));
-        LOG.debug(parameters);
+        LOG.info(parameters);
         SearchTransaction search = new SearchTransaction(parameters);
         search.execute(out, WebApp.getMetadataManager(),
                        RetsServer.getSessions());

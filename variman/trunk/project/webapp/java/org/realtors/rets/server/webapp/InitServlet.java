@@ -13,12 +13,15 @@ package org.realtors.rets.server.webapp;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Properties;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -136,6 +139,7 @@ public class InitServlet extends RetsServlet
     private void initLog4J()
     {
         initLogHome();
+        initLogLevels();
         String log4jInitFile =
             getContextInitParameter(
                 "log4j-init-file",
@@ -173,6 +177,38 @@ public class InitServlet extends RetsServlet
         System.setProperty(prefix + ".log.home", logHome);
     }
 
+    private void initLogLevels()
+    {
+        String logPropertiesFileName =
+            getContextInitParameter("rets-config-file",
+                                    "WEB-INF/rets/rets-logging.properties");
+        logPropertiesFileName = resolveFromConextRoot(logPropertiesFileName);
+        Properties logProperties = new Properties();
+        logProperties.setProperty(LOG_LEVEL, "debug");
+        logProperties.setProperty(LOG_SQL_LEVEL, "all");
+        try
+        {
+            File logPropertiesFile = new File(logPropertiesFileName);
+            if (logPropertiesFile.exists() && logPropertiesFile.canRead())
+            {
+                    logProperties.load(new FileInputStream(logPropertiesFile));
+            }
+        }
+        catch (IOException e)
+        {
+            // No logging setup, so just ignore
+        }
+        Enumeration e = logProperties.propertyNames();
+        while (e.hasMoreElements())
+        {
+            String name = (String) e.nextElement();
+            if (name.startsWith(WebApp.PROJECT_NAME + "."))
+            {
+                System.setProperty(name, logProperties.getProperty(name));
+            }
+        }
+    }
+
     private void initRetsConfiguration() throws ServletException
     {
         try
@@ -185,15 +221,15 @@ public class InitServlet extends RetsServlet
 
             String getObjectRoot = getGetObjectRoot();
             WebApp.setGetObjectRoot(getObjectRoot);
-            LOG.debug("GetObject root: " + getObjectRoot);
+            LOG.info("GetObject root: " + getObjectRoot);
 
             String photoPattern = mRetsConfig.getPhotoPattern();
             WebApp.setPhotoPattern(photoPattern);
-            LOG.debug("GetObject photo pattern: " + photoPattern);
+            LOG.info("GetObject photo pattern: " + photoPattern);
 
             String objectSetPattern = mRetsConfig.getObjectSetPattern();
             WebApp.setObjectSetPattern(objectSetPattern);
-            LOG.debug("GetObject object set pattern: " + objectSetPattern);
+            LOG.info("GetObject object set pattern: " + objectSetPattern);
 
             RetsServer.setSecurityConstraints(
                 mRetsConfig.getSecurityConstraints());
@@ -314,7 +350,7 @@ public class InitServlet extends RetsServlet
         {
             nonceTable.setInitialTimeout(
                 initialTimeout * DateUtils.MILLIS_IN_MINUTE);
-            LOG.debug("Set initial nonce timeout to " + initialTimeout +
+            LOG.info("Set initial nonce timeout to " + initialTimeout +
                       " minutes");
         }
 
@@ -323,7 +359,7 @@ public class InitServlet extends RetsServlet
         {
             nonceTable.setSuccessTimeout(
                 successTimeout * DateUtils.MILLIS_IN_MINUTE);
-            LOG.debug("Set success nonce timeout to " + successTimeout +
+            LOG.info("Set success nonce timeout to " + successTimeout +
                       " minutes");
         }
         WebApp.setNonceTable(nonceTable);
@@ -384,5 +420,8 @@ public class InitServlet extends RetsServlet
 
     private static final Logger LOG =
         Logger.getLogger(InitServlet.class);
+    private static final String LOG_LEVEL = WebApp.PROJECT_NAME + ".log.level";
+    private static final String LOG_SQL_LEVEL =
+        WebApp.PROJECT_NAME + ".log.sql_level";
     private RetsConfig mRetsConfig;
 }

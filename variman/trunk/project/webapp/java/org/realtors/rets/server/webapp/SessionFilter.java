@@ -73,12 +73,12 @@ public class SessionFilter implements Filter
         boolean isLoginPath = isLoginPath(contextUrl);
         if (isLoginPath && isSessionValid)
         {
-            LOG.debug("Logging in while session is valid, sending response");
+            LOG.info("Logging in while session is valid, sending response");
             sendAdditionalLoginNotPermitted(response);
         }
         else if (!isLoginPath && !isSessionValid)
         {
-            LOG.debug("Invalid session, sending response");
+            LOG.info("Invalid session, sending response");
             sendInvalidSession(response);
         }
         else
