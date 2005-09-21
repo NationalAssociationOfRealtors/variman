@@ -43,7 +43,6 @@ public class LogPanel extends AdminTab
         mLogLevelItems.add(new ComboItem("Debug", LOG_LEVEL_DEBUG));
         mLogLevel = new JComboBox();
         addAllItems(mLogLevel, mLogLevelItems);
-        mLogLevel.addActionListener(new OnLogLevelChanged());
         logConfig.addRow("Log Level:", mLogLevel, GridBagConstraints.NONE);
 
         mSqlLevelItems = new ArrayList();
@@ -51,7 +50,6 @@ public class LogPanel extends AdminTab
         mSqlLevelItems.add(new ComboItem("Disabled", SQL_LEVEL_DISABLED));
         mSqlLevel = new JComboBox();
         addAllItems(mSqlLevel, mSqlLevelItems);
-        mSqlLevel.addActionListener(new OnSqlLevelChanged());
         logConfig.addRow("SQL Logging:", mSqlLevel, GridBagConstraints.NONE);
 
         logConfig.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
@@ -68,6 +66,9 @@ public class LogPanel extends AdminTab
         logPanel.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         add(logPanel, BorderLayout.CENTER);
         refreshLevels();
+
+        mLogLevel.addActionListener(new OnLogLevelChanged());
+        mSqlLevel.addActionListener(new OnSqlLevelChanged());
     }
 
     private void addAllItems(JComboBox comboBox, List items)
@@ -81,16 +82,16 @@ public class LogPanel extends AdminTab
 
     private void readLoggingProperties()
     {
-        mLogPropertiesFileName = Admin.getLogConfigFile();
+        String logPropertiesFileName = Admin.getLogConfigFile();
+        mLogPropertiesFile = new File(logPropertiesFileName);
         mLogProperties = new Properties();
-        mLogProperties.setProperty(LOG_LEVEL, LOG_LEVEL_DEBUG);
+        mLogProperties.setProperty(LOG_LEVEL, LOG_LEVEL_NORMAL);
         mLogProperties.setProperty(SQL_LOG_LEVEL, SQL_LEVEL_ENABLED);
         try
         {
-            File logPropertiesFile = new File(mLogPropertiesFileName);
-            if (logPropertiesFile.exists() && logPropertiesFile.canRead())
+            if (mLogPropertiesFile.exists() && mLogPropertiesFile.canRead())
             {
-                    mLogProperties.load(new FileInputStream(logPropertiesFile));
+                    mLogProperties.load(new FileInputStream(mLogPropertiesFile));
             }
         }
         catch (IOException e)
@@ -103,9 +104,8 @@ public class LogPanel extends AdminTab
     {
         try
         {
-            File logPropertiesFile = new File(mLogPropertiesFileName);
             FileOutputStream outputStream =
-                new FileOutputStream(logPropertiesFile);
+                new FileOutputStream(mLogPropertiesFile);
             mLogProperties.store(outputStream, null);
         }
         catch (IOException e)
@@ -282,7 +282,7 @@ public class LogPanel extends AdminTab
     private List mLogLevelItems;
     private List mSqlLevelItems;
     private JTextArea mTextArea;
-    private String mLogPropertiesFileName;
+    private File mLogPropertiesFile;
     private Properties mLogProperties;
     private JComboBox mLogLevel;
     private JComboBox mSqlLevel;

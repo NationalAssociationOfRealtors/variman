@@ -184,7 +184,7 @@ public class InitServlet extends RetsServlet
                                     "WEB-INF/rets/rets-logging.properties");
         logPropertiesFileName = resolveFromConextRoot(logPropertiesFileName);
         Properties logProperties = new Properties();
-        logProperties.setProperty(LOG_LEVEL, "debug");
+        logProperties.setProperty(LOG_LEVEL, "info");
         logProperties.setProperty(LOG_SQL_LEVEL, "all");
         try
         {
