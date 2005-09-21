@@ -4,17 +4,18 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.sf.hibernate.HibernateException;
 import org.apache.log4j.Logger;
+
+import net.sf.hibernate.HibernateException;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.User;
@@ -27,9 +28,9 @@ import org.realtors.rets.server.UserUtils;
  * Time: 3:11:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class UsersPanel extends JPanel
+public class UsersPanel extends AdminTab
 {
-    public UsersPanel()
+    public UsersPanel(JMenu userMenu)
     {
         super(new BorderLayout());
         mUserListModel = new ListListModel();
@@ -65,14 +66,24 @@ public class UsersPanel extends JPanel
         splitPane.setDividerLocation(200);
         add(splitPane, BorderLayout.CENTER);
 
+        mUserMenu = userMenu;
+        mUserMenu.setEnabled(false);
         mPopup = new JPopupMenu();
+
         mAddUserAction = new AddUserAction();
+        mUserMenu.add(mAddUserAction);
         mPopup.add(mAddUserAction);
+
         mRemoveUserAction = new RemoveUserAction(this);
+        mUserMenu.add(mRemoveUserAction);
         mPopup.add(mRemoveUserAction);
+
         mChangePasswordAction = new ChangePasswordAction(this);
+        mUserMenu.add(mChangePasswordAction);
         mPopup.add(mChangePasswordAction);
+
         mEditUserAction = new EditUserAction(this);
+        mUserMenu.add(mEditUserAction);
         mPopup.add(mEditUserAction);
 
         PopupListener popupListener = new PopupListener();
@@ -121,27 +132,17 @@ public class UsersPanel extends JPanel
         return (Group) mGroupsList.getSelectedValue();
     }
 
-    public AddUserAction getAddUserAction()
+    public void tabSelected()
     {
-        return mAddUserAction;
+        mUserMenu.setEnabled(true);
     }
 
-    public RemoveUserAction getRemoveUserAction()
+    public void tabDeselected()
     {
-        return mRemoveUserAction;
+        mUserMenu.setEnabled(false);
     }
 
-    public ChangePasswordAction getChangePasswordAction()
-    {
-        return mChangePasswordAction;
-    }
-
-    public EditUserAction getEditUserAction()
-    {
-        return mEditUserAction;
-    }
-
-    public void populateList()
+    public void refreshTab()
     {
         final int selection = mUserList.getSelectedIndex();
         SwingWorker worker = new SwingWorker()
@@ -322,7 +323,7 @@ public class UsersPanel extends JPanel
                 SortedSet groups = UserUtils.getGroups(user);
                 groups.add(group);
                 UserUtils.updateGroups(user, groups);
-                mUsersPanel.populateList();
+                mUsersPanel.refreshTab();
             }
             catch (HibernateException e)
             {
@@ -356,7 +357,7 @@ public class UsersPanel extends JPanel
                 SortedSet groups = UserUtils.getGroups(user);
                 groups.remove(group);
                 UserUtils.updateGroups(user, groups);
-                mUsersPanel.populateList();
+                mUsersPanel.refreshTab();
             }
             catch (HibernateException e)
             {
@@ -385,4 +386,5 @@ public class UsersPanel extends JPanel
     private RemoveGroupButtonAction mRemoveGroupButtonAction;
     private ListListModel mUserListModel;
     private ListListModel mGroupsListModel;
+    private JMenu mUserMenu;
 }

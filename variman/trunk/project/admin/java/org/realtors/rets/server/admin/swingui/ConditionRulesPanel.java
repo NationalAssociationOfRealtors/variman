@@ -135,7 +135,7 @@ public class ConditionRulesPanel extends JPanel
             GroupRules rules = mGroupsPanel.getGroupRules();
             rules.addConditionRule(rule);
             Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
+            mGroupsPanel.refreshTab();
         }
 
         private GroupsPanel mGroupsPanel;
@@ -168,7 +168,7 @@ public class ConditionRulesPanel extends JPanel
             GroupRules rules = mGroupsPanel.getGroupRules();
             rules.removeConditionRule(rule);
             Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
+            mGroupsPanel.refreshTab();
         }
 
         private GroupsPanel mGroupsPanel;
@@ -196,7 +196,7 @@ public class ConditionRulesPanel extends JPanel
 
             dialog.updateRule(rule);
             Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
+            mGroupsPanel.refreshTab();
         }
 
         private GroupsPanel mGroupsPanel;

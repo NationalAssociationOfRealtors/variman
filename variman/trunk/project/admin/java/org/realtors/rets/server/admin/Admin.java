@@ -133,6 +133,16 @@ public class Admin
         return (System.getProperty("mrj.version") != null);
     }
 
+    public static void setLogConfigFile(String logConfigFile)
+    {
+        sLogConfigFile = logConfigFile;
+    }
+
+    public static String getLogConfigFile()
+    {
+        return sLogConfigFile;
+    }
+
     public static final String PROJECT_NAME = "variman";
     public static final String ADMIN_NAME = "Variman Admin";
     public static final String SERVER_NAME = "Variman";
@@ -145,4 +155,5 @@ public class Admin
     private static boolean sDebugEnabled;
     private static String sVersion;
     private static String sBuildDate;
+    private static String sLogConfigFile;
 }

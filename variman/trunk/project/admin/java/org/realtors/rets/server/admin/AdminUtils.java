@@ -60,6 +60,11 @@ public class AdminUtils
             Admin.setRetsConfig(retsConfig);
             Admin.setRetsConfigChanged(true);
         }
+
+        File logConfigFile =
+            new File(Admin.getHomeDirectory() +
+                     "/webapp/WEB-INF/rets/rets-logging.properties");
+        Admin.setLogConfigFile(logConfigFile.getAbsolutePath());
     }
 
     public static void initAdminProperties() throws RetsServerException

@@ -3,10 +3,10 @@ package org.realtors.rets.server.admin.swingui;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.List;
-import java.util.Date;
 import java.text.DateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -22,9 +22,9 @@ import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.config.TimeRestriction;
 
-public class GroupsPanel extends JPanel
+public class GroupsPanel extends AdminTab
 {
-    public GroupsPanel()
+    public GroupsPanel(JMenu groupMenu)
     {
         super(new BorderLayout());
         mGroupList = new JList();
@@ -55,18 +55,25 @@ public class GroupsPanel extends JPanel
         splitPane.setDividerLocation(200);
         add(splitPane, BorderLayout.CENTER);
 
+        mGroupMenu = groupMenu;
+        mGroupMenu.setEnabled(false);
         mPopup = new JPopupMenu();
+
         mAddGroupAction = new AddGroupAction();
+        mGroupMenu.add(mAddGroupAction);
         mPopup.add(mAddGroupAction);
+
         mRemoveGroupAction = new RemoveGroupAction(this);
+        mGroupMenu.add(mRemoveGroupAction);
         mPopup.add(mRemoveGroupAction);
+
         mEditGroupAction = new EditGroupAction(this);
+        mGroupMenu.add(mEditGroupAction);
         mPopup.add(mEditGroupAction);
 
         PopupListener popupListener = new PopupListener();
         mGroupList.addMouseListener(popupListener);
         splitPane.addMouseListener(popupListener);
-
     }
 
     private JComponent createRulesPanel()
@@ -77,21 +84,6 @@ public class GroupsPanel extends JPanel
         mConditionRulesPanel = new ConditionRulesPanel(this);
         tabbedPane.addTab("Condition Rules", mConditionRulesPanel);
         return tabbedPane;
-    }
-
-    public Action getAddGroupAction()
-    {
-        return mAddGroupAction;
-    }
-
-    public Action getRemoveGroupAction()
-    {
-        return mRemoveGroupAction;
-    }
-
-    public Action getEditGroupAction()
-    {
-        return mEditGroupAction;
     }
 
     public GroupRules getGroupRules()
@@ -167,7 +159,17 @@ public class GroupsPanel extends JPanel
         mConditionRulesPanel.updateRulesList(mGroupRules.getConditionRules());
     }
 
-    public void populateList()
+    public void tabSelected()
+    {
+        mGroupMenu.setEnabled(true);
+    }
+
+    public void tabDeselected()
+    {
+        mGroupMenu.setEnabled(false);
+    }
+
+    public void refreshTab()
     {
         final int selection = mGroupList.getSelectedIndex();
         SwingWorker worker = new SwingWorker()
@@ -273,4 +275,5 @@ public class GroupsPanel extends JPanel
     private FilterRulesPanel mFilterRulesPanel;
     private ConditionRulesPanel mConditionRulesPanel;
     private JLabel mTimeRestriction;
+    private JMenu mGroupMenu;
 }

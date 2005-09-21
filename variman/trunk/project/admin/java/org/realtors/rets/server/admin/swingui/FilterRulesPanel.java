@@ -142,7 +142,7 @@ public class FilterRulesPanel extends JPanel
             GroupRules rules = mGroupsPanel.getGroupRules();
             rules.addFilterRule(filterRule);
             Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
+            mGroupsPanel.refreshTab();
         }
 
         private GroupsPanel mGroupsPanel;
@@ -175,7 +175,7 @@ public class FilterRulesPanel extends JPanel
             GroupRules rules = mGroupsPanel.getGroupRules();
             rules.removeFilterRule(rule);
             Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
+            mGroupsPanel.refreshTab();
         }
 
         private GroupsPanel mGroupsPanel;
@@ -203,7 +203,7 @@ public class FilterRulesPanel extends JPanel
 
             dialog.updateRule(filterRule);
             Admin.setRetsConfigChanged(true);
-            mGroupsPanel.populateList();
+            mGroupsPanel.refreshTab();
         }
 
         private GroupsPanel mGroupsPanel;

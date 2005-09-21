@@ -65,7 +65,7 @@ public class RemoveGroupAction extends AbstractAction
             securityConstraints.removeRulesForGroup(group.getName());
             Admin.setRetsConfigChanged(true);
 
-            mGroupsPanel.populateList();
+            mGroupsPanel.refreshTab();
         }
         catch (HibernateException e)
         {

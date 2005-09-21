@@ -24,7 +24,7 @@ import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.RetsConfig;
 
-public class ConfigurationPanel extends JPanel
+public class ConfigurationPanel extends AdminTab
 {
     public ConfigurationPanel()
     {

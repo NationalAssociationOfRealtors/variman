@@ -15,8 +15,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -63,37 +66,34 @@ public class AdminFrame extends JFrame
             menu.add(new QuitAction());
         }
 
+        JMenu editMenu = new JMenu("Edit");
+        menuBar.add(editMenu);
+
         menu = new JMenu("Database");
         menuBar.add(menu);
         menu.add(new InitDatabaseAction());
         menu.add(new CreateSchemaAction());
 
         setJMenuBar(menuBar);
+        JMenu userMenu = new JMenu("User");
+        menuBar.add(userMenu);
+        JMenu groupMenu = new JMenu("Group");
+        menuBar.add(groupMenu);
 
+        mAdminTabs = new ArrayList();
         mTabbedPane = new JTabbedPane();
         mConfigurationPanel = new ConfigurationPanel();
-        mTabbedPane.addTab("Configuration", mConfigurationPanel);
-        mUsersPanel = new UsersPanel();
-        mTabbedPane.addTab("Users", mUsersPanel);
-        mGroupsPanel = new GroupsPanel();
-        mTabbedPane.addTab("Groups", mGroupsPanel);
+        addTab("Configuration", mConfigurationPanel);
+        mUsersPanel = new UsersPanel(userMenu);
+        addTab("Users", mUsersPanel);
+        mGroupsPanel = new GroupsPanel(groupMenu);
+        addTab("Groups", mGroupsPanel);
+        mLogPanel = new LogPanel();
+        addTab("Logging", mLogPanel);
+        mCurrentAdminTab = mUsersPanel;
         mTabbedPane.addChangeListener(new OnTabChanged());
         content.add(mTabbedPane, BorderLayout.CENTER);
-
-        mUserMenu = new JMenu("User");
-        menuBar.add(mUserMenu);
-        mUserMenu.add(mUsersPanel.getAddUserAction());
-        mUserMenu.add(mUsersPanel.getRemoveUserAction());
-        mUserMenu.add(mUsersPanel.getChangePasswordAction());
-        mUserMenu.add(mUsersPanel.getEditUserAction());
-        mUserMenu.setEnabled(false);
-
-        mGroupMenu = new JMenu("Group");
-        menuBar.add(mGroupMenu);
-        mGroupMenu.add(mGroupsPanel.getAddGroupAction());
-        mGroupMenu.add(mGroupsPanel.getRemoveGroupAction());
-        mGroupMenu.add(mGroupsPanel.getEditGroupAction());
-        mGroupMenu.setEnabled(false);
+        mLogPanel.addToEditMenu(editMenu);
 
         if (!Admin.isMacOS())
         {
@@ -113,6 +113,12 @@ public class AdminFrame extends JFrame
         {
             MacUtils.registerApplicationListeners();
         }
+    }
+
+    public void addTab(String name, AdminTab tab)
+    {
+        mAdminTabs.add(tab);
+        mTabbedPane.add(name, tab);
     }
 
     private void initConfig()
@@ -185,12 +191,12 @@ public class AdminFrame extends JFrame
 
     public void refreshUsers()
     {
-        mUsersPanel.populateList();
+        mUsersPanel.refreshTab();
     }
 
     public void refreshGroups()
     {
-        mGroupsPanel.populateList();
+        mGroupsPanel.refreshTab();
     }
 
     private class OnClose extends WindowAdapter
@@ -259,36 +265,27 @@ public class AdminFrame extends JFrame
     {
         public void stateChanged(ChangeEvent event)
         {
-            mUserMenu.setEnabled(false);
-            mGroupMenu.setEnabled(false);
-
             int tab = mTabbedPane.getSelectedIndex();
-            if (tab == USERS_TAB)
-            {
-                mUsersPanel.populateList();
-                mUserMenu.setEnabled(true);
-            }
-            else if (tab == GROUPS_TAB)
-            {
-                mGroupsPanel.populateList();
-                mGroupMenu.setEnabled(true);
-            }
+            mCurrentAdminTab.tabDeselected();
+            mCurrentAdminTab = (AdminTab) mAdminTabs.get(tab);
+            mCurrentAdminTab.tabSelected();
+            mCurrentAdminTab.refreshTab();
         }
     }
-
-    private static final int USERS_TAB = 1;
-    private static final int GROUPS_TAB = 2;
 
     private static final Logger LOG =
         Logger.getLogger(AdminFrame.class);
 
     private static AdminFrame sInstance;
-    private JTabbedPane mTabbedPane;
-    private JLabel mStatusBar;
-    private UsersPanel mUsersPanel;
-    private JMenu mUserMenu;
     private int mMenuShortcutKeyMask;
+    private JLabel mStatusBar;
+
+    private JTabbedPane mTabbedPane;
+    private List mAdminTabs;
+    private AdminTab mCurrentAdminTab;
+    
     private ConfigurationPanel mConfigurationPanel;
+    private UsersPanel mUsersPanel;
     private GroupsPanel mGroupsPanel;
-    private JMenu mGroupMenu;
+    private LogPanel mLogPanel;
 }
