@@ -275,7 +275,11 @@ public class InitServlet extends RetsServlet
         {
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
-            cfg.addJar(WebApp.PROJECT_NAME + "-hbm-xml.jar");
+	    
+	    File hbmXmlFile = new File(resolveFromConextRoot(
+	        "WEB-INF/classes/" + WebApp.PROJECT_NAME + "-hbm-xml.jar"));
+	    LOG.debug("HBM file: " + hbmXmlFile);
+            cfg.addJar(hbmXmlFile);
             LOG.info("JDBC URL: " + mRetsConfig.getDatabase().getUrl());
             cfg.setProperties(mRetsConfig.createHibernateProperties());
             RetsServer.setSessions(cfg.buildSessionFactory());

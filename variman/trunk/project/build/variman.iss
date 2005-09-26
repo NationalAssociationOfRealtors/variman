@@ -20,7 +20,7 @@ MinVersion=0,4
 ; Compression=none
 
 [Files]
-Source: "*"; Excludes: "\webapp\WEB-INF\rets\rets-config.xml"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Check: StopVarimanService
+Source: "*"; Excludes: "\webapp\WEB-INF\rets\rets-config.xml,\webapp\WEB-INF\rets\rets-logging.properties,\logs\%"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Check: StopVarimanService
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
