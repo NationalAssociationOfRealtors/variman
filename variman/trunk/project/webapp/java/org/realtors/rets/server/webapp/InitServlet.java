@@ -127,7 +127,7 @@ public class InitServlet extends RetsServlet
         return value;
     }
 
-    private String resolveFromConextRoot(String file)
+    private String resolveFromContextRoot(String file)
     {
         return IOUtils.resolve(getServletContext().getRealPath("/"), file);
     }
@@ -144,7 +144,7 @@ public class InitServlet extends RetsServlet
             getContextInitParameter(
                 "log4j-init-file",
                 "WEB-INF/classes/"+ WebApp.PROJECT_NAME + "-webapp-log4j.xml");
-        log4jInitFile = resolveFromConextRoot(log4jInitFile);
+        log4jInitFile = resolveFromContextRoot(log4jInitFile);
         WebApp.setLog4jFile(log4jInitFile);
         WebApp.loadLog4j();
     }
@@ -182,7 +182,7 @@ public class InitServlet extends RetsServlet
         String logPropertiesFileName =
             getContextInitParameter("rets-config-file",
                                     "WEB-INF/rets/rets-logging.properties");
-        logPropertiesFileName = resolveFromConextRoot(logPropertiesFileName);
+        logPropertiesFileName = resolveFromContextRoot(logPropertiesFileName);
         Properties logProperties = new Properties();
         logProperties.setProperty(LOG_LEVEL, "info");
         logProperties.setProperty(LOG_SQL_LEVEL, "all");
@@ -216,7 +216,7 @@ public class InitServlet extends RetsServlet
             String configFile =
                 getContextInitParameter("rets-config-file",
                                         "WEB-INF/rets/rets-config.xml");
-            configFile = resolveFromConextRoot(configFile);
+            configFile = resolveFromContextRoot(configFile);
             mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
 
             String getObjectRoot = getGetObjectRoot();
@@ -253,19 +253,16 @@ public class InitServlet extends RetsServlet
         if (!getObjectRootFile.exists())
         {
             LOG.warn("GetObject root does not exist: " + getObjectRoot);
-            getObjectRoot = "";
-        }
+       }
         else if (!getObjectRootFile.isDirectory())
         {
             LOG.warn("GetObject root is not a directory: " +
                      getObjectRoot);
-            getObjectRoot = "";
-        }
+       }
         else if (!getObjectRootFile.canRead())
         {
             LOG.warn("GetObject root is not readable: " + getObjectRoot);
-            getObjectRoot = "";
-        }
+       }
         return getObjectRoot;
     }
 
@@ -275,10 +272,9 @@ public class InitServlet extends RetsServlet
         {
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
-	    
-	    File hbmXmlFile = new File(resolveFromConextRoot(
-	        "WEB-INF/classes/" + WebApp.PROJECT_NAME + "-hbm-xml.jar"));
-	    LOG.debug("HBM file: " + hbmXmlFile);
+            File hbmXmlFile = new File(resolveFromContextRoot(
+	            "WEB-INF/classes/" + WebApp.PROJECT_NAME + "-hbm-xml.jar"));
+	        LOG.debug("HBM file: " + hbmXmlFile);
             cfg.addJar(hbmXmlFile);
             LOG.info("JDBC URL: " + mRetsConfig.getDatabase().getUrl());
             cfg.setProperties(mRetsConfig.createHibernateProperties());
@@ -335,7 +331,7 @@ public class InitServlet extends RetsServlet
         try
         {
             String metadataDir = mRetsConfig.getMetadataDir();
-            metadataDir = resolveFromConextRoot(metadataDir);
+            metadataDir = resolveFromContextRoot(metadataDir);
             LOG.info("Reading metadata from: " + metadataDir);
             MetadataLoader loader = new MetadataLoader();
             return loader.parseMetadataDirectory(metadataDir);
