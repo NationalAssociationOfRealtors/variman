@@ -23,9 +23,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.LogPropertiesUtils;
+import org.realtors.rets.server.LogPropertiesConstants;
 import org.realtors.rets.server.admin.Admin;
 
-public class LogPanel extends AdminTab
+public class LogPanel extends AdminTab implements LogPropertiesConstants
 {
     public LogPanel()
     {
@@ -37,6 +39,18 @@ public class LogPanel extends AdminTab
 
         content.add(new HeaderPanel("Logging Parameters"));
         TextValuePanel logConfig = new TextValuePanel();
+
+        mLogAppenderItems = new ArrayList();
+        mLogAppenderItems.add(
+            new ComboItem("Roll By Size (Cleans up automatically)",
+                          LOG_APPENDER_SIZE));
+        mLogAppenderItems.add(
+            new ComboItem("Roll Daily (Requires manual clean up)",
+                          LOG_APPENDER_DAILY));
+        mLogAppender = new JComboBox();
+        addAllItems(mLogAppender, mLogAppenderItems);
+        logConfig.addRow("Rotation Policy:", mLogAppender,
+                         GridBagConstraints.NONE);
 
         mLogLevelItems = new ArrayList();
         mLogLevelItems.add(new ComboItem("Normal", LOG_LEVEL_NORMAL));
@@ -67,6 +81,7 @@ public class LogPanel extends AdminTab
         add(logPanel, BorderLayout.CENTER);
         refreshLevels();
 
+        mLogAppender.addActionListener(new OnLogAppenderChanged());
         mLogLevel.addActionListener(new OnLogLevelChanged());
         mSqlLevel.addActionListener(new OnSqlLevelChanged());
     }
@@ -84,9 +99,7 @@ public class LogPanel extends AdminTab
     {
         String logPropertiesFileName = Admin.getLogConfigFile();
         mLogPropertiesFile = new File(logPropertiesFileName);
-        mLogProperties = new Properties();
-        mLogProperties.setProperty(LOG_LEVEL, LOG_LEVEL_NORMAL);
-        mLogProperties.setProperty(SQL_LOG_LEVEL, SQL_LEVEL_ENABLED);
+        mLogProperties = LogPropertiesUtils.createDefaultLoggingProperties();
         try
         {
             if (mLogPropertiesFile.exists() && mLogPropertiesFile.canRead())
@@ -116,8 +129,12 @@ public class LogPanel extends AdminTab
 
     private void refreshLevels()
     {
+        String appender = mLogProperties.getProperty(LOG_APPENDER);
+        ComboItem item = findByValue(mLogAppenderItems, appender);
+        mLogAppender.setSelectedItem(item);
+
         String logLevel = mLogProperties.getProperty(LOG_LEVEL);
-        ComboItem item = findByValue(mLogLevelItems, logLevel);
+        item = findByValue(mLogLevelItems, logLevel);
         mLogLevel.setSelectedItem(item);
 
         String sqlLevel = mLogProperties.getProperty(SQL_LOG_LEVEL);
@@ -212,6 +229,16 @@ public class LogPanel extends AdminTab
         editMenu.add(action);
     }
 
+    private class OnLogAppenderChanged extends AbstractAction
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            ComboItem item = (ComboItem) mLogAppender.getSelectedItem();
+            mLogProperties.setProperty(LOG_APPENDER, item.value);
+            writeLoggingProperties();
+        }
+    }
+
     private class OnLogLevelChanged extends AbstractAction
     {
         public void actionPerformed(ActionEvent event)
@@ -272,12 +299,6 @@ public class LogPanel extends AdminTab
 
     private static final Logger LOG =
         Logger.getLogger(LogPanel.class);
-    private static final String LOG_LEVEL = "variman.log.level";
-    private static final String LOG_LEVEL_NORMAL = "info";
-    private static final String LOG_LEVEL_DEBUG = "debug";
-    private static final String SQL_LOG_LEVEL = "variman.log.sql_level";
-    private static final String SQL_LEVEL_ENABLED = "all";
-    private static final String SQL_LEVEL_DISABLED = "none";
 
     private List mLogLevelItems;
     private List mSqlLevelItems;
@@ -286,4 +307,6 @@ public class LogPanel extends AdminTab
     private Properties mLogProperties;
     private JComboBox mLogLevel;
     private JComboBox mSqlLevel;
+    private ArrayList mLogAppenderItems;
+    private JComboBox mLogAppender;
 }

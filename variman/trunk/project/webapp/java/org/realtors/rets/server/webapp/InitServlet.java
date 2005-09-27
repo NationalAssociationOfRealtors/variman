@@ -38,6 +38,7 @@ import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.LogPropertiesUtils;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MClass;
@@ -142,8 +143,8 @@ public class InitServlet extends RetsServlet
         initLogLevels();
         String log4jInitFile =
             getContextInitParameter(
-                "log4j-init-file",
-                "WEB-INF/classes/"+ WebApp.PROJECT_NAME + "-webapp-log4j.xml");
+                "log4j-init-file", "WEB-INF/classes/" +
+                WebApp.PROJECT_NAME + "-webapp-log4j.properties");
         log4jInitFile = resolveFromContextRoot(log4jInitFile);
         WebApp.setLog4jFile(log4jInitFile);
         WebApp.loadLog4j();
@@ -183,9 +184,8 @@ public class InitServlet extends RetsServlet
             getContextInitParameter("rets-config-file",
                                     "WEB-INF/rets/rets-logging.properties");
         logPropertiesFileName = resolveFromContextRoot(logPropertiesFileName);
-        Properties logProperties = new Properties();
-        logProperties.setProperty(LOG_LEVEL, "info");
-        logProperties.setProperty(LOG_SQL_LEVEL, "all");
+        Properties logProperties =
+            LogPropertiesUtils.createDefaultLoggingProperties();
         try
         {
             File logPropertiesFile = new File(logPropertiesFileName);
@@ -204,7 +204,9 @@ public class InitServlet extends RetsServlet
             String name = (String) e.nextElement();
             if (name.startsWith(WebApp.PROJECT_NAME + "."))
             {
-                System.setProperty(name, logProperties.getProperty(name));
+                String value = logProperties.getProperty(name);
+                log("Set loging property: " + name + " to " + value);
+                System.setProperty(name, value);
             }
         }
     }
@@ -420,8 +422,5 @@ public class InitServlet extends RetsServlet
 
     private static final Logger LOG =
         Logger.getLogger(InitServlet.class);
-    private static final String LOG_LEVEL = WebApp.PROJECT_NAME + ".log.level";
-    private static final String LOG_SQL_LEVEL =
-        WebApp.PROJECT_NAME + ".log.sql_level";
     private RetsConfig mRetsConfig;
 }
