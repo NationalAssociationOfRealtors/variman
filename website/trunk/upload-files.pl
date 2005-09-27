@@ -8,6 +8,17 @@ use vars qw($COMMAND $opt_help $opt_dry_run $opt_user);
 
 $COMMAND = basename($0);
 
+sub sys
+{
+    my ($command) = @_;
+    if ($opt_dry_run) {
+        print "$command\n";
+    }
+    else {
+        system "$command";
+    }
+}
+
 sub usage
 {
   print STDERR <<USAGE;
@@ -55,6 +66,9 @@ if ($opt_user ne "")
 {
     $opt_user .= "@"
 }
+
+sys("chmod a+r files/*");
+sys("chmod a-x files/*");
 
 my $remote_host = "dargo.crt.realtors.org";
 my $remote_home = "/www/www.crt.realtors.org/www.crt.realtors.org/projects/rets/variman";
