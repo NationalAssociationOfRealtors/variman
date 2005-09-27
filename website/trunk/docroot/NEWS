@@ -1,3 +1,13 @@
+Version 2.1.7 - 27 September 2005
+
+  * Update rets-client to warn on metadata parse errors.
+  * Report proper SYSTEM metadata version in Login transaction.
+  * Decode to long values, then short values for COMPACT-DECODED.
+  * Add option to roll log file over every week, instead of by size.
+  * Make logging options configurable via administration GUI.
+  * Add an optional separate log file just for logging DMQL and SQL only.
+  * Add per-group time restrictions.
+
 Version 2.1.6 - 28 June 2005
 
   * Fixed digest authorization for URIs with query strings.
