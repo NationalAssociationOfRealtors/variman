@@ -1,0 +1,7 @@
+A Java Runtime Environment (JRE) or Java Development Kit (JDK),
+version 1.4 or higher is required.  If you need to install it,
+download from:
+
+http://java.sun.com/j2se/
+
+You will not be able to proceed until you have Java installed.
