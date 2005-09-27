@@ -17,5 +17,5 @@ public interface LogPropertiesConstants
     String LOG_LEVEL_DEBUG = "debug";
     String SQL_LOG_LEVEL = "variman.log.sql_level";
     String SQL_LEVEL_ENABLED = "all";
-    String SQL_LEVEL_DISABLED = "none";
+    String SQL_LEVEL_DISABLED = "off";
 }

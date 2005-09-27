@@ -1,13 +1,12 @@
-Version 2.1.7 - xxx
+Version 2.1.7 - 27 September 2005
 
   * Update rets-client to warn on metadata parse errors.
   * Report proper SYSTEM metadata version in Login transaction.
   * Decode to long values, then short values for COMPACT-DECODED.
-  * Roll log file over every week, instead of at 1MB.
-
-    WARNING: Log files do not get automatically deleted anymore.  The
-    server administrator must delete old log files to prevent
-    indenfinte log file buildup.
+  * Add option to roll log file over every week, instead of by size.
+  * Make logging options configurable via administration GUI.
+  * Add an optional separate log file just for logging DMQL and SQL only.
+  * Add per-group time restrictions.
 
 Version 2.1.6 - 28 June 2005
 

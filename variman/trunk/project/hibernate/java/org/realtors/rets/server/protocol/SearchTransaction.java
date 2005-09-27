@@ -319,9 +319,11 @@ public class SearchTransaction
         {
             select = "<empty>";
         }
-        SQL_LOG.info("SELECT: " + select + " " +
-                     "DMQL: " + mParameters.getQuery() + " " +
-                     "SQL: " + sql);
+        String message = "SELECT: " + select + " " +
+                         "DMQL: " + mParameters.getQuery() + " " +
+                         "SQL: " + sql;
+        SQL_LOG.info(message);
+        LOG.info(message);
     }
 
     private void printResults(PrintWriter out, List columns,
