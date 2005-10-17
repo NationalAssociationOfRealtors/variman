@@ -32,7 +32,7 @@
         OS X, and anywhere else a 1.3 version of Java is available.
       </li>
       <li>
-        Minimal external intallation requirements.  Embedded Tomcat
+        Minimal external installation requirements.  Embedded Tomcat
         version requires only Java and a relational database.
       </li>
       <li>
