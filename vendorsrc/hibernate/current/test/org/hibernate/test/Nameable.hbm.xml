@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping>
+
+    <class name="org.hibernate.test.Nameable">
+        <id name="key" column="key_">
+        	<generator class="native"/>
+         </id>
+        <discriminator column="clazz"/>
+        <property name="name"/>
+        <subclass name="org.hibernate.test.BasicNameable"/>
+    </class>
+
+</hibernate-mapping>

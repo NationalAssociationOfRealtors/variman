@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping>
+
+        <joined-subclass 
+        	name="org.hibernate.test.Mono" 
+        	extends="org.hibernate.test.Top"
+        	table="mono"
+        	dynamic-insert="true" 
+    		dynamic-update="true">
+        	<key column="superid"/>
+        	<set name="strings" table="monostrings">
+        		<key column="monoid_"/>
+        		<element type="string" column="str_"/>
+        	</set>
+        </joined-subclass>
+
+
+</hibernate-mapping>

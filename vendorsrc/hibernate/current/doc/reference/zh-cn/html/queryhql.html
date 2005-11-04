@@ -1,0 +1,434 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>&#31532;&nbsp;11&nbsp;&#31456;&nbsp;Hibernate&#26597;&#35810;&#35821;&#35328;(Query Language), &#21363;HQL</title><link rel="stylesheet" href="../shared/css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="up" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="previous" href="transactions.html" title="&#31532;&nbsp;10&nbsp;&#31456;&nbsp;&#20107;&#21153;&#21644;&#24182;&#34892;&#65288;Transactions And Concurrency&#65289;"><link rel="next" href="querycriteria.html" title="&#31532;&nbsp;12&nbsp;&#31456;&nbsp;&#26465;&#20214;&#26597;&#35810;(Criteria Query)"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&#31532;&nbsp;11&nbsp;&#31456;&nbsp;Hibernate&#26597;&#35810;&#35821;&#35328;(Query Language), &#21363;HQL</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="transactions.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="querycriteria.html">&#19979;&#19968;&#39029;</a></td></tr></table><hr></div><div class="chapter" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title"><a name="queryhql"></a>&#31532;&nbsp;11&nbsp;&#31456;&nbsp;Hibernate&#26597;&#35810;&#35821;&#35328;(Query Language), &#21363;HQL</h2></div></div><div></div></div><p>
+    Hibernate&#35013;&#22791;&#20102;&#19968;&#31181;&#26497;&#20026;&#26377;&#21147;&#30340;&#26597;&#35810;&#35821;&#35328;&#65292;&#65288;&#26377;&#24847;&#22320;&#65289;&#30475;&#19978;&#21435;&#24456;&#20687;SQL&#12290;&#20294;&#26159;&#21035;&#34987;&#35821;&#27861;&#33945;&#34109;&#65292;HQL&#26159;&#23436;&#20840;&#38754;&#21521;&#23545;&#35937;&#30340;&#65292;&#20855;&#22791;&#32487;&#25215;&#12289;&#22810;&#24577;&#21644;&#20851;&#32852;&#31561;&#29305;&#24615;&#12290;
+    </p><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-casesensitivity"></a>11.1.&nbsp;&#22823;&#23567;&#20889;&#25935;&#24863;&#24615;(Case Sensitivity)</h2></div></div><div></div></div><p>
+            &#38500;&#20102;Java&#31867;&#21644;&#23646;&#24615;&#21517;&#31216;&#22806;&#65292;&#26597;&#35810;&#37117;&#26159;&#22823;&#23567;&#20889;&#19981;&#25935;&#24863;&#30340;&#12290;
+            &#25152;&#20197;&#65292; <tt class="literal">SeLeCT</tt> &#21644;
+            <tt class="literal">sELEct</tt> &#20197;&#21450;
+            <tt class="literal">SELECT</tt> &#30456;&#21516;&#30340;&#65292;&#20294;&#26159;
+            <tt class="literal">net.sf.hibernate.eg.FOO</tt> &#21644;
+            <tt class="literal">net.sf.hibernate.eg.Foo</tt> &#26159;&#19981;&#21516;&#30340;&#65292;
+            <tt class="literal">foo.barSet</tt> &#21644;
+            <tt class="literal">foo.BARSET</tt>&#20063;&#26159;&#19981;&#21516;&#30340;&#12290;
+        </p><p>
+            &#26412;&#25163;&#20876;&#20351;&#29992;&#23567;&#20889;&#30340;HQL&#20851;&#38190;&#35789;&#12290;&#26377;&#20123;&#29992;&#25143;&#35748;&#20026;&#22312;&#26597;&#35810;&#20013;&#20351;&#29992;&#22823;&#20889;&#30340;&#20851;&#38190;&#23383;&#26356;&#21152;&#26131;&#35835;&#65292;&#20294;&#26159;&#25105;&#20204;&#35748;&#20026;&#23884;&#20837;&#22312;Java&#20195;&#30721;&#20013;&#36825;&#26679;&#24456;&#38590;&#30475;&#12290;            
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-from"></a>11.2.&nbsp;from &#23376;&#21477;</h2></div></div><div></div></div><p>
+            &#21487;&#33021;&#26368;&#31616;&#21333;&#30340;Hibernate&#26597;&#35810;&#26159;&#36825;&#26679;&#30340;&#24418;&#24335;&#65306;
+        </p><pre class="programlisting">from eg.Cat</pre><p>
+            &#23427;&#31616;&#21333;&#30340;&#36820;&#22238;&#25152;&#26377;<tt class="literal">eg.Cat</tt>&#31867;&#30340;&#23454;&#20363;&#12290;
+        </p><p>
+            &#22823;&#37096;&#20998;&#24773;&#20917;&#19979;&#65292;&#20320;&#38656;&#35201;&#36171;&#20104;&#23427;&#19968;&#20010;<span class="emphasis"><em>&#21035;&#21517;&#65288;alias&#65289;</em></span>&#65292;&#22240;&#20026;&#20320;&#22312;&#26597;&#35810;&#30340;&#20854;&#20182;&#22320;&#26041;&#20063;&#20250;&#24341;&#29992;&#36825;&#20010;<tt class="literal">Cat</tt>&#12290;
+        </p><pre class="programlisting">from eg.Cat as cat</pre><p>
+            &#19978;&#38754;&#30340;&#35821;&#21477;&#20026;<tt class="literal">Cat</tt>&#36171;&#20104;&#20102;&#19968;&#20010;&#21035;&#21517;<tt class="literal">cat</tt> &#12290;&#25152;&#20197;&#21518;&#38754;&#30340;&#26597;&#35810;&#21487;&#20197;&#29992;&#36825;&#20010;&#31616;&#21333;&#30340;&#21035;&#21517;&#20102;&#12290;<tt class="literal">as</tt>&#20851;&#38190;&#23383;&#26159;&#21487;&#20197;&#30465;&#30053;&#30340;&#65292;&#25105;&#20204;&#20063;&#21487;&#20197;&#20889;&#25104;&#36825;&#26679;&#65306;
+        </p><pre class="programlisting">from eg.Cat cat</pre><p>
+            &#21487;&#20197;&#20986;&#29616;&#22810;&#20010;&#31867;&#65292;&#32467;&#26524;&#26159;&#23427;&#20204;&#30340;&#31515;&#21345;&#23572;&#31215;&#65292;&#25110;&#32773;&#31216;&#20026;&#8220;&#20132;&#21449;&#8221;&#36830;&#25509;&#12290;
+        </p><pre class="programlisting">from Formula, Parameter</pre><pre class="programlisting">from Formula as form, Parameter as param</pre><p>
+            &#35753;&#26597;&#35810;&#20013;&#30340;&#21035;&#21517;&#26381;&#20174;&#39318;&#23383;&#27597;&#23567;&#20889;&#30340;&#35268;&#21017;&#65292;&#25105;&#20204;&#35748;&#20026;&#36825;&#26159;&#19968;&#20010;&#22909;&#20064;&#24815;&#12290;&#36825;&#21644;Java&#23545;&#23616;&#37096;&#21464;&#37327;&#30340;&#21629;&#21517;&#35268;&#33539;&#26159;&#19968;&#33268;&#30340;&#12290;(&#27604;&#22914;&#65292;<tt class="literal">domesticCat</tt>).
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-joins"></a>11.3.&nbsp;&#32852;&#21512;&#65288;Associations&#65289;&#21644;&#36830;&#25509;&#65288;joins&#65289;</h2></div></div><div></div></div><p>
+            &#20320;&#21487;&#20197;&#20351;&#29992;<tt class="literal">join</tt>&#23450;&#20041;&#20004;&#20010;&#23454;&#20307;&#30340;&#36830;&#25509;&#65292;&#21516;&#26102;&#25351;&#26126;&#21035;&#21517;&#12290;
+        </p><pre class="programlisting">from eg.Cat as cat 
+    inner join cat.mate as mate
+    left outer join cat.kittens as kitten
+
+from eg.Cat as cat left join cat.mate.kittens as kittens
+
+from Formula form full join form.parameter param</pre><p>
+            &#25903;&#25345;&#30340;&#36830;&#25509;&#31867;&#22411;&#26159;&#20174;ANSI SQL&#20511;&#29992;&#30340;&#65306;
+        </p><div class="itemizedlist"><ul type="disc" compact><li><p>
+                    <tt class="literal">&#20869;&#36830;&#25509;&#65292;inner join</tt>
+                </p></li><li><p>
+                    <tt class="literal">&#24038;&#22806;&#36830;&#25509;&#65292;left outer join</tt>
+                </p></li><li><p>
+                    <tt class="literal">&#21491;&#22806;&#36830;&#25509;&#65292;right outer join</tt>
+                </p></li><li><p>
+                    <tt class="literal">&#20840;&#36830;&#25509;&#65292;full join</tt> (&#19981;&#24120;&#20351;&#29992;)
+                </p></li></ul></div><p>
+            <tt class="literal">inner join</tt>, <tt class="literal">left outer join</tt> &#21644;
+            <tt class="literal">right outer join</tt> &#37117;&#21487;&#20197;&#31616;&#20889;&#12290;
+        </p><pre class="programlisting">from eg.Cat as cat 
+    join cat.mate as mate
+    left join cat.kittens as kitten</pre><p>
+            &#24182;&#19988;&#65292;&#21152;&#19978; "fetch"&#21518;&#32512;&#30340;&#25235;&#21462;&#36830;&#25509;&#21487;&#20197;&#35753;&#32852;&#21512;&#30340;&#23545;&#35937;&#38543;&#30528;&#23427;&#20204;&#30340;&#29238;&#23545;&#35937;&#30340;&#21021;&#22987;&#21270;&#32780;&#21021;&#22987;&#21270;&#65292;&#21482;&#38656;&#35201;&#19968;&#20010;select&#35821;&#21477;&#12290;&#36825;&#22312;&#21021;&#22987;&#21270;&#19968;&#20010;&#38598;&#21512;&#30340;&#26102;&#20505;&#29305;&#21035;&#26377;&#29992;&#12290;&#23427;&#26377;&#25928;&#22320;&#35206;&#30422;&#20102;&#26144;&#23556;&#25991;&#20214;&#20013;&#23545;&#20851;&#32852;&#21644;&#38598;&#21512;&#30340;&#22806;&#36830;&#25509;&#23450;&#20041;&#12290;
+        </p><pre class="programlisting">from eg.Cat as cat 
+    inner join fetch cat.mate
+    left join fetch cat.kittens</pre><p>
+            &#25235;&#21462;&#36830;&#25509;&#19968;&#33324;&#19981;&#38656;&#35201;&#36171;&#20104;&#21035;&#21517;&#65292;&#22240;&#20026;&#34987;&#32852;&#21512;&#30340;&#23545;&#35937;&#24212;&#35813;&#19981;&#20250;&#22312;<tt class="literal">where</tt>&#23376;&#21477;&#65288;&#25110;&#32773;&#20219;&#20309;&#20854;&#23427;&#23376;&#21477;&#65289;&#20013;&#20986;&#29616;&#12290;&#24182;&#19988;&#65292;&#34987;&#32852;&#21512;&#30340;&#23545;&#35937;&#20063;&#19981;&#20250;&#22312;&#26597;&#35810;&#32467;&#26524;&#20013;&#30452;&#25509;&#20986;&#29616;&#12290;&#23427;&#20204;&#26159;&#36890;&#36807;&#29238;&#23545;&#35937;&#36827;&#34892;&#35775;&#38382;&#30340;&#12290;
+        </p><p>
+            &#35831;&#27880;&#24847;&#65292;&#30446;&#21069;&#30340;&#23454;&#29616;&#20013;&#65292;&#22312;&#19968;&#27425;&#26597;&#35810;&#20013;&#21482;&#20250;&#25235;&#21462;&#19968;&#20010;&#38598;&#21512;&#65288;&#20854;&#20182;&#30340;&#19968;&#20999;&#37117;&#20570;&#19981;&#21040;&#12290;&#65289;&#65288;&#65311;&#21407;&#25991;&#20026;&#65306;only one collection role may be fetched
+            in a query&#65289;&#12290;&#20063;&#35831;&#27880;&#24847;&#65292;&#22312;&#20351;&#29992;<tt class="literal">scroll()</tt>&#25110;&#32773; <tt class="literal">iterate()</tt>&#26041;&#24335;&#35843;&#29992;&#30340;&#26597;&#35810;&#20013;&#65292;&#26159;&#31105;&#27490;&#20351;&#29992;<tt class="literal">fetch</tt>&#26500;&#36896;&#30340;&#12290;&#26368;&#21518;&#65292;&#35831;&#27880;&#24847;<tt class="literal">full join fetch</tt>&#21644;<tt class="literal">right join  fetch</tt>&#26159;&#27809;&#26377;&#24847;&#20041;&#30340;&#12290;
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-select"></a>11.4.&nbsp;select&#23376;&#21477;</h2></div></div><div></div></div><p>
+            <tt class="literal">select</tt>&#23376;&#21477;&#36873;&#25321;&#22312;&#32467;&#26524;&#38598;&#20013;&#36820;&#22238;&#21738;&#20123;&#23545;&#35937;&#21644;&#23646;&#24615;&#12290;&#24605;&#32771;&#19968;&#19979;&#19979;&#38754;&#30340;&#20363;&#23376;&#65306;
+        </p><pre class="programlisting">select mate 
+from eg.Cat as cat 
+    inner join cat.mate as mate</pre><p>
+            &#36825;&#20010;&#26597;&#35810;&#20250;&#36873;&#25321;&#20986;&#20316;&#20026;&#20854;&#23427;&#29483;&#65288;<tt class="literal">Cat</tt>&#65289;&#26379;&#21451;&#65288;<tt class="literal">mate</tt>&#65289;&#30340;&#37027;&#20123;&#29483;&#12290;&#24403;&#28982;&#65292;&#20320;&#21487;&#20197;&#26356;&#21152;&#30452;&#25509;&#30340;&#20889;&#25104;&#19979;&#38754;&#30340;&#24418;&#24335;&#65306;
+        </p><pre class="programlisting">select cat.mate from eg.Cat cat</pre><p>
+            &#20320;&#29978;&#33267;&#21487;&#20197;&#36873;&#25321;&#38598;&#21512;&#20803;&#32032;&#65292;&#20351;&#29992;&#29305;&#27530;&#30340;<tt class="literal">elements</tt>&#21151;&#33021;&#12290;&#19979;&#38754;&#30340;&#26597;&#35810;&#36820;&#22238;&#25152;&#26377;&#29483;&#30340;&#23567;&#29483;&#12290;
+        </p><pre class="programlisting">select elements(cat.kittens) from eg.Cat cat</pre><p>
+            &#26597;&#35810;&#21487;&#20197;&#36820;&#22238;&#20219;&#20309;&#20540;&#31867;&#22411;&#30340;&#23646;&#24615;&#65292;&#21253;&#25324;&#32452;&#20214;&#31867;&#22411;&#30340;&#23646;&#24615;&#65306;
+        </p><pre class="programlisting">select cat.name from eg.DomesticCat cat
+where cat.name like 'fri%'
+
+select cust.name.firstName from Customer as cust</pre><p>
+            &#26597;&#35810;&#21487;&#20197;&#29992;&#20803;&#32032;&#31867;&#22411;&#26159;<tt class="literal">Object[]</tt>&#30340;&#19968;&#20010;&#25968;&#32452;&#36820;&#22238;&#22810;&#20010;&#23545;&#35937;&#21644;/&#25110;&#22810;&#20010;&#23646;&#24615;&#12290;
+        </p><pre class="programlisting">select mother, offspr, mate.name 
+from eg.DomesticCat as mother
+    inner join mother.mate as mate
+    left outer join mother.kittens as offspr</pre><p>
+            &#25110;&#32773;&#23454;&#38469;&#19978;&#26159;&#31867;&#22411;&#23433;&#20840;&#30340;Java&#23545;&#35937;
+        </p><pre class="programlisting">select new Family(mother, mate, offspr)
+from eg.DomesticCat as mother
+    join mother.mate as mate
+    left join mother.kittens as offspr</pre><p>
+            &#19978;&#38754;&#30340;&#20195;&#30721;&#20551;&#23450;<tt class="literal">Family</tt>&#26377;&#19968;&#20010;&#21512;&#36866;&#30340;&#26500;&#36896;&#20989;&#25968;&#12290;
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-aggregation"></a>11.5.&nbsp;&#32479;&#35745;&#20989;&#25968;(Aggregate functions)</h2></div></div><div></div></div><p>
+            HQL&#26597;&#35810;&#21487;&#20197;&#36820;&#22238;&#23646;&#24615;&#30340;&#32479;&#35745;&#20989;&#25968;&#30340;&#32467;&#26524;&#12290;
+        </p><pre class="programlisting">select avg(cat.weight), sum(cat.weight), max(cat.weight), count(cat)
+from eg.Cat cat</pre><p>
+            &#22312;<tt class="literal">select</tt>&#23376;&#21477;&#20013;&#65292;&#32479;&#35745;&#20989;&#25968;&#30340;&#21464;&#37327;&#20063;&#21487;&#20197;&#26159;&#38598;&#21512;&#12290;
+        </p><pre class="programlisting">select cat, count( elements(cat.kittens) ) 
+from eg.Cat cat group by cat</pre><p>
+            &#19979;&#38754;&#26159;&#25903;&#25345;&#30340;&#32479;&#35745;&#20989;&#25968;&#21015;&#34920;&#65306;
+        </p><div class="itemizedlist"><ul type="disc" compact><li><p>
+                    <tt class="literal">avg(...), sum(...), min(...), max(...)</tt>
+                </p></li><li><p>
+                    <tt class="literal">count(*)</tt>
+                </p></li><li><p>
+                    <tt class="literal">count(...), count(distinct ...), count(all...)</tt>
+                </p></li></ul></div><p>
+        <tt class="literal">distinct</tt> &#21644; <tt class="literal">all</tt>&#20851;&#38190;&#23383;&#30340;&#29992;&#27861;&#21644;&#35821;&#20041;&#19982;SQL&#30456;&#21516;&#12290;
+    </p><pre class="programlisting">select distinct cat.name from eg.Cat cat
+
+select count(distinct cat.name), count(cat) from eg.Cat cat</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-polymorphism"></a>11.6.&nbsp;&#22810;&#24577;(polymorphism)&#26597;&#35810;</h2></div></div><div></div></div><p>
+            &#31867;&#20284;&#19979;&#38754;&#30340;&#26597;&#35810;&#65306;
+        </p><pre class="programlisting">from eg.Cat as cat</pre><p>
+        	&#36820;&#22238;&#30340;&#23454;&#20363;&#19981;&#20165;&#20165;&#26159;<tt class="literal">Cat</tt>&#65292;&#20063;&#26377;&#21487;&#33021;&#26159;&#23376;&#31867;&#30340;&#23454;&#20363;&#65292;&#27604;&#22914;<tt class="literal">DomesticCat</tt>&#12290;Hibernate&#26597;&#35810;&#21487;&#20197;&#22312;<tt class="literal">from</tt>&#23376;&#21477;&#20013;&#20351;&#29992;<span class="emphasis"><em>&#20219;&#20309;</em></span>Java&#31867;&#25110;&#32773;&#25509;&#21475;&#30340;&#21517;&#23383;&#12290;&#26597;&#35810;&#21487;&#33021;&#36820;&#22238;&#25152;&#26377;&#32487;&#25215;&#33258;&#36825;&#20010;&#31867;&#25110;&#32773;&#23454;&#29616;&#36825;&#20010;&#25509;&#21475;&#30340;&#25345;&#20037;&#21270;&#31867;&#30340;&#23454;&#20363;&#12290;&#19979;&#21015;&#26597;&#35810;&#20250;&#36820;&#22238;&#25152;&#26377;&#30340;&#25345;&#20037;&#21270;&#23545;&#35937;&#65306;
+        </p><pre class="programlisting">from java.lang.Object o</pre><p>
+            &#21487;&#33021;&#26377;&#22810;&#20010;&#25345;&#20037;&#21270;&#31867;&#37117;&#23454;&#29616;&#20102;<tt class="literal">Named</tt>&#25509;&#21475;&#65306;
+        </p><pre class="programlisting">from eg.Named n, eg.Named m where n.name = m.name</pre><p>
+            &#35831;&#27880;&#24847;&#65292;&#19978;&#38754;&#20004;&#20010;&#26597;&#35810;&#37117;&#20351;&#29992;&#20102;&#36229;&#36807;&#19968;&#20010;SQL&#30340;<tt class="literal">SELECT</tt>&#12290;&#36825;&#24847;&#21619;&#30528;<tt class="literal">order by</tt>&#23376;&#21477;&#23558;&#19981;&#20250;&#27491;&#30830;&#25490;&#24207;&#12290;&#65288;&#36825;&#20063;&#24847;&#21619;&#30528;&#20320;&#19981;&#33021;&#23545;&#36825;&#20123;&#26597;&#35810;&#20351;&#29992;<tt class="literal">Query.scroll()</tt>&#12290;&#65289;
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-where"></a>11.7.&nbsp;where&#23376;&#21477;</h2></div></div><div></div></div><p>
+            <tt class="literal">where</tt>&#23376;&#21477;&#35753;&#20320;&#32553;&#23567;&#20320;&#35201;&#36820;&#22238;&#30340;&#23454;&#20363;&#30340;&#21015;&#34920;&#33539;&#22260;&#12290;
+        </p><pre class="programlisting">from eg.Cat as cat where cat.name='Fritz'</pre><p>
+            &#36820;&#22238;&#25152;&#26377;&#21517;&#23383;&#20026;'Fritz'&#30340;<tt class="literal">Cat</tt>&#30340;&#23454;&#20363;&#12290;
+        </p><pre class="programlisting">select foo 
+from eg.Foo foo, eg.Bar bar
+where foo.startDate = bar.date</pre><p>
+            &#20250;&#36820;&#22238;&#25152;&#26377;&#30340;&#28385;&#36275;&#19979;&#21015;&#26465;&#20214;&#30340;<tt class="literal">Foo</tt>&#23454;&#20363;&#65292;&#23427;&#20204;&#23384;&#22312;&#19968;&#20010;&#23545;&#24212;&#30340;<tt class="literal">bar</tt>&#23454;&#20363;&#65292;&#20854;<tt class="literal">date</tt>&#23646;&#24615;&#19982;<tt class="literal">Foo</tt>&#30340;<tt class="literal">startDate</tt>&#23646;&#24615;&#30456;&#31561;&#12290;&#22797;&#21512;&#36335;&#24452;&#34920;&#36798;&#24335;&#20196;<tt class="literal">where</tt>&#23376;&#21477;&#21464;&#24471;&#26497;&#20026;&#26377;&#21147;&#12290;&#24605;&#32771;&#19979;&#38754;&#30340;&#20363;&#23376;&#65306;
+        </p><pre class="programlisting">from eg.Cat cat where cat.mate.name is not null</pre><p>
+            &#36825;&#20010;&#26597;&#35810;&#20250;&#34987;&#32763;&#35793;&#20026;&#24102;&#26377;&#19968;&#20010;&#34920;&#38388;&#65288;inner)join&#30340;SQL&#26597;&#35810;&#12290;&#22914;&#26524;&#20320;&#20889;&#19979;&#31867;&#20284;&#36825;&#26679;&#30340;&#35821;&#21477;&#65306;
+        </p><pre class="programlisting">from eg.Foo foo  
+where foo.bar.baz.customer.address.city is not null</pre><p>
+            &#20320;&#26368;&#32456;&#20250;&#24471;&#21040;&#30340;&#26597;&#35810;&#65292;&#20854;&#23545;&#24212;&#30340;SQL&#38656;&#35201;4&#20010;&#34920;&#38388;&#36830;&#25509;&#12290;
+        </p><p>
+            <tt class="literal">=</tt>&#25805;&#20316;&#31526;&#19981;&#20165;&#20165;&#29992;&#20110;&#21028;&#26029;&#23646;&#24615;&#26159;&#21542;&#30456;&#31561;&#65292;&#20063;&#21487;&#20197;&#29992;&#20110;&#23454;&#20363;&#65306;
+        </p><pre class="programlisting">from eg.Cat cat, eg.Cat rival where cat.mate = rival.mate
+
+select cat, mate 
+from eg.Cat cat, eg.Cat mate
+where cat.mate = mate</pre><p>
+            &#29305;&#21035;&#30340;&#65292;&#23567;&#20889;&#30340;<tt class="literal">id</tt>&#21487;&#20197;&#29992;&#26469;&#34920;&#31034;&#19968;&#20010;&#23545;&#35937;&#30340;&#24799;&#19968;&#26631;&#35782;&#12290;&#65288;&#20320;&#21487;&#20197;&#20351;&#29992;&#23427;&#30340;&#23646;&#24615;&#21517;&#12290;&#65289;
+        </p><pre class="programlisting">from eg.Cat as cat where cat.id = 123
+
+from eg.Cat as cat where cat.mate.id = 69</pre><p>
+            &#31532;&#20108;&#20010;&#26597;&#35810;&#26159;&#24456;&#39640;&#25928;&#30340;&#12290;&#19981;&#38656;&#35201;&#36827;&#34892;&#34920;&#38388;&#36830;&#25509;&#65281;
+        </p><p>
+            &#32452;&#21512;&#30340;&#26631;&#31034;&#31526;&#20063;&#21487;&#20197;&#20351;&#29992;&#12290;&#20551;&#35774;<tt class="literal">Person</tt>&#26377;&#19968;&#20010;&#32452;&#21512;&#26631;&#31034;&#31526;&#65292;&#26159;&#30001;<tt class="literal">country</tt>&#21644;<tt class="literal">medicareNumber</tt>&#32452;&#21512;&#32780;&#25104;&#30340;&#12290;
+            
+        </p><pre class="programlisting">from bank.Person person
+where person.id.country = 'AU' 
+    and person.id.medicareNumber = 123456
+
+from bank.Account account
+where account.owner.id.country = 'AU' 
+    and account.owner.id.medicareNumber = 123456</pre><p>
+            &#21448;&#19968;&#27425;&#65292;&#31532;&#20108;&#20010;&#26597;&#35810;&#19981;&#38656;&#35201;&#34920;&#38388;&#36830;&#25509;&#12290;
+        </p><p>
+            &#31867;&#20284;&#30340;&#65292;&#22312;&#23384;&#22312;&#22810;&#24577;&#25345;&#20037;&#21270;&#30340;&#24773;&#20917;&#19979;&#65292;&#29305;&#27530;&#23646;&#24615;<tt class="literal">class</tt>&#29992;&#20110;&#33719;&#21462;&#26576;&#20010;&#23454;&#20363;&#30340;&#36776;&#35782;&#20540;&#12290;&#22312;where&#23376;&#21477;&#20013;&#23884;&#20837;&#30340;Java&#31867;&#21517;&#23558;&#20250;&#36716;&#25442;&#20026;&#23427;&#30340;&#36776;&#35782;&#20540;&#12290;
+        </p><pre class="programlisting">from eg.Cat cat where cat.class = eg.DomesticCat</pre><p>
+            &#20320;&#20063;&#21487;&#20197;&#25351;&#23450;&#32452;&#20214;&#65288;&#25110;&#32773;&#26159;&#32452;&#20214;&#30340;&#32452;&#20214;&#65292;&#20381;&#27425;&#31867;&#25512;&#65289;&#25110;&#32773;&#32452;&#21512;&#31867;&#22411;&#20013;&#30340;&#23646;&#24615;&#12290;&#20294;&#26159;&#22312;&#19968;&#20010;&#23384;&#22312;&#36335;&#24452;&#30340;&#34920;&#36798;&#24335;&#20013;&#65292;&#26368;&#21518;&#19981;&#33021;&#20197;&#19968;&#20010;&#32452;&#20214;&#31867;&#22411;&#30340;&#23646;&#24615;&#32467;&#23614;&#12290;&#65288;&#36825;&#37324;&#19981;&#26159;&#25351;&#32452;&#20214;&#30340;&#23646;&#24615;&#65289;&#12290;&#27604;&#22914;&#65292;&#20551;&#33509;<tt class="literal">store.owner</tt>&#36825;&#20010;&#23454;&#20307;&#30340;&#30340;<tt class="literal">address</tt>&#26159;&#19968;&#20010;&#32452;&#20214;
+        </p><pre class="programlisting">store.owner.address.city    //okay
+store.owner.address         //error!</pre><p>
+        	&#8220;&#20219;&#24847;(any)&#8221;&#31867;&#22411;&#20063;&#26377;&#29305;&#27530;&#30340;<tt class="literal">id</tt>&#23646;&#24615;&#21644;<tt class="literal">class</tt>&#23646;&#24615;&#65292;&#36825;&#21487;&#20197;&#35753;&#25105;&#20204;&#29992;&#19979;&#38754;&#30340;&#24418;&#24335;&#26469;&#34920;&#36798;&#36830;&#25509;&#65288;&#36825;&#37324;<tt class="literal">AuditLog.item</tt>&#26159;&#19968;&#20010;&#23545;&#24212;&#21040;<tt class="literal">&lt;ant&gt;</tt>&#30340;&#23646;&#24615;&#65289;&#12290;
+        </p><pre class="programlisting">from eg.AuditLog log, eg.Payment payment 
+where log.item.class = 'eg.Payment' and log.item.id = payment.id</pre><p>
+            &#27880;&#24847;&#19978;&#38754;&#26597;&#35810;&#20013;&#65292;<tt class="literal">log.item.class</tt>&#21644;<tt class="literal">payment.class</tt>&#20250;&#25351;&#21521;&#20004;&#20010;&#20540;&#65292;&#20195;&#34920;&#23436;&#20840;&#19981;&#21516;&#30340;&#25968;&#25454;&#24211;&#23383;&#27573;&#12290;
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-expressions"></a>11.8.&nbsp;&#34920;&#36798;&#24335;(Expressions)</h2></div></div><div></div></div><p>
+            <tt class="literal">where</tt>&#23376;&#21477;&#20801;&#35768;&#20986;&#29616;&#30340;&#34920;&#36798;&#24335;&#21253;&#25324;&#20102;&#20320;&#22312;SQL&#20013;&#21487;&#20197;&#20351;&#29992;&#30340;&#22823;&#22810;&#25968;&#24773;&#20917;&#65306;
+        </p><div class="itemizedlist"><ul type="disc" compact><li><p>
+                    &#25968;&#23398;&#25805;&#20316;<tt class="literal">+, -, *, /</tt>
+                    
+                </p></li><li><p>
+                   	&#30495;&#20551;&#27604;&#36739;&#25805;&#20316; <tt class="literal">=, &gt;=, &lt;=, &lt;&gt;, !=, like</tt>
+                </p></li><li><p>
+                    &#36923;&#36753;&#25805;&#20316; <tt class="literal">and, or, not</tt>
+                </p></li><li><p>
+                    &#23383;&#31526;&#20018;&#36830;&#25509; ||
+                </p></li><li><p>
+                    SQL&#26631;&#37327;&#65288; scalar&#65289;&#20989;&#25968;&#65292;&#20363;&#22914; <tt class="literal">upper()</tt> &#21644;
+                    <tt class="literal">lower()</tt>
+                </p></li><li><p>
+                    &#27809;&#26377;&#21069;&#32512;&#30340; <tt class="literal">( )</tt>&#34920;&#31034;&#20998;&#32452;
+                </p></li><li><p>
+                    <tt class="literal">in</tt>,
+                    <tt class="literal">between</tt>,
+                    <tt class="literal">is null</tt>
+                </p></li><li><p>
+                    JDBC &#20256;&#20837;&#21442;&#25968;<tt class="literal">?</tt>
+                </p></li><li><p>
+                    &#21629;&#21517;&#21442;&#25968; <tt class="literal">:name</tt>, <tt class="literal">:start_date</tt>, <tt class="literal">:x1</tt>
+                </p></li><li><p>
+                    SQL &#25991;&#23383; <tt class="literal">'foo'</tt>, <tt class="literal">69</tt>, <tt class="literal">'1970-01-01 10:00:01.0'</tt>
+                </p></li><li><p>
+                    Java&#30340;<tt class="literal">public static final</tt>&#24120;&#37327;<tt class="literal"> &#27604;&#22914; Color.TABBY</tt>
+                </p></li></ul></div><p>
+            <tt class="literal">in</tt> &#21644; <tt class="literal">between</tt> &#21487;&#20197;&#22914;&#19979;&#20363;&#19968;&#26679;&#20351;&#29992;:
+        </p><pre class="programlisting">from eg.DomesticCat cat where cat.name between 'A' and 'B'
+
+from eg.DomesticCat cat where cat.name in ( 'Foo', 'Bar', 'Baz' )</pre><p>
+            &#20854;&#21542;&#23450;&#24418;&#24335;&#20026;
+        </p><pre class="programlisting">from eg.DomesticCat cat where cat.name not between 'A' and 'B'
+
+from eg.DomesticCat cat where cat.name not in ( 'Foo', 'Bar', 'Baz' )</pre><p>
+            &#31867;&#20284;&#30340;&#65292;<tt class="literal">is null</tt>&#21644;<tt class="literal">is not null</tt>&#21487;&#20197;&#29992;&#26469;&#27979;&#35797;null&#20540;&#12290;
+        </p><p>
+            &#36890;&#36807;&#22312;Hibernate&#37197;&#32622;&#20013;&#22768;&#26126;HQL&#26597;&#35810;&#30340;&#26367;&#25442;&#26041;&#24335;&#65292;Boolean&#20063;&#26159;&#24456;&#23481;&#26131;&#22312;&#34920;&#36798;&#24335;&#20013;&#20351;&#29992;&#30340;&#65306;
+        </p><pre class="programlisting">&lt;property name="hibernate.query.substitutions"&gt;true 1, false 0&lt;/property&gt;</pre><p>
+            &#22312;&#20174;HQL&#32763;&#35793;&#25104;SQL&#30340;&#26102;&#20505;,&#20851;&#38190;&#23383;<tt class="literal">true</tt>&#21644;<tt class="literal">false</tt>&#23601;&#20250;&#34987;&#26367;&#25442;&#25104;<tt class="literal">1</tt>&#21644;<tt class="literal">0</tt>&#12290;
+        </p><pre class="programlisting">from eg.Cat cat where cat.alive = true</pre><p>
+            &#20320;&#21487;&#20197;&#29992;&#29305;&#27530;&#23646;&#24615;<tt class="literal">size</tt>&#26469;&#27979;&#35797;&#19968;&#20010;&#38598;&#21512;&#30340;&#38271;&#24230;&#65292;&#25110;&#32773;&#29992;&#29305;&#27530;&#30340;<tt class="literal">size()</tt>&#20989;&#25968;&#20063;&#21487;&#20197;&#12290;
+        </p><pre class="programlisting">from eg.Cat cat where cat.kittens.size &gt; 0
+
+from eg.Cat cat where size(cat.kittens) &gt; 0</pre><p>
+            &#23545;&#20110;&#25490;&#24207;&#38598;&#21512;&#65292;&#20320;&#21487;&#20197;&#29992;<tt class="literal">minIndex</tt>&#21644;<tt class="literal">maxIndex</tt>&#26469;&#33719;&#21462;&#20854;&#26368;&#22823;&#32034;&#24341;&#20540;&#21644;&#26368;&#23567;&#32034;&#24341;&#20540;&#12290;&#31867;&#20284;&#30340;&#65292;<tt class="literal">minElement</tt> &#21644;<tt class="literal">maxElement</tt> &#21487;&#20197;&#29992;&#26469;&#33719;&#21462;&#38598;&#21512;&#20013;&#26368;&#23567;&#21644;&#26368;&#22823;&#30340;&#20803;&#32032;&#65292;&#21069;&#25552;&#26159;&#24517;&#39035;&#26159;&#22522;&#26412;&#31867;&#22411;&#30340;&#38598;&#21512;&#12290;
+        </p><pre class="programlisting">from Calendar cal where cal.holidays.maxElement &gt; current date</pre><p>
+            &#20063;&#26377;&#20989;&#25968;&#30340;&#24418;&#24335;&#65288;&#21644;&#19978;&#38754;&#30340;&#24418;&#24335;&#19981;&#21516;&#65292;&#20989;&#25968;&#24418;&#24335;&#26159;&#22823;&#23567;&#20889;&#19981;&#25935;&#24863;&#30340;&#65289;&#65306;
+            
+        </p><pre class="programlisting">from Order order where maxindex(order.items) &gt; 100
+
+from Order order where minelement(order.items) &gt; 10000</pre><p>
+            SQL&#20013;&#30340;<tt class="literal">any, some, all, exists, in</tt>&#21151;&#33021;&#20063;&#26159;&#25903;&#25345;&#30340;&#65292;&#21069;&#25552;&#26159;&#24517;&#39035;&#25226;&#38598;&#21512;&#30340;&#20803;&#32032;&#25110;&#32773;&#32034;&#24341;&#38598;&#20316;&#20026;&#23427;&#20204;&#30340;&#21442;&#25968;&#65288;&#20351;&#29992;<tt class="literal">element</tt>&#21644;<tt class="literal">indices</tt>&#20989;&#25968;&#65289;&#65292;&#25110;&#32773;&#20351;&#29992;&#23376;&#26597;&#35810;&#30340;&#32467;&#26524;&#20316;&#20026;&#21442;&#25968;&#12290;
+        </p><pre class="programlisting">select mother from eg.Cat as mother, eg.Cat as kit
+where kit in elements(foo.kittens)
+
+select p from eg.NameList list, eg.Person p
+where p.name = some elements(list.names)
+
+from eg.Cat cat where exists elements(cat.kittens)
+
+from eg.Player p where 3 &gt; all elements(p.scores)
+
+from eg.Show show where 'fizard' in indices(show.acts)</pre><p>
+            &#35831;&#27880;&#24847;&#36825;&#20123;&#35774;&#26045;&#65306;<tt class="literal">size</tt>,<tt class="literal">elements</tt>,<tt class="literal">indices</tt>,<tt class="literal">minIndex</tt>,<tt class="literal">maxIndex</tt>,<tt class="literal">minElement</tt>,<tt class="literal">maxElement</tt> &#37117;&#26377;&#19968;&#20123;&#20351;&#29992;&#38480;&#21046;&#65306;
+        </p><div class="itemizedlist"><ul type="disc" compact><li><p>
+                    &#22312;<tt class="literal">where</tt>&#23376;&#21477;&#20013;: &#21482;&#23545;&#25903;&#25345;&#23376;&#26597;&#35810;&#30340;&#25968;&#25454;&#24211;&#26377;&#25928;
+                </p></li><li><p>
+                    &#22312;<tt class="literal">select</tt>&#23376;&#21477;&#20013;&#65306;&#21482;&#26377;<tt class="literal">elements</tt>&#21644;<tt class="literal">indices</tt>&#26377;&#25928;
+                </p></li></ul></div><p>
+            &#26377;&#24207;&#30340;&#38598;&#21512;(&#25968;&#32452;&#12289;list&#12289;map)&#30340;&#20803;&#32032;&#21487;&#20197;&#29992;&#32034;&#24341;&#26469;&#36827;&#34892;&#24341;&#29992;&#65288;&#21482;&#38480;&#20110;&#22312;where&#23376;&#21477;&#20013;&#65289;
+        </p><pre class="programlisting">from Order order where order.items[0].id = 1234
+
+select person from Person person, Calendar calendar
+where calendar.holidays['national day'] = person.birthDay
+    and person.nationality.calendar = calendar
+
+select item from Item item, Order order
+where order.items[ order.deliveredItemIndices[0] ] = item and order.id = 11
+
+select item from Item item, Order order
+where order.items[ maxindex(order.items) ] = item and order.id = 11</pre><p>
+            <tt class="literal">[]</tt>&#20013;&#30340;&#34920;&#36798;&#24335;&#20801;&#35768;&#26159;&#21478;&#19968;&#20010;&#25968;&#23398;&#34920;&#36798;&#24335;&#12290;
+        </p><pre class="programlisting">select item from Item item, Order order
+where order.items[ size(order.items) - 1 ] = item</pre><p>
+            HQL&#20063;&#23545;&#19968;&#23545;&#22810;&#20851;&#32852;&#25110;&#32773;&#20540;&#38598;&#21512;&#25552;&#20379;&#20869;&#32622;&#30340;<tt class="literal">index()</tt>&#20989;&#25968;&#12290;
+        </p><pre class="programlisting">select item, index(item) from Order order 
+    join order.items item
+where index(item) &lt; 5</pre><p>
+            &#24213;&#23618;&#25968;&#25454;&#24211;&#25903;&#25345;&#30340;&#26631;&#37327;SQL&#20989;&#25968;&#20063;&#21487;&#20197;&#20351;&#29992;
+        </p><pre class="programlisting">from eg.DomesticCat cat where upper(cat.name) like 'FRI%'</pre><p>
+            &#20551;&#22914;&#20197;&#19978;&#30340;&#36825;&#20123;&#36824;&#27809;&#26377;&#35753;&#20320;&#20449;&#26381;&#30340;&#35805;&#65292;&#35831;&#24819;&#35937;&#19968;&#19979;&#19979;&#38754;&#30340;&#26597;&#35810;&#20551;&#33509;&#29992;SQL&#26469;&#20889;&#65292;&#20250;&#21464;&#24471;&#22810;&#20040;&#38271;&#65292;&#22810;&#20040;&#19981;&#21487;&#35835;&#65306;
+        </p><pre class="programlisting">select cust
+from Product prod,
+    Store store
+    inner join store.customers cust
+where prod.name = 'widget'
+    and store.location.name in ( 'Melbourne', 'Sydney' )
+    and prod = all elements(cust.currentOrder.lineItems)</pre><p>
+            <span class="emphasis"><em>&#25552;&#31034;&#65306;</em></span>&#23545;&#24212;&#30340;SQL&#35821;&#21477;&#21487;&#33021;&#26159;&#36825;&#26679;&#30340;
+        </p><pre class="programlisting">SELECT cust.name, cust.address, cust.phone, cust.id, cust.current_order
+FROM customers cust,
+    stores store,
+    locations loc,
+    store_customers sc,
+    product prod
+WHERE prod.name = 'widget'
+    AND store.loc_id = loc.id
+    AND loc.name IN ( 'Melbourne', 'Sydney' )
+    AND sc.store_id = store.id
+    AND sc.cust_id = cust.id
+    AND prod.id = ALL(
+        SELECT item.prod_id
+        FROM line_items item, orders o
+        WHERE item.order_id = o.id
+            AND cust.current_order = o.id
+    )</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-ordering"></a>11.9.&nbsp;order by &#23376;&#21477;</h2></div></div><div></div></div><p>
+            &#26597;&#35810;&#36820;&#22238;&#30340;&#21015;&#34920;&#21487;&#20197;&#25353;&#29031;&#20219;&#20309;&#36820;&#22238;&#30340;&#31867;&#25110;&#32773;&#32452;&#20214;&#30340;&#23646;&#24615;&#25490;&#24207;&#65306;
+        </p><pre class="programlisting">from eg.DomesticCat cat
+order by cat.name asc, cat.weight desc, cat.birthdate</pre><p>
+            <tt class="literal">asc</tt>&#21644;<tt class="literal">desc</tt>&#26159;&#21487;&#36873;&#30340;&#65292;&#20998;&#21035;&#20195;&#34920;&#21319;&#24207;&#25110;&#32773;&#38477;&#24207;&#12290;
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-grouping"></a>11.10.&nbsp;group by &#23376;&#21477;</h2></div></div><div></div></div><p>
+            &#36820;&#22238;&#32479;&#35745;&#20540;&#30340;&#26597;&#35810;&#21487;&#20197;&#25353;&#29031;&#36820;&#22238;&#30340;&#31867;&#25110;&#32773;&#32452;&#20214;&#30340;&#20219;&#20309;&#23646;&#24615;&#25490;&#24207;&#65306;
+        </p><pre class="programlisting">select cat.color, sum(cat.weight), count(cat) 
+from eg.Cat cat
+group by cat.color
+
+select foo.id, avg( elements(foo.names) ), max( indices(foo.names) ) 
+from eg.Foo foo
+group by foo.id</pre><p>
+	        &#35831;&#27880;&#24847;&#65306;&#20320;&#21487;&#20197;&#22312;select&#23376;&#21477;&#20013;&#20351;&#29992;<tt class="literal">elements</tt>&#21644;<tt class="literal">indices</tt>&#25351;&#20196;&#65292;&#21363;&#20351;&#20320;&#30340;&#25968;&#25454;&#24211;&#19981;&#25903;&#25345;&#23376;&#26597;&#35810;&#20063;&#21487;&#20197;&#12290;
+	    </p><p>
+	        <tt class="literal">having</tt>&#23376;&#21477;&#20063;&#26159;&#20801;&#35768;&#30340;&#12290;
+	    </p><pre class="programlisting">select cat.color, sum(cat.weight), count(cat) 
+from eg.Cat cat
+group by cat.color 
+having cat.color in (eg.Color.TABBY, eg.Color.BLACK)</pre><p>
+	        &#22312;<tt class="literal">having</tt>&#23376;&#21477;&#20013;&#20801;&#35768;&#20986;&#29616;SQL&#20989;&#25968;&#21644;&#32479;&#35745;&#20989;&#25968;&#65292;&#24403;&#28982;&#36825;&#38656;&#35201;&#24213;&#23618;&#25968;&#25454;&#24211;&#25903;&#25345;&#25165;&#34892;&#12290;&#65288;&#27604;&#22914;&#35828;,MySQL&#23601;&#19981;&#25903;&#25345;&#65289;
+	    </p><pre class="programlisting">select cat
+from eg.Cat cat
+    join cat.kittens kitten
+group by cat
+having avg(kitten.weight) &gt; 100
+order by count(kitten) asc, sum(kitten.weight) desc</pre><p>
+	        &#27880;&#24847;&#65292;<tt class="literal">group by</tt>&#23376;&#21477;&#21644;<tt class="literal">order by</tt>&#23376;&#21477;&#37117;&#19981;&#25903;&#25345;&#25968;&#23398;&#34920;&#36798;&#24335;&#12290;
+	    </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-subqueries"></a>11.11.&nbsp;&#23376;&#26597;&#35810;</h2></div></div><div></div></div><p>
+            &#23545;&#20110;&#25903;&#25345;&#23376;&#26597;&#35810;&#30340;&#25968;&#25454;&#24211;&#26469;&#35828;&#65292;Hibernate&#25903;&#25345;&#22312;&#26597;&#35810;&#20013;&#23884;&#22871;&#23376;&#26597;&#35810;&#12290;&#23376;&#26597;&#35810;&#24517;&#39035;&#30001;&#22278;&#25324;&#21495;&#21253;&#22260;&#65288;&#24120;&#24120;&#26159;&#22312;&#19968;&#20010;SQL&#32479;&#35745;&#20989;&#25968;&#20013;&#65289;&#12290;&#20063;&#20801;&#35768;&#20851;&#32852;&#23376;&#26597;&#35810;&#65288;&#22312;&#22806;&#37096;&#26597;&#35810;&#20013;&#20316;&#20026;&#19968;&#20010;&#21035;&#21517;&#20986;&#29616;&#30340;&#23376;&#26597;&#35810;&#65289;&#12290;
+        </p><pre class="programlisting">from eg.Cat as fatcat 
+where fatcat.weight &gt; ( 
+    select avg(cat.weight) from eg.DomesticCat cat 
+)
+
+from eg.DomesticCat as cat 
+where cat.name = some ( 
+    select name.nickName from eg.Name as name 
+)
+    
+from eg.Cat as cat 
+where not exists ( 
+    from eg.Cat as mate where mate.mate = cat 
+)
+
+from eg.DomesticCat as cat 
+where cat.name not in ( 
+    select name.nickName from eg.Name as name 
+)</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-examples"></a>11.12.&nbsp;HQL&#31034;&#20363;</h2></div></div><div></div></div><p>
+            Hibernate&#26597;&#35810;&#21487;&#20197;&#38750;&#24120;&#24378;&#22823;&#22797;&#26434;&#12290;&#23454;&#38469;&#19978;&#65292;&#24378;&#26377;&#21147;&#30340;&#26597;&#35810;&#35821;&#35328;&#26159;Hibernate&#30340;&#20027;&#35201;&#21334;&#28857;&#20043;&#19968;&#12290;&#19979;&#38754;&#32473;&#20986;&#30340;&#31034;&#20363;&#19982;&#25105;&#22312;&#36817;&#26399;&#23454;&#38469;&#39033;&#30446;&#20013;&#20351;&#29992;&#30340;&#19968;&#20123;&#26597;&#35810;&#24456;&#31867;&#20284;&#12290;&#35831;&#27880;&#24847;&#20320;&#32534;&#20889;&#30340;&#26597;&#35810;&#22823;&#37096;&#20998;&#31561;&#37117;&#19981;&#20250;&#36825;&#20040;&#22797;&#26434;&#65281;
+        </p><p>
+            &#19979;&#38754;&#30340;&#26597;&#35810;&#23545;&#29305;&#23450;&#30340;&#23458;&#25143;&#65292;&#26681;&#25454;&#32473;&#23450;&#30340;&#26368;&#23567;&#24635;&#35745;&#20540;&#65288;minAmount)&#65292;&#26597;&#35810;&#20986;&#25152;&#26377;&#26410;&#20184;&#35746;&#21333;&#65292;&#36820;&#22238;&#20854;&#35746;&#21333;&#21495;&#12289;&#36135;&#21697;&#24635;&#25968;&#12289;&#35746;&#21333;&#24635;&#37329;&#39069;&#65292;&#32467;&#26524;&#25353;&#29031;&#24635;&#37329;&#39069;&#25490;&#24207;&#12290;&#22312;&#20915;&#23450;&#20215;&#26684;&#30340;&#26102;&#20505;&#65292;&#21442;&#32771;&#24403;&#21069;&#30446;&#24405;&#12290;&#20135;&#29983;&#30340;SQL&#26597;&#35810;&#65292;&#22312;<tt class="literal">ORDER</tt>,<tt class="literal">ORDER_LINE</tt>,<tt class="literal">PRODUCT</tt>,<tt class="literal">CATALOG</tt>&#21644;<tt class="literal">PRICE</tt>&#34920;&#20043;&#38388;&#26377;&#22235;&#20010;&#20869;&#37096;&#36830;&#25509;&#21644;&#19968;&#20010;&#27809;&#26377;&#20135;&#29983;&#20851;&#32852;&#30340;&#23383;&#26597;&#35810;&#12290;
+        </p><pre class="programlisting">select order.id, sum(price.amount), count(item)
+from Order as order
+    join order.lineItems as item
+    join item.product as product,
+    Catalog as catalog
+    join catalog.prices as price
+where order.paid = false
+    and order.customer = :customer
+    and price.product = product
+    and catalog.effectiveDate &lt; sysdate
+    and catalog.effectiveDate &gt;= all (
+        select cat.effectiveDate 
+        from Catalog as cat
+        where cat.effectiveDate &lt; sysdate
+    )
+group by order
+having sum(price.amount) &gt; :minAmount
+order by sum(price.amount) desc</pre><p>
+            &#22909;&#23478;&#20249;&#65292;&#30495;&#38271;&#65281;&#23454;&#38469;&#19978;&#65292;&#22312;&#29616;&#23454;&#29983;&#27963;&#20013;&#25105;&#24182;&#19981;&#26159;&#38750;&#24120;&#28909;&#34935;&#20110;&#23376;&#26597;&#35810;&#65292;&#25152;&#20197;&#25105;&#30340;&#26597;&#35810;&#24448;&#24448;&#26159;&#36825;&#26679;&#30340;&#65306;
+        </p><pre class="programlisting">select order.id, sum(price.amount), count(item)
+from Order as order
+    join order.lineItems as item
+    join item.product as product,
+    Catalog as catalog
+    join catalog.prices as price
+where order.paid = false
+    and order.customer = :customer
+    and price.product = product
+    and catalog = :currentCatalog
+group by order
+having sum(price.amount) &gt; :minAmount
+order by sum(price.amount) desc</pre><p>
+            &#19979;&#38754;&#30340;&#26597;&#35810;&#32479;&#35745;&#20184;&#27454;&#35760;&#24405;&#22788;&#20110;&#27599;&#31181;&#29366;&#24577;&#20013;&#30340;&#25968;&#37327;&#65292;&#35201;&#25490;&#38500;&#25152;&#26377;&#22788;&#20110;<tt class="literal">AWAITING_APPROVAL</tt>&#29366;&#24577;&#30340;&#65292;&#25110;&#32773;&#26368;&#36817;&#19968;&#27425;&#29366;&#24577;&#26356;&#25913;&#26159;&#30001;&#24403;&#21069;&#29992;&#25143;&#20570;&#20986;&#30340;&#12290;&#23427;&#32763;&#35793;&#25104;SQL&#26597;&#35810;&#21518;&#65292;&#22312;<tt class="literal">PAYMENT</tt>,<tt class="literal">PAYMENT_STATUS</tt>&#21644;<tt class="literal">PAYMENT_STATUS_CHANGE</tt>&#34920;&#20043;&#38388;&#21253;&#21547;&#20004;&#20010;&#20869;&#37096;&#36830;&#25509;&#21644;&#19968;&#20010;&#29992;&#20110;&#20851;&#32852;&#30340;&#23376;&#26597;&#35810;&#12290;
+        </p><pre class="programlisting">select count(payment), status.name 
+from Payment as payment 
+    join payment.currentStatus as status
+    join payment.statusChanges as statusChange
+where payment.status.name &lt;&gt; PaymentStatus.AWAITING_APPROVAL
+    or (
+        statusChange.timeStamp = ( 
+            select max(change.timeStamp) 
+            from PaymentStatusChange change 
+            where change.payment = payment
+        )
+        and statusChange.user &lt;&gt; :currentUser
+    )
+group by status.name, status.sortOrder
+order by status.sortOrder</pre><p>
+            &#20551;&#33509;&#25105;&#24050;&#32463;&#25226;<tt class="literal">statusChange</tt>&#38598;&#21512;&#26144;&#23556;&#20026;&#19968;&#20010;&#21015;&#34920;&#32780;&#19981;&#26159;&#19968;&#20010;&#38598;&#21512;&#30340;&#35805;&#65292;&#26597;&#35810;&#20889;&#36215;&#26469;&#20250;&#31616;&#21333;&#24456;&#22810;&#12290;
+        </p><pre class="programlisting">select count(payment), status.name 
+from Payment as payment
+    join payment.currentStatus as status
+where payment.status.name &lt;&gt; PaymentStatus.AWAITING_APPROVAL
+    or payment.statusChanges[ maxIndex(payment.statusChanges) ].user &lt;&gt; :currentUser
+group by status.name, status.sortOrder
+order by status.sortOrder</pre><p>
+            &#19979;&#38754;&#30340;&#26597;&#35810;&#20351;&#29992;&#20102;MS SQL Server&#30340;<tt class="literal">isNull()</tt>&#20989;&#25968;&#65292;&#36820;&#22238;&#24403;&#21069;&#29992;&#25143;&#25152;&#23646;&#30340;&#32452;&#32455;&#25152;&#26377;&#36134;&#25143;&#21644;&#26410;&#20184;&#25903;&#20986;&#12290;&#32763;&#35793;&#20026;SQL&#26597;&#35810;&#21518;&#65292;&#22312;<tt class="literal">ACCOUNT</tt>, <tt class="literal">PAYMENT</tt>, <tt class="literal">PAYMENT_STATUS</tt>,<tt class="literal">ACCOUNT_TYPE</tt>, <tt class="literal">ORGANIZATION</tt> &#21644; <tt class="literal">ORG_USER</tt>&#34920;&#20043;&#38388;&#26377;&#19977;&#20010;&#20869;&#37096;&#36830;&#25509;&#65292;&#19968;&#20010;&#22806;&#37096;&#36830;&#25509;&#21644;&#19968;&#20010;&#23376;&#26597;&#35810;&#12290;
+        </p><pre class="programlisting">select account, payment
+from Account as account
+    left outer join account.payments as payment
+where :currentUser in elements(account.holder.users)
+    and PaymentStatus.UNPAID = isNull(payment.currentStatus.name, PaymentStatus.UNPAID)
+order by account.type.sortOrder, account.accountNumber, payment.dueDate</pre><p>
+            &#23545;&#26576;&#20123;&#25968;&#25454;&#24211;&#32780;&#35328;&#65292;&#25105;&#20204;&#21487;&#33021;&#19981;&#33021;&#20381;&#36182;&#65288;&#20851;&#32852;&#30340;&#65289;&#23376;&#26597;&#35810;&#12290;
+        </p><pre class="programlisting">select account, payment
+from Account as account
+    join account.holder.users as user
+    left outer join account.payments as payment
+where :currentUser = user
+    and PaymentStatus.UNPAID = isNull(payment.currentStatus.name, PaymentStatus.UNPAID)
+order by account.type.sortOrder, account.accountNumber, payment.dueDate</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="queryhql-tipstricks"></a>11.13.&nbsp;&#25552;&#31034;&#21644;&#25216;&#24039;&#65288;Tips &amp; Tricks&#65289;</h2></div></div><div></div></div><p>
+            &#20320;&#19981;&#36820;&#22238;&#32467;&#26524;&#38598;&#20063;&#21487;&#20197;&#26597;&#35810;&#32467;&#26524;&#38598;&#30340;&#22823;&#23567;&#65306;
+        </p><pre class="programlisting">( (Integer) session.iterate("select count(*) from ....").next() ).intValue()</pre><p>
+            &#35201;&#20381;&#25454;&#19968;&#20010;&#38598;&#21512;&#30340;&#22823;&#23567;&#23545;&#32467;&#26524;&#38598;&#25490;&#24207;&#65292;&#21487;&#20197;&#29992;&#19979;&#38754;&#30340;&#26597;&#35810;&#26469;&#23545;&#20184;&#19968;&#23545;&#22810;&#25110;&#22810;&#23545;&#22810;&#30340;&#20851;&#32852;&#65306;
+        </p><pre class="programlisting">select usr
+from User as usr 
+    left join usr.messages as msg
+group by usr
+order by count(msg)</pre><p>
+            &#22914;&#26524;&#20320;&#30340;&#25968;&#25454;&#24211;&#25903;&#25345;&#23376;&#26597;&#35810;&#65292;&#20320;&#21487;&#20197;&#22312;&#26597;&#35810;&#30340;where&#23376;&#21477;&#20013;&#23545;&#36873;&#25321;&#30340;&#22823;&#23567;&#36827;&#34892;&#26465;&#20214;&#38480;&#21046;&#65306;
+        </p><pre class="programlisting">from User usr where size(usr.messages) &gt;= 1</pre><p>
+            &#22914;&#26524;&#20320;&#30340;&#25968;&#25454;&#24211;&#19981;&#25903;&#25345;&#23376;&#26597;&#35810;&#65292;&#21487;&#20197;&#20351;&#29992;&#19979;&#21015;&#26597;&#35810;&#65306;
+        </p><pre class="programlisting">select usr.id, usr.name
+from User usr.name
+    join usr.messages msg
+group by usr.id, usr.name
+having count(msg) &gt;= 1</pre><p>
+            &#22240;&#20026;&#20351;&#29992;&#20102;inner join,&#36825;&#20010;&#35299;&#20915;&#26041;&#27861;&#19981;&#33021;&#36820;&#22238;&#27809;&#26377;message&#30340;<tt class="literal">User</tt>.&#19979;&#38754;&#30340;&#26041;&#24335;&#23601;&#21487;&#20197;&#65306;
+        </p><pre class="programlisting">select usr
+from User as usr
+    left join usr.messages as msg
+group by usr
+having count(msg) = 0</pre><p>
+            JavaBean&#30340;&#23646;&#24615;&#21487;&#20197;&#30452;&#25509;&#20316;&#20026;&#21629;&#21517;&#30340;&#26597;&#35810;&#21442;&#25968;&#65306;
+        </p><pre class="programlisting">Query q = s.createQuery("from foo in class Foo where foo.name=:name and foo.size=:size");
+q.setProperties(fooBean); // fooBean has getName() and getSize()
+List foos = q.list();</pre><p>
+            &#22312;<tt class="literal">Query</tt>&#25509;&#21475;&#20013;&#20351;&#29992;&#36807;&#28388;&#22120;(filter),&#21487;&#20197;&#23545;&#38598;&#21512;&#20998;&#39029;&#65306;
+        </p><pre class="programlisting">Query q = s.createFilter( collection, "" ); // the trivial filter
+q.setMaxResults(PAGE_SIZE);
+q.setFirstResult(PAGE_SIZE * pageNumber);
+List page = q.list();</pre><p>
+            &#38598;&#21512;&#20803;&#32032;&#21487;&#20197;&#20351;&#29992;&#26597;&#35810;&#36807;&#28388;&#22120;(query filter)&#36827;&#34892;&#25490;&#24207;&#25110;&#32773;&#20998;&#32452;&#65306;
+        </p><pre class="programlisting">Collection orderedCollection = s.filter( collection, "order by this.amount" );
+Collection counts = s.filter( collection, "select this.type, count(this) group by this.type" );</pre><p>
+            &#19981;&#29992;&#21021;&#22987;&#21270;&#38598;&#21512;&#23601;&#21487;&#20197;&#24471;&#21040;&#20854;&#22823;&#23567;&#65306;
+        </p><pre class="programlisting">( (Integer) session.iterate("select count(*) from ....").next() ).intValue();</pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="transactions.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">&#19978;&#19968;&#32423;</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="querycriteria.html">&#19979;&#19968;&#39029;</a></td></tr><tr><td width="40%" align="left" valign="top">&#31532;&nbsp;10&nbsp;&#31456;&nbsp;&#20107;&#21153;&#21644;&#24182;&#34892;&#65288;Transactions And Concurrency&#65289;&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">&#36215;&#22987;&#39029;</a></td><td width="40%" align="right" valign="top">&nbsp;&#31532;&nbsp;12&nbsp;&#31456;&nbsp;&#26465;&#20214;&#26597;&#35810;(Criteria Query)</td></tr></table></div></body></html>

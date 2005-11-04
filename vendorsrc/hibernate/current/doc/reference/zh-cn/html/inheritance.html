@@ -1,0 +1,142 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>&#31532;&nbsp;8&nbsp;&#31456;&nbsp;&#32487;&#25215;&#26144;&#23556;(Inheritance Mappings)</title><link rel="stylesheet" href="../shared/css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="up" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="previous" href="components.html" title="&#31532;&nbsp;7&nbsp;&#31456;&nbsp;&#32452;&#20214;&#65288;Component&#65289;&#26144;&#23556;"><link rel="next" href="manipulatingdata.html" title="&#31532;&nbsp;9&nbsp;&#31456;&nbsp;&#25805;&#20316;&#25345;&#20037;&#21270;&#25968;&#25454;(Manipulating Persistent Data)"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&#31532;&nbsp;8&nbsp;&#31456;&nbsp;&#32487;&#25215;&#26144;&#23556;(Inheritance Mappings)</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="components.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="manipulatingdata.html">&#19979;&#19968;&#39029;</a></td></tr></table><hr></div><div class="chapter" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title"><a name="inheritance"></a>&#31532;&nbsp;8&nbsp;&#31456;&nbsp;&#32487;&#25215;&#26144;&#23556;(Inheritance Mappings)</h2></div></div><div></div></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="inheritance-strategies"></a>8.1.&nbsp;&#19977;&#31181;&#31574;&#30053;</h2></div></div><div></div></div><p>
+               	Hibernate&#25903;&#25345;&#19977;&#31181;&#19981;&#21516;&#30340;&#22522;&#26412;&#32487;&#25215;&#26144;&#23556;&#31574;&#30053;&#12290;
+            </p><div class="itemizedlist"><ul type="disc"><li><p>
+                &#27599;&#26869;&#31867;&#32487;&#25215;&#26641;&#20351;&#29992;&#19968;&#20010;&#34920;(table per class hierarchy)
+            </p></li><li><p>
+                &#27599;&#20010;&#23376;&#31867;&#19968;&#20010;&#34920;(table per subclass)
+            </p></li><li><p>
+                &#27599;&#20010;&#20855;&#20307;&#31867;&#19968;&#20010;&#34920;(table per concrete class)&#65288;&#26377;&#19968;&#20123;&#38480;&#21046;&#65289;
+            </p></li></ul></div><p>
+                &#29978;&#33267;&#22312;&#19968;&#26869;&#32487;&#25215;&#20851;&#31995;&#20070;&#20013;&#23545;&#19981;&#21516;&#30340;&#20998;&#25903;&#20351;&#29992;&#19981;&#21516;&#30340;&#26144;&#23556;&#31574;&#30053;&#20063;&#26159;&#21487;&#33021;&#30340;&#12290;&#20294;&#26159;&#21644;&#8220;&#27599;&#20010;&#20855;&#20307;&#31867;&#19968;&#20010;&#34920;&#8221;&#30340;&#26144;&#23556;&#26377;&#19968;&#26679;&#30340;&#38480;&#21046;&#12290;Hibernate&#19981;&#25903;&#25345;&#25226;<tt class="literal">&lt;subclass&gt;</tt>&#26144;&#23556;&#19982;<tt class="literal">&lt;joined-subclass&gt;</tt>&#22312;&#21516;&#19968;&#20010;<tt class="literal">&lt;class&gt;</tt> &#20803;&#32032;&#20013;&#28151;&#21512;&#20351;&#29992;&#12290;
+            </p><p>
+                &#20551;&#35774;&#25105;&#20204;&#26377;&#19968;&#20010;<tt class="literal">Payment</tt>&#25509;&#21475;&#65292;&#26377;&#19981;&#21516;&#30340;&#23454;&#29616;&#65306;<tt class="literal">CreditCardPayment</tt>, <tt class="literal">CashPayment</tt>, <tt class="literal">ChequePayment</tt>&#12290;&#8220;&#32487;&#25215;&#25968;&#20849;&#20139;&#19968;&#20010;&#34920;&#8221;&#30340;&#26144;&#23556;&#26159;&#36825;&#26679;&#30340;&#65306;
+            </p><pre class="programlisting">&lt;class name="Payment" table="PAYMENT"&gt;
+    &lt;id name="id" type="long" column="PAYMENT_ID"&gt;
+        &lt;generator class="native"/&gt;
+    &lt;/id&gt;
+    &lt;discriminator column="PAYMENT_TYPE" type="string"/&gt;
+    &lt;property name="amount" column="AMOUNT"/&gt;
+    ...
+    &lt;subclass name="CreditCardPayment" discriminator-value="CREDIT"&gt;
+        ...
+    &lt;/subclass&gt;
+    &lt;subclass name="CashPayment" discriminator-value="CASH"&gt;
+        ...
+    &lt;/subclass&gt;
+    &lt;subclass name="ChequePayment" discriminator-value="CHEQUE"&gt;
+        ...
+    &lt;/subclass&gt;
+&lt;/class&gt;</pre><p>
+                &#21482;&#38656;&#35201;&#19968;&#20010;&#34920;&#12290;&#36825;&#31181;&#26144;&#23556;&#31574;&#30053;&#30001;&#19968;&#20010;&#22823;&#38480;&#21046;&#65306;&#23376;&#31867;&#23450;&#20041;&#30340;&#23383;&#27573;&#19981;&#33021;&#26377;<tt class="literal">NOT NULL</tt>&#38480;&#21046;&#12290;
+            </p><p>
+                &#8220;&#27599;&#20010;&#23376;&#31867;&#19968;&#20010;&#34920;&#8221;&#30340;&#26144;&#23556;&#26159;&#36825;&#26679;&#30340;&#65306;
+            </p><pre class="programlisting">&lt;class name="Payment" table="PAYMENT"&gt;
+    &lt;id name="id" type="long" column="PAYMENT_ID"&gt;
+        &lt;generator class="native"/&gt;
+    &lt;/id&gt;
+    &lt;property name="amount" column="AMOUNT"/&gt;
+    ...
+    &lt;joined-subclass name="CreditCardPayment" table="CREDIT_PAYMENT"&gt;
+        &lt;key column="PAYMENT_ID"/&gt;
+        ...
+    &lt;/joined-subclass&gt;
+    &lt;joined-subclass name="CashPayment" table="CASH_PAYMENT"&gt;
+        &lt;key column="PAYMENT_ID"/&gt;
+        ...
+    &lt;/joined-subclass&gt;
+    &lt;joined-subclass name="ChequePayment" table="CHEQUE_PAYMENT"&gt;
+        &lt;key column="PAYMENT_ID"/&gt;
+        ...
+    &lt;/joined-subclass&gt;
+&lt;/class&gt;</pre><p>
+                &#38656;&#35201;&#22235;&#20010;&#34920;&#12290;&#19977;&#20010;&#23376;&#31867;&#34920;&#36890;&#36807;&#20027;&#38190;&#21644;&#36229;&#31867;&#34920;&#20851;&#32852;&#65288;&#25152;&#20197;&#23454;&#38469;&#19978;&#20851;&#31995;&#27169;&#22411;&#26159;&#19968;&#23545;&#19968;&#20851;&#32852;&#65289;&#12290;
+            </p><p>
+                &#27880;&#24847;Hibernate&#30340;&#8220;&#27599;&#23376;&#31867;&#19968;&#34920;&#8221;&#30340;&#23454;&#29616;&#24182;&#19981;&#38656;&#35201;&#19968;&#20010;&#29305;&#21035;&#30340;&#36776;&#35748;&#23383;&#27573;&#12290;&#20854;&#20182;&#30340;&#23545;&#35937;/&#20851;&#31995;&#25968;&#25454;&#24211;&#26144;&#23556;&#24037;&#20855;&#20351;&#29992;&#21478;&#19968;&#31181;&#8220;&#27599;&#23376;&#31867;&#19968;&#34920;&#8221;&#23454;&#29616;&#65292;&#38656;&#35201;&#22312;&#36229;&#31867;&#34920;&#20013;&#26377;&#19968;&#20010;&#31867;&#22411;&#36776;&#35748;&#23383;&#27573;&#12290;Hibernate&#30340;&#36825;&#31181;&#23454;&#29616;&#26356;&#21152;&#22256;&#38590;&#65292;&#20294;&#26159;&#20174;&#20851;&#31995;(&#25968;&#25454;&#24211;)&#30340;&#35282;&#24230;&#26469;&#30475;&#65292;&#36825;&#26679;&#20570;&#26356;&#21152;&#27491;&#30830;&#12290;
+            </p><p>
+                &#23545;&#36825;&#20004;&#31181;&#26144;&#23556;&#31574;&#30053;&#26469;&#35828;&#65292;&#25351;&#21521;<tt class="literal">Payment</tt>&#30340;&#20851;&#32852;&#26159;&#20351;&#29992;<tt class="literal">&lt;many-to-one&gt;</tt>&#36827;&#34892;&#26144;&#23556;&#30340;&#12290;
+            </p><pre class="programlisting">&lt;many-to-one name="payment"
+    column="PAYMENT"
+    class="Payment"/&gt;</pre><p>&#8220;&#27599;&#20010;&#20855;&#20307;&#31867;&#19968;&#20010;&#34920;&#8221;&#30340;&#31574;&#30053;&#38750;&#24120;&#19981;&#21516;</p><pre class="programlisting">&lt;class name="CreditCardPayment" table="CREDIT_PAYMENT"&gt;
+    &lt;id name="id" type="long" column="CREDIT_PAYMENT_ID"&gt;
+        &lt;generator class="native"/&gt;
+    &lt;/id&gt;
+    &lt;property name="amount" column="CREDIT_AMOUNT"/&gt;
+    ...
+&lt;/class&gt;
+
+&lt;class name="CashPayment" table="CASH_PAYMENT"&gt;
+    &lt;id name="id" type="long" column="CASH_PAYMENT_ID"&gt;
+        &lt;generator class="native"/&gt;
+    &lt;/id&gt;
+    &lt;property name="amount" column="CASH_AMOUNT"/&gt;
+    ...
+&lt;/class&gt;
+
+&lt;class name="ChequePayment" table="CHEQUE_PAYMENT"&gt;
+    &lt;id name="id" type="long" column="CHEQUE_PAYMENT_ID"&gt;
+        &lt;generator class="native"/&gt;
+    &lt;/id&gt;
+    &lt;property name="amount" column="CHEQUE_AMOUNT"/&gt;
+    ...
+&lt;/class&gt;</pre><p>
+                &#38656;&#35201;&#19977;&#20010;&#34920;&#12290;&#27880;&#24847;&#25105;&#20204;&#27809;&#26377;&#26126;&#30830;&#30340;&#23450;&#20041;<tt class="literal">Payment</tt>&#25509;&#21475;&#12290;&#25105;&#20204;&#29992;Hibernate&#30340;<span class="emphasis"><em>&#38544;&#21547;&#22810;&#24577;&#65288;implicit polymorphism&#65289;</em></span>&#26426;&#21046;&#20195;&#26367;&#12290;&#20063;&#35201;&#27880;&#24847;<tt class="literal">Payment</tt>&#30340;&#23646;&#24615;&#22312;&#19977;&#20010;&#23383;&#31867;&#20013;&#37117;&#36827;&#34892;&#20102;&#26144;&#23556;&#12290;
+            </p><p>
+                &#36825;&#31181;&#24773;&#24418;&#19979;&#65292;&#19982;<tt class="literal">Payment</tt>&#20851;&#32852;&#30340;&#22810;&#24577;&#20851;&#32852;&#34987;&#26144;&#23556;&#20026;<tt class="literal">&lt;any&gt;</tt>&#12290;
+            </p><pre class="programlisting">&lt;any name="payment" 
+        meta-type="class"
+        id-type="long"&gt;
+    &lt;column name="PAYMENT_CLASS"/&gt;
+    &lt;column name="PAYMENT_ID"/&gt;
+&lt;/any&gt;</pre><p>
+                &#22914;&#26524;&#25105;&#20204;&#23450;&#20041;<tt class="literal">UserType</tt>&#21644;<tt class="literal">meta-type</tt>&#26469;&#26681;&#25454;&#19981;&#21516;&#30340;&#26631;&#35782;&#23383;&#31526;&#20018;&#26144;&#23556;&#21040;<tt class="literal">Payment</tt>&#65292;&#20107;&#24773;&#20250;&#26356;&#22909;&#19968;&#20123;&#12290;
+            </p><pre class="programlisting">&lt;any name="payment" 
+        meta-type="PaymentMetaType"
+        id-type="long"&gt;
+    &lt;column name="PAYMENT_TYPE"/&gt; &lt;!-- CREDIT, CASH or CHEQUE --&gt;
+    &lt;column name="PAYMENT_ID"/&gt;
+&lt;/any&gt;</pre><p>
+                &#23545;&#36825;&#20010;&#26144;&#23556;&#36824;&#26377;&#19968;&#28857;&#38656;&#35201;&#27880;&#24847;&#12290;&#22240;&#20026;&#27599;&#20010;&#23376;&#31867;&#37117;&#22312;&#21508;&#33258;&#29420;&#31435;&#30340;<tt class="literal">&lt;class&gt;</tt>&#20803;&#32032;&#20013;&#26144;&#23556;&#65288;&#24182;&#19988;<tt class="literal">Payment</tt>&#21482;&#26159;&#20010;&#25509;&#21475;&#65289;&#65292;&#27599;&#20010;&#23376;&#31867;&#37117;&#21487;&#20197;&#21644;&#23481;&#26131;&#30340;&#25104;&#20026;&#21478;&#19968;&#20010;"&#27599;&#20010;&#31867;&#19968;&#20010;&#34920;"&#25110;&#32773;"&#27599;&#20010;&#23376;&#31867;&#19968;&#20010;&#34920;"&#30340;&#32487;&#25215;&#26641;&#65281;&#65288;&#24182;&#19988;&#20320;&#20173;&#28982;&#21487;&#20197;&#23545;<tt class="literal">Payment</tt>&#25509;&#21475;&#20351;&#29992;&#22810;&#24577;&#26597;&#35810;&#12290;&#65289;
+                
+           </p><pre class="programlisting">&lt;class name="CreditCardPayment" table="CREDIT_PAYMENT"&gt;
+    &lt;id name="id" type="long" column="CREDIT_PAYMENT_ID"&gt;
+        &lt;generator class="native"/&gt;
+    &lt;/id&gt;
+    &lt;discriminator column="CREDIT_CARD" type="string"/&gt;
+    &lt;property name="amount" column="CREDIT_AMOUNT"/&gt;
+    ...
+    &lt;subclass name="MasterCardPayment" discriminator-value="MDC"/&gt;
+    &lt;subclass name="VisaPayment" discriminator-value="VISA"/&gt;
+&lt;/class&gt;
+
+&lt;class name="NonelectronicTransaction" table="NONELECTRONIC_TXN"&gt;
+    &lt;id name="id" type="long" column="TXN_ID"&gt;
+        &lt;generator class="native"/&gt;
+    &lt;/id&gt;
+    ...
+    &lt;joined-subclass name="CashPayment" table="CASH_PAYMENT"&gt;
+        &lt;key column="PAYMENT_ID"/&gt;
+        &lt;property name="amount" column="CASH_AMOUNT"/&gt;
+        ...
+    &lt;/joined-subclass&gt;
+    &lt;joined-subclass name="ChequePayment" table="CHEQUE_PAYMENT"&gt;
+        &lt;key column="PAYMENT_ID"/&gt;
+        &lt;property name="amount" column="CHEQUE_AMOUNT"/&gt;
+        ...
+    &lt;/joined-subclass&gt;
+&lt;/class&gt;</pre><p>
+                &#25105;&#20204;&#20877;&#19968;&#27425;&#27809;&#26377;&#26126;&#30830;&#30340;&#25552;&#21040;<tt class="literal">Payment</tt>&#12290;&#22914;&#26524;&#25105;&#20204;&#38024;&#23545;<tt class="literal">Payment</tt>&#25509;&#21475;&#25191;&#34892;&#26597;&#35810; &#8212;&#8212;&#27604;&#22914;&#65292;<tt class="literal">from Payment</tt>&#8212;&#8212; Hibernate&#33258;&#21160;&#36820;&#22238;<tt class="literal">CreditCardPayment</tt>&#23454;&#20363;&#65288;&#20197;&#21450;&#23427;&#30340;&#23376;&#31867;&#65292;&#22240;&#20026;&#23427;&#20204;&#20063;&#32487;&#25215;&#20102;<tt class="literal">Payment</tt>&#65289;&#65292;<tt class="literal">CashPayment</tt>&#21644;<tt class="literal">Chequepayment</tt>&#65292;&#20294;&#26159;&#19981;&#20250;&#26159;<tt class="literal">NonelectronicTransaction</tt>&#30340;&#23454;&#20363;&#12290;
+            </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="inheritance-limitations"></a>8.2.&nbsp;&#38480;&#21046;</h2></div></div><div></div></div><p>
+                Hibernate&#20551;&#35774;&#20851;&#32852;&#20005;&#26684;&#30340;&#21644;&#19968;&#20010;&#22806;&#38190;&#23383;&#27573;&#30456;&#26144;&#23556;&#12290;&#22914;&#26524;&#19968;&#20010;&#22806;&#38190;&#20855;&#26377;&#22810;&#20010;&#20851;&#32852;&#65292;&#20063;&#26159;&#21487;&#20197;&#23481;&#24525;&#30340;&#65288;&#20320;&#21487;&#33021;&#38656;&#35201;&#25351;&#23450;<tt class="literal">inverse="true"</tt>&#25110;&#32773;<tt class="literal">insert="false" update="false"</tt>&#65289;&#65292;&#20294;&#26159;&#20320;&#19981;&#33021;&#20026;&#22810;&#37325;&#22806;&#38190;&#25351;&#23450;&#20219;&#20309;&#26144;&#23556;&#30340;&#20851;&#32852;&#12290;&#36825;&#24847;&#21619;&#30528;&#65306;
+            </p><div class="itemizedlist"><ul type="disc"><li><p>
+                &#24403;&#26356;&#25913;&#19968;&#20010;&#20851;&#32852;&#30340;&#26102;&#20505;&#65292;&#27704;&#36828;&#26159;&#26356;&#26032;&#30340;&#21516;&#19968;&#20010;&#22806;&#38190;
+            </p></li><li><p>
+                &#24403;&#19968;&#20010;&#20851;&#32852;&#26159;&#24310;&#36831;&#25235;&#21462;(fetched lazily)&#30340;&#26102;&#20505;&#65292;&#21482;&#38656;&#35201;&#29992;&#19968;&#27425;&#25968;&#25454;&#24211;&#26597;&#35810;
+            </p></li><li><p>
+                &#24403;&#19968;&#20010;&#20851;&#32852;&#26159;&#25552;&#21069;&#25235;&#21462;(fetched eagerly)&#30340;&#26102;&#20505;&#65292;&#20351;&#29992;&#19968;&#27425;outer join&#21363;&#21487;
+            </p></li></ul></div><p>
+                &#29305;&#21035;&#35201;&#25351;&#20986;&#30340;&#26159;&#65292;&#20351;&#29992;&#8220;&#27599;&#20010;&#20855;&#20307;&#31867;&#19968;&#20010;&#34920;&#8221;&#30340;&#31574;&#30053;&#26469;&#23454;&#34892;&#22810;&#24577;&#30340;&#19968;&#23545;&#22810;&#20851;&#32852;&#26159;<span class="emphasis"><em>&#19981;&#25903;&#25345;</em></span>&#30340;&#12290;&#65288;&#25235;&#21462;&#36825;&#26679;&#30340;&#20851;&#32852;&#38656;&#35201;&#22810;&#27425;&#26597;&#35810;&#25110;&#32773;&#22810;&#27425;join&#12290;&#65289;
+            </p><p>
+                &#19979;&#38754;&#30340;&#34920;&#26684;&#21015;&#20986;&#20102;Hibernte&#20013;&#65292;&#8220;&#27599;&#20010;&#20855;&#20307;&#31867;&#19968;&#20010;&#34920;&#8221;&#31574;&#30053;&#19982;&#38544;&#21547;&#22810;&#24577;&#26426;&#21046;&#30340;&#38480;&#21046;&#12290;
+            </p><div class="table"><a name="d0e5669"></a><p class="title"><b>&#34920;&nbsp;8.1.&nbsp;&#32487;&#25215;&#26144;&#23556;&#29305;&#24615;&#65288;Features of inheritance mappings&#65289;			</b></p><table summary="&#32487;&#25215;&#26144;&#23556;&#29305;&#24615;&#65288;Features of inheritance mappings&#65289;			" border="1"><colgroup><col align="left"><col align="left"><col align="left"><col align="left"><col align="left"><col align="left"><col align="left"><col align="left"></colgroup><thead><tr><th align="left">&#32487;&#25215;&#31574;&#30053;&#65288;Inheritance strategy&#65289;</th><th align="left">&#22810;&#24577;&#22810;&#23545;&#19968;</th><th align="left">&#22810;&#24577;&#19968;&#23545;&#19968;</th><th align="left">&#22810;&#24577;&#19968;&#23545;&#22810;</th><th align="left">&#22810;&#24577;&#22810;&#23545;&#22810;</th><th align="left">&#22810;&#24577; <tt class="literal">load()/get()</tt></th><th align="left">&#22810;&#24577;&#26597;&#35810;</th><th align="left">&#22810;&#24577;&#36830;&#25509;(join)</th><th align="left">Outer join &#25235;&#21462;</th></tr></thead><tbody><tr><td align="left">&#27599;&#32487;&#25215;&#26641;&#19968;&#34920;</td><td align="left"><tt class="literal">&lt;many-to-one&gt;</tt></td><td align="left"><tt class="literal">&lt;one-to-one&gt;</tt></td><td align="left"><tt class="literal">&lt;one-to-many&gt;</tt></td><td align="left"><tt class="literal">&lt;many-to-many&gt;</tt></td><td align="left"><tt class="literal">s.get(Payment.class, id)</tt></td><td align="left"><tt class="literal">from Payment p</tt></td><td align="left"><tt class="literal">from Order o join o.payment p</tt></td><td align="left"><span class="emphasis"><em>&#25903;&#25345;</em></span></td></tr><tr><td align="left">&#27599;&#23376;&#31867;&#19968;&#34920;</td><td align="left"><tt class="literal">&lt;many-to-one&gt;</tt></td><td align="left"><tt class="literal">&lt;one-to-one&gt;</tt></td><td align="left"><tt class="literal">&lt;one-to-many&gt;</tt></td><td align="left"><tt class="literal">&lt;many-to-many&gt;</tt></td><td align="left"><tt class="literal">s.get(Payment.class, id)</tt></td><td align="left"><tt class="literal">from Payment p</tt></td><td align="left"><tt class="literal">from Order o join o.payment p</tt></td><td align="left"><span class="emphasis"><em>&#25903;&#25345;</em></span></td></tr><tr><td align="left">&#27599;&#20855;&#20307;&#31867;&#19968;&#34920;(&#38544;&#21547;&#22810;&#24577;)</td><td align="left"><tt class="literal">&lt;any&gt;</tt></td><td align="left"><span class="emphasis"><em>&#19981;&#25903;&#25345;</em></span></td><td align="left"><span class="emphasis"><em>&#19981;&#25903;&#25345;</em></span></td><td align="left"><tt class="literal">&lt;many-to-any&gt;</tt></td><td align="left"><span class="emphasis"><em>use a query</em></span></td><td align="left"><tt class="literal">from Payment p</tt></td><td align="left"><span class="emphasis"><em>&#19981;&#25903;&#25345;</em></span></td><td align="left"><span class="emphasis"><em>&#19981;&#25903;&#25345;</em></span></td></tr></tbody></table></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="components.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">&#19978;&#19968;&#32423;</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="manipulatingdata.html">&#19979;&#19968;&#39029;</a></td></tr><tr><td width="40%" align="left" valign="top">&#31532;&nbsp;7&nbsp;&#31456;&nbsp;&#32452;&#20214;&#65288;Component&#65289;&#26144;&#23556;&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">&#36215;&#22987;&#39029;</a></td><td width="40%" align="right" valign="top">&nbsp;&#31532;&nbsp;9&nbsp;&#31456;&nbsp;&#25805;&#20316;&#25345;&#20037;&#21270;&#25968;&#25454;(Manipulating Persistent Data)</td></tr></table></div></body></html>

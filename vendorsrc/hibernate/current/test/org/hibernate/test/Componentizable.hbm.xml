@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping 
+	PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping>
+	<class name="org.hibernate.test.Componentizable">
+		<id name="id">
+			<generator class="native"/>
+		</id>
+		<property name="nickName"/>
+		<component name="component" access="property" class="org.hibernate.test.Component">
+			<property name="name"/>
+			<component name="subComponent" class="org.hibernate.test.SubComponent">
+		   	<property name="subName"/>
+		   	<property name="subName1"/>
+	  	</component>
+		</component>
+	</class>
+</hibernate-mapping>

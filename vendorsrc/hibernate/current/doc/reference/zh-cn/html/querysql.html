@@ -1,0 +1,45 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>&#31532;&nbsp;13&nbsp;&#31456;&nbsp;&#21407;&#29983;SQL&#26597;&#35810;</title><link rel="stylesheet" href="../shared/css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="up" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="previous" href="querycriteria.html" title="&#31532;&nbsp;12&nbsp;&#31456;&nbsp;&#26465;&#20214;&#26597;&#35810;(Criteria Query)"><link rel="next" href="performance.html" title="&#31532;&nbsp;14&nbsp;&#31456;&nbsp;&#24615;&#33021;&#25552;&#21319;&#65288;Improving performance&#65289;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&#31532;&nbsp;13&nbsp;&#31456;&nbsp;&#21407;&#29983;SQL&#26597;&#35810;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="querycriteria.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="performance.html">&#19979;&#19968;&#39029;</a></td></tr></table><hr></div><div class="chapter" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title"><a name="querysql"></a>&#31532;&nbsp;13&nbsp;&#31456;&nbsp;&#21407;&#29983;SQL&#26597;&#35810;</h2></div></div><div></div></div><p>
+        &#20320;&#20063;&#21487;&#20197;&#30452;&#25509;&#20351;&#29992;&#20320;&#30340;&#25968;&#25454;&#24211;&#26041;&#35328;&#34920;&#36798;&#26597;&#35810;&#12290;&#22312;&#20320;&#24819;&#20351;&#29992;&#25968;&#25454;&#24211;&#30340;&#26576;&#20123;&#29305;&#24615;&#30340;&#26102;&#20505;&#65292;&#36825;&#26159;&#38750;&#24120;&#26377;&#29992;&#30340;&#65292;
+        &#27604;&#22914;Oracle&#20013;&#30340;CONNECT&#20851;&#38190;&#23383;&#12290;&#36825;&#20063;&#20250;&#25195;&#28165;&#20320;&#25226;&#21407;&#26469;&#30452;&#25509;&#20351;&#29992;SQL/JDBC &#30340;&#31243;&#24207;&#31227;&#26893;&#21040;Hibernate&#36947;&#36335;&#19978;&#30340;&#38556;&#30861;&#12290;
+	</p><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querysql-creating"></a>13.1.&nbsp;&#21019;&#24314;&#19968;&#20010;&#22522;&#20110;SQL&#30340;<tt class="literal">Query</tt></h2></div></div><div></div></div><p>
+    	&#21644;&#26222;&#36890;&#30340;HQL&#26597;&#35810;&#19968;&#26679;&#65292;SQL&#26597;&#35810;&#21516;&#26679;&#26159;&#20174;<tt class="literal">Query</tt>&#25509;&#21475;&#24320;&#22987;&#30340;&#12290;&#24799;&#19968;&#30340;&#21306;&#21035;&#26159;&#20351;&#29992;<tt class="literal">Session.createSQLQuery()</tt>&#26041;&#27861;&#12290;
+    </p><pre class="programlisting">Query sqlQuery = sess.createSQLQuery("select {cat.*} from cats {cat}", "cat", Cat.class);
+sqlQuery.setMaxResults(50);
+List cats = sqlQuery.list();</pre><p>
+		&#20256;&#36882;&#32473;<tt class="literal">createSQLQuer()</tt>&#30340;&#19977;&#20010;&#21442;&#25968;&#26159;&#65306;
+	</p><div class="itemizedlist"><ul type="disc"><li><p>
+        SQL&#26597;&#35810;&#35821;&#21477;
+    </p></li><li><p>
+        &#34920;&#30340;&#21035;&#21517;
+    </p></li><li><p>
+		&#26597;&#35810;&#36820;&#22238;&#30340;&#25345;&#20037;&#21270;&#31867;
+    </p></li></ul></div><p>
+		&#21035;&#21517;&#26159;&#20026;&#20102;&#22312;SQL&#35821;&#21477;&#20013;&#24341;&#29992;&#23545;&#24212;&#30340;&#31867;&#65288;&#26412;&#20363;&#20013;&#26159;<tt class="literal">Cat</tt>)&#30340;&#23646;&#24615;&#30340;&#12290;&#20320;&#20063;&#21487;&#20197;&#20256;&#36882;&#19968;&#20010;&#21035;&#21517;&#30340;<tt class="literal">String</tt>
+		&#25968;&#32452;&#21644;&#19968;&#20010;&#23545;&#24212;&#30340;<tt class="literal">Class</tt>&#30340;&#25968;&#32452;&#36827;&#21435;&#65292;&#27599;&#34892;&#23601;&#21487;&#20197;&#24471;&#21040;&#22810;&#20010;&#23545;&#35937;&#12290;
+	</p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querysql-aliasreferences"></a>13.2.&nbsp;&#21035;&#21517;&#21644;&#23646;&#24615;&#24341;&#29992;</h2></div></div><div></div></div><p>
+		
+		&#19978;&#38754;&#20351;&#29992;&#30340;<tt class="literal">{cat.*}</tt>&#26631;&#35760;&#26159;&#8220;&#25152;&#26377;&#23646;&#24615;&#30340;&#8221;&#30340;&#31616;&#20889;&#12290;&#20320;&#21487;&#20197;&#26174;&#24335;&#30340;&#21015;&#20986;&#38656;&#35201;&#30340;&#23646;&#24615;&#65292;&#20294;&#26159;&#20320;&#24517;&#39035;&#35753;Hibernate&#20026;&#27599;&#20010;
+		&#23646;&#24615;&#25552;&#20379;SQL&#21015;&#21035;&#21517;&#12290;&#36825;&#20123;&#21015;&#30340;&#30340;&#21344;&#20301;&#34920;&#31034;&#31526;&#26159;&#20197;&#34920;&#21035;&#21517;&#20026;&#21069;&#23548;&#65292;&#20877;&#21152;&#19978;&#23646;&#24615;&#21517;&#12290;&#19979;&#38754;&#30340;&#20363;&#23376;&#20013;&#65292;&#25105;&#20204;&#20174;&#19968;&#20010;&#20854;&#23427;&#30340;&#34920;(<tt class="literal">cat_log</tt>)
+		&#20013;&#33719;&#21462;<tt class="literal">Cat</tt>&#23545;&#35937;&#65292;&#32780;&#38750;<tt class="literal">Cat</tt>&#23545;&#35937;&#21407;&#26412;&#22312;&#26144;&#23556;&#20803;&#25968;&#25454;&#20013;&#22768;&#26126;&#30340;&#34920;&#12290;&#27880;&#24847;&#20320;&#22312;where&#23376;&#21477;&#20013;&#20063;&#21487;&#20197;&#20351;&#29992;
+		&#23646;&#24615;&#21035;&#21517;&#12290;
+	</p><pre class="programlisting">String sql = "select cat.originalId as {cat.id}, "
+    + "  cat.mateid as {cat.mate}, cat.sex as {cat.sex}, "
+    + "  cat.weight*10 as {cat.weight}, cat.name as {cat.name}"
+    + "     from cat_log cat where {cat.mate} = :catId"
+List loggedCats = sess.createSQLQuery(sql, "cat", Cat.class)
+    .setLong("catId", catId)
+    .list();
+</pre><p>
+	    <span class="emphasis"><em>&#27880;&#24847;&#65306;</em></span> &#22914;&#26524;&#20320;&#26126;&#30830;&#30340;&#21015;&#20986;&#20102;&#27599;&#20010;&#23646;&#24615;&#65292;&#20320;&#24517;&#39035;&#21253;&#21547;&#36825;&#20010;&#31867;<span class="emphasis"><em>&#21644;&#23427;&#30340;&#23376;&#31867;</em></span>&#30340;&#23646;&#24615;! 
+	    //??
+	</p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querysql-namedqueries"></a>13.3.&nbsp;&#20026;SQL&#26597;&#35810;&#21629;&#21517;</h2></div></div><div></div></div><p>
+        &#21487;&#20197;&#22312;&#26144;&#23556;&#25991;&#26723;&#20013;&#23450;&#20041;SQL&#26597;&#35810;&#30340;&#21517;&#23383;&#65292;&#28982;&#21518;&#23601;&#21487;&#20197;&#20687;&#35843;&#29992;&#19968;&#20010;&#21629;&#21517;HQL&#26597;&#35810;&#19968;&#26679;&#30452;&#25509;&#35843;&#29992;&#21629;&#21517;SQL&#26597;&#35810;&#12290;
+    </p><pre class="programlisting">&lt;sql-query name="mySqlQuery"&gt;
+    &lt;return alias="person" class="eg.Person"/&gt;
+    SELECT {person}.NAME AS {person.name},
+           {person}.AGE AS {person.age},
+           {person}.SEX AS {person.sex}
+    FROM PERSON {person} WHERE {person}.NAME LIKE 'Hiber%'
+&lt;/sql-query&gt;</pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="querycriteria.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">&#19978;&#19968;&#32423;</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="performance.html">&#19979;&#19968;&#39029;</a></td></tr><tr><td width="40%" align="left" valign="top">&#31532;&nbsp;12&nbsp;&#31456;&nbsp;&#26465;&#20214;&#26597;&#35810;(Criteria Query)&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">&#36215;&#22987;&#39029;</a></td><td width="40%" align="right" valign="top">&nbsp;&#31532;&nbsp;14&nbsp;&#31456;&nbsp;&#24615;&#33021;&#25552;&#21319;&#65288;Improving performance&#65289;</td></tr></table></div></body></html>

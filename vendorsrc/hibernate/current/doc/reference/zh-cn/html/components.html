@@ -1,0 +1,202 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>&#31532;&nbsp;7&nbsp;&#31456;&nbsp;&#32452;&#20214;&#65288;Component&#65289;&#26144;&#23556;</title><link rel="stylesheet" href="../shared/css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="up" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="previous" href="collections.html" title="&#31532;&nbsp;6&nbsp;&#31456;&nbsp;&#38598;&#21512;&#31867;(Collections)&#26144;&#23556;"><link rel="next" href="inheritance.html" title="&#31532;&nbsp;8&nbsp;&#31456;&nbsp;&#32487;&#25215;&#26144;&#23556;(Inheritance Mappings)"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&#31532;&nbsp;7&nbsp;&#31456;&nbsp;&#32452;&#20214;&#65288;Component&#65289;&#26144;&#23556;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="collections.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="inheritance.html">&#19979;&#19968;&#39029;</a></td></tr></table><hr></div><div class="chapter" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title"><a name="components"></a>&#31532;&nbsp;7&nbsp;&#31456;&nbsp;&#32452;&#20214;&#65288;Component&#65289;&#26144;&#23556;</h2></div></div><div></div></div><p>
+		<span class="emphasis"><em>Component</em></span>&#36825;&#20010;&#27010;&#24565;&#22312;Hibernate&#20013;&#20960;&#22788;&#19981;&#21516;&#30340;&#22320;&#26041;&#20026;&#20102;&#19981;&#21516;&#30340;&#30446;&#30340;&#34987;&#37325;&#22797;&#20351;&#29992;.
+    </p><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="components-dependentobjects"></a>7.1.&nbsp;&#20381;&#36182;&#23545;&#35937;&#65288;Dependent objects&#65289;</h2></div></div><div></div></div><p>
+			Component&#26159;&#19968;&#20010;&#34987;&#21253;&#21547;&#30340;&#23545;&#35937;,&#23427;&#20316;&#20026;&#20540;&#31867;&#22411;&#34987;&#25345;&#20037;&#21270;&#65292;&#32780;&#38750;&#19968;&#20010;&#23454;&#20307;&#12290;&#8220;component(&#32452;&#20214;)&#8221;&#36825;&#19968;&#26415;&#35821;&#25351;&#30340;&#26159;&#38754;&#21521;&#23545;&#35937;&#30340;&#21512;&#25104;&#27010;&#24565;&#65288;&#32780;&#24182;&#19981;&#26159;&#31995;&#32479;&#26500;&#26550;&#23618;&#27425;&#19978;&#30340;&#32452;&#20214;&#30340;&#27010;&#24565;&#65289;&#20030;&#20010;&#20363;&#23376;, &#20320;&#21487;&#20197;&#23545;&#20154;&#65288;Person)&#22914;&#20197;&#19979;&#36825;&#26679;&#26469;&#24314;&#27169;&#65306;
+        </p><pre class="programlisting">public class Person {
+    private java.util.Date birthday;
+    private Name name;
+    private String key;
+    public String getKey() {
+        return key;
+    }
+    private void setKey(String key) {
+        this.key=key;
+    }
+    public java.util.Date getBirthday() {
+        return birthday;
+    }
+    public void setBirthday(java.util.Date birthday) {
+        this.birthday = birthday;
+    }
+    public Name getName() {
+        return name;
+    }
+    public void setName(Name name) {
+        this.name = name;
+    }
+    ......
+    ......
+}</pre><pre class="programlisting">public class Name {
+    char initial;
+    String first;
+    String last;
+    public String getFirst() {
+        return first;
+    }
+    void setFirst(String first) {
+        this.first = first;
+    }
+    public String getLast() {
+        return last;
+    }
+    void setLast(String last) {
+        this.last = last;
+    }
+    public char getInitial() {
+        return initial;
+    }
+    void setInitial(char initial) {
+        this.initial = initial;
+    }
+}</pre><p>
+			&#29616;&#22312;,<tt class="literal">&#22995;&#21517;(Name)</tt>&#26159;&#20316;&#20026;<tt class="literal">&#20154;(Person)</tt>&#30340;&#19968;&#20010;&#32452;&#25104;&#37096;&#20998;&#12290;&#38656;&#35201;&#27880;&#24847;&#30340;&#26159;:&#38656;&#35201;&#23545;<tt class="literal">&#22995;&#21517;</tt>
+			&#30340;&#25345;&#20037;&#21270;&#23646;&#24615;&#23450;&#20041;getter&#21644;setter&#26041;&#27861;,&#20294;&#26159;&#19981;&#38656;&#35201;&#23454;&#29616;&#20219;&#20309;&#30340;&#25509;&#21475;&#25110;&#30003;&#26126;&#26631;&#35782;&#31526;&#23383;&#27573;&#12290;
+        </p><p>
+			&#20197;&#19979;&#26159;&#36825;&#20010;&#20363;&#23376;&#30340;Hibernate&#26144;&#23556;&#25991;&#20214;:
+        </p><pre class="programlisting">&lt;class name="eg.Person" table="person"&gt;
+    &lt;id name="Key" column="pid" type="string"&gt;
+        &lt;generator class="uuid.hex"/&gt;
+    &lt;/id&gt;
+    &lt;property name="birthday" type="date"/&gt;
+    &lt;component name="Name" class="eg.Name"&gt; &lt;!-- class attribute optional --&gt;
+        &lt;property name="initial"/&gt;
+        &lt;property name="first"/&gt;
+        &lt;property name="last"/&gt;
+    &lt;/component&gt;
+&lt;/class&gt;</pre><p>
+			&#20154;&#21592;(Person)&#34920;&#20013;&#23558;&#21253;&#25324;<tt class="literal">pid</tt>,
+			<tt class="literal">birthday</tt>,
+            <tt class="literal">initial</tt>,
+            <tt class="literal">first</tt>&#21644;
+            <tt class="literal">last</tt>&#31561;&#23383;&#27573;&#12290;
+        </p><p>
+			&#23601;&#20687;&#25152;&#26377;&#30340;&#20540;&#31867;&#22411;&#19968;&#26679;, Component&#19981;&#25903;&#25345;&#20849;&#20139;&#24341;&#29992;&#12290;Component&#30340;&#20540;&#20026;&#31354;&#20174;&#35821;&#20041;&#23398;&#19978;&#26469;&#35762;&#26159;<span class="emphasis"><em>&#19987;&#26377;&#30340;</em></span>&#12290; &#27599;&#24403;
+			&#37325;&#26032;&#21152;&#36733;&#19968;&#20010;&#21253;&#21547;&#32452;&#20214;&#30340;&#23545;&#35937;,&#22914;&#26524;component&#30340;&#25152;&#26377;&#23383;&#27573;&#20026;&#31354;&#65292;&#37027;&#20040;&#23558;Hibernate&#23558;&#20551;&#23450;&#25972;&#20010;component&#20026;
+			&#31354;&#12290;&#23545;&#20110;&#32477;&#22823;&#22810;&#25968;&#30446;&#30340;,&#36825;&#26679;&#20551;&#23450;&#26159;&#27809;&#26377;&#38382;&#39064;&#30340;&#12290;
+        </p><p>
+            Component&#30340;&#23646;&#24615;&#21487;&#20197;&#26159;Hibernate&#31867;&#22411;&#65288;&#21253;&#25324;Collections, many-to-one &#20851;&#32852;&#65292; &#20197;&#21450;&#20854;&#23427;Component
+            &#31561;&#31561;&#65289;&#12290;&#23884;&#22871;Component&#19981;&#24212;&#35813;&#20316;&#20026;&#29305;&#27530;&#30340;&#24212;&#29992;&#34987;&#32771;&#34385;(Nested components should not be considered 
+            an exotic usage)&#12290; Hibernate&#36235;&#21521;&#20110;&#25903;&#25345;&#35774;&#35745;&#32454;&#33268;(fine-grained)&#30340;&#23545;&#35937;&#27169;&#22411;&#12290;
+        </p><p>
+            <tt class="literal">&lt;component&gt;</tt> &#20803;&#32032;&#36824;&#20801;&#35768;&#26377; <tt class="literal">&lt;parent&gt;</tt>&#23376;&#20803;&#32032; &#65292;&#29992;&#26469;&#34920;&#26126;component&#31867;&#20013;&#30340;&#19968;&#20010;&#23646;&#24615;&#36820;&#22238;&#21253;&#21547;&#23427;&#30340;&#23454;&#20307;&#30340;&#24341;&#29992;&#12290;
+        </p><pre class="programlisting">&lt;class name="eg.Person" table="person"&gt;
+    &lt;id name="Key" column="pid" type="string"&gt;
+        &lt;generator class="uuid.hex"/&gt;
+    &lt;/id&gt;
+    &lt;property name="birthday" type="date"/&gt;
+    &lt;component name="Name" class="eg.Name"&gt;
+        &lt;parent name="namedPerson"/&gt; &lt;!-- reference back to the Person --&gt;
+        &lt;property name="initial"/&gt;
+        &lt;property name="first"/&gt;
+        &lt;property name="last"/&gt;
+    &lt;/component&gt;
+&lt;/class&gt;</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="components-incollections"></a>7.2.&nbsp;&#22312;&#38598;&#21512;&#20013;&#20986;&#29616;&#30340;&#20381;&#36182;&#23545;&#35937;</h2></div></div><div></div></div><p>
+			Hibernate&#25903;&#25345;component&#30340;&#38598;&#21512;(&#20363;&#22914;: &#19968;&#20010;&#20803;&#32032;&#26159;&#8220;&#22995;&#21517;&#8221;&#36825;&#31181;&#31867;&#22411;&#30340;&#25968;&#32452;)&#12290; &#20320;&#21487;&#20197;&#20351;&#29992;<tt class="literal">&lt;composite-element&gt;</tt>&#26631;&#31614;&#26367;&#20195;<tt class="literal">&lt;element&gt;</tt>&#26631;&#31614;&#26469;&#23450;&#20041;&#20320;&#30340;component&#38598;&#21512;&#12290;
+        </p><pre class="programlisting">&lt;set name="someNames" table="some_names" lazy="true"&gt;
+    &lt;key column="id"/&gt;
+    &lt;composite-element class="eg.Name"&gt; &lt;!-- class attribute required --&gt;
+        &lt;property name="initial"/&gt;
+        &lt;property name="first"/&gt;
+        &lt;property name="last"/&gt;
+    &lt;/composite-element&gt;
+&lt;/set&gt;</pre><p>
+            &#27880;&#24847;&#65292;&#22914;&#26524;&#20320;&#20915;&#23450;&#23450;&#20041;&#19968;&#20010;&#20803;&#32032;&#26159;&#32852;&#21512;&#20803;&#32032;&#30340;<tt class="literal">Set</tt>&#65292;&#27491;&#30830;&#22320;&#23454;&#29616;<tt class="literal">equals()</tt>&#21644;<tt class="literal">hashCode()</tt>&#26159;&#38750;&#24120;&#37325;&#35201;&#30340;&#12290;
+        </p><p>
+			&#32452;&#21512;&#20803;&#32032;&#21487;&#20197;&#21253;&#21547;component&#20294;&#26159;&#19981;&#33021;&#21253;&#21547;&#38598;&#21512;&#12290;&#22914;&#26524;&#20320;&#30340;&#32452;&#21512;&#20803;&#32032;&#33258;&#36523;&#21253;&#21547;component, &#24517;&#39035;&#20351;&#29992;<tt class="literal">&lt;nested-composite-element&gt;</tt>&#26631;&#31614;&#12290;&#36825;&#26159;&#19968;&#20010;&#30456;&#24403;&#29305;&#27530;&#30340;&#26696;&#20363; - &#32452;&#21512;&#20803;&#32032;&#30340;&#38598;&#21512;&#33258;&#36523;&#21487;&#20197;&#21253;&#21547;component&#12290; &#36825;&#20010;&#26102;&#20505;&#20320;&#23601;&#24212;&#35813;&#32771;&#34385;&#19968;&#19979;&#20351;&#29992;one-to-many&#20851;&#32852;&#26159;&#21542;&#20250;&#26356;&#24688;&#24403;&#12290; &#23581;&#35797;&#23545;&#36825;&#20010;&#32452;&#21512;&#20803;&#32032;&#37325;&#26032;&#24314;&#27169;&#20026;&#19968;&#20010;&#23454;&#20307;&#65293;&#20294;&#26159;&#38656;&#35201;&#27880;&#24847;&#30340;&#26159;&#65292;&#34429;&#28982;Java&#27169;&#22411;&#21644;&#37325;&#26032;&#24314;&#27169;&#21069; &#26159;&#19968;&#26679;&#30340;&#65292;&#20851;&#31995;&#27169;&#22411;&#21644;&#25345;&#20037;&#24615;&#35821;&#20041;&#19978;&#20173;&#28982;&#23384;&#22312;&#36731;&#24494;&#30340;&#21306;&#21035;&#12290;
+        </p><p>
+			&#35831;&#27880;&#24847;&#22914;&#26524;&#20320;&#20351;&#29992;<tt class="literal">&lt;set&gt;</tt>&#26631;&#31614;,&#19968;&#20010;&#32452;&#21512;&#20803;&#32032;&#30340;&#26144;&#23556;&#19981;&#25903;&#25345;&#21487;&#33021;&#20026;&#31354;&#30340;&#23646;&#24615;. &#24403;&#21024;&#38500;&#23545;&#35937;&#26102;, Hibernate&#24517;&#39035;&#20351;&#29992;&#27599;&#19968;&#20010;&#23383;&#27573;&#30340;&#26469;&#30830;&#23450;&#19968;&#26465;&#35760;&#24405;(&#22312;&#32452;&#21512;&#20803;&#32032;&#34920;&#20013;&#65292;&#27809;&#26377;&#21333;&#20010;&#30340;&#20851;&#38190;&#23383;&#27573;), &#22914;&#26524;&#26377;&#20026;null&#30340;&#23383;&#27573;&#65292;&#36825;&#26679;&#20570;&#23601;&#19981;&#21487;&#33021;&#20102;&#12290;&#20320;&#24517;&#39035;&#20316;&#20986;&#19968;&#20010;&#36873;&#25321;&#65292;&#35201;&#20040;&#22312;&#32452;&#21512;&#20803;&#32032;&#20013;&#20351;&#29992;&#19981;&#33021;&#20026;&#31354;&#30340;&#23646;&#24615;&#65292; &#35201;&#20040;&#36873;&#25321;&#20351;&#29992;<tt class="literal">&lt;list&gt;</tt>, <tt class="literal">&lt;map&gt;</tt>,<tt class="literal">&lt;bag&gt;</tt> &#25110;&#32773; <tt class="literal">&lt;idbag&gt;</tt>&#32780;&#19981;&#26159; <tt class="literal">&lt;set&gt;</tt>&#12290;
+        </p><p>
+			&#32452;&#21512;&#20803;&#32032;&#26377;&#20010;&#29305;&#21035;&#30340;&#26696;&#20363;&#65292;&#26159;&#32452;&#21512;&#20803;&#32032;&#21487;&#20197;&#21253;&#21547;&#19968;&#20010;<tt class="literal">&lt;many-to-one&gt;</tt> &#20803;&#32032;&#12290;&#31867;&#20284;&#36825;&#26679;&#30340;&#26144;&#23556;&#20801;&#35768;&#20320;&#26144;&#23556;&#19968;&#20010;many-to-mang&#20851;&#32852;&#34920;&#20316;&#20026;&#32452;&#21512;&#20803;&#32032;&#39069;&#22806;&#30340;&#23383;&#27573;&#12290;(A mapping like this allows you to map extra columns of a many-to-many association table to the composite element class.) &#25509;&#19979;&#26469;&#30340;&#30340;&#20363;&#23376;&#26159;&#20174;<tt class="literal">Order</tt>&#21040;<tt class="literal">Item</tt>&#30340;&#19968;&#20010;&#22810;&#23545;&#22810;&#30340;&#20851;&#32852;&#20851;&#31995;,&#32780;	<tt class="literal">purchaseDate</tt>, <tt class="literal">price</tt> &#21644; <tt class="literal">quantity</tt> &#26159;<tt class="literal">Item</tt>&#30340;&#20851;&#32852;&#23646;&#24615;&#12290;
+        </p><pre class="programlisting">&lt;class name="eg.Order" .... &gt;
+    ....
+    &lt;set name="purchasedItems" table="purchase_items" lazy="true"&gt;
+        &lt;key column="order_id"&gt;
+        &lt;composite-element class="eg.Purchase"&gt;
+            &lt;property name="purchaseDate"/&gt;
+            &lt;property name="price"/&gt;
+            &lt;property name="quantity"/&gt;
+            &lt;many-to-one name="item" class="eg.Item"/&gt; &lt;!-- class attribute is optional --&gt;
+        &lt;/composite-element&gt;
+    &lt;/set&gt;
+&lt;/class&gt;</pre><p>&#21363;&#20351;&#19977;&#37325;&#25110;&#22810;&#37325;&#31649;&#29702;&#37117;&#26159;&#21487;&#33021;&#30340;:</p><pre class="programlisting">&lt;class name="eg.Order" .... &gt;
+    ....
+    &lt;set name="purchasedItems" table="purchase_items" lazy="true"&gt;
+        &lt;key column="order_id"&gt;
+        &lt;composite-element class="eg.OrderLine"&gt;
+            &lt;many-to-one name="purchaseDetails" class="eg.Purchase"/&gt;
+            &lt;many-to-one name="item" class="eg.Item"/&gt;
+        &lt;/composite-element&gt;
+    &lt;/set&gt;
+&lt;/class&gt;</pre><p>
+            &#22312;&#26597;&#35810;&#20013;&#65292;&#32452;&#21512;&#20803;&#32032;&#20351;&#29992;&#30340;&#35821;&#27861;&#26159;&#21644;&#20851;&#32852;&#21040;&#20854;&#20182;&#23454;&#20307;&#30340;&#35821;&#27861;&#19968;&#26679;&#30340;&#12290;
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="components-asmapindex"></a>7.3.&nbsp;&#32452;&#20214;&#20316;&#20026;Map&#30340;&#32034;&#24341;&#65288;Components as Map indices &#65289;</h2></div></div><div></div></div><p>
+			<tt class="literal">&lt;composite-index&gt;</tt>&#20803;&#32032;&#20801;&#35768;&#20320;&#26144;&#23556;&#19968;&#20010;Component&#31867;&#20316;&#20026;<tt class="literal">Map</tt>&#30340;key&#65292; &#20294;&#26159;&#20320;&#24517;&#39035;&#30830;&#23450;&#20320;&#27491;&#30830;&#30340;&#22312;&#36825;&#20010;&#31867;&#20013;&#37325;&#20889;&#20102;<tt class="literal">hashCode()</tt> &#21644; <tt class="literal">equals()</tt>&#26041;&#27861;&#12290;
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="components-compositeid"></a>7.4.&nbsp;&#32452;&#20214;&#20316;&#20026;&#32852;&#21512;&#26631;&#35782;&#31526;(Components as composite identifiers)</h2></div></div><div></div></div><p>
+			&#20320;&#21487;&#20197;&#20351;&#29992;&#19968;&#20010;component&#20316;&#20026;&#19968;&#20010;&#23454;&#20307;&#31867;&#30340;&#26631;&#35782;&#31526;&#12290; &#20320;&#30340;component&#31867;&#24517;&#39035;&#28385;&#36275;&#20197;&#19979;&#35201;&#27714;&#65306;
+        </p><div class="itemizedlist"><ul type="disc" compact><li><p>
+					&#23427;&#24517;&#39035;&#23454;&#29616;<tt class="literal">java.io.Serializable</tt>&#25509;&#21475;
+                </p></li><li><p>
+					&#23427;&#24517;&#39035;&#37325;&#26032;&#23454;&#29616;<tt class="literal">equals()</tt>&#21644;<tt class="literal">hashCode()</tt>&#26041;&#27861;, &#22987;&#32456;&#21644;&#32452;&#21512;&#20851;&#38190;&#23383;&#22312;&#25968;&#25454;&#24211;&#20013;&#30340;&#27010;&#24565;&#20445;&#25345;&#19968;&#33268;
+                </p></li></ul></div><p>
+			&#20320;&#19981;&#33021;&#20351;&#29992;&#19968;&#20010;<tt class="literal">IdentifierGenerator</tt>&#20135;&#29983;&#32452;&#21512;&#20851;&#38190;&#23383;&#12290;&#20316;&#20026;&#26367;&#20195;&#24212;&#29992;&#31243;&#24207;&#24517;
+			&#39035;&#20998;&#37197;&#23427;&#33258;&#24049;&#30340;&#26631;&#35782;&#31526;.
+        </p><p>
+			&#26082;&#28982;&#32852;&#21512;&#26631;&#35782;&#31526;&#24517;&#39035;&#22312;&#23545;&#35937;&#23384;&#20648;&#20043;&#21069;&#34987;&#20998;&#37197;&#65292;&#25105;&#20204;&#23601;&#19981;&#33021;&#20351;&#29992;&#26631;&#35782;&#31526;&#30340;<tt class="literal">unsaved-value</tt>&#26469;&#25226;&#21018;&#21018;&#26032;&#24314;&#30340;&#23454;&#20363;&#21644;&#22312;&#20808;&#21069;&#30340;session&#20445;&#23384;&#30340;&#23454;&#20363;&#21306;&#20998;&#24320;&#26469;&#12290; 
+        </p><p>
+        &#22914;&#26524;&#20320;&#24076;&#26395;&#20351;&#29992;<tt class="literal">saveOrUpdate()</tt>&#25110;&#32773;&#32423;&#32852;&#20445;&#23384;/&#26356;&#26032;(cascading save / update)&#65292;&#20320;&#24212;&#35813;&#23454;&#29616; <tt class="literal">Interceptor.isUnsaved()</tt>&#12290;&#20351;&#29992;<tt class="literal">&lt;composite-id&gt;</tt> &#26631;&#31614;(&#23427;&#21644;<tt class="literal">&lt;component&gt;</tt>&#26631;&#31614;&#26377;&#21516;&#26679;&#30340;&#23646;&#24615;&#21644;&#20803;&#32032;)&#20195;&#26367;<tt class="literal">&lt;id&gt;</tt>&#26631;&#31614;&#12290; &#19979;&#38754;&#26377;&#20010;&#32852;&#21512;&#26631;&#35782;&#31526;&#31867;&#30340;&#23450;&#20041;:
+			
+		
+        </p><pre class="programlisting">&lt;class name="eg.Foo" table"FOOS"&gt;
+    &lt;composite-id name="compId" class="eg.FooCompositeID"&gt;
+        &lt;key-property name="string"/&gt;
+        &lt;key-property name="short"/&gt;
+        &lt;key-property name="date" column="date_" type="date"/&gt;
+    &lt;/composite-id&gt;
+    &lt;property name="name"/&gt;
+    ....
+&lt;/class&gt;</pre><p>
+			&#36825;&#26102;&#20505;,&#20219;&#20309;&#21040;<tt class="literal">FOOS</tt>&#30340;&#22806;&#38190;&#20063;&#21516;&#26679;&#26159;&#32852;&#21512;&#30340;&#65292; &#22312;&#20320;&#20854;&#20182;&#31867;&#30340;&#26144;&#23556;&#25991;&#20214;&#20013;&#20063;&#24517;&#39035;&#21516;&#26679;&#23450;&#20041;&#12290;
+			&#19968;&#20010;&#21040;<tt class="literal">Foo</tt>&#30340;&#23450;&#20041;&#24212;&#35813;&#20687;&#20197;&#19979;&#36825;&#26679;:
+        </p><pre class="programlisting">&lt;many-to-one name="foo" class="eg.Foo"&gt;
+&lt;!-- the "class" attribute is optional, as usual --&gt;
+    &lt;column name="foo_string"/&gt;
+    &lt;column name="foo_short"/&gt;
+    &lt;column name="foo_date"/&gt;
+&lt;/many-to-one&gt;</pre><p>
+		&#26032;&#30340; <tt class="literal">&lt;column&gt;</tt> &#26631;&#31614;&#21516;&#26679;&#34987;&#29992;&#20110;&#21253;&#21547;&#22810;&#20010;&#23383;&#27573;&#30340;&#33258;&#23450;&#20041;&#31867;&#22411;&#65288;This new  
+		<tt class="literal">column</tt>tag is also used by multi-column custom types&#65289;&#12290; &#20107;&#23454;&#19978;&#22312;&#21508;&#20010;&#22320;&#26041;&#23427;&#37117;&#26159;&#19968;&#20010;&#21487;&#36873;&#30340;&#23383;&#27573;&#23646;&#24615;&#12290;&#35201;&#23450;&#20041;&#19968;&#20010;&#20803;&#32032;&#26159;<tt class="literal">Foo</tt>&#30340;&#38598;&#21512;&#31867;&#65292;&#35201;&#36825;&#26679;&#20889;:
+    </p><pre class="programlisting">&lt;set name="foos"&gt;
+    &lt;key column="owner_id"/&gt;
+    &lt;many-to-many class="eg.Foo"&gt;
+        &lt;column name="foo_string"/&gt;
+        &lt;column name="foo_short"/&gt;
+        &lt;column name="foo_date"/&gt;
+    &lt;/many-to-many&gt;
+&lt;/set&gt;</pre><p>
+			&#21478;&#19968;&#26041;&#38754;&#65292;<tt class="literal">&lt;one-to-many&gt;</tt>&#20803;&#32032;&#36890;&#24120;&#19981;&#23450;&#20041;&#23383;&#27573;.
+        </p><p>
+			&#22914;&#26524; <tt class="literal">Foo</tt> &#33258;&#24049;&#21253;&#21547;&#38598;&#21512;&#65292; &#37027;&#20040;&#20182;&#20204;&#20063;&#38656;&#35201;&#20351;&#29992;&#32852;&#21512;&#22806;&#38190;&#12290;
+        </p><pre class="programlisting">&lt;class name="eg.Foo"&gt;
+    ....
+    ....
+    &lt;set name="dates" lazy="true"&gt;
+        &lt;key&gt;   &lt;!-- a collection inherits the composite key type --&gt;
+            &lt;column name="foo_string"/&gt;
+            &lt;column name="foo_short"/&gt;
+            &lt;column name="foo_date"/&gt;
+        &lt;/key&gt;
+        &lt;element column="foo_date" type="date"/&gt;
+    &lt;/set&gt;
+&lt;/class&gt;</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="components-dynamic"></a>7.5.&nbsp;&#21160;&#24577;&#32452;&#20214; &#65288;Dynamic components&#65289;</h2></div></div><div></div></div><p>
+			&#20320;&#29978;&#33267;&#21487;&#20197;&#26144;&#23556;<tt class="literal">Map</tt>&#31867;&#22411;&#30340;&#23646;&#24615;&#65306;
+        </p><pre class="programlisting">&lt;dynamic-component name="userAttributes"&gt;
+    &lt;property name="foo" column="FOO"/&gt;
+    &lt;property name="bar" column="BAR"/&gt;
+    &lt;many-to-one name="baz" class="eg.Baz" column="BAZ"/&gt;
+&lt;/dynamic-component&gt;</pre><p>
+		&#20174;<tt class="literal">&lt;dynamic-component&gt;</tt>&#26144;&#23556;&#30340;&#35821;&#20041;&#19978;&#26469;&#35762;&#65292;&#23427;&#21644;<tt class="literal">&lt;component&gt;</tt>&#26159;&#30456;&#21516;&#30340;&#12290;
+		&#36825;&#31181;&#26144;&#23556;&#31867;&#22411;&#30340;&#20248;&#28857;&#22312;&#20110;&#36890;&#36807;&#20462;&#25913;&#26144;&#23556;&#25991;&#20214;&#65292;&#23601;&#21487;&#20197;&#20855;&#26377;&#22312;&#37096;&#32626;&#26102;&#26816;&#27979;&#30495;&#23454;&#23646;&#24615;&#30340;&#33021;&#21147;.(&#21033;&#29992;&#19968;&#20010;DOM&#35299;&#26512;&#22120;&#65292;
+		&#26159;&#26377;&#21487;&#33021;&#22312;&#36816;&#34892;&#26102;&#21051;&#25805;&#20316;&#26144;&#23556;&#25991;&#20214;&#30340;&#12290;)
+        </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="collections.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">&#19978;&#19968;&#32423;</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="inheritance.html">&#19979;&#19968;&#39029;</a></td></tr><tr><td width="40%" align="left" valign="top">&#31532;&nbsp;6&nbsp;&#31456;&nbsp;&#38598;&#21512;&#31867;(Collections)&#26144;&#23556;&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">&#36215;&#22987;&#39029;</a></td><td width="40%" align="right" valign="top">&nbsp;&#31532;&nbsp;8&nbsp;&#31456;&nbsp;&#32487;&#25215;&#26144;&#23556;(Inheritance Mappings)</td></tr></table></div></body></html>

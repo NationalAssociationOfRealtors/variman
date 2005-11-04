@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping 
+	PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+	<class name="org.hibernate.test.Up" discriminator-value="null">
+		<composite-id>
+			<key-property name="id1"/>
+			<key-property name="id2"/>
+		</composite-id>
+		<discriminator column="value_" type="long" not-null="false"/>
+
+		<subclass name="org.hibernate.test.Down" discriminator-value="not null">
+			<property name="value" column="value_" type="long"/>
+		</subclass>
+	</class>
+</hibernate-mapping>
+	

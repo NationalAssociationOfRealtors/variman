@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping>
+
+	<subclass name="org.hibernate.test.C2" discriminator-value="2" extends="org.hibernate.test.B">
+		<property name="address" column="c2"/>
+	</subclass>
+
+	
+</hibernate-mapping>

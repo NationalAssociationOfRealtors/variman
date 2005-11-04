@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping>
+
+    <class name="org.hibernate.test.Custom" persister="org.hibernate.test.CustomPersister">
+        <id type="string" name="key" column="id_" length="64" unsaved-value="null">
+            <generator class="uuid.hex"/>
+        </id>
+    </class>
+
+</hibernate-mapping>

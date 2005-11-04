@@ -1,0 +1,325 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>&#31532;&nbsp;15&nbsp;&#31456;&nbsp;&#24037;&#20855;&#31665;&#25351;&#21335;</title><link rel="stylesheet" href="../shared/css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="up" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="previous" href="performance.html" title="&#31532;&nbsp;14&nbsp;&#31456;&nbsp;&#24615;&#33021;&#25552;&#21319;&#65288;Improving performance&#65289;"><link rel="next" href="example-parentchild.html" title="&#31532;&nbsp;16&nbsp;&#31456;&nbsp;&#31034;&#20363;&#65306;&#29238;&#23376;&#20851;&#31995;(Parent Child Relationships)"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&#31532;&nbsp;15&nbsp;&#31456;&nbsp;&#24037;&#20855;&#31665;&#25351;&#21335;</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="performance.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="example-parentchild.html">&#19979;&#19968;&#39029;</a></td></tr></table><hr></div><div class="chapter" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title"><a name="toolsetguide"></a>&#31532;&nbsp;15&nbsp;&#31456;&nbsp;&#24037;&#20855;&#31665;&#25351;&#21335;</h2></div></div><div></div></div><p>
+        &#36890;&#36807;Hibernate&#39033;&#30446;&#20013;&#25552;&#20379;&#30340;&#20960;&#20010;&#21629;&#20196;&#34892;&#24037;&#20855;(&#20182;&#20204;&#20063;&#34987;&#24403;&#20316;&#39033;&#30446;&#30340;&#19968;&#37096;&#20998;&#19981;&#26029;&#24471;&#21040;&#32500;&#25252;),&#36824;&#26377;XDoclet,Middlegen&#21644;AndroMDA&#20869;&#32622;&#30340;&#23545;Hibernate&#30340;&#25903;&#25345;,&#21487;&#20197;&#22312;&#20960;&#20010;&#19981;&#21516;&#30340;&#29615;&#22659;(SQL,java&#20195;&#30721;,xml&#26144;&#23556;&#25991;&#20214;)&#20013;&#36827;&#34892;&#30456;&#20114;&#36716;&#25442;(roundtrip)&#12290;
+    </p><p>
+        Hibernate&#30340;&#20027;&#21457;&#34892;&#21253;&#20013;&#38468;&#24102;&#20102;&#26368;&#37325;&#35201;&#30340;&#24037;&#20855;&#65288;&#29978;&#33267;&#22312;Hibernate&#20869;&#37096;&#20063;&#21487;&#20197;&#24555;&#36895;&#35843;&#29992;&#36825;&#20010;&#24037;&#20855;&#65289;&#65306;
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+            &#20174;&#26144;&#23556;&#25991;&#20214;&#21040;DDL schema&#30340;&#29983;&#25104;&#22120;&#65288;&#20063;&#23601;&#26159;<tt class="literal">SchemaExport</tt>&#21644;<tt class="literal">hbm2ddl</tt>&#65289;
+        </p></li></ul></div><p>
+        Hibernate&#39033;&#30446;&#30452;&#25509;&#25552;&#20379;&#30340;&#20854;&#20182;&#24037;&#20855;&#22312;&#19968;&#20010;&#21333;&#29420;&#30340;&#21457;&#34892;&#21253;&#20013;&#21457;&#24067;&#65292;<span class="emphasis"><em>Hibernate Extensions</em></span>&#12290;&#36825;&#20010;&#21457;&#34892;&#21253;&#21253;&#21547;&#20102;&#19979;&#21015;&#20219;&#21153;&#30340;&#24037;&#20855;&#65306;
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+            &#20174;&#26144;&#23556;&#25991;&#20214;&#21040;Java&#28304;&#20195;&#30721;&#30340;&#29983;&#25104;&#22120;(&#20063;&#23601;&#26159;<tt class="literal">CodeGenerator</tt>&#65292;<tt class="literal">hbm2java</tt>&#65289;
+        </p></li><li><p>
+            &#20174;&#24050;&#32534;&#35793;&#30340;Java&#31867;&#25110;&#32773;&#24102;&#26377;XDoclet&#26631;&#35760;&#30340;Java&#28304;&#20195;&#30721;&#29983;&#25104;&#26144;&#23556;&#25991;&#20214;&#65288;&#23427;&#20204;&#26159;<tt class="literal">MapGenerator</tt>,<tt class="literal">class2hbm</tt>&#65289;
+        </p></li></ul></div><p>
+        &#23454;&#38469;&#19978;Hibernate Extensions&#37324;&#38754;&#36824;&#26377;&#19968;&#20010;&#24037;&#20855;&#65306;<tt class="literal">ddl2hbm</tt>&#12290;&#20294;&#26159;&#23427;&#24050;&#32463;&#34987;&#24223;&#24323;&#20102;&#65292;&#24050;&#32463;&#19981;&#20877;&#34987;&#32500;&#25252;&#20102;&#12290;Middlegen&#23436;&#25104;&#20102;&#21516;&#26679;&#30340;&#20219;&#21153;&#65292;&#24182;&#19988;&#26356;&#21152;&#20986;&#33394;&#12290;
+    </p><p>
+        &#23545;Hibernate&#25552;&#20379;&#25903;&#25345;&#30340;&#31532;&#19977;&#26041;&#24037;&#20855;&#26377;&#65306;
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+            Middlegen (&#20174;&#29616;&#26377;&#30340;&#25968;&#25454;&#24211;schema&#20013;&#29983;&#25104;&#26144;&#23556;&#25991;&#20214;&#65289;
+        </p></li><li><p>
+            AndroMDA ( &#20351;&#29992;MDA&#24605;&#24819;(Model-Driven Architecture &#65292;&#27169;&#22411;&#39537;&#21160;&#20307;&#31995;)&#30340;&#20195;&#30721;&#29983;&#25104;&#22120;&#65292;&#23427;&#20174;UML&#22270;&#21644;&#20854;XML/XMI&#31561;&#20215;&#24418;&#24335;&#20013;&#29983;&#25104;&#25345;&#20037;&#21270;&#31867;&#30340;&#20195;&#30721;&#65289;
+        </p></li></ul></div><p>
+        &#36825;&#20123;&#31532;&#19977;&#26041;&#24037;&#20855;&#27809;&#26377;&#22312;&#36825;&#31687;&#25351;&#21335;&#20013;&#35828;&#26126;&#12290;&#35831;&#26597;&#38405;Hibernate &#32593;&#31449;&#24471;&#21040;&#20851;&#20110;&#23427;&#20204;&#30446;&#21069;&#30340;&#24773;&#20917;&#12290;&#65288;Hibernate&#20027;&#21457;&#34892;&#21253;&#20013;&#26377;&#20851;&#20110;&#25972;&#20010;&#32593;&#31449;&#30340;&#24555;&#29031;&#65289;
+    </p><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="toolsetguide-s1"></a>15.1.&nbsp;Schema &#29983;&#25104;&#22120;&#65288;Schema Generation&#65289;</h2></div></div><div></div></div><p>
+            &#21487;&#20197;&#20174;&#20320;&#30340;&#26144;&#23556;&#25991;&#20214;&#20351;&#29992;&#19968;&#20010;&#21629;&#20196;&#34892;&#24037;&#20855;&#29983;&#25104;DDL&#12290;&#22312;Hibernate&#20027;&#21457;&#34892;&#21253;&#30340;<tt class="literal">hibernate-x.x.x/bin</tt>&#30446;&#24405;&#19979;&#26377;&#19968;&#20010;&#25209;&#22788;&#29702;&#25991;&#20214;&#12290;
+        </p><p>
+            &#29983;&#25104;&#30340;schema&#21253;&#21547;&#26377;&#23545;&#23454;&#20307;&#21644;&#38598;&#21512;&#31867;&#34920;&#30340;&#23436;&#25972;&#24615;&#24341;&#29992;&#32422;&#26463;&#65288;&#20027;&#38190;&#21644;&#22806;&#38190;&#65289;&#12290;&#28041;&#21450;&#21040;&#30340;&#26631;&#31034;&#31526;&#29983;&#25104;&#22120;&#25152;&#38656;&#30340;&#34920;&#21644;sequence&#20063;&#20250;&#21516;&#26102;&#29983;&#25104;&#12290;
+        </p><p>
+            &#22312;&#20351;&#29992;&#36825;&#20010;&#24037;&#20855;&#30340;&#26102;&#20505;&#65292;&#20320;<span class="emphasis"><em>&#24517;&#39035;</em></span> &#36890;&#36807;<tt class="literal">hibernate.dialet</tt>&#23646;&#24615;&#25351;&#23450;&#19968;&#20010;SQL<tt class="literal">&#26041;&#35328;(Dialet)</tt>&#12290;
+        </p><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s1-2"></a>15.1.1.&nbsp;&#23545;schema&#23450;&#21046;&#21270;(Customizing the schema)</h3></div></div><div></div></div><p>
+                &#24456;&#22810;Hibernate&#26144;&#23556;&#20803;&#32032;&#23450;&#20041;&#20102;&#19968;&#20010;&#21487;&#36873;&#30340;<tt class="literal">length</tt>&#23646;&#24615;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#36825;&#20010;&#23646;&#24615;&#35774;&#32622;&#23383;&#27573;&#30340;&#38271;&#24230;&#12290; (&#22914;&#26524;&#26159;Or, for numeric/decimal data types, the precision.)
+            </p><p>
+                &#26377;&#20123;tag&#25509;&#21463;<tt class="literal">not-null</tt>&#23646;&#24615;&#65288;&#29992;&#26469;&#22312;&#34920;&#23383;&#27573;&#19978;&#29983;&#25104;<tt class="literal">NOT NULL</tt>&#32422;&#26463;&#65289;&#21644;<tt class="literal">unique</tt>&#23646;&#24615;&#65288;&#29992;&#26469;&#22312;&#34920;&#23383;&#27573;&#19978;&#29983;&#25104;<tt class="literal">UNIQUE</tt>&#32422;&#26463;&#65289;&#12290;
+            </p><p>
+                &#26377;&#20123;tag&#25509;&#21463;<tt class="literal">index</tt>&#23646;&#24615;&#65292;&#29992;&#26469;&#25351;&#23450;&#23383;&#27573;&#30340;index&#21517;&#23383;&#12290;<tt class="literal">unique-key</tt>&#23646;&#24615;&#21487;&#20197;&#23545;&#25104;&#32452;&#30340;&#23383;&#27573;&#25351;&#23450;&#19968;&#20010;&#32452;&#21512;&#38190;&#32422;&#26463;(unit key constraint)&#12290;&#30446;&#21069;&#65292;<tt class="literal">unique-key</tt>&#23646;&#24615;&#25351;&#23450;&#30340;&#20540;<span class="emphasis"><em>&#24182;&#19981;&#20250;</em></span>&#34987;&#24403;&#20316;&#36825;&#20010;&#32422;&#26463;&#30340;&#21517;&#23383;&#65292;&#23427;&#20204;&#21482;&#26159;&#22312;&#29992;&#26469;&#22312;&#26144;&#23556;&#25991;&#20214;&#20869;&#37096;&#29992;&#20316;&#21306;&#20998;&#30340;&#12290;
+            </p><p>
+                &#31034;&#20363;&#65306;
+            </p><pre class="programlisting">&lt;property name="foo" type="string" length="64" not-null="true"/&gt;
+
+&lt;many-to-one name="bar" foreign-key="fk_foo_bar" not-null="true"/&gt;
+
+&lt;element column="serial_number" type="long" not-null="true" unique="true"/&gt;</pre><p>
+                &#21478;&#22806;&#65292;&#36825;&#20123;&#20803;&#32032;&#36824;&#25509;&#21463;<tt class="literal">&lt;column&gt;</tt>&#23376;&#20803;&#32032;&#12290;&#22312;&#23450;&#20041;&#36328;&#36234;&#22810;&#23383;&#27573;&#30340;&#31867;&#22411;&#26102;&#29305;&#21035;&#26377;&#29992;&#12290;
+            </p><pre class="programlisting">&lt;property name="foo" type="string"&gt;
+    &lt;column name="foo" length="64" not-null="true" sql-type="text"/&gt;
+&lt;/property&gt;
+
+&lt;property name="bar" type="my.customtypes.MultiColumnType"/&gt;
+    &lt;column name="fee" not-null="true" index="bar_idx"/&gt;
+    &lt;column name="fi" not-null="true" index="bar_idx"/&gt;
+    &lt;column name="fo" not-null="true" index="bar_idx"/&gt;
+&lt;/property&gt;</pre><p>
+                <tt class="literal">sql-type</tt>&#23646;&#24615;&#20801;&#35768;&#29992;&#25143;&#35206;&#30422;&#40664;&#35748;&#30340;Hibernate&#31867;&#22411;&#21040;SQL&#25968;&#25454;&#31867;&#22411;&#30340;&#26144;&#23556;&#12290;
+            </p><p>
+                <tt class="literal">check</tt>&#23646;&#24615;&#20801;&#35768;&#29992;&#25143;&#25351;&#23450;&#19968;&#20010;&#32422;&#26463;&#26816;&#26597;&#12290;
+            </p><pre class="programlisting">&lt;property name="foo" type="integer"&gt;
+    &lt;column name="foo" check="foo &gt; 10"/&gt;
+&lt;/property&gt;
+
+&lt;class name="Foo" table="foos" check="bar &lt; 100.0"&gt;
+    ...
+    &lt;property name="bar" type="float"/&gt;
+&lt;/class&gt;</pre><div class="table"><a name="schemattributes-summary"></a><p class="title"><b>&#34920;&nbsp;15.1.&nbsp;Summary</b></p><table summary="Summary" border="1"><colgroup><col><col></colgroup><thead><tr><th>&#23646;&#24615;(Attribute)</th><th>&#20540;&#65288;Values&#65289;</th><th>&#35299;&#37322;&#65288;Interpretation&#65289;</th></tr></thead><tbody><tr><td><tt class="literal">length</tt></td><td>&#25968;&#23383;</td><td>&#23383;&#27573;&#38271;&#24230;/&#23567;&#25968;&#28857;&#31934;&#24230;</td></tr><tr><td><tt class="literal">not-null</tt></td><td><tt class="literal">true|false</tt></td><td>&#25351;&#26126;&#23383;&#27573;&#26159;&#21542;&#24212;&#35813;&#26159;&#38750;&#31354;&#30340;</td></tr><tr><td><tt class="literal">unique</tt></td><td><tt class="literal">true|false</tt></td><td>&#25351;&#26126;&#26159;&#21542;&#35813;&#23383;&#27573;&#20855;&#26377;&#24799;&#19968;&#32422;&#26463;</td></tr><tr><td><tt class="literal">index</tt></td><td><tt class="literal">index_name</tt></td><td>&#25351;&#26126;&#19968;&#20010;&#65288;&#22810;&#23383;&#27573;&#65289;&#30340;&#32034;&#24341;(index)&#30340;&#21517;&#23383;</td></tr><tr><td><tt class="literal">unique-key</tt></td><td><tt class="literal">unique_key_name</tt></td><td>&#25351;&#26126;&#22810;&#23383;&#27573;&#24799;&#19968;&#32422;&#26463;&#30340;&#21517;&#23383;&#65288;&#21442;&#35265;&#19978;&#38754;&#30340;&#35828;&#26126;&#65289;</td></tr><tr><td><tt class="literal">foreign-key</tt></td><td><tt class="literal">foreign_key_name</tt></td><td>
+                                &#25351;&#26126;&#19968;&#20010;&#22806;&#38190;&#30340;&#21517;&#23383;&#65292;&#23427;&#26159;&#20026;&#20851;&#32852;&#29983;&#25104;&#30340;&#12290;
+                            </td></tr><tr><td><tt class="literal">sql-type</tt></td><td><tt class="literal">column_type</tt></td><td>
+                                &#35206;&#30422;&#40664;&#35748;&#30340;&#23383;&#27573;&#31867;&#22411;(&#21482;&#33021;&#29992;&#20110;<tt class="literal">&lt;column&gt;</tt>&#23646;&#24615;&#65289;
+                            </td></tr><tr><td><tt class="literal">check</tt></td><td>SQL &#34920;&#36798;&#24335;</td><td>
+                            	&#23545;&#23383;&#27573;&#25110;&#34920;&#21152;&#20837;SQL&#32422;&#26463;&#26816;&#26597;
+                            </td></tr></tbody></table></div></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s1-3"></a>15.1.2.&nbsp;&#36816;&#34892;&#35813;&#24037;&#20855;</h3></div></div><div></div></div><p>
+                <tt class="literal">SchemaExport</tt>&#24037;&#20855;&#25226;DDL&#33050;&#26412;&#20889;&#21040;&#26631;&#20934;&#36755;&#20986;&#65292;&#21516;&#26102;/&#25110;&#32773;&#25191;&#34892;DDL&#35821;&#21477;&#12290;
+            </p><p>
+                <tt class="literal">java -cp </tt><span class="emphasis"><em>hibernate_classpaths</em></span>
+                <tt class="literal">net.sf.hibernate.tool.hbm2ddl.SchemaExport</tt> <span class="emphasis"><em>options mapping_files</em></span>
+            </p><div class="table"><a name="d0e9262"></a><p class="title"><b>&#34920;&nbsp;15.2.&nbsp;<tt class="literal">SchemaExport</tt>&#21629;&#20196;&#34892;&#36873;&#39033;</b></p><table summary="SchemaExport&#21629;&#20196;&#34892;&#36873;&#39033;" border="1"><colgroup><col><col></colgroup><thead><tr><th>&#36873;&#39033;</th><th>&#35828;&#26126;</th></tr></thead><tbody><tr><td><tt class="literal">--quiet</tt></td><td>&#19981;&#35201;&#25226;&#33050;&#26412;&#36755;&#20986;&#21040;stdout</td></tr><tr><td><tt class="literal">--drop</tt></td><td>&#21482;&#36827;&#34892;drop tables&#30340;&#27493;&#39588;</td></tr><tr><td><tt class="literal">--text</tt></td><td>&#19981;&#25191;&#34892;&#22312;&#25968;&#25454;&#24211;&#20013;&#36816;&#34892;&#30340;&#27493;&#39588;</td></tr><tr><td><tt class="literal">--output=my_schema.ddl</tt></td><td>&#25226;&#36755;&#20986;&#30340;ddl&#33050;&#26412;&#36755;&#20986;&#21040;&#19968;&#20010;&#25991;&#20214;</td></tr><tr><td><tt class="literal">--config=hibernate.cfg.xml</tt></td><td>&#20174;XML&#25991;&#20214;&#35835;&#20837;Hibernate&#37197;&#32622;</td></tr><tr><td><tt class="literal">--properties=hibernate.properties</tt></td><td>&#20174;&#25991;&#20214;&#35835;&#20837;&#25968;&#25454;&#24211;&#23646;&#24615;</td></tr><tr><td><tt class="literal">--format</tt></td><td>&#25226;&#33050;&#26412;&#20013;&#30340;SQL&#35821;&#21477;&#23545;&#40784;&#21644;&#32654;&#21270;</td></tr><tr><td><tt class="literal">--delimiter=x</tt></td><td>&#20026;&#33050;&#26412;&#35774;&#32622;&#34892;&#32467;&#26463;&#31526;</td></tr></tbody></table></div><p>
+                &#20320;&#29978;&#33267;&#21487;&#20197;&#22312;&#20320;&#30340;&#24212;&#29992;&#31243;&#24207;&#20013;&#23884;&#20837;<tt class="literal">SchemaExport</tt>&#24037;&#20855;:
+            </p><pre class="programlisting">Configuration cfg = ....;
+new SchemaExport(cfg).create(false, true);</pre></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s1-4"></a>15.1.3.&nbsp;&#23646;&#24615;(Properties)</h3></div></div><div></div></div><p>
+                &#21487;&#20197;&#36890;&#36807;&#22914;&#19979;&#26041;&#24335;&#25351;&#23450;&#25968;&#25454;&#24211;&#23646;&#24615;:
+            </p><div class="itemizedlist"><ul type="disc" compact><li><p>&#36890;&#36807;<tt class="literal">-D</tt><span class="emphasis"><em>&lt;property&gt;</em></span>&#31995;&#32479;&#21442;&#25968;</p></li><li><p>&#22312;<tt class="literal">hibernate.properties</tt>&#25991;&#20214;&#20013;</p></li><li><p>&#20301;&#20110;&#19968;&#20010;&#20854;&#23427;&#21517;&#23383;&#30340;properties&#25991;&#20214;&#20013;,&#28982;&#21518;&#29992; <tt class="literal">--properties</tt>&#21442;&#25968;&#25351;&#23450;</p></li></ul></div><p>
+                &#25152;&#38656;&#30340;&#21442;&#25968;&#21253;&#25324;:
+            </p><div class="table"><a name="d0e9360"></a><p class="title"><b>&#34920;&nbsp;15.3.&nbsp;SchemaExport &#36830;&#25509;&#23646;&#24615;</b></p><table summary="SchemaExport &#36830;&#25509;&#23646;&#24615;" border="1"><colgroup><col><col></colgroup><thead><tr><th>&#23646;&#24615;&#21517;</th><th>&#35828;&#26126;</th></tr></thead><tbody><tr><td><tt class="literal">hibernate.connection.driver_class</tt></td><td>jdbc driver class</td></tr><tr><td><tt class="literal">hibernate.connection.url</tt></td><td>jdbc url</td></tr><tr><td><tt class="literal">hibernate.connection.username</tt></td><td>database user</td></tr><tr><td><tt class="literal">hibernate.connection.password</tt></td><td>user password</td></tr><tr><td><tt class="literal">hibernate.dialect</tt></td><td>&#26041;&#35328;(dialect)</td></tr></tbody></table></div></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s1-5"></a>15.1.4.&nbsp;&#20351;&#29992;Ant(Using Ant)</h3></div></div><div></div></div><p>
+                &#20320;&#21487;&#20197;&#22312;&#20320;&#30340;Ant build&#33050;&#26412;&#20013;&#35843;&#29992;<tt class="literal">SchemaExport</tt>:
+            </p><pre class="programlisting">&lt;target name="schemaexport"&gt;
+    &lt;taskdef name="schemaexport"
+        classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask"
+        classpathref="class.path"/&gt;
+    
+    &lt;schemaexport
+        properties="hibernate.properties"
+        quiet="no"
+        text="no"
+        drop="no"
+        delimiter=";"
+        output="schema-export.sql"&gt;
+        &lt;fileset dir="src"&gt;
+            &lt;include name="**/*.hbm.xml"/&gt;
+        &lt;/fileset&gt;
+    &lt;/schemaexport&gt;
+&lt;/target&gt;</pre></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s1-6"></a>15.1.5.&nbsp;&#23545;schema&#30340;&#22686;&#37327;&#26356;&#26032;(Incremental schema updates)</h3></div></div><div></div></div><p>
+                <tt class="literal">SchemaUpdate</tt>&#24037;&#20855;&#23545;&#24050;&#23384;&#22312;&#30340;schema&#37319;&#29992;"&#22686;&#37327;"&#26041;&#24335;&#36827;&#34892;&#26356;&#26032;&#12290;&#27880;&#24847;<tt class="literal">SchemaUpdate</tt>&#20005;&#37325;&#20381;&#36182;&#20110;JDBC metadata API,&#25152;&#20197;&#23427;&#24182;&#38750;&#23545;&#25152;&#26377;JDBC&#39537;&#21160;&#37117;&#26377;&#25928;&#12290;
+            </p><p>
+                <tt class="literal">java -cp </tt><span class="emphasis"><em>hibernate_classpaths</em></span>
+                <tt class="literal">net.sf.hibernate.tool.hbm2ddl.SchemaUpdate</tt> <span class="emphasis"><em>options mapping_files</em></span>
+            </p><div class="table"><a name="d0e9437"></a><p class="title"><b>&#34920;&nbsp;15.4.&nbsp;<tt class="literal">SchemaUpdate</tt>&#21629;&#20196;&#34892;&#36873;&#39033;</b></p><table summary="SchemaUpdate&#21629;&#20196;&#34892;&#36873;&#39033;" border="1"><colgroup><col><col></colgroup><thead><tr><th>&#36873;&#39033;</th><th>&#35828;&#26126;</th></tr></thead><tbody><tr><td><tt class="literal">--quiet</tt></td><td>&#19981;&#35201;&#25226;&#33050;&#26412;&#36755;&#20986;&#21040;stdout</td></tr><tr><td><tt class="literal">--properties=hibernate.properties</tt></td><td>&#20174;&#25351;&#23450;&#25991;&#20214;&#35835;&#20837;&#25968;&#25454;&#24211;&#23646;&#24615;</td></tr></tbody></table></div><p>
+                &#20320;&#21487;&#20197;&#22312;&#20320;&#30340;&#24212;&#29992;&#31243;&#24207;&#20013;&#23884;&#20837;<tt class="literal">SchemaUpdate</tt>&#24037;&#20855;:
+            </p><pre class="programlisting">Configuration cfg = ....;
+new SchemaUpdate(cfg).execute(false);</pre></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s1-7"></a>15.1.6.&nbsp;&#29992;Ant&#26469;&#22686;&#37327;&#26356;&#26032;schema(Using Ant for incremental schema updates)</h3></div></div><div></div></div><p>
+                &#20320;&#21487;&#20197;&#22312;Ant&#33050;&#26412;&#20013;&#35843;&#29992;<tt class="literal">SchemaUpdate</tt>&#65306;
+            </p><pre class="programlisting">&lt;target name="schemaupdate"&gt;
+    &lt;taskdef name="schemaupdate"
+        classname="net.sf.hibernate.tool.hbm2ddl.SchemaUpdateTask"
+        classpathref="class.path"/&gt;
+    
+    &lt;schemaupdate
+        properties="hibernate.properties"
+        quiet="no"&gt;
+        &lt;fileset dir="src"&gt;
+            &lt;include name="**/*.hbm.xml"/&gt;
+        &lt;/fileset&gt;
+    &lt;/schemaupdate&gt;
+&lt;/target&gt;</pre></div></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="toolsetguide-s2"></a>15.2.&nbsp;&#20195;&#30721;&#29983;&#25104;&#65288;Code Generation&#65289;</h2></div></div><div></div></div><p>
+            Hibernate&#20195;&#30721;&#29983;&#25104;&#22120;&#21487;&#20197;&#29992;&#26469;&#20026;Hibernate&#26144;&#23556;&#25991;&#20214;&#29983;&#25104;Java&#23454;&#29616;&#31867;&#30340;&#39592;&#26550;&#12290;&#36825;&#20010;&#24037;&#20855;&#22312;Hibernate Extensions&#21457;&#34892;&#21253;&#20013;&#25552;&#20379;&#65288;&#38656;&#35201;&#21333;&#29420;&#19979;&#36733;&#65289;&#12290;
+        </p><p>
+            <tt class="literal">hbm2java</tt>&#35299;&#26512;&#26144;&#23556;&#25991;&#20214;&#65292;&#29983;&#25104;&#21487;&#24037;&#20316;&#30340;Java&#28304;&#20195;&#30721;&#25991;&#20214;&#12290;&#20351;&#29992;<tt class="literal">hbm2java</tt>&#65292;&#20320;&#21487;&#20197;&#8220;&#21482;&#8221;&#25552;&#20379;<tt class="literal">.hbm</tt>&#25991;&#20214;&#65292;&#19981;&#29992;&#25285;&#24515;&#35201;&#21435;&#25163;&#24037;&#32534;&#20889;Java&#25991;&#20214;&#12290;
+        </p><p>
+            <tt class="literal">java -cp</tt> <span class="emphasis"><em>hibernate_classpaths</em></span>
+            <tt class="literal">net.sf.hibernate.tool.hbm2java.CodeGenerator</tt> <span class="emphasis"><em> options
+            mapping_files</em></span>
+        </p><div class="table"><a name="d0e9511"></a><p class="title"><b>&#34920;&nbsp;15.5.&nbsp;&#20195;&#30721;&#29983;&#25104;&#22120;&#21629;&#20196;&#34892;&#36873;&#39033;</b></p><table summary="&#20195;&#30721;&#29983;&#25104;&#22120;&#21629;&#20196;&#34892;&#36873;&#39033;" border="1"><colgroup><col><col></colgroup><thead><tr><th>&#36873;&#39033;</th><th>&#35828;&#26126;</th></tr></thead><tbody><tr><td><tt class="literal">--output=</tt><span class="emphasis"><em>output_dir</em></span></td><td>&#29983;&#25104;&#20195;&#30721;&#36755;&#20986;&#30340;&#26681;&#30446;&#24405;</td></tr><tr><td><tt class="literal">--config=</tt><span class="emphasis"><em>config_file</em></span></td><td>&#21487;&#36873;&#30340;hvm2java&#37197;&#32622;&#25991;&#20214;</td></tr></tbody></table></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s2-1"></a>15.2.1.&nbsp;&#37197;&#32622;&#25991;&#20214;(&#21487;&#36873;)</h3></div></div><div></div></div><p>
+                &#37197;&#32622;&#25991;&#20214;&#25552;&#20379;&#20102;&#37197;&#32622;&#29983;&#25104;&#28304;&#20195;&#30721;&#30340;&#22810;&#20010;"&#28210;&#26579;&#22120;(renders)"&#30340;&#36884;&#24452;,&#20063;&#21487;&#20197;&#22768;&#26126;&#22312;&#20840;&#23616;&#33539;&#22260;&#29983;&#25928;&#30340;<tt class="literal">&lt;meta&gt;</tt>&#23646;&#24615;&#12290;&#35814;&#24773;&#35831;&#21442;&#35265;<tt class="literal">&lt;meta&gt;</tt>&#23646;&#24615;&#30340;&#37096;&#20998;&#12290;
+                
+                
+            </p><pre class="programlisting">&lt;codegen&gt;
+    &lt;meta attribute="implements"&gt;codegen.test.IAuditable&lt;/meta&gt;
+    &lt;generate renderer="net.sf.hibernate.tool.hbm2java.BasicRenderer"/&gt;
+    &lt;generate
+        package="autofinders.only"
+        suffix="Finder"
+        renderer="net.sf.hibernate.tool.hbm2java.FinderRenderer"/&gt;
+&lt;/codegen&gt;</pre><p>
+                &#36825;&#20010;&#37197;&#32622;&#25991;&#20214;&#22768;&#26126;&#20102;&#19968;&#20010;&#20840;&#23616;&#30340;meta(&#20803;&#65289;&#23646;&#24615;&#8220;implements&#8221;&#65292;&#25351;&#23450;&#20102;&#20004;&#20010;&#28210;&#26579;&#22120;&#65292;&#40664;&#35748;&#28210;&#26579;&#22120;(BadicRender)&#21644;&#29983;&#25104;Finder&#65288;&#21442;&#35265;&#19979;&#38754;&#30340;&#8220;&#22522;&#26412;Finder &#29983;&#25104;&#22120;&#8221;&#65289;&#30340;&#28210;&#26579;&#22120;&#12290;
+            </p><p>
+                &#23450;&#20041;&#31532;&#20108;&#20010;&#28210;&#26579;&#22120;&#38656;&#35201;&#19968;&#20010;&#21253;&#21517;&#21644;&#21518;&#32512;&#23646;&#24615;&#12290;
+            </p><p>
+                &#21253;&#21517;&#23646;&#24615;&#25351;&#23450;&#29983;&#25104;&#21518;&#30340;&#28304;&#20195;&#30721;&#24212;&#35813;&#20445;&#23384;&#30340;&#20301;&#32622;&#65292;&#35206;&#30422;&#22312;<tt class="literal">.hbm</tt>&#25991;&#20214;&#20013;&#25351;&#23450;&#30340;&#21253;&#33539;&#22260;&#12290;
+            </p><p>
+                &#21518;&#32512;&#23646;&#24615;&#25351;&#23450;&#29983;&#25104;&#30340;&#25991;&#20214;&#30340;&#21518;&#32512;&#12290;&#27604;&#22914;&#35828;&#65292;&#22914;&#26524;&#26377;&#19968;&#20010;<tt class="literal">Foo.java</tt>&#25991;&#20214;&#65292;&#24212;&#35813;&#21464;&#25104;<tt class="literal">FooFinder.java</tt>&#12290;
+            </p><p>
+              &#20063;&#21487;&#20197;&#36890;&#36807;&#22312;<tt class="literal">&lt;generate&gt;</tt>&#20803;&#32032;&#19978;&#22686;&#21152;<tt class="literal">&lt;param&gt;</tt>&#23646;&#24615;&#26469;&#20256;&#36882;&#29305;&#21035;&#30340;&#21442;&#25968;&#21040;&#28210;&#26579;&#22120;&#21435;&#12290;
+            </p><p>
+              hbm2java&#30446;&#21069;&#25903;&#25345;&#19968;&#20010;&#36825;&#26679;&#30340;&#21442;&#25968;&#65292;&#21517;&#23383;&#26159;<tt class="literal">generate-concrete-empty-classes</tt>&#26469;&#36890;&#30693;BasicRender&#23545;&#20320;&#25152;&#26377;&#30340;&#31867;&#37117;&#21482;&#29983;&#25104;&#31354;&#30340;&#20855;&#20307;&#31867;&#26469;&#32487;&#25215;&#23427;&#20204;&#12290;&#19979;&#21015;config.xml&#28436;&#31034;&#20102;&#36825;&#20010;&#21151;&#33021;
+            </p><pre class="programlisting">
+            &lt;codegen&gt;
+              &lt;generate prefix="Base" renderer="net.sf.hibernate.tool.hbm2java.BasicRenderer"/&gt; 
+              &lt;generate renderer="net.sf.hibernate.tool.hbm2java.BasicRenderer"&gt;
+                &lt;param name="generate-concrete-empty-classes"&gt;true&lt;/param&gt;
+                &lt;param name="baseclass-prefix"&gt;Base&lt;/param&gt;
+              &lt;/generate&gt;
+            &lt;/codegen&gt;</pre><p>
+              &#27880;&#24847;&#65292;&#36825;&#20010;config.xml&#23450;&#20041;&#20102;&#20004;&#20010;&#28210;&#26579;&#22120;&#12290;&#19968;&#20010;&#29983;&#25104;Base&#31867;&#65292;&#31532;&#20108;&#20010;&#21482;&#29983;&#25104;&#31354;&#30340;&#20855;&#20307;&#31867;&#12290;
+            </p></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s2-2"></a>15.2.2.&nbsp;<tt class="literal">meta</tt>&#23646;&#24615;</h3></div></div><div></div></div><p>
+                <tt class="literal">&lt;meta&gt;</tt>&#26631;&#31614;&#26102;&#23545;<tt class="literal">hbm.xml</tt>&#25991;&#20214;&#36827;&#34892;&#30340;&#31616;&#21333;&#27880;&#35299;&#65292;&#24037;&#20855;&#21487;&#20197;&#29992;&#36825;&#20010;&#20301;&#32622;&#26469;&#20445;&#23384;/&#38405;&#35835;&#21644;Hibernate&#20869;&#26680;&#19981;&#26159;&#30452;&#25509;&#30456;&#20851;&#30340;&#19968;&#20123;&#20449;&#24687;&#12290;
+            </p><p>
+                &#20320;&#21487;&#20197;&#29992;<tt class="literal">&lt;meta&gt;</tt>&#26631;&#31614;&#26469;&#21578;&#35785;<tt class="literal">hbm2java</tt>&#21482;&#29983;&#25104;"protectd"
+            </p><p>
+                &#19979;&#38754;&#30340;&#20363;&#23376;&#65306;
+            </p><pre class="programlisting">&lt;class name="Person"&gt;
+    &lt;meta attribute="class-description"&gt;
+        Javadoc for the Person class
+        @author Frodo
+    &lt;/meta&gt;
+    &lt;meta attribute="implements"&gt;IAuditable&lt;/meta&gt;
+    &lt;id name="id" type="long"&gt;
+        &lt;meta attribute="scope-set"&gt;protected&lt;/meta&gt;
+        &lt;generator class="increment"/&gt;
+    &lt;/id&gt;
+    &lt;property name="name" type="string"&gt;
+        &lt;meta attribute="field-description"&gt;The name of the person&lt;/meta&gt;
+    &lt;/property&gt;
+&lt;/class&gt;</pre><p>
+                &#20250;&#29983;&#25104;&#31867;&#20284;&#19979;&#38754;&#30340;&#36755;&#20986;&#65288;&#20026;&#20102;&#26377;&#21161;&#20110;&#29702;&#35299;&#65292;&#33410;&#36873;&#37096;&#20998;&#20195;&#30721;&#65289;&#12290;&#27880;&#24847;Javadoc&#27880;&#37322;&#21644;&#22768;&#26126;&#25104;protected&#30340;set&#26041;&#27861;&#65306;
+            </p><pre class="programlisting">// default package
+
+import java.io.Serializable;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+/** 
+ *         Javadoc for the Person class
+ *         @author Frodo
+ *     
+ */
+public class Person implements Serializable, IAuditable {
+
+    /** identifier field */
+    public Long id;
+
+    /** nullable persistent field */
+    public String name;
+
+    /** full constructor */
+    public Person(java.lang.String name) {
+        this.name = name;
+    }
+
+    /** default constructor */
+    public Person() {
+    }
+
+    public java.lang.Long getId() {
+        return this.id;
+    }
+
+    protected void setId(java.lang.Long id) {
+        this.id = id;
+    }
+
+    /** 
+     * The name of the person
+     */
+    public java.lang.String getName() {
+        return this.name;
+    }
+
+    public void setName(java.lang.String name) {
+        this.name = name;
+    }
+
+}</pre><div class="table"><a name="d0e9616"></a><p class="title"><b>&#34920;&nbsp;15.6.&nbsp;&#25903;&#25345;&#30340;meta&#26631;&#31614;</b></p><table summary="&#25903;&#25345;&#30340;meta&#26631;&#31614;" border="1"><colgroup><col><col></colgroup><thead><tr><th>&#23646;&#24615;</th><th>&#35828;&#26126;</th></tr></thead><tbody><tr><td><tt class="literal">class-description</tt></td><td>&#25554;&#20837;&#21040;&#31867;&#30340;javadoc&#35828;&#26126;&#21435;</td></tr><tr><td><tt class="literal">field-description</tt></td><td>&#25554;&#20837;&#21040;field/property&#30340;javadoc&#35828;&#26126;&#21435;</td></tr><tr><td><tt class="literal">interface</tt></td><td>&#22914;&#26524;&#26159;true,&#29983;&#25104;interface&#32780;&#38750;class</td></tr><tr><td><tt class="literal">implements</tt></td><td>&#31867;&#35201;&#23454;&#29616;&#30340;&#25509;&#21475;</td></tr><tr><td><tt class="literal">extends</tt></td><td>&#31867;&#35201;&#32487;&#25215;&#30340;&#36229;&#31867;(&#33509;&#26159;subclass,&#21017;&#24573;&#30053;&#35813;&#23646;&#24615;)</td></tr><tr><td><tt class="literal">generated-class</tt></td><td>&#37325;&#26032;&#25351;&#23450;&#35201;&#29983;&#25104;&#30340;&#31867;&#21517;</td></tr><tr><td><tt class="literal">scope-class</tt></td><td>class&#30340;scope</td></tr><tr><td><tt class="literal">scope-set</tt></td><td>set&#26041;&#27861;&#30340;scope</td></tr><tr><td><tt class="literal">scope-get</tt></td><td>get&#26041;&#27861;&#30340;scope</td></tr><tr><td><tt class="literal">scope-field</tt></td><td>&#23454;&#38469;&#23646;&#24615;&#23383;&#27573;(field)&#30340;scope</td></tr><tr><td><tt class="literal">use-in-tostring</tt></td><td>&#22312;<tt class="literal">toString()</tt>&#20013;&#21253;&#21547;&#27492;&#23646;&#24615;</td></tr><tr><td><tt class="literal">implement-equals</tt></td><td>&#22312;&#36825;&#20010;&#31867;&#20013;&#21253;&#21547;<tt class="literal">equals()</tt>&#21644;<tt class="literal">hashCode()</tt>&#26041;&#27861;</td></tr><tr><td><tt class="literal">use-in-equals</tt></td><td>&#22312;<tt class="literal">equals()</tt>&#21644;<tt class="literal">hashCode()</tt> &#26041;&#27861;&#20013;&#21253;&#21547;&#27492;&#23646;&#24615;</td></tr><tr><td><tt class="literal">bound</tt></td><td>&#20026;&#23646;&#24615;&#22686;&#21152;propertyChangeListener&#25903;&#25345;</td></tr><tr><td><tt class="literal">constrained</tt></td><td>&#20026;&#23646;&#24615;&#22686;&#21152;vetoChangeListener&#25903;&#25345;</td></tr><tr><td><tt class="literal">gen-property</tt></td><td>&#22914;&#26524;&#26159;false,&#19981;&#20250;&#29983;&#25104;&#23646;&#24615;(&#35880;&#24910;&#20351;&#29992;)</td></tr><tr><td><tt class="literal">property-type</tt></td><td>&#35206;&#30422;&#23646;&#24615;&#30340;&#40664;&#35748;&#20540;.&#22914;&#26524;&#20540;&#26159;&#26631;&#31614;,&#21017;&#25351;&#23450;&#19968;&#20010;&#20855;&#20307;&#30340;&#31867;&#22411;&#32780;&#38750;Object(Use this with any tag's to specify the concrete type instead of just Object.)</td></tr><tr><td><tt class="literal">class-code</tt></td><td>&#22312;&#31867;&#30340;&#26368;&#21518;&#20250;&#25554;&#20837;&#30340;&#39069;&#22806;&#20195;&#30721;</td></tr><tr><td><tt class="literal">extra-import</tt></td><td>&#22312;&#25152;&#26377;&#30340;import&#21518;&#38754;&#20250;&#25554;&#20837;&#30340;&#39069;&#22806;&#30340;import</td></tr><tr><td><tt class="literal">finder-method</tt></td><td>&#21442;&#35265;&#19979;&#38754;&#30340;"Basic finder generator"</td></tr><tr><td><tt class="literal">session-method</tt></td><td>&#21442;&#35265;&#19979;&#38754;&#30340;"Basic finder generator"</td></tr></tbody></table></div><p>
+                &#36890;&#36807;<tt class="literal">&lt;meta&gt;</tt>&#26631;&#31614;&#23450;&#20041;&#30340;&#23646;&#24615;&#22312;&#19968;&#20010;<tt class="literal">hbm.xml</tt>&#25991;&#20214;&#20013;&#26159;&#40664;&#35748;"&#32487;&#25215;"&#30340;&#12290;
+            </p><p>
+            	&#36825;&#31350;&#31455;&#26159;&#20160;&#20040;&#24847;&#24605;&#65311;&#22914;&#26524;&#20320;&#24076;&#26395;&#20320;&#25152;&#26377;&#30340;&#31867;&#37117;&#23454;&#29616;<tt class="literal">IAuditable</tt>&#25509;&#21475;&#65292;&#37027;&#20040;&#20320;&#21482;&#38656;&#35201;&#21152;&#19968;&#20010;<tt class="literal">&lt;meta attribute="implements"&gt;IAuditable&lt;/meta&gt;</tt> &#22312;&#20320;<tt class="literal">hml.xml</tt>&#25991;&#20214;&#30340;&#24320;&#22836;&#65292;&#23601;&#22312;<tt class="literal">&lt;hibernate-mapping&gt;</tt>&#21518;&#38754;&#12290;&#29616;&#22312;&#25152;&#26377;&#22312;<tt class="literal">hbm.xml</tt>&#25991;&#20214;&#20013;&#23450;&#20041;&#30340;&#31867;&#37117;&#20250;&#23454;&#29616;<tt class="literal">IAuditable</tt>&#20102;&#65281;&#65288;&#38500;&#20102;&#37027;&#20123;&#20063;&#29305;&#21035;&#25351;&#23450;&#20102;"implements"&#20803;&#23646;&#24615;&#30340;&#31867;&#65292;&#22240;&#20026;&#26412;&#22320;&#25351;&#23450;&#30340;&#20803;&#26631;&#31614;&#24635;&#26159;&#20250;&#35206;&#30422;&#20219;&#20309;&#32487;&#25215;&#30340;&#20803;&#26631;&#31614;&#65289;&#12290;
+            </p><p>
+                &#27880;&#24847;&#65292;&#36825;&#26465;&#35268;&#21017;&#23545;<span class="emphasis"><em>&#25152;&#26377;</em></span> &#30340;<tt class="literal">&lt;meta&gt;</tt>&#26631;&#31614;&#37117;&#26377;&#25928;&#12290;&#20063;&#23601;&#26159;&#35828;&#23427;&#21487;&#20197;&#29992;&#26469;&#25351;&#23450;&#25152;&#26377;&#30340;&#23383;&#27573;&#37117;&#34987;&#22768;&#26126;&#25104;protected&#30340;&#65292;&#32780;&#38750;&#40664;&#35748;&#30340;private&#12290;&#36825;&#21487;&#20197;&#36890;&#36807;&#22312;<tt class="literal">&lt;class&gt;</tt>&#21518;&#38754;<tt class="literal">&lt;meta attribute="scope-field"&gt;protected&lt;/meta&gt;</tt>&#25351;&#23450;&#65292;&#37027;&#20040;&#36825;&#20010;&#31867;&#25152;&#26377;&#30340;field&#37117;&#20250;&#21464;&#25104;protected&#12290;
+            </p><p>
+                &#22914;&#26524;&#20320;&#19981;&#24819;&#35753;<tt class="literal">&lt;meta&gt;</tt>&#26631;&#31614;&#32487;&#25215;&#65292;&#20320;&#21487;&#20197;&#31616;&#21333;&#30340;&#22312;&#26631;&#31614;&#23646;&#24615;&#19978;&#25351;&#26126;<tt class="literal">inherit="false"</tt>&#65292;&#27604;&#22914;<tt class="literal">&lt;meta attribute="scope-class" inherit="false"&gt;public abstract&lt;/meta&gt;</tt>&#65292;&#36825;&#26679;"class-scope"&#23601;&#21482;&#20250;&#23545;&#24403;&#21069;&#31867;&#36215;&#20316;&#29992;&#65292;&#19981;&#20250;&#23545;&#20854;&#23376;&#31867;&#29983;&#25928;&#12290;
+            </p></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s2-3"></a>15.2.3.&nbsp;&#22522;&#26412;&#30340;finder&#29983;&#25104;&#22120;&#65288;Basic finder generator&#65289;</h3></div></div><div></div></div><p>
+                &#30446;&#21069;&#21487;&#20197;&#35753;<tt class="literal">hbm2java</tt>&#20026;Hibernate&#23646;&#24615;&#29983;&#25104;&#22522;&#26412;&#30340;finder&#12290;&#36825;&#38656;&#35201;&#22312;<tt class="literal">hbm.xml</tt>&#25991;&#20214;&#20013;&#20570;&#20004;&#20214;&#20107;&#24773;&#12290;
+            </p><p>
+                &#39318;&#20808;&#26159;&#35201;&#26631;&#35760;&#20986;&#20320;&#24076;&#26395;&#29983;&#25104;finder&#30340;&#23383;&#27573;&#12290;&#20320;&#21487;&#20197;&#36890;&#36807;&#22312;property&#26631;&#31614;&#20013;&#30340;meta &#22359;&#26469;&#23450;&#20041;&#65306;
+            </p><pre class="programlisting">&lt;property name="name" column="name" type="string"&gt;
+     &lt;meta attribute="finder-method"&gt;findByName&lt;/meta&gt;
+&lt;/property&gt;</pre><p>
+                find&#26041;&#27861;&#30340;&#21517;&#23383;&#23601;&#26159;meta&#26631;&#31614;&#20013;&#38388;&#30340;&#25991;&#23383;&#12290;
+            </p><p>
+                &#31532;&#20108;&#20214;&#20107;&#26159;&#20026;hbm2java&#24314;&#31435;&#19979;&#38754;&#26684;&#24335;&#30340;&#37197;&#32622;&#25991;&#20214;&#65306;
+            </p><pre class="programlisting">&lt;codegen&gt;
+    &lt;generate renderer="net.sf.hibernate.tool.hbm2java.BasicRenderer"/&gt;
+    &lt;generate suffix="Finder" renderer="net.sf.hibernate.tool.hbm2java.FinderRenderer"/&gt;
+&lt;/codegen&gt;</pre><p>
+                 &#28982;&#21518;&#29992;&#21442;&#25968;&#21435;&#35843;&#29992;&#65306;<tt class="literal">hbm2java --config=xxx.xml</tt>&#65292;<tt class="literal">xxx.xml</tt>&#23601;&#26159;&#20320;&#21018;&#25165;&#21019;&#24314;&#30340;&#37197;&#32622;&#25991;&#20214;&#30340;&#21517;&#23383;&#12290;
+            </p><p>
+                 &#26377;&#20010;&#21487;&#36873;&#30340;&#21442;&#25968;,&#20316;&#20026;&#19968;&#20010;&#22312;class&#32423;&#21035;&#30340;meta&#26631;&#31614;&#65292;&#26684;&#24335;&#22914;&#19979;&#65306;
+            </p><pre class="programlisting">&lt;meta attribute="session-method"&gt;
+    com.whatever.SessionTable.getSessionTable().getSession();
+&lt;/meta&gt;</pre><p>
+                 &#20182;&#26159;&#29992;&#26469;&#31649;&#29702;&#20320;&#22914;&#20309;&#20351;&#29992;<span class="emphasis"><em>Thread Local Session</em></span>&#27169;&#24335;(&#22312;Hibernate &#32593;&#31449;&#30340;Design Patterns&#37096;&#20998;&#26377;&#25991;&#26723;&#65289;&#24471;&#21040;session&#30340;&#12290;
+            </p></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s2-4"></a>15.2.4.&nbsp;&#22522;&#20110;Velocity&#30340;&#28210;&#26579;&#22120;/&#29983;&#25104;&#22120;(Velocity based renderer/generator)</h3></div></div><div></div></div><p>
+      &#30446;&#21069;&#21487;&#20197;&#20351;&#29992;velocity&#20316;&#20026;&#28210;&#26579;&#26426;&#21046;&#30340;&#19968;&#20010;&#26367;&#20195;&#26041;&#26696;&#12290;&#19979;&#38754;&#30340;config.xml&#25991;&#20214;&#26174;&#31034;&#20102;&#22914;&#26524;&#37197;&#32622;hbm2java&#26469;&#20351;&#29992;velocity&#28210;&#26579;&#22120;&#12290;
+      </p><pre class="programlisting">
+    &lt;codegen&gt;
+     &lt;generate renderer="net.sf.hibernate.tool.hbm2java.VelocityRenderer"&gt;
+      &lt;param name="template"&gt;pojo.vm&lt;/param&gt;
+     &lt;/generate&gt;
+    &lt;/codegen&gt;</pre><p>
+        &#21517;&#20026;<tt class="literal">template</tt>&#30340;&#21442;&#25968;&#26159;&#25351;&#21521;&#20320;&#24076;&#26395;&#20320;&#20351;&#29992;velocity macro&#25991;&#20214;&#30340;&#36164;&#28304;&#36335;&#24452;&#12290;&#36825;&#20010;&#25991;&#20214;&#24517;&#39035;&#22312;hbm2java&#30340;classpath&#20013;&#12290;&#25152;&#20197;&#35201;&#35760;&#20303;&#25226;pojo.vm&#25152;&#22312;&#30340;&#36335;&#24452;&#21152;&#20837;&#21040;&#20320;ant&#20219;&#21153;&#25110;&#32773;shell&#33050;&#26412;&#20013;&#21435;&#12290;&#65288;&#40664;&#35748;&#30340;&#20301;&#32622;&#26159;<tt class="literal">./tools/src/velocity</tt>)
+      </p><p>
+        &#27880;&#24847;&#65292;&#24403;&#21069;&#30340;<tt class="literal">pojo.vm</tt>&#21482;&#29983;&#25104;java beans&#26368;&#22522;&#26412;&#30340;&#37096;&#20998;&#12290;&#20182;&#36824;&#27809;&#26377;&#40664;&#35748;&#30340;&#28210;&#26579;&#22120;&#37027;&#20040;&#23436;&#25972;&#65292;&#20063;&#27809;&#26377;&#37027;&#20040;&#22810;&#21151;&#33021;&#8212;&#8212;&#29305;&#21035;&#26159;&#22823;&#37096;&#20998;<tt class="literal">meta</tt>&#26631;&#31614;&#36824;&#19981;&#25903;&#25345;&#12290;
+      </p></div></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="toolsetguide-s3"></a>15.3.&nbsp;&#26144;&#23556;&#25991;&#20214;&#29983;&#25104;&#22120;&#65288;Mapping File Generation&#65289;</h2></div></div><div></div></div><p>
+            &#26144;&#23556;&#25991;&#20214;&#30340;&#39592;&#26550;&#21487;&#20197;&#20174;&#32534;&#35793;&#36807;&#30340;&#25345;&#20037;&#21270;&#31867;&#20013;&#20351;&#29992;<tt class="literal">MapGenerator</tt>&#24037;&#20855;&#29983;&#25104;&#12290;&#36825;&#24037;&#20855;&#26159;Hibernate Extensions&#21457;&#34892;&#21253;&#30340;&#19968;&#37096;&#20998;&#12290;
+        </p><p>
+            Hibernate&#26144;&#23556;&#29983;&#25104;&#22120;&#25552;&#20379;&#20102;&#20174;&#32534;&#35793;&#36807;&#30340;&#31867;&#20013;&#20135;&#29983;&#26144;&#23556;&#30340;&#26426;&#21046;&#12290;&#20182;&#20351;&#29992;Java&#21453;&#23556;&#26469;&#26597;&#25214;<span class="emphasis"><em>&#23646;&#24615;(
+properties)</em></span>&#65292;&#28982;&#21518;&#20351;&#29992;&#21551;&#21457;&#24335;&#31639;&#27861;&#26469;&#20174;&#23646;&#24615;&#31867;&#22411;&#29468;&#27979;&#21512;&#36866;&#30340;&#26144;&#23556;&#12290;&#29983;&#25104;&#20986;&#26469;&#30340;&#26144;&#23556;&#25991;&#20214;&#20043;&#24212;&#35813;&#30475;&#20316;&#26159;&#21518;&#32493;&#24037;&#20316;&#30340;&#36215;&#28857;&#12290;&#27809;&#26377;&#21150;&#27861;&#22312;&#27809;&#26377;&#29992;&#25143;&#20462;&#27491;&#30340;&#24773;&#20917;&#19979;&#29983;&#25104;&#23436;&#25972;&#30340;Hibernate&#26144;&#23556;&#12290;&#20294;&#26159;&#65292;&#36825;&#20010;&#24037;&#20855;&#36824;&#26159;&#26367;&#20320;&#20570;&#20102;&#24456;&#22810;&#38750;&#24120;&#29712;&#30862;&#21644;&#40635;&#28902;&#30340;&#24037;&#20316;&#12290;
+        </p><p>
+            &#31867;&#19968;&#20010;&#19968;&#20010;&#22320;&#21152;&#20837;&#21040;&#26144;&#23556;&#21435;&#12290;&#22914;&#26524;&#24037;&#20855;&#35748;&#20026;&#26576;&#20010;&#31867;&#19981;&#26159;<span class="emphasis"><em>Hibernate&#21487;&#25345;&#20037;&#21270;&#65288; persistable&#65289;</em></span>&#30340;&#65292;&#23601;&#20250;&#25226;&#36825;&#20123;&#31867;&#21076;&#38500;&#12290;
+        </p><p>
+            &#21028;&#26029;&#26159;&#21542;&#26159;<span class="emphasis"><em>Hibernate&#21487;&#25345;&#20037;&#21270;&#65288; persistable&#65289;</em></span>&#30340;&#21407;&#21017;&#26159;&#65306;
+        </p><div class="itemizedlist"><ul type="disc" compact><li><p>&#24517;&#23450;&#19981;&#26159;&#19968;&#20010;&#21407;&#22987;&#31867;&#22411;</p></li><li><p>&#24517;&#23450;&#19981;&#26159;&#19968;&#20010;&#25968;&#32452;</p></li><li><p>&#24517;&#23450;&#19981;&#26159;&#19968;&#20010;&#25509;&#21475;</p></li><li><p>&#24517;&#23450;&#19981;&#26159;&#19968;&#20010;&#20869;&#37096;&#31867;</p></li><li><p>&#24517;&#23450;&#26377;&#19968;&#20010;&#40664;&#35748;&#30340;&#26080;&#21442;&#25968;&#30340;&#26500;&#36896;&#26041;&#27861;&#12290;</p></li></ul></div><p>
+            &#27880;&#24847;&#65292;&#25509;&#21475;&#21644;&#20869;&#37096;&#31867;&#23454;&#38469;&#19978;&#26159;&#21487;&#20197;&#36890;&#36807;Hibernate&#25345;&#20037;&#21270;&#30340;&#65292;&#20294;&#26159;&#19968;&#33324;&#26469;&#35828;&#29992;&#25143;&#19981;&#20250;&#20351;&#29992;&#12290;
+        </p><p>
+            &#23545;&#24050;&#32463;&#21457;&#29616;&#30340;&#31867;&#65292;<tt class="literal">MapGenerator</tt>&#20250;&#37325;&#22797;&#22238;&#28335;&#21040;&#36229;&#31867;&#38142;&#26465;&#19978;&#21435;&#65292;&#20197;&#23613;&#21487;&#33021;&#30340;&#25226;Hibernate&#21487;&#25345;&#20037;&#21270;&#30340;&#36229;&#31867;&#21152;&#20837;&#21040;&#23545;&#21516;&#19968;&#20010;&#25968;&#25454;&#24211;&#34920;&#30340;&#26144;&#23556;&#21435;&#12290;&#22914;&#26524;&#22238;&#28335;&#36807;&#31243;&#20013;&#26576;&#20010;&#31867;&#20986;&#29616;&#20102;&#26377;&#20010;&#23646;&#24615;&#22312;&#19979;&#21015;<span class="emphasis"><em>&#22791;&#36873;UID&#21517;&#23383;&#65288;candidate UID names&#65289;</em></span>&#21517;&#21333;&#20013;&#65292;&#22238;&#28335;&#23601;&#20250;&#20572;&#27490;&#12290;
+        </p><p>
+            &#40664;&#35748;&#30340;&#22791;&#36873;UID&#23646;&#24615;&#21517;&#26377;&#65306;<tt class="literal">uid</tt>, <tt class="literal">UID</tt>,
+            <tt class="literal">id</tt>, <tt class="literal">ID</tt>, <tt class="literal">key</tt>, <tt class="literal">KEY</tt>,
+            <tt class="literal">pk</tt>, <tt class="literal">PK</tt>&#12290;
+        </p><p>
+            &#22914;&#26524;&#31867;&#20013;&#26377;&#20004;&#20010;&#26041;&#27861;&#65292;&#19968;&#20010;&#26159;setter,&#19968;&#20010;&#26159;getter&#65292;&#24182;&#19988;setter&#30340;&#21333;&#21442;&#25968;&#30340;&#23646;&#24615;&#21644;getter&#30340;&#26080;&#21442;&#25968;&#36820;&#22238;&#20540;&#24471;&#31867;&#22411;&#30456;&#21516;&#65292;&#24182;&#19988;setter&#36820;&#22238;<tt class="literal">void</tt>,&#23601;&#35748;&#20026;&#21457;&#29616;&#20102;&#19968;&#20010;&#23646;&#24615;&#12290;&#24182;&#19988;&#65292;setter&#30340;&#21517;&#23383;&#24517;&#39035;&#20197;<tt class="literal">set</tt>&#23383;&#31526;&#20018;&#24320;&#22987;&#65292;getter&#30340;&#21517;&#23383;&#24517;&#39035;&#20197;<tt class="literal">get</tt>&#24320;&#22987;&#65292;&#25110;&#32773;&#20197;<tt class="literal">is</tt>&#24320;&#22987;&#24182;&#19988;&#23646;&#24615;&#31867;&#22411;&#26159;boolean&#12290;&#22312;&#19978;&#38754;&#30340;&#24773;&#20917;&#21457;&#29983;&#26102;&#65292;get&#21644;set&#20043;&#21518;&#30340;&#21517;&#23383;&#36824;&#24517;&#39035;&#21305;&#37197;&#12290;&#36825;&#20010;&#21305;&#37197;&#23601;&#26159;&#23646;&#24615;&#30340;&#21517;&#23383;&#65292;&#28982;&#21518;&#22914;&#26524;&#31532;&#20108;&#20010;&#23383;&#27597;&#26159;&#23567;&#20889;&#30340;&#35805;&#65292;&#20250;&#25226;&#20854;&#39318;&#23383;&#27597;&#21464;&#25104;&#23567;&#20889;&#12290;
+        </p><p>
+            &#29992;&#26469;&#20915;&#23450;&#27599;&#20010;&#23646;&#24615;&#30340;&#25968;&#25454;&#24211;&#31867;&#22411;&#30340;&#35268;&#21017;&#22914;&#19979;&#65306;
+        </p><div class="orderedlist"><ol type="1" compact><li><p>
+                    &#22914;&#26524;Java&#31867;&#22411;&#26159;<tt class="literal">Hibernate.basic()</tt>&#65292;&#21017;&#23646;&#24615;&#26159;&#35813;&#31867;&#22411;&#30340;&#19968;&#20010;&#26222;&#36890;&#23383;&#27573;&#12290;
+                </p></li><li><p>
+                    &#23545;&#20110;<tt class="literal">hibernate.type.Type</tt>&#29305;&#23450;&#31867;&#22411;&#21644;<tt class="literal">PersistentEnum</tt>&#26469;&#35828;&#65292;&#20063;&#20250;&#20351;&#29992;&#19968;&#20010;&#26222;&#36890;&#23383;&#27573;&#12290;
+                </p></li><li><p>
+                    &#22914;&#26524;&#23646;&#24615;&#31867;&#22411;&#26159;&#19968;&#20010;&#25968;&#32452;&#65292;&#37027;&#20040;&#20250;&#20351;&#29992;&#19968;&#20010;Hibernate&#25968;&#32452;,&#24182;&#19988;<tt class="literal">MapGenerator</tt>&#35797;&#22270;&#21453;&#26144;&#25968;&#32452;&#20803;&#32032;&#30340;&#31867;&#22411;&#12290;&#65288;attempts to reflect on the array element type.&#65289;
+                </p></li><li><p>
+                    &#22914;&#26524;&#23646;&#24615;&#26159;<tt class="literal">java.util.List</tt>,<tt class="literal">java.util.Map</tt>&#25110;&#32773;<tt class="literal">java.util.Set</tt>&#65292;&#20250;&#20351;&#29992;&#23545;&#24212;&#30340;Hibernate&#31867;&#22411;&#65292;&#20294;&#26159;<tt class="literal">MapGenerator</tt>&#19981;&#33021;&#23545;&#36825;&#20123;&#31867;&#22411;&#36827;&#34892;&#36827;&#19968;&#27493;&#22788;&#29702;&#20102;&#12290;
+                </p></li><li><p>
+                    &#22914;&#26524;&#23646;&#24615;&#30340;&#31867;&#22411;&#19981;&#26159;&#19978;&#38754;&#20219;&#20309;&#19968;&#31181;&#65292;<tt class="literal">MapGeneraotr</tt>&#25226;&#20915;&#23450;&#25968;&#25454;&#24211;&#31867;&#22411;&#30340;&#27493;&#39588;&#30041;&#24453;&#25152;&#26377;&#30340;&#31867;&#37117;&#34987;&#22788;&#29702;&#20043;&#21518;&#20877;&#26469;&#20570;&#12290;&#22312;&#37027;&#26102;&#20505;&#65292;&#22914;&#26524;&#31867;&#22312;&#19978;&#38754;&#25551;&#36848;&#36807;&#30340;&#36229;&#31867;&#25628;&#32034;&#36807;&#31243;&#20013;&#34987;&#21457;&#29616;&#20102;&#65292;&#36825;&#20010;&#23646;&#24615;&#20250;&#34987;&#35748;&#20026;&#26159;&#19968;&#20010;<tt class="literal">many-to-one</tt>&#30340;&#20851;&#32852;&#12290;&#22914;&#26524;&#31867;&#26377;&#20154;&#21644;&#23646;&#24615;&#65292;&#23427;&#21017;&#26159;&#19968;&#20010;<tt class="literal">&#32452;&#20214;(component)</tt>&#12290;&#21542;&#21017;&#23427;&#23601;&#26159;&#21487;&#24207;&#21015;&#21270;&#30340;&#65288;serializable&#65289;&#65292;&#25110;&#32773;&#19981;&#26159;&#21487;&#25345;&#20037;&#21270;&#30340;&#12290;
+                </p></li></ol></div><div class="sect2" lang="zh-cn"><div class="titlepage"><div><div><h3 class="title"><a name="toolsetguide-s3-1"></a>15.3.1.&nbsp;&#36816;&#34892;&#27492;&#24037;&#20855;</h3></div></div><div></div></div><p>
+                &#36825;&#20010;&#24037;&#20855;&#20250;&#25226;XML&#26144;&#23556;&#20889;&#20837;&#21040;&#26631;&#20934;&#36755;&#20986;&#25110;&#32773;/&#24182;&#19988;&#21040;&#19968;&#20010;&#25991;&#20214;&#20013;&#21435;&#12290;
+            </p><p>
+                &#22312;&#35843;&#29992;&#36825;&#20010;&#24037;&#20855;&#30340;&#26102;&#20505;&#65292;&#20320;&#24517;&#39035;&#25226;&#20320;&#32534;&#35793;&#36807;&#30340;&#31867;&#25918;&#21040;classpath&#20013;&#21435;&#12290;
+            </p><p>
+                <tt class="literal">java -cp </tt><span class="emphasis"><em>hibernate_and_your_class_classpaths</em></span>
+                <tt class="literal">net.sf.hibernate.tool.class2hbm.MapGenerator</tt> <span class="emphasis"><em>options and
+                classnames</em></span>
+            </p><p>
+                &#26377;&#20004;&#31181;&#25805;&#20316;&#27169;&#24335;&#65306;&#21629;&#20196;&#34892;&#25110;&#32773;&#20132;&#20114;&#24335;&#12290;
+            </p><p>
+                &#20132;&#20114;&#24335;&#27169;&#24335;&#24403;&#20320;&#20351;&#29992;&#19968;&#20010;&#24799;&#19968;&#30340;&#21629;&#20196;&#34892;&#21442;&#25968;<tt class="literal">--interact</tt>&#30340;&#26102;&#20505;&#21551;&#21160;&#12290;&#36825;&#20010;&#27169;&#24335;&#25552;&#20379;&#19968;&#20010;&#21629;&#20196;&#25511;&#21046;&#21488;&#12290;&#20320;&#21487;&#20197;&#29992;<tt class="literal">uid=XXX</tt>&#21629;&#20196;&#35774;&#32622;&#27599;&#20010;&#31867;&#30340;UID&#23646;&#24615;&#30340;&#21517;&#23383;&#65292;<tt class="literal">XXX</tt>&#23601;&#26159;UID&#23646;&#24615;&#21517;&#12290;&#20854;&#20182;&#21487;&#29992;&#30340;&#21629;&#20196;&#23601;&#26159;&#31867;&#21517;&#30340;&#20840;&#38480;&#23450;&#21517;&#65292;&#25110;&#32773;&#8220;done&#8221;&#21629;&#20196;&#29992;&#26469;&#36755;&#20986;XML,&#24182;&#19988;&#32467;&#26463;&#12290;
+            </p><p>
+                &#22312;&#21629;&#20196;&#34892;&#27169;&#24335;&#19979;&#65292;&#19979;&#38754;&#30340;&#21442;&#25968;&#36873;&#39033;&#21644;&#25152;&#38656;&#22788;&#29702;&#30340;&#31867;&#30340;&#20840;&#38480;&#23450;&#21517;&#21487;&#20197;&#30456;&#20114;&#38388;&#38548;&#20351;&#29992;&#12290;&#22823;&#22810;&#25968;&#36873;&#39033;&#20250;&#20351;&#29992;&#22810;&#27425;&#65292;&#27599;&#20010;&#21482;&#24433;&#21709;&#20854;&#21518;&#20986;&#29616;&#30340;&#31867;&#12290;
+            </p><div class="table"><a name="d0e10059"></a><p class="title"><b>&#34920;&nbsp;15.7.&nbsp;MapGenerator&#21629;&#20196;&#34892;&#36873;&#39033;</b></p><table summary="MapGenerator&#21629;&#20196;&#34892;&#36873;&#39033;" border="1"><colgroup><col><col></colgroup><thead><tr><th>&#36873;&#39033;</th><th>&#35828;&#26126;</th></tr></thead><tbody><tr><td><tt class="literal">--quiet</tt></td><td>&#19981;&#25226;O-R &#26144;&#23556;&#36755;&#20986;&#21040;stdout</td></tr><tr><td><tt class="literal">--setUID=uid</tt></td><td>&#35774;&#32622;&#22791;&#36873;UID&#21517;&#21333;</td></tr><tr><td><tt class="literal">--addUID=uid</tt></td><td>&#22312;&#22791;&#36873;UID&#21517;&#21333;&#21069;&#38754;&#22686;&#21152;&#19968;&#20010;&#26032;&#30340;uid</td></tr><tr><td><tt class="literal">--select=</tt><span class="emphasis"><em>mode</em></span></td><td>&#23545;&#21518;&#38754;&#30340;classes&#20351;&#29992;select&#36873;&#25321;&#30340;<span class="emphasis"><em>&#27169;&#24335;(mode)</em></span>(&#27604;&#22914;,
+                            <span class="emphasis"><em>distinct</em></span> &#25110;&#32773;<span class="emphasis"><em>all</em></span>)</td></tr><tr><td><tt class="literal">--depth=&lt;small-int&gt;</tt></td><td>&#38480;&#21046;&#21518;&#38754;&#30340;&#31867;&#30340;&#32452;&#20214;&#25968;&#25454;&#36882;&#24402;&#23618;&#25968;</td></tr><tr><td><tt class="literal">--output=my_mapping.xml</tt></td><td>&#25226;O-R &#26144;&#23556;&#36755;&#20986;&#21040;&#19968;&#20010;&#25991;&#20214;</td></tr><tr><td><span class="emphasis"><em>full.class.Name</em></span></td><td>&#25226;&#36825;&#20010;&#31867;&#21152;&#20837;&#21040;&#26144;&#23556;&#20013;</td></tr><tr><td><tt class="literal">--abstract=</tt><span class="emphasis"><em>full.class.Name</em></span></td><td>&#21442;&#35265;&#19979;&#38754;&#30340;&#35828;&#26126;</td></tr></tbody></table></div><p>
+                abstract&#24320;&#20851;&#25351;&#23450;&#26412;&#24037;&#20855;&#24573;&#30053;&#29305;&#23450;&#30340;&#36229;&#31867;,&#25152;&#20197;&#23427;&#30340;&#32487;&#25215;&#25968;&#19978;&#30340;&#31867;&#19981;&#20250;&#34987;&#26144;&#23556;&#21040;&#19968;&#20010;&#22823;&#34920;&#20013;&#21435;&#12290;&#27604;&#22914;&#65292;&#25105;&#20204;&#26469;&#30475;&#19979;&#38754;&#30340;&#31867;&#32487;&#25215;&#26641;&#65306;
+            </p><p>
+                <tt class="literal">Animal--&gt;Mammal--&gt;Human</tt>
+            </p><p>
+                <tt class="literal">Animal--&gt;Mammal--&gt;Marsupial--&gt;Kangaroo</tt>
+            </p><p>
+                &#22914;&#26524;<span class="emphasis"><em>&#19981;</em></span>&#20351;&#29992;<tt class="literal">--abstract</tt>&#24320;&#20851;&#65292;<tt class="literal">Animal</tt>&#30340;&#25152;&#26377;&#23376;&#31867;&#37117;&#20250;&#34987;&#25918;&#21040;&#19968;&#20010;&#24040;&#22823;&#30340;&#34920;&#20013;&#21435;&#65292;&#21253;&#21547;&#25152;&#26377;&#31867;&#30340;&#25152;&#26377;&#23646;&#24615;&#65292;&#36824;&#26377;&#19968;&#20010;&#29992;&#20110;&#20998;&#36776;&#23376;&#31867;&#30340;&#23383;&#27573;&#12290;&#22914;&#26524;<tt class="literal">Mammal</tt>&#34987;&#26631;&#35760;&#25104;<tt class="literal">abstract</tt>&#65292;<tt class="literal">Human</tt>&#21644;<tt class="literal">Marsupial</tt>&#20250;&#34987;&#26144;&#23556;&#21040;&#19981;&#21516;&#30340;<tt class="literal">&lt;class&gt;</tt>&#22768;&#26126;&#65292;&#24182;&#19988;&#20250;&#26377;&#21508;&#33258;&#21333;&#29420;&#30340;&#34920;&#12290;<tt class="literal">Kangaroo</tt>&#20173;&#28982;&#20250;&#34987;&#35748;&#20026;&#26159;<tt class="literal">Marsupial</tt>&#30340;&#23376;&#31867;&#65292;&#38500;&#38750;<tt class="literal">Marsupial</tt>&#20063;&#26631;&#35760;&#20026;<tt class="literal">anstract</tt>&#30340;&#12290;
+            </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="performance.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">&#19978;&#19968;&#32423;</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="example-parentchild.html">&#19979;&#19968;&#39029;</a></td></tr><tr><td width="40%" align="left" valign="top">&#31532;&nbsp;14&nbsp;&#31456;&nbsp;&#24615;&#33021;&#25552;&#21319;&#65288;Improving performance&#65289;&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">&#36215;&#22987;&#39029;</a></td><td width="40%" align="right" valign="top">&nbsp;&#31532;&nbsp;16&nbsp;&#31456;&nbsp;&#31034;&#20363;&#65306;&#29238;&#23376;&#20851;&#31995;(Parent Child Relationships)</td></tr></table></div></body></html>

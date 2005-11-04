@@ -1,0 +1,54 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;13.&nbsp;Native SQL Queries</title><link rel="stylesheet" href="../shared/css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HIBERNATE - Relational Persistence for Idiomatic Java"><link rel="up" href="index.html" title="HIBERNATE - Relational Persistence for Idiomatic Java"><link rel="previous" href="querycriteria.html" title="Chapter&nbsp;12.&nbsp;Criteria Queries"><link rel="next" href="performance.html" title="Chapter&nbsp;14.&nbsp;Improving performance"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;13.&nbsp;Native SQL Queries</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="querycriteria.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="performance.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="querysql"></a>Chapter&nbsp;13.&nbsp;Native SQL Queries</h2></div></div><div></div></div><p>
+        You may also express queries in the native SQL dialect of your database. This is useful if you
+        want to utilize database specific features such as the CONNECT keyword in Oracle.
+        This also allows for a cleaner migration path from a direct SQL/JDBC based application to 
+        Hibernate.
+    </p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querysql-creating"></a>13.1.&nbsp;Creating a SQL based <tt class="literal">Query</tt></h2></div></div><div></div></div><p>
+            SQL queries are exposed through the same <tt class="literal">Query</tt> interface, just like ordinary
+            HQL queries. The only difference is the use of <tt class="literal">Session.createSQLQuery()</tt>.
+        </p><pre class="programlisting">Query sqlQuery = sess.createSQLQuery("select {cat.*} from cats {cat}", "cat", Cat.class);
+sqlQuery.setMaxResults(50);
+List cats = sqlQuery.list();</pre><p>
+            The three parameters provided to <tt class="literal">createSQLQuery()</tt> are:
+        </p><div class="itemizedlist"><ul type="disc"><li><p>
+            the SQL query string
+        </p></li><li><p>
+            a table alias name
+        </p></li><li><p>
+            the persistent class returned by the query
+        </p></li></ul></div><p>
+            The alias name is used inside the sql string to refer to the properties of the mapped class
+            (in this case  <tt class="literal">Cat</tt>). You may retrieve multiple objects per row by supplying
+            a <tt class="literal">String</tt> array of alias names and a <tt class="literal">Class</tt> array of
+            corresponding classes.
+        </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querysql-aliasreferences"></a>13.2.&nbsp;Alias and property references</h2></div></div><div></div></div><p>
+            The <tt class="literal">{cat.*}</tt> notation used above is a shorthand for "all properties". You
+            may even list the properties explicity, but you must let Hibernate provide SQL column aliases
+            for each property. The placeholders for these column aliases are the property name qualified by
+            the table alias. In the following example, we retrieve <tt class="literal">Cat</tt>s from a different
+            table (<tt class="literal">cat_log</tt>) to the one declared in the mapping metadata. Notice that we
+            may even use the property aliases in the where clause.
+        </p><pre class="programlisting">String sql = "select cat.originalId as {cat.id}, "
+    + "  cat.mateid as {cat.mate}, cat.sex as {cat.sex}, "
+    + "  cat.weight*10 as {cat.weight}, cat.name as {cat.name}"
+    + "     from cat_log cat where {cat.mate} = :catId"
+List loggedCats = sess.createSQLQuery(sql, "cat", Cat.class)
+    .setLong("catId", catId)
+    .list();
+</pre><p>
+            <span class="emphasis"><em>Note:</em></span> if you list each property explicitly, you must include all
+            properties of the class <span class="emphasis"><em>and its subclasses</em></span>!
+        </p></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querysql-namedqueries"></a>13.3.&nbsp;Named SQL queries</h2></div></div><div></div></div><p>
+            Named SQL queries may be defined in the mapping document and called in exactly the same way
+            as a named HQL query.
+        </p><pre class="programlisting">List people = sess.getNamedQuery("mySqlQuery")
+    .setMaxResults(50)
+    .list();</pre><pre class="programlisting">&lt;sql-query name="mySqlQuery"&gt;
+    &lt;return alias="person" class="eg.Person"/&gt;
+    SELECT {person}.NAME AS {person.name},
+           {person}.AGE AS {person.age},
+           {person}.SEX AS {person.sex}
+    FROM PERSON {person} WHERE {person}.NAME LIKE 'Hiber%'
+&lt;/sql-query&gt;</pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="querycriteria.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="performance.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;12.&nbsp;Criteria Queries&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;14.&nbsp;Improving performance</td></tr></table></div></body></html>

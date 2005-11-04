@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping package="org.hibernate.test">
+    <class
+        name="M"
+        table="M"
+    >
+
+        <id
+            name="uniqueSequence"
+            column="uniqueSequence"
+            type="long"
+            unsaved-value="null"
+        >
+            <generator class="native">
+            </generator>
+        </id>
+
+        <set
+               name="Children"
+               lazy="false"
+               inverse="true"
+               cascade="all-delete-orphan"
+               >
+             <key column="fkParent"/>
+             <one-to-many class="N"/>
+        </set>
+    </class>
+
+    <class
+        name="N"
+        table="N"
+       
+    >
+
+        <id
+            name="uniqueSequence"
+            column="uniqueSequence"
+            type="long"
+            unsaved-value="null"
+        >
+            <generator class="native">
+            </generator>
+        </id>
+   
+   <property
+            name="string"
+            type="java.lang.String"
+            column="String"
+        />
+               
+        <many-to-one
+            name="Parent"
+            column="fkParent"
+            not-null="true"
+        />
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping>
+	<class name="org.hibernate.test.Blobber" dynamic-update="true">
+		<id name="id">
+			<generator class="hilo"/>
+		</id>
+		<property name="blob" column="blob_"/>
+		<property name="clob" column="clob_"/>
+	</class>
+</hibernate-mapping>

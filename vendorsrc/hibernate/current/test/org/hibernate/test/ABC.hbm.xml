@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping>
+
+	<class name="org.hibernate.test.A" discriminator-value="0">
+		<id name = "id" column="identifier_column" unsaved-value = "null">
+			<generator class="increment"/>
+		</id>
+		<discriminator column="clazz_discriminata" type="integer" not-null="false"/>
+
+		<property name="name" index="indx_a_name">
+			<column name="name" index="indx_a_name2"/>
+		</property>
+
+		<subclass name="org.hibernate.test.B" discriminator-value="-1">
+			<property name="count" column="count_"/>
+
+			<map name="map"
+				where="(select a.clazz_discriminata from A a where a.identifier_column = bid) &lt; 0">
+				<key column="BID"/>
+				<index column="MAPKEY" type="string"/>
+				<element column="MAPVAL" type="string"/>
+			</map>
+
+			<subclass name="org.hibernate.test.C1" discriminator-value="null">
+				<property name="address" column="c1"/>
+				<one-to-one name="d"/>
+			</subclass>
+		</subclass>
+	</class>
+
+	<class name="org.hibernate.test.D" discriminator-value="0" proxy="org.hibernate.test.D">
+		<id name = "id" unsaved-value = "null">
+			<generator class="assigned"/>
+		</id>
+		<property name="amount"/>
+	</class>
+	
+</hibernate-mapping>

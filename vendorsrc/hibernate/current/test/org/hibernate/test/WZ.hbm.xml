@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping SYSTEM "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+<hibernate-mapping>
+
+	<class name="org.hibernate.test.Z">
+		<id name="id" unsaved-value="0">
+			<generator class="hilo"/>
+		</id>
+		<many-to-one name="w" 
+			cascade="save-update"
+			class="org.hibernate.test.W" 
+			insert="true" 
+			update="false" 
+			not-null="true"/>
+	</class>
+
+	<class name="org.hibernate.test.W" 
+		discriminator-value="0" 
+		proxy="org.hibernate.test.W">
+		
+		<id name="id" unsaved-value="0">
+			<generator class="hilo"/>
+		</id>
+		<!--<set name="zeds" lazy="true">
+			<key column="w"/>
+			<one-to-many class="org.hibernate.test.Z"/>
+		</set>-->
+	</class>
+	
+</hibernate-mapping>

@@ -1,0 +1,104 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>&#31532;&nbsp;12&nbsp;&#31456;&nbsp;&#26465;&#20214;&#26597;&#35810;(Criteria Query)</title><link rel="stylesheet" href="../shared/css/html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"><link rel="home" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="up" href="index.html" title="HIBERNATE - &#31526;&#21512;Java&#20064;&#24815;&#30340;&#20851;&#31995;&#25968;&#25454;&#24211;&#25345;&#20037;&#21270;"><link rel="previous" href="queryhql.html" title="&#31532;&nbsp;11&nbsp;&#31456;&nbsp;Hibernate&#26597;&#35810;&#35821;&#35328;(Query Language), &#21363;HQL"><link rel="next" href="querysql.html" title="&#31532;&nbsp;13&nbsp;&#31456;&nbsp;&#21407;&#29983;SQL&#26597;&#35810;"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">&#31532;&nbsp;12&nbsp;&#31456;&nbsp;&#26465;&#20214;&#26597;&#35810;(Criteria Query)</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="queryhql.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="querysql.html">&#19979;&#19968;&#39029;</a></td></tr></table><hr></div><div class="chapter" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title"><a name="querycriteria"></a>&#31532;&nbsp;12&nbsp;&#31456;&nbsp;&#26465;&#20214;&#26597;&#35810;(Criteria Query)</h2></div></div><div></div></div><p>
+        &#29616;&#22312;Hibernate&#20063;&#25903;&#25345;&#19968;&#31181;&#30452;&#35266;&#30340;&#12289;&#21487;&#25193;&#23637;&#30340;&#26465;&#20214;&#26597;&#35810;API&#12290;&#30446;&#21069;&#20026;&#27490;&#65292;&#36825;&#20010;API&#36824;&#27809;&#26377;&#26356;&#25104;&#29087;&#30340;HQL&#26597;&#35810;&#37027;&#20040;&#24378;&#22823;&#65292;&#20063;&#27809;&#26377;&#37027;&#20040;&#22810;&#26597;&#35810;&#33021;&#21147;&#12290;&#29305;&#21035;&#35201;&#25351;&#20986;&#65292;&#26465;&#20214;&#26597;&#35810;&#20063;&#19981;&#25903;&#25345;&#25237;&#24433;&#65288;projection&#65289;&#25110;&#32479;&#35745;&#20989;&#25968;&#65288;aggregation&#65289;&#12290;
+    </p><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querycriteria-creating"></a>12.1.&nbsp;&#21019;&#24314;&#19968;&#20010;<tt class="literal">Criteria</tt>&#23454;&#20363;</h2></div></div><div></div></div><p>
+        <tt class="literal">net.sf.hibernate.Criteria</tt>&#36825;&#20010;&#25509;&#21475;&#20195;&#34920;&#23545;&#19968;&#20010;&#29305;&#23450;&#30340;&#25345;&#20037;&#21270;&#31867;&#30340;&#26597;&#35810;&#12290;<tt class="literal">Session</tt>&#26159;&#29992;&#26469;&#21046;&#36896;<tt class="literal">Criteria</tt>&#23454;&#20363;&#30340;&#24037;&#21378;&#12290;
+    </p><pre class="programlisting">Criteria crit = sess.createCriteria(Cat.class);
+crit.setMaxResults(50);
+List cats = crit.list();</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querycriteria-narrowing"></a>12.2.&nbsp;&#32553;&#23567;&#32467;&#26524;&#38598;&#33539;&#22260;</h2></div></div><div></div></div><p>
+        &#19968;&#20010;&#26597;&#35810;&#26465;&#20214;(Criterion)&#26159;<tt class="literal">net.sf.hibernate.expression.Criterion</tt>&#25509;&#21475;&#30340;&#19968;&#20010;&#23454;&#20363;&#12290;&#31867;<tt class="literal">net.sf.hibernate.expression.Expression</tt>&#23450;&#20041;&#20102;&#33719;&#24471;&#19968;&#20123;&#20869;&#32622;&#30340;<tt class="literal">Criterion</tt>&#31867;&#22411;&#12290;
+    </p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .add( Expression.like("name", "Fritz%") )
+    .add( Expression.between("weight", minWeight, maxWeight) )
+    .list();</pre><p>
+        &#34920;&#36798;&#24335;&#65288;Expressions&#65289;&#21487;&#20197;&#25353;&#29031;&#36923;&#36753;&#20998;&#32452;.
+    </p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .add( Expression.like("name", "Fritz%") )
+    .add( Expression.or(
+    	Expression.eq( "age", new Integer(0) ),
+    	Expression.isNull("age")
+    ) )
+    .list();</pre><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .add( Expression.in( "name", new String[] { "Fritz", "Izi", "Pk" } ) )
+    .add( Expression.disjunction()
+        .add( Expression.isNull("age") )
+    	.add( Expression.eq("age", new Integer(0) ) )
+    	.add( Expression.eq("age", new Integer(1) ) )
+    	.add( Expression.eq("age", new Integer(2) ) )
+    ) )
+    .list();</pre><p>
+	&#26377;&#24456;&#22810;&#39044;&#21046;&#30340;&#26465;&#20214;&#31867;&#22411;&#65288;<tt class="literal">Expression</tt>&#30340;&#23376;&#31867;&#65289;&#12290;&#26377;&#19968;&#20010;&#29305;&#21035;&#26377;&#29992;&#65292;&#21487;&#20197;&#35753;&#20320;&#30452;&#25509;&#23884;&#20837;SQL&#12290;
+    </p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .add( Expression.sql("lower($alias.name) like lower(?)", "Fritz%", Hibernate.STRING) )
+    .list();</pre><p>
+        &#20854;&#20013;&#30340;<tt class="literal">{alias}</tt>&#26159;&#19968;&#20010;&#21344;&#20301;&#31526;&#65292;&#23427;&#23558;&#20250;&#34987;&#25152;&#26597;&#35810;&#23454;&#20307;&#30340;&#34892;&#21035;&#21517;&#25152;&#26367;&#20195;&#12290;(&#21407;&#25991;:The <tt class="literal">{alias}</tt> placeholder with be replaced by the row alias of the queried entity.)
+        </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querycriteria-ordering"></a>12.3.&nbsp;&#23545;&#32467;&#26524;&#25490;&#24207;</h2></div></div><div></div></div><p>
+        &#21487;&#20197;&#20351;&#29992;<tt class="literal">net.sf.hibernate.expression.Order</tt>&#23545;&#32467;&#26524;&#38598;&#25490;&#24207;.
+    </p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .add( Expression.like("name", "F%")
+    .addOrder( Order.asc("name") )
+    .addOrder( Order.desc("age") )
+    .setMaxResults(50)
+    .list();</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querycriteria-associations"></a>12.4.&nbsp;&#20851;&#32852;&#65288;Associations&#65289;</h2></div></div><div></div></div><p>
+        &#20320;&#21487;&#20197;&#22312;&#20851;&#32852;&#20043;&#38388;&#20351;&#29992;<tt class="literal">createCriteria()</tt>&#65292;&#24456;&#23481;&#26131;&#22320;&#22312;&#23384;&#22312;&#20851;&#31995;&#30340;&#23454;&#20307;&#20043;&#38388;&#25351;&#23450;&#32422;&#26463;&#12290;
+    </p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .add( Expression.like("name", "F%")
+    .createCriteria("kittens")
+        .add( Expression.like("name", "F%")
+    .list();</pre><p>
+        &#27880;&#24847;&#65292;&#31532;&#20108;&#20010;<tt class="literal">createCriteria()</tt>&#36820;&#22238;&#19968;&#20010;<tt class="literal">Criteria</tt>&#30340;&#26032;&#23454;&#20363;&#65292;&#25351;&#21521;<tt class="literal">kittens</tt>&#38598;&#21512;&#31867;&#30340;&#20803;&#32032;&#12290;
+    </p><p>
+        &#19979;&#38754;&#30340;&#26367;&#20195;&#24418;&#24335;&#22312;&#29305;&#23450;&#24773;&#20917;&#19979;&#26377;&#29992;&#12290;
+    </p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .createAlias("kittens", "kt")
+    .createAlias("mate", "mt")
+    .add( Expression.eqProperty("kt.name", "mt.name") )
+    .list();</pre><p>
+        &#65288;<tt class="literal">createAlias()</tt>&#65289;&#24182;&#19981;&#20250;&#21019;&#24314;&#19968;&#20010;<tt class="literal">Criteria</tt>&#30340;&#26032;&#23454;&#20363;&#12290;&#65289;
+    </p><p>
+        &#35831;&#27880;&#24847;&#65292;&#21069;&#38754;&#20004;&#20010;&#26597;&#35810;&#20013;<tt class="literal">Cat</tt>&#23454;&#20363;&#25152;&#25345;&#26377;&#30340;kittens&#38598;&#21512;&#31867;<span class="emphasis"><em>&#24182;&#27809;&#26377;</em></span>&#36890;&#36807;criteria&#39044;&#20808;&#36807;&#28388;&#65281;&#22914;&#26524;&#20320;&#24076;&#26395;&#21482;&#36820;&#22238;&#28385;&#36275;&#26465;&#20214;&#30340;kittens,&#20320;&#24517;&#39035;&#20351;&#29992;<tt class="literal">returnMaps()</tt>&#12290;
+    </p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .createCriteria("kittens", "kt")
+        .add( Expression.eq("name", "F%") )
+    .returnMaps()
+    .list();
+Iterator iter = cats.iterator();
+while ( iter.hasNext() ) {
+    Map map = (Map) iter.next();
+    Cat cat = (Cat) map.get(Criteria.ROOT_ALIAS);
+    Cat kitten = (Cat) map.get("kt");
+}</pre></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querycriteria-dynamicfetching"></a>12.5.&nbsp;&#21160;&#24577;&#20851;&#32852;&#23545;&#35937;&#33719;&#21462;&#65288;Dynamic association fetching&#65289;</h2></div></div><div></div></div><p>
+        &#21487;&#20197;&#22312;&#36816;&#34892;&#26102;&#36890;&#36807;<tt class="literal">setFetchMode()</tt>&#26469;&#25913;&#21464;&#20851;&#32852;&#23545;&#35937;&#33258;&#21160;&#33719;&#21462;&#30340;&#31574;&#30053;&#12290;
+</p><pre class="programlisting">List cats = sess.createCriteria(Cat.class)
+    .add( Expression.like("name", "Fritz%") )
+    .setFetchMode("mate", FetchMode.EAGER)
+    .setFetchMode("kittens", FetchMode.EAGER)
+    .list();</pre><p>
+        &#36825;&#20010;&#26597;&#35810;&#20250;&#36890;&#36807;&#22806;&#36830;&#25509;(outer join)&#21516;&#26102;&#33719;&#24471; <tt class="literal">mate</tt>&#21644;<tt class="literal">kittens</tt>&#12290;
+    </p></div><div class="sect1" lang="zh-cn"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="querycriteria-examples"></a>12.6.&nbsp;&#26681;&#25454;&#31034;&#20363;&#26597;&#35810;&#65288;Example queries&#65289;</h2></div></div><div></div></div><p>
+        <tt class="literal">net.sf.hibernate.expression.Example</tt>&#31867;&#20801;&#35768;&#20320;&#20174;&#25351;&#23450;&#30340;&#23454;&#20363;&#21019;&#36896;&#26597;&#35810;&#26465;&#20214;&#12290;
+    </p><pre class="programlisting">Cat cat = new Cat();
+cat.setSex('F');
+cat.setColor(Color.BLACK);
+List results = session.createCriteria(Cat.class)
+    .add( Example.create(cat) )
+    .list();</pre><p>
+       &#29256;&#26412;&#23646;&#24615;&#65292;&#34920;&#31034;&#31526;&#23646;&#24615;&#21644;&#20851;&#32852;&#37117;&#20250;&#34987;&#24573;&#30053;&#12290;&#40664;&#35748;&#24773;&#20917;&#19979;&#65292;null&#20540;&#30340;&#23646;&#24615;&#20063;&#34987;&#25490;&#38500;&#22312;&#22806;&#12290;
+    </p><p>
+       You can adjust how the <tt class="literal">Example</tt> is applied.
+       &#20320;&#21487;&#20197;&#35843;&#25972;<tt class="literal">&#31034;&#20363;(Example)</tt>&#22914;&#20309;&#24212;&#29992;&#12290;
+    </p><pre class="programlisting">Example example = Example.create(cat)
+    .excludeZeroes()           //exclude zero valued properties
+    .excludeProperty("color")  //exclude the property named "color"
+    .ignoreCase()              //perform case insensitive string comparisons
+    .enableLike();             //use like for string comparisons
+List results = session.createCriteria(Cat.class)
+    .add(example)
+    .list();</pre><p>
+        &#20320;&#29978;&#33267;&#21487;&#20197;&#29992;&#31034;&#20363;&#23545;&#20851;&#32852;&#23545;&#35937;&#24314;&#31435;criteria&#12290;
+    </p><pre class="programlisting">List results = session.createCriteria(Cat.class)
+    .add( Example.create(cat) )
+    .createCriteria("mate")
+        .add( Example.create( cat.getMate() ) )
+    .list();</pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="queryhql.html">&#19978;&#19968;&#39029;</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">&#19978;&#19968;&#32423;</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="querysql.html">&#19979;&#19968;&#39029;</a></td></tr><tr><td width="40%" align="left" valign="top">&#31532;&nbsp;11&nbsp;&#31456;&nbsp;Hibernate&#26597;&#35810;&#35821;&#35328;(Query Language), &#21363;HQL&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">&#36215;&#22987;&#39029;</a></td><td width="40%" align="right" valign="top">&nbsp;&#31532;&nbsp;13&nbsp;&#31456;&nbsp;&#21407;&#29983;SQL&#26597;&#35810;</td></tr></table></div></body></html>
