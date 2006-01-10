@@ -573,12 +573,14 @@ public class MetadataLoader
                 if (interpretation != null)
                 {
                     hTable.setInterpretation(
-                        InterpretationEnum.fromString(
-                            interpretation));
+                        InterpretationEnum.fromString(interpretation));
                 }
-                hTable.setAlignment(
-                        AlignmentEnum.fromString(
-                               in.getAlignment()));
+                String alignment = in.getAlignment();
+                if (alignment != null)
+                {
+                    hTable.setAlignment(
+                            AlignmentEnum.fromString(alignment));
+                }
                 hTable.setUseSeparator(in.getUseSeparator());
                 String editMasksJoined = in.getEditMaskID();
                 String resourcePath =  hClass.getResource().getPath();
