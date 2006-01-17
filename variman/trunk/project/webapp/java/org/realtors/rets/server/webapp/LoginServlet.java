@@ -66,7 +66,6 @@ public class LoginServlet extends RetsServlet
         out.println("Logout = " + contextPath + Paths.LOGOUT);
         out.println("Search = " + contextPath + Paths.SEARCH);
         out.println("GetMetadata = " + contextPath + Paths.GET_METADATA);
-        out.println("ChangePassword = " + contextPath + Paths.CHANGE_PASSWORD);
         out.println("GetObject = " + contextPath + Paths.GET_OBJECT);
         out.println("Balance = " + statitics.getTotalBalanceFormatted());
         out.println("TimeoutSeconds = " + session.getMaxInactiveInterval());
