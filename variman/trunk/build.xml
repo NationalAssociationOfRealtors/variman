@@ -35,9 +35,10 @@
   <path id="lib.path">
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${hibernate.jar}"/>
-    <pathelement path="${hibernate.jdbc.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${hibernate-ext.tools.jar}"/>
+    <pathelement path="${postgres.jdbc.jar}"/>
+    <pathelement path="${jtds.jdbc.jar}"/>
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${log4j.jar}"/>
   </path>
@@ -253,8 +254,9 @@
         <path refid="hibernate.path" />
         <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
         <pathelement location="build/hibernate/jar"/>
-        <pathelement location="${hibernate.jdbc.jar}"/>
         <fileset dir="${hibernate.lib}" includes="*.jar"/>
+        <pathelement location="${postgres.jdbc.jar}"/>
+        <pathelement location="${jtds.jdbc.jar}"/>
       </classpath>
       <arg line="${admin.args}"/>
     </java>
@@ -408,10 +410,6 @@
       <fileset dir="${tomcat.home}/server/lib"
                includes="jakarta-regexp-*.jar"/>
     </copy>
-    <!--
-    <copy tofile="build/rets-server/server/lib/tools.jar"
-          file="${jdk.tools.jar}"/>
-    -->
     <copy todir="build/rets-server/doc">
       <fileset dir="doc" includes="**/*"/>
     </copy>
@@ -520,11 +518,12 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${hibernate.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib">
-      <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="commons-lang*.jar"/>
+      <fileset dir="${hibernate.lib}" includes="*.jar" />
     </copy>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
-          file="${hibernate.jdbc.jar}"/>
+          file="${postgres.jdbc.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${jtds.jdbc.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
@@ -602,7 +601,8 @@
           file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/datagen/classes"
           file="project/hibernate/config/cache.ccf"/>
-    <copy todir="build/datagen/lib" file="${hibernate.jdbc.jar}"/>
+    <copy todir="build/datagen/lib" file="${postgres.jdbc.jar}"/>
+    <copy todir="build/datagen/lib" file="${jtds.jdbc.jar}"/>
   </target>
 
 
@@ -654,11 +654,9 @@
           file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/importer/classes"
           file="project/hibernate/config/cache.ccf"/>
-<!--     <copy todir="build/importer/lib" -->
-<!--           file="code/hibernate/config/hibernate.properties.dist"/> -->
 
-    <!-- Oh yeah, the jdbc driver would be nice. -->
-    <copy todir="build/importer/lib" file="${hibernate.jdbc.jar}"/>
+    <copy todir="build/importer/lib" file="${postgres.jdbc.jar}"/>
+    <copy todir="build/importer/lib" file="${jtds.jdbc.jar}"/>
   </target>
 
   <target name="build-admin" depends="build-hibernate"
