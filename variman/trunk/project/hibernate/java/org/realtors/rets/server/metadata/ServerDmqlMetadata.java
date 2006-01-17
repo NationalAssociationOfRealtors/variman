@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
@@ -35,6 +37,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         mLookupTypesMap = new HashMap();
         mStrings = new HashSet();
         mNumerics = new HashSet();
+        mColumns = new ArrayList();
     }
 
     public ServerDmqlMetadata(MClass clazz, boolean standardNames)
@@ -51,17 +54,10 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     private void init(Collection tables, boolean standardNames)
     {
-        DefaultColumnList defaultColumnList = new DefaultColumnList();
         for (Iterator i = tables.iterator(); i.hasNext();)
         {
             Table table = (Table) i.next();
             String dbName = table.getDbName();
-            int defaultOrder = table.getDefault();
-            // Skip all that have default set to -1
-            if (defaultOrder == -1)
-            {
-                continue;
-            }
 
             String fieldName = getTableName(table,  standardNames);
             if (fieldName == null)
@@ -78,10 +74,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
             }
 
             mFields.put(fieldName, table);
-            if (defaultOrder > 0)
-            {
-                defaultColumnList.add(defaultOrder, dbName);
-            }
+            mColumns.add(dbName);
 
             mFieldToColumn.put(fieldName, dbName);
             mColumnToField.put(dbName, fieldName);
@@ -111,7 +104,8 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
                 mFieldTypes.put(fieldName, DmqlFieldType.CHARACTER);
             }
         }
-        mDefaultColumnNames = defaultColumnList.getColumnNames();
+
+        Collections.sort(mColumns);
     }
 
     private boolean isLookup(Table table)
@@ -252,7 +246,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public List getAllColumns()
     {
-        return mDefaultColumnNames;
+        return mColumns;
     }
 
     public String getLookupDbValue(String lookupName, String lookupValue)
@@ -317,7 +311,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private Set mStrings;
     private static final Map LISTING_STATUS_VALUES;
     private Set mNumerics;
-    private List mDefaultColumnNames;
+    private List mColumns;
 
     static
     {

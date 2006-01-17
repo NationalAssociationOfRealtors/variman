@@ -20,26 +20,28 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals("r_STATUS", metadata.fieldToColumn("STATUS"));
         assertEquals("r_OWNER", metadata.fieldToColumn("OWNER"));
         assertEquals("r_IF", metadata.fieldToColumn("IF"));
+        assertEquals("r_HIDDEN", metadata.fieldToColumn("HIDDEN"));
         assertEquals("AR", metadata.columnToField("r_AR"));
         assertEquals("STATUS", metadata.columnToField("r_STATUS"));
         assertEquals("OWNER", metadata.columnToField("r_OWNER"));
         assertEquals("IF", metadata.columnToField("r_IF"));
+        assertEquals("HIDDEN", metadata.columnToField("r_HIDDEN"));
         assertNull(metadata.fieldToColumn("Area"));
         assertNull(metadata.fieldToColumn("ListingStatus"));
         assertNull(metadata.fieldToColumn("Owner"));
         assertNull(metadata.fieldToColumn("FOO"));
-        assertNull(metadata.fieldToColumn("HIDDEN"));
-        assertNull(metadata.fieldToColumn("r_HIDDEN"));
 
-        // Check ordering of all fields
+        // Check default ordering of fields is alphabetical
         List expectedColumns = new ArrayList();
-        expectedColumns.add("r_LP");
-        expectedColumns.add("r_LD");
-        expectedColumns.add("r_STATUS");
-        expectedColumns.add("r_OWNER");
-        expectedColumns.add("r_LT");
         expectedColumns.add("r_AR");
+        expectedColumns.add("r_HIDDEN");
         expectedColumns.add("r_IF");
+        expectedColumns.add("r_LD");
+        expectedColumns.add("r_LDT");
+        expectedColumns.add("r_LP");
+        expectedColumns.add("r_LT");
+        expectedColumns.add("r_OWNER");
+        expectedColumns.add("r_STATUS");
         assertEquals(expectedColumns, metadata.getAllColumns());
 
         // -----
@@ -50,12 +52,12 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidFieldName("OWNER"));
         assertTrue(metadata.isValidFieldName("LP"));
         assertTrue(metadata.isValidFieldName("IF"));
+        assertTrue(metadata.isValidFieldName("HIDDEN"));
         assertFalse(metadata.isValidFieldName("Area"));
         assertFalse(metadata.isValidFieldName("ListingStatus"));
         assertFalse(metadata.isValidFieldName("Owner"));
         assertFalse(metadata.isValidFieldName("ListingPrice"));
         assertFalse(metadata.isValidFieldName("FOO"));
-        assertFalse(metadata.isValidFieldName("HIDDEN"));
         assertFalse(metadata.isValidFieldName("r_HIDDEN"));
 
         // Check types
@@ -67,6 +69,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LD"));
         assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LDT"));
         assertEquals(DmqlFieldType.TEMPORAL, metadata.getFieldType("LT"));
+        assertEquals(DmqlFieldType.CHARACTER, metadata.getFieldType("HIDDEN"));
         assertNull(metadata.getFieldType("Owner"));
 
         // Check lookups
@@ -108,6 +111,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertEquals(mListDate, metadata.getTable("LD"));
         assertEquals(mListTime, metadata.getTable("LT"));
         assertEquals(mListDateTime, metadata.getTable("LDT"));
+        assertEquals(mHiddenTable, metadata.getTable("HIDDEN"));
     }
 
     public void testStandardNames()
@@ -128,11 +132,11 @@ public class ServerDmqlMetadataTest extends TestCase
 
         // Check ordering of all fields
         List expectedColumns = new ArrayList();
-        expectedColumns.add("r_LP");
-        expectedColumns.add("r_LD");
-        expectedColumns.add("r_STATUS");
-        expectedColumns.add("r_OWNER");
         expectedColumns.add("r_AR");
+        expectedColumns.add("r_LD");
+        expectedColumns.add("r_LP");
+        expectedColumns.add("r_OWNER");
+        expectedColumns.add("r_STATUS");
         assertEquals(expectedColumns, metadata.getAllColumns());
 
         // Check listing status uses lookup values from DTD
