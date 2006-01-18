@@ -98,10 +98,7 @@
 
   <path id="xdoclet.path">
     <pathelement path="${ant.home}/lib/ant.jar" />
-    <fileset dir="${xdoclet.lib}" includes="commons-*.jar"/>
-    <pathelement location="${xdoclet.jar}"/>
-    <pathelement location="${xdoclet.xdoclet.jar}"/>
-    <pathelement location="${xjavadoc.jar}"/>
+    <fileset dir="${xdoclet.lib}" includes="*.jar"/>
   </path>
 
   <target name="prepare">
