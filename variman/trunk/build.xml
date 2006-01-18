@@ -44,8 +44,8 @@
   </path>
 
   <path id="embedded.path">
-    <fileset dir="${tomcat.home}/server/lib" includes="*.jar"/>
-    <pathelement path="${tomcat.home}/bin/bootstrap.jar"/>
+    <fileset dir="${tomcat.server.lib}" includes="*.jar"/>
+    <pathelement path="${tomcat.bootstrap.jar}"/>
   </path>
 
   <path id="importer.path">
@@ -369,13 +369,10 @@
     </copy>
     <copy file="project/webapp/config/tomcat-users.xml"
           todir="build/rets-server/server/conf"/>
+    <copy file="${tomcat.bootstrap.jar}"
+      todir="build/rets-server/server/lib" />
     <copy todir="build/rets-server/server/lib">
-      <fileset dir="${tomcat.home}/bin">
-        <include name="bootstrap.jar"/>
-      </fileset>
-    </copy>
-    <copy todir="build/rets-server/server/lib">
-      <fileset dir="${tomcat.home}/common/lib">
+      <fileset dir="${tomcat.common.lib}">
         <include name="servlet.jar"/>
         <include name="naming-common.jar"/>
         <include name="naming-resources.jar"/>
@@ -386,7 +383,7 @@
       </fileset>
     </copy>
     <copy todir="build/rets-server/server/lib">
-      <fileset dir="${tomcat.home}/server/lib">
+      <fileset dir="${tomcat.server.lib}">
         <include name="catalina.jar"/>
         <include name="commons-digester.jar"/>
         <include name="tomcat-coyote.jar"/>
@@ -400,14 +397,14 @@
       </fileset>
     </copy>
     <copy todir="build/rets-server/server/lib">
-      <fileset dir="${tomcat.home}/common/endorsed">
+      <fileset dir="${tomcat.common.endorsed}">
         <include name="xercesImpl.jar"/>
         <include name="xmlParserAPIs.jar"/>
       </fileset>
     </copy>
     <!-- Rename jakarta-regexp to not have version number in it -->
     <copy tofile="build/rets-server/server/lib/jakarta-regexp.jar">
-      <fileset dir="${tomcat.home}/server/lib"
+      <fileset dir="${tomcat.server.lib}"
                includes="jakarta-regexp-*.jar"/>
     </copy>
     <copy todir="build/rets-server/doc">
