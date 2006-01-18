@@ -166,7 +166,8 @@
         <pathelement location="${antlr.jar}"/>
       </classpath>
     </antlr>
-    <javac target="${compile.vmtarget}" destdir="build/hibernate/classes"
+    <javac destdir="build/hibernate/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -176,8 +177,9 @@
         <path refid="hibernate.path" />
       </classpath>
     </javac>
-    <javac target="${compile.vmtarget}" srcdir="project/hibernate/test/java"
+    <javac srcdir="project/hibernate/test/java"
            destdir="build/hibernate/test/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -356,8 +358,9 @@
         <path refid="embedded.path" />
       </classpath>
     </depend>
-    <javac target="${compile.vmtarget}" srcdir="project/embedded/java"
+    <javac srcdir="project/embedded/java"
            destdir="build/embedded/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -460,8 +463,9 @@
         <path refid="webapp.path"/>
       </classpath>
     </depend>
-    <javac target="${compile.vmtarget}" srcdir="project/webapp/java"
+    <javac srcdir="project/webapp/java"
            destdir="build/rets-server/webapp/WEB-INF/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -476,8 +480,9 @@
         <path refid="webapp.test.path"/>
       </classpath>
     </depend>
-    <javac target="${compile.vmtarget}" srcdir="project/webapp/test/java"
-            destDir="build/webapp/test/classes"
+    <javac srcdir="project/webapp/test/java"
+           destDir="build/webapp/test/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -557,8 +562,9 @@
         <path refid="datagen.path"/>
       </classpath>
     </depend>
-    <javac target="${compile.vmtarget}" srcdir="project/datagen/java"
+    <javac srcdir="project/datagen/java"
            destdir="build/datagen/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -608,8 +614,9 @@
         <path refid="importer.path"/>
       </classpath>
     </depend>
-    <javac target="${compile.vmtarget}" srcdir="project/importer/java"
+    <javac srcdir="project/importer/java"
            destdir="build/importer/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -660,8 +667,9 @@
         <path refid="admin.path"/>
       </classpath>
     </depend>
-    <javac target="${compile.vmtarget}" srcdir="project/admin/java"
+    <javac srcdir="project/admin/java"
            destdir="build/admin/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -700,8 +708,9 @@
         <pathelement location="build/admin/classes"/>
       </classpath>
     </depend>
-    <javac target="${compile.vmtarget}" srcdir="project/admin/test/java"
+    <javac srcdir="project/admin/test/java"
            destdir="build/admin/test/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
@@ -805,7 +814,7 @@
     <exec executable="${inno_setup.iscc}"
           output="build/iss.log"
           failonerror="yes">
-      <arg line="${basedir}/build/${project.name}.iss"/>
+      <arg value="${basedir}/build/${project.name}.iss"/>
     </exec>
   </target>
 
