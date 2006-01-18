@@ -329,6 +329,12 @@
     <xslt basedir="project/doc/manual" destdir="${dest-dir}"
           style="build/doc/xsl/ldp-html-chunk.xsl" includes="manual.xml">
       <param name="base.dir" expression="${basedir}/${dest-dir}/"/>
+      <xmlcatalog>
+        <catalogpath>
+          <pathelement location="${docbookx-4.1.2.catalog}" />
+          <pathelement location="${docbook-4.2.catalog}" />
+        </catalogpath>
+      </xmlcatalog>
     </xslt>
     <copy todir="${dest-dir}">
       <fileset dir="project/doc/manual" excludes="*.xml"/>
