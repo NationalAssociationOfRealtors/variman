@@ -91,7 +91,7 @@
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${rets-client.jar}"/>
-    <pathelement path="${apple-eawt.jar}"/>
+    <pathelement path="${apple-java-ext.jar}"/>
     <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </path>
 
