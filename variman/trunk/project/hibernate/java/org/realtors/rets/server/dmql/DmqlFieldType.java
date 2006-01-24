@@ -1,6 +1,6 @@
 package org.realtors.rets.server.dmql;
 
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 
 /**
  * Field types needed for DMQL.  There are less types here than supported

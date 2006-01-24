@@ -220,7 +220,7 @@ public class Main
         AdminUtils.initConfig();
         AdminUtils.initDatabase();
 
-        int numProperties = NumberUtils.stringToInt(args[0]);
+        int numProperties = NumberUtils.toInt(args[0]);
         new CreatePropertiesCommand(numProperties).execute();
         System.out.println("Created " + numProperties + " properties");
     }

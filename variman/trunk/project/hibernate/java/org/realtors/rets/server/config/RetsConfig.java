@@ -387,7 +387,7 @@ public class RetsConfig
                 else if (ruleName.equals(RECORD_LIMIT))
                 {
                     groupRules.setRecordLimit(
-                        NumberUtils.stringToInt(grandChild.getTextTrim()));
+                        NumberUtils.toInt(grandChild.getTextTrim()));
                 }
                 else if (ruleName.equals(TIME_RESTRICTION))
                 {
@@ -516,7 +516,7 @@ public class RetsConfig
         else
         {
             String text = element.getChildTextTrim(name);
-            return NumberUtils.stringToInt(text, -1);
+            return NumberUtils.toInt(text, -1);
         }
     }
 

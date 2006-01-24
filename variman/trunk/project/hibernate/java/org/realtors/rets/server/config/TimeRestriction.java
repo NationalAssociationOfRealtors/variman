@@ -3,7 +3,7 @@ package org.realtors.rets.server.config;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 public class TimeRestriction

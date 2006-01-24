@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
@@ -63,7 +63,7 @@ public class SearchParameters
 
     private void initOffset(String offset)
     {
-        mOffset = NumberUtils.stringToInt(offset, 1);
+        mOffset = NumberUtils.toInt(offset, 1);
     }
 
     private void initLimit(String limit)
@@ -71,7 +71,7 @@ public class SearchParameters
         // "NONE" will not parse, and will correctly be set to MAX_VALUE. So
         // will any other non-integer string, but we'll let it slide, rather
         // than throwing an error.
-        mLimit = NumberUtils.stringToInt(limit, Integer.MAX_VALUE);
+        mLimit = NumberUtils.toInt(limit, Integer.MAX_VALUE);
     }
 
     private void initSelect(String select)

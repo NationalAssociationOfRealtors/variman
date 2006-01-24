@@ -54,7 +54,7 @@ public class ObjectServlet extends RetsServlet
         String resource = pathComponents[0];
         String type = pathComponents[1];
         String key = pathComponents[2];
-        int id = NumberUtils.stringToInt(pathComponents[3]);
+        int id = NumberUtils.toInt(pathComponents[3]);
 
         GetObjectTransaction transaction =
             new GetObjectTransaction(resource, type);

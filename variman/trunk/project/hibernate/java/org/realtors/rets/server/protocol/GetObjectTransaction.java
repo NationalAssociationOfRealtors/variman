@@ -199,7 +199,7 @@ public class GetObjectTransaction
                 }
                 else
                 {
-                    int objectId = NumberUtils.stringToInt(objectIdString);
+                    int objectId = NumberUtils.toInt(objectIdString);
                     ObjectDescriptor object =
                         objectSet.findObject(mType, objectId);
                     if (object != null)

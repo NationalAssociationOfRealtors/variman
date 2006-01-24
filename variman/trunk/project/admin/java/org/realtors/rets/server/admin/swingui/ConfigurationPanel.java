@@ -130,7 +130,7 @@ public class ConfigurationPanel extends AdminTab
 
     public int getPort()
     {
-        return NumberUtils.stringToInt(mPort.getText());
+        return NumberUtils.toInt(mPort.getText());
     }
 
     public String getMetadataDir()

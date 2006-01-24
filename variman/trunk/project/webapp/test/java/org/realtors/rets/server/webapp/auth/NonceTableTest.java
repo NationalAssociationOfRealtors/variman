@@ -76,10 +76,10 @@ public class NonceTableTest extends TestCase
         NonceTable nonceTable = new NonceTable();
         String nonce1 = nonceTable.generateNonce();
         // Set time to be one minute in the past
-        nonceTable.setExpirationTime(nonce1, time - DateUtils.MILLIS_IN_MINUTE);
+        nonceTable.setExpirationTime(nonce1, time - DateUtils.MILLIS_PER_MINUTE);
         String nonce2 = nonceTable.generateNonce();
         // Set time to be one minute in the future
-        nonceTable.setExpirationTime(nonce2, time + DateUtils.MILLIS_IN_MINUTE);
+        nonceTable.setExpirationTime(nonce2, time + DateUtils.MILLIS_PER_MINUTE);
 
         assertTrue(nonceTable.isValidNonce(nonce1));
         assertTrue(nonceTable.isValidNonce(nonce2));
@@ -102,7 +102,7 @@ public class NonceTableTest extends TestCase
                    (time + NonceTable.DEFAULT_INITIAL_TIMEOUT));
         assertTrue(expirationTime <=
                    (time + NonceTable.DEFAULT_INITIAL_TIMEOUT +
-                    DateUtils.MILLIS_IN_MINUTE));
+                    DateUtils.MILLIS_PER_MINUTE));
     }
 
     public void testGood2617ValidateExpirationTime()
@@ -123,7 +123,7 @@ public class NonceTableTest extends TestCase
                    (time + NonceTable.DEFAULT_SUCCESS_TIMEOUT));
         assertTrue(expirationTime <=
                    (time + NonceTable.DEFAULT_SUCCESS_TIMEOUT +
-                    DateUtils.MILLIS_IN_MINUTE));
+                    DateUtils.MILLIS_PER_MINUTE));
     }
 
     public void testGood2609ValidateExpirationTime()
@@ -142,7 +142,7 @@ public class NonceTableTest extends TestCase
                    (time + NonceTable.DEFAULT_SUCCESS_TIMEOUT));
         assertTrue(expirationTime <=
                    (time + NonceTable.DEFAULT_SUCCESS_TIMEOUT +
-                    DateUtils.MILLIS_IN_MINUTE));
+                    DateUtils.MILLIS_PER_MINUTE));
     }
 
     public void testBad2617ValidateExpirationTime()
@@ -163,7 +163,7 @@ public class NonceTableTest extends TestCase
                    (time + NonceTable.DEFAULT_INITIAL_TIMEOUT));
         assertTrue(expirationTime <=
                    (time + NonceTable.DEFAULT_INITIAL_TIMEOUT +
-                    DateUtils.MILLIS_IN_MINUTE));
+                    DateUtils.MILLIS_PER_MINUTE));
     }
 
     public void testBad2609ValidateExpirationTime()
@@ -182,6 +182,6 @@ public class NonceTableTest extends TestCase
                    (time + NonceTable.DEFAULT_INITIAL_TIMEOUT));
         assertTrue(expirationTime <=
                    (time + NonceTable.DEFAULT_INITIAL_TIMEOUT +
-                    DateUtils.MILLIS_IN_MINUTE));
+                    DateUtils.MILLIS_PER_MINUTE));
     }
 }

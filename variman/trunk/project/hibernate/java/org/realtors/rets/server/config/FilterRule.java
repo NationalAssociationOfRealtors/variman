@@ -3,7 +3,7 @@ package org.realtors.rets.server.config;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.StringUtils;
 
 public class FilterRule

@@ -10,7 +10,7 @@
  */
 package org.realtors.rets.server;
 
-import org.apache.commons.lang.enum.ValuedEnum;
+import org.apache.commons.lang.enums.ValuedEnum;
 
 public class ReplyCode extends ValuedEnum
 {

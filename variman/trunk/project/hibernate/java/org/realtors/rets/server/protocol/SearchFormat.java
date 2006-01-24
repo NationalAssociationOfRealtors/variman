@@ -1,6 +1,6 @@
 package org.realtors.rets.server.protocol;
 
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 
 public class SearchFormat extends Enum
 {

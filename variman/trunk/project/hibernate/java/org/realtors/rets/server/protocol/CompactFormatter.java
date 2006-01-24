@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;

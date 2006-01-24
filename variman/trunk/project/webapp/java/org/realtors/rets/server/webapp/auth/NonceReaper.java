@@ -31,8 +31,8 @@ public class NonceReaper
         mNonceTable = nonceTable;
         mTimer = new Timer();
         mTimer.schedule(new ReaperTask(),
-                        DateUtils.MILLIS_IN_MINUTE,     // Initial delay
-                        DateUtils.MILLIS_IN_MINUTE);    // Subsequent delay
+                        DateUtils.MILLIS_PER_MINUTE,     // Initial delay
+                        DateUtils.MILLIS_PER_MINUTE);    // Subsequent delay
         LOG.debug("Started nonce reaper");
     }
 

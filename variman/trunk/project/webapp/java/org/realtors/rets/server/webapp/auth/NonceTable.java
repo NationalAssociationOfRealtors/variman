@@ -281,11 +281,11 @@ public class NonceTable
 
     /** Initial timeout, before a succesful validation is 2 minutes.*/
     public static final long DEFAULT_INITIAL_TIMEOUT =
-        2 * DateUtils.MILLIS_IN_MINUTE;
+        2 * DateUtils.MILLIS_PER_MINUTE;
 
     /** Timeout after each successful validation is 5 minutes.*/
     public static final long DEFAULT_SUCCESS_TIMEOUT =
-        5 * DateUtils.MILLIS_IN_MINUTE;
+        5 * DateUtils.MILLIS_PER_MINUTE;
 
     private Map /* Entry */ mNonceTable;
     private long mInitialTimeout;

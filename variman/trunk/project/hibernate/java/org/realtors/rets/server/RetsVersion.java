@@ -10,7 +10,7 @@
  */
 package org.realtors.rets.server;
 
-import org.apache.commons.lang.enum.Enum;
+import org.apache.commons.lang.enums.Enum;
 
 public class RetsVersion extends Enum
 {

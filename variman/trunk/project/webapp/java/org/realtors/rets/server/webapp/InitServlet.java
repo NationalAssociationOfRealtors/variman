@@ -351,7 +351,7 @@ public class InitServlet extends RetsServlet
         if (initialTimeout != -1)
         {
             nonceTable.setInitialTimeout(
-                initialTimeout * DateUtils.MILLIS_IN_MINUTE);
+                initialTimeout * DateUtils.MILLIS_PER_MINUTE);
             LOG.info("Set initial nonce timeout to " + initialTimeout +
                       " minutes");
         }
@@ -360,7 +360,7 @@ public class InitServlet extends RetsServlet
         if (successTimeout != -1)
         {
             nonceTable.setSuccessTimeout(
-                successTimeout * DateUtils.MILLIS_IN_MINUTE);
+                successTimeout * DateUtils.MILLIS_PER_MINUTE);
             LOG.info("Set success nonce timeout to " + successTimeout +
                       " minutes");
         }
