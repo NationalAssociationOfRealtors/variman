@@ -1,3 +1,12 @@
+Version 2.1.8 - 25 January 2006
+
+  * The 'Default' attribute in Table metadata is ignored.
+  * SQL log file follows log policy setup in Admin tool.
+  * Daily logging now actually rolls over every day, instead of weekly.
+  * Null alignments are skipped.
+  * Change Password is removed from capability URLs.
+  * All CCT code has been removed and index page now shows login URL.
+
 Version 2.1.7 - 27 September 2005
 
   * Update rets-client to warn on metadata parse errors.
