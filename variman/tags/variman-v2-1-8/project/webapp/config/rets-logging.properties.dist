@@ -1,0 +1,19 @@
+# Values: roll_size | roll_daily
+# Default: roll_size
+#
+# roll_size means roll the log file every 10MB.  roll_daily means roll
+# every day.  roll_size keeps 5 files.  roll_daily keeps all files and
+# required manual clean up.
+variman.log.appender = roll_size
+
+# Values: info | debug
+# Default: info
+#
+# Setting to debug enables more logging
+variman.log.level = info
+
+# Values: off | all
+# Default: off
+#
+# Setting to "all" enables separate SQL logging
+variman.log.sql_level = off

@@ -1,0 +1,12 @@
+bin
+build
+dist
+build.properties*
+tmp
+scratch
+.ant-targets-build.xml
+prj.el
+.classpath
+.project
+.build
+.checkstyle
