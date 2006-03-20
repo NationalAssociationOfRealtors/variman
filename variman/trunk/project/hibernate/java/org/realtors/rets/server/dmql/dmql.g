@@ -253,7 +253,7 @@ string_start
     ;
 
 string_contains
-    : STAR text STAR
+    : STAR (text)* STAR
         {#string_contains = #([STRING], #string_contains);}
     ;
 

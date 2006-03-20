@@ -273,6 +273,20 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         assertEquals(list, sql);
     }
 
+    public void testStringContainsDigitsFirst() throws ANTLRException
+    {
+        SqlConverter sql = parse("(OWNER=*100th*)");
+        System.out.println(TestUtil.toSql(sql));
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        DmqlString string = new DmqlString();
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string.add("100");
+        string.add("th");
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+        assertEquals(list, sql);
+    }
+
     public void testStringChar() throws ANTLRException
     {
         SqlConverter sql = parse("(OWNER=f?o)");

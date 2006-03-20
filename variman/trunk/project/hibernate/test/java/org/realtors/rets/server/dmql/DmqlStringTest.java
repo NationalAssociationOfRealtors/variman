@@ -26,6 +26,28 @@ public class DmqlStringTest extends TestCase
         components.add(new ConstantStringComponent("bar"));
         assertEquals(components, string.getComponents());
         assertEquals(" = 'bar'", TestUtil.toSql(string));
+
+        string.add("100");
+        components.add(new ConstantStringComponent("100"));
+        assertEquals(components, string.getComponents());
+        assertEquals(" = 'bar100'", TestUtil.toSql(string));
+    }
+
+    public void testMutlipleConstantStrings()
+    {
+        DmqlString string = new DmqlString();
+        string.add("foo");
+        string.add("100");
+        string.add("bar");
+
+        List components = new ArrayList();
+        components = new ArrayList();
+        components.add(new ConstantStringComponent("foo"));
+        components.add(new ConstantStringComponent("100"));
+        components.add(new ConstantStringComponent("bar"));
+        assertEquals(components, string.getComponents());
+        assertEquals(" = 'foo100bar'", TestUtil.toSql(string));
+
     }
 
     public void testStartsWith()

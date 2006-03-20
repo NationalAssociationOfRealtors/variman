@@ -186,6 +186,12 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     private void addLookups(String fieldName, boolean standardNames,
                             Lookup lookup)
     {
+        if (lookup == null)
+        {
+            LOG.warn("Ignorig null lookup for field: " + fieldName);
+            return;
+        }
+
         boolean generateDbValues;
         Map dbValues;
         if (fieldName.equals("ListingStatus") && standardNames)
