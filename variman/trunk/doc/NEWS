@@ -1,3 +1,12 @@
+Version 2.1.9 - 21 March 2006
+
+  * Spaces are now allowed in wildcard searchs by URL encoding them.
+  * Fix a bug in the DMQL parser when using wildcards, numbers, and letters.
+  * Fields with a lookup interpration but no valid lookup are logged.
+  * The Windows setup program removes old code before installation to avoid
+    out of date files when upgrading.
+  * Unit tests now run and complete on Windows.
+
 Version 2.1.8 - 25 January 2006
 
   * The 'Default' attribute in Table metadata is ignored.
@@ -5,7 +14,7 @@ Version 2.1.8 - 25 January 2006
   * Daily logging now actually rolls over every day, instead of weekly.
   * Null alignments are skipped.
   * Change Password is removed from capability URLs.
-  * All CCT code has been removed and thhe index page now shows the login URL.
+  * All CCT code has been removed and the index page now shows the login URL.
 
 Version 2.1.7 - 27 September 2005
 
