@@ -836,10 +836,12 @@
   </target>
 
   <target name="dist-win-iss">
-    <copy file="project/build/${project.name}.iss" todir="build">
+    <copy file="project/build/${project.name}.iss" todir="build"
+          overwrite="true">
       <filterset>
         <filter token="VERSION" value="${project.version}"/>
         <filter token="BASEDIR" value="${basedir}"/>
+        <filter token="COMPRESSION" value="${inno_setup.compression}"/>
       </filterset>
     </copy>
     <copy file="${javaservice.exe}" tofile="build/rets-server/${project.name}.exe"/>

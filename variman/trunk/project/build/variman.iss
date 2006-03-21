@@ -17,7 +17,7 @@ InfoBeforeFile=@BASEDIR@\project\build\iss_java.txt
 LicenseFile=@BASEDIR@\LICENSE.TXT
 UninstallFilesDir={app}\uninstall
 MinVersion=0,4
-; Compression=none
+Compression=@COMPRESSION@
 
 [Files]
 Source: "*"; Excludes: "\webapp\WEB-INF\rets\rets-config.xml,\webapp\WEB-INF\rets\rets-logging.properties,\logs\%"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Check: StopVarimanService
@@ -151,4 +151,16 @@ begin
     ServiceStopped := True;
   end
   Result := True;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+var lib: String;
+var classes: String;
+begin
+  if CurStep = ssInstall then begin
+    lib := ExpandConstant('{app}') + '\webapp\WEB-INF\lib'
+    classes := ExpandConstant('{app}') + '\webapp\WEB-INF\classes'
+    DelTree(lib, True, True, True);
+    DelTree(classes, True, True, True);
+  end;
 end;
