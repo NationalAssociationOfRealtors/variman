@@ -2,13 +2,14 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2003-2004, The National Association of REALTORS
+ * Copyright (c) 2003-2006, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
 header {
 package org.realtors.rets.server.dmql;
 import java.util.*;
+import java.net.URLDecoder;
 }
 
 class DmqlParser extends Parser;
@@ -349,7 +350,21 @@ ALPHANUM
 
 protected
 TEXT
-	: (ALPHANUM)+;
+	: (ALPHANUM | URL_ENCODED_CHAR)+ 
+	{ 
+	    String s = $getText;
+	    $setText(URLDecoder.decode(s));
+	}
+	;
+    
+protected
+URL_ENCODED_CHAR
+    : '%' HEX_DIGIT HEX_DIGIT ;
+    
+protected
+HEX_DIGIT
+    : ('0'..'9' | 'A'..'F' | 'a'..'f')
+    ;
 
 protected
 NUMBER
