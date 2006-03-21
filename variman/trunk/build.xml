@@ -726,32 +726,6 @@
           depends="build-hibernate-xdoclet,build"/>
 
   <target name="test" description="Run all unit tests" depends="build">
-    <junit printsummary="yes" haltonfailure="yes">
-      <classpath>
-        <pathelement path="${java.class.path}"/>
-        <pathelement location="build/hibernate/test/classes"/>
-        <pathelement location="build/webapp/test/classes"/>
-        <pathelement location="build/admin/test/classes"/>
-        <path refid="hibernate.path"/>
-        <path refid="webapp.path"/>
-        <path refid="lib.path"/>
-        <path refid="embedded.path"/>
-        <pathelement path="${servlet.jar}"/>
-        <pathelement path="${log4j.jar}"/>
-        <pathelement path="${commons-lang.jar}"/>
-        <pathelement location="build/hibernate/classes"/>
-        <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
-        <pathelement location="build/admin/classes"/>
-      </classpath>
-      <jvmarg value="-Dtest.basedir=${basedir}"/>
-      <jvmarg value="-Dlog4j.configuration=${project.name}-test-log4j.xml"/>
-
-      <formatter type="plain"/>
-      <test fork="yes" name="test.AllTests" outfile="build/tests/results"/>
-    </junit>
-  </target>
-
-  <target name="test-batch" description="Run all unit tests" depends="build">
     <junit printsummary="no" haltonfailure="no" fork="yes" forkmode="perBatch"
       failureProperty="test.failure">
       <classpath>
