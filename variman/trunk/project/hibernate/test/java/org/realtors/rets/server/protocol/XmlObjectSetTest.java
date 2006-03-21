@@ -9,6 +9,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.IOUtils;
 
 public class XmlObjectSetTest extends TestCase
 {
@@ -133,7 +134,7 @@ public class XmlObjectSetTest extends TestCase
 
     private File getResourceFile(String resourceName)
     {
-        return new File(getClass().getResource(resourceName).getPath());
+        return IOUtils.urlToFile(getClass().getResource(resourceName));
     }
 
     private static final String LOCAL_OBJECT_SET = "abc123-local.xml";

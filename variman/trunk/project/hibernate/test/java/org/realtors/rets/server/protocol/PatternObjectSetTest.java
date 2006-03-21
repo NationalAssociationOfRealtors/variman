@@ -6,6 +6,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.IOUtils;
 
 public class PatternObjectSetTest extends TestCase
 {
@@ -83,10 +84,7 @@ public class PatternObjectSetTest extends TestCase
     private String directoryOfResource(String resourceName)
     {
         URL imageUrl = getClass().getResource(resourceName);
-        String imagePath = imageUrl.getPath();
-        String imageDirectory =
-            imagePath.substring(0, imagePath.lastIndexOf(resourceName) - 1);
-        return imageDirectory;
+        return IOUtils.urlToFile(imageUrl).getParent();
     }
 
     private URL localUrl(String resourceName)

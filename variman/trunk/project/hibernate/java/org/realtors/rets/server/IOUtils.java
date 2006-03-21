@@ -26,8 +26,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,17 @@ import java.util.List;
  */
 public class IOUtils
 {
+    public static File urlToFile(URL url)
+    {
+        URI uri = URI.create(url.toString());
+        return new File(uri);
+    }
+
+    public static String urlToFilename(URL url)
+    {
+        return urlToFile(url).getPath();
+    }
+
     /**
      * Reads the input stream, blocking until the byte buffer is full
      * or the end of the stream is reached.ch
@@ -83,7 +96,7 @@ public class IOUtils
     public static byte[] readBytes(URL file)
         throws IOException
     {
-        return readBytes(new FileInputStream(file.getFile()));
+        return readBytes(new FileInputStream(urlToFile(file)));
     }
 
     public static byte[] readBytes(String fileName) throws IOException
@@ -135,7 +148,7 @@ public class IOUtils
      */
     public static String readString(URL file) throws IOException
     {
-        return readString(new FileReader(file.getFile()));
+        return readString(new FileReader(urlToFile(file)));
     }
 
     /**
@@ -232,7 +245,7 @@ public class IOUtils
      */
     public static List readLines(URL file) throws IOException
     {
-        return readLines(new FileReader(file.getFile()));
+        return readLines(new FileReader(urlToFile(file)));
     }
 
     /**
@@ -496,6 +509,17 @@ public class IOUtils
 
     public static File relativize(File base, File file)
     {
+        URI baseUri = base.toURI();
+        URI fileUri = file.toURI();
+        URI relativeUri = baseUri.relativize(fileUri);
+        if (!relativeUri.isAbsolute())
+            return new File(relativeUri.getPath());
+        else
+            return new File(relativeUri);
+    }
+
+    public static File relativize2(File base, File file)
+    {
         String basePath = base.getPath();
         String filePath = file.getPath();
         if (filePath.startsWith(basePath))
@@ -512,30 +536,28 @@ public class IOUtils
 
     public static String relativize(String base, String file)
     {
-        return relativize(new File(base), new File(file)).getPath();
+        URI baseUri = URI.create(base);
+        URI fileUri = URI.create(file);
+        return baseUri.relativize(fileUri).getPath();
     }
 
     public static File resolve(File base, File file)
     {
-        try
+        URI baseUri = base.toURI();
+        URI fileUri = file.toURI();
+        if (!file.isAbsolute())
         {
-            if (!file.isAbsolute())
-            {
-                file = new File(base, file.getPath());
-            }
-            URL baseUrl = base.toURL();
-            URL resolvedUrl = new URL(baseUrl, file.toURL().getPath());
-            return new File(resolvedUrl.getFile());
+            file = new File(base, file.getPath());
+            fileUri = file.toURI();
         }
-        catch (MalformedURLException e)
-        {
-            throw new RuntimeException(e.getMessage());
-        }
+        URI resolvedUri = baseUri.resolve(fileUri);
+        return new File(resolvedUri);
     }
 
     public static String resolve(String base, String file)
     {
-        return resolve(new File(base), new File(file)).getPath();
+        URI baseUri = URI.create(base);
+        return baseUri.resolve(file).getPath();
     }
 
     /**

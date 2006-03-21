@@ -79,54 +79,54 @@ public class RetsConfigTest extends LinesEqualTestCase
         retsConfig.setSecurityConstraints(securityConstraints);
 
         String xml = retsConfig.toXml();
-        assertLinesEqual(
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<rets-config>\n" +
-            "  <port>7103</port>\n" +
-            "  <metadata-dir>WEB-INF/rets/metadata</metadata-dir>\n" +
-            "  <get-object-root>/tmp/pictures</get-object-root>\n" +
-            "  <photo-pattern>%k-%i.jpg</photo-pattern>\n" +
-            "  <object-set-pattern>%k.xml</object-set-pattern>\n" +
-            "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
-            "  <nonce-success-timeout>10</nonce-success-timeout>\n" +
-            "  <database>\n" +
-            "    <type>postgresql</type>\n" +
-            "    <host>localhost</host>\n" +
-            "    <name>rets_test</name>\n" +
-            "    <username>dave</username>\n" +
-            "    <password></password>\n" +
-            "    <max-active>100</max-active>\n" +
-            "    <max-idle>10</max-idle>\n" +
-            "    <max-wait>120000</max-wait>\n" +
-            "    <max-ps-active>50</max-ps-active>\n" +
-            "    <max-ps-idle>5</max-ps-idle>\n" +
-            "    <max-ps-wait>60000</max-ps-wait>\n" +
-            "    <show-sql>true</show-sql>\n" +
-            "  </database>\n" +
-            "  <security-constraints>\n" +
-            "    <group-rules group=\"newspaper\">\n" +
-            "      <record-limit>25</record-limit>\n" +
-            "      <include-rule resource=\"Property\" class=\"RES\">\n" +
-            "        <system-names>LP LN</system-names>\n" +
-            "      </include-rule>\n" +
-            "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
-            "        <system-names>EF</system-names>\n" +
-            "      </exclude-rule>\n" +
-            "      <condition-rule resource=\"Property\" class=\"RES\">\n" +
-            "        <sql-constraint>r_lp &lt; 500000</sql-constraint>\n" +
-            "      </condition-rule>\n" +
-            "    </group-rules>\n" +
-            "    <group-rules group=\"aggregators\">\n" +
+	assertLinesEqual(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL +
+            "<rets-config>" + NL +
+            "  <port>7103</port>" + NL +
+            "  <metadata-dir>WEB-INF/rets/metadata</metadata-dir>" + NL +
+            "  <get-object-root>/tmp/pictures</get-object-root>" + NL +
+            "  <photo-pattern>%k-%i.jpg</photo-pattern>" + NL +
+            "  <object-set-pattern>%k.xml</object-set-pattern>" + NL +
+            "  <nonce-initial-timeout>5</nonce-initial-timeout>" + NL +
+            "  <nonce-success-timeout>10</nonce-success-timeout>" + NL +
+            "  <database>" + NL +
+            "    <type>postgresql</type>" + NL +
+            "    <host>localhost</host>" + NL +
+            "    <name>rets_test</name>" + NL +
+            "    <username>dave</username>" + NL +
+            "    <password></password>" + NL +
+            "    <max-active>100</max-active>" + NL +
+            "    <max-idle>10</max-idle>" + NL +
+            "    <max-wait>120000</max-wait>" + NL +
+            "    <max-ps-active>50</max-ps-active>" + NL +
+            "    <max-ps-idle>5</max-ps-idle>" + NL +
+            "    <max-ps-wait>60000</max-ps-wait>" + NL +
+            "    <show-sql>true</show-sql>" + NL +
+            "  </database>" + NL +
+            "  <security-constraints>" + NL +
+            "    <group-rules group=\"newspaper\">" + NL +
+            "      <record-limit>25</record-limit>" + NL +
+            "      <include-rule resource=\"Property\" class=\"RES\">" + NL +
+            "        <system-names>LP LN</system-names>" + NL +
+            "      </include-rule>" + NL +
+            "      <exclude-rule resource=\"Property\" class=\"COM\">" + NL +
+            "        <system-names>EF</system-names>" + NL +
+            "      </exclude-rule>" + NL +
+            "      <condition-rule resource=\"Property\" class=\"RES\">" + NL +
+            "        <sql-constraint>r_lp &lt; 500000</sql-constraint>" + NL +
+            "      </condition-rule>" + NL +
+            "    </group-rules>" + NL +
+            "    <group-rules group=\"aggregators\">" + NL +
             "      <time-restriction policy=\"deny\" " +
-            "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
-            "    </group-rules>\n" +
-            "    <group-rules group=\"admins\">\n" +
+            "start=\"9:00 AM\" end=\"5:30 PM\" />" + NL +
+            "    </group-rules>" + NL +
+            "    <group-rules group=\"admins\">" + NL +
             "      <time-restriction policy=\"allow\" " +
-            "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
-            "    </group-rules>\n" +
-            "  </security-constraints>\n" +
-            "</rets-config>\n" +
-            "\n",
+            "start=\"9:00 AM\" end=\"5:30 PM\" />" + NL +
+            "    </group-rules>" + NL +
+            "  </security-constraints>" + NL +
+            "</rets-config>" + NL +
+            NL,
             xml
         );
     }

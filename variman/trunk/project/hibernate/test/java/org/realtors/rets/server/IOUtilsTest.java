@@ -8,6 +8,8 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,10 +24,29 @@ import junit.framework.TestCase;
 
 public class IOUtilsTest extends TestCase
 {
+    public static final String SEP = File.separator;
+    public static final String ROOT_PREFIX;
+
+    static
+    {
+        if (SystemUtils.IS_OS_UNIX)
+            ROOT_PREFIX = "/";
+        else if (SystemUtils.IS_OS_WINDOWS)
+            ROOT_PREFIX = "C:\\";
+        else
+            ROOT_PREFIX = "";
+    }
+
+    public void testFileRootPrefix()
+    {
+        File file = new File(ROOT_PREFIX + "foo");
+        assertTrue(file.isAbsolute());
+    }
+
     public void testFillByteBuffer() throws IOException
     {
         URL resource = getClass().getResource("large-file.txt");
-        File file = new File(resource.getFile());
+        File file = IOUtils.urlToFile(resource);
         int fileSize = (int) file.length();
         // Make sure file is larger than the number of bytes read per read()
         assertTrue(fileSize > SputteringInputStream.SPUTTERING_SIZE);
@@ -111,7 +132,7 @@ public class IOUtilsTest extends TestCase
 
     public void testWriteString() throws IOException
     {
-        String file = getClass().getResource("foo.txt").getFile();
+        String file = IOUtils.urlToFilename(getClass().getResource("foo.txt"));
         file = StringUtils.replace(file, "foo.txt", "bar.txt");
         String expected = "a\nb\nc\n" + System.currentTimeMillis() + "\n";
         IOUtils.writeString(expected, file);
@@ -120,7 +141,7 @@ public class IOUtilsTest extends TestCase
 
     public void testWriteBytes() throws IOException
     {
-        String file = getClass().getResource("foo.txt").getFile();
+        String file = IOUtils.urlToFilename(getClass().getResource("foo.txt"));
         file = StringUtils.replace(file, "foo.txt", "bar.txt");
         byte[] expected = new byte[10];
         Random random = new Random();
@@ -131,7 +152,7 @@ public class IOUtilsTest extends TestCase
 
     public void testListRecursive() throws IOException
     {
-        String file = getClass().getResource("foo.txt").getFile();
+        String file = IOUtils.urlToFilename(getClass().getResource("foo.txt"));
         file = StringUtils.replace(file, "foo.txt", "dirTest");
         List files = IOUtils.listFilesRecursive(new File(file));
         Collections.sort(files);
@@ -146,7 +167,7 @@ public class IOUtilsTest extends TestCase
 
     public void testListRecursiveFilenameFilter() throws IOException
     {
-        String file = getClass().getResource("foo.txt").getFile();
+        String file = IOUtils.urlToFilename(getClass().getResource("foo.txt"));
         file = StringUtils.replace(file, "foo.txt", "dirTest");
         List files = IOUtils.listFilesRecursive(
             new File(file), new IOUtils.ExtensionFilter(".html"));
@@ -158,7 +179,7 @@ public class IOUtilsTest extends TestCase
 
     public void testListRecursiveFileFilter() throws IOException
     {
-        String file = getClass().getResource("foo.txt").getFile();
+        String file = IOUtils.urlToFilename(getClass().getResource("foo.txt"));
         file = StringUtils.replace(file, "foo.txt", "dirTest");
         List files = IOUtils.listFilesRecursive(
             new File(file), new IOUtils.NotDirectoryFilter());
@@ -172,16 +193,19 @@ public class IOUtilsTest extends TestCase
 
     public void testRelativizeFiles()
     {
-        File base = new File("/root/directory/");
-        File subDir = new File("/root/directory/sub/directory");
-        File other = new File("/some/other/directory");
+        File base = new File(ROOT_PREFIX + "root" + SEP + "directory" + SEP);
+        File subDir = new File(ROOT_PREFIX + "root" + SEP + "directory" +
+                               SEP + "sub" + SEP + "directory");
+        File other = new File(ROOT_PREFIX + "some" + SEP + "other" +SEP +
+                              "directory");
 
         File relative = IOUtils.relativize(base, subDir);
-        File expected = new File("sub/directory");
+        File expected = new File("sub" + SEP + "directory");
         assertEquals(expected, relative);
 
         relative = IOUtils.relativize(base, other);
-        expected = new File("/some/other/directory");
+        expected = new File(ROOT_PREFIX + "some" + SEP + "other" + SEP +
+                            "directory");
         assertEquals(expected, relative);
     }
 
@@ -202,12 +226,28 @@ public class IOUtilsTest extends TestCase
 
     public void testResolveStrings()
     {
+        String base = "/tmp/";
+        String subDir = "sub/directory";
+        String other = "/some/other/directory";
+
+        String resolved = IOUtils.resolve(base, subDir);
+        String expected = "/tmp/sub/directory";
+        assertEquals(expected, resolved);
+
+        resolved = IOUtils.resolve(base, other);
+        expected = other;
+        assertEquals(expected, resolved);
+    }
+
+    public void x_testResolveStrings()
+    {
         String base = SystemUtils.JAVA_IO_TMPDIR;
         String subDir = new File("sub/directory").getPath();
         String other = new File("/some/other/directory").getPath();
 
         String resolved = IOUtils.resolve(base, subDir);
-        String expected = new File(base, "sub/directory").getPath();
+        URI subDirUri = URI.create(subDir);
+        String expected = subDirUri.resolve("sub/directory").getPath();
         assertEquals(expected, resolved);
 
         resolved = IOUtils.resolve(base, other);
@@ -218,8 +258,9 @@ public class IOUtilsTest extends TestCase
     public void testResolveFiles()
     {
         File base = new File(SystemUtils.JAVA_IO_TMPDIR);
-        File subDir = new File("sub/directory");
-        File other = new File("/some/other/directory");
+        File subDir = new File("sub" + SEP + "directory");
+        File other = new File(ROOT_PREFIX + "some" + SEP +
+                              "other" + SEP + "directory");
 
         File resolved = IOUtils.resolve(base, subDir);
         File expected = new File(base, "sub/directory");

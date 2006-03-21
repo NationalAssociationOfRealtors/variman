@@ -464,10 +464,7 @@ public class GetObjectTransactionTest extends TestCase
     private String directoryOfResource(String resourceName)
     {
         URL imageUrl = getClass().getResource(resourceName);
-        String imagePath = imageUrl.getPath();
-        String imageDirectory =
-            imagePath.substring(0, imagePath.lastIndexOf(resourceName) - 1);
-        return imageDirectory;
+        return IOUtils.urlToFile(imageUrl).getParent();
     }
 
     private URL localUrl(String resourceName)

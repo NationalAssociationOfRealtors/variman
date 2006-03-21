@@ -88,7 +88,7 @@ public class PatternObjectSet implements ObjectSet
             {
                 LOG.debug("File " + filePath + " exists");
                 return new ObjectDescriptor(mResourceKey, objectId,
-                                            file.toURL());
+                                            file.toURI().toURL());
             }
             else
             {

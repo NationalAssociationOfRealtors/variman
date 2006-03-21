@@ -47,7 +47,7 @@ public class CompactFormatter implements SearchResultsFormatter
         try
         {
             PrintWriter out = context.getWriter();
-            out.println("<DELIMITER value=\"09\"/>");
+            out.print("<DELIMITER value=\"09\"/>\n");
             formatColumns(context);
             int numColumns = context.getNumberOfColumns();
             while (context.hasNext())

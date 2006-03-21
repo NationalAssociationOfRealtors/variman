@@ -8,6 +8,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.realtors.rets.server.Util;
+import org.realtors.rets.server.IOUtils;
 
 public class ObjectDescriptor
 {
@@ -102,7 +103,7 @@ public class ObjectDescriptor
     {
         if (mIsLocal)
         {
-            return new FileObjectStream(mUrl.getFile());
+            return new FileObjectStream(IOUtils.urlToFile(mUrl));
         }
         else
         {

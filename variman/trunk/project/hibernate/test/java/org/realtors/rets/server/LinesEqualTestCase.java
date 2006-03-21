@@ -8,8 +8,12 @@ import java.io.StringReader;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.SystemUtils;
+
 public abstract class LinesEqualTestCase extends TestCase
 {
+    public static String NL = SystemUtils.LINE_SEPARATOR;
+
     /**
      * Asserts that two line-based strings are equal. The error message in the
      * assertion contains the line number for better error messages.

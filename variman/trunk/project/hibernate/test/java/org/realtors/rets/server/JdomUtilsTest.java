@@ -13,7 +13,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.SystemUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -39,21 +38,21 @@ public class JdomUtilsTest extends LinesEqualTestCase
         outputter.setIndent("  ");
         outputter.setNewlines(true);
         outputter.setOmitDeclaration(true);
-        outputter.setLineSeparator(SystemUtils.LINE_SEPARATOR);
+        outputter.setLineSeparator(NL);
         String mergedString = outputter.outputString(merged);
         assertLinesEqual(
-            "<root>\n" +
-            "  <foo a=\"b\">\n" +
-            "    <aaa>\n" +
-            "      <bbb />\n" +
-            "    </aaa>\n" +
-            "  </foo>\n" +
-            "  <bar c=\"d\">\n" +
-            "    <xxx>\n" +
-            "      <yyy />\n" +
-            "    </xxx>\n" +
-            "  </bar>\n" +
-            "</root>\n\n",
+            "<root>" + NL +
+            "  <foo a=\"b\">" + NL +
+            "    <aaa>" + NL +
+            "      <bbb />" + NL +
+            "    </aaa>" + NL +
+            "  </foo>" + NL +
+            "  <bar c=\"d\">" + NL +
+            "    <xxx>" + NL +
+            "      <yyy />" + NL +
+            "    </xxx>" + NL +
+            "  </bar>" + NL +
+            "</root>" + NL + NL,
             mergedString);
     }
 }

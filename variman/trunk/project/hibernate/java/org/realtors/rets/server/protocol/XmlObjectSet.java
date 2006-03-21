@@ -52,7 +52,7 @@ public class XmlObjectSet implements ObjectSet
             mObjectDescriptorsByType = new HashMap();
             mDefaultObjectIdsByType = new HashMap();
             mAreRemoteLocationsAllowable = false;
-            mRootUrl = new File(rootPath).toURL();
+            mRootUrl = new File(rootPath).toURI().toURL();
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(reader);
             Element rootElement = document.getRootElement();

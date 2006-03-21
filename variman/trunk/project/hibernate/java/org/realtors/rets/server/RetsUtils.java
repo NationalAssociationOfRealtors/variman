@@ -34,8 +34,8 @@ public class RetsUtils
     public static void printEmptyRets(PrintWriter out, int replyCode,
                                       String replyText)
     {
-        out.println("<RETS ReplyCode=\"" + replyCode + "\" " +
-                    "ReplyText=\"" + replyText + "\"/>");
+        out.print("<RETS ReplyCode=\"" + replyCode + "\" " +
+                  "ReplyText=\"" + replyText + "\"/>\n");
     }
 
     public static void printEmptyRets(PrintWriter out, ReplyCode replyCode)

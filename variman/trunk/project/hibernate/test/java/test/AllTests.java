@@ -31,7 +31,7 @@ public class AllTests
 
     private static int addSuitesFromPath(TestSuite suite, String path)
     {
-        if (path.endsWith(".jar"))
+        if (path.endsWith(".jar") || path.endsWith(".zip"))
         {
             return 0;
         }

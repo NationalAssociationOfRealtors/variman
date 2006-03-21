@@ -25,7 +25,7 @@ public class TestFormatterLookup implements FormatterLookup
             for (Iterator iterator = metadatums.iterator(); iterator.hasNext();)
             {
                 ServerMetadata metadata = (ServerMetadata) iterator.next();
-                out.println(metadata.getTableName());
+                out.print(metadata.getTableName() + "\n");
                 formatCount++;
             }
             if (formatCount == 0)
