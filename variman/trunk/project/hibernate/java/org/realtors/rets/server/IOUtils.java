@@ -518,22 +518,6 @@ public class IOUtils
             return new File(relativeUri);
     }
 
-    public static File relativize2(File base, File file)
-    {
-        String basePath = base.getPath();
-        String filePath = file.getPath();
-        if (filePath.startsWith(basePath))
-        {
-            // Need to add one for file separator
-            String relativePath = filePath.substring(basePath.length() + 1);
-            return new File(relativePath);
-        }
-        else
-        {
-            return file;
-        }
-    }
-
     public static String relativize(String base, String file)
     {
         URI baseUri = URI.create(base);
@@ -556,8 +540,9 @@ public class IOUtils
 
     public static String resolve(String base, String file)
     {
-        URI baseUri = URI.create(base);
-        return baseUri.resolve(file).getPath();
+        File baseFile = new File(base);
+        File fileFile = new File(file);
+        return resolve(baseFile, fileFile).getPath();
     }
 
     /**

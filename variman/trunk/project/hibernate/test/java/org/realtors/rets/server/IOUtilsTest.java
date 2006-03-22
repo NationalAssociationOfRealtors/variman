@@ -226,28 +226,13 @@ public class IOUtilsTest extends TestCase
 
     public void testResolveStrings()
     {
-        String base = "/tmp/";
-        String subDir = "sub/directory";
-        String other = "/some/other/directory";
-
-        String resolved = IOUtils.resolve(base, subDir);
-        String expected = "/tmp/sub/directory";
-        assertEquals(expected, resolved);
-
-        resolved = IOUtils.resolve(base, other);
-        expected = other;
-        assertEquals(expected, resolved);
-    }
-
-    public void x_testResolveStrings()
-    {
         String base = SystemUtils.JAVA_IO_TMPDIR;
-        String subDir = new File("sub/directory").getPath();
-        String other = new File("/some/other/directory").getPath();
+        String subDir = new File("sub" + SEP + "directory").getPath();
+        String other = new File(ROOT_PREFIX + "some" + SEP +"other" + SEP +
+                                "directory").getPath();
 
         String resolved = IOUtils.resolve(base, subDir);
-        URI subDirUri = URI.create(subDir);
-        String expected = subDirUri.resolve("sub/directory").getPath();
+        String expected = base + subDir;
         assertEquals(expected, resolved);
 
         resolved = IOUtils.resolve(base, other);
