@@ -8,8 +8,6 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,7 +16,6 @@ import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.commons.lang.math.RandomUtils;
 
 import junit.framework.TestCase;
 
@@ -232,7 +229,7 @@ public class IOUtilsTest extends TestCase
                                 "directory").getPath();
 
         String resolved = IOUtils.resolve(base, subDir);
-        String expected = base + subDir;
+        String expected = new File(base, "sub" + SEP + "directory").getPath();;
         assertEquals(expected, resolved);
 
         resolved = IOUtils.resolve(base, other);
