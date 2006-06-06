@@ -36,6 +36,7 @@ import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.UserUtils;
+import org.realtors.rets.server.QueryCount;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.dmql.DmqlCompiler;
@@ -48,11 +49,17 @@ import org.realtors.rets.server.metadata.ServerMetadata;
 
 public class SearchTransaction
 {
+    static QueryCount sQueryCount = new QueryCount(3, QueryCount.PER_MINUTE);
+
     public SearchTransaction(SearchParameters parameters)
         throws RetsServerException
     {
         try
         {
+            if (!sQueryCount.increment())
+            {
+                throw new RetsReplyException(20210, "Query limit exceeded");
+            }
             mParameters = parameters;
             mGroups = UserUtils.getGroups(mParameters.getUser());
             mLimit = getLimit();
