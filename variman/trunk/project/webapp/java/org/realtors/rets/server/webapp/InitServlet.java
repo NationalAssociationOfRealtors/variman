@@ -39,6 +39,7 @@ import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.LogPropertiesUtils;
+import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MClass;
@@ -235,6 +236,8 @@ public class InitServlet extends RetsServlet
 
             RetsServer.setSecurityConstraints(
                 mRetsConfig.getSecurityConstraints());
+
+            RetsServer.setQueryCountTable(new QueryCountTable());
         }
         catch (IOException e)
         {

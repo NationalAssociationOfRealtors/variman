@@ -29,7 +29,6 @@ import antlr.ANTLRException;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
-import org.realtors.rets.server.Group;
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServer;
@@ -37,6 +36,7 @@ import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.UserUtils;
 import org.realtors.rets.server.QueryCount;
+import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.dmql.DmqlCompiler;
@@ -49,19 +49,15 @@ import org.realtors.rets.server.metadata.ServerMetadata;
 
 public class SearchTransaction
 {
-    static QueryCount sQueryCount = new QueryCount(3, QueryCount.PER_MINUTE);
-
     public SearchTransaction(SearchParameters parameters)
         throws RetsServerException
     {
         try
         {
-            if (!sQueryCount.increment())
-            {
-                throw new RetsReplyException(20210, "Query limit exceeded");
-            }
             mParameters = parameters;
             mGroups = UserUtils.getGroups(mParameters.getUser());
+            checkForQueryLimit();
+
             mLimit = getLimit();
             mExecuteQuery = true;
         }
@@ -71,20 +67,36 @@ public class SearchTransaction
         }
     }
 
+    private void checkForQueryLimit() throws RetsReplyException
+    {
+        QueryCountTable queryCountTable = RetsServer.getQueryCountTable();
+        String username = mParameters.getUser().getUsername();
+        SecurityConstraints securityConstraints =
+            RetsServer.getSecurityConstraints();
+        List allRules = securityConstraints.getAllRulesForGroups(mGroups);
+        QueryCount queryCount = queryCountTable.getQueryCountForUser(username,
+                                                                     allRules);
+        LOG.debug("Using query count of " + queryCount.dump());
+        if (!queryCount.increment())
+        {
+            LOG.info("Query limit exceeded for " + username);
+            throw new RetsReplyException(20210, "Query limit exceeded");
+        }
+    }
+
     private int getLimit()
     {
         int userSuppliedLimit =  mParameters.getLimit();
         LOG.debug("User supplied limit is " + userSuppliedLimit);
         int limit = userSuppliedLimit;
-        for (Iterator iterator = mGroups.iterator(); iterator.hasNext();)
+        SecurityConstraints securityConstraints =
+            RetsServer.getSecurityConstraints();
+        List allRules = securityConstraints.getAllRulesForGroups(mGroups);
+        for (Iterator iterator = allRules.iterator(); iterator.hasNext();)
         {
-            Group group = (Group) iterator.next();
-            SecurityConstraints securityConstraints =
-                RetsServer.getSecurityConstraints();
-            GroupRules rules =
-                securityConstraints.getRulesForGroup(group.getName());
+            GroupRules rules = (GroupRules) iterator.next();
             int recordLimit = rules.getRecordLimit();
-            LOG.debug("Limit for group " + group.getName() + " is " +
+            LOG.debug("Limit for group " + rules.getGroupName() + " is " +
                       recordLimit);
             if ((recordLimit != 0) && (recordLimit < limit))
             {

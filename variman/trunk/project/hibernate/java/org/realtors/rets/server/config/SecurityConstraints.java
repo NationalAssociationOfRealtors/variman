@@ -3,6 +3,11 @@ package org.realtors.rets.server.config;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.realtors.rets.server.Group;
 
 public class SecurityConstraints
 {
@@ -52,6 +57,17 @@ public class SecurityConstraints
             mGroupRules.remove(groupRules);
             mGroupRulesByName.remove(groupName);
         }
+    }
+
+    public List getAllRulesForGroups(Collection groups)
+    {
+        List allRules = new ArrayList();
+        for (Iterator iterator = groups.iterator(); iterator.hasNext();)
+        {
+            Group group = (Group) iterator.next();
+            allRules.add(getRulesForGroup(group.getName()));
+        }
+        return allRules;
     }
 
     private List mGroupRules;

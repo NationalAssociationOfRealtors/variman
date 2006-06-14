@@ -2,6 +2,7 @@ package org.realtors.rets.server;
 
 import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class QueryCount
 {
@@ -53,12 +54,29 @@ public class QueryCount
                                                limitPeriod);
         }
         mLimit = limit;
+        mLimitPeriod = limitPeriod;
     }
 
     public void setNoQueryLimit()
     {
         mLimit = Long.MAX_VALUE;
         mResetPeriod = 0;
+        mLimitPeriod = null;
+    }
+
+    public boolean isNoQueryLimit()
+    {
+        return (mLimitPeriod == null);
+    }
+
+    public long getLimit()
+    {
+        return mLimit;
+    }
+
+    public LimitPeriod getLimitPeriod()
+    {
+        return mLimitPeriod;
     }
 
     protected long getCurrentCount()
@@ -89,6 +107,39 @@ public class QueryCount
         mLastResetTime = time;
     }
 
+    public boolean isMoreRestrictiveThan(QueryCount queryCount)
+    {
+        // If we're no limit, everything is more restrictive
+        if (isNoQueryLimit())
+            return false;
+        // If the other is no limit, and we're not, the it's more restrictive
+        else if (queryCount.isNoQueryLimit())
+            return true;
+
+        // Neither are "no limit", so check the reset period
+        if (queryCount.mResetPeriod < mResetPeriod)
+            return false;
+        else if (queryCount.mResetPeriod > mResetPeriod)
+            return true;
+
+        // Reset periods are equal, check the limit
+        if (queryCount.mLimit <= mLimit)
+            return false;
+
+        return true;
+    }
+
+    public String dump()
+    {
+        return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append("limit", mLimit)
+            .append("limitPeriod", mLimitPeriod)
+            .append("queryCount", mQueryCount)
+            .append("resetPeriod", mResetPeriod)
+            .append("lastResetTime", mLastResetTime)
+            .toString();
+    }
+
     public static final class LimitPeriod extends Enum
     {
         public LimitPeriod(String s)
@@ -102,7 +153,8 @@ public class QueryCount
     public static final LimitPeriod PER_DAY = new LimitPeriod("per day");
 
     private long mLimit;
+    private LimitPeriod mLimitPeriod;
+    private long mResetPeriod;
     private long mQueryCount;
     private long mLastResetTime;
-    private long mResetPeriod;
 }

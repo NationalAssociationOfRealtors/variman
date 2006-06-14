@@ -73,8 +73,19 @@ public class RetsServer
         return sSecurityConstraints;
     }
 
+    public static QueryCountTable getQueryCountTable()
+    {
+        return sQueryCountTable;
+    }
+
+    public static void setQueryCountTable(QueryCountTable queryCountTable)
+    {
+        sQueryCountTable = queryCountTable;
+    }
+
     private static SessionFactory sSessions;
     private static TableGroupFilter sTableGroupFilter;
     private static ConditionRuleSet sConditionRuleSet;
     private static SecurityConstraints sSecurityConstraints;
+    private static QueryCountTable sQueryCountTable;
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.realtors.rets.server.QueryCount;
+
 public class GroupRules
 {
     public GroupRules(String groupName)
@@ -13,6 +15,7 @@ public class GroupRules
         mReadOnlyFilterRules = Collections.unmodifiableList(mFilterRules);
         mConditionRules = new ArrayList();
         mReadOnlyConditionRules = Collections.unmodifiableList(mConditionRules);
+        setNoQueryCountLimit();
     }
 
     public String getGroupName()
@@ -70,6 +73,43 @@ public class GroupRules
         mTimeRestriction = timeRestriction;
     }
 
+    public void setQueryCountLimit(long limit, QueryCount.LimitPeriod limitPeriod)
+    {
+        if (limit <= 0)
+        {
+            throw new IllegalArgumentException("limit must be greater than 0: "
+                                               + limit);
+        }
+        if (limitPeriod == null)
+        {
+            throw new IllegalArgumentException("limitPeriod must not be null");
+        }
+
+        mQueryCountLimit = limit;
+        mQueryCountLimitPeriod = limitPeriod;
+    }
+
+    public void setNoQueryCountLimit()
+    {
+        mQueryCountLimit = 0;
+        mQueryCountLimitPeriod = null;
+    }
+
+    public boolean hasNoQueryLimit()
+    {
+        return (mQueryCountLimitPeriod == null);
+    }
+
+    public long getQueryCountLimit()
+    {
+        return mQueryCountLimit;
+    }
+
+    public QueryCount.LimitPeriod getQueryCountLimitPeriod()
+    {
+        return mQueryCountLimitPeriod;
+    }
+
     private String mGroupName;
     private List mFilterRules;
     private List mReadOnlyFilterRules;
@@ -77,4 +117,6 @@ public class GroupRules
     private List mReadOnlyConditionRules;
     private int mRecordLimit;
     private TimeRestriction mTimeRestriction;
+    private long mQueryCountLimit;
+    private QueryCount.LimitPeriod mQueryCountLimitPeriod;
 }
