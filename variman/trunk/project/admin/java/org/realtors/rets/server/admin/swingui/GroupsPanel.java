@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
+import org.realtors.rets.server.QueryCount;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
@@ -43,6 +44,8 @@ public class GroupsPanel extends AdminTab
         tvp.addRow("Record Limit:", mRecordLimit);
         mTimeRestriction = new JLabel("");
         tvp.addRow("Time Restriction:", mTimeRestriction);
+        mQueryCountLimit = new JLabel("");
+        tvp.addRow("Query Count Limit:", mQueryCountLimit);
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panel.add(tvp, BorderLayout.NORTH);
         panel.add(createRulesPanel(), BorderLayout.CENTER);
@@ -110,6 +113,7 @@ public class GroupsPanel extends AdminTab
             mDescription.setText("");
             mRecordLimit.setText("");
             mTimeRestriction.setText("");
+            mQueryCountLimit.setText("");
             mRemoveGroupAction.setEnabled(false);
             mEditGroupAction.setEnabled(false);
             mFilterRulesPanel.unselectGroup();
@@ -132,31 +136,52 @@ public class GroupsPanel extends AdminTab
         {
             mRecordLimit.setText(Integer.toString(recordLimit));
         }
+        mTimeRestriction.setText(timeRestrictionToString());
+        mQueryCountLimit.setText(queryCountToString());
+        mFilterRulesPanel.updateRulesList(mGroupRules.getFilterRules());
+        mConditionRulesPanel.updateRulesList(mGroupRules.getConditionRules());
+    }
+
+    private String timeRestrictionToString()
+    {
         TimeRestriction timeRestriction = mGroupRules.getTimeRestriction();
         if (timeRestriction == null)
+            return "None";
+
+        StringBuffer text = new StringBuffer();
+        if (timeRestriction.getPolicy() == TimeRestriction.ALLOW)
         {
-            mTimeRestriction.setText("None");
+            text.append("Allow between ");
         }
         else
         {
-            StringBuffer text = new StringBuffer();
-            if (timeRestriction.getPolicy() == TimeRestriction.ALLOW)
-            {
-                text.append("Allow between ");
-            }
-            else
-            {
-                text.append("Deny between ");
-            }
-            DateFormat formatter = DateFormat.getTimeInstance(DateFormat.SHORT);
-            Date date = timeRestriction.getStartAsCalendar().getTime();
-            text.append(formatter.format(date)).append(" and ");
-            date = timeRestriction.getEndAsCalendar().getTime();
-            text.append(formatter.format(date));
-            mTimeRestriction.setText(text.toString());
+            text.append("Deny between ");
         }
-        mFilterRulesPanel.updateRulesList(mGroupRules.getFilterRules());
-        mConditionRulesPanel.updateRulesList(mGroupRules.getConditionRules());
+        DateFormat formatter = DateFormat.getTimeInstance(DateFormat.SHORT);
+        Date date = timeRestriction.getStartAsCalendar().getTime();
+        text.append(formatter.format(date)).append(" and ");
+        date = timeRestriction.getEndAsCalendar().getTime();
+        text.append(formatter.format(date));
+        String timeRestrictionString = text.toString();
+        return timeRestrictionString;
+    }
+
+    private String queryCountToString()
+    {
+        if (mGroupRules.hasNoQueryLimit())
+            return "None";
+
+        StringBuffer text = new StringBuffer();
+        text.append(mGroupRules.getQueryCountLimit());
+        QueryCount.LimitPeriod limitPeriod =
+            mGroupRules.getQueryCountLimitPeriod();
+        if (limitPeriod.equals(QueryCount.PER_DAY))
+            text.append(" per day");
+        else if (limitPeriod.equals(QueryCount.PER_HOUR))
+            text.append(" per hour");
+        else if (limitPeriod.equals(QueryCount.PER_MINUTE))
+            text.append(" per minute");
+        return text.toString();
     }
 
     public void tabSelected()
@@ -276,4 +301,5 @@ public class GroupsPanel extends AdminTab
     private ConditionRulesPanel mConditionRulesPanel;
     private JLabel mTimeRestriction;
     private JMenu mGroupMenu;
+    private JLabel mQueryCountLimit;
 }

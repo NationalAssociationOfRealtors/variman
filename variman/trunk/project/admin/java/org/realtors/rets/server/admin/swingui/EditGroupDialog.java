@@ -2,6 +2,7 @@ package org.realtors.rets.server.admin.swingui;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -27,6 +28,10 @@ public class EditGroupDialog extends JDialog
         tvp.addRow("Record Limit:", mRecordLimit);
         mTimeRestriction = new TimeRestrictionPanel(rules.getTimeRestriction());
         tvp.addRow("Time Restriction:", mTimeRestriction);
+        mEnableQueryCountLimit = new JCheckBox("Query Count Limit:");
+        mQueryCountLimit = new QueryCountLimitPanel();
+        mEnableQueryCountLimit.addActionListener(new QueryCountLimitAction());
+        tvp.addRow(mEnableQueryCountLimit, mQueryCountLimit);
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         content.add(tvp);
 
@@ -71,11 +76,6 @@ public class EditGroupDialog extends JDialog
         return mTimeRestriction.isValidContent();
     }
 
-    public boolean validateFields()
-    {
-        return mTimeRestriction.isValidContent();
-    }
-
     private class SaveChangesButtonAction extends AbstractAction
     {
         public SaveChangesButtonAction()
@@ -104,10 +104,20 @@ public class EditGroupDialog extends JDialog
         }
     }
 
+    private class QueryCountLimitAction implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            mQueryCountLimit.setEnabled(mEnableQueryCountLimit.isSelected());
+        }
+    }
+
 
     private static final int TEXT_WIDTH = 25;
     private JTextField mDescription;
     private WholeNumberField mRecordLimit;
     private int mResponse;
     private TimeRestrictionPanel mTimeRestriction;
+    private JCheckBox mEnableQueryCountLimit;
+    private QueryCountLimitPanel mQueryCountLimit;
 }

@@ -67,7 +67,7 @@ public class EditGroupAction extends AbstractAction
             {
                 break;
             }
-            if (dialog.validateFields())
+            if (dialog.isValidContent())
             {
                 break;
             }

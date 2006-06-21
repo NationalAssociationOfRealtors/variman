@@ -39,6 +39,16 @@ public class TextValuePanel extends JPanel
 
     public void addRow(String text, JComponent component, int fill)
     {
+        addRow(new JLabel(text), component, fill);
+    }
+
+    public void addRow(JComponent label, JComponent component)
+    {
+        addRow(label, component, GridBagConstraints.HORIZONTAL);
+    }
+
+    public void addRow(JComponent label, JComponent component, int fill)
+    {
         Insets leftInsets;
         Insets rightInsets;
         if (mLabels.size() == 0)
@@ -52,7 +62,6 @@ public class TextValuePanel extends JPanel
             rightInsets = mRightInsets;
         }
 
-        JLabel label = new JLabel(text);
         mConstraints.gridwidth = GridBagConstraints.RELATIVE;
         mConstraints.fill = GridBagConstraints.NONE;
         mConstraints.weightx = 0.0;
@@ -82,7 +91,7 @@ public class TextValuePanel extends JPanel
 
     public void setRowVisible(int row, boolean visible)
     {
-        JLabel label = (JLabel) mLabels.get(row);
+        JComponent label = (JComponent) mLabels.get(row);
         JComponent component = (JComponent) mComponents.get(row);
         label.setVisible(visible);
         component.setVisible(visible);
