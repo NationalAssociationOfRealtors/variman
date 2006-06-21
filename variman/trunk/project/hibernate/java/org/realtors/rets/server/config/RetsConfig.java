@@ -177,12 +177,36 @@ public class RetsConfig
             addFilterRules(groupRules, groupRulesElement);
             addConditionRules(groupRules, groupRulesElement);
             addTimeRestriction(groupRules, groupRulesElement);
+            addQueryCountToElement(groupRules, groupRulesElement);
             if (groupRulesElement.getChildren().size() != 0)
             {
                 securityContraints.addContent(groupRulesElement);
             }
         }
         return securityContraints;
+    }
+
+    private void addQueryCountToElement(GroupRules groupRules,
+                                        Element groupRulesElement)
+    {
+        if (groupRules.hasNoQueryLimit())
+            return;
+        Element element = new Element(QUERY_COUNT_LIMIT);
+        QueryCount.LimitPeriod limitPeriod =
+            groupRules.getQueryCountLimitPeriod();
+        if (limitPeriod.equals(QueryCount.PER_DAY))
+            element.setAttribute("period", "per-day");
+        else if (limitPeriod.equals(QueryCount.PER_HOUR))
+            element.setAttribute("period", "per-hour");
+        else if (limitPeriod.equals(QueryCount.PER_MINUTE))
+            element.setAttribute("period", "per-minute");
+        else
+        {
+            LOG.warn("Unknown query count limit period: " + limitPeriod);
+            return;
+        }
+        element.setText("" + groupRules.getQueryCountLimit());
+        groupRulesElement.addContent(element);
     }
 
     private void addTimeRestriction(GroupRules groupRules,

@@ -63,16 +63,19 @@ public class RetsConfigTest extends LinesEqualTestCase
         conditionRule.setRetsClass("RES");
         conditionRule.setSqlConstraint("r_lp < 500000");
         groupRules.addConditionRule(conditionRule);
+        groupRules.setQueryCountLimit(500, QueryCount.PER_DAY);
         securityConstraints.add(groupRules);
 
         groupRules = new GroupRules("aggregators");
         groupRules.setTimeRestriction(
             new TimeRestriction(TimeRestriction.DENY, 9, 0, 17, 30));
+        groupRules.setQueryCountLimit(50, QueryCount.PER_HOUR);
         securityConstraints.add(groupRules);
 
         groupRules = new GroupRules("admins");
         groupRules.setTimeRestriction(
             new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 30));
+        groupRules.setQueryCountLimit(5, QueryCount.PER_MINUTE);
         securityConstraints.add(groupRules);
 
         // Test empty group rules
@@ -116,14 +119,17 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      <condition-rule resource=\"Property\" class=\"RES\">" + NL +
             "        <sql-constraint>r_lp &lt; 500000</sql-constraint>" + NL +
             "      </condition-rule>" + NL +
+            "      <query-count-limit period=\"per-day\">500</query-count-limit>" + NL +
             "    </group-rules>" + NL +
             "    <group-rules group=\"aggregators\">" + NL +
             "      <time-restriction policy=\"deny\" " +
             "start=\"9:00 AM\" end=\"5:30 PM\" />" + NL +
+            "      <query-count-limit period=\"per-hour\">50</query-count-limit>" + NL +
             "    </group-rules>" + NL +
             "    <group-rules group=\"admins\">" + NL +
             "      <time-restriction policy=\"allow\" " +
             "start=\"9:00 AM\" end=\"5:30 PM\" />" + NL +
+            "      <query-count-limit period=\"per-minute\">5</query-count-limit>" + NL +
             "    </group-rules>" + NL +
             "  </security-constraints>" + NL +
             "</rets-config>" + NL +
