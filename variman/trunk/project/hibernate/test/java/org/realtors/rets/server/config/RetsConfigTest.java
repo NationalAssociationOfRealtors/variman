@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.QueryCount;
 
 public class RetsConfigTest extends LinesEqualTestCase
 {
@@ -171,6 +172,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      </exclude-rule>\n" +
             "      <time-restriction policy=\"allow\" " +
             "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
+            "      <query-count-limit period=\"per-day\">50</query-count-limit>\n" +
             "    </group-rules>\n" +
             "    <group-rules group=\"agent\">\n" +
             "      <record-limit>25</record-limit>\n" +
@@ -181,6 +183,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    <group-rules group=\"aggregators\">\n" +
             "      <time-restriction policy=\"deny\" " +
             "start=\"9:00 AM\" end=\"5:30 PM\" />\n" +
+            "      <query-count-limit period=\"per-hour\">15</query-count-limit>\n" +
             "    </group-rules>\n" +
             "  </security-constraints>\n" +
             "</rets-config>";
@@ -252,6 +255,11 @@ public class RetsConfigTest extends LinesEqualTestCase
             new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 30);
         assertEquals(timeRestriction, groupRules.getTimeRestriction());
 
+        /* Check query count limits */
+        assertFalse(groupRules.hasNoQueryLimit());
+        assertEquals(QueryCount.PER_DAY, groupRules.getQueryCountLimitPeriod());
+        assertEquals(50, groupRules.getQueryCountLimit());
+
         groupRules = (GroupRules) securityConstraints.get(1);
         assertEquals("agent", groupRules.getGroupName());
         assertEquals(25, groupRules.getRecordLimit());
@@ -266,6 +274,8 @@ public class RetsConfigTest extends LinesEqualTestCase
         expected.add("LN");
         expected.add("LF");
 
+        assertTrue(groupRules.hasNoQueryLimit());
+
         groupRules = (GroupRules) securityConstraints.get(2);
         assertEquals("aggregators", groupRules.getGroupName());
         assertEquals(0, groupRules.getRecordLimit());
@@ -274,6 +284,10 @@ public class RetsConfigTest extends LinesEqualTestCase
         timeRestriction =
             new TimeRestriction(TimeRestriction.DENY, 9, 0, 17, 30);
         assertEquals(timeRestriction, groupRules.getTimeRestriction());
+
+        assertFalse(groupRules.hasNoQueryLimit());
+        assertEquals(QueryCount.PER_HOUR, groupRules.getQueryCountLimitPeriod());
+        assertEquals(15, groupRules.getQueryCountLimit());
     }
 
     public void testFromXmlDefaults()

@@ -39,6 +39,7 @@ import org.jdom.output.XMLOutputter;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.Util;
+import org.realtors.rets.server.QueryCount;
 
 public class RetsConfig
 {
@@ -393,15 +394,60 @@ public class RetsConfig
                 {
                     createAndAddTimeRestriction(groupRules, grandChild);
                 }
+                else if (ruleName.equals(QUERY_COUNT_LIMIT))
+                {
+                    addQueryCount(groupRules, grandChild);
+                }
                 else
                 {
-                    LOG.warn("Unknown rule" + grandChild.toString());
+                    LOG.warn("Unknown rule " + grandChild.toString());
                     continue;
                 }
             }
             securityConstraints.add(groupRules);
         }
         config.setSecurityConstraints(securityConstraints);
+    }
+
+    private static void addQueryCount(GroupRules groupRules, Element element)
+    {
+        String periodString = element.getAttributeValue("period");
+        String limitString = element.getTextTrim();
+        try
+        {
+            long limit = Long.parseLong(limitString);
+            if (limit <= 0)
+            {
+                LOG.warn("Query count must be > 0: " + limit);
+                return;
+            }
+
+            QueryCount.LimitPeriod limitPeriod;
+            if (periodString.equals("per-day"))
+            {
+                limitPeriod = QueryCount.PER_DAY;
+            }
+            else if (periodString.equals("per-hour"))
+            {
+                limitPeriod = QueryCount.PER_HOUR;
+            }
+            else if (periodString.equals("per-minute"))
+            {
+                limitPeriod = QueryCount.PER_MINUTE;
+            }
+            else
+            {
+                LOG.warn("Invalid period string (must be one of 'per-day', " +
+                         "'per-hour', or 'per-minute'): " + periodString);
+                return;
+            }
+            groupRules.setQueryCountLimit(limit, limitPeriod);
+        }
+        catch(NumberFormatException e)
+        {
+            LOG.warn("Query count limit must be a number: " + limitString);
+            return;
+        }
     }
 
     private static void createAndAddTimeRestriction(GroupRules groupRules,
@@ -685,6 +731,7 @@ public class RetsConfig
     private static final String POLICY = "policy";
     private static final String START = "start";
     private static final String END = "end";
+    private static final String QUERY_COUNT_LIMIT = "query-count-limit";
 
     private int mPort;
     private String mGetObjectRoot;
