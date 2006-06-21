@@ -195,11 +195,11 @@ public class RetsConfig
         QueryCount.LimitPeriod limitPeriod =
             groupRules.getQueryCountLimitPeriod();
         if (limitPeriod.equals(QueryCount.PER_DAY))
-            element.setAttribute("period", "per-day");
+            element.setAttribute(PERIOD, PER_DAY);
         else if (limitPeriod.equals(QueryCount.PER_HOUR))
-            element.setAttribute("period", "per-hour");
+            element.setAttribute(PERIOD, PER_HOUR);
         else if (limitPeriod.equals(QueryCount.PER_MINUTE))
-            element.setAttribute("period", "per-minute");
+            element.setAttribute(PERIOD, PER_MINUTE);
         else
         {
             LOG.warn("Unknown query count limit period: " + limitPeriod);
@@ -420,7 +420,7 @@ public class RetsConfig
                 }
                 else if (ruleName.equals(QUERY_COUNT_LIMIT))
                 {
-                    addQueryCount(groupRules, grandChild);
+                    addQueryCountToRules(groupRules, grandChild);
                 }
                 else
                 {
@@ -433,9 +433,10 @@ public class RetsConfig
         config.setSecurityConstraints(securityConstraints);
     }
 
-    private static void addQueryCount(GroupRules groupRules, Element element)
+    private static void addQueryCountToRules(GroupRules groupRules,
+                                             Element element)
     {
-        String periodString = element.getAttributeValue("period");
+        String periodString = element.getAttributeValue(PERIOD);
         String limitString = element.getTextTrim();
         try
         {
@@ -447,15 +448,15 @@ public class RetsConfig
             }
 
             QueryCount.LimitPeriod limitPeriod;
-            if (periodString.equals("per-day"))
+            if (periodString.equals(PER_DAY))
             {
                 limitPeriod = QueryCount.PER_DAY;
             }
-            else if (periodString.equals("per-hour"))
+            else if (periodString.equals(PER_HOUR))
             {
                 limitPeriod = QueryCount.PER_HOUR;
             }
-            else if (periodString.equals("per-minute"))
+            else if (periodString.equals(PER_MINUTE))
             {
                 limitPeriod = QueryCount.PER_MINUTE;
             }
@@ -756,6 +757,10 @@ public class RetsConfig
     private static final String START = "start";
     private static final String END = "end";
     private static final String QUERY_COUNT_LIMIT = "query-count-limit";
+    private static final String PERIOD = "period";
+    private static final String PER_DAY = "per-day";
+    private static final String PER_HOUR = "per-hour";
+    private static final String PER_MINUTE = "per-minute";
 
     private int mPort;
     private String mGetObjectRoot;
