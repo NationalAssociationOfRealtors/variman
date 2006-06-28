@@ -16,22 +16,34 @@ public class EditGroupDialog extends JDialog
     {
         super(parent);
         setModal(true);
-        setTitle("Edit Group: " + group.getName());
 
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         TextValuePanel tvp = new TextValuePanel();
 
-        mDescription = new JTextField(group.getDescription(), TEXT_WIDTH);
+        mDescription = new JTextField("", TEXT_WIDTH);
         tvp.addRow("Description:", mDescription);
         mRecordLimit = new WholeNumberField(rules.getRecordLimit(), TEXT_WIDTH);
         tvp.addRow("Record Limit:", mRecordLimit);
         mTimeRestriction = new TimeRestrictionPanel(rules.getTimeRestriction());
         tvp.addRow("Time Restriction:", mTimeRestriction);
+
         mEnableQueryCountLimit = new JCheckBox("Query Count Limit:");
         mQueryCountLimit = new QueryCountLimitPanel();
         mEnableQueryCountLimit.addActionListener(new QueryCountLimitAction());
+        if (rules.hasNoQueryLimit())
+        {
+            mEnableQueryCountLimit.setSelected(false);
+        }
+        else
+        {
+            mEnableQueryCountLimit.setSelected(true);
+            mQueryCountLimit.setLimit(rules.getQueryCountLimit());
+            mQueryCountLimit.setLimitPeriod(rules.getQueryCountLimitPeriod());
+        }
+        syncQueryCountComponents();
         tvp.addRow(mEnableQueryCountLimit, mQueryCountLimit);
+
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         content.add(tvp);
 
@@ -49,6 +61,35 @@ public class EditGroupDialog extends JDialog
         setResizable(false);
         SwingUtils.centerOnFrame(this, parent);
         mResponse = JOptionPane.CANCEL_OPTION;
+
+        updateFromGroup(group);
+    }
+
+    public void updateFromGroup(Group group)
+    {
+        setTitle("Edit Group: " + group.getName());
+        mDescription.setText(group.getDescription());
+
+    }
+
+    public void updateRules(GroupRules rules)
+    {
+        if (mEnableQueryCountLimit.isSelected())
+        {
+            rules.setQueryCountLimit(mQueryCountLimit.getLimit(),
+                                     mQueryCountLimit.getLimitPeriod());
+        }
+        else
+        {
+            rules.setNoQueryCountLimit();
+        }
+        rules.setRecordLimit(getRecordLimit());
+        rules.setTimeRestriction(getTimeRestriction());
+    }
+
+    private void syncQueryCountComponents()
+    {
+        mQueryCountLimit.setEnabled(mEnableQueryCountLimit.isSelected());
     }
 
     public int getResponse()
@@ -108,7 +149,7 @@ public class EditGroupDialog extends JDialog
     {
         public void actionPerformed(ActionEvent event)
         {
-            mQueryCountLimit.setEnabled(mEnableQueryCountLimit.isSelected());
+            syncQueryCountComponents();
         }
     }
 

@@ -2,6 +2,8 @@ package org.realtors.rets.server.admin.swingui;
 
 import javax.swing.*;
 
+import org.realtors.rets.server.QueryCount;
+
 public class QueryCountLimitPanel extends JPanel
 {
     public QueryCountLimitPanel()
@@ -9,7 +11,7 @@ public class QueryCountLimitPanel extends JPanel
         super();
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        String[] limitPeriodStrings = { PER_HOUR, PER_DAY, PER_MINUTE };
+        String[] limitPeriodStrings = { PER_MINUTE, PER_HOUR, PER_DAY };
 
         mLimitField = createLimitField(1);
         restrictMaximumSize(mLimitField);
@@ -37,14 +39,55 @@ public class QueryCountLimitPanel extends JPanel
         mLimitPeriod.setEnabled(enabled);
     }
 
+    public long getLimit()
+    {
+        return mLimitField.getValue();
+    }
+
+    public void setLimit(long limit)
+    {
+        mLimitField.setValue((int) limit);
+    }
+
+    public QueryCount.LimitPeriod getLimitPeriod()
+    {
+        Object selectedLimitPeriod = mLimitPeriod.getSelectedItem();
+        if (selectedLimitPeriod.equals(PER_MINUTE))
+            return QueryCount.PER_MINUTE;
+        else if (selectedLimitPeriod.equals(PER_HOUR))
+            return QueryCount.PER_HOUR;
+        else if (selectedLimitPeriod.equals(PER_DAY))
+            return QueryCount.PER_DAY;
+        else
+        {
+            throw new IllegalArgumentException(
+                "Unknown selected limit period: " + selectedLimitPeriod);
+        }
+    }
+
+    public void setLimitPeriod(QueryCount.LimitPeriod limitPeriod)
+    {
+        if (limitPeriod.equals(QueryCount.PER_DAY))
+            mLimitPeriod.setSelectedItem(PER_DAY);
+        else if (limitPeriod.equals(QueryCount.PER_HOUR))
+            mLimitPeriod.setSelectedItem(PER_HOUR);
+        else if (limitPeriod.equals(QueryCount.PER_MINUTE))
+            mLimitPeriod.setSelectedItem(PER_MINUTE);
+        else
+        {
+            throw new IllegalArgumentException(
+                "Unknown limit period: " + limitPeriod);
+        }
+    }
+
     private void restrictMaximumSize(JComponent component)
     {
         component.setMaximumSize(component.getPreferredSize());
     }
 
+    private static final String PER_MINUTE = "per minute";
     private static final String PER_HOUR = "per hour";
     private static final String PER_DAY = "per day";
-    private static final String PER_MINUTE = "per minute";
 
     private WholeNumberField mLimitField;
     private JComboBox mLimitPeriod;
