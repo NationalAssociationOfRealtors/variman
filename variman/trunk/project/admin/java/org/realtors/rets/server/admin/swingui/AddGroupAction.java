@@ -44,7 +44,7 @@ public class AddGroupAction extends AbstractAction
                 retsConfig.getSecurityConstraints();
             GroupRules rules =
                 securityConstraints.getRulesForGroup(group.getName());
-            dialog.updateRules(rules);
+            dialog.transferToGropuRules(rules);
 
             frame.setStatusText("Group " + group.getName() + " added");
             frame.refreshGroups();

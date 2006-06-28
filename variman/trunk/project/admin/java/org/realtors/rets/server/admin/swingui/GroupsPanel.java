@@ -130,7 +130,7 @@ public class GroupsPanel extends AdminTab
         int recordLimit = mGroupRules.getRecordLimit();
         if (recordLimit == 0)
         {
-            mRecordLimit.setText("0 (None)");
+            mRecordLimit.setText("None");
         }
         else
         {

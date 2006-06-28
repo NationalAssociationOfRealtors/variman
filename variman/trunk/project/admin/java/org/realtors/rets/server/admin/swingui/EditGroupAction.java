@@ -43,7 +43,7 @@ public class EditGroupAction extends AbstractAction
             group.setDescription(dialog.getDescription());
             HibernateUtils.update(group);
             // Update this after hibernate, just in case of DB failure
-            dialog.updateRules(rules);
+            dialog.transferToGropuRules(rules);
             frame.setStatusText("Group " + group.getName() + " changed");
             frame.refreshGroups();
             // Group rules are stored in RetsConfig
