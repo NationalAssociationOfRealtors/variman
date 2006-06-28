@@ -33,13 +33,15 @@ public class GroupDialog extends JDialog
         tvp.addRow("Description:", mDescription);
 
         mEnableRecordLimit = new JCheckBox("Record Limit:");
-        mEnableRecordLimit.addActionListener(new EnableRecordLimitAction());
+        mEnableRecordLimit.addActionListener(new RecordLimitAction());
         mRecordLimit = new WholeNumberField(1, TEXT_WIDTH);
         mRecordLimit.setMinValue(1);
         tvp.addRow(mEnableRecordLimit, mRecordLimit);
 
+        mEnableTimeRestriction = new JCheckBox("Time Restriction:");
+        mEnableTimeRestriction.addActionListener(new TimeRestrictionAction());
         mTimeRestriction = new TimeRestrictionPanel();
-        tvp.addRow("Time Restriction:", mTimeRestriction);
+        tvp.addRow(mEnableTimeRestriction, mTimeRestriction);
 
         mEnableQueryCountLimit = new JCheckBox("Query Count Limit:");
         mEnableQueryCountLimit.addActionListener(new QueryCountLimitAction());
@@ -93,7 +95,17 @@ public class GroupDialog extends JDialog
             mRecordLimit.setValue(rules.getRecordLimit());
         }
         syncRecordLimitComponents();
-        mTimeRestriction.setTimeRestriction(rules.getTimeRestriction());
+
+        if (rules.getTimeRestriction() == null)
+        {
+            mEnableTimeRestriction.setSelected(false);
+            mTimeRestriction.setTimeRestriction(null);
+        }
+        else
+        {
+            mEnableTimeRestriction.setSelected(true);
+            mTimeRestriction.setTimeRestriction(rules.getTimeRestriction());
+        }
 
         if (rules.hasNoQueryLimit())
         {
@@ -125,12 +137,20 @@ public class GroupDialog extends JDialog
         else
             rules.setRecordLimit(0);
 
-        rules.setTimeRestriction(getTimeRestriction());
+        if (mEnableTimeRestriction.isSelected())
+            rules.setTimeRestriction(getTimeRestriction());
+        else
+            rules.setTimeRestriction(null);
     }
 
     private void syncRecordLimitComponents()
     {
         mRecordLimit.setEnabled(mEnableRecordLimit.isSelected());
+    }
+
+    private void syncTimeRestrictionComponents()
+    {
+        mTimeRestriction.setEnabled(mEnableTimeRestriction.isSelected());
     }
 
     private void syncQueryCountComponents()
@@ -233,11 +253,19 @@ public class GroupDialog extends JDialog
         }
     }
 
-    private class EnableRecordLimitAction implements ActionListener
+    private class RecordLimitAction implements ActionListener
     {
         public void actionPerformed(ActionEvent event)
         {
             syncRecordLimitComponents();
+        }
+    }
+
+    private class TimeRestrictionAction implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
+            syncTimeRestrictionComponents();
         }
     }
 
@@ -260,4 +288,5 @@ public class GroupDialog extends JDialog
     private boolean mEditMode;
     private SubmitButtonAction mSubmitButtonAction;
     private JCheckBox mEnableRecordLimit;
+    private JCheckBox mEnableTimeRestriction;
 }

@@ -1,7 +1,5 @@
 package org.realtors.rets.server.admin.swingui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.text.NumberFormat;
@@ -18,14 +16,13 @@ public class TimeRestrictionPanel extends JPanel
     TimeRestrictionPanel()
     {
         super();
-        String[] policyStrings = { NONE, ALLOW, DENY };
+        String[] policyStrings = { ALLOW, DENY };
         String[] am_pm = { AM, PM };
         mMinuteFormat = NumberFormat.getNumberInstance(Locale.US);
         mMinuteFormat.setMinimumIntegerDigits(2);
         mReformatter = new WholeNumberReformatter();
 
         mPolicy = new JComboBox(policyStrings);
-        mPolicy.addActionListener(new PolicyChangeListener());
         add(mPolicy);
         mStartHour = createHourField(12);
         add(mStartHour);
@@ -73,12 +70,11 @@ public class TimeRestrictionPanel extends JPanel
     {
         if (timeRestriction == null)
         {
-            mPolicy.setSelectedItem(NONE);
-            setTimesEnabled(false);
+            setEnabled(false);
         }
         else
         {
-            setTimesEnabled(true);
+            setEnabled(true);
             if (timeRestriction.getPolicy() == TimeRestriction.ALLOW)
             {
                 mPolicy.setSelectedItem(ALLOW);
@@ -101,11 +97,7 @@ public class TimeRestrictionPanel extends JPanel
     public TimeRestriction getTimeRestriction()
     {
         TimeRestriction.Policy policy;
-        if (mPolicy.getSelectedItem().equals(NONE))
-        {
-            return null;
-        }
-        else if (mPolicy.getSelectedItem().equals(ALLOW))
+        if (mPolicy.getSelectedItem().equals(ALLOW))
         {
             policy = TimeRestriction.ALLOW;
         }
@@ -203,8 +195,10 @@ public class TimeRestrictionPanel extends JPanel
         }
     }
 
-    private void setTimesEnabled(boolean enabled)
+    public void setEnabled(boolean enabled)
     {
+        super.setEnabled(enabled);
+        mPolicy.setEnabled(enabled);
         mStartHour.setEnabled(enabled);
         mStartMinutes.setEnabled(enabled);
         mStartAmPm.setEnabled(enabled);
@@ -222,22 +216,6 @@ public class TimeRestrictionPanel extends JPanel
         }
     }
 
-    class PolicyChangeListener implements ActionListener
-    {
-        public void actionPerformed(ActionEvent event)
-        {
-            if (mPolicy.getSelectedItem().equals(NONE))
-            {
-                setTimesEnabled(false);
-            }
-            else
-            {
-                setTimesEnabled(true);
-            }
-        }
-    }
-
-    private static final String NONE = "None";
     private static final String ALLOW = "Allow";
     private static final String DENY = "Deny";
     private static final String AM = "AM";
