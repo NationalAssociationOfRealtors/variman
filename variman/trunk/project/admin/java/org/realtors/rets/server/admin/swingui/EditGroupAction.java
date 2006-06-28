@@ -6,11 +6,11 @@ import javax.swing.*;
 
 import org.apache.log4j.Logger;
 
+import net.sf.hibernate.HibernateException;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.HibernateUtils;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
-import net.sf.hibernate.HibernateException;
 
 public class EditGroupAction extends AbstractAction
 {
@@ -23,7 +23,7 @@ public class EditGroupAction extends AbstractAction
     public void actionPerformed(ActionEvent event)
     {
         AdminFrame frame = SwingUtils.getAdminFrame();
-        EditGroupDialog dialog = new EditGroupDialog(frame);
+        GroupDialog dialog = new GroupDialog(frame);
 
         try
         {
@@ -61,7 +61,7 @@ public class EditGroupAction extends AbstractAction
         }
     }
 
-    private int showUntilCancelOrValid(EditGroupDialog dialog)
+    private int showUntilCancelOrValid(GroupDialog dialog)
         throws HibernateException
     {
         int response = JOptionPane.CANCEL_OPTION;

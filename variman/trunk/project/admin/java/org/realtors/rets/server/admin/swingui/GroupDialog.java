@@ -8,15 +8,15 @@ import javax.swing.*;
 
 import org.apache.commons.lang.StringUtils;
 
+import net.sf.hibernate.HibernateException;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.TimeRestriction;
-import net.sf.hibernate.HibernateException;
 
-public class EditGroupDialog extends JDialog
+public class GroupDialog extends JDialog
 {
-    public EditGroupDialog(Frame parent)
+    public GroupDialog(Frame parent)
     {
         super(parent);
         setModal(true);
@@ -61,7 +61,7 @@ public class EditGroupDialog extends JDialog
         mResponse = JOptionPane.CANCEL_OPTION;
     }
 
-    public EditGroupDialog(Frame parent, Group group, GroupRules rules)
+    public GroupDialog(Frame parent, Group group, GroupRules rules)
     {
         this(parent);
         editGroup(group, rules);
