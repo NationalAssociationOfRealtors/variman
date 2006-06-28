@@ -15,7 +15,7 @@ import org.realtors.rets.server.config.TimeRestriction;
 
 public class TimeRestrictionPanel extends JPanel
 {
-    TimeRestrictionPanel(TimeRestriction timeRestriction)
+    TimeRestrictionPanel()
     {
         super();
         String[] policyStrings = { NONE, ALLOW, DENY };
@@ -44,6 +44,11 @@ public class TimeRestrictionPanel extends JPanel
         mEndAmPm = new JComboBox(am_pm);
         mEndAmPm.setSelectedItem(PM);
         add(mEndAmPm);
+    }
+
+    TimeRestrictionPanel(TimeRestriction timeRestriction)
+    {
+        this();
         setTimeRestriction(timeRestriction);
     }
 

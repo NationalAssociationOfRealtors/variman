@@ -22,6 +22,9 @@ public class EditGroupAction extends AbstractAction
 
     public void actionPerformed(ActionEvent event)
     {
+        AdminFrame frame = SwingUtils.getAdminFrame();
+        EditGroupDialog dialog = new EditGroupDialog(frame);
+
         try
         {
             Group group = mGroupsPanel.getSelectedGroup();
@@ -30,9 +33,8 @@ public class EditGroupAction extends AbstractAction
             {
                 LOG.warn("Edit null group");
             }
+            dialog.editGroup(group, rules);
 
-            AdminFrame frame = SwingUtils.getAdminFrame();
-            EditGroupDialog dialog = new EditGroupDialog(frame, group, rules);
             if (showUntilCancelOrValid(dialog) != JOptionPane.OK_OPTION)
             {
                 return;
@@ -53,9 +55,14 @@ public class EditGroupAction extends AbstractAction
         {
             LOG.error("Caught", e);
         }
+        finally
+        {
+            dialog.dispose();
+        }
     }
 
     private int showUntilCancelOrValid(EditGroupDialog dialog)
+        throws HibernateException
     {
         int response = JOptionPane.CANCEL_OPTION;
         while (true)

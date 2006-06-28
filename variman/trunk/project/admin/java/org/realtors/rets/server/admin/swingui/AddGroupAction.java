@@ -24,7 +24,9 @@ public class AddGroupAction extends AbstractAction
     
     public void actionPerformed(ActionEvent event)
     {
-        AddGroupDialog dialog = new AddGroupDialog();
+        AdminFrame frame = SwingUtils.getAdminFrame();
+        EditGroupDialog dialog = new EditGroupDialog(frame);
+
         try
         {
             if (showUntilCancelOrValid(dialog) != JOptionPane.OK_OPTION)
@@ -43,10 +45,8 @@ public class AddGroupAction extends AbstractAction
                 retsConfig.getSecurityConstraints();
             GroupRules rules =
                 securityConstraints.getRulesForGroup(group.getName());
-            rules.setRecordLimit(dialog.getRecordLimit());
-            rules.setTimeRestriction(dialog.getTimeRestriction());
+            dialog.updateRules(rules);
 
-            AdminFrame frame = SwingUtils.getAdminFrame();
             frame.setStatusText("Group " + group.getName() + " added");
             frame.refreshGroups();
             // Group rules are stored in RetsConfig
@@ -63,7 +63,7 @@ public class AddGroupAction extends AbstractAction
         }
     }
 
-    private int showUntilCancelOrValid(AddGroupDialog dialog)
+    private int showUntilCancelOrValid(EditGroupDialog dialog)
         throws HibernateException
     {
         int response = JOptionPane.CANCEL_OPTION;
@@ -75,7 +75,7 @@ public class AddGroupAction extends AbstractAction
             {
                 break;
             }
-            if (dialog.validateFields())
+            if (dialog.isValidContent())
             {
                 break;
             }
