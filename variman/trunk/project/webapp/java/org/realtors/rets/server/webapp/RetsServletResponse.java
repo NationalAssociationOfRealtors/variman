@@ -64,6 +64,7 @@ public class RetsServletResponse extends HttpServletResponseWrapper
             setHeader("RETS-Version", mRetsVersionheader);
         }
         setHeader("RETS-Server", sRetServerHeader);
+        setHeader("Cache-Control", "private");
     }
 
     public void reset()
