@@ -1,0 +1,73 @@
+Version 2.1.9 - 21 March 2006
+
+  * Spaces are now allowed in wildcard searchs by URL encoding them.
+  * Fix a bug in the DMQL parser when using wildcards, numbers, and letters.
+  * Fields with a lookup interpration but no valid lookup are logged.
+  * The Windows setup program removes old code before installation to avoid
+    out of date files when upgrading.
+  * Unit tests now run and complete on Windows.
+
+Version 2.1.8 - 25 January 2006
+
+  * The 'Default' attribute in Table metadata is ignored.
+  * The SQL log file follows log policy setup in Admin tool.
+  * Daily logging now actually rolls over every day, instead of weekly.
+  * Null alignments are skipped.
+  * Change Password is removed from capability URLs.
+  * All CCT code has been removed and the index page now shows the login URL.
+
+Version 2.1.7 - 27 September 2005
+
+  * Update rets-client to warn on metadata parse errors.
+  * Report proper SYSTEM metadata version in Login transaction.
+  * Decode to long values, then short values for COMPACT-DECODED.
+  * Add option to roll log file over every week, instead of by size.
+  * Make logging options configurable via administration GUI.
+  * Add an optional separate log file just for logging DMQL and SQL only.
+  * Add per-group time restrictions.
+
+Version 2.1.6 - 28 June 2005
+
+  * Fixed digest authorization for URIs with query strings.
+  * Added scroll bars to various lists in the admin tool.
+  * Fixed SQL generation for string literals.
+  * Honor default ordering.
+  * Implemented SQL generation for lookup multi fields.
+  * Add object set feature for flexible GetObject file naming using an
+    XML mapping file.
+  * Fixed null pointer when webapp is not installed as default (root) webapp.
+  * Add infinite loop detection to photo patterns.
+  * Add more error checking on GetObject root directory.
+
+Version 2.1.5 - 1 February 2005
+
+  * Fixed SQL generation for date fields.
+
+Version 2.1.4 - 21 January 2005
+
+  * COMPACT-DECODED decodes lookups to short value.
+  * Add per-group record limits.
+
+Version 2.1.3 - 14 January 2005
+
+  * Metadata gets filtered according to group filtering rules.
+  * Added condition rules to filter based on arbitry SQL conditions.
+
+Version 2.1.2 - 20 December 2004
+
+  * Renamed to Variman.
+
+Version 2.1.1 - 12 November 2004
+
+  * Location support in GetObject.
+  * Update multipart GetObject behavior to reflect 1.7.
+  * Fix DMQL parsing error for numbers.
+
+Version 2.1.0 - 12 October 2004
+
+  * Groups support.
+  * Support for larger data sets on  SQLServer.
+  * Full GetObject support (including multipart).
+  * Improved stability.
+  * New reference manual.
+  * Improved administration tool.
