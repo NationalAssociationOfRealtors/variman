@@ -16,6 +16,8 @@ public class TimeRestrictionPanel extends JPanel
     TimeRestrictionPanel()
     {
         super();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
         String[] policyStrings = { ALLOW, DENY };
         String[] am_pm = { AM, PM };
         mMinuteFormat = NumberFormat.getNumberInstance(Locale.US);
@@ -24,20 +26,29 @@ public class TimeRestrictionPanel extends JPanel
 
         mPolicy = new JComboBox(policyStrings);
         add(mPolicy);
+        addStrut();
         mStartHour = createHourField(12);
         add(mStartHour);
+        addStrut();
         add(new JLabel(":"));
+        addStrut();
         mStartMinutes = createMinuteField(0);
         add(mStartMinutes);
+        addStrut();
         mStartAmPm = new JComboBox(am_pm);
         mStartAmPm.setSelectedItem(AM);
         add(mStartAmPm);
+        addStrut();
         add(new JLabel(" to "));
+        addStrut();
         mEndHour = createHourField(11);
         add(mEndHour);
+        addStrut();
         add(new JLabel(":"));
+        addStrut();
         mEndMinute = createMinuteField(59);
         add(mEndMinute);
+        addStrut();
         mEndAmPm = new JComboBox(am_pm);
         mEndAmPm.setSelectedItem(PM);
         add(mEndAmPm);
@@ -47,6 +58,11 @@ public class TimeRestrictionPanel extends JPanel
     {
         this();
         setTimeRestriction(timeRestriction);
+    }
+
+    private void addStrut()
+    {
+        add(Box.createHorizontalStrut(5));
     }
 
     private WholeNumberField createHourField(int number)
