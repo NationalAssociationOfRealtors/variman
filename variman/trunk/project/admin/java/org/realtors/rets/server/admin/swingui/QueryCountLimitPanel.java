@@ -21,8 +21,6 @@ public class QueryCountLimitPanel extends JPanel
         restrictMaximumSize(mLimitPeriod);
         add(mLimitPeriod);
         add(Box.createHorizontalGlue());
-
-        setEnabled(false);
     }
 
     private WholeNumberField createLimitField(int number)

@@ -33,19 +33,25 @@ public class GroupDialog extends JDialog
         tvp.addRow("Description:", mDescription);
 
         mEnableRecordLimit = new JCheckBox("Record Limit:");
+        mEnableRecordLimit.setSelected(false);
         mEnableRecordLimit.addActionListener(new RecordLimitAction());
         mRecordLimit = new WholeNumberField(1, TEXT_WIDTH);
         mRecordLimit.setMinValue(1);
+        syncRecordLimitComponents();
         tvp.addRow(mEnableRecordLimit, mRecordLimit);
 
         mEnableTimeRestriction = new JCheckBox("Time Restriction:");
+        mEnableTimeRestriction.setSelected(false);
         mEnableTimeRestriction.addActionListener(new TimeRestrictionAction());
         mTimeRestriction = new TimeRestrictionPanel();
+        syncTimeRestrictionComponents();
         tvp.addRow(mEnableTimeRestriction, mTimeRestriction);
 
         mEnableQueryCountLimit = new JCheckBox("Query Count Limit:");
+        mEnableQueryCountLimit.setSelected(false);
         mEnableQueryCountLimit.addActionListener(new QueryCountLimitAction());
         mQueryCountLimit = new QueryCountLimitPanel();
+        syncQueryCountComponents();
         tvp.addRow(mEnableQueryCountLimit, mQueryCountLimit);
 
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -106,6 +112,7 @@ public class GroupDialog extends JDialog
             mEnableTimeRestriction.setSelected(true);
             mTimeRestriction.setTimeRestriction(rules.getTimeRestriction());
         }
+        syncTimeRestrictionComponents();
 
         if (rules.hasNoQueryLimit())
         {
