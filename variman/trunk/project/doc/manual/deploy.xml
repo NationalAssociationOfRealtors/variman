@@ -149,7 +149,7 @@
     </para>
 
     <para>
-      A RETS client may only retreive objects of the same type in a
+      A RETS client may only retrieve objects of the same type in a
       single transaction.  Each transaction must also include at least
       one listing ID, called the <firstterm>resource key</firstterm>
       in RETS terminology.  For each resource key, there may be zero
@@ -179,7 +179,7 @@
           <row>
             <entry><literal>Photo</literal></entry>
             <entry>
-              An image, usually a photograph for the ojbect key.
+              An image, usually a photograph for the object key.
             </entry>
           </row>
           <row>
@@ -219,7 +219,7 @@
       The usual behavior is for all objects matching the RETS client's
       criteria to be sent back to the client in a single GetObject
       response.  For a request that returns a large number of objects,
-      however, this may be impracticle.  The RETS specification allows
+      however, this may be impractical.  The RETS specification allows
       the RETS server to return only a URL, instead of the object
       itself.  This URL is called a <firstterm>location
       URL</firstterm>.
@@ -601,10 +601,10 @@
     <title>Groups</title>
     <para>
       Groups are managed through the Groups Tab as seen in <xref
-      linkend="fig-groups"/>. Groups may be created, edited, and
-      removed from the Group menu or contextual menu.  The main
-      purpose of groups is to restrict data in a number of ways,
-      described below.
+      linkend="fig-groups"/> and the Group Dialog, as seen in <xref
+      linkend="fig-group-dialog"/>. Groups may be created, edited, and removed
+      from the Group menu or contextual menu. The main purpose of groups is to
+      restrict data in a number of ways, described below.
     </para>
 
     <figure id="fig-groups">
@@ -616,6 +616,15 @@
       </mediaobject>
     </figure>
 
+    <figure id="fig-group-dialog">
+      <title>Group Dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="group-dialog.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
     <para>
     </para>
 
@@ -623,13 +632,49 @@
       <title>Record Limits</title>
 
       <para>
-        A record limit may be set on a per-group basis.  Members of
-        groups with a limit will only be able to retrieve that many
-        records per query, even if more records match the search
-        critera.  This limit always overrides any user supplied limit.
-        A record limit of 0 means that users of this group have no
-        limit.  If a user is a member of multiple groups with record
-        limits, the lowest limit is taken.
+        If a record limit is enabled for a group, members of this group will
+        only be able to retrieve that many records per query, even if more
+        records match the search criteria. This limit always overrides any
+        user supplied limit. If a user is a member of multiple groups with
+        record limits, the lowest limit is taken.
+      </para>
+    </section>
+    
+    <section id="time-restrictions">
+      <title>Time Restrictions</title>
+      
+      <para>
+        If a time restriction is enabled for a group, then members of this
+        group are only allowed during the specified time periods. Any access
+        outside the allowed time periods results in an authentication failure.
+        Time restrictions may be setup as inclusive or exclusive. Inclusive
+        restrictions means the user is only allowed to access the server in
+        this time period. They will be denied access outside this period. For
+        example, "Allow between 9:00AM and 5:00PM" means the user is allowed
+        access between 9AM and 5PM and denied access before 9AM and after 5PM.
+        Exclusive restrictions means the user is only allowed to access
+        outside this time period. They will be denied access within this
+        period. For example, "Deny between 9:00AM and 5:00PM" means the user
+        is allowed before 9AM and after 5PM and denied access between 9AM and
+        5PM. If a user is a member of multiple groups, the restrictions
+        applied to that user is a union of all allowed time periods of all the
+        time restrictions.
+      </para>
+    </section>
+    
+    <section id="query-count-limits">
+      <title>Query Count Limits</title>
+      
+      <para>
+        If a query count limit is enabled for a group, then members of this
+        group are only allowed a certain number of search queries in a given
+        time period. A user exceeding their query count limit will receive a
+        RETS error on all subsequent searches until the time period has
+        elapsed. The possible time periods are: per day, per hour, and per
+        minute. For example, "5 queries per minute" means that more than 5
+        queries per minute result in an error until one minute has elapsed.
+        Then, the user will be allowed at most 5 more queries. If a user is a
+        member of multiple groups, the most restrictive query count is applied
       </para>
     </section>
 
@@ -638,7 +683,7 @@
 
       <para>
         Filter rules allow RETS system names to be filtered out.  If
-        none of a users's groups contain any rules, then they have
+        none of a users' groups contain any rules, then they have
         access to all system names provided in the metadata.  Rules
         are written for a particular resource and class.  There two
         types of filter rules: include and exclude.  Include rules
