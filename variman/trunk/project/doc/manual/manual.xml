@@ -57,6 +57,13 @@
           configuration.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>1.5</revnumber>
+        <date>2006-07-05</date>
+        <revremark>
+          Add sections on time restrictions and query count limits.
+        </revremark>
+      </revision>
     </revhistory>
     
     <abstract>
