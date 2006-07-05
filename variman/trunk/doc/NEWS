@@ -1,3 +1,8 @@
+Version 2.1.10 - 05 July 2006
+
+  * Query count limit added to group preferences.
+  * Added "Cache-Control: private" header to all transactions.
+
 Version 2.1.9 - 21 March 2006
 
   * Spaces are now allowed in wildcard searchs by URL encoding them.
