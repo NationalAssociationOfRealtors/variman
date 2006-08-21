@@ -8,18 +8,16 @@
 
 package org.realtors.rets.server;
 
-import org.apache.log4j.Logger;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
-import org.realtors.rets.server.protocol.TableGroupFilter;
 import org.realtors.rets.server.protocol.SearchTransaction;
+import org.realtors.rets.server.protocol.TableGroupFilter;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.beans.BeansException;
 
 public class RetsServer implements ApplicationContextAware
 {
