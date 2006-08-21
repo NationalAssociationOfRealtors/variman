@@ -97,13 +97,9 @@ public class RetsServer implements ApplicationContextAware
 
     public static SearchTransaction createSearchTransaction()
     {
-        LOG.debug("Creating SearchTransactionInterface");
         return (SearchTransaction)
             sApplicationContext.getBean("SearchTransaction");
     }
-
-    private static final Logger LOG =
-        Logger.getLogger(RetsServer.class);
 
     private static SessionFactory sSessions;
     private static TableGroupFilter sTableGroupFilter;
