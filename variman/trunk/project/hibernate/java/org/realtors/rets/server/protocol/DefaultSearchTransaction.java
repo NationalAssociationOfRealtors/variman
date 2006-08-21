@@ -47,9 +47,14 @@ import org.realtors.rets.server.metadata.ServerDmqlMetadata;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ServerMetadata;
 
-public class SearchTransaction
+public class DefaultSearchTransaction implements SearchTransaction
 {
-    public SearchTransaction(SearchParameters parameters)
+    public DefaultSearchTransaction()
+    {
+        LOG.debug("Creating DefaultSearchTransaction");
+    }
+
+    public void setParameters(SearchParameters parameters)
         throws RetsServerException
     {
         try
@@ -480,7 +485,7 @@ public class SearchTransaction
     }
 
     private static final Logger LOG =
-        Logger.getLogger(SearchTransaction.class);
+        Logger.getLogger(DefaultSearchTransaction.class);
     private static final String SQL_LOG_NAME =
         "org.realtors.rets.server.sql_log";
     private static final Logger SQL_LOG = Logger.getLogger(SQL_LOG_NAME);

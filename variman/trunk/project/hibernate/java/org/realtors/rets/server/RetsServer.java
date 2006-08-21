@@ -8,14 +8,20 @@
 
 package org.realtors.rets.server;
 
+import org.apache.log4j.Logger;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.TableGroupFilter;
+import org.realtors.rets.server.protocol.SearchTransaction;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.beans.BeansException;
 
-public class RetsServer
+public class RetsServer implements ApplicationContextAware
 {
     public static void setSessions(SessionFactory sessionFactory)
     {
@@ -83,9 +89,26 @@ public class RetsServer
         sQueryCountTable = queryCountTable;
     }
 
+    public void setApplicationContext(ApplicationContext applicationContext)
+        throws BeansException
+    {
+        sApplicationContext = applicationContext;
+    }
+
+    public static SearchTransaction createSearchTransaction()
+    {
+        LOG.debug("Creating SearchTransactionInterface");
+        return (SearchTransaction)
+            sApplicationContext.getBean("SearchTransaction");
+    }
+
+    private static final Logger LOG =
+        Logger.getLogger(RetsServer.class);
+
     private static SessionFactory sSessions;
     private static TableGroupFilter sTableGroupFilter;
     private static ConditionRuleSet sConditionRuleSet;
     private static SecurityConstraints sSecurityConstraints;
     private static QueryCountTable sQueryCountTable;
+    private static ApplicationContext sApplicationContext;
 }

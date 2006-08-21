@@ -29,6 +29,7 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${rets-client.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
+    <pathelement path="${spring.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -531,6 +532,8 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${commons-codec.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.jar}"/>
 
     <copy todir="build/rets-server/webapp/WEB-INF/rets"
           file="project/webapp/config/rets-config.xml"/>
@@ -540,16 +543,8 @@
           file="project/webapp/config/rets-logging.properties"/>
     <copy todir="build/rets-server/webapp/WEB-INF/rets"
           file="project/webapp/config/rets-logging.properties.dist"/>
-    <!-- copy the struts stuff -->
     <copy todir="build/rets-server/webapp/WEB-INF"
-          file="project/webapp/config/struts-config.xml"/>
-    <copy todir="build/rets-server/webapp/WEB-INF"
-          file="project/webapp/config/validation.xml"/>
-    <copy todir="build/rets-server/webapp/WEB-INF"
-          file="project/webapp/config/validator-rules.xml"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/classes">
-      <fileset dir="project/webapp/config/properties/" includes="*" />
-    </copy>
+          file="project/webapp/config/spring-appContext.xml"/>
   </target>
 
   <target name="build-datagen" depends="build-hibernate"
