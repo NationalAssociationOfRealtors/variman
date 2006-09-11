@@ -16,8 +16,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
@@ -29,14 +27,14 @@ import antlr.ANTLRException;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
+import org.realtors.rets.server.QueryCount;
+import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.UserUtils;
-import org.realtors.rets.server.QueryCount;
-import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.dmql.DmqlCompiler;
@@ -44,8 +42,6 @@ import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.ServerDmqlMetadata;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.ServerMetadata;
 
 public class DefaultSearchTransaction implements SearchTransaction
 {
@@ -61,10 +57,14 @@ public class DefaultSearchTransaction implements SearchTransaction
         {
             mParameters = parameters;
             mGroups = UserUtils.getGroups(mParameters.getUser());
-            checkForQueryLimit();
+            assertQueryLimitNotExceeded();
 
             mLimit = getLimit();
             mExecuteQuery = true;
+
+            mSearchSqlBuilder = new DefaultSearchSqlBuilder();
+            mSearchSqlBuilder.setParameters(mParameters);
+            mSearchSqlBuilder.setGroups(mGroups);
         }
         catch (HibernateException e)
         {
@@ -72,7 +72,7 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private void checkForQueryLimit() throws RetsReplyException
+    private void assertQueryLimitNotExceeded() throws RetsReplyException
     {
         QueryCountTable queryCountTable = RetsServer.getQueryCountTable();
         String username = mParameters.getUser().getUsername();
@@ -122,9 +122,9 @@ public class DefaultSearchTransaction implements SearchTransaction
         throws RetsServerException
     {
         mSessions = sessions;
-        prepareMetadata(manager);;
-        mFromClause = mClass.getDbTable();
-        generateWhereClause(mClass);
+        mSearchSqlBuilder.perpareForQuery(manager);
+        generateWhereClause(mSearchSqlBuilder.getMetadataClass());
+
         if (!mExecuteQuery)
         {
             RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
@@ -143,33 +143,6 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private void prepareMetadata(MetadataManager manager)
-        throws RetsReplyException
-    {
-        String resourceName = mParameters.getResourceId();
-        ServerMetadata resource =
-            manager.findByPath(Resource.TABLE, resourceName);
-        if (resource == null)
-        {
-            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
-                                        "Invalid resource: " + resourceName);
-        }
-
-        String className = mParameters.getClassName();
-        mClass = (MClass) manager.findByPath(
-            MClass.TABLE, resourceName + ":" + className);
-        if (mClass == null)
-        {
-            throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
-                                         "Invalid class: " + className);
-        }
-
-        TableGroupFilter groupFilter = RetsServer.getTableGroupFilter();
-        mTables = groupFilter.findTables(mGroups, resourceName, className);
-        mMetadata = new ServerDmqlMetadata(mTables,
-                                           mParameters.isStandardNames());
-    }
-
     /**
      * Queries the database for the data and outputs the result.
      *
@@ -179,10 +152,34 @@ public class DefaultSearchTransaction implements SearchTransaction
     private void printData(PrintWriter out)
         throws RetsServerException
     {
-        List columns = getColumns(mMetadata);
-        String sql = generateSql(StringUtils.join(columns.iterator(), ","));
-        LOG.debug("SQL: " + sql);
-        executeSql(sql, out, columns);
+        Session session = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try
+        {
+            String sql = generateSql(mSearchSqlBuilder.getSelectClause());
+            logSql(sql);
+            session = mSessions.openSession();
+            Connection connection = session.connection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            advance(resultSet);
+            printResults(out, mSearchSqlBuilder.getColumns(), resultSet);
+        }
+        catch (HibernateException e)
+        {
+            throw new RetsServerException(e);
+        }
+        catch (SQLException e)
+        {
+            throw new RetsServerException(e);
+        }
+        finally
+        {
+            close(resultSet);
+            close(statement);
+            close(session);
+        }
     }
 
     /**
@@ -239,38 +236,13 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private List getColumns(ServerDmqlMetadata metadata)
-        throws RetsReplyException
-    {
-        String[] fields = mParameters.getSelect();
-        if (fields == null)
-        {
-            return metadata.getAllColumns();
-        }
-        else
-        {
-            List columns = new ArrayList();
-            for (int i = 0; i < fields.length; i++)
-            {
-                String column = metadata.fieldToColumn(fields[i]);
-                if (column == null)
-                {
-                    throw new RetsReplyException(ReplyCode.INVALID_SELECT,
-                                                 fields[i]);
-                }
-                columns.add(column);
-            }
-            return columns;
-        }
-    }
-
     private String generateSql(String selectClause)
     {
         StringBuffer buffer = new StringBuffer();
         buffer.append("SELECT ");
         buffer.append(selectClause);
         buffer.append(" FROM ");
-        buffer.append(mFromClause);
+        buffer.append(mSearchSqlBuilder.getFromClause());
         buffer.append(" WHERE ");
         buffer.append(mWhereClause);
         return buffer.toString();
@@ -286,7 +258,7 @@ public class DefaultSearchTransaction implements SearchTransaction
         String sqlConstraint =
             conditionRuleSet.findSqlConstraint(mGroups, resourceName,
                                                className);
-        SqlConverter sqlConverter = parse(mMetadata);
+        SqlConverter sqlConverter = parse(mSearchSqlBuilder.getMetadata());
         StringWriter stringWriter = new StringWriter();
         sqlConverter.toSql(new PrintWriter(stringWriter));
         mWhereClause = stringWriter.toString();
@@ -304,40 +276,10 @@ public class DefaultSearchTransaction implements SearchTransaction
         RetsUtils.printCloseRets(out);
     }
 
-    private void executeSql(String sql, PrintWriter out, List columns)
-        throws RetsServerException
-    {
-        Session session = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try
-        {
-            logSql(sql);
-            session = mSessions.openSession();
-            Connection connection = session.connection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(sql);
-            advance(resultSet);
-            printResults(out, columns, resultSet);
-        }
-        catch (HibernateException e)
-        {
-            throw new RetsServerException(e);
-        }
-        catch (SQLException e)
-        {
-            throw new RetsServerException(e);
-        }
-        finally
-        {
-            close(resultSet);
-            close(statement);
-            close(session);
-        }
-    }
-
     private void logSql(String sql)
     {
+        LOG.debug("SQL: " + sql);
+
         String select = StringUtils.join(mParameters.getSelect(), ",");
         if (select == null)
         {
@@ -355,7 +297,8 @@ public class DefaultSearchTransaction implements SearchTransaction
         throws RetsServerException
     {
         SearchFormatterContext context =
-            new SearchFormatterContext(out, resultSet, columns, mMetadata);
+            new SearchFormatterContext(out, resultSet, columns,
+                                       mSearchSqlBuilder.getMetadata());
         context.setLimit(getLimit());
         SearchResultsFormatter formatter = getFormatter();
 
@@ -492,13 +435,10 @@ public class DefaultSearchTransaction implements SearchTransaction
 
     private SearchParameters mParameters;
     private SortedSet mGroups;
-    private MClass mClass;
-    private Collection mTables;
+    private SearchSqlBuilder mSearchSqlBuilder;
     private boolean mExecuteQuery;
-    private String mFromClause;
     private String mWhereClause;
     private int mCount;
     private SessionFactory mSessions;
-    private ServerDmqlMetadata mMetadata;
     private int mLimit;
 }
