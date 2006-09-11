@@ -50,6 +50,11 @@ public class DefaultSearchTransaction implements SearchTransaction
         LOG.debug("Creating DefaultSearchTransaction");
     }
 
+    public void setSearchSqlBuilder(SearchSqlBuilder searchSqlBuilder)
+    {
+        mSearchSqlBuilder = searchSqlBuilder;
+    }
+
     public void setParameters(SearchParameters parameters)
         throws RetsServerException
     {
@@ -62,7 +67,6 @@ public class DefaultSearchTransaction implements SearchTransaction
             mLimit = getLimit();
             mExecuteQuery = true;
 
-            mSearchSqlBuilder = new DefaultSearchSqlBuilder();
             mSearchSqlBuilder.setParameters(mParameters);
             mSearchSqlBuilder.setGroups(mGroups);
         }
