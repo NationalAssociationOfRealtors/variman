@@ -11,6 +11,7 @@ package org.realtors.rets.server.tomcat;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.InetAddress;
 import java.util.Enumeration;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -92,7 +93,8 @@ public class EmbeddedTomcat
         mEmbedded.addEngine(engine);
 
         // Assembled and install a default HTTP connector
-        Connector connector = mEmbedded.createConnector(null, getPort(), false);
+       Connector connector = mEmbedded.createConnector(
+           getAddress(), getPort(), false);
         mEmbedded.addConnector(connector);
 
         // Start the embedded server
@@ -118,6 +120,17 @@ public class EmbeddedTomcat
         Element root = document.getDocumentElement();
         Node portTag = root.getElementsByTagName("port").item(0);
         mPort = Integer.parseInt(portTag.getFirstChild().getNodeValue());
+
+        Node addressTag = root.getElementsByTagName("address").item(0);
+        if (addressTag != null)
+            mAddress = InetAddress.getByName(addressTag.getFirstChild().getNodeValue());
+        else
+            mAddress = null;
+    }
+
+    private InetAddress getAddress()
+    {
+        return mAddress;
     }
 
     private int getPort()
@@ -259,6 +272,7 @@ public class EmbeddedTomcat
     private String mCatalinaHome;
     private Embedded mEmbedded;
     private Host mHost;
+    private InetAddress mAddress;
     private int mPort;
     private boolean mInitFailed;
     private Context mContext;
