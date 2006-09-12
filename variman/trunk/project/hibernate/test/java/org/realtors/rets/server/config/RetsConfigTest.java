@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.QueryCount;
+import org.jdom.Element;
 
 public class RetsConfigTest extends LinesEqualTestCase
 {
@@ -83,9 +84,10 @@ public class RetsConfigTest extends LinesEqualTestCase
         retsConfig.setSecurityConstraints(securityConstraints);
 
         String xml = retsConfig.toXml();
-	assertLinesEqual(
+        assertLinesEqual(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL +
             "<rets-config>" + NL +
+            "  <address />" + NL +
             "  <port>7103</port>" + NL +
             "  <metadata-dir>WEB-INF/rets/metadata</metadata-dir>" + NL +
             "  <get-object-root>/tmp/pictures</get-object-root>" + NL +
@@ -144,6 +146,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         String xml =
             "<?xml version='1.0' ?>\n" +
             "<rets-config>\n" +
+            "  <address>192.168.1.1</address>\n" +
             "  <port>7103</port>\n" +
             "  <metadata-dir>WEB-INF/rets/metadata</metadata-dir>\n" +
             "  <get-object-root>/tmp/pictures</get-object-root>\n" +
@@ -194,6 +197,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "  </security-constraints>\n" +
             "</rets-config>";
         RetsConfig retsConfig = RetsConfig.initFromXml(xml);
+        assertEquals("192.168.1.1", retsConfig.getAddress());
         assertEquals(7103, retsConfig.getPort());
         assertEquals("WEB-INF/rets/metadata", retsConfig.getMetadataDir());
         assertEquals("%k-%i.jpg", retsConfig.getPhotoPattern());
@@ -308,6 +312,45 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertNull(retsConfig.getGetObjectRoot());
         assertEquals(-1, retsConfig.getNonceInitialTimeout());
         assertEquals(-1, retsConfig.getNonceSuccessTimeout());
+    }
+
+    public void testAddStringChild() throws RetsServerException
+    {
+        Element element = new Element("foo");
+        RetsConfig.addChild(element, "bar", "baz");
+        Element child = element.getChild("bar");
+        assertNotNull(child);
+        assertEquals("baz", child.getText());
+    }
+
+    public void testAddNullStringChild() throws RetsServerException
+    {
+        Element element = new Element("foo");
+        RetsConfig.addChild(element, "bar", null);
+        Element child = element.getChild("bar");
+        assertNotNull(child);
+        assertEquals("", child.getText());
+    }
+
+    public void testAddEmptyStringChild() throws RetsServerException
+    {
+        Element element = new Element("foo");
+        RetsConfig.addChild(element, "bar", "");
+        Element child = element.getChild("bar");
+        assertNotNull(child);
+        assertEquals("", child.getText());
+    }
+
+    public void testSetBlankAddress()
+    {
+        RetsConfig retsConfig = new RetsConfig();
+        assertNull(retsConfig.getAddress());
+        retsConfig.setAddress("");
+        assertNull(retsConfig.getAddress());
+        retsConfig.setAddress("  ");
+        assertNull(retsConfig.getAddress());
+        retsConfig.setAddress(null);
+        assertNull(retsConfig.getAddress());
     }
 
     public void testGetDefaults()

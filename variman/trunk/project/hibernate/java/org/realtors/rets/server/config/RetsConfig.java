@@ -52,6 +52,19 @@ public class RetsConfig
         mBlockLocation = false;
     }
 
+    public String getAddress()
+    {
+        return mAddress;
+    }
+
+    public void setAddress(String address)
+    {
+        if (StringUtils.isBlank(address))
+            mAddress = null;
+        else
+            mAddress = address;
+    }
+
     public int getPort()
     {
         return mPort;
@@ -136,6 +149,7 @@ public class RetsConfig
     public String toXml() throws RetsServerException
     {
         Element retsConfig = new Element(RETS_CONFIG);
+        addChild(retsConfig, ADDRESS, mAddress);
         addChild(retsConfig, PORT, mPort);
         addChild(retsConfig, METADATA_DIR, mMetadataDir);
         addChild(retsConfig, GET_OBJECT_ROOT, mGetObjectRoot);
@@ -292,7 +306,7 @@ public class RetsConfig
             new Element(name).setText(Integer.toString(number)));
     }
 
-    private Element addChild(Element element, String name, String text)
+    protected static Element addChild(Element element, String name, String text)
     {
         return element.addContent(new Element(name).setText(text));
     }
@@ -331,6 +345,7 @@ public class RetsConfig
     private static RetsConfig elementToConfig(Element element)
     {
         RetsConfig config = new RetsConfig();
+        config.setAddress(getString(element, ADDRESS));
         config.mPort = getInt(element, PORT);
         config.mMetadataDir = getString(element, METADATA_DIR);
         String photoPattern = getString(element, PHOTO_PATTERN);
@@ -719,6 +734,7 @@ public class RetsConfig
 
     private static final Logger LOG =
         Logger.getLogger(RetsConfig.class);
+    private static final String ADDRESS = "address";
     private static final String PORT = "port";
     private static final String METADATA_DIR = "metadata-dir";
     private static final String RETS_CONFIG = "rets-config";
@@ -762,6 +778,7 @@ public class RetsConfig
     private static final String PER_HOUR = "per-hour";
     private static final String PER_MINUTE = "per-minute";
 
+    private String mAddress;
     private int mPort;
     private String mGetObjectRoot;
     private String mPhotoPattern;
