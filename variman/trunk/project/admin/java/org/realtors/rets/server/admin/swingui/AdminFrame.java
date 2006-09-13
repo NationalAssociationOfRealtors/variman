@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -138,6 +137,7 @@ public class AdminFrame extends JFrame
         try
         {
             RetsConfig retsConfig = Admin.getRetsConfig();
+            retsConfig.setAddress(mConfigurationPanel.getAddresss());
             retsConfig.setPort(mConfigurationPanel.getPort());
             retsConfig.setMetadataDir(mConfigurationPanel.getMetadataDir());
             retsConfig.setGetObjectRoot(mConfigurationPanel.getImageRootDir());

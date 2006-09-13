@@ -15,10 +15,13 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.*;
+import javax.swing.text.Document;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.DatabaseConfig;
@@ -38,6 +41,14 @@ public class ConfigurationPanel extends AdminTab
         ConfigChangeListener changeListener = new ConfigChangeListener();
 
         TextValuePanel retsConfig = new TextValuePanel();
+
+        JPanel box;
+        GridBagConstraints c;
+
+        mAddressPanel = new AddressPanel();
+        mAddressPanel.getDocument().addDocumentListener(changeListener);
+        retsConfig.addRow("Listening IP Address:", mAddressPanel);
+
         mPort = new JTextField(5);
 
         // Not sure why the min size needs to be set, but if it's not, then the
@@ -50,8 +61,8 @@ public class ConfigurationPanel extends AdminTab
 
         RetsConfig config = Admin.getRetsConfig();
 
-        JPanel box = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        box = new JPanel(new GridBagLayout());
+        c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
         String webappRoot = Admin.getWebAppRoot();
@@ -125,7 +136,13 @@ public class ConfigurationPanel extends AdminTab
         mHostName.setText(dbConfig.getHostName());
         mDatabaseName.setText(dbConfig.getDatabaseName());
         mUsername.setText(dbConfig.getUsername());
+        mAddressPanel.setAddress(config.getAddress());
         mPort.setText("" + config.getPort());
+    }
+
+    public String getAddresss()
+    {
+        return mAddressPanel.getAddress();
     }
 
     public int getPort()
@@ -245,6 +262,16 @@ public class ConfigurationPanel extends AdminTab
 
     }
 
+    private void updateEdited()
+    {
+        if (!mInConstructor)
+        {
+            // Events may occur during construction and trigger false
+            // changes, so ignore changes during construction.
+            Admin.setRetsConfigChanged(true);
+        }
+    }
+
     private class ConfigChangeListener implements DocumentListener
     {
         public void insertUpdate(DocumentEvent event)
@@ -261,18 +288,80 @@ public class ConfigurationPanel extends AdminTab
         {
             updateEdited();
         }
-
-        private void updateEdited()
-        {
-            if (!mInConstructor)
-            {
-                // Events may occur during construction and trigger false
-                // changes, so ignore changes during construction.
-                Admin.setRetsConfigChanged(true);
-            }
-        }
     }
 
+    private class AddressPanel extends JPanel
+    {
+        public AddressPanel()
+        {
+            setLayout(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.weightx = 0.0;
+            String[] options = {"All", "Specified:"};
+            mAddressMenu = new JComboBox(options);
+            mAddressMenu.setAction(new AddressChangedAction());
+            add(mAddressMenu, c);
+
+            add(Box.createHorizontalStrut(5));
+
+            c.weightx = 1.0;
+            mListeningAddress = new JTextField();
+            add(mListeningAddress, c);
+            setAddress(null);
+        }
+
+        public void setAddress(String address)
+        {
+            if (StringUtils.isBlank(address))
+            {
+                mAddressMenu.setSelectedIndex(0);
+                mListeningAddress.setText(null);
+            }
+            else
+            {
+                mAddressMenu.setSelectedIndex(1);
+                mListeningAddress.setText(address);
+            }
+            syncAddressComponents();
+        }
+
+        private void syncAddressComponents()
+        {
+            if (mAddressMenu.getSelectedIndex() == 0)
+                mListeningAddress.setEnabled(false);
+            else
+                mListeningAddress.setEnabled(true);
+        }
+
+        public String getAddress()
+        {
+            if (mAddressMenu.getSelectedIndex() == 0)
+                return null;
+            else
+                return mListeningAddress.getText();
+        }
+
+        public Document getDocument()
+        {
+            return mListeningAddress.getDocument();
+        }
+
+        class AddressChangedAction extends AbstractAction
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                updateEdited();
+                syncAddressComponents();
+            }
+        }
+
+        private JComboBox mAddressMenu;
+        private JTextField mListeningAddress;
+    }
+
+
+    private AddressPanel mAddressPanel;
     private JTextField mPort;
     private JTextField mMetadataDir;
     private JLabel mDatabaseType;
