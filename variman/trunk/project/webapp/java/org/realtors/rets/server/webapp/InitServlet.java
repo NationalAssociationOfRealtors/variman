@@ -222,6 +222,12 @@ public class InitServlet extends RetsServlet
             configFile = resolveFromContextRoot(configFile);
             mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
 
+            String address = mRetsConfig.getAddress();
+            if  (address == null)
+                address = "all IP addresses";
+            LOG.info("Listening on " + address + ", port " +
+                     mRetsConfig.getPort());
+
             String getObjectRoot = getGetObjectRoot();
             WebApp.setGetObjectRoot(getObjectRoot);
             LOG.info("GetObject root: " + getObjectRoot);
