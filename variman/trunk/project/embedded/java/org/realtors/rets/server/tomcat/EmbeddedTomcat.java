@@ -121,11 +121,14 @@ public class EmbeddedTomcat
         Node portTag = root.getElementsByTagName("port").item(0);
         mPort = Integer.parseInt(portTag.getFirstChild().getNodeValue());
 
+        mAddress = null;
         Node addressTag = root.getElementsByTagName("address").item(0);
         if (addressTag != null)
-            mAddress = InetAddress.getByName(addressTag.getFirstChild().getNodeValue());
-        else
-            mAddress = null;
+        {
+            Node firstChild = addressTag.getFirstChild();
+            if (firstChild != null)
+                mAddress = InetAddress.getByName(firstChild.getNodeValue());
+        }
     }
 
     private InetAddress getAddress()
