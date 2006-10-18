@@ -126,7 +126,7 @@ function InstallServiceParams(Default: String): String;
 begin
   Result := '-install "' + ServiceName + '" "' + JavaJvmDll +
     '" "-Djava.class.path={app}\variman.jar" ' +
-    '-Xmx512m ' +
+    '-Xms128m -Xmx1500m ' +
     '-Dcom.sun.management.jmxremote ' +
     '-start org.realtors.rets.server.tomcat.EmbeddedTomcat ' +
     '-params start ' +
