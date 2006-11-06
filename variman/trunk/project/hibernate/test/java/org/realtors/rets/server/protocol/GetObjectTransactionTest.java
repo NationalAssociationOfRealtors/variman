@@ -18,9 +18,15 @@ import junit.framework.TestCase;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.GlobalTestSetup;
 
 public class GetObjectTransactionTest extends TestCase
 {
+    public void setUp()
+    {
+        GlobalTestSetup.globalSetup();
+    }
+
     public void testSingleJpeg() throws IOException, RetsServerException
     {
         GetObjectTransaction transaction = createTransaction("abc123:1");
