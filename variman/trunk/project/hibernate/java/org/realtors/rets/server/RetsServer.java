@@ -8,14 +8,18 @@
 
 package org.realtors.rets.server;
 
+import org.apache.log4j.Logger;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
+import org.realtors.rets.server.protocol.ObjectSet;
 import org.realtors.rets.server.protocol.SearchTransaction;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -98,7 +102,23 @@ public class RetsServer implements ApplicationContextAware
         return (SearchTransaction)
             sApplicationContext.getBean("SearchTransaction");
     }
+    
+    public static ObjectSet createCustomObjectSet()
+    {
+        try
+        {
+            return (ObjectSet)
+                sApplicationContext.getBean("CustomObjectSet");
+        }
+        catch (NoSuchBeanDefinitionException e)
+        {
+            LOG.debug("CustomObjectSet bean not found.");
+            return null;
+        }
+    }
 
+    private static final Logger LOG =
+        Logger.getLogger(RetsServer.class);
     private static SessionFactory sSessions;
     private static TableGroupFilter sTableGroupFilter;
     private static ConditionRuleSet sConditionRuleSet;

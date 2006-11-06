@@ -14,17 +14,18 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 
 public class GetObjectTransaction
@@ -233,15 +234,22 @@ public class GetObjectTransaction
     private ObjectSet getObjectSet(String resourceEntity)
         throws RetsServerException
     {
-        ObjectSet objectSet = getXmlObjectSet(resourceEntity);
+        ObjectSet objectSet = RetsServer.createCustomObjectSet();
         if (objectSet == null)
         {
-            objectSet = getPatternObjectSet(resourceEntity);
+            objectSet = getXmlObjectSet(resourceEntity);
             if (objectSet == null)
             {
-                objectSet = NULL_OBJECT_SET;
+                objectSet = getPatternObjectSet(resourceEntity);
+                if (objectSet == null)
+                {
+                    objectSet = NULL_OBJECT_SET;
+                }
             }
         }
+        
+        objectSet.setResource(mResource);
+        objectSet.setResourceEntity(resourceEntity);
         return objectSet;
     }
 
@@ -322,6 +330,13 @@ public class GetObjectTransaction
 
     private static class NullObjectset implements ObjectSet
     {
+        public void setResource(String resource)
+        {
+        }
+        
+        public void setResourceEntity(String resourceEntity)
+        {
+        }
 
         public List findAllObjects(String type) throws RetsServerException
         {

@@ -80,6 +80,14 @@ public class XmlObjectSet implements ObjectSet
             return false;
         }
     }
+    
+    public void setResource(String resource)
+    {
+    }
+    
+    public void setResourceEntity(String resourceEntity)
+    {
+    }
 
     private void parseObjectSet(Element objectSet) throws IOException
     {
