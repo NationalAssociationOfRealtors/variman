@@ -1,4 +1,4 @@
-<servlet>
+<!-- servlet>
   <servlet-name>struts-action</servlet-name>
   <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
   <init-param>
@@ -10,4 +10,4 @@
     <param-value>0</param-value>
   </init-param>
   <load-on-startup>2</load-on-startup>
-</servlet>
+</servlet-->

@@ -81,7 +81,8 @@ public class ObjectTypeEnum implements PersistentEnum
             case 2: return "Video";
             case 3: return "Audio";
             case 4: return "Thumbnail";
-            case 5: return "VRImage";
+            case 5: return "Map";
+            case 6: return "VRImage";
             default: throw new RuntimeException("Unknown Object Type");
         }
     }
