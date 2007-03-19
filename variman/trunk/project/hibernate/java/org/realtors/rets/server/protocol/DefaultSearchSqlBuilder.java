@@ -28,7 +28,7 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         mGroups = groups;
     }
 
-    public void perpareForQuery(MetadataManager manager)
+    public void prepareForQuery(MetadataManager manager)
         throws RetsReplyException
     {
        String resourceName = mParameters.getResourceId();

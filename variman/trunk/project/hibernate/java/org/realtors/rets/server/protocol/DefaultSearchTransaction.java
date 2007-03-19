@@ -126,7 +126,7 @@ public class DefaultSearchTransaction implements SearchTransaction
         throws RetsServerException
     {
         mSessions = sessions;
-        mSearchSqlBuilder.perpareForQuery(manager);
+        mSearchSqlBuilder.prepareForQuery(manager);
         generateWhereClause(mSearchSqlBuilder.getMetadataClass());
 
         if (!mExecuteQuery)
@@ -240,7 +240,7 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private String generateSql(String selectClause)
+    private String generateSql(String selectClause) throws RetsReplyException
     {
         StringBuffer buffer = new StringBuffer();
         buffer.append("SELECT ");

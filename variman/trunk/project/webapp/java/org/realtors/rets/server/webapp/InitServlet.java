@@ -53,6 +53,9 @@ import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
 
 /**
+ * FIXME: Change to a ServletContextListener. (This will still maintain
+ * Servlet 2.3 compatibility.)
+ * 
  * @web.servlet name="init-servlet"
  *   load-on-startup="1"
  */
@@ -119,16 +122,6 @@ public class InitServlet extends RetsServlet
         }
     }
 
-    private String getContextInitParameter(String name, String defaultValue)
-    {
-        String value = getServletContext().getInitParameter(name);
-        if (value == null)
-        {
-            value = defaultValue;
-        }
-        return value;
-    }
-
     private String resolveFromContextRoot(String file)
     {
         return IOUtils.resolve(getServletContext().getRealPath("/"), file);
@@ -158,8 +151,7 @@ public class InitServlet extends RetsServlet
     private void initLogHome()
     {
         String prefix = WebApp.PROJECT_NAME;
-        String logHome =
-            getServletContext().getInitParameter(prefix + "-log4j-home");
+        String logHome = getContextInitParameter(prefix + "-log4j-home", null);
         if (logHome == null)
         {
             logHome = System.getProperty(prefix + ".log.home");
@@ -424,12 +416,18 @@ public class InitServlet extends RetsServlet
         RetsServer.setConditionRuleSet(ruleSet);
     }
 
+    protected void doRets(RetsServletRequest request, RetsServletResponse response)
+            throws RetsServerException, IOException
+    {
+        // Does nothing.
+    }
+    
     public void destroy()
     {
         WebApp.getReaper().stop();
     }
-
-    private static final Logger LOG =
-        Logger.getLogger(InitServlet.class);
+    
+    private static final Logger LOG = Logger.getLogger(InitServlet.class);
     private RetsConfig mRetsConfig;
+    
 }

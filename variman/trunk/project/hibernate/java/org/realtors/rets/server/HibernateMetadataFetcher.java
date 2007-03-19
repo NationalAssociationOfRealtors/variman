@@ -114,7 +114,7 @@ public class HibernateMetadataFetcher implements MetadataFetcher
         throw new UnsupportedOperationException("not implemented");
     }
 
-    public Date getSysetmDate() throws RetsServerException
+    public Date getSystemDate() throws RetsServerException
     {
         throw new UnsupportedOperationException("not implemented");
     }
@@ -149,7 +149,7 @@ public class HibernateMetadataFetcher implements MetadataFetcher
         return system;
     }
 
-    private static final Logger LOG =
+    private static final Logger LOG = 
         Logger.getLogger(HibernateMetadataFetcher.class);
     private static Map sMetadataFinders;
     private SessionFactory mSessions;

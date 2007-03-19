@@ -32,16 +32,25 @@ import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
-public class RetsServlet extends HttpServlet implements Constants
+public abstract class RetsServlet extends HttpServlet implements Constants
 {
 
-    protected void doGet(HttpServletRequest request,
+    protected String getContextInitParameter(String name, String defaultValue)
+    {
+        String value = getServletContext().getInitParameter(name);
+        if (value == null)
+        {
+            value = defaultValue;
+        }
+        return value;
+    }
+
+    protected void doGet(HttpServletRequest request, 
                          HttpServletResponse response)
         throws ServletException, IOException
     {
         RetsServletRequest retsRequest = new RetsServletRequest(request);
-        RetsServletResponse retsResponse =
-            new RetsServletResponse(response);
+        RetsServletResponse retsResponse = new RetsServletResponse(response);
         serviceRets(retsRequest, retsResponse);
     }
 
@@ -66,7 +75,7 @@ public class RetsServlet extends HttpServlet implements Constants
     }
 
     /**
-     * Template method for RETS service handling. It calls serviceRets(), but
+     * Template method for RETS service handling. It calls doRets(), but
      * handles exceptions.
      *
      * @see #isXmlResponse
@@ -134,6 +143,7 @@ public class RetsServlet extends HttpServlet implements Constants
     protected void preDoRets(RetsServletRequest request,
                              RetsServletResponse response)
     {
+        // Default implementation does nothing.
     }
 
     /**
@@ -143,16 +153,14 @@ public class RetsServlet extends HttpServlet implements Constants
      * back appropriate RETS error responses. Once the response is committed,
      * the only way to handle errors is to log them.
      */
-    protected void doRets(RetsServletRequest request,
+    protected abstract void doRets(RetsServletRequest request,
                           RetsServletResponse response)
-        throws RetsServerException, IOException
-    {
-        // Should be overridden
-    }
+        throws RetsServerException, IOException;
 
     protected void postDoRets(RetsServletRequest request,
                                    RetsServletResponse response)
     {
+        // Default implementation does nothing.
     }
 
     protected AccountingStatistics getStatistics(HttpSession session)
@@ -192,11 +200,9 @@ public class RetsServlet extends HttpServlet implements Constants
         {
             metadataFetcher =
                 new HibernateMetadataFetcher(RetsServer.getSessions());
-        }
-        return metadataFetcher;
+        }        return metadataFetcher;
     }
-
-    private static final Logger LOG =
-        Logger.getLogger(RetsServlet.class);
+    
+    private static final Logger LOG = Logger.getLogger(RetsServlet.class);
     private static final boolean USE_CACHE = true;
 }

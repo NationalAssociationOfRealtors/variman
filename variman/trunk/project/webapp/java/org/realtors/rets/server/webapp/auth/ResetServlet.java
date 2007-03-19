@@ -12,11 +12,12 @@ package org.realtors.rets.server.webapp.auth;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.webapp.RetsServlet;
+import org.realtors.rets.server.webapp.RetsServletRequest;
+import org.realtors.rets.server.webapp.RetsServletResponse;
 
 /**
  * @web.servlet name="reset-servlet"
@@ -24,8 +25,8 @@ import org.realtors.rets.server.webapp.RetsServlet;
  */
 public class ResetServlet extends RetsServlet
 {
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException
+    protected void doRets(RetsServletRequest req, RetsServletResponse resp)
+            throws RetsServerException, IOException
     {
         String header =
             new DigestAuthenticateResponse("RETS Server").getHeader();

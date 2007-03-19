@@ -17,21 +17,21 @@ import org.realtors.rets.server.RetsReplyException;
  */
 public interface SearchSqlBuilder
 {
-    void setParameters(SearchParameters parameters);
+    public void setParameters(SearchParameters parameters);
 
-    void setGroups(SortedSet groups);
+    public void setGroups(SortedSet groups);
 
-    void perpareForQuery(MetadataManager manager)
+    public void prepareForQuery(MetadataManager manager)
         throws RetsReplyException;
 
-    MClass getMetadataClass();
+    public MClass getMetadataClass();
 
-    List getColumns()
+    public List getColumns()
         throws RetsReplyException;
 
-    ServerDmqlMetadata getMetadata();
+    public ServerDmqlMetadata getMetadata();
 
-    String getSelectClause() throws RetsReplyException;
+    public String getSelectClause() throws RetsReplyException;
 
-    String getFromClause();
+    public String getFromClause() throws RetsReplyException;
 }

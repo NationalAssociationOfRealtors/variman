@@ -64,7 +64,7 @@ public class ManagerMetadataFetcher implements MetadataFetcher
         return findSystem(manager).getVersionString();
     }
 
-    public Date getSysetmDate() throws RetsServerException
+    public Date getSystemDate() throws RetsServerException
     {
         MetadataManager manager = getMetadataManager();
         return findSystem(manager).getDate();
