@@ -19,6 +19,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
+import org.realtors.rets.server.webapp.WebApp;
 
 /**
  * A nonce table that tracks generated nonces and nonce counts to counter reply
@@ -107,7 +108,8 @@ public class NonceTable
         }
 
         long currentCount = Long.parseLong(nonceCount, 16);
-        if (!(currentCount > entry.getCurrentNonceCount()))
+        // HPMA does not advance NC!
+        if (!(currentCount > entry.getCurrentNonceCount() || WebApp.getHPMAMode()))
         {
             LOG.warn("nonce count failed assertion: " + currentCount + " > " +
                      entry.getCurrentNonceCount());

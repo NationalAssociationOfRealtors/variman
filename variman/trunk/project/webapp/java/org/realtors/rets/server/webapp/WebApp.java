@@ -26,6 +26,10 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 public class WebApp
 {
+    private WebApp() {
+        // Prevents instantiation.
+    }
+    
     public static void setServletContext(ServletContext servletContext)
     {
         sServletContext = servletContext;
@@ -157,4 +161,17 @@ public class WebApp
     private static NonceReaper sReaper;
     private static String sVersion;
     private static String sBuildDate;
+    
+    // This mode added by RealGo to allow a certain non-compliant client to log on,
+    // namely HP Real Estate Marketing Assistant (HPMA or HP REMA)
+    private static boolean sHPMAMode = false;
+    public static void setHPMAMode(boolean mode)
+    {
+        sHPMAMode = mode;
+    }
+    public static boolean getHPMAMode()
+    {
+        return sHPMAMode;
+    }
+    
 }

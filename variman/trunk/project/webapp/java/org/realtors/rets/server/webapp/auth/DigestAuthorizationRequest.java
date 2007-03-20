@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
+import org.realtors.rets.server.webapp.WebApp;
 
 public class DigestAuthorizationRequest
 {
@@ -112,6 +113,8 @@ public class DigestAuthorizationRequest
         }
         if (!header.startsWith(PREFIX))
         {
+            // HPMA sends a truncated header
+            if (WebApp.getHPMAMode()) return;
             throw new IllegalArgumentException("Incorrect prefix <" + header +
                                                ">");
         }
@@ -155,7 +158,8 @@ public class DigestAuthorizationRequest
             }
             else if (key.equals("nc"))
             {
-                mNonceCount = value;
+                // HPMA quotes NC
+                mNonceCount = WebApp.getHPMAMode() ? removeQuotes(value) : value;
             }
             else if (key.equals("cnonce"))
             {

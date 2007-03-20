@@ -71,7 +71,8 @@ public class SessionFilter implements Filter
         //
         // Anything else is fine, and we let it go.
         boolean isLoginPath = isLoginPath(contextUrl);
-        if (isLoginPath && isSessionValid)
+        // HPMA logs in an extra time and does not log out!
+        if (isLoginPath && isSessionValid && !WebApp.getHPMAMode())
         {
             LOG.info("Logging in while session is valid, sending response");
             sendAdditionalLoginNotPermitted(response);
