@@ -54,6 +54,10 @@ public class CompactFormatter implements SearchResultsFormatter
             {
                 formatRow(context, numColumns);
             }
+            if (context.exceededLimit())
+            {
+                out.print("<MAXROWS/>\n");
+            }
         }
         catch (SQLException e)
         {

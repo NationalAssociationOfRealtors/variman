@@ -35,7 +35,25 @@ public class CompactFormatterTest extends LinesEqualTestCase
             format(CompactFormatter.DECODE_LOOKUPS));
     }
 
+    public void testMaxRows() throws RetsServerException
+    {
+        assertLinesEqual(
+            "<DELIMITER value=\"09\"/>\n" +
+            "<COLUMNS>\tSTNAME\tZIP_CODE\tSTATUS\tIF\t</COLUMNS>\n" +
+            "<DATA>\tMain St.\t12345\t0\t\t</DATA>\n" +
+            "<DATA>\tMichigan Ave.\t60605\t1\tDW,FR\t</DATA>\n" +
+            "<MAXROWS/>\n",
+            format(CompactFormatter.NO_DECODING, 2));
+    }
+
     private String format(CompactFormatter.LookupDecoding lookupDecoding)
+        throws RetsServerException
+    {
+        return format(lookupDecoding, Integer.MAX_VALUE);
+    }
+
+    private String format(CompactFormatter.LookupDecoding lookupDecoding,
+                          int limit)
         throws RetsServerException
     {
         CompactFormatter formatter =
@@ -58,6 +76,7 @@ public class CompactFormatterTest extends LinesEqualTestCase
             new SearchFormatterContext(
                 new PrintWriter(formatted), results, Arrays.asList(COLUMNS),
                 metadata);
+        context.setLimit(limit);
         formatter.formatResults(context);
         return formatted.toString();
     }

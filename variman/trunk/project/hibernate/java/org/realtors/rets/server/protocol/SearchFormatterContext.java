@@ -144,6 +144,11 @@ public class SearchFormatterContext
         return mRowCount;
     }
 
+    public boolean exceededLimit()
+    {
+        return (mRowCount >= mLimit);
+    }
+
     /**
      * Returns a String from the ResultSet using a RETS field name. The
      * actual column name is retrieved from the metadata.
