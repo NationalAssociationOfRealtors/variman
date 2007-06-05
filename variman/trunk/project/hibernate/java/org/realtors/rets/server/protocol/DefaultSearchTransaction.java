@@ -215,7 +215,6 @@ public class DefaultSearchTransaction implements SearchTransaction
             if (resultSet.next())
             {
                 mCount = resultSet.getInt(1);
-                mCount = Math.min(mCount, mLimit);
             }
             else
             {
@@ -304,6 +303,7 @@ public class DefaultSearchTransaction implements SearchTransaction
             new SearchFormatterContext(out, resultSet, columns,
                                        mSearchSqlBuilder.getMetadata());
         context.setLimit(getLimit());
+        mCount = Math.min(mCount, mLimit);
         SearchResultsFormatter formatter = getFormatter();
 
         RetsUtils.printXmlHeader(out);
@@ -353,10 +353,16 @@ public class DefaultSearchTransaction implements SearchTransaction
 
     private void advance(ResultSet resultSet) throws SQLException
     {
+        int offset = mParameters.getOffset();
+        LOG.debug("Advancing using offset: " + offset);
         // Todo: Add scrollable ResultSet support
-        for (int i = 1; i < mParameters.getOffset(); i++)
+        for (int i = 1; i < offset; i++)
         {
             resultSet.next();
+        }
+        if (mParameters.getCount() == SearchParameters.COUNT_AND_DATA)
+        {
+            mCount -= offset - 1;
         }
     }
 
