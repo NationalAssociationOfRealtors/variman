@@ -1,3 +1,14 @@
+Version 2.1.11 - 20 June 2007
+
+  * On queries with Count=2 return total count, ignoring offset and limit.
+  * <MAXROWS/> now returned at the end of COMPACT and COMPACT-DECODED format
+    if the row limit was exceeded
+  * Windows binary service version will now use my memory.  It was limited
+    to default of 512MB of heap, this has been increased to 1.5GB
+  * When running standalone, can now bind to specific IPs
+  * Developers can override default behaviour in some instances by
+    swapping interfaces using Swing.
+
 Version 2.1.10 - 05 July 2006
 
   * Query count limit added to group preferences.

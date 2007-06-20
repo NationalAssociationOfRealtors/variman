@@ -50,6 +50,9 @@
 
     <h3>News</h3>
     <ul>
+      <li> <b>20 June 2007</b>: Version 2.1.11 released. </li>
+    </ul>
+    <ul>
       <li> <b>05 July 2006</b>: Version 2.1.10 released. </li>
     </ul>
     <ul>

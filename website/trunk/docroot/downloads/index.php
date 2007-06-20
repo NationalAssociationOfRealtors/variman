@@ -31,7 +31,7 @@ function dl_file($file)
         <td>
           <?php dl_file("variman-" . ver() . "-setup.exe")?>
         </td>
-        <td>16M</td>
+        <td>17M</td>
         <td>
           Embedded Tomcat Windows installer.  Installs a Service to
           start and stop Variman.
@@ -41,7 +41,7 @@ function dl_file($file)
         <td>
           <?php dl_file("variman-" . ver() . ".tar.gz")?>
         </td>
-        <td>15M</td>
+        <td>17M</td>
         <td>
             Embedded Tomcat archive for all other platforms.  Command
             line administration only.
@@ -54,14 +54,14 @@ function dl_file($file)
         <td>
           <?php dl_file("variman-webapp-" . ver() . ".tar.gz")?>
         </td>
-        <td>11M</td>
+        <td>13M</td>
         <td> Web application archive, tar+gzipped. </td>
       </tr>
       <tr>
         <td>
           <?php dl_file("variman-webapp-" . ver() . ".zip")?>
         </td>
-        <td>11M</td>
+        <td>13M</td>
         <td> Web application archive, zipped. </td>
       </tr>
       <tr>
@@ -71,14 +71,14 @@ function dl_file($file)
         <td>
           <?php dl_file("variman-" . ver() . "-src.tar.gz")?>
         </td>
-        <td>225k</td>
+        <td>31M</td>
         <td>Source archive, tar+gzipped</td>
       </tr>
       <tr>
         <td>
           <?php dl_file("variman-" . ver() . "-src.zip")?>
         </td>
-        <td>486k</td>
+        <td>32M</td>
         <td>Source archive, zipped</td>
       </tr>
       <tr>
