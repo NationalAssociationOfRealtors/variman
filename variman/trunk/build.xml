@@ -29,6 +29,7 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${rets-client.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
+    <pathelement path="${commons-collections.jar}"/>
     <pathelement path="${spring.jar}"/>
   </path>
 
@@ -532,6 +533,8 @@
     <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${commons-codec.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${commons-collections.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${spring.jar}"/>
 

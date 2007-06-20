@@ -12,20 +12,20 @@ package org.realtors.rets.server.metadata;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
 
 public class MetadataManager
 {
     public MetadataManager()
     {
-        mTablesByLevel = new HashMap();
-        mTablesByPath = new HashMap();
+        mTablesByLevel = new ListOrderedMap();
+        mTablesByPath = new ListOrderedMap();
     }
 
     public void clear()
@@ -45,7 +45,7 @@ public class MetadataManager
         Map subMap = (Map) map.get(key);
         if (subMap == null)
         {
-            subMap = new HashMap();
+            subMap = new ListOrderedMap();
             map.put(key, subMap);
         }
         return subMap;
@@ -136,7 +136,7 @@ public class MetadataManager
 
     public Map findByPattern(String tableName, String[] patternElements)
     {
-        Map found = new HashMap();
+        Map found = new ListOrderedMap();
 
         Map table = (Map) mTablesByLevel.get(tableName);
         if (table != null)

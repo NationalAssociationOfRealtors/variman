@@ -13,13 +13,13 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -64,18 +64,18 @@ public class MetadataLoader
      */
     public MetadataLoader()
     {
-        mResources = new HashMap();
-        mClasses = new HashMap();
-        mEditMasks = new HashMap();
-        mTables = new HashMap();
-        mLookups = new HashMap();
-        mSearchHelps = new HashMap();
-        mValidationExternals = new HashMap();
-        mValidationExpressions = new HashMap();
-        mValidationLookups = new HashMap();
-        mUpdates = new HashMap();
-        mUpdateHelps = new HashMap();
-        mTableStandardNames = new HashMap();
+        mResources = new ListOrderedMap();
+        mClasses = new ListOrderedMap();
+        mEditMasks = new ListOrderedMap();
+        mTables = new ListOrderedMap();
+        mLookups = new ListOrderedMap();
+        mSearchHelps = new ListOrderedMap();
+        mValidationExternals = new ListOrderedMap();
+        mValidationExpressions = new ListOrderedMap();
+        mValidationLookups = new ListOrderedMap();
+        mUpdates = new ListOrderedMap();
+        mUpdateHelps = new ListOrderedMap();
+        mTableStandardNames = new ListOrderedMap();
         mNextId = 1;
     }
 
@@ -913,7 +913,7 @@ public class MetadataLoader
                         in.getResultFields();
                 String resultFields[] =
                         StringUtils.split(joinedResultField, ",");
-                Map resultFieldMap = new HashMap();
+                Map resultFieldMap = new ListOrderedMap();
                 for (int c = 0; c < resultFields.length; c++)
                 {
                     String split[] =
