@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004,2007 The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -11,10 +11,10 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -191,7 +191,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mClasses == Collections.EMPTY_SET)
         {
-            mClasses = new HashSet();
+            mClasses = new ListOrderedSet();
         }
         clazz.setResource(this);
         clazz.updateLevel();
@@ -221,7 +221,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mObjects == Collections.EMPTY_SET)
         {
-            mObjects = new HashSet();
+            mObjects = new ListOrderedSet();
         }
         object.setResource(this);
         mObjects.add(object);
@@ -250,7 +250,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mSearchHelps == Collections.EMPTY_SET)
         {
-            mSearchHelps = new HashSet();
+            mSearchHelps = new ListOrderedSet();
         }
         searchHelp.setResource(this);
         searchHelp.updateLevel();
@@ -280,7 +280,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mEditMasks == Collections.EMPTY_SET)
         {
-            mEditMasks = new HashSet();
+            mEditMasks = new ListOrderedSet();
         }
         editMask.setResource(this);
         editMask.updateLevel();
@@ -311,7 +311,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mLookups == Collections.EMPTY_SET)
         {
-            mLookups = new HashSet();
+            mLookups = new ListOrderedSet();
         }
         lookup.setResource(this);
         lookup.updateLevel();
@@ -341,7 +341,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mValidationLookups == Collections.EMPTY_SET)
         {
-            mValidationLookups = new HashSet();
+            mValidationLookups = new ListOrderedSet();
         }
         validationLookup.setResource(this);
         validationLookup.updateLevel();
@@ -371,7 +371,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mValidationExternals == Collections.EMPTY_SET)
         {
-            mValidationExternals = new HashSet();
+            mValidationExternals = new ListOrderedSet();
         }
         validationExternal.setResource(this);
         validationExternal.updateLevel();
@@ -402,7 +402,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mValidationExpressions == Collections.EMPTY_SET)
         {
-            mValidationExpressions = new HashSet();
+            mValidationExpressions = new ListOrderedSet();
         }
         validationExpression.setResource(this);
         validationExpression.updateLevel();
@@ -432,7 +432,7 @@ public class Resource extends ServerMetadata implements Serializable
     {
         if (mUpdateHelps == Collections.EMPTY_SET)
         {
-            mUpdateHelps = new HashSet();
+            mUpdateHelps = new ListOrderedSet();
         }
         updateHelp.setResource(this);
         updateHelp.updateLevel();

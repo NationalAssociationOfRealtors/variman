@@ -2,17 +2,14 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004,2007 The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
-/*
- */
 package org.realtors.rets.server.metadata;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +17,8 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.dmql.DmqlFieldType;
@@ -29,14 +28,14 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 {
     private ServerDmqlMetadata()
     {
-        mFields = new HashMap();
-        mFieldTypes = new HashMap();
-        mFieldToColumn = new HashMap();
-        mColumnToField = new HashMap();
-        mLookupsDbMap = new HashMap();
-        mLookupTypesMap = new HashMap();
-        mStrings = new HashSet();
-        mNumerics = new HashSet();
+        mFields = new ListOrderedMap();
+        mFieldTypes = new ListOrderedMap();
+        mFieldToColumn = new ListOrderedMap();
+        mColumnToField = new ListOrderedMap();
+        mLookupsDbMap = new ListOrderedMap();
+        mLookupTypesMap = new ListOrderedMap();
+        mStrings = new ListOrderedSet();
+        mNumerics = new ListOrderedSet();
         mColumns = new ArrayList();
     }
 
@@ -201,11 +200,11 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
         else
         {
-            dbValues = new HashMap();
+            dbValues = new ListOrderedMap();
             generateDbValues = true;
         }
 
-        HashMap lookupTypesMap = new HashMap();
+        Map lookupTypesMap = new ListOrderedMap();
         Set lookupTypes = lookup.getLookupTypes();
         for (Iterator iterator = lookupTypes.iterator(); iterator.hasNext();)
         {

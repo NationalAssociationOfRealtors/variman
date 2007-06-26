@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004,2007 The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -13,13 +13,13 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -236,7 +236,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hClasses = new HashSet();
+            Set hClasses = new ListOrderedSet();
             org.realtors.rets.common.metadata.types.MClass[] classes =
                     mMetadata.getResource(resource.getResourceID())
                     .getMClasses();
@@ -285,7 +285,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hEditMasks = new HashSet();
+            Set hEditMasks = new ListOrderedSet();
             MEditMask[] editMasks = mMetadata.getResource(
                     resource.getResourceID()).getMEditMasks();
             for (int j = 0; j < editMasks.length; j++)
@@ -312,7 +312,7 @@ public class MetadataLoader
     {
         MForeignKey[] foreignKeys = mMetadata.getSystem().getMForeignKeys();
 
-        Set hForeignKeys = new HashSet();
+        Set hForeignKeys = new ListOrderedSet();
         for (int i = 0; i < foreignKeys.length; i++)
         {
             MForeignKey in = foreignKeys[i];
@@ -353,7 +353,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hLookups = new HashSet();
+            Set hLookups = new ListOrderedSet();
             MLookup[] lookups =
                 mMetadata.getResource(resource.getResourceID()).getMLookups();
             for (int j = 0; j < lookups.length; j++)
@@ -394,7 +394,7 @@ public class MetadataLoader
                     mMetadata.getLookup(lookup.getResource().getResourceID(),
                                         lookup.getLookupName())
                     .getMLookupTypes();
-            Set hLookupTypes = new HashSet();
+            Set hLookupTypes = new ListOrderedSet();
             for (int j = 0; j < lookupTypes.length; j++)
             {
                 MLookupType in = lookupTypes[j];
@@ -422,7 +422,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hObjects = new HashSet();
+            Set hObjects = new ListOrderedSet();
             org.realtors.rets.common.metadata.types.MObject[] objects =
                     mMetadata.getResource(resource.getResourceID())
                     .getMObjects();
@@ -454,7 +454,7 @@ public class MetadataLoader
     {
 
         MResource[] resources = mMetadata.getSystem().getMResources();
-        Set hResources = new HashSet();
+        Set hResources = new ListOrderedSet();
         for (int i = 0; i < resources.length; i++)
         {
             MResource in = resources[i];
@@ -486,7 +486,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hSearchHelps = new HashSet();
+            Set hSearchHelps = new ListOrderedSet();
             MSearchHelp[] searchHelps = mMetadata
                     .getResource(resource.getResourceID())
                     .getMSearchHelps();
@@ -534,7 +534,7 @@ public class MetadataLoader
             String className = hClass.getClassName();
             LOG.debug("Getting tables for resource: " + resourceName +
                       ", class: " + className);
-            Set hTables = new HashSet();
+            Set hTables = new ListOrderedSet();
             MTable[] tables = mMetadata.getMClass(
                     resourceName, className).getMTables();
             for (int j = 0; j < tables.length; j++)
@@ -585,7 +585,7 @@ public class MetadataLoader
                 String editMasksJoined = in.getEditMaskID();
                 String resourcePath =  hClass.getResource().getPath();
                 String path = null;
-                Set hEditMasks = new HashSet();
+                Set hEditMasks = new ListOrderedSet();
                 if (editMasksJoined != null)
                 {
                     String editMasks[] =
@@ -649,7 +649,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             MClass clazz = (MClass) i.next();
-            Set hUpdates = new HashSet();
+            Set hUpdates = new ListOrderedSet();
             MUpdate[] updates = mMetadata.getMClass(
                     clazz.getResource().getResourceID(),
                     clazz.getClassName()).getMUpdates();
@@ -681,7 +681,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hUpdateHelps = new HashSet();
+            Set hUpdateHelps = new ListOrderedSet();
             MUpdateHelp[] updateHelps = mMetadata.getResource(
                     resource.getResourceID()).getMUpdateHelps();
 
@@ -712,7 +712,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Update update = (Update) i.next();
-            Set hUpdateTypes = new HashSet();
+            Set hUpdateTypes = new ListOrderedSet();
             MUpdateType[] updateTypes = mMetadata.getUpdate(
                     update.getMClass().getResource().getResourceID(),
                     update.getMClass().getClassName(),
@@ -740,7 +740,7 @@ public class MetadataLoader
                 String joinedAttributes = in.getAttributes();
                 String attributes[] =
                         StringUtils.split(joinedAttributes, ",");
-                Set attributeSet = new HashSet();
+                Set attributeSet = new ListOrderedSet();
                 for (int c = 0; c < attributes.length; c++)
                 {
                     attributeSet.add(UpdateTypeAttributeEnum.fromInt(
@@ -752,7 +752,7 @@ public class MetadataLoader
 
                 String valExp[] = StringUtils.split(
                         in.getValidationExpressionID(), ",");
-                Set valExpSet = new HashSet();
+                Set valExpSet = new ListOrderedSet();
                 String resourcePath =
                         update.getMClass().getResource().getPath();
                 if (valExp != null)
@@ -796,7 +796,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hValidationExpressions = new HashSet();
+            Set hValidationExpressions = new ListOrderedSet();
             MValidationExpression[] validationExpressions =
                     mMetadata.getResource(resource.getResourceID())
                     .getMValidationExpressions();
@@ -829,7 +829,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hValidationExternals = new HashSet();
+            Set hValidationExternals = new ListOrderedSet();
             MValidationExternal[] validationExternals =
                     mMetadata.getResource(resource.getResourceID())
                     .getMValidationExternal();
@@ -872,7 +872,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             ValidationExternal ve = (ValidationExternal) i.next();
-            Set hValdationExternalTypes = new HashSet();
+            Set hValdationExternalTypes = new ListOrderedSet();
             MValidationExternalType[] validationExternalTypes =
                     mMetadata.getValidationExternal(
                             ve.getResource().getResourceID(),
@@ -889,7 +889,7 @@ public class MetadataLoader
                 String joinedSearchField = in.getSearchField();
                 String searchField[] =
                         StringUtils.split(joinedSearchField, ",");
-                Set searchFieldSet = new HashSet();
+                Set searchFieldSet = new ListOrderedSet();
                 for (int c = 0; c < searchField.length; c++)
                 {
                     searchFieldSet.add(
@@ -901,7 +901,7 @@ public class MetadataLoader
                         in.getDisplayField();
                 String displayFields[] =
                         StringUtils.split(joinedDisplayField, ",");
-                Set displayFieldSet = new HashSet();
+                Set displayFieldSet = new ListOrderedSet();
                 for (int c = 0; c < displayFields.length; c++)
                 {
                     displayFieldSet.add(
@@ -941,7 +941,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             Resource resource = (Resource) i.next();
-            Set hValidationLookups = new HashSet();
+            Set hValidationLookups = new ListOrderedSet();
             MValidationLookup[] validationLookups =
                 mMetadata.getResource(resource.getResourceID())
                     .getMValidationLookups();
@@ -974,7 +974,7 @@ public class MetadataLoader
         while (i.hasNext())
         {
             ValidationLookup vl = (ValidationLookup) i.next();
-            Set hValdationLookupTypes = new HashSet();
+            Set hValdationLookupTypes = new ListOrderedSet();
             MValidationLookupType[] validationLookupTypes =
                     mMetadata.getValidationLookup(
                             vl.getResource().getResourceID(),

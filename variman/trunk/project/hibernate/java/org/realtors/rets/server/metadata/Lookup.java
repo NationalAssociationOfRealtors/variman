@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004,2007 The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -11,10 +11,10 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -129,7 +129,7 @@ public class Lookup extends ServerMetadata implements Serializable
     {
         if (mLookupTypes == Collections.EMPTY_SET)
         {
-            mLookupTypes = new HashSet();
+            mLookupTypes = new ListOrderedSet();
         }
         lookupType.setLookup(this);
         lookupType.updateLevel();
