@@ -2,7 +2,7 @@
  * Rex RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004,2007 The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -329,7 +329,7 @@ public class DataGenerator extends DataGenBase
     private int mCount;
     private Date[] mDate;
     private int[] mESchools;
-    private int[] mHSchools;
+//    private int[] mHSchools;
     private String[] mListingTypes;
     private String[] mLocations;
     private String[] mOwners;
@@ -337,5 +337,5 @@ public class DataGenerator extends DataGenBase
     private String[] mStatus;
     private String[] mStreets;
     private String[] mUrls;
-    private int[] mViews;
+//    private int[] mViews;
 }
