@@ -22,6 +22,32 @@ public class CompactFormatterTest extends LinesEqualTestCase
             "<DATA>\tState St.\t60601\t\tDw\t</DATA>\n",
             format(CompactFormatter.NO_DECODING));
     }
+    
+    public void testDateFormat() throws RetsServerException
+    {
+        CompactFormatter formatter =
+            new CompactFormatter(CompactFormatter.NO_DECODING);
+        MockResultSet results = new MockResultSet();
+        String[] columns = new String[]{"r_DATE"};
+        results.setColumns(columns);
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(2008, 4, 9, 12, 17, 0);
+        results.addRow(new Object[] {cal.getTime()});
+        SimpleDmqlMetadata metadata = new SimpleDmqlMetadata();
+        metadata.addTemporal("DATE");
+        StringWriter formatted = new StringWriter();
+        SearchFormatterContext context =
+            new SearchFormatterContext(
+                new PrintWriter(formatted), results, Arrays.asList(columns),
+                metadata);
+        context.setLimit(10000);
+        formatter.formatResults(context);
+        assertLinesEqual(
+        		"<DELIMITER value=\"09\"/>\n" + 
+        		"<COLUMNS>\tDATE\t</COLUMNS>\n" + 
+        		"<DATA>\tFri May 09 12:17:00 CDT 2008\t</DATA>\n", formatted.toString());
+    	
+    }
 
     public void testCompactDecodedFormat() throws RetsServerException
     {
