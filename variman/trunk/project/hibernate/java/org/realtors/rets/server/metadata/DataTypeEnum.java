@@ -11,9 +11,8 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
 
-public class DataTypeEnum implements PersistentEnum
+public class DataTypeEnum
 {
     public static final DataTypeEnum BOOLEAN = new DataTypeEnum(0);
     public static final DataTypeEnum CHARACTER = new DataTypeEnum(1);

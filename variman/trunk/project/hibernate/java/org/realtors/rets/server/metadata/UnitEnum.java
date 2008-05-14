@@ -11,9 +11,7 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
-
-public class UnitEnum implements PersistentEnum
+public class UnitEnum
 {
     public static final UnitEnum FEET = new UnitEnum(0);
     public static final UnitEnum METERS = new UnitEnum(1);

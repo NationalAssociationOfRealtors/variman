@@ -16,8 +16,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_table_standard_name"
- *   mutable="false"
  */
 public class TableStandardName implements Serializable, Identifiable
 {
@@ -36,7 +34,6 @@ public class TableStandardName implements Serializable, Identifiable
      *
      * @return the unique ID.
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -53,9 +50,6 @@ public class TableStandardName implements Serializable, Identifiable
      *
      * @return the standard name
      *
-     * @hibernate.property length="32"
-     *   not-null="true"
-     *   unique="true"
      */
     public String getName()
     {

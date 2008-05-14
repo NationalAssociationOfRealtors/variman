@@ -11,9 +11,7 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
-
-public class ClassStandardNameEnum implements PersistentEnum
+public class ClassStandardNameEnum
 {
     public static final ClassStandardNameEnum RESIDENTIAL =
         new ClassStandardNameEnum(0);

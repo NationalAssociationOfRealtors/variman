@@ -11,9 +11,7 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
-
-public class ResourceStandardNameEnum implements PersistentEnum
+public class ResourceStandardNameEnum
 {
     public static final ResourceStandardNameEnum ACTIVE_AGENT =
         new ResourceStandardNameEnum(0);

@@ -19,7 +19,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_class"
  */
 public class MClass extends ServerMetadata implements Serializable
 {
@@ -45,7 +44,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -61,12 +59,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="class_name"
-     *   not-null="true"
-     *   unique="true"
-     *   index="class_name_index"
-     *   length="32"
      */
     public String getClassName()
     {
@@ -82,11 +74,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a ClassStandardNameEnum
      *
-     * @hibernate.property
-     * @hibernate.column name="standardName"
-     *   not-null="false"
-     *   unique="false"
-     *   index="class_standard_name_index"
      */
     public ClassStandardNameEnum getStandardName()
     {
@@ -102,12 +89,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="visible_name"
-     *   not-null="false"
-     *   unique="false"
-     *   index="class_visible_name_index"
-     *   length="32"
      */
     public String getVisibleName()
     {
@@ -123,7 +104,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="64"
      */
     public String getDescription()
     {
@@ -139,9 +119,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a Resource object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="resourceid"
-     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -157,10 +134,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a Set of Table objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="classid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.Table"
      */
     public Set getTables()
     {
@@ -196,10 +169,6 @@ public class MClass extends ServerMetadata implements Serializable
      *
      * @return a Set of Update objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="classid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.Update"
      */
     public Set getUpdates()
     {
@@ -222,7 +191,6 @@ public class MClass extends ServerMetadata implements Serializable
     /**
      * @return string with DbTable name
      * 
-     * @hibernate.property
      */
     public String getDbTable()
     {
@@ -240,9 +208,6 @@ public class MClass extends ServerMetadata implements Serializable
     /**
      * Returns the level of this metadata object.
      *
-     * @return the level of this metadata object
-     *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

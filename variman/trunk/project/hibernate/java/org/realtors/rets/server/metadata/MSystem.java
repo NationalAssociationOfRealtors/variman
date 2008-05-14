@@ -22,7 +22,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_system"
  */
 public class MSystem extends ServerMetadata implements Serializable
 {
@@ -36,7 +35,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -52,7 +50,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="10"
      */
     public String getSystemID()
     {
@@ -68,7 +65,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="64"
      */
     public String getDescription()
     {
@@ -84,7 +80,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
      */
     public String getComments()
     {
@@ -100,7 +95,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a integer
      *
-     * @hibernate.property
      */
     public int getVersion()
     {
@@ -127,7 +121,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a Date object
      *
-     * @hibernate.property type="date"
      */
     public Date getDate()
     {
@@ -143,10 +136,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a Set of Resource objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="systemid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.Resource"
      */
     public Set getResources()
     {
@@ -178,10 +167,6 @@ public class MSystem extends ServerMetadata implements Serializable
      *
      * @return a Set of ForeignKey objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="system"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.ForeignKey"
      */
     public Set getForeignKeys()
     {

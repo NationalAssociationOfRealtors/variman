@@ -16,7 +16,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_updatetype"
  */
 public class UpdateType extends ServerMetadata implements Serializable
 {
@@ -34,7 +33,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -50,10 +48,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="systemName"
-     *   not-null="true"
-     *   index="updatetype_systemname_index"
      */
     public Table getTable()
     {
@@ -69,7 +63,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property
      */
     public int getSequence()
     {
@@ -85,7 +78,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property column="r_default"
      */
     public String getDefault()
     {
@@ -101,9 +93,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return an Update object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="updateid"
-     *   not-null="true"
      */
     public Update getUpdate()
     {
@@ -119,7 +108,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return an UpdateHelp object
      *
-     * @hibernate.many-to-one
      */
     public UpdateHelp getUpdateHelp()
     {
@@ -135,7 +123,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return a ValidationLookup object
      *
-     * @hibernate.many-to-one
      */
     public ValidationLookup getValidationLookup()
     {
@@ -151,7 +138,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return a ValidationExternal object
      *
-     * @hibernate.many-to-one
      */
     public ValidationExternal getValidationExternal()
     {
@@ -167,11 +153,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return a Set of UpdateTypeAttributeEnums
      *
-     * @hibernate.set inverse="false"
-     *   table="rets_metadata_updatetype_attributes"
-     * @hibernate.collection-key column="id"
-     * @hibernate.collection-element column="attributes"
-     *   type="org.realtors.rets.server.metadata.UpdateTypeAttributeEnum"
      */
     public Set getAttributes()
     {
@@ -187,11 +168,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return a Set of ValidationExpressions
      *
-     * @hibernate.set inverse="false"
-     *   table="rets_metadata_updatetype_validationexpressions"
-     * @hibernate.collection-key column="id"
-     * @hibernate.collection-many-to-many column="validation_expression"
-     *   class="org.realtors.rets.server.metadata.ValidationExpression"
      */
     public Set getValidationExpressions()
     {
@@ -208,7 +184,6 @@ public class UpdateType extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

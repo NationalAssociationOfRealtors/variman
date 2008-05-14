@@ -15,7 +15,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_validationlookuptype"
  */
 public class ValidationLookupType extends ServerMetadata implements Serializable
 {
@@ -32,8 +31,6 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
     /**
      *
      * @return a Long object
-     *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -48,8 +45,6 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
     /**
      *
      * @return a String
-     *
-     * @hibernate.property length="32"
      */
     public String getValidText()
     {
@@ -64,8 +59,6 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
     /**
      *
      * @return a String
-     *
-     * @hibernate.property length="32"
      */
     public String getParent1Value()
     {
@@ -80,8 +73,6 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
     /**
      *
      * @return a String
-     *
-     * @hibernate.property length="32"
      */
     public String getParent2Value()
     {
@@ -96,10 +87,6 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
     /**
      *
      * @return a ValidationLookupType object
-     *
-     * @hibernate.many-to-one
-     * @hibernate.column name="validationlookupid"
-     *   not-null="true"
      */
     public ValidationLookup getValidationLookup()
     {
@@ -116,7 +103,6 @@ public class ValidationLookupType extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

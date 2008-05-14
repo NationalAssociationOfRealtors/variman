@@ -11,9 +11,7 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
-
-public class AlignmentEnum implements PersistentEnum
+public class AlignmentEnum
 {
     public static final AlignmentEnum LEFT = new AlignmentEnum(0);
     public static final AlignmentEnum RIGHT = new AlignmentEnum(1);

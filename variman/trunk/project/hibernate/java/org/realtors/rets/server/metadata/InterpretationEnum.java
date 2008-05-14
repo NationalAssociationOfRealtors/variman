@@ -11,9 +11,8 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
 
-public class InterpretationEnum implements PersistentEnum
+public class InterpretationEnum
 {
     public static final InterpretationEnum NUMBER = new InterpretationEnum(0);
     public static final InterpretationEnum CURRENCY =

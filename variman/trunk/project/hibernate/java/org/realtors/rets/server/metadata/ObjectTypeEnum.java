@@ -11,9 +11,7 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
-
-public class ObjectTypeEnum implements PersistentEnum
+public class ObjectTypeEnum
 {
     public static final ObjectTypeEnum PHOTO = new ObjectTypeEnum(0);
     public static final ObjectTypeEnum PLAT = new ObjectTypeEnum(1);

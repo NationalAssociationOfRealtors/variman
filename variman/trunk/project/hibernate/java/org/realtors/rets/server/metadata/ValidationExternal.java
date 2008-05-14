@@ -19,7 +19,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_validationexternal"
  */
 public class ValidationExternal extends ServerMetadata implements Serializable
 {
@@ -39,7 +38,6 @@ public class ValidationExternal extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -55,11 +53,6 @@ public class ValidationExternal extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="validationExternalName"
-     *   not-null="true"
-     *   index="rets_metadata_validationexternal_name_index"
-     *   length="32"
      */
     public String getValidationExternalName()
     {
@@ -75,9 +68,6 @@ public class ValidationExternal extends ServerMetadata implements Serializable
      *
      * @return a Resource Object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="resourceid"
-     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -103,7 +93,6 @@ public class ValidationExternal extends ServerMetadata implements Serializable
      *
      * @return a MClass object
      *
-     * @hibernate.many-to-one
      */
     public MClass getSearchClass()
     {
@@ -119,10 +108,6 @@ public class ValidationExternal extends ServerMetadata implements Serializable
      *
      * @return a Set of ValidationExternalType objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="validationexternalid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.ValidationExternalType"
      */
     public Set getValidationExternalTypes()
     {
@@ -151,7 +136,6 @@ public class ValidationExternal extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

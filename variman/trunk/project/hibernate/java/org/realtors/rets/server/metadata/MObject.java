@@ -15,7 +15,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_object"
  */
 public class MObject extends ServerMetadata implements Serializable
 {
@@ -33,7 +32,6 @@ public class MObject extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -49,11 +47,6 @@ public class MObject extends ServerMetadata implements Serializable
      *
      * @return an ObjectTypeEnum object
      *
-     * @hibernate.property
-     * @hibernate.column name="objectType"
-     *   not-null="false"
-     *   unique="false"
-     *   index="rets_metadata_objecttype_index"
      */
     public ObjectTypeEnum getObjectType()
     {
@@ -69,7 +62,6 @@ public class MObject extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="24"
      */
     public String getMimeType()
     {
@@ -85,7 +77,6 @@ public class MObject extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="32"
      */
     public String getVisibleName()
     {
@@ -101,7 +92,6 @@ public class MObject extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="64"
      */
     public String getDescription()
     {
@@ -117,9 +107,6 @@ public class MObject extends ServerMetadata implements Serializable
      *
      * @return a Resource object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="resourceid"
-     *   not-null="true"
      */
     public Resource getResource()
     {

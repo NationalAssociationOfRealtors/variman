@@ -19,7 +19,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_validationlookup"
  */
 public class ValidationLookup extends ServerMetadata implements Serializable
 {
@@ -39,7 +38,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -55,12 +53,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="validationLookupName"
-     *   not-null="true"
-     *   unique="true"
-     *   index="rets_metadata_validationlookup_name_index"
-     *   length="32"
      */
     public String getValidationLookupName()
     {
@@ -76,7 +68,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      *
      * @return a Table SystemName
      *
-     * @hibernate.property
      */
     public String getParent1Field()
     {
@@ -92,7 +83,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      *
      * @return a Table SystemName
      *
-     * @hibernate.property
      */
     public String getParent2Field()
     {
@@ -108,9 +98,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      *
      * @return a Resouce object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="resourceid"
-     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -126,10 +113,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      *
      * @return a Set of ValidationLookupTypes
      *
-     * @hibernate.set inverse="false"
-     * @hibernate.collection-key column="validationlookupid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.ValidationLookupType"
      */
     public Set getValidationLookupTypes()
     {
@@ -158,7 +141,6 @@ public class ValidationLookup extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

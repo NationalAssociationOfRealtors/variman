@@ -14,7 +14,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_searchhelp"
  */
 public class SearchHelp extends ServerMetadata implements Serializable
 {
@@ -32,7 +31,6 @@ public class SearchHelp extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -48,12 +46,6 @@ public class SearchHelp extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="searchHelpID"
-     *   not-null="false"
-     *   unique="false"
-     *   index="rets_metadata_searchhelp_index"
-     *   length="32"
      */
     public String getSearchHelpID()
     {
@@ -69,7 +61,6 @@ public class SearchHelp extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="256"
      */
     public String getValue()
     {
@@ -85,9 +76,6 @@ public class SearchHelp extends ServerMetadata implements Serializable
      *
      * @return a Resource object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="resourceid"
-     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -104,7 +92,6 @@ public class SearchHelp extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

@@ -15,14 +15,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_foreignkey"
  */
 public class ForeignKey extends ServerMetadata implements Serializable
 {
     /**
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -37,12 +35,6 @@ public class ForeignKey extends ServerMetadata implements Serializable
     /**
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="foreign_key_id"
-     *   not-null="true"
-     *   unique="true"
-     *   index="rets_metadata_foreignkey_id_index"
-     *   length="32"
      */
     public String getForeignKeyID()
     {
@@ -57,7 +49,6 @@ public class ForeignKey extends ServerMetadata implements Serializable
     /**
      * @return a MSystem object
      *
-     * @hibernate.many-to-one
      */
     public MSystem getSystem()
     {
@@ -72,7 +63,6 @@ public class ForeignKey extends ServerMetadata implements Serializable
     /**
      * @return a Table object
      *
-     * @hibernate.many-to-one
      */
     public Table getParentTable()
     {
@@ -87,7 +77,6 @@ public class ForeignKey extends ServerMetadata implements Serializable
     /**
      * @return a Table object
      *
-     * @hibernate.many-to-one
      */
     public Table getChildTable()
     {

@@ -8,9 +8,8 @@
 
 package org.realtors.rets.server.metadata;
 
-import net.sf.hibernate.PersistentEnum;
 
-public class UpdateTypeAttributeEnum implements PersistentEnum
+public class UpdateTypeAttributeEnum
 {
     public static final UpdateTypeAttributeEnum DISPLAYONLY =
         new UpdateTypeAttributeEnum(1);

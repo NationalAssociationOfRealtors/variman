@@ -18,7 +18,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.realtors.rets.server.Util;
 
 /**
- * @hibernate.class table="rets_metadata_table"
  */
 public class Table extends ServerMetadata implements Serializable
 {
@@ -48,7 +47,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -64,12 +62,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="systemName"
-     *   not-null="true"
-     *   unique="true"
-     *   index="table_system_name_index"
-     *   length="32"
      */
     public String getSystemName()
     {
@@ -85,7 +77,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a TableStandardNameEnum
      *
-     * @hibernate.property
      */
     public TableStandardName getStandardName()
     {
@@ -100,8 +91,6 @@ public class Table extends ServerMetadata implements Serializable
     /**
      *
      * @return a String
-     *
-     * @hibernate.property length="32"
      */
     public String getLongName()
     {
@@ -117,7 +106,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="10"
      */
     public String getDbName()
     {
@@ -134,7 +122,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="24"
      */
     public String getShortName()
     {
@@ -150,7 +137,6 @@ public class Table extends ServerMetadata implements Serializable
      * Get the MaximumLength value.
      * @return the MaximumLength value.
      *
-     * @hibernate.property
      */
     public int getMaximumLength()
     {
@@ -170,7 +156,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a DataTypeEnum object
      *
-     * @hibernate.property
      */
     public DataTypeEnum getDataType()
     {
@@ -186,7 +171,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property
      */
     public int getPrecision()
     {
@@ -202,7 +186,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a boolean
      *
-     * @hibernate.property
      */
     public boolean isSearchable()
     {
@@ -218,7 +201,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an InterpretationEnum object
      *
-     * @hibernate.property
      */
     public InterpretationEnum getInterpretation()
     {
@@ -234,7 +216,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an AlignmentEnum object
      *
-     * @hibernate.property
      */
     public AlignmentEnum getAlignment()
     {
@@ -250,7 +231,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a boolean
      *
-     * @hibernate.property
      */
     public boolean isUseSeparator()
     {
@@ -266,7 +246,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property
      */
     public int getMaxSelect()
     {
@@ -282,7 +261,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an UnitEnum object
      *
-     * @hibernate.property
      */
     public UnitEnum getUnits()
     {
@@ -298,7 +276,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property
      */
     public int getIndex()
     {
@@ -314,7 +291,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property
      */
     public int getMinimum()
     {
@@ -330,7 +306,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property
      */
     public int getMaximum()
     {
@@ -346,7 +321,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property column="r_default"
      */
     public int getDefault()
     {
@@ -362,7 +336,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an integer
      *
-     * @hibernate.property
      */
     public int getRequired()
     {
@@ -378,7 +351,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a boolean
      *
-     * @hibernate.property column="r_unique"
      */
     public boolean isUnique()
     {
@@ -394,9 +366,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return an MClass object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="classid"
-     *   not-null="true"
      */
     public MClass getMClass()
     {
@@ -412,11 +381,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a Set of EditMask objects
      *
-     * @hibernate.set inverse="false"
-     *   table="rets_metadata_table_editmasks"
-     * @hibernate.collection-key column="id"
-     * @hibernate.collection-many-to-many column="editMask"
-     *   class="org.realtors.rets.server.metadata.EditMask"
      */
     public Set getEditMasks()
     {
@@ -432,7 +396,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a Lookup Object
      *
-     * @hibernate.many-to-one
      */
     public Lookup getLookup()
     {
@@ -448,7 +411,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return a SearchHelp object
      *
-     * @hibernate.many-to-one
      */
     public SearchHelp getSearchHelp()
     {
@@ -465,7 +427,6 @@ public class Table extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

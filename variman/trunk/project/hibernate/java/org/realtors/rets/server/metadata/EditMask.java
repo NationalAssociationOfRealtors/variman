@@ -14,7 +14,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_editmask"
  *
  */
 public class EditMask extends ServerMetadata implements Serializable
@@ -34,7 +33,6 @@ public class EditMask extends ServerMetadata implements Serializable
      *
      * @return the ID
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -49,12 +47,6 @@ public class EditMask extends ServerMetadata implements Serializable
     /**
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="edit_mask_id"
-     *   not-null="true"
-     *   unique="true"
-     *   length="32"
-     *   index="rets_metadata_editmask_id_index"
      */
     public String getEditMaskID()
     {
@@ -69,7 +61,6 @@ public class EditMask extends ServerMetadata implements Serializable
     /**
      * @return a String
      *
-     * @hibernate.property length="256"
      */
     public String getValue()
     {
@@ -84,9 +75,6 @@ public class EditMask extends ServerMetadata implements Serializable
     /**
      * @return a Resource object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="resourceid"
-     *   not-null="true"
      */
     public Resource getResource()
     {
@@ -103,7 +91,6 @@ public class EditMask extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

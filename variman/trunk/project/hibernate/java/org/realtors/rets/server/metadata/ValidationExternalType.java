@@ -17,7 +17,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_validationexternaltype"
  */
 public class ValidationExternalType
     extends ServerMetadata
@@ -37,7 +36,6 @@ public class ValidationExternalType
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -53,9 +51,6 @@ public class ValidationExternalType
      *
      * @return returns a ValdiationExternal object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="validationexternalid"
-     *   not-null="true"
      */
     public ValidationExternal getValidationExternal()
     {
@@ -71,12 +66,6 @@ public class ValidationExternalType
      *
      * @return a Map of Strings that are key value pairs
      *
-     * @hibernate.map table="rets_metadata_validationexternaltype_resultfields"
-     * @hibernate.collection-key column="id"
-     * @hibernate.collection-index column="key"
-     *   type="string" length="32"
-     * @hibernate.collection-element column="value"
-     *   type="string" length="32"
      */
     public Map getResultFields()
     {
@@ -91,11 +80,6 @@ public class ValidationExternalType
      *
      * @return a Set of Strings that are Table names
      *
-     * @hibernate.set inverse="false"
-     *   table="rets_metadata_validationexternaltype_searchfield"
-     * @hibernate.collection-key column="id"
-     * @hibernate.collection-element column="field"
-     *   type="string" length="32" not-null="true"
      */
     public Set getSearchField()
     {
@@ -111,11 +95,6 @@ public class ValidationExternalType
      *
      * @return a Set of Strings that are Table names
      *
-     * @hibernate.set inverse="false"
-     *   table="rets_metadata_validationexternaltype_displayfield"
-     * @hibernate.collection-key column="id"
-     * @hibernate.collection-element column="field"
-     *   type="string" length="32" not-null="true"
      */
     public Set getDisplayField()
     {
@@ -132,7 +111,6 @@ public class ValidationExternalType
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

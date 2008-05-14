@@ -20,7 +20,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_update"
  */
 public class Update extends ServerMetadata implements Serializable
 {
@@ -40,7 +39,6 @@ public class Update extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -56,12 +54,6 @@ public class Update extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="updateName"
-     *   not-null="true"
-     *   unique="true"
-     *   index="update_update_name_index"
-     *   length="32"
      */
     public String getUpdateName()
     {
@@ -77,7 +69,6 @@ public class Update extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="64"
      */
     public String getDescription()
     {
@@ -93,7 +84,6 @@ public class Update extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="32"
      */
     public String getKeyField()
     {
@@ -109,9 +99,6 @@ public class Update extends ServerMetadata implements Serializable
      *
      * @return a MClass object
      *
-     * @hibernate.many-to-one
-     * @hibernate.column name="classid"
-     *   not-null="true"
      */
     public MClass getMClass()
     {
@@ -127,10 +114,6 @@ public class Update extends ServerMetadata implements Serializable
      *
      * @return a Set of UpdateType objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="updateid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.UpdateType"
      */
     public Set getUpdateTypes()
     {
@@ -158,7 +141,6 @@ public class Update extends ServerMetadata implements Serializable
      *
      * @return the hierarchy level for this metadata object.
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {

@@ -11,9 +11,7 @@ package org.realtors.rets.server.metadata;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.hibernate.PersistentEnum;
-
-public class ValidationExpressionTypeEnum implements PersistentEnum
+public class ValidationExpressionTypeEnum
 {
     public static final ValidationExpressionTypeEnum ACCEPT =
         new ValidationExpressionTypeEnum(0);

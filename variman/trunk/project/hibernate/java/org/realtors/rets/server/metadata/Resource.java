@@ -20,7 +20,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * @hibernate.class table="rets_metadata_resource"
  */
 public class Resource extends ServerMetadata implements Serializable
 {
@@ -48,7 +47,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Long object
      *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -64,12 +62,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property
-     * @hibernate.column name="resourceID"
-     *   not-null="true"
-     *   unique="true"
-     *   index="resource_rets_id_index"
-     *   length="32"
      */
     public String getResourceID()
     {
@@ -85,11 +77,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a ResourceStandardNameEnum
      *
-     * @hibernate.property
-     * @hibernate.column name="standardName"
-     *   not-null="false"
-     *   unique="false"
-     *   index="resource_standard_name_index"
      */
     public ResourceStandardNameEnum getStandardName()
     {
@@ -105,7 +92,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="32"
      */
     public String getVisibleName()
     {
@@ -121,7 +107,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="64"
      */
     public String getDescription()
     {
@@ -137,7 +122,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a String
      *
-     * @hibernate.property length="32"
      */
     public String getKeyField()
     {
@@ -152,10 +136,6 @@ public class Resource extends ServerMetadata implements Serializable
     /**
      *
      * @return a MSystem object
-     *
-     * @hibernate.many-to-one
-     * @hibernate.column name="systemid"
-     *   not-null="true"
      * 
      */
     public MSystem getSystem()
@@ -172,10 +152,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of MClass objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.MClass"
      */
     public Set getClasses()
     {
@@ -202,10 +178,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of MObject objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.MObject"
      */
     public Set getObjects()
     {
@@ -231,10 +203,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of SearchHelp objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.SearchHelp"
      */
     public Set getSearchHelps()
     {
@@ -261,10 +229,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of EditMasks
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.EditMask"
      */
     public Set getEditMasks()
     {
@@ -291,10 +255,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of Lookup objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.Lookup"
      */
     public Set getLookups()
     {
@@ -322,10 +282,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of ValidationLookups
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.ValidationLookup"
      */
     public Set getValidationLookups()
     {
@@ -352,10 +308,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of ValidationExternals
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.ValidationExternal"
      */
     public Set getValidationExternals()
     {
@@ -382,10 +334,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of ValidationExpressions
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.ValidationExpression"
      */
     public Set getValidationExpressions()
     {
@@ -413,10 +361,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a Set of UpdateHelp objects
      *
-     * @hibernate.set inverse="true"
-     * @hibernate.collection-key column="resourceid"
-     * @hibernate.collection-one-to-many
-     *   class="org.realtors.rets.server.metadata.UpdateHelp"
      */
     public Set getUpdateHelps()
     {
@@ -444,7 +388,6 @@ public class Resource extends ServerMetadata implements Serializable
      *
      * @return a string of level
      *
-     * @hibernate.property length="64"
      */
     public String getLevel()
     {
