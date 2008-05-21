@@ -16,18 +16,13 @@ import net.sf.hibernate.Query;
 public class AccountingStatisticsUtils
 {
     public static AccountingStatistics findByUser(User user)
-        throws HibernateException
+        throws RetsServerException, HibernateException
     {
         SessionHelper helper = RetsServer.createSessionHelper();
         try
         {
             AccountingStatistics statistics = findByUser(user, helper);
             return statistics;
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
         }
         finally
         {

@@ -23,6 +23,7 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 
+import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
@@ -131,63 +132,37 @@ public class CreatePropertiesCommand
      *
      */
     private void dropData()
-        throws HibernateException, SQLException
+        throws RetsServerException, SQLException
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        ConnectionHelper helper = RetsServer.createHelper();
         Connection connection = null;
         Statement statement = null;
         try
         {
-            Session session = helper.beginSession();
-            connection = session.connection();
+            connection = helper.getConnection();
             statement = connection.createStatement();
 
             statement.execute("delete from rets_property_res");
-
-            connection.commit();
-        }
-        catch (HibernateException e)
-        {
-            if (connection != null)
-            {
-                connection.rollback();
-            }
-            throw e;
-        }
-        catch (SQLException e)
-        {
-            System.out.println(statement);
-            if (connection != null)
-            {
-                connection.rollback();
-            }
-            throw e;
+            helper.commit();
         }
         finally
         {
-            if (statement != null)
-            {
-                statement.close();
-            }
-            helper.close(LOG);
+        	if (statement != null)
+        		statement.close();
+        	helper.close(LOG);
         }
     }
 
     private void createData()
-        throws HibernateException, SQLException
+        throws RetsServerException, SQLException
     {
-        Session session = null;
-        Connection con = null;
+
         PreparedStatement ps = null;
+    	ConnectionHelper helper = RetsServer.createHelper();
         try
         {
-            session = mSessions.openSession();
-            con = session.connection();
-            con.setAutoCommit(false);
-
-            for (int i = 0; i < mNumProperties; i++)
-            {
-                ps = con.prepareStatement(
+            Connection con = helper.getConnectionTransaction();
+            ps = con.prepareStatement(
                     "INSERT INTO " +
                     "rets_property_res(id,r_lp,r_broker,r_agent_id,r_ln," +
                     "                  r_zip_code,r_ld,r_sqft,r_e_school," +
@@ -195,6 +170,8 @@ public class CreatePropertiesCommand
                     "                  r_ltyp, r_stnum, r_vew, r_ar,r_status," +
                     "                  r_owner)" +
                     " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+            for (int i = 0; i < mNumProperties; i++)
+            {
                 // todo: LookupMulti EF needs to be added.
                 // todo: LookupMulti IF needs to be added.
                 mCount += mRandom.nextInt(10);
@@ -223,35 +200,13 @@ public class CreatePropertiesCommand
                 ps.setString(18, getNextStatus());
                 ps.setString(19, getNextOwner());
                 ps.execute();
-                ps.close();
             }
-            con.commit();
-            session.close();
+            ps.close();
+            helper.commit();
         }
-        catch (HibernateException e)
+        finally
         {
-            if (con != null)
-            {
-                con.rollback();
-            }
-            if (session != null)
-            {
-                session.close();
-            }
-            throw e;
-        }
-        catch (SQLException e)
-        {
-            System.out.println(ps);
-            if (con != null)
-            {
-                con.rollback();
-            }
-            if (session != null)
-            {
-                session.close();
-            }
-            throw e;
+        	helper.close(LOG);
         }
     }
 

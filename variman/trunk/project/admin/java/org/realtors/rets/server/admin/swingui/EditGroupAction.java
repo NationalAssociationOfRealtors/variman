@@ -51,7 +51,7 @@ public class EditGroupAction extends AbstractAction
             LOG.debug("Chagned group: " + group + ", record limit: " +
                       dialog.getRecordLimit());
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
         }

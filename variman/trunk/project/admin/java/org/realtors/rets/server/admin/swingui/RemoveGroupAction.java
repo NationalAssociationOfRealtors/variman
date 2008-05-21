@@ -67,7 +67,7 @@ public class RemoveGroupAction extends AbstractAction
 
             mGroupsPanel.refreshTab();
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
         }

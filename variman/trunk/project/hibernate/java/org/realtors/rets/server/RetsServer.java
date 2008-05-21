@@ -35,14 +35,9 @@ public class RetsServer implements ApplicationContextAware
         return sSessions;
     }
 
-    public static SessionHelper createHelper()
+    public static ConnectionHelper createHelper()
     {
         return new SessionHelper(sSessions);
-    }
-
-    public static Session openSession() throws HibernateException
-    {
-        return sSessions.openSession();
     }
 
     public static SessionHelper createSessionHelper()

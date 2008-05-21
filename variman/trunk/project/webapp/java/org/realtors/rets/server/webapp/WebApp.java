@@ -72,10 +72,10 @@ public class WebApp
         }
     }
 
-    public static SessionHelper createHelper()
-    {
-        return RetsServer.createSessionHelper();
-    }
+//    public static SessionHelper createHelper()
+//    {
+//        return RetsServer.createSessionHelper();
+//    }
 
     public static void setGetObjectRoot(String getObjectRoot)
     {

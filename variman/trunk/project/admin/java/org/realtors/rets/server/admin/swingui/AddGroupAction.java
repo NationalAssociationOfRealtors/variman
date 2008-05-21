@@ -52,7 +52,7 @@ public class AddGroupAction extends AbstractAction
             Admin.setRetsConfigChanged(true);
             LOG.debug("New group: " + group.dump());
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
         }

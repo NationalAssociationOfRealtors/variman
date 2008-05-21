@@ -48,7 +48,7 @@ public class AddUserAction extends AbstractAction
             frame.refreshUsers();
             LOG.debug("New user: " + user.dump());
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
         }

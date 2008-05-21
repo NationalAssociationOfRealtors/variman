@@ -109,7 +109,7 @@ public class AdminUtils
 
     private static void logDatabaseInfo() throws RetsServerException
     {
-        SessionHelper helper = RetsServer.createHelper();
+        SessionHelper helper = RetsServer.createSessionHelper();
         try
         {
             Session session = helper.beginSession();

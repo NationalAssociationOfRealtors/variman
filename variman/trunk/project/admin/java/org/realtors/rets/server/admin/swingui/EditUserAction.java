@@ -45,7 +45,7 @@ public class EditUserAction extends AbstractAction
             frame.refreshUsers();
             LOG.debug("Changed user: " + user);
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
         }

@@ -94,7 +94,7 @@ public class AccountingFilter implements Filter, Constants
     private AccountingStatistics findOrCreateStatistics(User user)
     {
         AccountingStatistics statistics = null;
-        SessionHelper helper = RetsServer.createHelper();
+        SessionHelper helper = RetsServer.createSessionHelper();
         try
         {
             Session session = helper.beginTransaction();
@@ -108,17 +108,16 @@ public class AccountingFilter implements Filter, Constants
             }
             helper.commit();
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.warn("Exception", e);
-            helper.rollback(LOG);
             statistics = null;
         }
         finally
         {
             helper.close(LOG);
         }
-
+        
         if (statistics == null)
         {
             LOG.warn("Could not create persistent statistics, " +
@@ -135,7 +134,7 @@ public class AccountingFilter implements Filter, Constants
             LOG.debug("Saving statistics");
             HibernateUtils.update(statistics);
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.warn("Exception", e);
         }

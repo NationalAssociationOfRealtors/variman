@@ -17,10 +17,11 @@ import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
+import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
-public class SessionHelper
+public class SessionHelper implements ConnectionHelper
 {
     public SessionHelper(SessionFactory factory)
     {
@@ -36,6 +37,19 @@ public class SessionHelper
         mTx = null;
         return mSession;
     }
+    
+    public Connection getConnection() throws RetsServerException 
+    {
+    	try
+    	{
+    		beginSession();
+	    	return mSession.connection();
+    	}
+    	catch(HibernateException e)
+    	{
+    		throw new RetsServerException(e);
+    	}
+    }
 
     public Session beginTransaction() throws HibernateException
     {
@@ -45,6 +59,20 @@ public class SessionHelper
         return mSession;
     }
 
+
+    public Connection getConnectionTransaction() throws RetsServerException
+    {
+    	try
+    	{
+			beginTransaction();
+    		return mSession.connection();
+    	}
+    	catch(HibernateException e)
+    	{
+    		throw new RetsServerException(e);
+    	}
+    }
+    
     public Query createQuery(String queryString) throws HibernateException
     {
         LOG.debug("createQuery");
@@ -55,21 +83,38 @@ public class SessionHelper
         return mSession.createQuery(queryString);
     }
 
-    public void commit() throws HibernateException
+    public void commit() throws RetsServerException
     {
         LOG.debug("commit");
         if (mTx != null)
         {
-            mTx.commit();
+        	try
+        	{
+        		mTx.commit();
+        		mTx = null;
+        	}
+        	catch(HibernateException e)
+        	{
+        		throw new RetsServerException(e);
+        	}
         }
     }
 
-    public void rollback() throws HibernateException
+    public void rollback() throws RetsServerException
     {
         LOG.debug("rollback");
         if (mTx != null)
         {
-            mTx.rollback();
+        	try
+        	{
+        		Transaction tx = mTx;
+        		mTx = null;
+        		tx.rollback();
+        	}
+        	catch(HibernateException e)
+        	{
+        		throw new RetsServerException(e);
+        	}
         }
     }
 
@@ -79,9 +124,8 @@ public class SessionHelper
         {
             rollback();
         }
-        catch (HibernateException e)
+        catch (RetsServerException e)
         {
-            mTx = null;
             log.warn("Exception", e);
         }
     }
@@ -92,19 +136,29 @@ public class SessionHelper
         {
             rollback();
         }
-        catch (HibernateException e)
+        catch (RetsServerException e)
         {
-            mTx = null;
             e.printStackTrace(stream);
         }
     }
 
-    public void close() throws HibernateException
+    public void close() throws RetsServerException
     {
         LOG.debug("close");
         if (mSession != null)
         {
-            mSession.close();
+        	try
+        	{
+        		if (mTx != null)
+        		{
+        			rollback();
+        		}
+        		mSession.close();
+        	}
+        	catch(HibernateException e)
+        	{
+        		throw new RetsServerException(e);
+        	}
         }
     }
 
@@ -114,7 +168,7 @@ public class SessionHelper
         {
             close();
         }
-        catch (HibernateException e)
+        catch (RetsServerException e)
         {
             mSession = null;
             log.warn("Exception", e);
@@ -127,7 +181,7 @@ public class SessionHelper
         {
             close();
         }
-        catch (HibernateException e)
+        catch (RetsServerException e)
         {
             mSession = null;
             e.printStackTrace(stream);

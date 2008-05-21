@@ -37,7 +37,7 @@ public class Admin
         new SchemaExport(mCfg).create(true, true);
     }
 
-    public void doIt() throws HibernateException
+    public void doIt()
     {
         SessionHelper helper = new SessionHelper(mSessions);
         try
@@ -75,7 +75,7 @@ public class Admin
             }
             helper.commit();
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             e.printStackTrace();
             helper.rollback(System.err);

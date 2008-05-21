@@ -41,7 +41,7 @@ public class ChangePasswordAction extends AbstractAction
             frame.setStatusText("Password changed for " + user.getName());
             LOG.debug("Password changed for: " + user);
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
         }

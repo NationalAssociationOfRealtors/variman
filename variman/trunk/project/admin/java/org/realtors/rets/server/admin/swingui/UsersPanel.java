@@ -325,7 +325,7 @@ public class UsersPanel extends AdminTab
                 UserUtils.updateGroups(user, groups);
                 mUsersPanel.refreshTab();
             }
-            catch (HibernateException e)
+            catch (Exception e)
             {
                 LOG.error("Caught", e);
             }
@@ -359,7 +359,7 @@ public class UsersPanel extends AdminTab
                 UserUtils.updateGroups(user, groups);
                 mUsersPanel.refreshTab();
             }
-            catch (HibernateException e)
+            catch (Exception e)
             {
                 LOG.error("Caught", e);
             }

@@ -66,7 +66,7 @@ public class UserUtils
         return query.list();
     }
 
-    public static void delete(User user) throws HibernateException
+    public static void delete(User user) throws HibernateException, RetsServerException
     {
         SessionHelper helper = RetsServer.createSessionHelper();
         try
@@ -87,11 +87,6 @@ public class UserUtils
             }
             session.delete(user);
             helper.commit();
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
         }
         finally
         {
@@ -117,7 +112,7 @@ public class UserUtils
     }
 
     public static void updateGroups(User user, SortedSet groups)
-        throws HibernateException
+        throws HibernateException, RetsServerException
     {
         SessionHelper helper = RetsServer.createSessionHelper();
         try

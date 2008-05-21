@@ -33,6 +33,8 @@ import org.apache.log4j.Logger;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.cfg.Configuration;
+
+import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
@@ -292,22 +294,17 @@ public class InitServlet extends RetsServlet
 
     private void logDatabaseInfo() throws ServletException
     {
-        SessionHelper helper = RetsServer.createHelper();
+        ConnectionHelper helper = RetsServer.createHelper();
         try
         {
-            Session session = helper.beginSession();
-            Connection connection = session.connection();
+            Connection connection = helper.getConnection();
             DatabaseMetaData metaData = connection.getMetaData();
             LOG.info("JDBC Driver info: " + metaData.getDriverName() +
                      " version " + metaData.getDriverVersion());
             LOG.info("JDBC DB info: " + metaData.getDatabaseProductName() +
                      " version " + metaData.getDatabaseProductVersion());
         }
-        catch (SQLException e)
-        {
-            throw new ServletException("Caught", e);
-        }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             throw new ServletException("Caught", e);
         }

@@ -50,7 +50,7 @@ public class RemoveUserAction extends AbstractAction
             frame.setStatusText("User " + user.getName() + " removed.");
             frame.refreshUsers();
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.error("Caught", e);
         }

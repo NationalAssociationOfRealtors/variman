@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 public class HibernateUtils
 {
     public static Long save(Object object)
-        throws HibernateException
+        throws HibernateException, RetsServerException
     {
         SessionHelper helper = RetsServer.createSessionHelper();
         try
@@ -26,11 +26,6 @@ public class HibernateUtils
             helper.commit();
             return id;
         }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
-        }
         finally
         {
             helper.close(LOG);
@@ -38,7 +33,7 @@ public class HibernateUtils
     }
 
     public static void update(Object object)
-        throws HibernateException
+        throws HibernateException, RetsServerException
     {
         SessionHelper helper = RetsServer.createSessionHelper();
         try
@@ -47,11 +42,6 @@ public class HibernateUtils
             session.update(object);
             helper.commit();
         }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
-        }
         finally
         {
             helper.close(LOG);
@@ -59,7 +49,7 @@ public class HibernateUtils
     }
 
     public static void delete(Object object)
-        throws HibernateException
+        throws HibernateException, RetsServerException
     {
         SessionHelper helper = RetsServer.createSessionHelper();
         try
@@ -67,11 +57,6 @@ public class HibernateUtils
             Session session = helper.beginTransaction();
             session.delete(object);
             helper.commit();
-        }
-        catch (HibernateException e)
-        {
-            helper.rollback(LOG);
-            throw e;
         }
         finally
         {
