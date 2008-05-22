@@ -19,22 +19,18 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
-
-import org.apache.log4j.Logger;
 
 public class CreatePropertiesCommand
 {

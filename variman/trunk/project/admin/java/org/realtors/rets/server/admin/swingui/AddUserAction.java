@@ -2,13 +2,15 @@ package org.realtors.rets.server.admin.swingui;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 
-import org.realtors.rets.server.UserUtils;
-import org.realtors.rets.server.User;
-import org.realtors.rets.server.HibernateUtils;
-import org.apache.log4j.Logger;
 import net.sf.hibernate.HibernateException;
+
+import org.apache.log4j.Logger;
+import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.UserUtils;
 
 /**
  * Created by IntelliJ IDEA.

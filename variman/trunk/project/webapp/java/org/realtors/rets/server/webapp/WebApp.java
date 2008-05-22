@@ -10,19 +10,16 @@
  */
 package org.realtors.rets.server.webapp;
 
-import java.util.Properties;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import org.realtors.rets.server.RetsServer;
-import org.realtors.rets.server.SessionHelper;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
-
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.xml.DOMConfigurator;
 
 public class WebApp
 {

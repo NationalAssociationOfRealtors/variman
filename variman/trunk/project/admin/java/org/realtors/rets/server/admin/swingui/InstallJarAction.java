@@ -4,12 +4,14 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.realtors.rets.server.admin.Admin;
-import org.realtors.rets.server.IOUtils;
 import org.apache.log4j.Logger;
+import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.admin.Admin;
 
 public class InstallJarAction extends AbstractAction
 {

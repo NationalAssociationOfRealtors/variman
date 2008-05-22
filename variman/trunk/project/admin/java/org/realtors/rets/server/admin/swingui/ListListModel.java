@@ -1,9 +1,10 @@
 package org.realtors.rets.server.admin.swingui;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractListModel;
+import javax.swing.JList;
 
 /**
  * A Swing list model using a collections list as the data source.  This is

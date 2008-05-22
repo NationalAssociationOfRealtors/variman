@@ -2,7 +2,12 @@ package org.realtors.rets.server.admin.swingui;
 
 import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
 
 public class HeaderPanel extends JPanel
 {

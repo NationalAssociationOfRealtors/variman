@@ -1,6 +1,9 @@
 package org.realtors.rets.server.admin.swingui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Point;
 
 /**
  * Created by IntelliJ IDEA.

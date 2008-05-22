@@ -8,11 +8,9 @@
 
 package org.realtors.rets.server;
 
-import org.apache.log4j.Logger;
-
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
+
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.ObjectSet;

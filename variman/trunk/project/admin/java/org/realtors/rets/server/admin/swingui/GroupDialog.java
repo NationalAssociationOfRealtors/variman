@@ -4,11 +4,20 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
-
-import org.apache.commons.lang.StringUtils;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import net.sf.hibernate.HibernateException;
+
+import org.apache.commons.lang.StringUtils;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
 import org.realtors.rets.server.config.GroupRules;

@@ -8,16 +8,21 @@
 
 package org.realtors.rets.server.admin.swingui;
 
+import java.awt.Container;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.awt.*;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import net.sf.hibernate.cfg.Configuration;
 import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
 
 import org.apache.log4j.Logger;
-
-import org.realtors.rets.server.admin.*;
+import org.realtors.rets.server.admin.Admin;
 
 public class CreateSchemaAction extends AbstractAction
 {

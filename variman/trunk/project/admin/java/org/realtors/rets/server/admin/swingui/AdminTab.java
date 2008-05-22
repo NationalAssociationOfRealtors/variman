@@ -2,7 +2,7 @@ package org.realtors.rets.server.admin.swingui;
 
 import java.awt.LayoutManager;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 /**
  * Created by IntelliJ IDEA.

@@ -8,10 +8,9 @@
 
 package org.realtors.rets.server.admin;
 
-import javax.swing.*;
+import javax.swing.UIManager;
 
 import org.realtors.rets.server.admin.swingui.AdminFrame;
-//import org.apache.commons.lang.SystemUtils;
 
 public class SwingMain
 {

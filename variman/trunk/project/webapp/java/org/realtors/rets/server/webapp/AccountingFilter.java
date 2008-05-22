@@ -21,19 +21,17 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-
-import org.realtors.rets.server.AccountingStatistics;
-import org.realtors.rets.server.AccountingStatisticsUtils;
-import org.realtors.rets.server.RetsServer;
-import org.realtors.rets.server.SessionHelper;
-import org.realtors.rets.server.User;
-import org.realtors.rets.server.HibernateUtils;
-import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.realtors.rets.server.AccountingStatistics;
+import org.realtors.rets.server.AccountingStatisticsUtils;
+import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.User;
+import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
 /**
  * @web.filter name="accounting-filter"

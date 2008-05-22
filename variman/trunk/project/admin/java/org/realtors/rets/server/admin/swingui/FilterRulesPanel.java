@@ -2,17 +2,25 @@ package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collections;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.GroupRules;

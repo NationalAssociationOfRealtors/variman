@@ -2,8 +2,6 @@
  */
 package org.realtors.rets.server;
 
-import org.realtors.rets.server.LinesEqualTestCase;
-
 import junit.framework.AssertionFailedError;
 
 public class LinesEqualTestCaseTest extends LinesEqualTestCase

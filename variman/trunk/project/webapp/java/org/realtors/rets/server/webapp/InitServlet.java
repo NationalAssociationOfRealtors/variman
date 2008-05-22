@@ -11,37 +11,33 @@
 package org.realtors.rets.server.webapp;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Properties;
-import java.util.Enumeration;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.cfg.Configuration;
+
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
-
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.cfg.Configuration;
-
 import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.LogPropertiesUtils;
 import org.realtors.rets.server.PasswordMethod;
+import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.SessionHelper;
-import org.realtors.rets.server.LogPropertiesUtils;
-import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MClass;

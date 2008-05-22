@@ -6,7 +6,12 @@ import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import org.realtors.rets.server.CalendarUtils;
 import org.realtors.rets.server.config.TimeRestriction;

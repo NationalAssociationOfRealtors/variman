@@ -1,11 +1,16 @@
 package org.realtors.rets.server.admin.swingui;
 
-import java.awt.*;
+import java.awt.Container;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
 
-import org.realtors.rets.server.admin.AdminUtils;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+
 import org.apache.log4j.Logger;
+import org.realtors.rets.server.admin.AdminUtils;
 
 /**
  * Created by IntelliJ IDEA.

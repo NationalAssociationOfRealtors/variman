@@ -15,16 +15,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JMenu;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
-
 import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.LogPropertiesUtils;
 import org.realtors.rets.server.LogPropertiesConstants;
+import org.realtors.rets.server.LogPropertiesUtils;
 import org.realtors.rets.server.admin.Admin;
 
 public class LogPanel extends AdminTab implements LogPropertiesConstants
