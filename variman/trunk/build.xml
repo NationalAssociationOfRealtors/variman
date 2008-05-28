@@ -136,7 +136,7 @@
   <target name="build" description="Build all"
           depends="build-hibernate,build-webapp,build-importer,build-admin" />
 
-  <target name="build-hibernate" depends="prepare">
+  <target name="build-hibernate" depends="build-hibernate-xdoclet">
     <property name="src.antlr.dir"
               value="${basedir}/project/hibernate/java/org/realtors/rets/server/dmql"/>
     <property name="build.antlr.dir"
@@ -719,9 +719,6 @@
     <copy file="project/admin/shell/${project.name}" todir="build/admin/bin"/>
     <chmod file="build/admin/bin/${project.name}" perm="ugo+rx"/>
   </target>
-
-  <target name="build-full" description="Full build from clean"
-          depends="build-hibernate-xdoclet,build"/>
 
   <target name="test" description="Run all unit tests" depends="build">
     <junit printsummary="no" haltonfailure="no" fork="yes" forkmode="perBatch"
