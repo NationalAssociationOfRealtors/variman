@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METADATA-CLASS Resource="Property" Version="1.01.000" Date="2009-01-20T00:00:00Z">
+<COLUMNS>	ClassName	StandardName	VisibleName	X-DBName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	ClassTimeStamp	DeletedFlagField	DeletedFlagValue	HasKeyIndex	</COLUMNS>
+<DATA>	CON	CommonInterest	Condos	con	Condominiums	1.01.000	2009-01-20T00:00:00Z	1.01.000	2009-01-20T00:00:00Z	TIMESTAMP				</DATA>
+<DATA>	LND	LotsAndLand	Lots and Land	lnd	Lots and Land	1.01.000	2009-01-20T00:00:00Z	1.01.000	2009-01-20T00:00:00Z	TIMESTAMP				</DATA>
+<DATA>	MOB	MobileHomes	Mobile Home	mob	Mobile Homes	1.01.000	2009-01-20T00:00:00Z	1.01.000	2009-01-20T00:00:00Z	TIMESTAMP				</DATA>
+<DATA>	ResidentialProperty	ResidentialProperty	Single Family	rets_property_res	Single Family Residential	1.01.000	2009-01-20T00:00:00Z	1.01.000	2009-01-20T00:00:00Z	TIMESTAMP				</DATA>
+<DATA>	CommercialProperty	CommercialProperty	Commercial	xceligent	Commercial Properties	1.01.000	2009-01-20T00:00:00Z	1.01.000	2009-01-20T00:00:00Z	TIMESTAMP				</DATA>
+<DATA>	MUL	MultiFamily	Multi-Family	mul	Multi-Family Residential	1.01.000	2009-01-20T00:00:00Z	1.01.000	2009-01-20T00:00:00Z	TIMESTAMP				</DATA>
+</METADATA-CLASS>

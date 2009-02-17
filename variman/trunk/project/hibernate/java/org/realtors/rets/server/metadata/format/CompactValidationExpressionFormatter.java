@@ -28,7 +28,7 @@ public class CompactValidationExpressionFormatter extends MetadataFormatter
         tag.begin("METADATA-VALIDATION_EXPRESSION");
         tag.appendAttribute("Resource", levels[RESOURCE_LEVEL]);
         tag.appendAttribute("Version", context.getVersion());
-        tag.appendAttribute("Date", context.getDate());
+        tag.appendAttribute("Date", context.getDate(), context.getRetsVersion());
         tag.endAttributes();
         tag.appendColumns(COLUMNS);
         for (Iterator i = validationExpressions.iterator(); i.hasNext();)
@@ -46,16 +46,17 @@ public class CompactValidationExpressionFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(validationExpression.getMetadataEntryID());
         row.append(validationExpression.getValidationExpressionID());
         row.append(validationExpression.getValidationExpressionType());
         row.append(validationExpression.getValue());
         row.append(context.getVersion());
-        row.append(context.getDate());
+        row.append(context.getDate(), context.getRetsVersion());
         row.end();
     }
 
     private static final String[] COLUMNS = {
-        "ValidationExpressionID", "ValidationExpressionType", "Value",
+        "MetadataEntryID", "ValidationExpressionID", "ValidationExpressionType", "Value",
         "Version", "Date",
     };
 }

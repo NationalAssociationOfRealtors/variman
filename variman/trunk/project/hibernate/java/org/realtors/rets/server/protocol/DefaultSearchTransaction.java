@@ -27,6 +27,9 @@ import antlr.ANTLRException;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
+
+import org.realtors.rets.client.RetsVersion;
+
 import org.realtors.rets.server.QueryCount;
 import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.ReplyCode;
@@ -301,7 +304,8 @@ public class DefaultSearchTransaction implements SearchTransaction
     {
         SearchFormatterContext context =
             new SearchFormatterContext(out, resultSet, columns,
-                                       mSearchSqlBuilder.getMetadata());
+                                       mSearchSqlBuilder.getMetadata(),
+                                       mParameters.getRetsVersion());
         context.setLimit(getLimit());
         mCount = Math.min(mCount, mLimit);
         SearchResultsFormatter formatter = getFormatter();
@@ -326,12 +330,12 @@ public class DefaultSearchTransaction implements SearchTransaction
         else if (searchFormat == SearchFormat.COMPACT_DECODED)
         {
             formatter =
-                new CompactFormatter(CompactFormatter.DECODE_LOOKUPS);
+                new CompactFormatter(CompactFormatter.DECODE_LOOKUPS, mParameters.getRetsVersion());
         }
         else if (searchFormat == SearchFormat.COMPACT)
         {
             formatter =
-                new CompactFormatter(CompactFormatter.NO_DECODING);
+                new CompactFormatter(CompactFormatter.NO_DECODING, mParameters.getRetsVersion());
         }
         else
         {
@@ -355,7 +359,7 @@ public class DefaultSearchTransaction implements SearchTransaction
     {
         int offset = mParameters.getOffset();
         LOG.debug("Advancing using offset: " + offset);
-        // Todo: Add scrollable ResultSet support
+        // TODO: Add scrollable ResultSet support
         for (int i = 1; i < offset; i++)
         {
             resultSet.next();
@@ -387,6 +391,15 @@ public class DefaultSearchTransaction implements SearchTransaction
         {
             // This is not an error as bad DMQL can cause this to be thrown.
             LOG.debug("Caught", e);
+            // This is ugly .. we need to match the error message to determine which
+            // RETS error to throw. Can't handle this another way because the grammar
+            // is built first and therefore, can't yet import the Rets Exception classes.
+            if (e.toString().contains("No such field"))
+            	throw new RetsReplyException(ReplyCode.INVALID_QUERY_FIELD, e.toString());
+            
+            if (e.toString().contains("No Such lookup value"))
+            	throw new RetsReplyException(ReplyCode.INVALID_QUERY_FIELD, e.toString());
+            
             throw new RetsReplyException(ReplyCode.INVALID_QUERY_SYNTAX,
                                          e.toString());
         }

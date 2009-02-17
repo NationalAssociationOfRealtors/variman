@@ -47,7 +47,7 @@ public class AdminUtils
         }
         else
         {
-            RetsConfig retsConfig = new RetsConfig();
+            RetsConfig retsConfig = RetsConfig.getInstance();
             String defaultDirectory = SystemUtils.USER_DIR + File.separator;
             retsConfig.setMetadataDir(defaultDirectory + "metadata");
             retsConfig.setGetObjectRoot(defaultDirectory + "pictures");
@@ -95,7 +95,7 @@ public class AdminUtils
         RetsConfig retsConfig = Admin.getRetsConfig();
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         Configuration config = new Configuration()
-            .addJar(Admin.PROJECT_NAME + "-hbm-xml.jar")
+            .addJar(new File(Admin.PROJECT_NAME + "-hbm-xml.jar"))
             .setProperties(retsConfig.createHibernateProperties());
         SessionFactory sessionFactory =
             config.buildSessionFactory();

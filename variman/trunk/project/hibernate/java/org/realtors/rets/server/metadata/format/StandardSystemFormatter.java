@@ -25,7 +25,7 @@ public class StandardSystemFormatter extends MetadataFormatter
         MSystem system = (MSystem) systems.iterator().next();
         TagBuilder metadata = new TagBuilder(out, "METADATA-SYSTEM")
             .appendAttribute("Version", system.getVersionString())
-            .appendAttribute("Date", system.getDate())
+            .appendAttribute("Date", system.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         TagBuilder tag = new TagBuilder(out, "System")
@@ -34,9 +34,11 @@ public class StandardSystemFormatter extends MetadataFormatter
         TagBuilder.simpleTag(out, "SystemID", system.getSystemID());
         TagBuilder.simpleTag(out, "SystemDescription", system.getDescription());
         TagBuilder.simpleTag(out, "Comments", system.getComments());
+        TagBuilder.simpleTag(out, "TimeZoneOffset", system.getTimeZoneOffset());
 
         if (context.isRecursive())
         {
+        	context.format(system.getForeignKeys(), system.getPathAsArray());
             context.format(system.getResources(), system.getPathAsArray());
         }
 

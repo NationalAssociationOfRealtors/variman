@@ -93,7 +93,20 @@ public class ValidationLookup extends ServerMetadata implements Serializable
     {
         mParent2Field = parent2Field;
     }
-
+    
+    /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
     /**
      *
      * @return a Resouce object
@@ -215,6 +228,9 @@ public class ValidationLookup extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private String mParent2Field;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
 
     /** nullable persistent field */
     private Resource mResource;

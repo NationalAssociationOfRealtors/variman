@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METADATA-UPDATE_HELP Resource="Property" Version="1.00.000" Date="2009-01-20T00:00:00Z">
+<COLUMNS>	MetadataEntryID	UpdateHelpID	Value	</COLUMNS>
+<DATA>	UpdateStreetNum	ST_NUM_UPDATE_HELP	Enter the Street Number	</DATA>
+<DATA>	UpdateStreetName	ST_NAME_UPDATE_HELP	Enter the Street Name	</DATA>
+<DATA>	UpdateOriginalListingDate	DATE_UPDATE_HELP	Original listing date (YYYY-MM-DD)	</DATA>
+<DATA>	UpdateOriginalListingAgent	AGENT_UPDATE_HELP	Original listing Agent	</DATA>
+</METADATA-UPDATE_HELP>

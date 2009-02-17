@@ -26,7 +26,7 @@ public class StandardValidationExternalFormatter extends BaseStandardFormatter
                                              "METADATA-VALIDATION_EXTERNAL")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = validationExternals.iterator(); i.hasNext();)
@@ -36,6 +36,8 @@ public class StandardValidationExternalFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "ValidationExternalType")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", 
+            		validationExternal.getMetadataEntryID());
             TagBuilder.simpleTag(
                 out, "ValidationExternalName",
                 validationExternal.getValidationExternalName());

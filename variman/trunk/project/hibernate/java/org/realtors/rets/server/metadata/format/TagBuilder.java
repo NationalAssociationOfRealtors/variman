@@ -20,6 +20,8 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.server.config.RetsConfig;
 
 public class TagBuilder
 {
@@ -74,12 +76,26 @@ public class TagBuilder
         return this;
     }
 
-    public TagBuilder appendAttribute(String attribute, Date date)
+    public TagBuilder appendAttribute(String attribute, Date date, RetsVersion retsVersion)
     {
-        DateFormat formatter =
+        SimpleDateFormat formatter =
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        appendAttribute(attribute, formatter.format(date));
+        
+        String retsDate;
+        
+        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+        	retsVersion.equals(RetsVersion.RETS_1_7))
+    	{
+        	// Done this way to allow for all future versions that use the 1.7.2 format.
+        	retsDate = formatter.format(date);
+    	}
+        else
+        {
+    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    		retsDate = formatter.format(date);
+        }
+        appendAttribute(attribute, retsDate);
         return this;
     }
 
@@ -126,12 +142,26 @@ public class TagBuilder
         return this;
     }
 
-    public TagBuilder print(Date date)
+    public TagBuilder print(Date date, RetsVersion retsVersion)
     {
-        DateFormat formatter =
+        SimpleDateFormat formatter =
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return print(formatter.format(date));
+        
+        String retsDate;
+        
+        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+        	retsVersion.equals(RetsVersion.RETS_1_7))
+    	{
+        	// Done this way to allow for all future versions that use the 1.7.2 format.
+        	retsDate = formatter.format(date);
+    	}
+        else
+        {
+    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    		retsDate = formatter.format(date);
+        }
+        return print(retsDate);
     }
 
     public TagBuilder print(boolean b)
@@ -201,6 +231,29 @@ public class TagBuilder
                                  Collection value)
     {
         new TagBuilder(writer, tagName).beginContent().print(value).close();
+    }
+    
+    public static void simpleTag(PrintWriter writer, String tagName,
+    							Date date, RetsVersion retsVersion)
+    {
+        SimpleDateFormat formatter =
+            new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
+        String retsDate;
+        
+        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+        	retsVersion.equals(RetsVersion.RETS_1_7))
+    	{
+        	// Done this way to allow for all future versions that use the 1.7.2 format.
+        	retsDate = formatter.format(date);
+    	}
+        else
+        {
+    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    		retsDate = formatter.format(date);
+        }
+    	new TagBuilder(writer, tagName).beginContent().print(retsDate).close();
     }
 
     private String mTagName;

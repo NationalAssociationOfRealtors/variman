@@ -12,6 +12,7 @@ package org.realtors.rets.server.protocol;
 
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,6 +20,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.enums.Enum;
+
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.attrib.AttrDate;
+import org.realtors.rets.common.util.RetsDateTime;
 
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
@@ -30,9 +35,10 @@ import org.realtors.rets.server.metadata.format.TagBuilder;
  */
 public class CompactFormatter implements SearchResultsFormatter
 {
-    public CompactFormatter(LookupDecoding lookupDecoding)
+    public CompactFormatter(LookupDecoding lookupDecoding, RetsVersion retsVersion)
     {
         mLookupDecoding = lookupDecoding;
+        mRetsVersion = retsVersion;
     }
 
     /**
@@ -88,6 +94,7 @@ public class CompactFormatter implements SearchResultsFormatter
         throws SQLException
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter(), DELIMITER);
+        
         row.begin();
         for (int i = 0; i < numColumns; i++)
         {
@@ -97,6 +104,35 @@ public class CompactFormatter implements SearchResultsFormatter
             {
                 value = context.decodeLookupValue(i, value);
             }
+            if (context.isColumnDateTime(i) && !context.isColumnRetsDateTime(i))
+            {
+            	// This is ugly, but got no choice. Try to convert the date
+            	// and then properly render it. Let's try SQL format first in 
+            	// case this date is returned by a SQL query.
+            	if (value != null)
+            	{
+	            	try
+	            	{
+            			value = RetsDateTime.render(RetsDateTime.parseSql(value),
+            									context.getRetsVersion());
+	            	}
+	            	catch (ParseException e)
+	            	{
+	            		try
+	            		{
+		        			// Need to parse this as RETS_1_5.
+		        			RetsDateTime retsDateTime = new RetsDateTime(value, RetsVersion.RETS_1_5);
+		
+		        			value = retsDateTime.toString();
+	            		}
+	            		catch (ParseException f)
+	            		{
+	            			// Ignore the error. The timestamp as returned from the SQL engine will be used.
+	            		}
+	            	}
+            	}
+            }
+            
             row.append(value);
         }
         row.end();
@@ -136,4 +172,6 @@ public class CompactFormatter implements SearchResultsFormatter
 
     private static final String DELIMITER = "\t";
     private LookupDecoding mLookupDecoding;
+    private RetsVersion mRetsVersion;
+    private static final AttrDate mAttrDate = new AttrDate();
 }

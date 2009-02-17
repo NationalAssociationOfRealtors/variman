@@ -25,7 +25,7 @@ public class StandardValidationLookupFormatter extends BaseStandardFormatter
         TagBuilder metadata = new TagBuilder(out, "METADATA-VALIDATION_LOOKUP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = validationLookups.iterator(); i.hasNext();)
@@ -34,6 +34,8 @@ public class StandardValidationLookupFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "ValidationLookupType")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", 
+            					validationLookup.getMetadataEntryID());
             TagBuilder.simpleTag(out, "ValidationLookupName",
                                  validationLookup.getValidationLookupName());
             TagBuilder.simpleTag(out, "Parent1Field",

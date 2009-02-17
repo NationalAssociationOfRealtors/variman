@@ -102,7 +102,45 @@ public class MObject extends ServerMetadata implements Serializable
     {
         mDescription = description;
     }
-
+    
+    /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    /**
+     *  @return a String containing the ObjectTimeStamp
+     */
+    public String getObjectTimeStamp()
+    {
+    	return mObjectTimeStamp;
+    }
+    
+    public void setObjectTimeStamp(String objectTimeStamp)
+    {
+    	mObjectTimeStamp = objectTimeStamp;
+    }
+    
+    /**
+     *  @return a String containing the ObjectCount
+     */
+    public String getObjectCount()
+    {
+    	return mObjectCount;
+    }
+    
+    public void setObjectCount(String objectCount)
+    {
+    	mObjectCount = objectCount;
+    }
+        
     /**
      *
      * @return a Resource object
@@ -181,6 +219,15 @@ public class MObject extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private Resource mResource;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
+    
+    /** nullable persistent field */
+    private String mObjectTimeStamp;
+    
+    /** nullable persistent field */
+    private String mObjectCount;
 
     public static final String TABLE = "OBJECT";
 }

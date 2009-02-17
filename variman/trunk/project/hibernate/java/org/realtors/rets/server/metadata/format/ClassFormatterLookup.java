@@ -101,8 +101,8 @@ public class ClassFormatterLookup implements FormatterLookup
                              new StandardValidationExternalTypeFormatter());
             mFormatters.put(ValidationExpression.class,
                              new StandardValidationExpressionFormatter());
-//            mFormatters.put(ForeignKey.class,
-//                             new StandardForeignKeyFormatter());
+            mFormatters.put(ForeignKey.class,
+                             new StandardForeignKeyFormatter());
         }
         else
         {

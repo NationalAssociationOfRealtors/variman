@@ -11,6 +11,7 @@ package org.realtors.rets.server.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -93,6 +94,45 @@ public class Update extends ServerMetadata implements Serializable
     public void setKeyField(String keyField)
     {
         mKeyField = keyField;
+    }
+    
+    /**
+     *  @return a String
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
+    /**
+     * @return an integer
+     */
+    public int getUpdateTypeVersion()
+    {
+    	return mUpdateTypeVersion;
+    }
+    
+    public void setUpdateTypeVersion(int updateTypeVersion)
+    {
+    	mUpdateTypeVersion = updateTypeVersion;
+    }
+    
+    /**
+     * @return a Date
+     */
+    public Date getUpdateTypeDate()
+    {
+    	return mUpdateTypeDate;
+    }
+    
+    public void setUpdateTypeDate(Date updateTypeDate)
+    {
+    	mUpdateTypeDate = updateTypeDate;
     }
 
     /**
@@ -221,7 +261,16 @@ public class Update extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private String mKeyField;
+    
+    // 1.7.2
+    /** nullable persistent field */
+    private String mMetadataEntryID;
+    
+    /** nullable persistent field */
+    private int mUpdateTypeVersion;
 
+    private Date mUpdateTypeDate;
+    
     /** nullable persistent field */
     private MClass mMClass;
 

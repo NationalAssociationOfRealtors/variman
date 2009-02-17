@@ -1,6 +1,8 @@
 package org.realtors.rets.server.protocol;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -101,6 +103,38 @@ public class PatternObjectSet implements ObjectSet
             else
             {
                 LOG.debug("File " + filePath + " does not exist");
+                /*
+                 * As a multipart response, we need to create an object of text/xml
+                 * that contains the RETS ReplyCode message. 
+                 */
+                try
+                {
+                	StringBuffer notFoundName = new StringBuffer(mRootDirectory);
+                	notFoundName.append(File.separator + "notfound.xml");
+
+                	/*
+                	 * Not the best way, but this is the exceptional case, 
+                	 * so brute force should work.
+                	 */
+                	File notFound = new File(notFoundName.toString());
+
+                	synchronized (this)
+                	{
+	                	if (notFound.length() == 0)
+	                	{
+	                		BufferedWriter out = new BufferedWriter(new FileWriter(notFound));
+	                		out.write("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>\r\n");
+	                		out.close();
+	                		notFound.deleteOnExit();
+	                	}
+                	}
+                    return new ObjectDescriptor(mResourceKey, objectId,
+												notFound.toURI().toURL(),
+												null);
+                }
+                catch (Exception e)
+                {
+                }
                 return null;
             }
         }

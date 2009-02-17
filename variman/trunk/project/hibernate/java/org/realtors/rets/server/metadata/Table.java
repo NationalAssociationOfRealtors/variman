@@ -274,15 +274,15 @@ public class Table extends ServerMetadata implements Serializable
 
     /**
      *
-     * @return an integer
+     * @return a boolean that if TRUE indicates the field is part of an index.
      *
      */
-    public int getIndex()
+    public boolean getIndex()
     {
         return mIndex;
     }
 
-    public void setIndex(int index)
+    public void setIndex(boolean index)
     {
         mIndex = index;
     }
@@ -361,7 +361,98 @@ public class Table extends ServerMetadata implements Serializable
     {
         mUnique = unique;
     }
+    
+    /**
+     *  @return a String
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
+    /**
+     * @return a boolean
+     */
+    public boolean getModTimeStamp()
+    {
+    	return mModTimeStamp;
+    }
+    
+    public void setModTimeStamp(boolean modTimeStamp)
+    {
+    	mModTimeStamp = modTimeStamp;
+    }
+    
+    /**
+     *  @return a String
+     */
+    public String getForeignKeyName()
+    {
+    	return mForeignKeyName;
+    }
+    
+    public void setForeignKeyName(String foreignKeyName)
+    {
+    	mForeignKeyName = foreignKeyName;
+    }
+    
+    /**
+     * @return a String
+     */
+    public String getForeignField()
+    {
+    	return mForeignField;
+    }
+    
+    public void setForeignField(String foreignField)
+    {
+    	mForeignField = foreignField;
+    }
+    
+    /**
+     * @return a boolean
+     */
+    public boolean getKeyQuery()
+    {
+    	return mKeyQuery;
+    }
+    
+    public void setKeyQuery(boolean keyQuery)
+    {
+    	mKeyQuery = keyQuery;
+    }
+    
+    /**
+     * @return a boolean
+     */
+    public boolean getKeySelect()
+    {
+    	return mKeySelect;
+    }
+    
+    public void setKeySelect(boolean keySelect)
+    {
+    	mKeySelect = keySelect;
+    }
 
+    /**
+     * @return a boolean
+     */
+    public boolean getInKeyIndex()
+    {
+    	return mInKeyIndex;
+    }
+    
+    public void setInKeyIndex(boolean inKeyIndex)
+    {
+    	mInKeyIndex = inKeyIndex;
+    }
+    
     /**
      *
      * @return an MClass object
@@ -536,7 +627,7 @@ public class Table extends ServerMetadata implements Serializable
     private UnitEnum mUnits;
 
     /** nullable persistent field */
-    private int mIndex;
+    private boolean mIndex;
 
     /** nullable persistent field */
     private int mMinimum;
@@ -552,6 +643,28 @@ public class Table extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private boolean mUnique;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
+    
+    /** nullable persistent field */
+    private boolean mModTimeStamp;
+    
+    /** nullable persistent field */
+    private String mForeignKeyName;
+    
+    /** nullable persistent field */
+    private String mForeignField;
+    
+    /** nullable persistent field */
+    private boolean mKeyQuery;
+    
+    /** nullable persistent field */
+    private boolean mKeySelect;
+    
+    /** nullable persistent field */
+    private boolean mInKeyIndex;
+
 
     /** nullable persistent field */
     private MClass mMClass;

@@ -10,6 +10,7 @@ package org.realtors.rets.server;
 
 import java.util.List;
 
+import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -26,11 +27,26 @@ public class JdomUtils
      */
     public static Document mergeDocuments(List documents, Element newRoot)
     {
+    	DocType docType = null;
+    	Document merged = null;
+    	
         for (int i = 0; i < documents.size(); i++)
         {
             Document document = (Document) documents.get(i);
+            
+            DocType checkDocType = document.getDocType();
+            if (checkDocType != null && checkDocType.getElementName().equals("METADATA-SYSTEM"))
+            {
+            	docType = (DocType)checkDocType.clone();
+            }
+            
             newRoot.addContent(document.detachRootElement());
         }
-        return new Document(newRoot);
+        
+        merged = new Document(newRoot);
+        if (docType != null)
+        	merged.setDocType(docType);
+        
+        return merged;
     }
 }

@@ -25,7 +25,7 @@ public class StandardObjectFormatter extends BaseStandardFormatter
         TagBuilder metadata = new TagBuilder(out, "METADATA-OBJECT")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = objects.iterator(); i.hasNext();)
@@ -34,11 +34,14 @@ public class StandardObjectFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "Object")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", object.getMetadataEntryID());
             TagBuilder.simpleTag(out, "ObjectType", object.getObjectType());
             TagBuilder.simpleTag(out, "StandardName", (Object) null);
             TagBuilder.simpleTag(out, "MimeType", object.getMimeType());
             TagBuilder.simpleTag(out, "Description", object.getDescription());
-
+            TagBuilder.simpleTag(out, "ObjectTimeStamp", object.getObjectTimeStamp());
+            TagBuilder.simpleTag(out, "ObjectCount", object.getObjectCount());
+            
             tag.close();
         }
 

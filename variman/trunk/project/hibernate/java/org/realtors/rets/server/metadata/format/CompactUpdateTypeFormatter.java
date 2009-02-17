@@ -53,7 +53,7 @@ public class CompactUpdateTypeFormatter extends MetadataFormatter
             .appendAttribute("Class", levels[CLASS_LEVEL])
             .appendAttribute("Update", levels[UPDATE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = updateTypes.iterator(); iterator.hasNext();)
@@ -68,6 +68,7 @@ public class CompactUpdateTypeFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(updateType.getMetadataEntryID());
         row.append(updateType.getTable().getSystemName());
         row.append(updateType.getSequence());
         row.append(updateType.getAttributes());
@@ -76,12 +77,13 @@ public class CompactUpdateTypeFormatter extends MetadataFormatter
         row.append(updateType.getUpdateHelp());
         row.append(updateType.getValidationLookup());
         row.append(updateType.getValidationExternal());
+        row.append(updateType.getMaxUpdate());
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
-        "SystemName", "Sequence", "Attributes", "Default",
+        "MetadataEntryID", "SystemName", "Sequence", "Attributes", "Default",
         "ValidationExpressionID", "UpdateHelpID", "ValidationLookupName",
-        "ValidationExternalName",
+        "ValidationExternalName", "MaxUpdate",
     };
 }

@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.realtors.rets.common.util.RetsDateTime;
+
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -22,18 +24,11 @@ public class DateTimeSqlConverter implements SqlConverter
     {
         try
         {
-            mDate = sFromDmql.parse(dateTime);
+        	mDate = new RetsDateTime(dateTime);
         }
         catch (ParseException e)
         {
-            try
-            {
-                mDate = sFromDmqlNoMilliseconds.parse(dateTime);
-            }
-            catch (ParseException e1)
-            {
-                throw new NestableRuntimeException(e);
-            }
+		    throw new NestableRuntimeException(e);
         }
     }
 
@@ -50,7 +45,7 @@ public class DateTimeSqlConverter implements SqlConverter
         }
         else
         {
-            return mDate;
+            return mDate.getDate();
         }
     }
 
@@ -73,12 +68,8 @@ public class DateTimeSqlConverter implements SqlConverter
             .isEquals();
     }
 
-    private static final SimpleDateFormat sFromDmql =
-        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    private static final SimpleDateFormat sFromDmqlNoMilliseconds =
-        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private static final SimpleDateFormat sToSql =
         new SimpleDateFormat("''yyyy-MM-dd HH:mm:ss''");
     
-    private Date mDate;
+    private RetsDateTime mDate;
 }

@@ -25,7 +25,7 @@ public class StandardUpdateHelpFormatter extends BaseStandardFormatter
         TagBuilder metadata = new TagBuilder(out, "METADATA-UPDATE_HELP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = updateHelps.iterator(); i.hasNext();)
@@ -34,6 +34,7 @@ public class StandardUpdateHelpFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "UpdateHelp")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", updateHelp.getMetadataEntryID());
             TagBuilder.simpleTag(out, "UpdateHelpID",
                                  updateHelp.getUpdateHelpID());
             TagBuilder.simpleTag(out, "Value", updateHelp.getValue());

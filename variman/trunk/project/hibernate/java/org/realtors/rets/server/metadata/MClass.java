@@ -27,6 +27,12 @@ public class MClass extends ServerMetadata implements Serializable
         mTables = Collections.EMPTY_SET;
         mUpdates = Collections.EMPTY_SET;
     }
+    
+    public MClass(org.realtors.rets.common.metadata.types.MClass clazz)
+    {
+    	this();
+    	mClass = clazz;
+    }
 
     public MClass(long id)
     {
@@ -62,57 +68,65 @@ public class MClass extends ServerMetadata implements Serializable
      */
     public String getClassName()
     {
-        return mClassName;
+    	if (mClass != null)
+    		return mClass.getClassName();
+    	
+    	return mClassName;
     }
 
     public void setClassName(String className)
     {
-        mClassName = className;
+    	mClassName = className;
     }
-
-    /**
+     /**
      *
      * @return a ClassStandardNameEnum
      *
      */
     public ClassStandardNameEnum getStandardName()
     {
-        return mStandardName;
+    	if (mClass != null)
+    		return ClassStandardNameEnum.fromString(mClass.getStandardName());
+    	return mStandardName;
     }
-
+    
     public void setStandardName(ClassStandardNameEnum standardName)
     {
-        mStandardName = standardName;
+    	mStandardName = standardName;
     }
 
-    /**
+     /**
      *
      * @return a String
      *
      */
     public String getVisibleName()
     {
-        return mVisibleName;
+    	if (mClass != null)
+        	return mClass.getVisibleName();
+    	return mVisibleName;
     }
-
+    
     public void setVisibleName(String visibleName)
     {
-        mVisibleName = visibleName;
+    	mVisibleName = visibleName;
     }
 
-    /**
+     /**
      *
      * @return a String
      *
      */
     public String getDescription()
     {
-        return mDescription;
+    	if (mClass != null)
+    		return mClass.getDescription();
+    	return mDescription;
     }
-
+    
     public void setDescription(String description)
     {
-        mDescription = description;
+    	mDescription = description;
     }
 
     /**
@@ -231,7 +245,9 @@ public class MClass extends ServerMetadata implements Serializable
      */
     public String getPath()
     {
-        return mLevel + ":" + mClassName;
+    	if (mClass != null)
+    		return mLevel + ":" + mClass.getClassName();
+    	return mLevel + ":" + mClassName;
     }
 
     public List getChildren()
@@ -244,7 +260,9 @@ public class MClass extends ServerMetadata implements Serializable
 
     public String getRetsId()
     {
-        return mVisibleName;
+    	if (mClass != null)
+    		return mClass.getVisibleName();
+    	return mVisibleName;
     }
 
     public String getTableName()
@@ -254,7 +272,9 @@ public class MClass extends ServerMetadata implements Serializable
 
     public String toString()
     {
-        return mClassName;
+    	if (mClass != null)
+    		return mClass.getClassName();
+    	return mClassName;
     }
 
     public boolean equals(Object other)
@@ -280,10 +300,93 @@ public class MClass extends ServerMetadata implements Serializable
     {
         return visitor.visit(this);
     }
+    
+    /**
+     *
+     * @return a String
+     *
+     */
+    public String getClassTimeStamp()
+    {
+    	if (mClass != null)
+    		return mClass.getClassTimeStamp();
+    	return mClassTimeStamp;
+    }
+    
+    public void setClassTimeStamp(String classTimeStamp)
+    {
+    	mClassTimeStamp = classTimeStamp;
+    }
+
+    /**
+     *
+     * @return a String
+     *
+     */
+    public String getDeletedFlagField()
+    {
+    	if (mClass != null)
+    		return mClass.getDeletedFlagField();
+    	return mDeletedFlagField;
+    }
+    
+    public void setDeletedFlagField(String deletedFlagField)
+    {
+    	mDeletedFlagField = deletedFlagField;
+    }
+    
+    /**
+     *
+     * @return a String
+     *
+     */
+    public String getDeletedFlagValue()
+    {
+    	if (mClass != null)
+    		return mClass.getDeletedFlagValue();
+    	return mDeletedFlagValue;
+    }
+    
+    public void setDeletedFlagValue(String deletedFlagValue)
+    {
+    	mDeletedFlagValue = deletedFlagValue;
+    }
+    
+    /**
+     *
+     * @return a boolean
+     *
+     */
+    public boolean getHasKeyIndex()
+    {
+    	if (mClass != null)
+    		return mClass.getHasKeyIndex();
+    
+    	return mHasKeyIndex;
+	}
+    
+    public void setHasKeyIndex(boolean hasKeyIndex)
+    {
+    	mHasKeyIndex = hasKeyIndex;
+    }
+    /**
+     *
+     * @return a boolean
+     *
+     */
+    public String [] getColumnNames()
+    {
+    	if (mClass != null)
+    		return mClass.getAttributeNames();
+    	
+    	return null;
+    }
 
     /** identifier field */
     private Long mId;
 
+    private org.realtors.rets.common.metadata.types.MClass mClass = null;
+    
     /** nullable persistent field */
     private String mClassName;
 
@@ -310,4 +413,18 @@ public class MClass extends ServerMetadata implements Serializable
     private String mDbTable;
 
     public static final String TABLE = "CLASS";
+    
+    // 1.7.2
+    /** nullable persistent field */
+    private String mClassTimeStamp;
+    
+    /** nullable persistent field */
+    private String mDeletedFlagField;
+    
+    /** nullable persistent field */
+    private String mDeletedFlagValue;
+    
+    /** persistent field */
+    private boolean mHasKeyIndex;
+
 }

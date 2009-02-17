@@ -89,6 +89,19 @@ public class LookupType extends ServerMetadata implements Serializable
     }
 
     /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
+    /**
      * 
      * @return a Lookup object
      *
@@ -174,6 +187,9 @@ public class LookupType extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private String mValue;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
 
     /** nullable persistent field */
     private Lookup mLookup;

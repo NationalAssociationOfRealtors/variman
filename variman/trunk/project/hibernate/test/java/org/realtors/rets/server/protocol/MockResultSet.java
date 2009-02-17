@@ -74,6 +74,14 @@ public class MockResultSet extends NullResultSet
             return null;
         }
     }
+    
+    public Object getObject(int columnIndex) throws SQLException
+    {
+        // Make it zero-based
+        columnIndex--;
+        List currentRow = getCurrentRow();
+        return currentRow.get(columnIndex);
+    }
 
     private List mRows;
     private int mCurrentRow;

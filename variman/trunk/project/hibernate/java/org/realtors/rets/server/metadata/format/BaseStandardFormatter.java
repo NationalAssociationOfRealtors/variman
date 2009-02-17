@@ -25,7 +25,7 @@ public abstract class BaseStandardFormatter extends MetadataFormatter
 
             new TagBuilder(context.getWriter(), tagName + "Date")
                 .beginContent()
-                .print(context.getDate())
+                .print(context.getDate(), context.getRetsVersion())
                 .close();
         }
     }

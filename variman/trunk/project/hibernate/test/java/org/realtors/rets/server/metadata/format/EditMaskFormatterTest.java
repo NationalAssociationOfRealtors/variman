@@ -13,6 +13,7 @@ public class EditMaskFormatterTest extends FormatterTestCase
     {
         List editMasks = new ArrayList();
         EditMask editMask = new EditMask();
+        editMask.setMetadataEntryID("EditMask");
         editMask.setEditMaskID("LN_EDITMASK");
         editMask.setValue("[0-9]{4,8}");
         editMasks.add(editMask);
@@ -40,9 +41,9 @@ public class EditMaskFormatterTest extends FormatterTestCase
             "<METADATA-EDITMASK Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tEditMaskID\tValue\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tEditMaskID\tValue\t</COLUMNS>\n" +
 
-            "<DATA>\tLN_EDITMASK\t[0-9]{4,8}\t</DATA>\n" +
+            "<DATA>\tEditMask\tLN_EDITMASK\t[0-9]{4,8}\t</DATA>\n" +
 
             "</METADATA-EDITMASK>\n";
     }
@@ -58,6 +59,7 @@ public class EditMaskFormatterTest extends FormatterTestCase
             "<METADATA-EDITMASK Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">" + EOL +
             "<EditMask>" + EOL +
+            "<MetadataEntryID>EditMask</MetadataEntryID>" + EOL +
             "<EditMaskID>LN_EDITMASK</EditMaskID>" + EOL +
             "<Value>[0-9]{4,8}</Value>" + EOL +
             "</EditMask>" + EOL +

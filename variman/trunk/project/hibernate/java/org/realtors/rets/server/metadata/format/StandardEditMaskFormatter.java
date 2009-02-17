@@ -25,7 +25,7 @@ public class StandardEditMaskFormatter extends BaseStandardFormatter
         TagBuilder metadata = new TagBuilder(out, "METADATA-EDITMASK")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = editMasks.iterator(); i.hasNext();)
@@ -34,6 +34,7 @@ public class StandardEditMaskFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "EditMask")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", editMask.getMetadataEntryID());
             TagBuilder.simpleTag(out, "EditMaskID", editMask.getEditMaskID());
             TagBuilder.simpleTag(out, "Value", editMask.getValue());
 

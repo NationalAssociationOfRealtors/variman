@@ -14,6 +14,7 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
     {
         List validationExpressions = new ArrayList();
         ValidationExpression validationExpression = new ValidationExpression();
+        validationExpression.setMetadataEntryID("ListingDate");
         validationExpression.setValidationExpressionID("LD_DATE");
         validationExpression.setValidationExpressionType(
             ValidationExpressionTypeEnum.SET);
@@ -43,10 +44,10 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_EXPRESSION Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tValidationExpressionID\tValidationExpressionType\t" +
+            "<COLUMNS>\tMetadataEntryID\tValidationExpressionID\tValidationExpressionType\t" +
             "Value\tVersion\tDate\t</COLUMNS>\n" +
 
-            "<DATA>\tLD_DATE\tSET\tLD=.TODAY." + VERSION_DATE + "\t</DATA>\n" +
+            "<DATA>\tListingDate\tLD_DATE\tSET\tLD=.TODAY." + VERSION_DATE + "\t</DATA>\n" +
 
             "</METADATA-VALIDATION_EXPRESSION>\n";
     }
@@ -62,6 +63,7 @@ public class ValidationExpressionFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_EXPRESSION Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<ValidationExpression>" + EOL +
+            "<MetadataEntryID>ListingDate</MetadataEntryID>" + EOL +
             "<ValidationExpressionID>LD_DATE</ValidationExpressionID>" + EOL +
             "<ValidationExpressionType>SET</ValidationExpressionType>" + EOL +
             "<Value>LD=.TODAY.</Value>" + EOL +

@@ -46,11 +46,12 @@ public class ClassFormatterTest extends FormatterTestCase
 
             "<COLUMNS>\tClassName\tStandardName\tVisibleName\t" +
             "Description\tTableVersion\tTableDate\tUpdateVersion\t" +
-            "UpdateDate\t</COLUMNS>\n" +
+            "UpdateDate\tClassTimeStamp\tDeletedFlagField\t" +
+            "DeletedFlagValue\tHasKeyIndex\t</COLUMNS>\n" +
 
             "<DATA>\tRES\tResidentialProperty\tSingle Family\t" +
             "Single Family Residential" + VERSION_DATE + VERSION_DATE +
-            "\t</DATA>\n" +
+            "\t\t\t\t0\t</DATA>\n" +
 
             "</METADATA-CLASS>\n";
     }
@@ -64,11 +65,13 @@ public class ClassFormatterTest extends FormatterTestCase
 
             "<COLUMNS>\tClassName\tStandardName\tVisibleName\t" +
             "Description\tTableVersion\tTableDate\tUpdateVersion\t" +
-            "UpdateDate\t</COLUMNS>\n" +
+            "UpdateDate\tClassTimeStamp\tDeletedFlagField\t" +
+            "DeletedFlagValue\tHasKeyIndex\t</COLUMNS>\n" +
+
 
             "<DATA>\tRES\tResidentialProperty\tSingle Family\t" +
             "Single Family Residential" + VERSION_DATE + VERSION_DATE +
-            "\t</DATA>\n" +
+            "\t\t\t\t0\t</DATA>\n" +
 
             "</METADATA-CLASS>\n" +
             Table.TABLE + "\n" +

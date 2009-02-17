@@ -21,8 +21,13 @@ import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.util.RetsDateTime;
+import org.realtors.rets.common.metadata.attrib.AttrDate;
+
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 import org.realtors.rets.server.dmql.DmqlFieldType;
+
 
 /**
  * Contains all objects needed to format search results. It contains:
@@ -50,10 +55,12 @@ public class SearchFormatterContext
      * @param resultSet
      * @param columns
      * @param metadata
+     * @param retsVersion The RETS protocol version.
      */
     public SearchFormatterContext(PrintWriter writer, ResultSet resultSet,
                                   Collection columns,
-                                  DmqlParserMetadata metadata)
+                                  DmqlParserMetadata metadata,
+                                  RetsVersion retsVersion)
     {
         mWriter = writer;
         mResultSet = resultSet;
@@ -62,6 +69,7 @@ public class SearchFormatterContext
         mMetadata = metadata;
         mRowCount = 0;
         mLimit = Integer.MAX_VALUE;
+        mRetsVersion = retsVersion;
     }
 
     public List getColumns()
@@ -85,6 +93,15 @@ public class SearchFormatterContext
         return (String) mColumns.get(columnIndex);
     }
 
+    /**
+     * Return the RETS protocol version associated with this search.
+     * @return RetsVersion
+     */
+    public RetsVersion getRetsVersion()
+    {
+    	return mRetsVersion;
+    }
+    
     public DmqlParserMetadata getMetadata()
     {
         return mMetadata;
@@ -182,7 +199,9 @@ public class SearchFormatterContext
     public String getResultString(int columnIndex)
         throws SQLException
     {
-        return mResultSet.getString(columnIndex + 1);
+    	String date = mResultSet.getString(columnIndex + 1);
+    	
+    	return date;
     }
 
     /**
@@ -276,6 +295,60 @@ public class SearchFormatterContext
         return ((fieldType == DmqlFieldType.LOOKUP) ||
                 (fieldType == DmqlFieldType.LOOKUP_MULTI));
     }
+ 
+    /**
+     * Checks if the column at the specified column index is a DateTime field.
+     *
+     * @param columnIndex 1-based column index
+     * @return <code>true</code> if the column is a DateTime field.
+     */
+    public boolean isColumnDateTime(int columnIndex)
+    {
+        String column = (String) mColumns.get(columnIndex);
+        return isColumnDateTime(column);
+    }
+
+    /**
+     * Checks if the column is a DateTime field.
+     *
+     * @param column column name
+     * @return <code>true</code> if the column is a DateTime field
+     */
+    public boolean isColumnDateTime(String column)
+    {
+        String field = mMetadata.columnToField(column);
+        DmqlFieldType fieldType = mMetadata.getFieldType(field);
+        return (fieldType == DmqlFieldType.TEMPORAL);
+    }
+    
+    /**
+     * Checks if the column at the specified column index is a RetsDateTime field.
+     *
+     * @param columnIndex 1-based column index
+     * @return <code>true</code> if the column is a RetsDateTime field.
+     */
+    public boolean isColumnRetsDateTime(int columnIndex) throws SQLException
+    {
+        Object o = mResultSet.getObject(columnIndex + 1);
+        return o instanceof RetsDateTime;
+    }
+
+    /**
+     * Checks if the column is a RetsDateTime field.
+     *
+     * @param fieldName column name
+     * @return <code>true</code> if the column is a RetsDateTime field
+     */
+    public boolean isColumnRetsDateTime(String fieldName) throws SQLException
+    {
+        if (mColumnsSet.contains(fieldName))
+        {
+        	Object o = mResultSet.getObject(mResultSet.findColumn(fieldName));
+            return o instanceof RetsDateTime;
+        }
+        return false;
+    }
+
 
     /** The writer to print to. */
     private PrintWriter mWriter;
@@ -290,4 +363,7 @@ public class SearchFormatterContext
     private int mRowCount;
     /** The maximum number of rows to iterate through. */
     private int mLimit;
+    /** The RETS protocol version */
+    private RetsVersion mRetsVersion;
+
 }

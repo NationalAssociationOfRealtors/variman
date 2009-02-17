@@ -27,7 +27,7 @@ public class CompactLookupFormatter extends MetadataFormatter
         TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-LOOKUP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = lookups.iterator(); iterator.hasNext();)
@@ -52,14 +52,15 @@ public class CompactLookupFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(lookup.getMetadataEntryID());
         row.append(lookup.getLookupName());
         row.append(lookup.getVisibleName());
         row.append(context.getVersion());
-        row.append(context.getDate());
+        row.append(context.getDate(), context.getRetsVersion());
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
-        "LookupName", "VisibleName", "Version", "Date",
+        "MetadataEntryID", "LookupName", "VisibleName", "Version", "Date",
     };
 }

@@ -1,0 +1,704 @@
+--
+-- PostgreSQL database dump
+--
+
+SET client_encoding = 'SQL_ASCII';
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'Standard public schema';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: actagt; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE actagt (
+    office_id character varying(7),
+    agent_id character varying(7) NOT NULL,
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.actagt OWNER TO mklein;
+
+--
+-- Name: agt; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE agt (
+    cell_phone character varying(11),
+    office_id character varying(7),
+    first_name character varying(12),
+    agent_id character varying(7) NOT NULL,
+    last_name character varying(18),
+    dsgnations character varying(20),
+    url character varying(40),
+    off_phone character varying(11),
+    "password" character varying(12),
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.agt OWNER TO mklein;
+
+--
+-- Name: con; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE con (
+    "owner" character varying(20),
+    stnum character varying(10),
+    ld date,
+    broker character varying(40),
+    vew bigint,
+    ltyp character varying(4),
+    status character varying(1),
+    sqft character varying(8),
+    m_school integer,
+    h_school integer,
+    stname character varying(20),
+    lp integer,
+    lif character varying(100),
+    e_school integer,
+    ar character varying(5),
+    ln character varying(40) NOT NULL,
+    ef character varying(100),
+    url character varying(40),
+    zip_code bigint,
+    agent_id character varying(6),
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.con OWNER TO mklein;
+
+--
+-- Name: lnd; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE lnd (
+    vew bigint,
+    sqft character varying(8),
+    zip_code bigint,
+    ln character varying(40) NOT NULL,
+    ld date,
+    ltyp character varying(4),
+    ar character varying(5),
+    agent_id character varying(6),
+    broker character varying(40),
+    lp integer,
+    "owner" character varying(20),
+    url character varying(40),
+    m_school integer,
+    lif character varying(100),
+    ef character varying(100),
+    e_school integer,
+    h_school integer,
+    stname character varying(20),
+    status character varying(1),
+    stnum character varying(10),
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.lnd OWNER TO mklein;
+
+--
+-- Name: mob; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE mob (
+    ld date,
+    stnum character varying(10),
+    "owner" character varying(20),
+    ltyp character varying(4),
+    h_school integer,
+    sqft character varying(8),
+    zip_code bigint,
+    ef character varying(100),
+    ar character varying(5),
+    ln character varying(40) NOT NULL,
+    lif character varying(100),
+    status character varying(1),
+    stname character varying(20),
+    e_school integer,
+    m_school integer,
+    url character varying(40),
+    agent_id character varying(6),
+    lp integer,
+    vew bigint,
+    broker character varying(40),
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.mob OWNER TO mklein;
+
+--
+-- Name: mul; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE mul (
+    ln character varying(40) NOT NULL,
+    lif character varying(100),
+    stnum character varying(10),
+    url character varying(40),
+    ld date,
+    h_school integer,
+    m_school integer,
+    "owner" character varying(20),
+    ef character varying(100),
+    broker character varying(40),
+    vew bigint,
+    lp integer,
+    zip_code bigint,
+    sqft character varying(8),
+    ltyp character varying(4),
+    stname character varying(20),
+    e_school integer,
+    agent_id character varying(6),
+    status character varying(1),
+    ar character varying(5),
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.mul OWNER TO mklein;
+
+--
+-- Name: office; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE office (
+    url character varying(40),
+    name character varying(20),
+    broker_id character varying(6),
+    office_id character varying(7) NOT NULL,
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.office OWNER TO mklein;
+
+--
+-- Name: rets_accounting; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE rets_accounting (
+    id bigint NOT NULL,
+    totaltime bigint,
+    userid bigint
+);
+
+
+ALTER TABLE public.rets_accounting OWNER TO mklein;
+
+--
+-- Name: rets_group; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE rets_group (
+    id bigint NOT NULL,
+    name character varying(32) NOT NULL,
+    description character varying(80)
+);
+
+
+ALTER TABLE public.rets_group OWNER TO mklein;
+
+--
+-- Name: rets_property_res; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE rets_property_res (
+    r_ld date,
+    r_md timestamp without time zone,
+    r_lp integer,
+    r_baths integer,
+    r_beds integer,
+    r_agent_id character varying(12),
+    r_city character varying(24),
+    r_county character varying(24),
+    r_ln character varying(40) NOT NULL,
+    r_office_id character varying(12),
+    r_zip_code character varying(10),
+    r_state character varying(24),
+    r_stnum character varying(12),
+    r_street_dir_prefix character varying(12),
+    r_stname character varying(24),
+    r_ltyp character varying(4),
+    r_board character varying(24),
+    r_cldate date,
+    r_codate date,
+    r_cp integer,
+    r_unnum character varying(12),
+    r_ls character varying(12),
+    r_garage integer,
+    r_area integer,
+    r_rooms integer,
+    r_year_built integer,
+    r_sqft double precision,
+    r_thumb_md timestamp without time zone,
+    r_thumbnails integer,
+    r_photo_md timestamp without time zone,
+    r_photos integer
+);
+
+
+ALTER TABLE public.rets_property_res OWNER TO postgres;
+
+--
+-- Name: rets_user; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE rets_user (
+    id bigint NOT NULL,
+    firstname character varying(80) NOT NULL,
+    lastname character varying(80) NOT NULL,
+    username character varying(32) NOT NULL,
+    passwordmethod character varying(255),
+    "password" character varying(80),
+    agentcode character varying(80),
+    brokercode character varying(80)
+);
+
+
+ALTER TABLE public.rets_user OWNER TO mklein;
+
+--
+-- Name: rets_user_groups; Type: TABLE; Schema: public; Owner: mklein; Tablespace: 
+--
+
+CREATE TABLE rets_user_groups (
+    group_id bigint NOT NULL,
+    user_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.rets_user_groups OWNER TO mklein;
+
+--
+-- Name: xceligent; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE xceligent (
+    property_id character(10),
+    property_name character(80),
+    address character(40),
+    building_number character(20),
+    city character(40),
+    state character(40),
+    county character(40),
+    zip character(20),
+    metro character(60),
+    general_use character(20),
+    gba character(20),
+    gla character(20),
+    nra character(20),
+    building_size character(20),
+    no_of_floors character(10),
+    construction_status character(20),
+    construction_class character(20),
+    year_built character(10),
+    listing_type character(30),
+    sale_created_date character(20),
+    sale_modified_date character(20),
+    sale_listing_status character(20),
+    sale_sharing_level character(10),
+    sale_agent_id character(20),
+    sale_agent_first_name character(60),
+    sale_agent_last_name character(60),
+    sale_email_address character(40),
+    sale_company_name character(60),
+    sale_agent_address character(80),
+    sale_agent_city character(40),
+    sale_agent_state character(20),
+    sale_agent_zip character(20),
+    specific_use character(60),
+    tenancy_type character(40),
+    sale_asking_price character(80),
+    sale_agent_phone_number character(40),
+    r_md timestamp without time zone
+);
+
+
+ALTER TABLE public.xceligent OWNER TO postgres;
+
+--
+-- Name: TABLE xceligent; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE xceligent IS 'xceligent sales listings';
+
+
+--
+-- Data for Name: actagt; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY actagt (office_id, agent_id, r_md) FROM stdin;
+\N	agent07	\N
+\N	Joe	\N
+\.
+
+
+--
+-- Data for Name: agt; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY agt (cell_phone, office_id, first_name, agent_id, last_name, dsgnations, url, off_phone, "password", r_md) FROM stdin;
+8005882300		James	agent07	Bond		http://realtor.org/crt			\N
+8675309		Joe	Joe	Schmoe		http://realtor.org/crt			\N
+\.
+
+
+--
+-- Data for Name: con; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY con ("owner", stnum, ld, broker, vew, ltyp, status, sqft, m_school, h_school, stname, lp, lif, e_school, ar, ln, ef, url, zip_code, agent_id, r_md) FROM stdin;
+\.
+
+
+--
+-- Data for Name: lnd; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY lnd (vew, sqft, zip_code, ln, ld, ltyp, ar, agent_id, broker, lp, "owner", url, m_school, lif, ef, e_school, h_school, stname, status, stnum, r_md) FROM stdin;
+\.
+
+
+--
+-- Data for Name: mob; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY mob (ld, stnum, "owner", ltyp, h_school, sqft, zip_code, ef, ar, ln, lif, status, stname, e_school, m_school, url, agent_id, lp, vew, broker, r_md) FROM stdin;
+\.
+
+
+--
+-- Data for Name: mul; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY mul (ln, lif, stnum, url, ld, h_school, m_school, "owner", ef, broker, vew, lp, zip_code, sqft, ltyp, stname, e_school, agent_id, status, ar, r_md) FROM stdin;
+\.
+
+
+--
+-- Data for Name: office; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY office (url, name, broker_id, office_id, r_md) FROM stdin;
+\.
+
+
+--
+-- Data for Name: rets_accounting; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY rets_accounting (id, totaltime, userid) FROM stdin;
+6	40	4
+14	219	11
+22	259	20
+33	48	25
+59	20	56
+65	0	53
+68	165	66
+82	102	80
+91	148	89
+79	2034	71
+2	24318188	1
+\.
+
+
+--
+-- Data for Name: rets_group; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY rets_group (id, name, description) FROM stdin;
+3	users	General Users
+\.
+
+
+--
+-- Data for Name: rets_property_res; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY rets_property_res (r_ld, r_md, r_lp, r_baths, r_beds, r_agent_id, r_city, r_county, r_ln, r_office_id, r_zip_code, r_state, r_stnum, r_street_dir_prefix, r_stname, r_ltyp, r_board, r_cldate, r_codate, r_cp, r_unnum, r_ls, r_garage, r_area, r_rooms, r_year_built, r_sqft, r_thumb_md, r_thumbnails, r_photo_md, r_photos) FROM stdin;
+2004-07-04	\N	250000	3	4	agent07	Chicago	Cook	LN000005	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2004-04-01	\N	425000	3	5	agent07	Evanston	Cook	LN000003	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-11 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000004	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000002	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2005-04-14	2008-09-01 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000001	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000006	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000007	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000008	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000009	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000010	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000011	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000012	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000013	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000014	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000015	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000016	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000017	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000018	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000019	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000020	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000021	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000022	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000023	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000024	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000025	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000026	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000027	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000028	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000029	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000030	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000031	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000032	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000033	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000034	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000035	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000036	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000037	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000038	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000039	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000040	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000041	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000042	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000043	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000044	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000045	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+2005-04-14	2008-09-15 00:00:00	300000	2	5	agent07	Chicago	Cook	LN000046	\N	60605	IL	430	N	Michigan Ave	\N	\N	\N	\N	\N	\N	Active	1	1400	11	1989	1250.1199999999999	\N	\N	\N	\N
+2005-03-23	2008-09-01 00:00:00	250000	1	3	Joe	Chicago	Cook	LN000047	\N	60613	IL	1250	E	Armitage Ave	\N	\N	\N	\N	\N	\N	Active	3	900	8	1975	\N	\N	\N	\N	\N
+2004-04-01	2007-01-01 00:00:00	425000	3	5	agent07	Evanston	Cook	LN000048	\N	60533	IL	120		Main St	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1922	10.000999999999999	\N	\N	\N	\N
+2004-05-30	2008-09-01 00:00:00	380000	3	4	Joe	Buffalo Grove	Lake	LN000049	\N	60089	IL	83		Fox Hill	\N	\N	\N	\N	\N	\N	Active	\N	\N	\N	1985	\N	\N	\N	\N	\N
+2004-07-04	2008-09-15 00:00:00	250000	3	4	agent07	Chicago	Cook	LN000050	\N	60605	IL	625	N	Michigan	\N	\N	2004-09-01	\N	233000	\N	Closed	2	1100	9	1978	1500.2322999999999	\N	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: rets_user; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY rets_user (id, firstname, lastname, username, passwordmethod, "password", agentcode, brokercode) FROM stdin;
+1	Joe	Schmoe	Joe	A1:RETS Server	a04aab7e749c8f532b78bdd61dfa0cb2		
+4	Eric	Elliston	eelliston	A1:RETS Server	09239930fe440491351eba4a253ac396	\N	\N
+7	De	Which	nji78	A1:RETS Server	d7043cb513a1bd418ce85f469ddad654	\N	\N
+11	Michael	McCord	mmccord	A1:RETS Server	14ea23d9f2c1c688b9e3369fb7c19278	\N	\N
+20	Frank	Hoeflich	frankh	A1:RETS Server	bf65261ed6f92e2fa5b20a9c1de56bfa	\N	\N
+25	A Khadir	Kamal	khadir	A1:RETS Server	2a5083f8e2ead281ee69ea6e2b59a592	\N	\N
+34	vet	supr	vetcomp	A1:RETS Server	f579676b55feda18d9a0dbb8b4d59499	\N	\N
+42	Max	Krivoshlyk	mxkr	A1:RETS Server	f54f8173028dcd1ae71fa40e34e1942b	\N	\N
+45	Ravi	Somepalli	rsomepalli	A1:RETS Server	1f2404ca86c83055c799156d5b53540e	\N	\N
+53	bill	sternberger	billsternberger	A1:RETS Server	eaa9b6f2dd59be10c11917f18a193225	\N	\N
+56	Bokonon	Mokonon	mokonon	A1:RETS Server	43e9acbe5d4dab973c406e897ab5aa97	\N	\N
+66	Tom	Test	tomtest	A1:RETS Server	4dc147ed8d2f743fe183e1ac7a6d2b4b	\N	\N
+69	loren	ryter	woodenbrain	A1:RETS Server	a419dbacea6d7bb3ff1b2e512611a57f	\N	\N
+71	Abhinav	Zone	AbhinavZone	A1:RETS Server	1109676e266ff76de43127274119d374	\N	\N
+80	Daniel	Zachary	lcl	A1:RETS Server	a92fe10360f613cf8d810af5817b007e	\N	\N
+89	Foo	Bar	foobar	A1:RETS Server	9870deaed9251925112fef8482e56eab	\N	\N
+92	Adam	Fidel	dopple	A1:RETS Server	5114068d295e45676d4081bca57522d4	\N	\N
+95	test	test	test	A1:RETS Server	063194b73509594d2cf9a126699b58d5	\N	\N
+\.
+
+
+--
+-- Data for Name: rets_user_groups; Type: TABLE DATA; Schema: public; Owner: mklein
+--
+
+COPY rets_user_groups (group_id, user_id) FROM stdin;
+3	1
+\.
+
+
+--
+-- Data for Name: xceligent; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY xceligent (property_id, property_name, address, building_number, city, state, county, zip, metro, general_use, gba, gla, nra, building_size, no_of_floors, construction_status, construction_class, year_built, listing_type, sale_created_date, sale_modified_date, sale_listing_status, sale_sharing_level, sale_agent_id, sale_agent_first_name, sale_agent_last_name, sale_email_address, sale_company_name, sale_agent_address, sale_agent_city, sale_agent_state, sale_agent_zip, specific_use, tenancy_type, sale_asking_price, sale_agent_phone_number, r_md) FROM stdin;
+585893    	SEC of Randolph and Lexington                                                   	SE of Randolph and Lexington            	1                   	Saint Paul                              	MN                                      	Ramsey                                  	55105               	Minneapolis-St. Paul                                        	Ret                 	26571               	26571               	26571               	26571               	1         	Existing            	A                   	NULL      	Exclusive                     	50:05.2             	10:06.4             	Active              	N         	14341               	Amy                                                         	Senn                                                        	asenn@welshco.com                       	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Gas Station/Conv Store                                      	Single-Tenant                           	$875,000                                                                        	(952) 897-7833                          	\N
+573687    	Gander Mountain Outlots                                                         	SE of I-94 and Woodbury Dr              	1                   	Woodbury                                	MN                                      	Washington                              	55125               	Minneapolis-St. Paul                                        	Ret                 	85000               	85000               	85000               	85000               	1         	Proposed            	A                   	NULL      	Exclusive                     	41:26.7             	52:08.7             	Active              	N         	13898               	Chris                                                       	Simmons                                                     	csimmons@Welshco.com                    	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Freestanding                                                	Multi-Tenant                            	$3,045,715                                                                      	(952) 897-7760                          	\N
+471812    	Former Burger King                                                              	7516 Brooklyn Blvd                      	1                   	Brooklyn Park                           	MN                                      	Hennepin                                	55443               	Minneapolis-St. Paul                                        	Ret                 	3500                	3500                	3500                	3500                	NULL      	Existing            	A                   	1974      	Exclusive                     	26:30.8             	52:08.6             	Active              	N         	13898               	Chris                                                       	Simmons                                                     	csimmons@Welshco.com                    	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Fast Food                                                   	Single-Tenant                           	$495,000                                                                        	(952) 897-7760                          	\N
+490371    	Diamond Lake Fast Lube & Car Wash                                               	21025 Diamond Lake Rd S                 	1                   	Rogers                                  	MN                                      	Hennepin                                	55374               	Minneapolis-St. Paul                                        	Ret                 	5335                	5335                	5335                	5335                	NULL      	Existing            	A                   	2001      	Exclusive                     	02:30.6             	54:17.9             	Active              	N         	13841               	Jeff                                                        	Minea                                                       	jminea@welshco.com                      	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Automotive                                                  	Single-Tenant                           	$1,150,000                                                                      	(952) 897-7741                          	\N
+531067    	Former Burger King                                                              	8097 Hwy 65                             	1                   	Spring Lake Park                        	MN                                      	Anoka                                   	55432               	Minneapolis-St. Paul                                        	Ret                 	2757                	2757                	2757                	2757                	NULL      	Existing            	A                   	NULL      	Exclusive                     	37:30.9             	52:08.6             	Active              	N         	13898               	Chris                                                       	Simmons                                                     	csimmons@Welshco.com                    	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Fast Food                                                   	                                        	$650,000                                                                        	(952) 897-7760                          	\N
+586197    	11700 Jefferson  St NE                                                          	11700 Jefferson  St NE                  	1                   	Blaine                                  	MN                                      	Anoka                                   	55434               	Minneapolis-St. Paul                                        	Ret                 	8010                	8010                	8010                	8010                	1         	Existing            	A                   	NULL      	Exclusive                     	27:08.8             	20:50.3             	Active              	N         	17173               	Eric                                                        	Batiza                                                      	ebatiza@welshco.com                     	NAI Welsh Commercial Real Estate Services                   	900 2nd Ave S #200                                                              	Minneapolis                             	MN                  	55402               	Neighborhood Ctr                                            	Multi-Tenant                            	$600,000                                                                        	(952) 837-3007                          	\N
+179249    	Audio King Building                                                             	5939 John Martin Dr                     	1                   	Brooklyn Center                         	MN                                      	Hennepin                                	55430-2509          	Minneapolis-St. Paul                                        	Ret                 	15000               	15000               	15000               	15000               	1         	Existing            	A                   	1984      	Exclusive                     	44:14.2             	52:08.7             	Active              	N         	13682               	Dan                                                         	Brastad, CCIM                                               	dbrastad@welshco.com                    	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Freestanding                                                	Single-Tenant                           	$1,750,000                                                                      	(952) 897-7890                          	\N
+456359    	2510 Kenzie Terr                                                                	2510 Kenzie Terr                        	1                   	Minneapolis                             	MN                                      	Hennepin                                	55418               	Minneapolis-St. Paul                                        	Ret                 	NULL                	5866                	NULL                	5866                	1         	Existing            	A                   	NULL      	Exclusive                     	17:37.3             	24:37.0             	Active              	N         	14341               	Amy                                                         	Senn                                                        	asenn@welshco.com                       	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	General                                                     	Multi-Tenant                            	$599,000                                                                        	(952) 897-7833                          	\N
+212638    	Amoco Surplus Building                                                          	6300 Lakeland Ave N                     	1                   	Brooklyn Park                           	MN                                      	Hennepin                                	55428               	Minneapolis-St. Paul                                        	Ret                 	1540                	1540                	1540                	1540                	1         	Existing            	A                   	1968      	Exclusive                     	12:51.8             	52:08.6             	Active              	N         	13914               	Tony                                                        	Strauss, CCIM                                               	astrauss@welshco.com                    	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Freestanding                                                	Single-Tenant                           	$250,000                                                                        	(952) 897-7882                          	\N
+177398    	Levitz Furniture Building                                                       	7007 Lakeland Ave N                     	1                   	Brooklyn Park                           	MN                                      	Hennepin                                	55428               	Minneapolis-St. Paul                                        	Ret                 	50309               	50309               	50309               	50309               	1         	Existing            	A                   	1989      	Exclusive                     	04:59.4             	48:32.2             	Active              	N         	13874               	Tim                                                         	Prinsen                                                     	tprinsen@welshco.com                    	NAI Welsh Commercial Real Estate Services                   	7807 Creekridge Circle                                                          	Minneapolis                             	MN                  	55439               	Big Box                                                     	Single-Tenant                           	$6,075,000                                                                      	(952) 897-7748                          	\N
+118674    	5233-5235 S 27th St                                                             	5233-5235 S 27th St                     	1                   	Milwaukee                               	WI                                      	Milwaukee                               	53221               	Wisconsin                                                   	Ret                 	9860                	9860                	9860                	9860                	1         	Existing            	A                   	1984      	Exclusive                     	23:08.4             	54:25.1             	Active              	N         	9015                	Tom                                                         	Kohl                                                        	tkohl@boerke.com                        	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Conv/Strip Ctr                                              	Multi-Tenant                            	$1,000,000                                                                      	(414) 203-3015                          	\N
+171126    	Brahm's Service                                                                 	725 E Geneva St                         	1                   	Delavan                                 	WI                                      	Walworth                                	53115               	Wisconsin                                                   	Ret                 	NULL                	3960                	NULL                	3960                	1         	Existing            	A                   	NULL      	Exclusive                     	46:20.1             	48:02.2             	Active              	N         	9022                	Don                                                         	Silvers                                                     	dsilvers@boerke.com                     	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Other                                                       	Single-Tenant                           	$375,000                                                                        	(414) 203-3035                          	\N
+167259    	11042-11074 N Pilgrim (W156) Rd                                                 	11042-11074 N Pilgrim Rd                	1                   	Germantown                              	WI                                      	Washington                              	53022               	Wisconsin                                                   	Ret                 	NULL                	14237               	NULL                	14237               	1         	Existing            	A                   	NULL      	Exclusive                     	43:04.3             	48:02.1             	Active              	N         	9015                	Tom                                                         	Kohl                                                        	tkohl@boerke.com                        	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Neighborhood Ctr                                            	Multi-Tenant                            	$250,000                                                                        	(414) 203-3015                          	\N
+574458    	11201 N Port Washington Rd                                                      	11201 N Port Washington Rd              	1                   	Mequon                                  	WI                                      	Ozaukee                                 	53092               	Wisconsin                                                   	Ret                 	1700                	1700                	1700                	1700                	1         	Existing            	A                   	NULL      	Exclusive                     	27:55.4             	01:44.8             	Pending             	N         	9015                	Tom                                                         	Kohl                                                        	tkohl@boerke.com                        	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Fast Food                                                   	Single-Tenant                           	$1,100,000                                                                      	(414) 203-3015                          	\N
+539623    	1408 Summit Ave                                                                 	1408 Summit Ave                         	1                   	Oconomowoc                              	WI                                      	Waukesha                                	53066               	Wisconsin                                                   	Ret                 	91651               	91651               	91651               	91651               	1         	Existing            	A                   	NULL      	Exclusive                     	28:51.9             	48:02.1             	Active              	N         	9025                	Andy                                                        	Fishler                                                     	afishler@boerke.com                     	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Conv/Strip Ctr                                              	Multi-Tenant                            	$10,700,000                                                                     	(414) 203-3027                          	\N
+111492    	532-534 N Water St                                                              	532-534 N Water St                      	1                   	Milwaukee                               	WI                                      	Milwaukee                               	53202               	Wisconsin                                                   	Ret                 	16800               	16800               	16800               	16800               	4         	Existing            	A                   	1870      	Exclusive                     	17:05.6             	48:02.1             	Active              	N         	113971              	Jason                                                       	Frederick                                                   	jfrederick@boerke.com                   	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Other                                                       	Multi-Tenant                            	$420,000                                                                        	(414) 203-3031                          	\N
+113032    	Milwaukee Electric Tool Tech. Center                                            	4085 N 128th St                         	1                   	Brookfield                              	WI                                      	Waukesha                                	53005               	Wisconsin                                                   	Ind                 	48000               	48000               	48000               	48000               	2         	Existing            	A                   	NULL      	Exclusive                     	37:54.1             	48:01.8             	Active              	N         	9007                	James                                                       	Babiasz                                                     	jbabiasz@boerke.com                     	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Light Manufacturing                                         	Single-Tenant                           	$1,800,000                                                                      	(414) 203-3039                          	\N
+350685    	325 E 15th St                                                                   	325 E 15th St                           	1                   	Clintonville                            	WI                                      	Waupaca                                 	54929               	Wisconsin                                                   	Ind                 	59742               	NULL                	NULL                	59742               	NULL      	Existing            	A                   	NULL      	Exclusive                     	58:15.6             	48:01.8             	Active              	N         	9023                	Chad                                                        	Vande Zande                                                 	cvandezande@boerke.com                  	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	                                                            	                                        	$995,000                                                                        	(414) 203-3024                          	\N
+110778    	5023 N 35th St                                                                  	5023 N 35th St                          	1                   	Milwaukee                               	WI                                      	Milwaukee                               	53209               	Wisconsin                                                   	Ind                 	233850              	233850              	233850              	233850              	2         	Existing            	A                   	1890      	Exclusive                     	01:32.6             	48:01.8             	Active              	N         	9007                	James                                                       	Babiasz                                                     	jbabiasz@boerke.com                     	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Flex/R&D                                                    	Multi-Tenant                            	$2,600,000                                                                      	(414) 203-3039                          	\N
+491641    	P.H. Glatfelter Facility                                                        	1655 Bergstrom Rd                       	1                   	Neenah                                  	WI                                      	Winnebago                               	54956               	Wisconsin                                                   	Ind                 	179272              	179272              	179272              	179272              	1         	Existing            	A                   	NULL      	Exclusive                     	34:24.9             	48:01.8             	Active              	N         	9007                	James                                                       	Babiasz                                                     	jbabiasz@boerke.com                     	Grubb & Ellis | Boerke Company                              	411 E Wisconsin Ave                                                             	Milwaukee                               	WI                  	53202               	Warehouse - Distribution                                    	Single-Tenant                           	$2,900,000                                                                      	(414) 203-3039                          	\N
+540313    	7700 W 44th Ave                                                                 	7700 W 44th Ave                         	1                   	Wheat Ridge                             	CO                                      	Jefferson                               	80033               	Denver                                                      	Ret                 	24700               	24700               	24700               	24700               	1         	Existing            	A                   	1977      	Exclusive                     	43:15.6             	14:00.2             	Pending             	N         	100882              	Greg                                                        	Knott                                                       	gknott@uniqueprop.com                   	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Freestanding                                                	Single-Tenant                           	$775,000                                                                        	(303) 321-5888                          	\N
+489228    	2709 S Broadway                                                                 	2709 S Broadway St                      	1                   	Englewood                               	CO                                      	Arapahoe                                	80113               	Denver                                                      	Ret                 	4088                	4088                	4088                	4088                	1         	U/C                 	A                   	NULL      	Exclusive                     	35:50.8             	11:37.2             	Active              	N         	100877              	Todd                                                        	Silverman                                                   	tsilverman@uniqueprop.com               	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	General                                                     	Multi-Tenant                            	$204,400 - $817,600                                                             	(303) 321-5888                          	\N
+491971    	33355 Colfax Ave                                                                	33355 Colfax Ave                        	1                   	Watkins                                 	CO                                      	Adams                                   	80137               	Denver                                                      	Ret                 	7488                	7488                	7488                	7488                	1         	Existing            	A                   	NULL      	Exclusive                     	35:47.9             	20:17.6             	Active              	N         	100875              	Allen                                                       	Freedberg                                                   	afreedberg@uniqueprop.com               	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Restaurant                                                  	Single-Tenant                           	$1,925,000                                                                      	(303) 321-5888                          	\N
+485254    	Chatfield Autobody                                                              	8537 S Reed St                          	1                   	Littleton                               	CO                                      	Jefferson                               	80128               	Denver                                                      	Ret                 	4608                	4608                	4608                	4608                	1         	Existing            	A                   	1979      	Exclusive                     	48:21.5             	38:22.6             	Active              	N         	100877              	Todd                                                        	Silverman                                                   	tsilverman@uniqueprop.com               	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Automotive                                                  	Multi-Tenant                            	$850,000                                                                        	(303) 321-5888                          	\N
+512641    	310 N Wilcox St                                                                 	310 N Wilcox St                         	1                   	Castle Rock                             	CO                                      	Douglas                                 	80104               	Denver                                                      	Ret                 	5122                	5122                	5122                	5122                	1         	Existing            	A                   	NULL      	Exclusive                     	49:10.1             	17:05.9             	Active              	N         	100874              	Marc                                                        	Lippitt                                                     	mlippitt@uniqueprop.com                 	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Restaurant                                                  	                                        	$650,000                                                                        	(303) 321-5888 Ext 201                  	\N
+417944    	6161 E 88th Ave                                                                 	6161 E 88th Ave                         	1                   	Henderson                               	CO                                      	Adams                                   	80640               	Denver                                                      	Ind                 	14788               	14788               	14788               	14788               	1         	Existing            	A                   	1959      	Exclusive                     	02:08.6             	39:05.0             	Active              	N         	100882              	Greg                                                        	Knott                                                       	gknott@uniqueprop.com                   	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Light Manufacturing                                         	Single-Tenant                           	$1,100,000                                                                      	(303) 321-5888                          	\N
+403785    	800-810 W 8th Ave                                                               	800-810 W 8th Ave                       	1                   	Denver                                  	CO                                      	Denver                                  	80204               	Denver                                                      	Ind                 	20732               	20732               	20732               	20732               	2         	Existing            	A                   	1970      	Exclusive                     	11:44.6             	04:27.5             	Active              	N         	113692              	Jules                                                       	Hochman                                                     	jbhochman@uniqueprop.com                	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Light Manufacturing                                         	Single-Tenant                           	$2,200,000                                                                      	(303) 321-5888                          	\N
+374503    	Discount Windows Building                                                       	4321 Broadway St                        	1                   	Denver                                  	CO                                      	Denver                                  	80216               	Denver                                                      	Ind                 	27460               	27460               	27460               	27460               	1         	Existing            	A                   	1978      	Exclusive                     	02:47.0             	01:42.3             	Active              	N         	100882              	Greg                                                        	Knott                                                       	gknott@uniqueprop.com                   	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Light Manufacturing                                         	Multi-Tenant                            	$2,325,000                                                                      	(303) 321-5888                          	\N
+471405    	Compton Square                                                                  	530 Compton St                          	1                   	Broomfield                              	CO                                      	Broomfield                              	80020-1635          	Denver                                                      	Ind                 	21248               	NULL                	NULL                	21248               	1         	Existing            	B                   	1990      	Exclusive                     	46:23.4             	12:03.8             	Active              	N         	100872              	Dwaine                                                      	Ulrich                                                      	dulrich@uniqueprop.com                  	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Flex/R&D                                                    	Single-Tenant                           	$1,600,000                                                                      	(303) 321-5888                          	\N
+373142    	7476 S Eagle St                                                                 	7476 S Eagle St                         	1                   	Englewood                               	CO                                      	Arapahoe                                	80112               	Denver                                                      	Ind                 	20092               	20092               	20092               	20092               	1         	Existing            	                    	1984      	Exclusive                     	02:43.3             	12:03.8             	Active              	N         	100872              	Dwaine                                                      	Ulrich                                                      	dulrich@uniqueprop.com                  	Unique Properties LLC                                       	1873 South Bellaire St.                                                         	Denver                                  	CO                  	80222               	Warehouse - Distribution                                    	Multi-Tenant                            	$1,495,000                                                                      	(303) 321-5888                          	\N
+\.
+
+
+--
+-- Name: actagt_pkey; Type: CONSTRAINT; Schema: public; Owner: mklein; Tablespace: 
+--
+
+ALTER TABLE ONLY actagt
+    ADD CONSTRAINT actagt_pkey PRIMARY KEY (agent_id);
+
+
+--
+-- Name: agt_pkey; Type: CONSTRAINT; Schema: public; Owner: mklein; Tablespace: 
+--
+
+ALTER TABLE ONLY agt
+    ADD CONSTRAINT agt_pkey PRIMARY KEY (agent_id);
+
+
+--
+-- Name: con_pkey; Type: CONSTRAINT; Schema: public; Owner: mklein; Tablespace: 
+--
+
+ALTER TABLE ONLY con
+    ADD CONSTRAINT con_pkey PRIMARY KEY (ln);
+
+
+--
+-- Name: lnd_pkey; Type: CONSTRAINT; Schema: public; Owner: mklein; Tablespace: 
+--
+
+ALTER TABLE ONLY lnd
+    ADD CONSTRAINT lnd_pkey PRIMARY KEY (ln);
+
+
+--
+-- Name: mob_pkey; Type: CONSTRAINT; Schema: public; Owner: mklein; Tablespace: 
+--
+
+ALTER TABLE ONLY mob
+    ADD CONSTRAINT mob_pkey PRIMARY KEY (ln);
+
+
+--
+-- Name: mul_pkey; Type: CONSTRAINT; Schema: public; Owner: mklein; Tablespace: 
+--
+
+ALTER TABLE ONLY mul
+    ADD CONSTRAINT mul_pkey PRIMARY KEY (ln);
+
+
+--
+-- Name: office_pkey; Type: CONSTRAINT; Schema: public; Owner: mklein; Tablespace: 
+--
+
+ALTER TABLE ONLY office
+    ADD CONSTRAINT office_pkey PRIMARY KEY (office_id);
+
+
+--
+-- Name: rets_property_res_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY rets_property_res
+    ADD CONSTRAINT rets_property_res_pkey PRIMARY KEY (r_ln);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: actagt; Type: ACL; Schema: public; Owner: mklein
+--
+
+REVOKE ALL ON TABLE actagt FROM PUBLIC;
+REVOKE ALL ON TABLE actagt FROM mklein;
+GRANT ALL ON TABLE actagt TO mklein;
+
+
+--
+-- Name: agt; Type: ACL; Schema: public; Owner: mklein
+--
+
+REVOKE ALL ON TABLE agt FROM PUBLIC;
+REVOKE ALL ON TABLE agt FROM mklein;
+GRANT ALL ON TABLE agt TO mklein;
+
+
+--
+-- Name: con; Type: ACL; Schema: public; Owner: mklein
+--
+
+REVOKE ALL ON TABLE con FROM PUBLIC;
+REVOKE ALL ON TABLE con FROM mklein;
+GRANT ALL ON TABLE con TO mklein;
+
+
+--
+-- Name: lnd; Type: ACL; Schema: public; Owner: mklein
+--
+
+REVOKE ALL ON TABLE lnd FROM PUBLIC;
+REVOKE ALL ON TABLE lnd FROM mklein;
+GRANT ALL ON TABLE lnd TO mklein;
+
+
+--
+-- Name: mob; Type: ACL; Schema: public; Owner: mklein
+--
+
+REVOKE ALL ON TABLE mob FROM PUBLIC;
+REVOKE ALL ON TABLE mob FROM mklein;
+GRANT ALL ON TABLE mob TO mklein;
+
+
+--
+-- Name: mul; Type: ACL; Schema: public; Owner: mklein
+--
+
+REVOKE ALL ON TABLE mul FROM PUBLIC;
+REVOKE ALL ON TABLE mul FROM mklein;
+GRANT ALL ON TABLE mul TO mklein;
+
+
+--
+-- Name: office; Type: ACL; Schema: public; Owner: mklein
+--
+
+REVOKE ALL ON TABLE office FROM PUBLIC;
+REVOKE ALL ON TABLE office FROM mklein;
+GRANT ALL ON TABLE office TO mklein;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

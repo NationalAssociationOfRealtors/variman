@@ -50,6 +50,7 @@ public class ResidentialPropertyFormatter implements SearchResultsFormatter
     private void formatRow(SearchFormatterContext context)
         throws SQLException
     {
+    	// FIXME: This is a shell and needs to be fully implemented for 1.7.2
         PrintWriter out = context.getWriter();
         DmqlParserMetadata metadata = context.getMetadata();
         TagBuilder residentialProperty =

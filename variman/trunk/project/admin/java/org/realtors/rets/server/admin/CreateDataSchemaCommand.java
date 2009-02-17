@@ -102,6 +102,7 @@ public class CreateDataSchemaCommand
 
             sb.append("CREATE TABLE ").append(sqlTableName);
             sb.append(" (").append(mLs);
+            // FIXME: I'm not sure why this was recently added or if it is complete.
             sb.append("\tid ").append(dialect.getTypeName(Types.BIGINT));
             sb.append(" NOT NULL,").append(mLs);
 
@@ -172,7 +173,7 @@ public class CreateDataSchemaCommand
                         sb.append(" unique");
                     }
 
-                    if (table.getIndex() > 0)
+                    if (table.getIndex())
                     {
                         needsIndex.add(table);
                     }
@@ -206,10 +207,10 @@ public class CreateDataSchemaCommand
                 sb.append("\tparent_id ").append(bigint).append(" NOT NULL, ");
                 sb.append(mLs);
                 sb.append("\tlookup_name ");
-                sb.append(dialect.getTypeName(Types.VARCHAR, 32));
+                sb.append(dialect.getTypeName(Types.VARCHAR, 64));
                 sb.append(" NOT NULL, ").append(mLs);
                 sb.append("\tvalue ");
-                sb.append(dialect.getTypeName(Types.VARCHAR, 32)).append(mLs);
+                sb.append(dialect.getTypeName(Types.VARCHAR, 128)).append(mLs);
                 sb.append(");").append(mLs);
 
                 // Do the primary key

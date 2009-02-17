@@ -13,6 +13,7 @@ public class LookupTypeFormatterTest extends FormatterTestCase
     {
         List lookupTypes = new ArrayList();
         LookupType lookupType = new LookupType();
+        lookupType.setMetadataEntryID("Aurora386");
         lookupType.setLongValue("Aurora 306");
         lookupType.setShortValue("306");
         lookupType.setValue("306");
@@ -41,9 +42,9 @@ public class LookupTypeFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP_TYPE Resource=\"Property\" Lookup=\"E_SCHOOL\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tLongValue\tShortValue\tValue\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tLongValue\tShortValue\tValue\t</COLUMNS>\n" +
 
-            "<DATA>\tAurora 306\t306\t306\t</DATA>\n" +
+            "<DATA>\tAurora386\tAurora 306\t306\t306\t</DATA>\n" +
 
             "</METADATA-LOOKUP_TYPE>\n";
     }
@@ -59,6 +60,7 @@ public class LookupTypeFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP_TYPE Resource=\"Property\" Lookup=\"E_SCHOOL\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<Lookup>" + EOL +
+            "<MetadataEntryID>Aurora386</MetadataEntryID>" + EOL +
             "<LongValue>Aurora 306</LongValue>" + EOL +
             "<ShortValue>306</ShortValue>" + EOL +
             "<Value>306</Value>" + EOL +

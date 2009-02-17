@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.server.metadata.Update;
+import org.realtors.rets.server.Util;
 
 public class StandardUpdateFormatter extends BaseStandardFormatter
 {
@@ -26,7 +27,7 @@ public class StandardUpdateFormatter extends BaseStandardFormatter
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Class", levels[CLASS_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = updates.iterator(); i.hasNext();)
@@ -34,10 +35,12 @@ public class StandardUpdateFormatter extends BaseStandardFormatter
             Update update = (Update) i.next();
             TagBuilder tag = new TagBuilder(out, "UpdateType")
                 .beginContentOnNewLine();
-
+ 
+            TagBuilder.simpleTag(out, "MetadataEntryID", update.getMetadataEntryID());
             TagBuilder.simpleTag(out, "UpdateName", update.getUpdateName());
             TagBuilder.simpleTag(out, "Description", update.getDescription());
             TagBuilder.simpleTag(out, "KeyField", update.getKeyField());
+            
             formatVersionDateTags(context, VERSION_DATE_TAGS);
 
             if (context.isRecursive())

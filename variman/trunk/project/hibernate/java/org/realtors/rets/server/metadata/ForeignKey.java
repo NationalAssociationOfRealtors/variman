@@ -87,6 +87,33 @@ public class ForeignKey extends ServerMetadata implements Serializable
     {
         mChildTable = childTable;
     }
+    
+    /**
+     *  @return Conditional Parent Field
+     */
+    public String getConditionalParentField()
+    {
+    	return mConditionalParentField;
+    }
+    
+    public void setConditionalParentField(String conditionalParentField)
+    {
+    	mConditionalParentField = conditionalParentField;
+    }
+
+    /**
+     *  @return Conditional Parent Value
+     */
+    public String getConditionalParentValue()
+    {
+    	return mConditionalParentValue;
+    }
+    
+    public void setConditionalParentValue(String conditionalParentValue)
+    {
+    	mConditionalParentValue = conditionalParentValue;
+    }
+
 
     public String getTableName()
     {
@@ -143,5 +170,10 @@ public class ForeignKey extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private Table mChildTable;
-
+    
+    /** nullable persistent field */
+    private String mConditionalParentField;
+    
+    /** nullable persistent field */
+    private String mConditionalParentValue;
 }

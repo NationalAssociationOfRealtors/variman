@@ -12,6 +12,7 @@
   <object-set-pattern>%k.xml</object-set-pattern>
   <nonce-initial-timeout>1</nonce-initial-timeout>
   <nonce-success-timeout>1</nonce-success-timeout>
+  <strict-parsing>true</strict-parsing>
   -->
 
   <database>

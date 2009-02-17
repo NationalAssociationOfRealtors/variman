@@ -28,7 +28,7 @@ public class CompactSearchHelpFormatter extends MetadataFormatter
                                         "METADATA-SEARCH_HELP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = searchHelps.iterator(); iterator.hasNext();)
@@ -43,12 +43,13 @@ public class CompactSearchHelpFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(searchHelp.getMetadataEntryID());
         row.append(searchHelp.getSearchHelpID());
         row.append(searchHelp.getValue());
         row.end();
      }
 
     private static final String[] COLUMNS = new String[] {
-        "SearchHelpID", "Value",
+        "MetadataEntryID", "SearchHelpID", "Value",
     };
 }

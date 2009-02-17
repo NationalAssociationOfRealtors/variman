@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.realtors.rets.server.RetsVersion;
+import org.realtors.rets.client.RetsVersion;
 
 public class RetsServletResponse extends HttpServletResponseWrapper
 {
@@ -46,15 +46,29 @@ public class RetsServletResponse extends HttpServletResponseWrapper
 
     public void setRetsVersionHeader(RetsVersion retsVersion)
     {
-        if (retsVersion == RetsVersion.RETS_1_0)
+        if (retsVersion.equals(RetsVersion.RETS_1_0))
         {
             mRetsVersionheader = "RETS/1.0";
         }
-        else if (retsVersion == RetsVersion.RETS_1_5)
+        else if (retsVersion.equals(RetsVersion.RETS_1_5))
         {
             mRetsVersionheader = "RETS/1.5";
         }
+        else if (retsVersion.equals(RetsVersion.RETS_1_7))
+        {
+        	mRetsVersionheader = "RETS/1.7";
+        }
+        else if (retsVersion.equals(RetsVersion.RETS_1_7_2))
+        {
+        	mRetsVersionheader = "RETS/1.7.2";
+        }
         setRetsHttpHeaders();
+    }
+    
+    public void setRetsRequestID(String retsRequestID)
+    {
+    	mRetsRequestID = retsRequestID;
+    	setRetsHttpHeaders();
     }
 
     private void setRetsHttpHeaders()
@@ -65,6 +79,8 @@ public class RetsServletResponse extends HttpServletResponseWrapper
         }
         setHeader("RETS-Server", sRetServerHeader);
         setHeader("Cache-Control", "private");
+        if (mRetsRequestID != null)
+        	setHeader("RETS-Request-ID", mRetsRequestID);
     }
 
     public void reset()
@@ -74,6 +90,7 @@ public class RetsServletResponse extends HttpServletResponseWrapper
     }
 
     private String mRetsVersionheader;
+    private String mRetsRequestID;
     public static final String sRetServerHeader =
         WebApp.SERVER_NAME + "/" + WebApp.getVersion();
 }

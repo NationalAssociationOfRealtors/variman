@@ -38,6 +38,7 @@ public class TableFormatterTest extends FormatterTestCase
         mSchool.setSearchable(true);
         mSchool.setInterpretation(InterpretationEnum.LOOKUP);
         mSchool.setAlignment(AlignmentEnum.LEFT);
+        mSchool.setMetadataEntryID("ElementarySchool");
 
         EditMask em1 = new EditMask(1);
         em1.setEditMaskID("EM1");
@@ -55,7 +56,7 @@ public class TableFormatterTest extends FormatterTestCase
 
         mSchool.setMaxSelect(1);
         mSchool.setUnits(UnitEnum.FEET);
-        mSchool.setIndex(2);
+        mSchool.setIndex(true);
         mSchool.setMinimum(3);
         mSchool.setMaximum(4);
         mSchool.setDefault(5);
@@ -75,12 +76,13 @@ public class TableFormatterTest extends FormatterTestCase
         mAgent.setSearchable(true);
         mAgent.setAlignment(AlignmentEnum.LEFT);
         mAgent.setMaxSelect(0);
-        mAgent.setIndex(0);
+        mAgent.setIndex(false);
         mAgent.setMinimum(0);
         mAgent.setMaximum(0);
         mAgent.setDefault(5);
         mAgent.setRequired(0);
         mAgent.setUnique(false);
+        mAgent.setMetadataEntryID("ListAgentAgentID");
         allTables.add(mAgent);
 
         mListingPrice = new Table(3);
@@ -95,12 +97,13 @@ public class TableFormatterTest extends FormatterTestCase
         mListingPrice.setSearchable(true);
         mListingPrice.setAlignment(AlignmentEnum.LEFT);
         mListingPrice.setMaxSelect(0);
-        mListingPrice.setIndex(0);
+        mListingPrice.setIndex(false);
         mListingPrice.setMinimum(0);
         mListingPrice.setMaximum(0);
         mListingPrice.setDefault(5);
         mListingPrice.setRequired(0);
         mListingPrice.setUnique(false);
+        mListingPrice.setMetadataEntryID("ListingPrice");
         allTables.add(mListingPrice);
 
         mGroupFilter = new TableGroupFilter();
@@ -161,23 +164,27 @@ public class TableFormatterTest extends FormatterTestCase
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
             "<COLUMNS>\t" +
-            "SystemName\tStandardName\tLongName\tDBName\t" +
+            "MetadataEntryID\tSystemName\tStandardName\tLongName\tDBName\t" +
             "ShortName\tMaximumLength\tDataType\tPrecision\tSearchable\t" +
             "Interpretation\tAlignment\tUseSeparator\tEditMaskID\t" +
             "LookupName\tMaxSelect\tUnits\tIndex\tMinimum\tMaximum\tDefault\t" +
             "Required\tSearchHelpID\tUnique\t" +
+            "ModTimeStamp\tForeignKeyName\tForeignField\tKeyQuery\t" +
+            "KeySelect\tInKeyIndex\t" +
             "</COLUMNS>\n" +
 
             "<DATA>\t" +
-            "E_SCHOOL\tElementarySchool\tElementary School\t" +
+            "ElementarySchool\tE_SCHOOL\tElementarySchool\tElementary School\t" +
             "E_SCHOOL\tElemSchool\t4\tInt\t0\t1\tLookup\tLeft\t0\tEM1,EM2\t" +
-            "E_SCHOOL\t1\tFeet\t2\t3\t4\t5\t6\t\t0\t" +
+            "E_SCHOOL\t1\tFeet\t1\t3\t4\t5\t6\t\t0\t" +
+            "0\t\t\t0\t0\t0\t" +
             "</DATA>\n" +
 
             "<DATA>\t" +
-            "AGENT_ID\tListAgentAgentID\tListing Agent ID\tAGENT_ID\t" +
+            "ListAgentAgentID\tAGENT_ID\tListAgentAgentID\tListing Agent ID\tAGENT_ID\t" +
             "AgentID\t0\tCharacter\t0\t1\t\tLeft\t0\t\t\t0\t\t0\t0\t0\t5" +
             "\t0\t\t0\t" +
+            "0\t\t\t0\t0\t0\t" +
             "</DATA>\n" +
 
             "</METADATA-TABLE>\n";
@@ -194,14 +201,15 @@ public class TableFormatterTest extends FormatterTestCase
             "<METADATA-TABLE Resource=\"Property\" Class=\"MOB\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<Field>" + EOL +
+            "<MetadataEntryID>ElementarySchool</MetadataEntryID>" + EOL +
             "<SystemName>E_SCHOOL</SystemName>" + EOL +
             "<StandardName>ElementarySchool</StandardName>" + EOL +
             "<LongName>Elementary School</LongName>" + EOL +
             "<DBName>E_SCHOOL</DBName>" + EOL +
             "<ShortName>ElemSchool</ShortName>" + EOL +
             "<MaximumLength>4</MaximumLength>" + EOL +
-            "<DataType>Int</DataType>" + EOL +
             // Line 10
+            "<DataType>Int</DataType>" + EOL +
             "<Precision>0</Precision>" + EOL +
             "<Searchable>1</Searchable>" + EOL +
             "<Interpretation>Lookup</Interpretation>" + EOL +
@@ -211,16 +219,24 @@ public class TableFormatterTest extends FormatterTestCase
             "<LookupName>E_SCHOOL</LookupName>" + EOL +
             "<MaxSelect>1</MaxSelect>" + EOL +
             "<Units>Feet</Units>" + EOL +
-            "<Index>2</Index>" + EOL +
             // Line 20
+            "<Index>1</Index>" + EOL +
             "<Minimum>3</Minimum>" + EOL +
             "<Maximum>4</Maximum>" + EOL +
             "<Default>5</Default>" + EOL +
             "<Required>6</Required>" + EOL +
             "<SearchHelpID></SearchHelpID>" + EOL +
             "<Unique>0</Unique>" + EOL +
+            "<ModTimeStamp>0</ModTimeStamp>" + EOL +
+            "<ForeignKeyName></ForeignKeyName>" + EOL +
+            "<ForeignField></ForeignField>" + EOL +
+            "<KeyQuery>0</KeyQuery>" + EOL +
+            "<KeySelect>0</KeySelect>" + EOL +
+            "<InKeyIndex>0</InKeyIndex>" + EOL +
             "</Field>" + EOL +
+            
             "<Field>" + EOL +
+            "<MetadataEntryID>ListAgentAgentID</MetadataEntryID>" + EOL +
             "<SystemName>AGENT_ID</SystemName>" + EOL +
             "<StandardName>ListAgentAgentID</StandardName>" + EOL +
             //Line 30
@@ -247,6 +263,12 @@ public class TableFormatterTest extends FormatterTestCase
             "<SearchHelpID></SearchHelpID>" + EOL +
             // Line 50
             "<Unique>0</Unique>" + EOL +
+            "<ModTimeStamp>0</ModTimeStamp>" + EOL +
+            "<ForeignKeyName></ForeignKeyName>" + EOL +
+            "<ForeignField></ForeignField>" + EOL +
+            "<KeyQuery>0</KeyQuery>" + EOL +
+            "<KeySelect>0</KeySelect>" + EOL +
+            "<InKeyIndex>0</InKeyIndex>" + EOL +
             "</Field>" + EOL +
             "</METADATA-TABLE>" + EOL;
     }

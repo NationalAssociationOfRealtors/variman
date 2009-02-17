@@ -13,6 +13,7 @@ public class SearchHelpFormatterTest extends FormatterTestCase
     {
         List searchHelps = new ArrayList();
         SearchHelp searchHelp = new SearchHelp();
+        searchHelp.setMetadataEntryID("LNSearchHelp");
         searchHelp.setSearchHelpID("LN_SEARCH_HELP");
         searchHelp.setValue("Listing Number (all numbers)");
         searchHelps.add(searchHelp);
@@ -40,9 +41,9 @@ public class SearchHelpFormatterTest extends FormatterTestCase
             "<METADATA-SEARCH_HELP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tSearchHelpID\tValue\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tSearchHelpID\tValue\t</COLUMNS>\n" +
 
-            "<DATA>\tLN_SEARCH_HELP\tListing Number (all numbers)\t</DATA>\n" +
+            "<DATA>\tLNSearchHelp\tLN_SEARCH_HELP\tListing Number (all numbers)\t</DATA>\n" +
 
             "</METADATA-SEARCH_HELP>\n";
     }
@@ -58,6 +59,7 @@ public class SearchHelpFormatterTest extends FormatterTestCase
             "<METADATA-SEARCH_HELP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">" + EOL +
             "<SearchHelp>" + EOL +
+            "<MetadataEntryID>LNSearchHelp</MetadataEntryID>" + EOL +
             "<SearchHelpID>LN_SEARCH_HELP</SearchHelpID>" + EOL +
             "<Value>Listing Number (all numbers)</Value>" + EOL +
             "</SearchHelp>" + EOL +

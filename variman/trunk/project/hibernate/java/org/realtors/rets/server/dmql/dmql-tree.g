@@ -91,6 +91,16 @@ options
         return new EqualClause(column, sql);
     }
 
+	private AnyClause newAnyClause(String field) {
+		String column = mMetadata.fieldToColumn(field);
+		return new AnyClause(column);
+	}
+	
+	private EmptyClause newEmptyClause(String field) {
+		String column = mMetadata.fieldToColumn(field);
+		return new EmptyClause(column);
+	}
+	
     private String fieldToColumn(String field) {
         return mMetadata.fieldToColumn(field);
     }
@@ -118,6 +128,8 @@ field_criteria returns [SqlConverter sql]
     | sql=string_literal
     | sql=number_value
     | sql=period_value
+    | sql=dotempty_value
+    | sql=dotany_value
     ;
 
 field returns [String text]
@@ -204,3 +216,14 @@ period_value returns [SqlConverter sql]
     { String f; SqlConverter p;}
     : #(PERIOD f=field p=period) { sql = newEqualClause(f, p);}
     ;
+
+dotany_value returns [SqlConverter sql]
+    { String f;}
+    : #(DOT_ANY f=field) { sql = newAnyClause(f);}
+    ;
+
+dotempty_value returns [SqlConverter sql]
+    { String f;}
+    : #(DOT_EMPTY f=field) { sql = newEmptyClause(f);}
+    ;
+       

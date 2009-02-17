@@ -18,6 +18,8 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
         List validationExternalTypes = new ArrayList();
         ValidationExternalType validationExternalType =
             new ValidationExternalType();
+        
+        validationExternalType.setMetadataEntryID("AgentValidation");
 
         Set searchFields = new HashSet();
         searchFields.add("AgentID");
@@ -57,13 +59,13 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
     {
         return
             "<METADATA-VALIDATION_EXTERNAL_TYPE Resource=\"Property\" " +
-            "ValidationExternal=\"VET1\" Version=\"" + VERSION + "\" " +
+            "ValidationExternalName=\"VET1\" Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">\n" +
 
 
-            "<COLUMNS>\tSearchField\tDisplayField\tResultFields\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tSearchField\tDisplayField\tResultFields\t</COLUMNS>\n" +
 
-            "<DATA>\tAgentCode,AgentID\tAgentName,OfficeName\t" +
+            "<DATA>\tAgentValidation\tAgentCode,AgentID\tAgentName,OfficeName\t" +
             "SaleAgentID=AgentID,SaleAgentName=AgentName\t</DATA>\n" +
 
             "</METADATA-VALIDATION_EXTERNAL_TYPE>\n";
@@ -78,9 +80,10 @@ public class ValidationExternalTypeFormatterTest extends FormatterTestCase
     {
         return
             "<METADATA-VALIDATION_EXTERNAL_TYPE Resource=\"Property\" " +
-            "ValidationExternal=\"VET1\" Version=\"" + VERSION + "\" " +
+            "ValidationExternalName=\"VET1\" Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">" + EOL +
             "<ValidationExternal>" + EOL +
+            "<MetadataEntryID>AgentValidation</MetadataEntryID>" + EOL +
             "<SearchField>AgentCode</SearchField>" + EOL +
             "<SearchField>AgentID</SearchField>" + EOL +
             "<DisplayField>AgentName</DisplayField>" + EOL +

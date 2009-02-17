@@ -49,7 +49,7 @@ public class CompactTableFormatter extends MetadataFormatter
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Class", levels[CLASS_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = tables.iterator(); iterator.hasNext();)
@@ -64,6 +64,7 @@ public class CompactTableFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(table.getMetadataEntryID());
         row.append(table.getSystemName());
         row.append(table.getStandardName());
         row.append(table.getLongName());
@@ -94,14 +95,27 @@ public class CompactTableFormatter extends MetadataFormatter
         row.append(table.getRequired());
         row.append(table.getSearchHelp());
         row.append(table.isUnique());
+        
+        // 1.7.2
+        row.append(table.getModTimeStamp());
+        row.append(table.getForeignKeyName());
+        row.append(table.getForeignField());
+        row.append(table.getKeyQuery());
+        row.append(table.getKeySelect());
+        row.append(table.getInKeyIndex());
+        
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
+    	"MetadataEntryID",
         "SystemName", "StandardName", "LongName", "DBName", "ShortName",
         "MaximumLength", "DataType", "Precision", "Searchable",
         "Interpretation", "Alignment", "UseSeparator", "EditMaskID",
         "LookupName", "MaxSelect", "Units", "Index", "Minimum", "Maximum",
-        "Default", "Required", "SearchHelpID", "Unique"
+        "Default", "Required", "SearchHelpID", "Unique",
+        // 1.7.2
+        "ModTimeStamp","ForeignKeyName","ForeignField", 
+        "KeyQuery","KeySelect","InKeyIndex",
     };
 }

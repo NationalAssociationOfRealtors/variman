@@ -13,7 +13,8 @@ package org.realtors.rets.server.webapp;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
 
-import org.realtors.rets.server.RetsVersion;
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.server.config.RetsConfig;
 
 public class RetsServletRequest extends HttpServletRequestWrapper
 {
@@ -32,7 +33,16 @@ public class RetsServletRequest extends HttpServletRequestWrapper
             {
                 mVersion = RetsVersion.RETS_1_5;
             }
+            else if (mRetsVersionHeader.equals("RETS/1.7"))
+            {
+            	mVersion = RetsVersion.RETS_1_7;
+            }
+            else if (mRetsVersionHeader.equals("RETS/1.7.2"))
+            {
+            	mVersion = RetsVersion.RETS_1_7_2;
+            }
         }
+        mRetsRequestID = request.getHeader("RETS-Request-ID");
     }
 
     /**
@@ -55,7 +65,18 @@ public class RetsServletRequest extends HttpServletRequestWrapper
     {
         return mRetsVersionHeader;
     }
-
+    
+    /**
+     *  Returns the RETS-Request-ID header value.
+     *  @return the RETS-Request-ID header value.
+     */
+    public String getRetsRequestID()
+    {
+    	return mRetsRequestID;
+    }
+ 
+    
     private RetsVersion mVersion;
     private String mRetsVersionHeader;
+    private String mRetsRequestID;
 }

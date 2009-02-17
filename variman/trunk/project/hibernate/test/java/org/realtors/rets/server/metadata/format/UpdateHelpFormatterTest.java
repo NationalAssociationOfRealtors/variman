@@ -15,6 +15,7 @@ public class UpdateHelpFormatterTest extends FormatterTestCase
         updateHelp.setUpdateHelpID("1");
         updateHelp.setValue("Enter a number");
         List updateHelps = new ArrayList();
+        updateHelp.setMetadataEntryID("UpdateHelp");
         updateHelps.add(updateHelp);
         return updateHelps;
     }
@@ -39,8 +40,8 @@ public class UpdateHelpFormatterTest extends FormatterTestCase
         return
             "<METADATA-UPDATE_HELP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
-            "<COLUMNS>\tUpdateHelpID\tValue\t</COLUMNS>\n" +
-            "<DATA>\t1\tEnter a number\t</DATA>\n" +
+            "<COLUMNS>\tMetadataEntryID\tUpdateHelpID\tValue\t</COLUMNS>\n" +
+            "<DATA>\tUpdateHelp\t1\tEnter a number\t</DATA>\n" +
             "</METADATA-UPDATE_HELP>\n";
     }
 
@@ -55,6 +56,7 @@ public class UpdateHelpFormatterTest extends FormatterTestCase
             "<METADATA-UPDATE_HELP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">" + EOL +
             "<UpdateHelp>" + EOL +
+            "<MetadataEntryID>UpdateHelp</MetadataEntryID>" + EOL +
             "<UpdateHelpID>1</UpdateHelpID>" + EOL +
             "<Value>Enter a number</Value>" + EOL +
             "</UpdateHelp>" + EOL +

@@ -14,6 +14,7 @@ public class LookupFormatterTest extends FormatterTestCase
     {
         List lookups = new ArrayList();
         Lookup lookup = new Lookup();
+        lookup.setMetadataEntryID("ElementarySchoolDistrict");
         lookup.setLookupName("E_SCHOOL");
         lookup.setVisibleName("Elementary School District");
         lookup.addLookupType(new LookupType(1));
@@ -42,9 +43,9 @@ public class LookupFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tLookupName\tVisibleName\tVersion\tDate\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tLookupName\tVisibleName\tVersion\tDate\t</COLUMNS>\n" +
 
-            "<DATA>\tE_SCHOOL\tElementary School District" + VERSION_DATE +
+            "<DATA>\tElementarySchoolDistrict\tE_SCHOOL\tElementary School District" + VERSION_DATE +
             "\t</DATA>\n" +
 
             "</METADATA-LOOKUP>\n";
@@ -56,9 +57,9 @@ public class LookupFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tLookupName\tVisibleName\tVersion\tDate\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tLookupName\tVisibleName\tVersion\tDate\t</COLUMNS>\n" +
 
-            "<DATA>\tE_SCHOOL\tElementary School District" + VERSION_DATE +
+            "<DATA>\tElementarySchoolDistrict\tE_SCHOOL\tElementary School District" + VERSION_DATE +
             "\t</DATA>\n" +
 
             "</METADATA-LOOKUP>\n" +
@@ -72,6 +73,7 @@ public class LookupFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">" + EOL +
             "<LookupType>" + EOL +
+            "<MetadataEntryID>ElementarySchoolDistrict</MetadataEntryID>" + EOL +
             "<LookupName>E_SCHOOL</LookupName>" + EOL +
             "<VisibleName>Elementary School District</VisibleName>" + EOL +
             "<LookupTypeVersion>" + VERSION + "</LookupTypeVersion>" + EOL +
@@ -86,6 +88,7 @@ public class LookupFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">" + EOL +
             "<LookupType>" + EOL +
+            "<MetadataEntryID>ElementarySchoolDistrict</MetadataEntryID>" + EOL +
             "<LookupName>E_SCHOOL</LookupName>" + EOL +
             "<VisibleName>Elementary School District</VisibleName>" + EOL +
             "<LookupTypeVersion>" + VERSION + "</LookupTypeVersion>" + EOL +

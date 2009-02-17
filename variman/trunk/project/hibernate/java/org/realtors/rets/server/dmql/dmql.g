@@ -38,6 +38,10 @@ tokens
     {
         String fieldName = t.getText();
         if (!mMetadata.isValidFieldName(fieldName)) {
+        	// Do not change the message below without also fixing the catch block
+        	// in DefaultSearchTransaction. It would be so much better to throw the
+        	// proper RETS exception, but we can't from here because we are bootstrapping
+        	// the code when this module is built.
             throw newSemanticException("No such field [" + fieldName + "]", t);
         }
     }
@@ -61,6 +65,10 @@ tokens
     {
         String lookupName = field.getText();
         String lookupValue = t.getText();
+       	// Do not change the message below without also fixing the catch block
+    	// in DefaultSearchTransaction. It would be so much better to throw the
+    	// proper RETS exception, but we can't from here because we are bootstrapping
+    	// the code when this module is built.
         if (!mMetadata.isValidLookupValue(lookupName, lookupValue)) {
             throw newSemanticException("No such lookup value [" +
                                        lookupName + "]: " + lookupValue, t);
@@ -287,6 +295,8 @@ text_token returns [Token t]
     | not:NOT       {t=not;     #not.setType(TEXT);}
     | today:TODAY   {t=today;   #today.setType(TEXT);}
     | now:NOW       {t=now;     #now.setType(TEXT);}
+    | dot_any:DOT_ANY {t=dot_any; #dot_any.setType(TEXT);}
+    | dot_empty:DOT_EMPTY {t=dot_empty; #dot_empty.setType(TEXT);}
     | integer:INT   {t=integer; #integer.setType(TEXT);}
     ;
 
@@ -379,6 +389,8 @@ protected AND : "AND" ;
 protected NOT : "NOT" ;
 protected TODAY : "TODAY" ;
 protected NOW : "NOW" ;
+protected DOT_ANY : ".ANY.";
+protected DOT_EMPTY : ".EMPTY.";
 
 // Since these all basically have overlapping patterns, we need to use
 // backtracking to try them in order.
@@ -392,7 +404,9 @@ TEXT_OR_NUMBER_OR_PERIOD
     | (TODAY) => TODAY {$setType(TODAY);}
     | (NOW) => NOW {$setType(NOW);}
     | (INT) => INT {$setType(INT);}
-    | (NUMBER) => NUMBER {$setType(NUMBER);}
+    | (DOT_ANY) => DOT_ANY {$setType(DOT_ANY);}
+    | (DOT_EMPTY) => DOT_EMPTY {$setType(DOT_EMPTY);}
+	| (NUMBER) => NUMBER {$setType(NUMBER);}
     | TEXT {$setType(TEXT);}
     ;
 

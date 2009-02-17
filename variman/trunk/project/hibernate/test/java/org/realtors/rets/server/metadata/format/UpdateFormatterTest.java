@@ -17,7 +17,10 @@ public class UpdateFormatterTest extends FormatterTestCase
         update.setUpdateName("Add");
         update.setDescription("Add a new Residential Listing");
         update.setKeyField("key");
+        update.setUpdateTypeVersion(10000001);
+        update.setUpdateTypeDate(getDate());
         update.addUpdateType(new UpdateType(1));
+        update.setMetadataEntryID("Add");
         updates.add(update);
         return updates;
     }
@@ -43,10 +46,11 @@ public class UpdateFormatterTest extends FormatterTestCase
             "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tUpdateName\tDescription\tKeyField\tVersion\tDate\t" +
+            "<COLUMNS>\tMetadataEntryID\tUpdateName\tDescription\t" + 
+            "KeyField\tUpdateTypeVersion\tUpdateTypeDate\t" +
             "</COLUMNS>\n" +
 
-            "<DATA>\tAdd\tAdd a new Residential Listing\tkey" + VERSION_DATE +
+            "<DATA>\tAdd\tAdd\tAdd a new Residential Listing\tkey" + VERSION_DATE +
             "\t</DATA>\n" +
 
             "</METADATA-UPDATE>\n";
@@ -58,10 +62,11 @@ public class UpdateFormatterTest extends FormatterTestCase
             "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tUpdateName\tDescription\tKeyField\tVersion\tDate\t" +
+            "<COLUMNS>\tMetadataEntryID\tUpdateName\tDescription\t" + 
+            "KeyField\tUpdateTypeVersion\tUpdateTypeDate\t" +
             "</COLUMNS>\n" +
 
-            "<DATA>\tAdd\tAdd a new Residential Listing\tkey" + VERSION_DATE +
+            "<DATA>\tAdd\tAdd\tAdd a new Residential Listing\tkey" + VERSION_DATE +
             "\t</DATA>\n" +
 
             "</METADATA-UPDATE>\n" +
@@ -74,6 +79,7 @@ public class UpdateFormatterTest extends FormatterTestCase
             "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<UpdateType>" + EOL +
+            "<MetadataEntryID>Add</MetadataEntryID>" + EOL +
             "<UpdateName>Add</UpdateName>" + EOL +
             "<Description>Add a new Residential Listing</Description>" + EOL +
             "<KeyField>key</KeyField>" + EOL +
@@ -89,6 +95,7 @@ public class UpdateFormatterTest extends FormatterTestCase
             "<METADATA-UPDATE Resource=\"Property\" Class=\"RES\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<UpdateType>" + EOL +
+            "<MetadataEntryID>Add</MetadataEntryID>" + EOL +
             "<UpdateName>Add</UpdateName>" + EOL +
             "<Description>Add a new Residential Listing</Description>" + EOL +
             "<KeyField>key</KeyField>" + EOL +

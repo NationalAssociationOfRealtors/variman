@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METADATA-CLASS Resource="ActiveAgent" Version="1.01.000" Date="2009-01-20T00:00:00Z">
+<COLUMNS>	ClassName	StandardName	VisibleName	X-DBName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	ClassTimeStamp	DeletedFlagField	DeletedFlagValue	HasKeyIndex	</COLUMNS>
+<DATA>	ACTAGT	ACTAGT	ActiveAgent	actagt	Active Agent	1.01.000	2009-01-20T00:00:00Z	1.01.000	2009-01-20T00:00:00Z					</DATA>
+</METADATA-CLASS>

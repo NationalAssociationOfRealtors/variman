@@ -142,7 +142,7 @@ public class CreateSchema extends RetsHelpers
                         sb.append(" unique");
                     }
     
-                    if (table.getIndex() > 0)
+                    if (table.getIndex())
                     {
                         needsIndex.add(table);
                     }

@@ -20,6 +20,8 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.server.config.RetsConfig;
 
 /***
  * Helper class to facilitate building rows in compact format. Each append()
@@ -58,12 +60,26 @@ public class DataRowBuilder
         mWriter.print(mDelimiter);
     }
 
-    public void append(Date date)
+    public void append(Date date, RetsVersion retsVersion)
     {
-        DateFormat formatter =
+        SimpleDateFormat formatter =
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        mWriter.print(formatter.format(date));
+        
+        String retsDate;
+        
+        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+        	retsVersion.equals(RetsVersion.RETS_1_7))
+    	{
+        	// Done this way to allow for all future versions that use the 1.7.2 format.
+        	retsDate = formatter.format(date);
+    	}
+        else
+        {
+    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    		retsDate = formatter.format(date);
+        }
+        mWriter.print(retsDate);
         mWriter.print(mDelimiter);
     }
 

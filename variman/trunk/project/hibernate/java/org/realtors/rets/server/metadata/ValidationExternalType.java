@@ -107,6 +107,19 @@ public class ValidationExternalType
     }
 
     /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
+    /**
      * Returns the hierarchy level for this metadata object.
      *
      * @return the hierarchy level for this metadata object.
@@ -178,6 +191,9 @@ public class ValidationExternalType
 
     /** persistent field */
     private Set mDisplayField;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
 
     private String mLevel;
 

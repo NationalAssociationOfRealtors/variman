@@ -25,7 +25,7 @@ public class StandardClassFormatter extends BaseStandardFormatter
         TagBuilder metadata = new TagBuilder(out, "METADATA-CLASS")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = classes.iterator(); i.hasNext();)

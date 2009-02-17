@@ -71,7 +71,20 @@ public class SearchHelp extends ServerMetadata implements Serializable
     {
         mValue = value;
     }
-
+    
+    /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
     /**
      *
      * @return a Resource object
@@ -155,6 +168,9 @@ public class SearchHelp extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private String mValue;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
 
     /** nullable persistent field */
     private Resource mResource;

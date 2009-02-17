@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<METADATA-TABLE Resource="Property" Class="CommercialProperty" Version="1.00.000" Date="Fri, 23 Jun 2005 12:30:38 GMT">
+<COLUMNS>	MetadataEntryID	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	ModTimeStamp	ForeignKeyName	ForeignField	KeyQuery	KeySelect	InKeyIndex	</COLUMNS>
+<DATA>	ListingId	LN	usercac.PropertyIdentification	Property ID	Property_ID	Property ID	10	Character	0	1		Left	0			0		0	0	0	1	0		1	1						</DATA>
+<DATA>	PropertyName	PropertyName	usercbc.BuildingName	Property Name	Property_Name	Property Name	24	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	Address	Address	usercbc.StreetName	Address	Address	Address	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	BuildingNumber	BuildingNumber	usercbc.BuildingNumber	Building Number	Building_Number	Building Number	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	City	City	usercbc.CityName	City	City	City	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	State	State	usercac.CountrySubentityCode	State	State	State	12	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	County	County	usercac.CountrySubentity	County	County	County	24	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	Zip	Zip	usercbc.Zone	Zip	Zip	Zip	24	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	Metro	Metro	usercbc.NearestMetropolitanStatisticalArea	Metro	Metro	Metro	40	Character	0	1		Left	0			0		0	1	0	1	0		0	1						</DATA>
+<DATA>	GeneralUse	GeneralUse	usercac.TypeCode	General Use	General_Use	General Use	12	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SpecificUse	SpecificUse	usercac.SubTypeCode	Specific Use	Specific_Use	Specific Use	10	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	GBA	GBA	usercbc.GrossBuildingAreaMeasure	GBA	GBA	GBA	24	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	GLA	GLA	usercbc.GrossLandAreaMeasure	GLA	GLA	GLA	12	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	NRA	NRA	usercbc.RentableAreaMeasure	NRA	NRA	NRA	24	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	BuildingSize	BuildingSize	usercbc.GrossBuildingAreaMeasure	Building Size	Building_Size	Building Size	12	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	NumberFloors	noofFloors	usercbc.NumberOfFloorsNumeric	no of Floors	no_of_Floors	no of Floors	4	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	ConstructionStatus	ConstructionStatus	usercac.ConstructionStatusCode	Construction Status	Construction_Status	Construction Status	24	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	TenancyType	TenancyType	usercac.TenancyTypeCode	Tenancy Type	Tenancy_Type	Tenancy Type	10	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	ConstructionClass	ConstructionClass	usercac.ConstructionClassCode	Construction Class	Construction_Class	Construction Class	10	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	YearBuilt	YearBuilt	usercbc.YearBuiltMeasure	Year Built	Year_Built	Year Built	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleAskingPrice	SaleAskingPrice	usercbc.AskingPriceAmount	Sale Asking Price	Sale_Asking_Price	Sale Asking Price	12	Character	0	1	Currency	Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	ListingType	ListingType	usercac.SaleOrLeaseCode	Listing Type	Listing_Type	Listing Type	12	Character	0	1		Left	0			0		0	0	0	1	1		0	1						</DATA>
+<DATA>	SaleCreatedDate	SaleCreatedDate		Sale Created Date	Sale_Created_Date	Sale Created Date	4	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleModifiedDate	SaleModifiedDate		Sale Modified Date	Sale_Modified_Date	Sale Modified Date	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleListingStatus	SaleListingStatus	usercac.ListingStatusCode	Sale Listing Status	Sale_Listing_Status	Sale Listing Status	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleSharingLevel	SaleSharinglevel		Sale Sharing level	Sale_Sharing_level	Sale Sharing level	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleAgentId	SaleAgentID	usercac.IdentificationID	Sale Agent ID	Sale_Agent_ID	Sale Agent ID	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleAgentFirstName	SaleAgentFirstName	usercbc.GivenName	Sale Agent First Name	Sale_Agent_First_Name	Sale Agent First Name	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleAgentLastName	SaleAgentLastName	usercbc.FamilyName	Sale Agent Last Name	Sale_Agent_Last_Name	Sale Agent Last Name	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleAgentPhoneNumber	SaleAgentPhoneNumber	usercbc.Value	Sale Agent Phone Number	Sale_Agent_Phone_Number	Sale Agent Phone Number	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleEmailAddress	SaleEmailAddress	usercbc.Value	Sale Email Address	Sale_Email_Address	Sale Email Address	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	SaleCompanyName	SaleCompanyName	usercbc.Name	Sale Company Name	Sale_Company_Name	Sale Company Name	8	Character	0	1		Left	0			0		0	0	0	1	0		0	1						</DATA>
+<DATA>	Timestamp	TIMESTAMP	ModificationTimestamp	Modification Time Stamp	r_md	Mod Dt	24	DateTime	0	1		Left	0	DATETIME_EDITMASK		0		0	0	0	3	0	DATETIME_SEARCH_HELP	0							</DATA>
+</METADATA-TABLE>

@@ -17,6 +17,8 @@ import java.util.SortedSet;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
 
+import org.realtors.rets.client.RetsVersion;
+
 import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
 import org.realtors.rets.server.metadata.format.FormatterLookup;
@@ -28,11 +30,13 @@ public class GetMetadataTransaction
 {
     public GetMetadataTransaction(PrintWriter out,
                                   GetMetadataParameters parameters,
-                                  MetadataFetcher fetcher)
+                                  MetadataFetcher fetcher,
+                                  RetsVersion retsVersion)
     {
         mOut = out;
         mParameters = parameters;
         mFetcher = fetcher;
+        mRetsVersion = retsVersion;
     }
 
     public void execute()
@@ -79,6 +83,7 @@ public class GetMetadataTransaction
             {
                 MetadataSegment segment = (MetadataSegment) segments.get(i);
                 context.setVersion(segment.getVersion());
+                context.setRetsVersion(mRetsVersion);
                 context.setDate(segment.getDate());
                 context.format(segment.getDataList(), segment.getLevels());
             }
@@ -105,4 +110,5 @@ public class GetMetadataTransaction
     private PrintWriter mOut;
     private GetMetadataParameters mParameters;
     private MetadataFetcher mFetcher;
+    private RetsVersion mRetsVersion;
 }

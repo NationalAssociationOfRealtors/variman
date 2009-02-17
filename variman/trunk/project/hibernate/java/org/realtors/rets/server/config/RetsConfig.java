@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.CloneNotSupportedException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.Util;
@@ -43,13 +45,24 @@ import org.realtors.rets.server.QueryCount;
 
 public class RetsConfig
 {
-    public RetsConfig()
+    private RetsConfig()
     {
         mPort = 6103;
         mNonceInitialTimeout = -1;
         mNonceSuccessTimeout = -1;
         mSecurityConstraints = new SecurityConstraints();
         mBlockLocation = false;
+        mStrictParsing = true;
+    }
+    
+    public static synchronized RetsConfig getInstance()
+    {
+    	return _instance;
+    }
+    
+    public Object clone() throws CloneNotSupportedException
+    {
+    	throw new CloneNotSupportedException();
     }
 
     public String getAddress()
@@ -134,7 +147,17 @@ public class RetsConfig
     {
         mDatabase = database;
     }
-
+    
+    public boolean getStrictParsing()
+    {
+    	return mStrictParsing;
+    }
+    
+    public void setStrictParsing(boolean strict)
+    {
+    	mStrictParsing = strict;
+    }
+    
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
@@ -142,6 +165,7 @@ public class RetsConfig
             .append("GetObject photo pattern", mPhotoPattern)
             .append("nonce initial timeout", mNonceInitialTimeout)
             .append("nonce success timeout", mNonceSuccessTimeout)
+            .append("strict parsing", mStrictParsing)
             .append(mDatabase)
             .toString();
     }
@@ -157,6 +181,8 @@ public class RetsConfig
         addChild(retsConfig, OBJECT_SET_PATTERN, mObjectSetPattern);
         addChild(retsConfig, NONCE_INITIAL_TIMEOUT, mNonceInitialTimeout);
         addChild(retsConfig, NONCE_SUCCESS_TIMEOUT, mNonceSuccessTimeout);
+        addChild(retsConfig, STRICT_PARSING, mStrictParsing);
+
         Element database = new Element(DATABASE);
         addChild(database, TYPE, mDatabase.getDatabaseType().getName());
         addChild(database, HOST, mDatabase.getHostName());
@@ -344,7 +370,7 @@ public class RetsConfig
 
     private static RetsConfig elementToConfig(Element element)
     {
-        RetsConfig config = new RetsConfig();
+        RetsConfig config = getInstance();
         config.setAddress(getString(element, ADDRESS));
         config.mPort = getInt(element, PORT);
         config.mMetadataDir = getString(element, METADATA_DIR);
@@ -362,6 +388,7 @@ public class RetsConfig
         config.mObjectSetPattern = getString(element, OBJECT_SET_PATTERN);
         config.mNonceInitialTimeout = getInt(element, NONCE_INITIAL_TIMEOUT);
         config.mNonceSuccessTimeout = getInt(element, NONCE_SUCCESS_TIMEOUT);
+        config.mStrictParsing = getBoolean(element, STRICT_PARSING);
 
         elementToDatabaseConfig(element.getChild(DATABASE), config);
         elementToSecurityConstraints(element.getChild(SECURITY_CONSTRAINTS),
@@ -777,6 +804,7 @@ public class RetsConfig
     private static final String PER_DAY = "per-day";
     private static final String PER_HOUR = "per-hour";
     private static final String PER_MINUTE = "per-minute";
+    private static final String STRICT_PARSING = "strict-parsing";
 
     private String mAddress;
     private int mPort;
@@ -789,4 +817,7 @@ public class RetsConfig
     private String mMetadataDir;
     private SecurityConstraints mSecurityConstraints;
     private boolean mBlockLocation;
+    private boolean mStrictParsing;
+    
+    private static RetsConfig _instance = new RetsConfig();
 }

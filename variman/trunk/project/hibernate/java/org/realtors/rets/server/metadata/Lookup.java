@@ -78,7 +78,20 @@ public class Lookup extends ServerMetadata implements Serializable
     {
         mVisibleName = visibleName;
     }
-
+    
+    /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
     /**
      *
      * @return a Resource object
@@ -201,6 +214,9 @@ public class Lookup extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private Resource mResource;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
 
     /** persistent field */
     private Set mLookupTypes;

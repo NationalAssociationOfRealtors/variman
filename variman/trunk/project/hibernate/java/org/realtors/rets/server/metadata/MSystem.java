@@ -20,6 +20,7 @@ import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.realtors.rets.server.Util;
 
 /**
  */
@@ -108,13 +109,7 @@ public class MSystem extends ServerMetadata implements Serializable
 
     public String getVersionString()
     {
-        Object[] dottedVersion = new Object[3];
-        dottedVersion[0] = new Integer(mVersion / 100000);
-        dottedVersion[1] = new Integer((mVersion / 1000) % 100);
-        dottedVersion[2] = new Integer(mVersion % 1000);
-        MessageFormat format =
-            new MessageFormat("{0,number,#}.{1,number,00}.{2,number,000}");
-        return format.format(dottedVersion);
+    	return Util.getVersionString(mVersion);
     }
 
     /**
@@ -178,6 +173,19 @@ public class MSystem extends ServerMetadata implements Serializable
         mForeignKeys = foreignKeys;
     }
 
+    /**
+     * @return the TimeZoneOffset
+     */
+    public String getTimeZoneOffset()
+    {
+    	return mTimeZoneOffset;
+    }
+    
+    public void setTimeZoneOffset(String timeZoneOffset)
+    {
+    	mTimeZoneOffset = timeZoneOffset;
+    }
+    
     public String getPath()
     {
         return "";
@@ -260,6 +268,9 @@ public class MSystem extends ServerMetadata implements Serializable
 
     /** persistent field */
     private Set mForeignKeys;
+    
+    /** persistent field */
+    private String mTimeZoneOffset;
 
     public static final String TABLE = "SYSTEM";
 }

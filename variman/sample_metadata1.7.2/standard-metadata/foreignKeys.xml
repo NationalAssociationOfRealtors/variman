@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METADATA-FOREIGN_KEYS Version="1.01.000" Date="2009-01-20T00:00:00Z">
+<COLUMNS>	ForeignKeyID	ParentResourceID	ParentClassID	ParentSystemName	ChildResourceID	ChildClassID	ChildSystemName	ConditionalParentField	ConditionalParentValue	</COLUMNS>
+<DATA>	ActiveAgent_Office	ActiveAgent	ACTAGT	OFFICE_ID	Office	OFFICE	OFFICE_ID			</DATA>
+<DATA>	Property_ActiveAgent	Property	ResidentialProperty	AGENT_ID	ActiveAgent	ACTAGT	AGENT_ID			</DATA>
+<DATA>	Property_Agent	Property	ResidentialProperty	AGENT_ID	Agent	AGT	AGENT_ID			</DATA>
+<DATA>	Agent_Office	Agent	AGT	OFFICE_ID	Office	OFFICE	OFFICE_ID			</DATA>
+<DATA>	ActiveAgent_Agent	ActiveAgent	ACTAGT	AGENT_ID	Agent	AGT	AGENT_ID			</DATA>
+</METADATA-FOREIGN_KEYS>

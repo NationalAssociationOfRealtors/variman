@@ -13,6 +13,7 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.server.Util;
 import org.realtors.rets.server.metadata.Update;
 
 public class CompactUpdateFormatter extends MetadataFormatter
@@ -28,7 +29,7 @@ public class CompactUpdateFormatter extends MetadataFormatter
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Class", levels[CLASS_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = updates.iterator(); iterator.hasNext();)
@@ -53,15 +54,17 @@ public class CompactUpdateFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(update.getMetadataEntryID());
         row.append(update.getUpdateName());
         row.append(update.getDescription());
         row.append(update.getKeyField());
-        row.append(context.getVersion());
-        row.append(context.getDate());
+        row.append(Util.getVersionString(update.getUpdateTypeVersion()));
+        row.append(update.getUpdateTypeDate(), context.getRetsVersion());
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
-        "UpdateName", "Description", "KeyField", "Version", "Date",
+    	"MetadataEntryID",
+        "UpdateName", "Description", "KeyField", "UpdateTypeVersion", "UpdateTypeDate",
     };
 }

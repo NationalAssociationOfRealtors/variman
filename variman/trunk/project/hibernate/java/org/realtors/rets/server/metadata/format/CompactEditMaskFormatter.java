@@ -28,7 +28,7 @@ public class CompactEditMaskFormatter extends MetadataFormatter
                                         "METADATA-EDITMASK")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = editMasks.iterator(); iterator.hasNext();)
@@ -43,12 +43,13 @@ public class CompactEditMaskFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(editMask.getMetadataEntryID());
         row.append(editMask.getEditMaskID());
         row.append(editMask.getValue());
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
-        "EditMaskID", "Value",
+        "MetadataEntryID", "EditMaskID", "Value",
     };
 }

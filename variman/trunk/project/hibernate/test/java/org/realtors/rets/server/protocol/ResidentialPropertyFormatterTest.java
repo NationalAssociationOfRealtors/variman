@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.metadata.Table;
@@ -32,7 +33,7 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
             new SearchFormatterContext(new PrintWriter(formatted), results,
-                                       Arrays.asList(COLUMNS), metadata);
+                                       Arrays.asList(COLUMNS), metadata, RetsVersion.RETS_1_5);
         formatter.formatResults(context);
         assertLinesEqual(
             "<REData>\n" +
@@ -70,7 +71,8 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
             new SearchFormatterContext(new PrintWriter(formatted), results,
-                                       Arrays.asList(COLUMNS), metadata);
+                                       Arrays.asList(COLUMNS), metadata,
+                                       RetsVersion.RETS_1_5);
         formatter.formatResults(context);
         assertLinesEqual(
             "<REData>\n" +
@@ -112,7 +114,8 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
             new SearchFormatterContext(new PrintWriter(formatted), results,
-                                       Arrays.asList(columns), metadata);
+                                       Arrays.asList(columns), metadata,
+                                       RetsVersion.RETS_1_5);
         formatter.formatResults(context);
         assertLinesEqual(
             "<REData>\n" +

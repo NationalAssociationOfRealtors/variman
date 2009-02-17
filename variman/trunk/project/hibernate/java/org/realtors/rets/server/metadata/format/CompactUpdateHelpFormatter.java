@@ -28,7 +28,7 @@ public class CompactUpdateHelpFormatter extends MetadataFormatter
                                         "METADATA-UPDATE_HELP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator i = updateHelps.iterator(); i.hasNext();)
@@ -43,12 +43,13 @@ public class CompactUpdateHelpFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(updateHelp.getMetadataEntryID());
         row.append(updateHelp.getUpdateHelpID());
         row.append(updateHelp.getValue());
         row.end();
     }
 
     private static final String[] COLUMNS = {
-        "UpdateHelpID", "Value"
+        "MetadataEntryID", "UpdateHelpID", "Value"
     };
 }

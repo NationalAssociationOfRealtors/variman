@@ -21,9 +21,11 @@ import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaParseException;
+
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
-import org.realtors.rets.server.RetsVersion;
 import org.realtors.rets.server.Util;
 import org.realtors.rets.server.User;
 
@@ -44,12 +46,14 @@ public class SearchParameters
         initQueryType(getParameter(parameterMap, "QueryType"), version);
         initQuery(getParameter(parameterMap, "Query"));
         initFormat(getParameter(parameterMap, "Format"));
+        initRestrictedIndicator(getParameter(parameterMap, "RestrictedIndicator"));
         initStandardNames(getParameter(parameterMap, "StandardNames"));
         initSelect(getParameter(parameterMap, "Select"));
         initLimit(getParameter(parameterMap, "Limit"));
         initOffset(getParameter(parameterMap, "Offset"));
         initCount(getParameter(parameterMap, "Count"));
         mUser = user;
+        mRetsVersion = version;
     }
 
     private void initCount(String count)
@@ -115,11 +119,13 @@ public class SearchParameters
         throws RetsReplyException
     {
         mQueryType = queryType;
-        boolean validQueryType = false;
-        validQueryType |=
-            ((version == RetsVersion.RETS_1_0) && mQueryType.equals(DMQL));
-        validQueryType |=
-            ((version == RetsVersion.RETS_1_5) && mQueryType.equals(DMQL2));
+        boolean validQueryType = mQueryType.equals(DMQL2);
+        
+        if (version.equals(RetsVersion.RETS_1_0))
+        {
+        	validQueryType = mQueryType.equals(DMQL);
+        }
+ 
         if (!validQueryType)
         {
             throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
@@ -131,6 +137,27 @@ public class SearchParameters
     private void initFormat(String format)
     {
         mFormat = format;
+    }
+    
+    private void initRestrictedIndicator(String restrictedIndicator)
+    	throws RetsReplyException
+    {
+    	if (restrictedIndicator == null)
+    		return;
+    	
+		char[] chars = restrictedIndicator.toCharArray();
+		for (int i = 0; i < chars.length; i++) 
+		{
+			char c = chars[i];
+			if (!Character.isLetterOrDigit(c)) 
+			{
+				throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+						"Invalid Alphanum character at position " + i + 
+						"in RestrictedIndicator: " + c);
+			}
+		}
+		
+    	mRestrictedIndicator = restrictedIndicator;
     }
 
     private String getParameter(Map parameterMap, String name)
@@ -218,6 +245,11 @@ public class SearchParameters
     {
         return mCount;
     }
+    
+    public String getRestrictedIndicator()
+    {
+    	return mRestrictedIndicator;
+    }
 
     public boolean countRequested()
     {
@@ -258,6 +290,17 @@ public class SearchParameters
             return (Count) getEnum(Count.class, name);
         }
     }
+    
+    /**
+     * Returns the RETS protocol version information.
+     * 
+     * @return The RetsVersion
+     */
+    public RetsVersion getRetsVersion()
+    {
+    	return mRetsVersion;
+    }
+    
 
     private static final Logger LOG =
         Logger.getLogger(SearchParameters.class);
@@ -273,10 +316,12 @@ public class SearchParameters
     private String mQueryType;
     private String mQuery;
     private String mFormat;
+    private String mRestrictedIndicator;
     private boolean mStandardNames;
     private String[] mSelect;
     private int mLimit;
     private int mOffset;
     private Count mCount;
     private User mUser;
+    private RetsVersion mRetsVersion;
 }

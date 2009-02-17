@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Set;
 import java.io.PrintWriter;
 
+import org.realtors.rets.client.RetsVersion;
+
 import org.realtors.rets.server.protocol.TableGroupFilter;
 
 /**
@@ -16,16 +18,22 @@ public class MutableFormatterContext extends FormatterContext
     }
 
     public MutableFormatterContext(String version, Date date, boolean recursive,
-                                   PrintWriter writer, FormatterLookup lookup)
+                                   PrintWriter writer, FormatterLookup lookup,
+                                   RetsVersion retsVersion)
     {
-        super(version, date, recursive, writer, lookup);
+        super(version, date, recursive, writer, lookup, retsVersion);
     }
 
     public void setVersion(String version)
     {
         super.setVersion(version);
     }
-
+    
+    public void setRetsVersion(RetsVersion retsVersion)
+    {
+    	super.setRetsVersion(retsVersion);
+    }
+    
     public void setDate(Date date)
     {
         super.setDate(date);

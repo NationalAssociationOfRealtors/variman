@@ -12,7 +12,10 @@ package org.realtors.rets.server.metadata.format;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.server.metadata.MClass;
 
 public class CompactClassFormatter extends MetadataFormatter
@@ -24,17 +27,28 @@ public class CompactClassFormatter extends MetadataFormatter
         {
             return;
         }
+        RetsVersion retsVersion = context.getRetsVersion();
+        
         TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-CLASS")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
-            .beginContentOnNewLine()
-            .appendColumns(COLUMNS);
-        for (Iterator iterator = classes.iterator(); iterator.hasNext();)
+            .appendAttribute("Date", context.getDate(), retsVersion)
+            .beginContentOnNewLine();
+        // FIXME: Ticket #23 - Support X- extensions.
+        // In order to support X- extensions, we need to fetch the column names and then
+        // use them in order to fetch their values.
+        //if (classes.iterator().hasNext())
+    	//{
+        //	columnNames = ((MClass) classes.iterator().next()).getColumnNames();
+        //	tag.appendColumns(columnNames);
+    	//}
+ 
+      	tag.appendColumns(COLUMNS);
+
+    	for (Iterator iterator = classes.iterator(); iterator.hasNext();)
         {
             MClass clazz = (MClass) iterator.next();
             appendDataRow(context, clazz);
-
         }
         tag.close();
 
@@ -54,6 +68,8 @@ public class CompactClassFormatter extends MetadataFormatter
     private void appendDataRow(FormatterContext context, MClass clazz)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
+        RetsVersion retsVersion = context.getRetsVersion();
+        
         row.begin();
         row.append(clazz.getClassName());
         row.append(clazz.getStandardName());
@@ -61,15 +77,23 @@ public class CompactClassFormatter extends MetadataFormatter
         row.append(clazz.getDescription());
         // Table version and date
         row.append(context.getVersion());
-        row.append(context.getDate());
+        row.append(context.getDate(), retsVersion);
         // Update version and date
         row.append(context.getVersion());
-        row.append(context.getDate());
+        row.append(context.getDate(), retsVersion);
+        // 1.7.2
+    	row.append(clazz.getClassTimeStamp());
+		row.append(clazz.getDeletedFlagField());
+		row.append(clazz.getDeletedFlagValue());
+		row.append(clazz.getHasKeyIndex());
         row.end();
     }
 
+    private String [] columnNames;
+    
     private static final String[] COLUMNS = {
         "ClassName", "StandardName", "VisibleName", "Description",
         "TableVersion", "TableDate", "UpdateVersion", "UpdateDate",
+    	"ClassTimeStamp", "DeletedFlagField", "DeletedFlagValue", "HasKeyIndex",
     };
 }

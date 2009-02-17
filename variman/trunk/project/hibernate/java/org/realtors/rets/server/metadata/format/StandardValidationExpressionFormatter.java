@@ -26,7 +26,7 @@ public class StandardValidationExpressionFormatter extends BaseStandardFormatter
                                              "METADATA-VALIDATION_EXPRESSION")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = validationExpressions.iterator(); i.hasNext();)
@@ -36,6 +36,8 @@ public class StandardValidationExpressionFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "ValidationExpression")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", 
+            				validationExpression.getMetadataEntryID());
             TagBuilder.simpleTag(
                 out, "ValidationExpressionID",
                 validationExpression.getValidationExpressionID());

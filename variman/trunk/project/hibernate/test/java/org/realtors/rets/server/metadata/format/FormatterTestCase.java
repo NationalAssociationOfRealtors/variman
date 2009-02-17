@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 
@@ -38,8 +39,8 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
         StringWriter formatted = new StringWriter();
         PrintWriter writer = new PrintWriter(formatted);
         MutableFormatterContext context =
-            new MutableFormatterContext("1.00.001", DATE_OBJECT, recursive,
-                                        writer, lookup);
+            new MutableFormatterContext("1.00.00001", DATE_OBJECT, recursive,
+                                        writer, lookup, RetsVersion.RETS_1_5);
         context.setTableFilter(groupFilter, groups);
         formatter.format(context, data, levels);
         return formatted.toString();
@@ -106,7 +107,7 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
         assertLinesEqual(getExpectedStandardRecursive(), formatted);
     }
 
-    protected static final String VERSION = "1.00.001";
+    protected static final String VERSION = "1.00.00001";
     protected static final String DATE = "Wed, 01 Jan 2003 00:01:00 GMT";
     protected static final String VERSION_DATE = "\t" + VERSION +  "\t" + DATE;
     protected static final String EOL = "\n";

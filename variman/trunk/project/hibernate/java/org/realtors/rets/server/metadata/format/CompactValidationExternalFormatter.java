@@ -28,7 +28,7 @@ public class CompactValidationExternalFormatter extends MetadataFormatter
                                         "METADATA-VALIDATION_EXTERNAL")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator i = validationExternals.iterator(); i.hasNext();)
@@ -56,15 +56,17 @@ public class CompactValidationExternalFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(validationExternal.getMetadataEntryID());
         row.append(validationExternal.getValidationExternalName());
         row.append(validationExternal.getSearchResource());
         row.append(validationExternal.getSearchClass());
         row.append(context.getVersion());
-        row.append(context.getDate());
+        row.append(context.getDate(), context.getRetsVersion());
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
+    	"MetadataEntryID",
         "ValidationExternalName", "SearchResource", "SearchClass", "Version",
         "Date",
     };

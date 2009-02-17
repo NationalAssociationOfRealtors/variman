@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METADATA-EDITMASK Resource="ActiveAgent" Version="1.01.000" Date="2009-01-20T00:00:00Z">
+<COLUMNS>	MetadataEntryID	EditMaskID	Value	</COLUMNS>
+<DATA>	DateMask	DATE_EDITMASK	[0-9]{4}-[0-9]{2}-[0-9]{2}	</DATA>
+<DATA>	DateTimeMask	DATETIME_EDITMASK	[0-9]{4}-[0-9]{2}-[0-9]{2}	</DATA>
+</METADATA-EDITMASK>

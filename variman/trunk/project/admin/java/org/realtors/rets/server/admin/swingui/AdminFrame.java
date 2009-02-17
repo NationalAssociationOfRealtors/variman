@@ -187,7 +187,7 @@ public class AdminFrame extends JFrame
     public void showAboutBox()
     {
         AboutBox dialog = new AboutBox(AdminFrame.this);
-        dialog.show();
+        dialog.setVisible(true);
         dialog.dispose();
     }
 

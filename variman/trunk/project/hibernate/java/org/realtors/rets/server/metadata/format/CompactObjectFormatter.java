@@ -27,7 +27,7 @@ public class CompactObjectFormatter extends MetadataFormatter
         TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-OBJECT")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = objects.iterator(); iterator.hasNext();)
@@ -42,14 +42,18 @@ public class CompactObjectFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(object.getMetadataEntryID());
         row.append(object.getObjectType());
         row.append(object.getMimeType());
         row.append(object.getVisibleName());
         row.append(object.getDescription());
+        row.append(object.getObjectTimeStamp());
+        row.append(object.getObjectCount());
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
-        "ObjectType", "MimeType", "VisibleName", "Description"
+        "MetadataEntryID", "ObjectType", "MimeType", "VisibleName", 
+        "Description", "ObjectTimeStamp", "ObjectCount",
     };
 }

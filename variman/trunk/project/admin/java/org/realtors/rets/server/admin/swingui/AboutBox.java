@@ -29,7 +29,7 @@ public class AboutBox extends JDialog
             "<h1>" + Admin.ADMIN_NAME + "</h1>" +
             "<p>Version " + version + " (" + buildDate + ")</p>" +
             "<p></p>" +
-            "<p>Copyright &copy; 2004-2005,<br>" +
+            "<p>Copyright &copy; 2004-2009,<br>" +
             "The Center for REALTOR&reg; Technology</p>" +
             "</center></html>");
         content.add(label);

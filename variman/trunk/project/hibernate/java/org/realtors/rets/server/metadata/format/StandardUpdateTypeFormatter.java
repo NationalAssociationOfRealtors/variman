@@ -30,7 +30,7 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
             .appendAttribute("Class", retsClass)
             .appendAttribute("Update", levels[UPDATE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = updateTypes.iterator(); i.hasNext();)
@@ -45,6 +45,7 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "UpdateField")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", updateType.getMetadataEntryID());
             TagBuilder.simpleTag(out, "SystemName",
                                  table.getSystemName());
             TagBuilder.simpleTag(out, "Sequence", updateType.getSequence());
@@ -58,6 +59,7 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
                                  updateType.getValidationLookup());
             TagBuilder.simpleTag(out, "ValidationExternalName",
                                  updateType.getValidationExternal());
+            TagBuilder.simpleTag(out, "MaxUpdate", updateType.getMaxUpdate());
             
             tag.close();
         }

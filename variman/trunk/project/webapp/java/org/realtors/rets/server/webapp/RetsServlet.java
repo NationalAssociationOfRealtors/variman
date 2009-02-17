@@ -87,6 +87,7 @@ public abstract class RetsServlet extends HttpServlet implements Constants
         try
         {
             response.setRetsVersionHeader(request.getRetsVersion());
+            response.setRetsRequestID(request.getRetsRequestID());
             preDoRets(request, response);
             doRets(request, response);
             postDoRets(request, response);

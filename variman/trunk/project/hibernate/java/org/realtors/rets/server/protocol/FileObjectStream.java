@@ -40,6 +40,10 @@ public class FileObjectStream implements ObjectStream
         {
             return "image/jpeg";
         }
+        else if (file.endsWith(".xml"))
+        {
+        	return "text/xml";
+        }
         else
         {
             LOG.warn("Unknown file type: " + file);

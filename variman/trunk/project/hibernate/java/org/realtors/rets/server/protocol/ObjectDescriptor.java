@@ -1,5 +1,6 @@
 package org.realtors.rets.server.protocol;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -34,7 +35,7 @@ public class ObjectDescriptor
         mDescription = description;
         mRemoteLocationAllowable = false;
     }
-
+    
     public String getObjectKey()
     {
         return mObjectKey;

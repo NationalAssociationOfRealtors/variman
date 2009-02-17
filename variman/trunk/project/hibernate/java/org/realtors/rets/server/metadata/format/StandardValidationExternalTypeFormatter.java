@@ -28,10 +28,10 @@ public class StandardValidationExternalTypeFormatter
         TagBuilder metadata =
             new TagBuilder(out, "METADATA-VALIDATION_EXTERNAL_TYPE")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
-            .appendAttribute("ValidationExternal",
+            .appendAttribute("ValidationExternalName",
                              levels[VALIDATION_EXTERNAL_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = validationExternalTypes.iterator(); i.hasNext();)
@@ -40,6 +40,9 @@ public class StandardValidationExternalTypeFormatter
                 (ValidationExternalType) i.next();
             TagBuilder tag = new TagBuilder(out, "ValidationExternal")
                 .beginContentOnNewLine();
+            
+            // 1.7.2
+            TagBuilder.simpleTag(out, "MetadataEntryID", validationExternalType.getMetadataEntryID());
 
             List sorted = FormatUtil.toSortedStringList(
                 validationExternalType.getSearchField());

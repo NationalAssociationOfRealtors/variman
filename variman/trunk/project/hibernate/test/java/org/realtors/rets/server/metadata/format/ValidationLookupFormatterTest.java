@@ -14,6 +14,7 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
     {
         List validationLookups = new ArrayList();
         ValidationLookup validationLookup = new ValidationLookup();
+        validationLookup.setMetadataEntryID("SchoolLookup");
         validationLookup.setValidationLookupName("School");
         validationLookup.setParent1Field("Area");
         validationLookup.setParent2Field("Subarea");
@@ -43,10 +44,10 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tValidationLookupName\tParent1Field\tParent2Field\t" +
+            "<COLUMNS>\tMetadataEntryID\tValidationLookupName\tParent1Field\tParent2Field\t" +
             "Version\tDate\t</COLUMNS>\n" +
 
-            "<DATA>\tSchool\tArea\tSubarea" + VERSION_DATE + "\t</DATA>\n" +
+            "<DATA>\tSchoolLookup\tSchool\tArea\tSubarea" + VERSION_DATE + "\t</DATA>\n" +
 
             "</METADATA-VALIDATION_LOOKUP>\n";
     }
@@ -57,10 +58,10 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tValidationLookupName\tParent1Field\tParent2Field\t" +
+            "<COLUMNS>\tMetadataEntryID\tValidationLookupName\tParent1Field\tParent2Field\t" +
             "Version\tDate\t</COLUMNS>\n" +
 
-            "<DATA>\tSchool\tArea\tSubarea" + VERSION_DATE + "\t</DATA>\n" +
+            "<DATA>\tSchoolLookup\tSchool\tArea\tSubarea" + VERSION_DATE + "\t</DATA>\n" +
 
             "</METADATA-VALIDATION_LOOKUP>\n" +
 
@@ -73,6 +74,7 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<ValidationLookupType>" + EOL +
+            "<MetadataEntryID>SchoolLookup</MetadataEntryID>" + EOL +
             "<ValidationLookupName>School</ValidationLookupName>" + EOL +
             "<Parent1Field>Area</Parent1Field>" + EOL +
             "<Parent2Field>Subarea</Parent2Field>" + EOL +
@@ -90,6 +92,7 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_LOOKUP Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<ValidationLookupType>" + EOL +
+            "<MetadataEntryID>SchoolLookup</MetadataEntryID>" + EOL +
             "<ValidationLookupName>School</ValidationLookupName>" + EOL +
             "<Parent1Field>Area</Parent1Field>" + EOL +
             "<Parent2Field>Subarea</Parent2Field>" + EOL +

@@ -16,6 +16,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
     {
         List validationExternals = new ArrayList();
         ValidationExternal validationExternal = new ValidationExternal();
+        validationExternal.setMetadataEntryID("Vet1");
         validationExternal.setValidationExternalName("VET1");
 
         MClass res = new MClass(1);
@@ -52,10 +53,10 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tValidationExternalName\tSearchResource\tSearchClass\t" +
+            "<COLUMNS>\tMetadataEntryID\tValidationExternalName\tSearchResource\tSearchClass\t" +
             "Version\tDate\t</COLUMNS>\n" +
 
-            "<DATA>\tVET1\tProperty\tRES" + VERSION_DATE + "\t</DATA>\n" +
+            "<DATA>\tVet1\tVET1\tProperty\tRES" + VERSION_DATE + "\t</DATA>\n" +
 
             "</METADATA-VALIDATION_EXTERNAL>\n";
     }
@@ -66,10 +67,10 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tValidationExternalName\tSearchResource\tSearchClass\t" +
+            "<COLUMNS>\tMetadataEntryID\tValidationExternalName\tSearchResource\tSearchClass\t" +
             "Version\tDate\t</COLUMNS>\n" +
 
-            "<DATA>\tVET1\tProperty\tRES" + VERSION_DATE + "\t</DATA>\n" +
+            "<DATA>\tVet1\tVET1\tProperty\tRES" + VERSION_DATE + "\t</DATA>\n" +
 
             "</METADATA-VALIDATION_EXTERNAL>\n" +
 
@@ -82,6 +83,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<ValidationExternalType>" + EOL +
+            "<MetadataEntryID>Vet1</MetadataEntryID>" + EOL +
             "<ValidationExternalName>VET1</ValidationExternalName>" + EOL +
             "<SearchResource>Property</SearchResource>" + EOL +
             "<SearchClass>RES</SearchClass>" + EOL +
@@ -99,6 +101,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
             "<METADATA-VALIDATION_EXTERNAL Resource=\"Property\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
             "<ValidationExternalType>" + EOL +
+            "<MetadataEntryID>Vet1</MetadataEntryID>" + EOL +
             "<ValidationExternalName>VET1</ValidationExternalName>" + EOL +
             "<SearchResource>Property</SearchResource>" + EOL +
             "<SearchClass>RES</SearchClass>" + EOL +

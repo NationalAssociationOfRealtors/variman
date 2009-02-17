@@ -28,7 +28,7 @@ public class CompactResourceFormatter extends MetadataFormatter
         TagBuilder tag = new TagBuilder(context.getWriter(),
                                         "METADATA-RESOURCE")
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator iterator = resources.iterator(); iterator.hasNext();)
@@ -75,7 +75,7 @@ public class CompactResourceFormatter extends MetadataFormatter
         for (int i = 0; i < 9; i++)
         {
             row.append(version);
-            row.append(date);
+            row.append(date, context.getRetsVersion());
         }
         row.end();
     }

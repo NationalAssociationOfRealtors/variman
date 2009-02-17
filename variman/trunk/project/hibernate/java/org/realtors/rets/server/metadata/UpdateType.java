@@ -178,6 +178,32 @@ public class UpdateType extends ServerMetadata implements Serializable
     {
         mValidationExpressions = validationExpressions;
     }
+    
+    /**
+     * @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
+    /**
+     * @return an integer containing MaxUpdate
+     */
+    public int getMaxUpdate()
+    {
+    	return mMaxUpdate;
+    }
+    
+    public void setMaxUpdate(int maxUpdate)
+    {
+    	mMaxUpdate = maxUpdate;
+    }
 
     /**
      * Returns the hierarchy level for this metadata object.
@@ -270,7 +296,13 @@ public class UpdateType extends ServerMetadata implements Serializable
 
     /** persistent field */
     private Set mValidationExpressions;
-
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
+    
+    /** nullable persistent field */
+    private int mMaxUpdate;
+    
     private String mLevel;
 
     public static final String TABLE = "UPDATE_TYPE";

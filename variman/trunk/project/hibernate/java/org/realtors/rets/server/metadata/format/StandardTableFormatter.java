@@ -28,7 +28,7 @@ public class StandardTableFormatter extends BaseStandardFormatter
             .appendAttribute("Resource", resource)
             .appendAttribute("Class", retsClass)
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = tables.iterator(); i.hasNext();)
@@ -41,6 +41,7 @@ public class StandardTableFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "Field").
                 beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", table.getMetadataEntryID());
             TagBuilder.simpleTag(out, "SystemName", table.getSystemName());
             TagBuilder.simpleTag(out, "StandardName", table.getStandardName());
             TagBuilder.simpleTag(out, "LongName", table.getLongName());
@@ -73,6 +74,14 @@ public class StandardTableFormatter extends BaseStandardFormatter
             TagBuilder.simpleTag(out, "Required", table.getRequired());
             TagBuilder.simpleTag(out, "SearchHelpID", table.getSearchHelp());
             TagBuilder.simpleTag(out, "Unique", table.isUnique());
+            
+            //1.7.2
+            TagBuilder.simpleTag(out, "ModTimeStamp", table.getModTimeStamp());
+            TagBuilder.simpleTag(out, "ForeignKeyName", table.getForeignKeyName());
+            TagBuilder.simpleTag(out, "ForeignField", table.getForeignField());
+            TagBuilder.simpleTag(out, "KeyQuery", table.getKeyQuery());
+            TagBuilder.simpleTag(out, "KeySelect", table.getKeySelect());
+            TagBuilder.simpleTag(out, "InKeyIndex", table.getInKeyIndex());            
 
             tag.close();
         }

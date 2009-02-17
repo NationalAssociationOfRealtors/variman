@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
+import org.realtors.rets.client.RetsVersion;
+
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 
@@ -27,13 +29,15 @@ public class FormatterContext
 
     public FormatterContext(String version, Date date, boolean recursive,
                             PrintWriter writer,
-                            FormatterLookup lookup)
+                            FormatterLookup lookup,
+                            RetsVersion retsVersion)
     {
         mVersion = version;
         mDate = date;
         mRecursive = recursive;
         mWriter = writer;
         mLookup = lookup;
+        mRetsVersion = retsVersion;
     }
 
     public String getVersion()
@@ -46,6 +50,16 @@ public class FormatterContext
         mVersion = version;
     }
 
+    public RetsVersion getRetsVersion()
+    {
+    	return mRetsVersion;
+    }
+    
+    protected void setRetsVersion(RetsVersion retsVersion)
+    {
+    	mRetsVersion = retsVersion;
+    }
+    
     public Date getDate()
     {
         return mDate;
@@ -118,4 +132,5 @@ public class FormatterContext
     private FormatterLookup mLookup;
     private TableGroupFilter mGroupFilter;
     private Set mGroups;
+    private RetsVersion mRetsVersion;
 }

@@ -30,6 +30,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         allTables.add(table);
 
         mStatusType = new UpdateType(1);
+        mStatusType.setMetadataEntryID("Status");
         mStatusType.setTable(table);
         mStatusType.setSequence(12);
 
@@ -60,9 +61,11 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         ValidationExternal validationExternal = new ValidationExternal(1);
         validationExternal.setValidationExternalName("VE_NAME");
         mStatusType.setValidationExternal(validationExternal);
+        mStatusType.setMaxUpdate(1);
 
         table = new Table(2);
         table.setSystemName("LIST_PRICE");
+        
         allTables.add(table);
         mListPriceType = new UpdateType(2);
         mListPriceType.setTable(table);
@@ -73,7 +76,8 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         mListPriceType.setUpdateHelp(updateHelp);
         mListPriceType.setValidationLookup(validationLookup);
         mListPriceType.setValidationExternal(validationExternal);
-
+        mListPriceType.setMaxUpdate(0);
+        
         mGroupFilter = new TableGroupFilter();
         mGroupFilter.setTables("Property", "RES", allTables);
 
@@ -131,11 +135,11 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
             "Update=\"Change\" Version=\"" + VERSION + "\" Date=\"" + DATE +
             "\">\n" +
 
-            "<COLUMNS>\tSystemName\tSequence\tAttributes\tDefault\t" +
+            "<COLUMNS>\tMetadataEntryID\tSystemName\tSequence\tAttributes\tDefault\t" +
             "ValidationExpressionID\tUpdateHelpID\tValidationLookupName\t" +
-            "ValidationExternalName\t</COLUMNS>\n" +
+            "ValidationExternalName\tMaxUpdate\t</COLUMNS>\n" +
 
-            "<DATA>\tSTATUS\t12\t2,4\t0\tVE1,VE2\tUH1\tVL_NAME\tVE_NAME\t" +
+            "<DATA>\tStatus\tSTATUS\t12\t2,4\t0\tVE1,VE2\tUH1\tVL_NAME\tVE_NAME\t1\t" +
             "</DATA>\n" +
 
             "</METADATA-UPDATE_TYPE>\n";
@@ -153,6 +157,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
             "Update=\"Change\" Version=\"" + VERSION + "\" Date=\"" + DATE +
             "\">" + EOL +
             "<UpdateField>" + EOL +
+            "<MetadataEntryID>Status</MetadataEntryID>" + EOL +
             "<SystemName>STATUS</SystemName>" + EOL +
             "<Sequence>12</Sequence>" + EOL +
             "<Attributes>2,4</Attributes>" + EOL +
@@ -161,6 +166,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
             "<UpdateHelpID>UH1</UpdateHelpID>" + EOL +
             "<ValidationLookupName>VL_NAME</ValidationLookupName>" + EOL +
             "<ValidationExternalName>VE_NAME</ValidationExternalName>" + EOL +
+            "<MaxUpdate>1</MaxUpdate>" + EOL +
             "</UpdateField>" + EOL +
             "</METADATA-UPDATE_TYPE>" + EOL;
     }

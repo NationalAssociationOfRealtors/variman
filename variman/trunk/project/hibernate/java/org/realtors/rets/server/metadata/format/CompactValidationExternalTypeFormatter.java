@@ -31,10 +31,10 @@ public class CompactValidationExternalTypeFormatter extends MetadataFormatter
         TagBuilder tag = new TagBuilder(context.getWriter(),
                                         "METADATA-VALIDATION_EXTERNAL_TYPE")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
-            .appendAttribute("ValidationExternal",
+            .appendAttribute("ValidationExternalName",
                              levels[VALIDATION_EXTERNAL_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator i = validationExternalTypes.iterator(); i.hasNext();)
@@ -51,6 +51,7 @@ public class CompactValidationExternalTypeFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(validationExternalType.getMetadataEntryID());
         row.append(validationExternalType.getSearchField());
         row.append(validationExternalType.getDisplayField());
         List formattedResultFields =
@@ -73,6 +74,6 @@ public class CompactValidationExternalTypeFormatter extends MetadataFormatter
     }
 
     private static final String[] COLUMNS = new String[] {
-        "SearchField", "DisplayField", "ResultFields",
+        "MetadataEntryID", "SearchField", "DisplayField", "ResultFields",
     };
 }

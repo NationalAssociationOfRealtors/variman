@@ -28,7 +28,7 @@ public class CompactValidationLookupFormatter extends MetadataFormatter
                                         "METADATA-VALIDATION_LOOKUP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
         for (Iterator i = validationLookups.iterator(); i.hasNext();)
@@ -54,16 +54,17 @@ public class CompactValidationLookupFormatter extends MetadataFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
+        row.append(validationLookup.getMetadataEntryID());
         row.append(validationLookup.getValidationLookupName());
         row.append(validationLookup.getParent1Field());
         row.append(validationLookup.getParent2Field());
         row.append(context.getVersion());
-        row.append(context.getDate());
+        row.append(context.getDate(), context.getRetsVersion());
         row.end();
     }
 
     private static final String[] COLUMNS = new String[] {
-        "ValidationLookupName", "Parent1Field", "Parent2Field", "Version",
+        "MetadataEntryID", "ValidationLookupName", "Parent1Field", "Parent2Field", "Version",
         "Date",
     };
 }

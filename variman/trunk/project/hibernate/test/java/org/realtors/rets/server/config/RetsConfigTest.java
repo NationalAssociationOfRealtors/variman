@@ -15,7 +15,7 @@ public class RetsConfigTest extends LinesEqualTestCase
     public void testToXml()
         throws RetsServerException
     {
-        RetsConfig retsConfig = new RetsConfig();
+        RetsConfig retsConfig = RetsConfig.getInstance();
         retsConfig.setGetObjectRoot("/tmp/pictures");
         retsConfig.setPhotoPattern("%k-%i.jpg");
         retsConfig.setObjectSetPattern("%k.xml");
@@ -23,6 +23,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         retsConfig.setNonceSuccessTimeout(10);
         retsConfig.setPort(7103);
         retsConfig.setMetadataDir("WEB-INF/rets/metadata");
+        retsConfig.setStrictParsing(false);
 
         DatabaseConfig database = new DatabaseConfig();
         database.setDatabaseType(DatabaseType.POSTGRESQL);
@@ -95,6 +96,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "  <object-set-pattern>%k.xml</object-set-pattern>" + NL +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>" + NL +
             "  <nonce-success-timeout>10</nonce-success-timeout>" + NL +
+            "  <strict-parsing>false</strict-parsing>" + NL +
             "  <database>" + NL +
             "    <type>postgresql</type>" + NL +
             "    <host>localhost</host>" + NL +
@@ -154,6 +156,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "  <object-set-pattern>%k.xml</object-set-pattern>\n" +
             "  <nonce-initial-timeout>5</nonce-initial-timeout>\n" +
             "  <nonce-success-timeout>10</nonce-success-timeout>\n" +
+            "  <strict-parsing>true</strict-parsing>" +
             "  <database>\n" +
             "    <type>postgresql</type>\n" +
             "    <host>localhost</host>\n" +
@@ -205,6 +208,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertEquals("/tmp/pictures", retsConfig.getGetObjectRoot());
         assertEquals(5, retsConfig.getNonceInitialTimeout());
         assertEquals(10, retsConfig.getNonceSuccessTimeout());
+        assertEquals(true, retsConfig.getStrictParsing());
 
         DatabaseConfig database = retsConfig.getDatabase();
         assertEquals(DatabaseType.POSTGRESQL, database.getDatabaseType());
@@ -343,7 +347,7 @@ public class RetsConfigTest extends LinesEqualTestCase
 
     public void testSetBlankAddress()
     {
-        RetsConfig retsConfig = new RetsConfig();
+        RetsConfig retsConfig = RetsConfig.getInstance();
         assertNull(retsConfig.getAddress());
         retsConfig.setAddress("");
         assertNull(retsConfig.getAddress());
@@ -355,7 +359,7 @@ public class RetsConfigTest extends LinesEqualTestCase
 
     public void testGetDefaults()
     {
-        RetsConfig retsConfig = new RetsConfig();
+        RetsConfig retsConfig = RetsConfig.getInstance();
         assertEquals("/", retsConfig.getGetObjectRoot("/"));
         assertEquals("%i.jpg", retsConfig.getPhotoPattern("%i.jpg"));
         assertEquals("foo", retsConfig.getObjectSetPattern("foo"));

@@ -9,6 +9,8 @@
   <property file="${basedir}/build.properties" />
   <property file="${user.home}/.build.properties" />
   <property file="${basedir}/project/build.properties" />
+	
+  <property name="rets-client.jar" value="${basedir}/build/rets-client/rets-client.jar" />
 
   <fileset id="hibernate.mapping.files" dir="project/hibernate/mappings">
     <include name="**/*.hbm.xml" />
@@ -60,7 +62,6 @@
   </path>
 
   <path id="datagen.path">
-<!--     <pathelement location="${rets-client.jar}"/> -->
     <pathelement path="build/hibernate/classes"/>
     <pathelement location="${commons-cli.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
@@ -71,6 +72,7 @@
     <pathelement path="${servlet.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${rets-client.jar}"/>
     <pathelement location="build/embedded/classes"/>
     <pathelement path="${hibernate.jar}"/>
     <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
@@ -94,6 +96,16 @@
     <pathelement path="${rets-client.jar}"/>
     <pathelement path="${apple-java-ext.jar}"/>
     <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
+  </path>
+
+  <path id="rets-client.path">
+    <pathelement path="${jdom.jar}"/> 
+    <pathelement path="${commons-codec.jar}"/>
+    <pathelement path="${commons-httpclient.jar}"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
+    <pathelement path="${apple-java-ext.jar}"/> 
+ <!--   <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/> -->
   </path>
 
   <path id="xdoclet.path">
@@ -129,14 +141,16 @@
     <mkdir dir="build/admin/classes"/>
     <mkdir dir="build/admin/bin"/>
     <mkdir dir="build/admin/test/classes"/>
-    <mkdir dir="build/tests"/>
+ 	<mkdir dir="build/rets-client/classes"/>
+ 	<mkdir dir="build/rets-client/tests/classes"/>
+  	<mkdir dir="build/tests"/>
     <mkdir dir="dist" />
   </target>
 
   <target name="build" description="Build all"
           depends="build-hibernate,build-webapp,build-importer,build-admin" />
 
-  <target name="build-hibernate" depends="build-hibernate-xdoclet">
+  <target name="build-hibernate" depends="build-hibernate-xdoclet,build-rets-client">
     <property name="src.antlr.dir"
               value="${basedir}/project/hibernate/java/org/realtors/rets/server/dmql"/>
     <property name="build.antlr.dir"
@@ -351,7 +365,7 @@
   <target name="doc" depends="doc-api"
           description="Build generated documentation"/>
 
-  <target name="build-embedded" depends="prepare">
+  <target name="build-embedded" depends="prepare,build-rets-client">
     <depend srcDir="project/embedded/java"
             destDir="build/embedded/classes"
             cache="build/embedded/depcache" closure="yes">
@@ -431,7 +445,111 @@
          manifest="build/embedded/${project.name}-server.manifest"/>
   </target>
 
-  <target name="build-webapp-webdoclet">
+  <target name="build-rets-client" depends="prepare">
+	    <depend srcDir="project/rets-client/java"
+	            destDir="build/rets-client/classes"
+	            cache="build/rets-client/depcache" closure="yes">
+	      <classpath>
+	        <path refid="rets-client.path" />
+	      </classpath>
+	    </depend>
+	    <javac srcdir="project/rets-client/java"
+	           destdir="build/rets-client/classes"
+	           target="${compile.vmtarget}" source="${compile.vmsource}"
+	           optimize="${compile.optimize}"
+	           debug="${compile.debug}"
+	           deprecation="${compile.deprecation}">
+	      <classpath>
+	        <path refid="rets-client.path" />
+	      </classpath>
+	    </javac>
+
+	    <copy todir="build/rets-server/server/conf">
+	      <fileset dir="project/rets-client/conf" includes="*"/>
+	    </copy>
+
+	    <jar jarfile="${rets-client.jar}"
+	         basedir="build/rets-client/classes"/>
+  </target>
+	
+	<target name="test-rets-client" depends="build-rets-client">
+		<depend srcDir="project/rets-client/junit"
+		        destDir="build/rets-client/tests/classes"
+		        cache="build/rets-client/tests/depcache" closure="yes">
+			<classpath>
+			    <pathelement path="${rets-client.jar}"/>
+		        <path refid="rets-client.path" />
+			</classpath>
+		</depend>
+		<javac srcdir="project/rets-client/junit"
+			destdir="build/rets-client/tests/classes"
+			target="${compile.vmtarget}" source="${compile.vmsource}"
+			optimize="${compile.optimize}"
+			debug="${compile.debug}"
+			deprecation="${compile.deprecation}">
+			<classpath>
+				<path refid="rets-client.path" />
+			    <pathelement path="${rets-client.jar}"/>
+			</classpath>
+		</javac>
+		<copy todir="build/rets-client/tests/classes">
+			<fileset dir="project/rets-client/junit" 
+				includes="**/*"
+				excludes="**/*.java"
+			/>
+		</copy>
+		
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="build/rets-client/tests/classes"/>
+				<pathelement location="build/rets-client/classes"/>
+				<path refid="rets-client.path"/>
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+			<formatter type="brief"/>
+			
+			<test name="org.realtors.rets.common.metadata.AllTests"
+				outfile="build/tests/metadata"
+			/>
+			<test name="org.realtors.rets.client.AllTests"
+				outfile="build/tests/results"
+			/>
+		</junit>
+	</target>	
+<!--
+    <classpath>
+      <pathelement path="${java.class.path}"/>
+      <pathelement location="build/hibernate/test/classes"/>
+      <pathelement location="build/webapp/test/classes"/>
+      <pathelement location="build/admin/test/classes"/>
+      <path refid="hibernate.path"/>
+      <path refid="webapp.path"/>
+      <path refid="lib.path"/>
+      <path refid="embedded.path"/>
+      <pathelement path="${servlet.jar}"/>
+      <pathelement path="${log4j.jar}"/>
+      <pathelement path="${commons-lang.jar}"/>
+      <pathelement location="build/hibernate/classes"/>
+      <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+      <pathelement location="build/admin/classes"/>
+    </classpath>
+    <formatter type="brief" />
+    <jvmarg value="-Dtest.basedir=${basedir}"/>
+    <jvmarg value="-Dlog4j.configuration=${project.name}-test-log4j.xml"/>
+    <batchtest todir="build/tests">
+        <fileset dir="build/hibernate/test/classes"
+          includes="**/*Test.class" excludes="**/Abstract*.class" />
+        <fileset dir="build/webapp/test/classes"
+          includes="**/*Test.class" excludes="**/Abstract*.class" />
+        <fileset dir="build/admin/test/classes"
+          includes="**/*Test.class" excludes="**/Abstract*.class" />
+    </batchtest>
+  </junit>
+  <fail message="Tests failed" if="test.failure" />
+</target>
+-->
+
+	<target name="build-webapp-webdoclet">
     <taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask">
       <classpath>
         <path refid="xdoclet.path"/>
@@ -455,7 +573,7 @@
     </webdoclet>
   </target>
 
-  <target name="build-webapp" depends="build-hibernate,build-embedded"
+  <target name="build-webapp" depends="build-hibernate,build-embedded,build-rets-client"
           description="Build webapp">
     <depend srcDir="project/webapp/java"
             destDir="build/rets-server/webapp/WEB-INF/classes"
@@ -602,7 +720,7 @@
 
 
 
-  <target name="build-importer" depends="build-hibernate"
+  <target name="build-importer" depends="build-hibernate,build-rets-client"
           description="Builds the data and metadata importers">
     <depend srcDir="project/importer/java"
             destDir="build/importer/classes"

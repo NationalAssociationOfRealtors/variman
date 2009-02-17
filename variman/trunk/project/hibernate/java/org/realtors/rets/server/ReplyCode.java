@@ -17,6 +17,8 @@ public class ReplyCode extends ValuedEnum
     public static final ReplyCode SUCCESSFUL =
         new ReplyCode("Operation Successful", 0);
 
+    public static final ReplyCode INVALID_QUERY_FIELD =
+    	new ReplyCode("Invalid Query Field", 20200);
     public static final ReplyCode NO_RECORDS_FOUND =
         new ReplyCode("No Records Found", 20201);
     public static final ReplyCode INVALID_SELECT =

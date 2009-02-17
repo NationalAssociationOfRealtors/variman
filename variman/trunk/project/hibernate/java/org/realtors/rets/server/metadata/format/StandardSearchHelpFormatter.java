@@ -25,7 +25,7 @@ public class StandardSearchHelpFormatter extends BaseStandardFormatter
         TagBuilder metadata = new TagBuilder(out, "METADATA-SEARCH_HELP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = searchHelps.iterator(); i.hasNext();)
@@ -34,6 +34,7 @@ public class StandardSearchHelpFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "SearchHelp")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", searchHelp.getMetadataEntryID());
             TagBuilder.simpleTag(out, "SearchHelpID",
                                  searchHelp.getSearchHelpID());
             TagBuilder.simpleTag(out, "Value", searchHelp.getValue());

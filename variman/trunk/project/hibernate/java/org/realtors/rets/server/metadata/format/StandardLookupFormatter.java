@@ -25,7 +25,7 @@ public class StandardLookupFormatter extends BaseStandardFormatter
         TagBuilder metadata = new TagBuilder(out, "METADATA-LOOKUP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate())
+            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
         for (Iterator i = lookups.iterator(); i.hasNext();)
@@ -34,8 +34,10 @@ public class StandardLookupFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "LookupType")
                 .beginContentOnNewLine();
 
+            TagBuilder.simpleTag(out, "MetadataEntryID", lookup.getMetadataEntryID());
             TagBuilder.simpleTag(out, "LookupName", lookup.getLookupName());
             TagBuilder.simpleTag(out, "VisibleName", lookup.getVisibleName());
+            
             formatVersionDateTags(context, VERSION_DATE_TAGS);
 
             if (context.isRecursive())

@@ -165,7 +165,7 @@ public class MetadataLoader
             for (int j = 0; j < classes.length; j++)
             {
                 org.realtors.rets.common.metadata.types.MClass in = classes[j];
-                MClass hClass = new MClass();
+                MClass hClass = new MClass(in);
 
                 hClass.setResource(resource);
                 hClass.setClassName(in.getClassName());
@@ -208,6 +208,8 @@ public class MetadataLoader
                 hEditMask.setResource(resource);
                 hEditMask.setEditMaskID(in.getEditMaskID());
                 hEditMask.setValue(in.getValue());
+                // 1.7.2
+                hEditMask.setMetadataEntryID(in.getMetadataEntryID());
 
                 hEditMask.updateLevel();
 
@@ -233,6 +235,9 @@ public class MetadataLoader
             hFk.setSystem(hSystem);
 
             hFk.setForeignKeyID(in.getForeignKeyID());
+            hFk.setConditionalParentField(in.getConditionalParentField());
+            hFk.setConditionalParentValue(in.getConditionalParentValue());
+            
             String path[] = new String[3];
             path[0] = in.getParentResourceID();
             path[1] = in.getParentClassID();
@@ -278,6 +283,8 @@ public class MetadataLoader
                 hLookup.setLookupName(in.getLookupName());
 
                 hLookup.setVisibleName(in.getVisibleName());
+                // 1.7.2
+                hLookup.setMetadataEntryID(in.getMetadataEntryID());
 
                 hLookup.updateLevel();
                 save(hLookup);
@@ -317,7 +324,9 @@ public class MetadataLoader
                 hLookupType.setLongValue(in.getLongValue());
                 hLookupType.setShortValue(in.getShortValue());
                 hLookupType.setValue(in.getValue());
-
+                // 1.7.2
+                hLookupType.setMetadataEntryID(in.getMetadataEntryID());
+                
                 hLookupType.updateLevel();
 
                 save(hLookupType);
@@ -352,6 +361,12 @@ public class MetadataLoader
                 hObject.setDescription(
                         StringUtils.substring(
                                 in.getDescription(), 0, 64));
+                
+                // 1.7.2
+                hObject.setMetadataEntryID(in.getMetadataEntryID());
+                hObject.setObjectTimeStamp(in.getObjectTimeStamp());
+                hObject.setObjectCount(in.getObjectCount());
+                
                 // Should we have an updateLevel?
                 save(hObject);
                 hObjects.add(hObject);
@@ -410,7 +425,9 @@ public class MetadataLoader
                 hSearchHelp.setResource(resource);
                 hSearchHelp.setSearchHelpID(in.getSearchHelpID());
                 hSearchHelp.setValue(in.getValue());
-
+                // 1.7.2
+                hSearchHelp.setMetadataEntryID(in.getMetadataEntryID());
+                
                 hSearchHelp.updateLevel();
 
                 save(hSearchHelp);
@@ -425,8 +442,9 @@ public class MetadataLoader
     protected MSystem doSystem()
     {
         MSystem hSystem = new MSystem();
-        hSystem.setVersion(101001);
+        hSystem.setVersion(10100000);
         hSystem.setDate(Calendar.getInstance().getTime());
+        hSystem.setTimeZoneOffset("-06:00");
         save(hSystem);
         return hSystem;
     }
@@ -540,6 +558,16 @@ public class MetadataLoader
                 hTable.setSearchHelp(searchHelp);
                 // String = md.getAttribute("unique");
                 hTable.setUnique(in.getUnique());
+                
+                // 1.7.2
+                hTable.setMetadataEntryID(in.getMetadataEntryID());
+                hTable.setModTimeStamp(in.getModTimeStamp());
+                hTable.setForeignKeyName(in.getForeignKeyName());
+                hTable.setForeignField(in.getForeignField());
+                hTable.setKeyQuery(in.getKeyQuery());
+                hTable.setKeySelect(in.getKeySelect());
+                hTable.setInKeyIndex(in.getInKeyIndex());
+                
                 hTable.updateLevel();
 
                 save(hTable);
@@ -571,6 +599,10 @@ public class MetadataLoader
                 hUpdate.setUpdateName(in.getUpdateName());
                 hUpdate.setDescription(in.getDescription());
                 hUpdate.setKeyField(in.getKeyField());
+                
+                hUpdate.setMetadataEntryID(in.getMetadataEntryID());
+                hUpdate.setUpdateTypeVersion(in.getUpdateTypeVersion());
+                hUpdate.setUpdateTypeDate(in.getUpdateTypeDate());
 
                 hUpdate.updateLevel();
 
@@ -601,6 +633,8 @@ public class MetadataLoader
                 hUpdateHelp.setResource(resource);
                 hUpdateHelp.setUpdateHelpID(in.getUpdateHelpID());
                 hUpdateHelp.setValue(in.getValue());
+                // 1.7.2
+                hUpdateHelp.setMetadataEntryID(in.getMetadataEntryID());
 
                 hUpdateHelp.updateLevel();
 
@@ -689,6 +723,10 @@ public class MetadataLoader
                         in.getValidationExternalName();
                 updateType.setValidationExternal(
                         (ValidationExternal) mValidationExternals.get(vePath));
+                
+                // 1.7.2
+                updateType.setMetadataEntryID(in.getMetadataEntryID());
+                updateType.setMaxUpdate(in.getMaxUpdate());
 
                 save(updateType);
                 hUpdateTypes.add(updateType);
@@ -720,6 +758,8 @@ public class MetadataLoader
                         ValidationExpressionTypeEnum.fromString(
                                 in.getValidationExpressionType()));
                 ve.setValue(in.getValue());
+                // 1.7.2
+                ve.setMetadataEntryID(in.getMetadataEntryID());
 
                 ve.updateLevel();
                 save(ve);
@@ -751,6 +791,9 @@ public class MetadataLoader
 
                 hValidationExternal.setValidationExternalName(
                         in.getValidationExternalName());
+                // 1.7.2
+                hValidationExternal.setMetadataEntryID(
+                		in.getMetadataEntryID());
 
                 // get the search class
                 String path = in.getSearchResource() + ":" +
@@ -830,6 +873,8 @@ public class MetadataLoader
                                        StringUtils.trimToEmpty(split[1]));
                 }
                 vet.setResultFields(resultFieldMap);
+                // 1.7.2
+                vet.setMetadataEntryID(in.getMetadataEntryID());
 
                 vet.updateLevel();
                 save(vet);
@@ -864,6 +909,7 @@ public class MetadataLoader
 
                 hvl.setParent1Field(in.getParent1Field());
                 hvl.setParent2Field(in.getParent2Field());
+                hvl.setMetadataEntryID(in.getMetadataEntryID());
 
                 hvl.updateLevel();
 
@@ -898,6 +944,8 @@ public class MetadataLoader
                 vlt.setValidText(in.getValidText());
                 vlt.setParent1Value(in.getParent1Value());
                 vlt.setParent2Value(in.getParent2Value());
+                // 1.7.2
+                vlt.setMetadataEntryID(in.getMetadataEntryID());
 
                 vlt.updateLevel();
 

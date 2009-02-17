@@ -5,6 +5,11 @@ package org.realtors.rets.server.protocol;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.TimeZone;
+
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.util.RetsDateTime;
 
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.RetsServerException;
@@ -26,26 +31,46 @@ public class CompactFormatterTest extends LinesEqualTestCase
     public void testDateFormat() throws RetsServerException
     {
         CompactFormatter formatter =
-            new CompactFormatter(CompactFormatter.NO_DECODING);
+            new CompactFormatter(CompactFormatter.NO_DECODING, RetsVersion.RETS_1_5);
         MockResultSet results = new MockResultSet();
         String[] columns = new String[]{"r_DATE"};
         results.setColumns(columns);
-        java.util.Calendar cal = java.util.Calendar.getInstance();
+        // This is pre RETS 1.7.2 format
+        RetsDateTime cal = new RetsDateTime();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.set(2008, 4, 9, 12, 17, 0);
-        results.addRow(new Object[] {cal.getTime()});
+        cal.setRetsVersion(RetsVersion.RETS_1_5);
+        results.addRow(new Object[] {cal});
         SimpleDmqlMetadata metadata = new SimpleDmqlMetadata();
         metadata.addTemporal("DATE");
         StringWriter formatted = new StringWriter();
         SearchFormatterContext context =
             new SearchFormatterContext(
                 new PrintWriter(formatted), results, Arrays.asList(columns),
-                metadata);
+                metadata, RetsVersion.RETS_1_5);
         context.setLimit(10000);
         formatter.formatResults(context);
         assertLinesEqual(
         		"<DELIMITER value=\"09\"/>\n" + 
         		"<COLUMNS>\tDATE\t</COLUMNS>\n" + 
-        		"<DATA>\tFri May 09 12:17:00 CDT 2008\t</DATA>\n", formatted.toString());
+        		"<DATA>\tFri, 9 May 2008 12:17:00 GMT\t</DATA>\n", formatted.toString());
+        
+        // This is RETS 1.7.2 (the default) format.
+        results = new MockResultSet();
+        cal = new RetsDateTime();
+        cal.set(2008, 4, 9, 12, 17, 0);
+        results.addRow(new Object[] {cal});
+        formatted = new StringWriter();
+        context =
+            new SearchFormatterContext(
+                new PrintWriter(formatted), results, Arrays.asList(columns),
+                metadata, RetsVersion.RETS_1_7_2);
+        context.setLimit(10000);
+        formatter.formatResults(context);
+        assertLinesEqual(
+        		"<DELIMITER value=\"09\"/>\n" + 
+        		"<COLUMNS>\tDATE\t</COLUMNS>\n" + 
+        		"<DATA>\t2008-05-09T19:17:00Z\t</DATA>\n", formatted.toString());
     	
     }
 
@@ -83,7 +108,7 @@ public class CompactFormatterTest extends LinesEqualTestCase
         throws RetsServerException
     {
         CompactFormatter formatter =
-            new CompactFormatter(lookupDecoding);
+            new CompactFormatter(lookupDecoding, RetsVersion.RETS_1_5);
         MockResultSet results = new MockResultSet();
         results.setColumns(COLUMNS);
         results.addRow(new String[] {"Main St.", "12345", "0", null});
@@ -101,7 +126,7 @@ public class CompactFormatterTest extends LinesEqualTestCase
         SearchFormatterContext context =
             new SearchFormatterContext(
                 new PrintWriter(formatted), results, Arrays.asList(COLUMNS),
-                metadata);
+                metadata, RetsVersion.RETS_1_5);
         context.setLimit(limit);
         formatter.formatResults(context);
         return formatted.toString();

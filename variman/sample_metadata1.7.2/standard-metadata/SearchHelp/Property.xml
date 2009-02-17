@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METADATA-SEARCH_HELP Resource="Property" Version="1.01.000" Date="2009-01-20T00:00:00Z">
+<COLUMNS>	MetadataEntryID	SearchHelpID	Value	</COLUMNS>
+<DATA>	SearchExteriorFeatures	EXTERIOR_FEATURE_SEARCH_HELP	Exterior Features (multiple)	</DATA>
+<DATA>	SearchInteriorFeatures	INTERIOR_FEATURE_SEARCH_HELP	Interior Features (multiple)	</DATA>
+<DATA>	SearchViews	VIEW_SEARCH_HELP	Views (multiple)	</DATA>
+<DATA>	SearchSquareFootage	SQFT_SEARCH_HELP	Square Footage (dddxddd)	</DATA>
+<DATA>	SearchListingStatus	LISTING_STATUS_SEARCH_HELP	Status of the Listing	</DATA>
+<DATA>	SearchListingNumber	LN_SEARCH_HELP	Listing Number (all numbers)	</DATA>
+<DATA>	SearchDate	DATE_SEARCH_HELP	Date (YYYY-MM-DD)	</DATA>
+</METADATA-SEARCH_HELP>

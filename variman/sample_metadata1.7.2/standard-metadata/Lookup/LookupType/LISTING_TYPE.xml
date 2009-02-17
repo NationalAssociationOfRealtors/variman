@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="LISTING_TYPE" Version="1.01.000" Date="2009-01-20T00:00:00Z">
+<COLUMNS>	MetadataEntryID	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	Income	INCOME	INC	INC	</DATA>
+<DATA>	Land	LAND	LND	LND	</DATA>
+<DATA>	Rent	RENT	RENT	RENT	</DATA>
+<DATA>	Residential	RESIDENTIAL	RES	RES	</DATA>
+</METADATA-LOOKUP_TYPE>

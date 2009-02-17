@@ -65,6 +65,19 @@ public class ValidationExternal extends ServerMetadata implements Serializable
     }
 
     /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
+    /**
      *
      * @return a Resource Object
      *
@@ -210,6 +223,9 @@ public class ValidationExternal extends ServerMetadata implements Serializable
 
     /** nullable persistent field */
     private MClass mSearchClass;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
 
     /** persistent field */
     private Set mValidationExternalTypes;
