@@ -192,7 +192,14 @@ public class GetObjectTransactionTest extends TestCase
         out.writeBytes(CRLF);
         stream = getClass().getResourceAsStream(JPEG_FILE_3);
         IOUtils.copyStream(stream, out);
-
+        
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-ID: abc125" + CRLF);
+        out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: text/xml" + CRLF);
+        out.writeBytes(CRLF);
+        out.writeBytes("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>" + CRLF);
+        
         out.writeBytes(CRLF + "--" + BOUNDARY + "--" + CRLF);
         out.flush();
 
@@ -220,23 +227,38 @@ public class GetObjectTransactionTest extends TestCase
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
-        out.writeBytes("Content-Type: application/octet-stream" + CRLF);
+        out.writeBytes("Content-Type: text/xml" + CRLF);
         out.writeBytes("Location: " + createLocationUrl("abc123", "1") + CRLF);
         out.writeBytes(CRLF);
+        out.writeBytes("<RETS ReplyCode=\"0\" ReplyText=\"Operation Successful\"/>" +
+            				CRLF);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
         out.writeBytes("Content-ID: abc123" + CRLF);
         out.writeBytes("Object-ID: 2" + CRLF);
-        out.writeBytes("Content-Type: application/octet-stream" + CRLF);
+        out.writeBytes("Content-Type: text/xml" + CRLF);
         out.writeBytes("Location: " + createLocationUrl("abc123", "2") + CRLF);
         out.writeBytes(CRLF);
+        out.writeBytes("<RETS ReplyCode=\"0\" ReplyText=\"Operation Successful\"/>" +
+							CRLF);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
         out.writeBytes("Content-ID: abc124" + CRLF);
         out.writeBytes("Object-ID: 1" + CRLF);
-        out.writeBytes("Content-Type: application/octet-stream" + CRLF);
+        out.writeBytes("Content-Type: text/xml" + CRLF);
         out.writeBytes("Location: " + createLocationUrl("abc124", "1") + CRLF);
         out.writeBytes(CRLF);
+        out.writeBytes("<RETS ReplyCode=\"0\" ReplyText=\"Operation Successful\"/>" +
+							CRLF);
+
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-ID: abc125" + CRLF);
+        out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: text/xml" + CRLF);
+        out.writeBytes("Location: " + CRLF);
+        out.writeBytes(CRLF);
+        out.writeBytes("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>" +
+							CRLF);
 
         out.writeBytes(CRLF + "--" + BOUNDARY + "--" + CRLF);
         out.flush();
@@ -334,6 +356,13 @@ public class GetObjectTransactionTest extends TestCase
         ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(expectedStream);
 
+        out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
+        out.writeBytes("Content-ID: abc125" + CRLF);
+        out.writeBytes("Object-ID: 1" + CRLF);
+        out.writeBytes("Content-Type: text/xml" + CRLF);
+        out.writeBytes(CRLF);
+        out.writeBytes("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>" + CRLF);
+        
         out.writeBytes(CRLF + "--" + BOUNDARY + CRLF);
         out.writeBytes("Content-ID: abc126" + CRLF);
         out.writeBytes("Content-Description: Beautiful frontal view of home." +

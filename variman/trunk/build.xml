@@ -838,7 +838,7 @@
     <chmod file="build/admin/bin/${project.name}" perm="ugo+rx"/>
   </target>
 
-  <target name="test" description="Run all unit tests" depends="build">
+  <target name="test" description="Run all unit tests" depends="build, test-rets-client">
     <junit printsummary="no" haltonfailure="no" fork="yes" forkmode="perBatch"
       failureProperty="test.failure">
       <classpath>

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsServerException;
 
 public class PatternObjectSet implements ObjectSet
@@ -52,6 +53,14 @@ public class PatternObjectSet implements ObjectSet
     {
         if (object != null)
         {
+        	/*
+        	 * This is only used by findAllObjects. If the ObjectID is not
+        	 * equal to "1" and an error happened, do not add the object and
+        	 * assume that there are no more objects to find.
+        	 */
+        	if (object.getObjectId() != 1 && object.getRetsReplyCode() != ReplyCode.SUCCESSFUL)
+        		return false;
+        	
             URL url = object.getUrl();
             if (!urls.contains(url))
             {
@@ -104,7 +113,7 @@ public class PatternObjectSet implements ObjectSet
             {
                 LOG.debug("File " + filePath + " does not exist");
                 /*
-                 * As a multipart response, we need to create an object of text/xml
+                 * In case this is a multipart response, we need to create an object of text/xml
                  * that contains the RETS ReplyCode message. 
                  */
                 try
@@ -128,9 +137,10 @@ public class PatternObjectSet implements ObjectSet
 	                		notFound.deleteOnExit();
 	                	}
                 	}
-                    return new ObjectDescriptor(mResourceKey, objectId,
-												notFound.toURI().toURL(),
-												null);
+                	ObjectDescriptor objectDescriptor = new ObjectDescriptor(mResourceKey, objectId,
+                													notFound.toURI().toURL(), null);
+                	objectDescriptor.setRetsReplyCode(ReplyCode.NO_OBJECT_FOUND);
+                	return objectDescriptor;
                 }
                 catch (Exception e)
                 {

@@ -83,6 +83,12 @@ public class GetObjectTransaction
             {
                 ObjectDescriptor objectDescriptor =
                     (ObjectDescriptor) allObjects.get(0);
+                /*
+                 * Check the ReplyCode. If not SUCCESSFUL, throw an exception.
+                 */
+                if (objectDescriptor.getRetsReplyCode() != ReplyCode.SUCCESSFUL)
+                	throw new RetsReplyException(objectDescriptor.getRetsReplyCode());
+                
                 executeSinglePart(response, objectDescriptor);
             }
             else
@@ -150,10 +156,20 @@ public class GetObjectTransaction
                            CRLF);
             if (useLocation())
             {
-                out.writeBytes("Content-Type: application/octet-stream" + CRLF);
-                out.writeBytes("Location: " + getLocationUrl(objectDescriptor) +
-                               CRLF);
-                out.writeBytes(CRLF);
+                out.writeBytes("Content-Type: text/xml" + CRLF);
+            	if (objectDescriptor.getRetsReplyCode() == ReplyCode.SUCCESSFUL)
+            	{
+            		out.writeBytes("Location: " + getLocationUrl(objectDescriptor) +
+                               CRLF + CRLF);
+            		out.writeBytes("<RETS ReplyCode=\"0\" ReplyText=\"Operation Successful\"/>" +
+            						CRLF);
+            	}
+            	else
+            	{
+            		out.writeBytes("Location: " + CRLF + CRLF);
+            		out.writeBytes("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>" +
+            							CRLF);
+            	}
             }
             else
             {

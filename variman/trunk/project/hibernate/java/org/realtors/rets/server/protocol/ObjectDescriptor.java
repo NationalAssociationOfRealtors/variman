@@ -10,6 +10,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.realtors.rets.server.Util;
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.ReplyCode;
 
 public class ObjectDescriptor
 {
@@ -34,6 +35,7 @@ public class ObjectDescriptor
         }
         mDescription = description;
         mRemoteLocationAllowable = false;
+        mRetsReplyCode = ReplyCode.SUCCESSFUL;
     }
     
     public String getObjectKey()
@@ -99,6 +101,16 @@ public class ObjectDescriptor
             return buffer.toString();
         }
     }
+    
+    public ReplyCode getRetsReplyCode()
+    {
+    	return mRetsReplyCode;
+    }
+    
+    public void setRetsReplyCode(ReplyCode retsReplyCode)
+    {
+    	mRetsReplyCode = retsReplyCode;
+    }
 
     public ObjectStream openObjectStream() throws IOException
     {
@@ -121,6 +133,7 @@ public class ObjectDescriptor
             .append(mIsLocal)
             .append(mDescription)
             .append(mRemoteLocationAllowable)
+            .append(mRetsReplyCode)
             .toString();
     }
 
@@ -138,6 +151,7 @@ public class ObjectDescriptor
             .append(mIsLocal, rhs.mIsLocal)
             .append(mDescription, rhs.mDescription)
             .append(mRemoteLocationAllowable, rhs.mRemoteLocationAllowable)
+            .append(mRetsReplyCode, rhs.mRetsReplyCode)
             .isEquals();
     }
 
@@ -150,6 +164,7 @@ public class ObjectDescriptor
             .append(mIsLocal)
             .append(mDescription)
             .append(mRemoteLocationAllowable)
+            .append(mRetsReplyCode)
             .toHashCode();
     }
 
@@ -159,4 +174,5 @@ public class ObjectDescriptor
     private boolean mIsLocal;
     private String mDescription;
     private boolean mRemoteLocationAllowable;
+    private ReplyCode mRetsReplyCode;
 }

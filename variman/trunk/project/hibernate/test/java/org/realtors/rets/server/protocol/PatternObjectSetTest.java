@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
+
+import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.IOUtils;
 
@@ -23,7 +25,9 @@ public class PatternObjectSetTest extends TestCase
     public void testNonexistantObjectId() throws RetsServerException
     {
         PatternObjectSet objectSet = createObjectSet();
-        assertNull(objectSet.findObject("Photo", 3));
+        ObjectDescriptor actual = objectSet.findObject("Photo", 3);
+        ReplyCode reply = actual.getRetsReplyCode();
+        assertTrue(actual.getRetsReplyCode().equals(ReplyCode.NO_OBJECT_FOUND));
     }
 
     public void testNonexistantType() throws RetsServerException
