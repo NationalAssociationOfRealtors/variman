@@ -1,12 +1,19 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 
 public class MLookup extends MetaObject {
+	private static final String METADATATYPENAME = "Lookup";
+	
 	private static final MetadataType[] CHILDREN = { MetadataType.LOOKUP_TYPE };
 	private static final MLookupType[] EMPTYLOOKUPTYPES = {};
 	public static final String METADATAENTRYID = "MetadataEntryID";
@@ -15,6 +22,21 @@ public class MLookup extends MetaObject {
 	public static final String VERSION = "Version";
 	public static final String DATE = "Date";
 
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(METADATAENTRYID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(LOOKUPNAME, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(VISIBLENAME, sPlaintext64, sREQUIRED));
+    		add(new MetadataElement(VERSION, sAttrVersion, sREQUIRED));
+    		add(new MetadataElement(DATE, sAttrDate, sREQUIRED));
+        }};
+        
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+        
 	public MLookup() {
 		this(DEFAULT_PARSING);
 	}
@@ -62,12 +84,21 @@ public class MLookup extends MetaObject {
 	}
 
 	@Override
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.LOOKUP;
+	}
+	
+	@Override
 	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(METADATAENTRYID, sRETSID);
-		attributeMap.put(LOOKUPNAME, sRETSNAME);
-		attributeMap.put(VISIBLENAME, sPlaintext64);
-		attributeMap.put(VERSION, sAttrVersion);
-		attributeMap.put(DATE, sAttrDate);
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
 
 }

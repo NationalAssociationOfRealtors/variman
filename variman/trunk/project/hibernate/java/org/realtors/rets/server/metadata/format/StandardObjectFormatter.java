@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.MObject;
 
 public class StandardObjectFormatter extends BaseStandardFormatter

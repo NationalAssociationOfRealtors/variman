@@ -1,13 +1,18 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 import org.realtors.rets.common.metadata.attrib.AttrGenericText;
 
 public class MUpdateType extends MetaObject {
+	private static final String METADATATYPENAME = "UpdateType";
+	
 	public static final String METADATAENTRYID = "MetadataEntryID";
 	public static final String SYSTEMNAME = "SystemName";
 	public static final String SEQUENCE = "Sequence";
@@ -18,9 +23,27 @@ public class MUpdateType extends MetaObject {
 	public static final String VALIDATIONLOOKUPNAME = "ValidationLookupName";
 	public static final String VALIDATIONEXTERNALNAME = "ValidationExternalName";
 	public static final String MAXUPDATE = "MaxUpdate";
-
-	private static final AttrType sAttributes = new AttrGenericText(0, 10, "12345,");
-
+	
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(METADATAENTRYID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(SYSTEMNAME, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(SEQUENCE, sAttrNumeric));
+    		add(new MetadataElement(ATTRIBUTES, sAttributes1to5, sREQUIRED));
+    		add(new MetadataElement(DEFAULT, sPlaintext));
+    		add(new MetadataElement(VALIDATIONEXPRESSIONID, sAlphanum64));
+    		add(new MetadataElement(UPDATEHELPID, sRETSNAME));
+    		add(new MetadataElement(VALIDATIONLOOKUPNAME, sRETSNAME));
+    		add(new MetadataElement(VALIDATIONEXTERNALNAME, sRETSNAME));
+    		add(new MetadataElement(MAXUPDATE, sAttrNumeric));
+		}};
+	    
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+		
 	public MUpdateType() {
 		this(DEFAULT_PARSING);
 
@@ -81,17 +104,20 @@ public class MUpdateType extends MetaObject {
 	}
 
 	@Override
-	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(METADATAENTRYID, sRETSID);
-		attributeMap.put(SYSTEMNAME, sRETSNAME);
-		attributeMap.put(SEQUENCE, sAttrNumeric);
-		attributeMap.put(ATTRIBUTES, sAttributes);
-		attributeMap.put(DEFAULT, sPlaintext);
-		attributeMap.put(VALIDATIONEXPRESSIONID, sAlphanum64);
-		attributeMap.put(UPDATEHELPID, sRETSNAME);
-		attributeMap.put(VALIDATIONLOOKUPNAME, sRETSNAME);
-		attributeMap.put(VALIDATIONEXTERNALNAME, sRETSNAME);
-		attributeMap.put(MAXUPDATE, sAttrNumeric);
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
 	}
-
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.UPDATE_TYPE;
+	}
+	
+	@Override
+	protected void addAttributesToMap(Map attributeMap) {
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
+	}
 }

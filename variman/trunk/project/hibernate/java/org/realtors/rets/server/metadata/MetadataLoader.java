@@ -188,7 +188,8 @@ public class MetadataLoader
             String parent = file.getParent();
             if (StringUtils.contains(parent, "Notices") ||
                 StringUtils.contains(parent, "Roles") ||
-                StringUtils.contains(parent, "Template"))
+                StringUtils.contains(parent, "Template") ||
+                StringUtils.contains(parent, ".svn"))
             {
                 return false;
             }

@@ -9,12 +9,30 @@
 package org.realtors.rets.server.admin;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import net.sf.hibernate.cfg.Configuration;
 
+import org.apache.commons.lang.StringUtils;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.realtors.rets.common.metadata.JDomCompactBuilder;
+import org.realtors.rets.common.metadata.Metadata;
+import org.realtors.rets.common.metadata.types.MSystem;
+
+import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.JdomUtils;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.metadata.MetadataLoader;
+//import org.realtors.rets.server.metadata.MSystem;
 
 public class Admin
 {
@@ -142,6 +160,28 @@ public class Admin
     {
         return sLogConfigFile;
     }
+    
+    public static MetadataLoader getMetadataLoader()
+    {
+    	if (sMetadataLoader == null)
+    		sMetadataLoader = new MetadataLoader();
+    	
+    	return sMetadataLoader;
+    }
+    
+//    public static MSystem getMetadata()
+//    	throws RetsServerException
+//    {
+//        String metadataDir = Admin.getRetsConfig().getMetadataDir();
+//        metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
+//        File file = new File(metadataDir);
+//        if (!file.isDirectory())
+//        	return null;
+//        
+//        MetadataLoader loader = new MetadataLoader();
+//        MSystem system = getMetadataLoader().parseMetadataDirectory(metadataDir);
+//        return system;
+//    }
 
     public static final String PROJECT_NAME = "variman";
     public static final String ADMIN_NAME = "Variman Admin";
@@ -156,4 +196,6 @@ public class Admin
     private static String sVersion;
     private static String sBuildDate;
     private static String sLogConfigFile;
+    private static MetadataLoader sMetadataLoader = null;
+
 }

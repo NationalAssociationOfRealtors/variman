@@ -12,6 +12,47 @@ import org.realtors.rets.common.metadata.MetaParseException;
 
 public class AttrTimeZone implements AttrType<Integer> 
 {
+	/** A description of this attribute. */
+	protected String description;
+
+	/**
+	 * Constructor
+	 * @param min	An int indicating the minimum length of this attribute.
+	 * @param max	An int indicating the maximum length of this attribute.
+	 * @param description A String containing the description for this attribute.
+	 */
+	public AttrTimeZone(String description) 
+	{
+		this.description 	= description;
+	}
+	
+	/**
+	 * Constructor
+	 */
+	public AttrTimeZone()
+	{
+		this.description	= null;
+	}
+
+	/**
+	 * Return the description of this attribute. The description field is arbitrary, but can
+	 * be used for things like error text when validation fails.
+	 * @return A String containing the description for this attribute.
+	 */
+	public String getDescription()
+	{
+		if (description == null)
+			return "";
+		
+		return description;
+	}
+	
+	/**
+	 * Parse and optionally validate the contents of this attribute.
+	 * @param value	A String containing the value to parse.
+	 * @param strict A boolean that indicates whether or not strict parsing
+	 * is to take place.
+	 */
 	public Integer parse(String value, boolean strict) throws MetaParseException 
 	{
 		try 
@@ -41,6 +82,9 @@ public class AttrTimeZone implements AttrType<Integer>
 		return null;
 	}
 
+	/**
+	 * Render the attribute.
+	 */
 	public String render(Integer value) 
 	{
 		String TimeZoneValue = "Z";
@@ -69,6 +113,11 @@ public class AttrTimeZone implements AttrType<Integer>
 		return TimeZoneValue + hours + ":" + mins;
 	}
 
+	/**
+	 * Attribute specific content checker.
+	 * @param value
+	 * @throws MetaParseException
+	 */
 	public Class<Integer> getType() 
 	{
 		return Integer.class;

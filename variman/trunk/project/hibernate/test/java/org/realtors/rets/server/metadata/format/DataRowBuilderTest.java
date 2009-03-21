@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.realtors.rets.common.util.DataRowBuilder;
+
 import junit.framework.TestCase;
 
 public class DataRowBuilderTest extends TestCase

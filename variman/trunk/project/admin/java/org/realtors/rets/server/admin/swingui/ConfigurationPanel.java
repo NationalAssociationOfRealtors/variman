@@ -32,9 +32,11 @@ import javax.swing.text.Document;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.metadata.MSystem;
 
 public class ConfigurationPanel extends AdminTab
 {
@@ -82,6 +84,7 @@ public class ConfigurationPanel extends AdminTab
         c.weightx = 0.0;
         box.add(Box.createHorizontalStrut(5));
         box.add(new JButton(new ChooseMetadataAction()), c);
+        
         retsConfig.addRow("Metadatata Directory:", box);
 
         box = new JPanel(new GridBagLayout());
@@ -209,7 +212,7 @@ public class ConfigurationPanel extends AdminTab
         }
     }
 
-    private class ChooseImageRootAction extends AbstractAction
+     private class ChooseImageRootAction extends AbstractAction
     {
         public ChooseImageRootAction()
         {

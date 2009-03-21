@@ -16,6 +16,8 @@ import java.util.Set;
 
 import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.util.DataRowBuilder;
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.MClass;
 
 public class CompactClassFormatter extends MetadataFormatter

@@ -1,12 +1,17 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 
 public class MValidationExternal extends MetaObject {
+	private static final String METADATATYPENAME = "ValidationExternal";
 
 	private static final MetadataType[] CHILDREN = { MetadataType.VALIDATION_EXTERNAL_TYPE };
 	public static final String METADATAENTRYID = "MetadataEntryID";
@@ -16,6 +21,22 @@ public class MValidationExternal extends MetaObject {
 	public static final String VERSION = "Version";
 	public static final String DATE = "Date";
 
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(METADATAENTRYID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(VALIDATIONEXTERNALNAME, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(SEARCHRESOURCE, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(SEARCHCLASS, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(VERSION, sAttrVersion, sREQUIRED));
+    		add(new MetadataElement(DATE, sAttrDate, sREQUIRED));
+        }};    
+	
+    public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+        
 	public MValidationExternal() {
 		this(DEFAULT_PARSING);
 	}
@@ -64,13 +85,21 @@ public class MValidationExternal extends MetaObject {
 	}
 
 	@Override
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.VALIDATION_EXTERNAL;
+	}
+
+	@Override
 	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(METADATAENTRYID, sRETSID);
-		attributeMap.put(VALIDATIONEXTERNALNAME, sRETSNAME);
-		attributeMap.put(SEARCHRESOURCE, sRETSNAME);
-		attributeMap.put(SEARCHCLASS, sRETSNAME);
-		attributeMap.put(VERSION, sAttrVersion);
-		attributeMap.put(DATE, sAttrDate);
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
 
 }

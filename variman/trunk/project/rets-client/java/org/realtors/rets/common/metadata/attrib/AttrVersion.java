@@ -16,6 +16,46 @@ import org.realtors.rets.common.metadata.MetaParseException;
  * to an integer such as major * 10,000,000 + minor * 100,000 + release.
  */
 public class AttrVersion implements AttrType<Integer> {
+	
+	/** A description of this attribute. */
+	protected String description;
+
+	/**
+	 * Constructor
+	 * @param description A String containing the description for this attribute.
+	 */
+	public AttrVersion(String description) 
+	{
+		this.description 	= description;
+	}
+	
+	/**
+	 * Constructor
+	 */
+	public AttrVersion()
+	{
+		this.description	= null;
+	}
+	
+	/**
+	 * Return the description of this attribute. The description field is arbitrary, but can
+	 * be used for things like error text when validation fails.
+	 * @return A String containing the description for this attribute.
+	 */
+	public String getDescription()
+	{
+		if (description == null)
+			return "";
+		
+		return description;
+	}
+	
+	/**
+	 * Parse and optionally validate the contents of this attribute.
+	 * @param value	A String containing the value to parse.
+	 * @param strict A boolean that indicates whether or not strict parsing
+	 * is to take place.
+	 */
 	public Integer parse(String value, boolean strict) throws MetaParseException {
 		String[] parts = StringUtils.split(value, ".");
 		int major, minor, release;
@@ -36,11 +76,21 @@ public class AttrVersion implements AttrType<Integer> {
 			throw new MetaParseException("Invalid version: " + value);
 		return 0;
 	}
+	
+	/**
+	 * Return the component parts of the version.
+	 * @param parts A String array containing the RETS major, minor and update versions.
+	 * @param part An int indicating which component to return.
+	 * @return A String containing the version component.
+	 */
 	private String getPart(String[] parts, int part){
 		if( parts != null && parts.length > part ) return parts[part];
 		return "0";
 	}
 
+	/**
+	 * Render the attribute.
+	 */
 	public String render(Integer value) {
 		int ver = value.intValue();
 		int release = ver % 100000;
@@ -57,6 +107,9 @@ public class AttrVersion implements AttrType<Integer> {
 		return major + "." + minstr + "." + relstr;
 	}
 
+	/**
+	 * Return the Class type.
+	 */
 	public Class<Integer> getType() {
 		return Integer.class;
 	}

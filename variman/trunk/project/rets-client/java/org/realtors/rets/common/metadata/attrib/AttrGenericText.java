@@ -12,11 +12,29 @@ import org.realtors.rets.common.metadata.MetaParseException;
 
 public class AttrGenericText extends AttrAbstractText {
 	private String mChars;
-
+	/**
+	 * Constructor
+	 * @param min	An int indicating the minimum length of this attribute.
+	 * @param max	An int indicating the maximum length of this attribute.
+	 * @param chars A String containing the accepted characters for this attribute.
+	 */
 	public AttrGenericText(int min, int max, String chars) {
-		super(min, max);
+		super(min, max, null);
 		this.mChars = chars;
 	}
+	
+	/**
+	 * Constructor
+	 * @param min	An int indicating the minimum length of this attribute.
+	 * @param max	An int indicating the maximum length of this attribute.
+	 * @param chars A String containing the accepted characters for this attribute.
+	 * @param description A String containing the description for this attribute.
+	 */
+	public AttrGenericText(int min, int max, String chars, String description) {
+		super(min, max, description);
+		this.mChars = chars;
+	}
+
 
 	@Override
 	protected void checkContent(String value) throws MetaParseException {

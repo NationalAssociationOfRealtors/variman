@@ -1,27 +1,18 @@
-/*
- * Variman RETS Server
- *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
- * Distributed under a BSD-style license.  See LICENSE.TXT for details.
- */
-
-/*
- */
-package org.realtors.rets.server.metadata.format;
+package org.realtors.rets.common.util;
 
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.realtors.rets.client.RetsVersion;
-import org.realtors.rets.server.config.RetsConfig;
 
 /***
  * Helper class to facilitate building rows in compact format. Each append()
@@ -107,11 +98,18 @@ public class DataRowBuilder
         mWriter.print(mDelimiter);
     }
 
-    public void append(Collection collection)
+    public void append(Collection<?> collection)
     {
         if (collection != null)
         {
-            List strings = FormatUtil.toSortedStringList(collection);
+            List<String> strings = new ArrayList<String>(collection.size());
+            for (Iterator<?> iterator = collection.iterator(); iterator.hasNext();)
+            {
+                Object o = iterator.next();
+                strings.add(o.toString());
+            }
+            Collections.sort(strings);
+            
             append(StringUtils.join(strings.iterator(), ","));
         }
         else

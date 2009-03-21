@@ -1,12 +1,19 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 
 public class MUpdate extends MetaObject {
+	private static final String METADATATYPENAME = "Update";
+	
 	public static final String METADATAENTRYID = "MetadataEntryID";
 	public static final String UPDATENAME = "UpdateName";
 	public static final String DESCRIPTION = "Description";
@@ -14,6 +21,22 @@ public class MUpdate extends MetaObject {
 	public static final String UPDATETYPEVERSION = "UpdateTypeVersion";
 	public static final String UPDATETYPEDATE = "UpdateTypeDate";
 
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(METADATAENTRYID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(UPDATENAME, sAlphanum24, sREQUIRED));
+    		add(new MetadataElement(DESCRIPTION, sPlaintext64));
+    		add(new MetadataElement(KEYFIELD, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(UPDATETYPEVERSION, sAttrVersion, sREQUIRED));
+    		add(new MetadataElement(UPDATETYPEDATE, sAttrDate, sREQUIRED));
+		}};
+	    
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+		
 	public MUpdate() {
 		this(DEFAULT_PARSING);
 	}
@@ -66,13 +89,21 @@ public class MUpdate extends MetaObject {
 	}
 
 	@Override
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.UPDATE;
+	}
+	
+	@Override
 	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(METADATAENTRYID, sRETSID);
-		attributeMap.put(UPDATENAME, sAlphanum24);
-		attributeMap.put(DESCRIPTION, sPlaintext64);
-		attributeMap.put(KEYFIELD, sRETSNAME);
-		attributeMap.put(UPDATETYPEVERSION, sAttrVersion);
-		attributeMap.put(UPDATETYPEDATE, sAttrDate);
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
 
 	private static final MetadataType[] sTypes = { MetadataType.UPDATE_TYPE };

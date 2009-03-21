@@ -1,13 +1,18 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 import org.realtors.rets.common.metadata.attrib.AttrEnum;
 
 public class MTable extends MetaObject {
+	private static final String METADATATYPENAME = "Table";
 
 	public static final String METADATAENTRYID = "MetadataEntryID";
 	public static final String SYSTEMNAME = "SystemName";
@@ -35,11 +40,12 @@ public class MTable extends MetaObject {
 	public static final String UNIQUE = "Unique";
 	// 1.7.2
 	public static final String MODTIMESTAMP = "ModTimeStamp";
-	public static final String FOREIGNKEYNAME = "ForeighKeyName";
+	public static final String FOREIGNKEYNAME = "ForeignKeyName";
 	public static final String FOREIGNFIELD = "ForeignField";
 	public static final String KEYQUERY = "KeyQuery";
 	public static final String KEYSELECT = "KeySelect";
 	public static final String INKEYINDEX = "InKeyIndex";
+	
 	private static final String[] DATATYPES = "Boolean,Character,Date,DateTime,Time,Tiny,Small,Int,Long,Decimal".split(",");
 	private static final AttrType sDataTypes = new AttrEnum(DATATYPES);
 	private static final String[] INTERPRETATIONS = "Number,Currency,Lookup,LookupMulti,LookupBitstring,LookupBitmask".split(",");
@@ -49,6 +55,47 @@ public class MTable extends MetaObject {
 	private static final String[] UNITSS = "Feet,Meters,SqFt,SqMeters,Acres,Hectares".split(",");
 	private static final AttrType sUnits = new AttrEnum(UNITSS);
 
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(METADATAENTRYID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(SYSTEMNAME, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(STANDARDNAME, sRETSNAME));
+    		add(new MetadataElement(LONGNAME, sText256));
+    		add(new MetadataElement(DBNAME, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(SHORTNAME, sText64));
+    		add(new MetadataElement(MAXIMUMLENGTH, sPOSITIVENUM));
+    		add(new MetadataElement(DATATYPE, sDataTypes));
+    		add(new MetadataElement(PRECISION, sAttrNumeric));
+    		add(new MetadataElement(SEARCHABLE, sAttrBoolean));
+    		add(new MetadataElement(INTERPRETATION, sInterpretations));
+    		add(new MetadataElement(ALIGNMENT, sAlignments));
+    		add(new MetadataElement(USESEPARATOR, sAttrBoolean));
+    		add(new MetadataElement(EDITMASKID, sAlphanum64)); // FIXME: but multiples are separated by commas
+    		add(new MetadataElement(LOOKUPNAME, sRETSNAME));
+    		add(new MetadataElement(MAXSELECT, sAttrNumeric));
+    		add(new MetadataElement(UNITS, sUnits));
+    		add(new MetadataElement(INDEX, sAttrBoolean));
+    		add(new MetadataElement(MINIMUM, sAttrNumeric));
+    		add(new MetadataElement(MAXIMUM, sAttrNumeric));
+    		add(new MetadataElement(DEFAULT, sAttrNumeric)); // XXX: serial
+    		add(new MetadataElement(REQUIRED, sAttrNumeric));
+    		add(new MetadataElement(SEARCHHELPID, sRETSNAME));
+    		add(new MetadataElement(UNIQUE, sAttrBoolean));
+    		// 1.7.2
+    		add(new MetadataElement(MODTIMESTAMP, sAttrBoolean, RetsVersion.RETS_1_7_2));
+    		add(new MetadataElement(FOREIGNKEYNAME, sRETSID, RetsVersion.RETS_1_7_2));
+    		add(new MetadataElement(FOREIGNFIELD, sRETSNAME, RetsVersion.RETS_1_7_2));
+    		add(new MetadataElement(KEYQUERY, sAttrBoolean, RetsVersion.RETS_1_7_2));
+    		add(new MetadataElement(KEYSELECT, sAttrBoolean, RetsVersion.RETS_1_7_2));
+    		add(new MetadataElement(INKEYINDEX, sAttrBoolean, RetsVersion.RETS_1_7_2));
+		}};
+	    
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+		
 	public MTable() {
 		this(DEFAULT_PARSING);
 	}
@@ -200,38 +247,21 @@ public class MTable extends MetaObject {
 	}
 
 	@Override
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.TABLE;
+	}
+
+	@Override
 	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(METADATAENTRYID, sRETSID);
-		attributeMap.put(SYSTEMNAME, sRETSNAME);
-		attributeMap.put(STANDARDNAME, sRETSNAME);
-		attributeMap.put(LONGNAME, sText256);
-		attributeMap.put(DBNAME, sAlphanum);
-		attributeMap.put(SHORTNAME, sText64);
-		attributeMap.put(MAXIMUMLENGTH, sPOSITIVENUM);
-		attributeMap.put(DATATYPE, sDataTypes);
-		attributeMap.put(PRECISION, sAttrNumeric);
-		attributeMap.put(SEARCHABLE, sAttrBoolean);
-		attributeMap.put(INTERPRETATION, sInterpretations);
-		attributeMap.put(ALIGNMENT, sAlignments);
-		attributeMap.put(USESEPARATOR, sAttrBoolean);
-		attributeMap.put(EDITMASKID, sAlphanum64); // FIXME: but multiples are separated by commas
-		attributeMap.put(LOOKUPNAME, sRETSNAME);
-		attributeMap.put(MAXSELECT, sAttrNumeric);
-		attributeMap.put(UNITS, sUnits);
-		attributeMap.put(INDEX, sAttrBoolean);
-		attributeMap.put(MINIMUM, sAttrNumeric);
-		attributeMap.put(MAXIMUM, sAttrNumeric);
-		attributeMap.put(DEFAULT, sAttrNumeric); // XXX: serial
-		attributeMap.put(REQUIRED, sAttrNumeric);
-		attributeMap.put(SEARCHHELPID, sRETSNAME);
-		attributeMap.put(UNIQUE, sAttrBoolean);
-		// 1.7.2
-		attributeMap.put(MODTIMESTAMP, sAttrBoolean);
-		attributeMap.put(FOREIGNKEYNAME, sRETSID);
-		attributeMap.put(FOREIGNFIELD, sRETSNAME);
-		attributeMap.put(KEYQUERY, sAttrBoolean);
-		attributeMap.put(KEYSELECT, sAttrBoolean);
-		attributeMap.put(INKEYINDEX, sAttrBoolean);
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
 
 }

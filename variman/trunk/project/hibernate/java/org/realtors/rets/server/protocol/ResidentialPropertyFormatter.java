@@ -15,9 +15,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
-import org.realtors.rets.server.metadata.format.TagBuilder;
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.UnitEnum;
 

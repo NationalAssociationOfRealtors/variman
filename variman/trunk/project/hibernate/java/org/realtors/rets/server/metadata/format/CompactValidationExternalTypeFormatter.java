@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.realtors.rets.common.util.DataRowBuilder;
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 
 public class CompactValidationExternalTypeFormatter extends MetadataFormatter

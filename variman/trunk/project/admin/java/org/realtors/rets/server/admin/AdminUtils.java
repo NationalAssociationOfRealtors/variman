@@ -30,6 +30,7 @@ import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.DatabaseType;
 import org.realtors.rets.server.config.RetsConfig;
 
+
 public class AdminUtils
 {
 
@@ -94,8 +95,12 @@ public class AdminUtils
         LOG.debug("Initializing Hibernate configuration");
         RetsConfig retsConfig = Admin.getRetsConfig();
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
+        String hibernateConfig = Admin.getHomeDirectory() + 
+        							"/webapp/WEB-INF/classes/" + 
+        							Admin.PROJECT_NAME + "-hbm-xml.jar";
+ 
         Configuration config = new Configuration()
-            .addJar(new File(Admin.PROJECT_NAME + "-hbm-xml.jar"))
+            .addJar(new File(hibernateConfig))
             .setProperties(retsConfig.createHibernateProperties());
         SessionFactory sessionFactory =
             config.buildSessionFactory();

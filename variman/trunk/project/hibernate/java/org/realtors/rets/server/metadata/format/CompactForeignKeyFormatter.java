@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.common.util.DataRowBuilder;
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.ForeignKey;
 import org.realtors.rets.server.metadata.Table;
 

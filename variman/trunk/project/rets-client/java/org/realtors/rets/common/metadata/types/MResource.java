@@ -1,12 +1,18 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 
 public class MResource extends MetaObject {
+	private static final String METADATATYPENAME = "Resource";
+	
 	private static final MetadataType[] CHILDREN = { 
 		MetadataType.VALIDATION_EXPRESSION, 
 		MetadataType.LOOKUP,
@@ -44,6 +50,40 @@ public class MResource extends MetaObject {
 	public static final String VALIDATIONEXTERNALVERSION = "ValidationExternalVersion";
 	public static final String VALIDATIONEXTERNALDATE = "ValidationExternalDate";
 
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(RESOURCEID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(STANDARDNAME, sAlphanum64));
+    		add(new MetadataElement(VISIBLENAME, sPlaintext64, sREQUIRED));
+    		add(new MetadataElement(DESCRIPTION, sPlaintext64));
+    		add(new MetadataElement(KEYFIELD, sRETSID));
+    		add(new MetadataElement(CLASSCOUNT, sPOSITIVENUM));
+    		add(new MetadataElement(CLASSVERSION, sAttrVersion, sREQUIRED));
+    		add(new MetadataElement(CLASSDATE, sAttrDate, sREQUIRED));
+    		add(new MetadataElement(OBJECTVERSION, sAttrVersion));
+    		add(new MetadataElement(OBJECTDATE, sAttrDate));
+    		add(new MetadataElement(SEARCHHELPVERSION, sAttrVersion));
+    		add(new MetadataElement(SEARCHHELPDATE, sAttrDate));
+    		add(new MetadataElement(EDITMASKVERSION, sAttrVersion));
+    		add(new MetadataElement(EDITMASKDATE, sAttrDate));
+    		add(new MetadataElement(LOOKUPVERSION, sAttrVersion));
+    		add(new MetadataElement(LOOKUPDATE, sAttrDate));
+    		add(new MetadataElement(UPDATEHELPVERSION, sAttrVersion));
+    		add(new MetadataElement(UPDATEHELPDATE, sAttrDate));
+    		add(new MetadataElement(VALIDATIONEXPRESSIONVERSION, sAttrVersion));
+    		add(new MetadataElement(VALIDATIONEXPRESSIONDATE, sAttrDate));
+    		add(new MetadataElement(VALIDATIONLOOKUPVERSION, sAttrVersion));
+    		add(new MetadataElement(VALIDATIONLOOKUPDATE, sAttrDate));
+    		add(new MetadataElement(VALIDATIONEXTERNALVERSION, sAttrVersion));
+    		add(new MetadataElement(VALIDATIONEXTERNALDATE, sAttrDate));
+        }};
+        
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+    	
 	public MResource() {
 		this(DEFAULT_PARSING);
 	}
@@ -73,7 +113,8 @@ public class MResource extends MetaObject {
 	}
 
 	public int getClassCount() {
-		return getIntAttribute(CLASSCOUNT);
+		return getMClasses().length;
+		//return getIntAttribute(CLASSCOUNT);
 	}
 
 	public int getClassVersion() {
@@ -240,31 +281,21 @@ public class MResource extends MetaObject {
 	}
 
 	@Override
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.RESOURCE;
+	}
+	
+	@Override
 	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(RESOURCEID, sRETSID);
-		attributeMap.put(STANDARDNAME, sAlphanum64);
-		attributeMap.put(VISIBLENAME, sPlaintext64);
-		attributeMap.put(DESCRIPTION, sPlaintext64);
-		attributeMap.put(KEYFIELD, sRETSID);
-		attributeMap.put(CLASSCOUNT, sPOSITIVENUM);
-		attributeMap.put(CLASSVERSION, sAttrVersion);
-		attributeMap.put(CLASSDATE, sAttrDate);
-		attributeMap.put(OBJECTVERSION, sAttrVersion);
-		attributeMap.put(OBJECTDATE, sAttrDate);
-		attributeMap.put(SEARCHHELPVERSION, sAttrVersion);
-		attributeMap.put(SEARCHHELPDATE, sAttrDate);
-		attributeMap.put(EDITMASKVERSION, sAttrVersion);
-		attributeMap.put(EDITMASKDATE, sAttrDate);
-		attributeMap.put(LOOKUPVERSION, sAttrVersion);
-		attributeMap.put(LOOKUPDATE, sAttrDate);
-		attributeMap.put(UPDATEHELPVERSION, sAttrVersion);
-		attributeMap.put(UPDATEHELPDATE, sAttrDate);
-		attributeMap.put(VALIDATIONEXPRESSIONVERSION, sAttrVersion);
-		attributeMap.put(VALIDATIONEXPRESSIONDATE, sAttrDate);
-		attributeMap.put(VALIDATIONLOOKUPVERSION, sAttrVersion);
-		attributeMap.put(VALIDATIONLOOKUPDATE, sAttrDate);
-		attributeMap.put(VALIDATIONEXTERNALVERSION, sAttrVersion);
-		attributeMap.put(VALIDATIONEXTERNALDATE, sAttrDate);
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
 
 }

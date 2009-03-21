@@ -1,27 +1,19 @@
-/*
- * Variman RETS Server
- *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
- * Distributed under a BSD-style license.  See LICENSE.TXT for details.
- */
-
-/*
- */
-package org.realtors.rets.server.metadata.format;
+package org.realtors.rets.common.util;
 
 import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.realtors.rets.client.RetsVersion;
-import org.realtors.rets.server.config.RetsConfig;
+
 
 public class TagBuilder
 {
@@ -177,11 +169,18 @@ public class TagBuilder
         return this;
     }
 
-    public TagBuilder print(Collection collection)
+    public TagBuilder print(Collection<String> collection)
     {
         if (collection != null)
         {
-            List strings = FormatUtil.toSortedStringList(collection);
+            List<String> strings = new ArrayList<String>(collection.size());
+            for (Iterator<?> iterator = collection.iterator(); iterator.hasNext();)
+            {
+                Object o = iterator.next();
+                strings.add(o.toString());
+            }
+            Collections.sort(strings);
+
             print(StringUtils.join(strings.iterator(), ","));
         }
         return this;
@@ -228,7 +227,7 @@ public class TagBuilder
     }
 
     public static void simpleTag(PrintWriter writer, String tagName,
-                                 Collection value)
+                                 Collection<?> value)
     {
         new TagBuilder(writer, tagName).beginContent().print(value).close();
     }
@@ -255,7 +254,7 @@ public class TagBuilder
         }
     	new TagBuilder(writer, tagName).beginContent().print(retsDate).close();
     }
-
+    
     private String mTagName;
     private PrintWriter mWriter;
     private boolean mContentIsEmpty;

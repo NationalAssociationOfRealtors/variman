@@ -23,12 +23,12 @@ import org.apache.commons.lang.enums.Enum;
 
 import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.metadata.attrib.AttrDate;
+import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.RetsDateTime;
+import org.realtors.rets.common.util.TagBuilder;
 
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
-import org.realtors.rets.server.metadata.format.DataRowBuilder;
-import org.realtors.rets.server.metadata.format.TagBuilder;
 
 /**
  * Formats results in COMPACT format.

@@ -66,7 +66,7 @@ public class AddUserAction extends AbstractAction
         int response = JOptionPane.CANCEL_OPTION;
         while (true)
         {
-            dialog.show();
+            dialog.setVisible(true);
             response = dialog.getResponse();
             if (response == JOptionPane.CANCEL_OPTION)
             {

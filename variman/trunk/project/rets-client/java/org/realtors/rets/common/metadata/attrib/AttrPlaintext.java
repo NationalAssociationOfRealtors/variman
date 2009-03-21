@@ -10,8 +10,24 @@ package org.realtors.rets.common.metadata.attrib;
 import org.realtors.rets.common.metadata.MetaParseException;
 
 public class AttrPlaintext extends AttrAbstractText {
+	/**
+	 * Constructor
+	 * @param min	An int indicating the minimum length of this attribute.
+	 * @param max	An int indicating the maximum length of this attribute.
+	 * @param description A String containing the description for this attribute.
+	 */
+	public AttrPlaintext(int min, int max, String description) 
+	{
+		super(min, max, description);
+	}
+	
+	/**
+	 * Constructor
+	 * @param min	An int indicating the maximum length of this attribute.
+	 * @param max	An int indicating the maximum length of this attribute.
+	 */
 	public AttrPlaintext(int min, int max) {
-		super(min, max);
+		super(min, max, null);
 	}
 
 	@Override

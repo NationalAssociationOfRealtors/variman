@@ -13,6 +13,8 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.common.util.DataRowBuilder;
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.SearchHelp;
 
 public class CompactSearchHelpFormatter extends MetadataFormatter

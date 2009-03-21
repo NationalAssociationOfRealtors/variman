@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.LinesEqualTestCase;
 
 public class TagBuilderTest extends LinesEqualTestCase

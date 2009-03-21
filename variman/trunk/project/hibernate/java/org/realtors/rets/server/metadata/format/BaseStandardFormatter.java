@@ -10,6 +10,8 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import org.realtors.rets.common.util.TagBuilder;
+
 public abstract class BaseStandardFormatter extends MetadataFormatter
 {
     protected void formatVersionDateTags(FormatterContext context,

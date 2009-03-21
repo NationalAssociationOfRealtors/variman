@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.realtors.rets.common.util.DataRowBuilder;
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.Table;
 
 public class CompactTableFormatter extends MetadataFormatter

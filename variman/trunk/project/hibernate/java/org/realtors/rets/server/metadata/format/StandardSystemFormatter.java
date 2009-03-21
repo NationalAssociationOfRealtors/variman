@@ -13,6 +13,7 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.Collection;
 
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.MSystem;
 
 public class StandardSystemFormatter extends MetadataFormatter

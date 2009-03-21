@@ -1,11 +1,18 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 
 public class MForeignKey extends MetaObject {
+	private static final String METADATATYPENAME = "ForeignKey";
+	
 	public static final String FOREIGNKEYID = "ForeignKeyID";
 	public static final String PARENTRESOURCEID = "ParentResourceID";
 	public static final String PARENTCLASSID = "ParentClassID";
@@ -17,6 +24,27 @@ public class MForeignKey extends MetaObject {
 	public static final String CONDITIONALPARENTFIELD = "ConditionalParentField";
 	public static final String CONDITIONALPARENTVALUE = "ConditionalParentValue";
 
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(FOREIGNKEYID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(PARENTRESOURCEID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(PARENTCLASSID, sRETSID, sREQUIRED));
+    		add(new MetadataElement(PARENTSYSTEMNAME, sRETSNAME, sREQUIRED));
+    		add(new MetadataElement(CHILDRESOURCEID, sRETSID));
+    		add(new MetadataElement(CHILDCLASSID, sRETSID));
+    		add(new MetadataElement(CHILDSYSTEMNAME, sRETSNAME));
+    	
+    		// 1.7.2
+    		add(new MetadataElement(CONDITIONALPARENTFIELD, sRETSNAME, RetsVersion.RETS_1_7_2));
+    		add(new MetadataElement(CONDITIONALPARENTVALUE, sRETSNAME, RetsVersion.RETS_1_7_2));
+        }};
+    
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+    	
 	public MForeignKey() {
 		this(DEFAULT_PARSING);
 	}
@@ -72,18 +100,21 @@ public class MForeignKey extends MetaObject {
 	}
 
 	@Override
-	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(FOREIGNKEYID, sRETSID);
-		attributeMap.put(PARENTRESOURCEID, sRETSID);
-		attributeMap.put(PARENTCLASSID, sRETSID);
-		attributeMap.put(PARENTSYSTEMNAME, sRETSNAME);
-		attributeMap.put(CHILDRESOURCEID, sRETSID);
-		attributeMap.put(CHILDCLASSID, sRETSID);
-		attributeMap.put(CHILDSYSTEMNAME, sRETSNAME);
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
 	
-		// 1.7.2
-		attributeMap.put(CONDITIONALPARENTFIELD, sRETSNAME);
-		attributeMap.put(CONDITIONALPARENTVALUE, sRETSNAME);
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.FOREIGNKEYS;
+	}
+
+	@Override
+	protected void addAttributesToMap(Map attributeMap) {
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
 
 }

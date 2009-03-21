@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.List;
 import java.io.PrintWriter;
 
+import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.ValidationExternalType;
 
 public class StandardValidationExternalTypeFormatter

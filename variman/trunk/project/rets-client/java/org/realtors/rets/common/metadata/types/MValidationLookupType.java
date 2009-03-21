@@ -1,16 +1,36 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 
 public class MValidationLookupType extends MetaObject {
+	private static final String METADATATYPENAME = "ValidationLookupType";
+	
 	public static final String METADATAENTRYID = "MetadataEntryID";
 	public static final String VALIDTEXT = "ValidText";
 	public static final String PARENT1VALUE = "Parent1Value";
 	public static final String PARENT2VALUE = "Parent2Value";
 
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+    		add(new MetadataElement(METADATAENTRYID, sRETSID));
+    		add(new MetadataElement(VALIDTEXT, sRETSNAME));
+    		add(new MetadataElement(PARENT1VALUE, sRETSNAME));
+    		add(new MetadataElement(PARENT2VALUE, sRETSNAME));
+        }};
+        
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+	
 	public MValidationLookupType() {
 		this(DEFAULT_PARSING);
 	}
@@ -46,11 +66,21 @@ public class MValidationLookupType extends MetaObject {
 	}
 
 	@Override
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.VALIDATION_LOOKUP_TYPE;
+	}
+
+	@Override
 	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(METADATAENTRYID, sRETSID);
-		attributeMap.put(VALIDTEXT, sRETSNAME);
-		attributeMap.put(PARENT1VALUE, sRETSNAME);
-		attributeMap.put(PARENT2VALUE, sRETSNAME);
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
 
 }

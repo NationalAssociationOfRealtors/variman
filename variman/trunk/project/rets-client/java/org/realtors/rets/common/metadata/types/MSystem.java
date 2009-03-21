@@ -1,20 +1,43 @@
 package org.realtors.rets.common.metadata.types;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataElement;
 import org.realtors.rets.common.metadata.MetadataType;
 
 public class MSystem extends MetaObject {
+	private static final String METADATATYPENAME = "System";
+	
 	public static final String SYSTEMID = "SystemID";
 	public static final String SYSTEMDESCRIPTION = "SystemDescription";
-	public static final String COMMENTS = "Comments";
+	public static final String COMMENTS = "COMMENTS";
 	public static final String DATE = "Date";
 	public static final String VERSION = "Version";
 	// 1.7.2
 	public static final String TIMEZONEOFFSET = "TimeZoneOffset";
 	
+    private static final List<MetadataElement> sAttributes =
+    	new ArrayList<MetadataElement>()
+        {{
+        	add(new MetadataElement(SYSTEMID, sAlphanum10, sREQUIRED));
+        	add(new MetadataElement(SYSTEMDESCRIPTION, sPlaintext64));
+        	add(new MetadataElement(DATE, sAttrDate, sREQUIRED));
+        	add(new MetadataElement(VERSION, sAttrVersion, sREQUIRED));
+        	add(new MetadataElement(COMMENTS, sText));
+        	add(new MetadataElement(TIMEZONEOFFSET, sTIMEZONEOFFSET, RetsVersion.RETS_1_7_2));
+        }};
+        
+	public static void addAttributes(String name, AttrType type)
+	{
+		sAttributes.add(new MetadataElement(name, type));
+	}
+    	
 	public MSystem() {
 		this(DEFAULT_PARSING);
 	}
@@ -75,17 +98,24 @@ public class MSystem extends MetaObject {
 		return null;
 	}
 
+	@Override
+	public final String getMetadataTypeName() {
+		return METADATATYPENAME;
+	}
+	
+	@Override
+	public final MetadataType getMetadataType() {
+		return MetadataType.SYSTEM;
+	}
+
 	public static final MetadataType[] CHILDREN = { MetadataType.RESOURCE, MetadataType.FOREIGNKEYS };
 
 	@Override
-	protected void addAttributesToMap(Map attributeMap) {
-		attributeMap.put(SYSTEMID, sAlphanum10);
-		attributeMap.put(SYSTEMDESCRIPTION, sPlaintext64);
-		attributeMap.put(DATE, sAttrDate);
-		attributeMap.put(VERSION, sAttrVersion);
-		attributeMap.put(COMMENTS, sText);
-		// 1.7.2
-		attributeMap.put(TIMEZONEOFFSET, sTIMEZONEOFFSET);
+	protected void addAttributesToMap(Map attributeMap) 
+	{
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
 	}
-
 }

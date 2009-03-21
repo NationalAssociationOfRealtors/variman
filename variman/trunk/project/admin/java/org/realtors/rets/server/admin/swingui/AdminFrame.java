@@ -85,6 +85,10 @@ public class AdminFrame extends JFrame
         menuBar.add(userMenu);
         JMenu groupMenu = new JMenu("Group");
         menuBar.add(groupMenu);
+        
+        JMenu metadataMenu = new JMenu("Metadata");
+
+        menuBar.add(metadataMenu);
 
         mAdminTabs = new ArrayList();
         mTabbedPane = new JTabbedPane();
@@ -96,6 +100,8 @@ public class AdminFrame extends JFrame
         addTab("Groups", mGroupsPanel);
         mLogPanel = new LogPanel();
         addTab("Logging", mLogPanel);
+        mMetadataPanel = new MetadataPanel(metadataMenu);
+        addTab("Metadata", mMetadataPanel);
         mCurrentAdminTab = mUsersPanel;
         mTabbedPane.addChangeListener(new OnTabChanged());
         content.add(mTabbedPane, BorderLayout.CENTER);
@@ -153,6 +159,10 @@ public class AdminFrame extends JFrame
             retsConfig.setObjectSetPattern(
                 mConfigurationPanel.getObjectSetPattern());
             retsConfig.toXml(Admin.getConfigFile());
+            if (retsConfig.saveMetadata() == false)
+            {
+            	LOG.error("Unable to save metadata!");
+            }
             Admin.setRetsConfigChanged(false);
         }
         catch (RetsServerException e)
@@ -295,4 +305,6 @@ public class AdminFrame extends JFrame
     private UsersPanel mUsersPanel;
     private GroupsPanel mGroupsPanel;
     private LogPanel mLogPanel;
+    
+    private MetadataPanel mMetadataPanel;
 }
