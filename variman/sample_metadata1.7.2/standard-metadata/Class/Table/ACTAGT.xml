@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <METADATA-TABLE Resource="ActiveAgent" Class="ACTAGT" Version="1.00.000" Date="2009-01-20T00:00:00Z">
 <COLUMNS>	MetadataEntryID	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	ModTimeStamp	ForeignKeyName	ForeignField	KeyQuery	KeySelect	InKeyIndex	</COLUMNS>
-<DATA>	OfficeId	OFFICE_ID	OfficeID	Office ID	OFFICE_ID	OFFICE_ID	7	Character	0	1		Left	0			0		0	0	0	0	0		0	1						</DATA>
-<DATA>	AgentId	AGENT_ID	AgentID	Agent ID	AGENT_ID	AGENT	6	Character	0	1		Left	0			0		0	0	0	1	1		1	1						</DATA>
-<DATA>	Timestamp	TIMESTAMP	ModificationTimestamp	Modification Time Stamp	r_md	Mod Dt	24	DateTime	0	1		Left	0	DATETIME_EDITMASK		0		0	0	0	3	0	DATETIME_SEARCH_HELP	0							</DATA>
+<DATA>	OfficeId	OFFICEID	OfficeID	Office ID	office_id	OFFICEID	7	Character	0	1		Left	0			0		0	0	0	0	0		0	1						</DATA>
+<DATA>	AgentId	AGENTID	AgentID	Agent ID	agent_id	AGENT	6	Character	0	1		Left	0			0		0	0	0	1	1		1	1						</DATA>
+<DATA>	Timestamp	TIMESTAMP	ModificationTimestamp	Modification Time Stamp	r_md	Mod Dt	24	DateTime	0	1		Left	0	DateTimeEditMask		0		0	0	0	3	0	DateTimeSearchHelp	0							</DATA>
 </METADATA-TABLE>

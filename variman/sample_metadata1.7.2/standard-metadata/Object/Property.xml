@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <METADATA-OBJECT Resource="Property" Version="1.01.000" Date="2009-01-20T00:00:00Z">
 <COLUMNS>	MetadataEntryID	ObjectType	MimeType	VisibleName	Description	ObjectTimeStamp	ObjectCount	</COLUMNS>
-<DATA>	BrandedEnlarged	Branded_Enlarged	image/jpeg	Enlarged, Branded Photos	A branded and enlarged image (Not covered by the RETS Specification)			</DATA>
-<DATA>	BrandedPhoto	Branded_Photo	image/jpeg	Full, Branded Photos	A branded image image (Not covered by the RETS Specification)			</DATA>
-<DATA>	BrandedThumbnail	Branded_Thumbnail	image/jpeg	Small, Branded Photos	A branded lower-resolution image (Not covered by the RETS Specification)			</DATA>
+<DATA>	BrandedEnlarged	BrandedEnlarged	image/jpeg	Enlarged, Branded Photos	A branded and enlarged image (Not covered by the RETS Specification)			</DATA>
+<DATA>	BrandedPhoto	BrandedPhoto	image/jpeg	Full, Branded Photos	A branded image image (Not covered by the RETS Specification)			</DATA>
+<DATA>	BrandedThumbnail	BrandedThumbnail	image/jpeg	Small, Branded Photos	A branded lower-resolution image (Not covered by the RETS Specification)			</DATA>
 <DATA>	Enlarged	Enlarged	image/jpeg	Enlarged  Photos	An enlarged image (Not covered by the RETS Specification)			</DATA>
 <DATA>	Thumbnail	Thumbnail	image/jpeg	Small Photos	A lower-resolution image related to the element defined by the resource KeyField	ThumbnailTimestamp	ThumbnailCount	</DATA>
 <DATA>	Photo	Photo	image/jpeg	Full Photos	A representation image related to the element defined by the resource KeyField	PhotoTimestamp	PhotoCount	</DATA>

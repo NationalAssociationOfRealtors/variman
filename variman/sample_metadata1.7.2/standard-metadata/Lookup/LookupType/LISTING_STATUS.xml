@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<METADATA-LOOKUP_TYPE Resource="Property" Lookup="LISTING_STATUS" Version="1.01.000" Date="2009-01-20T00:00:00Z">
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="LISTINGSTATUS" Version="1.01.000" Date="2009-01-20T00:00:00Z">
 <COLUMNS>	MetadataEntryID	LongValue	ShortValue	Value	</COLUMNS>
 <DATA>	Active	Active	A	A	</DATA>
 <DATA>	Closed	Closed	C	C	</DATA>

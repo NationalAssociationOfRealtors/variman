@@ -3,7 +3,7 @@
 <COLUMNS>	MetadataEntryID	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	ModTimeStamp	ForeignKeyName	ForeignField	KeyQuery	KeySelect	InKeyIndex	</COLUMNS>
 <DATA>	Url	URL	ListOfficeWWW	Broker URL	URL	BROKER_URL	40	Character	0	1		Left	0			0		0	0	0	3	0		0	1						</DATA>
 <DATA>	BrokerName	NAME		Broker Name	NAME	BROKER	20	Character	0	1		Left	0			0		0	0	0	0	0		0	1						</DATA>
-<DATA>	BrokerId	BROKER_ID	ListOfficeBrokerID	Broker ID	BROKER_ID	BROKER_ID	6	Character	0	1		Left	0			0		0	0	0	2	1		0	1						</DATA>
-<DATA>	OfficeId	OFFICE_ID	ListOfficeOfficeID	Office ID	OFFICE_ID	OFFICE_ID	7	Character	0	1		Left	0			0		0	0	0	1	0		1	1						</DATA>
-<DATA>	Timestamp	TIMESTAMP	ModificationTimestamp	Modification Time Stamp	r_md	Mod Dt	24	DateTime	0	1		Left	0	DATETIME_EDITMASK		0		0	0	0	3	0	DATETIME_SEARCH_HELP	0							</DATA>
+<DATA>	BrokerId	BROKERID	ListOfficeBrokerID	Broker ID	BROKER_ID	BROKER_ID	6	Character	0	1		Left	0			0		0	0	0	2	1		0	1						</DATA>
+<DATA>	OfficeId	OFFICEID	ListOfficeOfficeID	Office ID	OFFICE_ID	OFFICE_ID	7	Character	0	1		Left	0			0		0	0	0	1	0		1	1						</DATA>
+<DATA>	Timestamp	TIMESTAMP	ModificationTimestamp	Modification Time Stamp	r_md	Mod Dt	24	DateTime	0	1		Left	0	DateTimeEditMask		0		0	0	0	3	0	DateTimeSearchHelp	0							</DATA>
 </METADATA-TABLE>
