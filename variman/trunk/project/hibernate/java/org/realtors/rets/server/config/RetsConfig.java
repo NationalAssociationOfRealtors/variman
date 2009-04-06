@@ -732,7 +732,7 @@ public class RetsConfig
     	/*
     	 * See if the metadata directory changed and we need to force a reload.
     	 */
-    	if (!mMetadataDir.equals(metadataDir))
+    	if (mMetadataDir != null && !mMetadataDir.equals(metadataDir))
     	{
     		sMetadata = null;
     	}

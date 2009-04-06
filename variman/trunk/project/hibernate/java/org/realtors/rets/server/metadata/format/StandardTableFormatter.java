@@ -58,12 +58,19 @@ public class StandardTableFormatter extends BaseStandardFormatter
                                  table.getInterpretation());
             TagBuilder.simpleTag(out, "Alignment", table.getAlignment());
             TagBuilder.simpleTag(out, "UseSeparator", table.isUseSeparator());
-            
-            for (Iterator iterator = table.getEditMasks().iterator(); iterator.hasNext();)
+
+        	String editMasks = "";
+            if (table.getEditMasks() != null)
             {
-                EditMask editMask = (EditMask) iterator.next();
-                TagBuilder.simpleTag(out, "EditMaskID", editMask.getEditMaskID());
+	            for (Iterator iterator = table.getEditMasks().iterator(); iterator.hasNext();)
+	            {
+	                EditMask editMask = (EditMask) iterator.next();
+	                if (editMasks.length() > 1)
+	                	editMasks += ",";
+	                editMasks += editMask.getEditMaskID();
+	            }
             }
+            TagBuilder.simpleTag(out, "EditMaskID", editMasks);
  
             String lookupName = null;
             if (table.getLookup() != null)

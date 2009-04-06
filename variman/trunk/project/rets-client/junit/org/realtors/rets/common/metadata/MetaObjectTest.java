@@ -1,7 +1,7 @@
 package org.realtors.rets.common.metadata;
 
 public class MetaObjectTest extends MetadataTestCase {
-	public void testStrictAttributes() {
+	public void testStrictAttributes() throws MetaParseException {
 		MetaObject.clearAttributeMapCache();
 		TestMetaObject metaObject = createTestMetaObject(MetaObject.STRICT_PARSING);
 		assertEquals("SomeName", metaObject.getSystemName());
@@ -10,14 +10,14 @@ public class MetaObjectTest extends MetadataTestCase {
 		assertEquals("foo bar", metaObject.getAttributeAsString("string1"));
 	}
 
-	public void testLooseAttributes() {
+	public void testLooseAttributes() throws MetaParseException {
 		MetaObject.clearAttributeMapCache();
 		TestMetaObject metaObject = createTestMetaObject(MetaObject.LOOSE_PARSING);
 		assertEquals("somename", metaObject.getSystemName());
 		assertEquals("foo bar", metaObject.getString1());
 	}
 
-	public void testCache() {
+	public void testCache() throws MetaParseException {
 		TestMetaObject.resetAddAttributeCount();
 		MetaObject.clearAttributeMapCache();
 		createTestMetaObject(MetaObject.STRICT_PARSING);
@@ -33,7 +33,7 @@ public class MetaObjectTest extends MetadataTestCase {
 		assertEquals(4, TestMetaObject.getAddAttributeCount());
 	}
 
-	private TestMetaObject createTestMetaObject(boolean strictParsing) {
+	private TestMetaObject createTestMetaObject(boolean strictParsing)  throws MetaParseException {
 		TestMetaObject metaObject = new TestMetaObject(strictParsing);
 		metaObject.setAttribute("SystemName", "SomeName");
 		metaObject.setAttribute("systemname", "somename");

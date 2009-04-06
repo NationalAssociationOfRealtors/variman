@@ -71,6 +71,7 @@ public class ObjectFormatterTest extends FormatterTestCase
             "<ObjectType>Thumbnail</ObjectType>" + EOL +
             "<StandardName></StandardName>" + EOL +
             "<MimeType>image/jpeg</MimeType>" + EOL +
+            "<VisibleName>Small Photos</VisibleName>" + EOL +
             "<Description>A lower-resolution image</Description>" + EOL +
             "<ObjectTimeStamp>ThumbTimeStamp</ObjectTimeStamp>" + EOL +
             "<ObjectCount>ThumbCount</ObjectCount>" + EOL +
