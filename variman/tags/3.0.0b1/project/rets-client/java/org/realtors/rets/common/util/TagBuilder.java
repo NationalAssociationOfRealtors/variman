@@ -229,7 +229,20 @@ public class TagBuilder
     public static void simpleTag(PrintWriter writer, String tagName,
                                  Collection<?> value)
     {
-        new TagBuilder(writer, tagName).beginContent().print(value).close();
+        if (value != null)
+        {
+            List<String> strings = new ArrayList<String>(value.size());
+            for (Iterator<?> iterator = value.iterator(); iterator.hasNext();)
+            {
+                Object o = iterator.next();
+                strings.add(o.toString());
+            }
+            Collections.sort(strings);
+
+            new TagBuilder(writer, tagName).beginContent().print(StringUtils.join(strings.iterator(), ",")).close();
+        }
+	else
+            emptyTag(writer, tagName);
     }
     
     public static void simpleTag(PrintWriter writer, String tagName,

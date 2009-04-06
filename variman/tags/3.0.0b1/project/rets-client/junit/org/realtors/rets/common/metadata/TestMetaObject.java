@@ -45,4 +45,15 @@ class TestMetaObject extends MetaObject {
 		return sAddAttributeCount;
 	}
 
+	public boolean isAttributeRequired(String name) {
+		return false;
+	}
+
+	public final String getMetadataTypeName() {
+		return "SYSTEM";
+	}
+
+	public final MetadataType getMetadataType() {
+		return MetadataType.SYSTEM;
+	}
 }
