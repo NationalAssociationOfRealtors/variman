@@ -129,7 +129,7 @@ public class GetMetadataParameters extends TransactionParameters
     {
         if (formatString == null)
         {
-            return MetadataFormatter.COMPACT;
+            return MetadataFormatter.STANDARD;
         }
 
         formatString = formatString.toUpperCase();

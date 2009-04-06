@@ -76,6 +76,15 @@ public class GetObjectParameters extends TransactionParameters
             String[] resourceSetParameter =
                 StringUtils.split(stringResourceSet, ":", 2);
             resourceSet.setResourceEntity(resourceSetParameter[0]);
+            /*
+             * The RETS spec sez that object-ids are optional and if not supplied, should
+             * be the "designated preferred object". To simplify things, we'll just assign
+             * it to be "0" and let the logic elsewhere handle the interpretation.
+             */
+            if (resourceSetParameter.length < 2 || resourceSetParameter[1] == null)
+            {
+            	resourceSetParameter = new String [] {resourceSetParameter[0], new String("0")};
+            }
             // Split object-id-list into object-id
             String[] objectIds =
                 StringUtils.split(resourceSetParameter[1], ":");

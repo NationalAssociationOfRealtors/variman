@@ -266,14 +266,21 @@ public class MetadataResourceDialog extends MetadataDialog
             		}
             	}
             	
-            	/*
-            	 * Clear the old value.
-            	 */
-            	try 
-            	{ 
-            		mResource.setAttribute(attribute, "", false);
-            	} 
-            	catch (Exception e) {};
+              	if ((value == null || value.length() < 1) && 
+            			mResource.isAttributeRequired(attribute))
+            	{
+            		mComponents.get(row).setBackground(Color.pink);
+            		invalid.add(attribute);
+            	}
+            	else
+                	/*
+                	 * Good to go. Clear the old value.
+                	 */
+                	try 
+                	{ 
+                		mResource.setAttribute(attribute, "", false);
+                	} 
+                	catch (Exception e) {};
             	
             	if (value != null && value.length() > 0)
             	{
@@ -299,8 +306,14 @@ public class MetadataResourceDialog extends MetadataDialog
         		String msg = new String();
         		for (String attribute : invalid)
         		{
+        			String required = "\n";
+        			
         			AttrType<?> attrType = mResource.getAttributeType(attribute);
-        			msg += attribute + ": " + attrType.getDescription() + "\n";
+        			
+        			if (mResource.isAttributeRequired(attribute))
+        				required = " (REQUIRED)\n";
+        			
+        			msg += attribute + ": " + attrType.getDescription() + required;
         		}
                 JOptionPane.showMessageDialog(
                         SwingUtils.getAdminFrame(),

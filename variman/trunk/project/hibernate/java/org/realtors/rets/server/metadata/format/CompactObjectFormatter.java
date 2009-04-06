@@ -16,6 +16,7 @@ import java.util.Iterator;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.ObjectTypeEnum;
 
 public class CompactObjectFormatter extends MetadataFormatter
 {
@@ -45,7 +46,7 @@ public class CompactObjectFormatter extends MetadataFormatter
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(object.getMetadataEntryID());
-        row.append(object.getObjectType());
+        row.append(ObjectTypeEnum.toString(object.getObjectType()));
         row.append(object.getMimeType());
         row.append(object.getVisibleName());
         row.append(object.getDescription());

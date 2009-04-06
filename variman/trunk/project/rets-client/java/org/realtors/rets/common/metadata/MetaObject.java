@@ -59,86 +59,111 @@ public abstract class MetaObject implements Serializable {
 	protected static final AttrType sAttrNumeric = new AttrNumeric("A positive or negative whole number.");
 	protected static final AttrType sAttrVersion = new AttrVersion("A RETS version in MM.mm.rrrrr format.");
 	// RETS 1.7.2
-	public static final AttrType sPOSITIVENUM = new AttrPositiveNumeric("A positive whole number.");
-	public static final AttrType sRETSNAME = new AttrIDAlphanum(1,64, "Alpha Numeric including an underscore.");
-	public static final AttrType sRETSID = new AttrAlphanum(1,32, "Alph Numeric, 1 to 32 characters.");
-	public static final AttrType sTIMEZONEOFFSET = new AttrTimeZone("Z for UTC, [+-]00:00 for offset to UTC.");
+	public    static final AttrType sPOSITIVENUM = new AttrPositiveNumeric("A positive whole number.");
+	public    static final AttrType sRETSNAME = new AttrIDAlphanum(1,64, "Alpha Numeric including an underscore.");
+	public    static final AttrType sRETSID = new AttrAlphanum(1,32, "Alph Numeric, 1 to 32 characters.");
+	public    static final AttrType sTIMEZONEOFFSET = new AttrTimeZone("Z for UTC, [+-]00:00 for offset to UTC.");
 	
-	public  static final AttrType sAttrMetadataEntryId = sRETSID;
+	public    static final AttrType sAttrMetadataEntryId = sRETSID;
 	// Used by MUpdateType.
-	protected static final AttrType sAttributes1to5 = new AttrGenericText(0, 10, "12345,", "1,2,3,4,5 singly, or in combination.");
+	public    static final AttrType sAttributes1to5 = new AttrGenericText(0, 10, "12345,", "1,2,3,4,5 singly, or in combination.");
 	// Used by MValidationExpression
-	protected static final String[] VALIDATIONEXPRESSIONTYPES = "ACCEPT,REJECT,SET".split(",");
-	protected static final AttrType sExpressionType = new AttrEnum(VALIDATIONEXPRESSIONTYPES, "'ACCEPT' or 'REJECT' or 'SET'.");
+	public    static final String[] VALIDATIONEXPRESSIONTYPES = "ACCEPT,REJECT,SET".split(",");
+	public    static final AttrType sExpressionType = new AttrEnum(VALIDATIONEXPRESSIONTYPES, "'ACCEPT' or 'REJECT' or 'SET'.");
 	
     protected static final Map<String, AttrType> sNameToAttributeMap =
-    	new HashMap<String,AttrType>()
+    	new LinkedHashMap<String,AttrType>()
     {{
-    	put("sAlphanum", sAlphanum);
-    	put("sAlphanum64", sAlphanum64);
-    	put("sAlphanum32", sAlphanum32);
-    	put("sAlphanum24", sAlphanum24);
-    	put("sAlphanum10", sAlphanum10);
-    	put("sPlaintext", sPlaintext);
-    	put("sPlaintext1024", sPlaintext1024);
-    	put("sPlaintext512", sPlaintext512);
-    	put("sPlaintext128", sPlaintext128);
-    	put("sPlaintext64", sPlaintext64);
-    	put("sPlaintext32", sPlaintext32);
-    	put("sText", sText);
-    	put("sText1024", sText1024);
-    	put("sText512", sText512);
-    	put("sText256", sText256);
-    	put("sText128", sText128);
-    	put("sText64", sText64);
-    	put("sText32", sText32);
-    	put("sAttrBoolean", sAttrBoolean);
-    	put("sAttrDate", sAttrDate);
-    	put("sAttrNumeric", sAttrNumeric);
-    	put("sAttrVersion", sAttrVersion);
-    	put("sAttributes1to5", sAttributes1to5);
-    	put("sExpressionType", sExpressionType);
+    	put("ALPHANUM", sAlphanum);
+    	put("1*64ALPHANUM", sAlphanum64);
+    	put("1*32ALPHANUM", sAlphanum32);
+    	put("1*24ALPHANUM", sAlphanum24);
+    	put("1*10ALPHANUM", sAlphanum10);
+    	put("PLAINTEXT", sPlaintext);
+    	put("1*1024PLAINTEXT", sPlaintext1024);
+    	put("1*512PLAINTEXT", sPlaintext512);
+    	put("1*128PLAINTEXT", sPlaintext128);
+    	put("1*64PLAINTEXT", sPlaintext64);
+    	put("1*32PLAINTEXT", sPlaintext32);
+    	put("TEXT", sText);
+    	put("1*1024TEXT", sText1024);
+    	put("1*512TEXT", sText512);
+    	put("1*256TEXT", sText256);
+    	put("1*128TEXT", sText128);
+    	put("1*64TEXT", sText64);
+    	put("1*32TEXT", sText32);
+    	put("BOOLEAN", sAttrBoolean);
+    	put("RETSDATE", sAttrDate);
+    	put("NUMERIC", sAttrNumeric);
+    	put("RETSVERSION", sAttrVersion);
+    	put("1to5", sAttributes1to5);
+    	put("EXPRESSIONTYPE", sExpressionType);
     	// RETS 1.7.2
-    	put("sPOSITIVENUM", sPOSITIVENUM);
-    	put("sRETSNAME", sRETSNAME);
-    	put("sRETSID", sRETSID);
-    	put("sTIMEZONEOFFSET", sTIMEZONEOFFSET);
+    	put("POSITIVENUM", sPOSITIVENUM);
+    	put("RETSNAME", sRETSNAME);
+    	put("RETSID", sRETSID);
+    	put("TIMEZONEOFFSET", sTIMEZONEOFFSET);
     }};
     
+    /*
+     * This is used to map the attribute type to the standard RETS "name".
+     * It is a linked hashmap that can be randomly accessed by attribute type,
+     * or enumerated in the order you see it below. The purpose of this
+     * ordering is to order the more common usages for potential display
+     * in a combo box.
+     */
     protected static final Map<AttrType<?>, String> sAttributeToNameMap =
-    	new HashMap<AttrType<?>,String>()
+    	new LinkedHashMap<AttrType<?>,String>()
     {{
-    	put(sAlphanum, "sAlphanum");
-    	put(sAlphanum64, "sAlphanum64");
-    	put(sAlphanum32, "sAlphanum32");
-    	put(sAlphanum24, "sAlphanum24");
-    	put(sAlphanum10, "sAlphanum10");
-    	put(sPlaintext, "sPlaintext");
-    	put(sPlaintext1024, "sPlaintext1024");
-    	put(sPlaintext512, "sPlaintext512");
-    	put(sPlaintext128, "sPlaintext128");
-    	put(sPlaintext64, "sPlaintext64");
-    	put(sPlaintext32, "sPlaintext32");
-    	put(sText, "sText");
-    	put(sText1024, "sText1024");
-    	put(sText512, "sText512");
-    	put(sText256, "sText256");
-    	put(sText128, "sText128");
-    	put(sText64, "sText64");
-    	put(sText32, "sText32");
-    	put(sAttrBoolean, "sAttrBoolean");
-    	put(sAttrDate, "sAttrDate");
-    	put(sAttrNumeric, "sAttrNumeric");
-    	put(sAttrVersion, "sAttrVersion");
-    	put(sAttributes1to5, "sAttributes1to5");
-    	put(sExpressionType, "sExpressionType");
-    	// RETS 1.7.2
-    	put(sPOSITIVENUM, "sPOSITIVENUM");
-    	put(sRETSNAME, "sRETSNAME");
-    	put(sRETSID, "sRETSID");
-    	put(sTIMEZONEOFFSET, "sTIMEZONEOFFSET");
-    }};
+    	/*
+    	 * Most used attribute types.
+    	 */
+    	put(sRETSNAME, "RETSNAME");
+    	put(sRETSID, "RETSID");
+    	put(sAttrBoolean, "BOOLEAN");
+    	put(sAttrDate, "RETSDATE");
+    	put(sAttrVersion, "RETSVERSION");
+    	put(sAttrNumeric, "NUMERIC");
 
+    	/*
+    	 * Alpha numerics.
+    	 */
+    	put(sAlphanum, "ALPHANUM");
+    	put(sAlphanum64, "1*64ALPHANUM");
+    	put(sAlphanum32, "1*32ALPHANUM");
+    	put(sAlphanum24, "1*24ALPHANUM");
+    	put(sAlphanum10, "1*10ALPHANUM");
+
+    	/*
+    	 * Plain text.
+    	 */
+    	put(sPlaintext, "PLAINTEXT");
+    	put(sPlaintext1024, "1*1024PLAINTEXT");
+    	put(sPlaintext512, "1*512PLAINTEXT");
+    	put(sPlaintext128, "1*128PLAINTEXT");
+    	put(sPlaintext64, "1*64PLAINTEXT");
+    	put(sPlaintext32, "1*32PLAINTEXT");
+    	
+    	/*
+    	 * Text.
+    	 */
+    	put(sText, "TEXT");
+    	put(sText1024, "1*1024TEXT");
+    	put(sText512, "1*512TEXT");
+    	put(sText256, "1*256TEXT");
+    	put(sText128, "1*128TEXT");
+    	put(sText64, "1*64TEXT");
+    	put(sText32, "1*32TEXT");
+    	
+    	/*
+    	 * Miscellaneous
+    	 */
+    	put(sAttributes1to5, "1to5");
+    	put(sExpressionType, "EXPRESSIONTYPE");
+    	put(sPOSITIVENUM, "POSITIVENUM");
+    	put(sTIMEZONEOFFSET, "TIMEZONEOFFSET");
+    }};
+   
 	protected static final MetadataType[] sNoChildren = new MetadataType[0];
 
 	public static final boolean STRICT_PARSING = true;
@@ -149,8 +174,8 @@ public abstract class MetaObject implements Serializable {
 	 * Used by subordinate classes to indicate that an attribute is required or
 	 * optional.
 	 */
-	protected static final boolean sREQUIRED = true;
-	protected static final boolean sOPTIONAL = false;
+	public static final boolean sREQUIRED = true;
+	public static final boolean sOPTIONAL = false;
 
 	/** the metadata path to this object */
 	protected String path;
@@ -182,7 +207,7 @@ public abstract class MetaObject implements Serializable {
 
 	private Map getAttributeMap(boolean strictParsing) {
 		synchronized (sAttributeMapCache) {
-			Map<CacheKey,Map> map = sAttributeMapCache.get(new CacheKey(this, strictParsing));
+			Map map = sAttributeMapCache.get(new CacheKey(this, strictParsing));
 			if (map == null) {
 				if (strictParsing) {
 					map = new LinkedHashMap();
@@ -206,7 +231,7 @@ public abstract class MetaObject implements Serializable {
 			sAttributeMapCache.clear();
 		}
 	}
-
+	
 	public Collection getChildren(MetadataType type) {
 		if (!this.childTypes.containsKey(type)) {
 			// throw new IllegalArgumentException?
@@ -334,6 +359,25 @@ public abstract class MetaObject implements Serializable {
     {
     	return sAttributeToNameMap.get(attribute);
     }
+    
+    /**
+     * Get standard known attribute names.
+     * @return A string array of the standard attribute names.
+     */
+    public static String [] getStandardAttributeNames()
+    {
+		ArrayList<String> names = new ArrayList<String>();
+		Iterator iter = sAttributeToNameMap.values().iterator();
+
+		while (iter.hasNext()) {
+			String key = (String) iter.next();
+			names.add(key);
+		}
+		String [] stringArray = new String[names.size()];
+		stringArray = names.toArray(stringArray);
+		
+		return stringArray;
+    }
 
 	public String getAttributeAsString(String key) {
 		Object value = this.attributes.get(key);
@@ -389,24 +433,11 @@ public abstract class MetaObject implements Serializable {
 	 * @param value A String containing the value of the attribute to be parsed.
 	 */
 	public void setAttribute(String key, String value) 
+		throws MetaParseException
 	{
-		if (value == null) {
-			// LOG.warning()
-			return;
-		}
-		if (this.attrTypes.containsKey(key)) {
-			AttrType type = (AttrType) this.attrTypes.get(key);
-			try {
-				this.attributes.put(key, type.parse(value,this.strict));
-			} catch (MetaParseException e) {
-				LOG.warn(toString() + " couldn't parse attribute " + key + ", value " + value + ": " + e.getMessage());
-			}
-		} else {
-			this.attributes.put(key, value);
-			if (!key.startsWith("X-"))
-				LOG.warn("Unknown key (" + toString() + "): " + key);
-		}
+			setAttribute(key, value, this.strict);
 	}
+
 	/**
 	 * Set the attribute and override the strict parsing setting.
 	 * @param key A String containing the name of the attribute.
@@ -469,6 +500,7 @@ public abstract class MetaObject implements Serializable {
 			return;
 		}
 	}
+	
 	public void deleteChild(MetadataType type, MetaObject child) 
 	{
 		if (this.childTypes.containsKey(type)) 
@@ -487,6 +519,21 @@ public abstract class MetaObject implements Serializable {
 				map.remove(id);
 			}
 			return;
+		}
+	}
+	
+	public void deleteAllChildren(MetadataType type) 
+	{
+		if (this.childTypes.containsKey(type)) 
+		{
+			Object obj = this.childTypes.get(type);
+			
+			if (obj == null) 
+				return;
+			
+			this.childTypes.remove(type);
+			Map map = new HashMap();
+			this.childTypes.put(type, map);
 		}
 	}
 
@@ -568,6 +615,12 @@ public abstract class MetaObject implements Serializable {
 	
 	public abstract MetadataType getMetadataType();
 	
+	/**
+	 * Returns whether or not the attribute is required.
+	 * @param name Name of the attribute.
+	 * @return TRUE if the attribute is required, FALSE otherwise.
+	 */
+	public abstract boolean isAttributeRequired(String name);
 }
 
 class CacheKey {

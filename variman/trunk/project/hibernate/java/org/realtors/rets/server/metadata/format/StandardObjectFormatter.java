@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.server.metadata.ObjectTypeEnum;
 
 public class StandardObjectFormatter extends BaseStandardFormatter
 {
@@ -36,9 +37,10 @@ public class StandardObjectFormatter extends BaseStandardFormatter
                 .beginContentOnNewLine();
 
             TagBuilder.simpleTag(out, "MetadataEntryID", object.getMetadataEntryID());
-            TagBuilder.simpleTag(out, "ObjectType", object.getObjectType());
+            TagBuilder.simpleTag(out, "ObjectType", ObjectTypeEnum.toString(object.getObjectType()));
             TagBuilder.simpleTag(out, "StandardName", (Object) null);
             TagBuilder.simpleTag(out, "MimeType", object.getMimeType());
+            TagBuilder.simpleTag(out, "VisibleName", object.getVisibleName());
             TagBuilder.simpleTag(out, "Description", object.getDescription());
             TagBuilder.simpleTag(out, "ObjectTimeStamp", object.getObjectTimeStamp());
             TagBuilder.simpleTag(out, "ObjectCount", object.getObjectCount());

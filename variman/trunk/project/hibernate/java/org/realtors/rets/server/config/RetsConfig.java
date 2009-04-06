@@ -798,11 +798,13 @@ public class RetsConfig
 	    			if (metadata.isFile() && metadata.canRead())
 	    			{
 	    				files.add(metadata);
+	    				LOG.debug("Found metadata.xml at: " + metadata.getCanonicalPath());
 	    			}
 	    		}
 	    		catch (Exception e)
 	    		{
 	    			sMetadata = new Metadata(new MSystem());
+	    			LOG.debug("Unable to locate metadata.xml: " + e);
 	    			return sMetadata;
 	    		}
 	    		/*
@@ -816,15 +818,18 @@ public class RetsConfig
 			            files = IOUtils.listFilesRecursive(
 							                new File(retsConfig.getMetadataDir()), 
 							                new MetadataFileFilter());
+			            LOG.debug("Looking for metadata in old format.");
 			        }
 			        catch (Exception e)
 			        {
 		    			sMetadata = new Metadata(new MSystem());
+		    			LOG.debug("Unable to locate metadata: " + e);
 		    			return sMetadata;
 			        }
 	    		}
 			    try
 		        {
+			    	LOG.debug("Merging metadata into a single XML document.");
 		            List documents = parseAllFiles(files);
 		            Document merged = (Document)documents.get(0);
 		            if (documents.size() > 1)
@@ -836,6 +841,7 @@ public class RetsConfig
 		        catch (Exception e)
 		        {
 	    			sMetadata = new Metadata(new MSystem());
+	    			LOG.debug("Unable to merge metadata: " + e);
 	    			return sMetadata;
 		        }
 	    	}
@@ -845,6 +851,12 @@ public class RetsConfig
 	    	}
     	}
     	return sMetadata;
+    }
+    
+    public static Metadata reloadMetadata()
+    {
+    	sMetadata = null;
+    	return getMetadata();
     }
     
     public static boolean saveMetadata()
@@ -867,13 +879,32 @@ public class RetsConfig
     		 */
     		try
     		{
+    			File backup = new File(systemRoot + File.separator + "metadata.xml-");
     			File metadata = new File(systemRoot + File.separator + "metadata.xml");
+    			/*
+    			 * If there is an old backup file, rmeove it.
+    			 */
+    			if (backup.isFile() && backup.canWrite())
+    			{
+    				LOG.debug("Deleteing " + backup.getCanonicalFile());
+    				backup.delete();
+    			}
+    			/*
+    			 * Rename the current file to the backup.
+    			 */
+    			if (metadata.isFile() && metadata.canWrite())
+    			{
+       				LOG.debug("Renaming " + metadata.getCanonicalPath() + 
+       							" to " + backup.getCanonicalFile());
+    				metadata.renameTo(backup);
+    			}
     			if (!metadata.isFile() && !metadata.isDirectory())
     			{
     				metadata.createNewFile();
     			}
     			if (metadata.isFile() && metadata.canWrite())
     			{
+    				LOG.debug("Formatting metadata into COMPACT format.");
     				PrintWriter out = new PrintWriter(metadata);
     				MetadataCompactFormatter formatter = new MetadataCompactFormatter(sMetadata, out, RetsVersion.RETS_1_7_2);
     				formatter.output();

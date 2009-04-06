@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.common.util.TagBuilder;
+import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.Table;
 
 public class StandardTableFormatter extends BaseStandardFormatter
@@ -57,8 +58,13 @@ public class StandardTableFormatter extends BaseStandardFormatter
                                  table.getInterpretation());
             TagBuilder.simpleTag(out, "Alignment", table.getAlignment());
             TagBuilder.simpleTag(out, "UseSeparator", table.isUseSeparator());
-            TagBuilder.simpleTag(out, "EditMaskID", table.getEditMasks());
-
+            
+            for (Iterator iterator = table.getEditMasks().iterator(); iterator.hasNext();)
+            {
+                EditMask editMask = (EditMask) iterator.next();
+                TagBuilder.simpleTag(out, "EditMaskID", editMask.getEditMaskID());
+            }
+ 
             String lookupName = null;
             if (table.getLookup() != null)
             {

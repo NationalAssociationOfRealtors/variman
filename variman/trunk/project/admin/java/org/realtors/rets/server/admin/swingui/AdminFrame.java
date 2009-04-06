@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -20,6 +22,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -34,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.AdminUtils;
+import org.realtors.rets.server.admin.swingui.metadata.MetadataModel;
 import org.realtors.rets.server.config.RetsConfig;
 
 public class AdminFrame extends JFrame
@@ -102,6 +106,30 @@ public class AdminFrame extends JFrame
         addTab("Logging", mLogPanel);
         mMetadataPanel = new MetadataPanel(metadataMenu);
         addTab("Metadata", mMetadataPanel);
+        mMetadataModel = new MetadataModel(metadataMenu);
+        JCheckBoxMenuItem metadataModelMenuItem = new JCheckBoxMenuItem("Metadata Model");
+        metadataModelMenuItem.setSelected(false);
+        metadataModelMenuItem.addItemListener(new ItemListener()
+        {
+        	public void itemStateChanged(ItemEvent e)
+        	{
+        		if (e.getStateChange() == ItemEvent.DESELECTED)
+        		{
+        			if (mMetadataModelTab > -1)
+        			{
+        			   mTabbedPane.removeTabAt(mMetadataModelTab);    				
+        			}
+        			mMetadataModelTab = -1;
+        		}
+        		if (e.getStateChange() == ItemEvent.SELECTED)
+        		{
+ 			       addTab("Metadata Model", mMetadataModel);
+    			   mMetadataModelTab = mTabbedPane.getTabCount() - 1;      				
+        		}
+        	}
+        });
+        metadataMenu.add(metadataModelMenuItem);
+        
         mCurrentAdminTab = mUsersPanel;
         mTabbedPane.addChangeListener(new OnTabChanged());
         content.add(mTabbedPane, BorderLayout.CENTER);
@@ -307,4 +335,6 @@ public class AdminFrame extends JFrame
     private LogPanel mLogPanel;
     
     private MetadataPanel mMetadataPanel;
+    private MetadataModel mMetadataModel;
+    private int           mMetadataModelTab = -1;
 }

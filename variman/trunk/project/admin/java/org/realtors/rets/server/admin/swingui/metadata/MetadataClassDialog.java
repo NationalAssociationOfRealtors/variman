@@ -134,8 +134,8 @@ public class MetadataClassDialog extends MetadataDialog
     			if (value == null || value.length() == 0)
     			{
     				value = metadata.getSystem().getAttributeAsString(MSystem.DATE);
-                	((JTextField)component).setText(value);
     			}
+            	((JTextField)component).setText(value);
     		}
     		else
     		if (attrType instanceof AttrEnum)
@@ -164,8 +164,8 @@ public class MetadataClassDialog extends MetadataDialog
     			if (value == null || value.length() == 0)
     			{
     				value = metadata.getSystem().getAttributeAsString(MSystem.VERSION);
-                	((JTextField)component).setText(value);
     			}
+               	((JTextField)component).setText(value);
     		}
     		else
     		{
@@ -254,14 +254,22 @@ public class MetadataClassDialog extends MetadataDialog
             		}
             	}
             	
-            	/*
-            	 * Clear the old value.
-            	 */
-            	try 
-            	{ 
-            		mClass.setAttribute(attribute, "", false);
-            	} 
-            	catch (Exception e) {};
+               	if ((value == null || value.length() < 1) && 
+            			mClass.isAttributeRequired(attribute))
+            	{
+            		mComponents.get(row).setBackground(Color.pink);
+            		invalid.add(attribute);
+            	}
+            	else
+                	/*
+                	 * Good to go. Clear the old value.
+                	 */
+                	try 
+                	{ 
+                		mClass.setAttribute(attribute, "", false);
+                	} 
+                	catch (Exception e) {};
+                	
             	
             	if (value != null && value.length() > 0)
             	{
@@ -277,6 +285,7 @@ public class MetadataClassDialog extends MetadataDialog
             	}
             	row++;
             }
+            
         	if (invalid.isEmpty())
         	{
         		setResponse(JOptionPane.OK_OPTION);
@@ -287,8 +296,14 @@ public class MetadataClassDialog extends MetadataDialog
         		String msg = new String();
         		for (String attribute : invalid)
         		{
+        			String required = "\n";
+        			
         			AttrType<?> attrType = mClass.getAttributeType(attribute);
-        			msg += attribute + ": " + attrType.getDescription() + "\n";
+        			
+        			if (mClass.isAttributeRequired(attribute))
+        				required = " (REQUIRED)\n";
+        			
+        			msg += attribute + ": " + attrType.getDescription() + required;
         		}
                 JOptionPane.showMessageDialog(
                         SwingUtils.getAdminFrame(),

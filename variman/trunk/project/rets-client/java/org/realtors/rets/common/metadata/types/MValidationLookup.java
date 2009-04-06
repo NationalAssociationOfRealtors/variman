@@ -30,12 +30,7 @@ public class MValidationLookup extends MetaObject {
     		add(new MetadataElement(VERSION, sAttrVersion, sREQUIRED));
     		add(new MetadataElement(DATE, sAttrDate, sREQUIRED));
         }};
-        
-	public static void addAttributes(String name, AttrType type)
-	{
-		sAttributes.add(new MetadataElement(name, type));
-	}
-        
+     
 	private static final MetadataType[] sChildren = { MetadataType.VALIDATION_LOOKUP_TYPE };
 
 	public MValidationLookup() {
@@ -44,6 +39,80 @@ public class MValidationLookup extends MetaObject {
 
 	public MValidationLookup(boolean strictParsing) {
 		super(strictParsing);
+	}
+
+	/**
+	 * Add an attribute to the class static attributes.
+	 * @param name Attribute Name
+	 * @param type Attribute Type
+	 * @param required TRUE, the attribute is required. FALSE otherwise.
+	 */
+	public static void addAttribute(String name, AttrType<?> type, boolean required)
+	{
+		MetadataElement element = new MetadataElement(name, type, required);
+		sAttributes.add(element);
+	}
+
+	/*
+	 * Add the attributes to the map. This must be done here to
+	 * make sure static initialization properly takes place.
+	 */
+	@Override
+	protected void addAttributesToMap(Map attributeMap) 
+	{
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
+	}
+	
+	/**
+	 * Returns whether or not the attribute is required.
+	 * @param name Name of the attribute.
+	 * @return TRUE if the attribute is required, FALSE otherwise.
+	 */
+	@Override
+	public boolean isAttributeRequired(String name)
+	{
+		for (MetadataElement element : this.sAttributes)
+		{
+			if (element.getName().equals(name))
+				return element.isRequired();
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Update (or add) the attribute. This is intended for use where the 
+	 * metadata model is being changed or expanded.
+	 * @param name Attribute Name
+	 * @param type Attribute Type
+	 * @param required TRUE, the attribute is required. FALSE otherwise.
+	 */
+	public static void updateAttribute(String name, AttrType<?> type, boolean required)
+	{
+		boolean found = false;
+		int index = -1;
+		if (sAttributes == null)
+			return;
+		
+		clearAttributeMapCache();
+		MetadataElement element = new MetadataElement(name, type, required);
+		
+		for (int i = 0; i < sAttributes.size(); i++)
+		{
+			if (sAttributes.get(i).getName().equals(name))
+			{
+				found = true;
+				sAttributes.set(i, element);
+				break;
+			}
+		}
+		if (!found)
+		{
+			sAttributes.add(element);
+		}
 	}
 
 	public String getMetadataEntryID() {
@@ -89,18 +158,9 @@ public class MValidationLookup extends MetaObject {
 	public final MetadataType getMetadataType() {
 		return MetadataType.VALIDATION_LOOKUP;
 	}
-	
-	@Override
-	protected void addAttributesToMap(Map attributeMap) {
-		for (MetadataElement element : sAttributes)
-		{
-			attributeMap.put(element.getName(), element.getType());
-		}
-	}
 
 	public MValidationLookupType[] getMValidationLookupTypes() {
 		MValidationLookupType[] tmpl = new MValidationLookupType[0];
 		return (MValidationLookupType[]) getChildren(MetadataType.VALIDATION_LOOKUP_TYPE).toArray(tmpl);
-	}
-
+	}	
 }

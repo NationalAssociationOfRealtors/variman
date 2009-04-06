@@ -24,9 +24,19 @@ import org.realtors.rets.common.metadata.types.MValidationLookupType;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.RetsDateTime;
 import org.realtors.rets.common.util.TagBuilder;
-
+/**
+ * This class is responsible for serializing the metadata into the RETS COMPACT format.
+ * @author mklein
+ *
+ */
 public class MetadataCompactFormatter 
 {
+	/**
+	 * Constructor.
+	 * @param metadata The Metadata
+	 * @param out A PrintWriter to receive the compact formatted data
+	 * @param retsVersion The RETS Version to use for date formatting. Default RETS_1_7_2.
+	 */
 	public MetadataCompactFormatter(Metadata metadata, PrintWriter out, RetsVersion retsVersion)
 	{
 		mOut = out;
@@ -36,6 +46,10 @@ public class MetadataCompactFormatter
 		mSystemDate = RetsDateTime.render(mSystem.getDate(), mRetsVersion);
 	}
 	
+	/**
+	 * Format a RETS RESOURCE and dependents (RETS CLASS).
+	 * @param resource An MResource containing the RETS RESOURCE.
+	 */
 	public void formatClasses(MResource resource)
 	{
 		TagBuilder tag = null;
@@ -56,6 +70,10 @@ public class MetadataCompactFormatter
 		}
 		if (tag != null)
 			tag.close();
+		for (MClass clazz : resource.getMClasses())
+		{
+			formatTables(resource, clazz);
+		}
 	}
 	
 	public void formatEditMasks(MResource resource)
@@ -259,7 +277,7 @@ public class MetadataCompactFormatter
 			{
 				tag = new TagBuilder(mOut, "METADATA-TABLE")
 								.appendAttribute("Version", resource.getAttributeAsString(MResource.CLASSVERSION))
-								.appendAttribute("Date", table.getDateAttribute(MResource.CLASSDATE), mRetsVersion)
+								.appendAttribute("Date", resource.getDateAttribute(MResource.CLASSDATE), mRetsVersion)
 								.appendAttribute("Resource", resource.getResourceID())
 								.appendAttribute("Class", clazz.getClassName())
 								.beginContentOnNewLine()
@@ -405,7 +423,8 @@ public class MetadataCompactFormatter
 								.appendAttribute("Version", resource.getAttributeAsString(MResource.VALIDATIONEXTERNALVERSION))
 								.appendAttribute("Date", resource.getDateAttribute(MResource.VALIDATIONEXTERNALDATE), mRetsVersion)
 								.appendAttribute("Resource", resource.getResourceID())
-									.beginContentOnNewLine()
+								.appendAttribute("ValidationExternalName", external.getValidationExternalName())
+								.beginContentOnNewLine()
 								.appendColumns(externalType.getAttributeNames());
 			}
 			
@@ -483,7 +502,7 @@ public class MetadataCompactFormatter
 
 	public void output()
 	{
-		TagBuilder tag = null;
+		TagBuilder tag = new TagBuilder(mOut, "RETS").beginContentOnNewLine();
 		
 		formatSystem();
 		
@@ -493,6 +512,7 @@ public class MetadataCompactFormatter
 		 */
 		formatResources();
 
+		tag.close();
 	}
 	
 	private PrintWriter mOut;

@@ -7,6 +7,8 @@
  */
 package org.realtors.rets.common.metadata;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.realtors.rets.common.metadata.types.MClass;
 import org.realtors.rets.common.metadata.types.MEditMask;
 import org.realtors.rets.common.metadata.types.MForeignKey;
@@ -44,7 +46,14 @@ public abstract class MetadataBuilder {
 	}
 
 	protected static void setAttribute(MetaObject obj, String key, String value) {
-		obj.setAttribute(key, value);
+		try
+		{
+			obj.setAttribute(key, value);
+		}
+		catch (MetaParseException e)
+		{
+			LOG.error(e);
+		}
 	}
 
 	protected MSystem buildSystem() {
@@ -200,4 +209,5 @@ public abstract class MetadataBuilder {
 	}
 
 	private boolean mStrict;
+	private static final Log LOG = LogFactory.getLog(MetadataBuilder.class);
 }

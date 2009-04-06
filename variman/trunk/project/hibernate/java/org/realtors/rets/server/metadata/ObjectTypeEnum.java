@@ -20,11 +20,22 @@ public class ObjectTypeEnum
     public static final ObjectTypeEnum THUMBNAIL = new ObjectTypeEnum(4);
     public static final ObjectTypeEnum MAP = new ObjectTypeEnum(5);
     public static final ObjectTypeEnum VRIMAGE = new ObjectTypeEnum(6);
-
+ 
+    private static int mNext = 7;
+    private static Map mEnumMap;
     private static Map mStringMap;
 
     static
     {
+    	mEnumMap = new HashMap();
+    	mEnumMap.put(0, "Photo");
+        mEnumMap.put(1, "Plat");
+        mEnumMap.put(2, "Video");
+        mEnumMap.put(3, "Audio");
+        mEnumMap.put(4, "Thumbnail");
+        mEnumMap.put(5, "Map");
+        mEnumMap.put(6, "VRImage");
+    	
         mStringMap = new HashMap();
         mStringMap.put("photo", PHOTO);
         mStringMap.put("plat", PLAT);
@@ -47,22 +58,27 @@ public class ObjectTypeEnum
 
     public static ObjectTypeEnum fromInt(int code)
     {
-        switch (code)
-        {
-            case 0: return PHOTO;
-            case 1: return PLAT;
-            case 2: return VIDEO;
-            case 3: return AUDIO;
-            case 4: return THUMBNAIL;
-            case 5: return MAP;
-            case 6: return VRIMAGE;
-            default: throw new RuntimeException("Unknown Object Type");
-        }
+    	String key = (String) mEnumMap.get(code);
+    	
+    	if (key == null)
+        	throw new RuntimeException("Unknown Object Type");
+    	
+   		return (ObjectTypeEnum) mStringMap.get(key);
     }
 
     public static ObjectTypeEnum fromString(String value)
     {
-        return (ObjectTypeEnum) mStringMap.get(value.toLowerCase());
+    	ObjectTypeEnum ote = (ObjectTypeEnum) mStringMap.get(value.toLowerCase());
+    	if (ote == null)
+    	{
+    		synchronized (ObjectTypeEnum.class)
+    		{
+    			ote = new ObjectTypeEnum(mNext);
+    			mEnumMap.put(mNext++, value);
+    			mStringMap.put(value.toLowerCase(), ote);
+    		}
+    	}
+        return ote;
     }
 
     public String toString()
@@ -72,17 +88,12 @@ public class ObjectTypeEnum
 
     public static String toString(int code)
     {
-        switch (code)
-        {
-            case 0: return "Photo";
-            case 1: return "Plat";
-            case 2: return "Video";
-            case 3: return "Audio";
-            case 4: return "Thumbnail";
-            case 5: return "Map";
-            case 6: return "VRImage";
-            default: throw new RuntimeException("Unknown Object Type");
-        }
+    	String key = (String) mEnumMap.get(code);
+    	
+    	if (key == null)
+        	throw new RuntimeException("Unknown Object Type");
+    	
+    	return key;
     }
 
     public static String toString(ObjectTypeEnum ote)

@@ -207,6 +207,8 @@ public class ConfigurationPanel extends AdminTab
 
             metadataDir = dirDialog.getSelectedFile().getPath();
             metadataDir = IOUtils.relativize(webappRoot, metadataDir);
+            // Save to the configuration so we can retrieve it from MetadataPanel.
+            config.setMetadataDir(metadataDir);
             mMetadataDir.setText(metadataDir);
             Admin.setRetsConfigChanged(true);
         }

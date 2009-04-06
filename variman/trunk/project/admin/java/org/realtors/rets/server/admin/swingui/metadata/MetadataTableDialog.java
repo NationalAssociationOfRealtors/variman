@@ -412,14 +412,22 @@ public class MetadataTableDialog extends MetadataDialog
             		}
             	}
       
-            	/*
-            	 * Clear the old value.
-            	 */
-            	try 
-            	{ 
-            		mTable.setAttribute(attribute, "", false);
-            	} 
-            	catch (Exception e) {};
+              	if ((value == null || value.length() < 1) && 
+            			mTable.isAttributeRequired(attribute))
+            	{
+            		mComponents.get(row).setBackground(Color.pink);
+            		invalid.add(attribute);
+            	}
+            	else
+                	/*
+                	 * Good to go. Clear the old value.
+                	 */
+                	try 
+                	{ 
+                		mTable.setAttribute(attribute, "", false);
+                	} 
+                	catch (Exception e) {};
+                	
             	
             	if (value != null && value.length() > 0)
             	{
@@ -445,8 +453,14 @@ public class MetadataTableDialog extends MetadataDialog
         		String msg = new String();
         		for (String attribute : invalid)
         		{
-        			AttrType attrType = mTable.getAttributeType(attribute);
-        			msg += attribute + ": " + attrType.getDescription() + "\n";
+        			String required = "\n";
+        			
+        			AttrType<?> attrType = mTable.getAttributeType(attribute);
+        			
+        			if (mTable.isAttributeRequired(attribute))
+        				required = " (REQUIRED)\n";
+        			
+        			msg += attribute + ": " + attrType.getDescription() + required;
         		}
                 JOptionPane.showMessageDialog(
                         SwingUtils.getAdminFrame(),

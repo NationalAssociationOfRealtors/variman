@@ -28,8 +28,8 @@ public class MClass extends MetaObject {
 	public static final String DELETEDFLAGFIELD = "DeletedFlagField";
 	public static final String DELETEDFLAGVALUE = "DeletedFlagValue";
 	public static final String HASKEYINDEX = "HasKeyIndex";
-	
-    private static final List<MetadataElement> sAttributes =
+
+	private static final List<MetadataElement> sAttributes =
     	new ArrayList<MetadataElement>()
         {{
     		add(new MetadataElement(CLASSNAME, sAlphanum32, sREQUIRED));
@@ -41,13 +41,12 @@ public class MClass extends MetaObject {
     		add(new MetadataElement(UPDATEVERSION, sAttrVersion));
     		add(new MetadataElement(UPDATEDATE, sAttrDate));
     		// RETS 1.7.2
-    		add(new MetadataElement(CLASSTIMESTAMP, sRETSNAME, RetsVersion.RETS_1_7_2));
-    		add(new MetadataElement(DELETEDFLAGFIELD, sRETSNAME, RetsVersion.RETS_1_7_2));
-    		add(new MetadataElement(DELETEDFLAGVALUE, sAlphanum32, RetsVersion.RETS_1_7_2));
-    		add(new MetadataElement(HASKEYINDEX, sAttrBoolean, RetsVersion.RETS_1_7_2));
+			add(new MetadataElement(CLASSTIMESTAMP, sRETSNAME, RetsVersion.RETS_1_7_2));
+			add(new MetadataElement(DELETEDFLAGFIELD, sRETSNAME, RetsVersion.RETS_1_7_2));
+			add(new MetadataElement(DELETEDFLAGVALUE, sAlphanum32, RetsVersion.RETS_1_7_2));
+			add(new MetadataElement(HASKEYINDEX, sAttrBoolean, RetsVersion.RETS_1_7_2));
         }};
-	
-	
+ 	
 	private static MetadataType[] sTypes = { MetadataType.UPDATE, MetadataType.TABLE };
 
 	public MClass() {
@@ -58,9 +57,78 @@ public class MClass extends MetaObject {
 		super(strictParsing);
 	}
 
-	public static void addAttributes(String name, AttrType type)
+	/**
+	 * Add an attribute to the class static attributes.
+	 * @param name Attribute Name
+	 * @param type Attribute Type
+	 * @param required TRUE, the attribute is required. FALSE otherwise.
+	 */
+	public static void addAttribute(String name, AttrType<?> type, boolean required)
 	{
-		sAttributes.add(new MetadataElement(name, type));
+		MetadataElement element = new MetadataElement(name, type, required);
+		sAttributes.add(element);
+	}
+
+	/*
+	 * Add the attributes to the map. This must be done here to
+	 * make sure static initialization properly takes place.
+	 */
+	@Override
+	protected void addAttributesToMap(Map attributeMap) 
+	{
+		for (MetadataElement element : sAttributes)
+		{
+			attributeMap.put(element.getName(), element.getType());
+		}
+	}
+	
+	/**
+	 * Returns whether or not the attribute is required.
+	 * @param name Name of the attribute.
+	 * @return TRUE if the attribute is required, FALSE otherwise.
+	 */
+	@Override
+	public boolean isAttributeRequired(String name)
+	{
+		for (MetadataElement element : this.sAttributes)
+		{
+			if (element.getName().equals(name))
+				return element.isRequired();
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Update (or add) the attribute. This is intended for use where the 
+	 * metadata model is being changed or expanded.
+	 * @param name Attribute Name
+	 * @param type Attribute Type
+	 * @param required TRUE, the attribute is required. FALSE otherwise.
+	 */
+	public static void updateAttribute(String name, AttrType<?> type, boolean required)
+	{
+		boolean found = false;
+		int index = -1;
+		if (sAttributes == null)
+			return;
+		
+		clearAttributeMapCache();
+		MetadataElement element = new MetadataElement(name, type, required);
+		
+		for (int i = 0; i < sAttributes.size(); i++)
+		{
+			if (sAttributes.get(i).getName().equals(name))
+			{
+				found = true;
+				sAttributes.set(i, element);
+				break;
+			}
+		}
+		if (!found)
+		{
+			sAttributes.add(element);
+		}
 	}
 	
 	@Override
@@ -148,13 +216,4 @@ public class MClass extends MetaObject {
 	public final MetadataType getMetadataType() {
 		return MetadataType.CLASS;
 	}
-
-	@Override
-	protected void addAttributesToMap(Map attributeMap) {
-		for (MetadataElement element : sAttributes)
-		{
-			attributeMap.put(element.getName(), element.getType());
-		}
-	}
-
 }
