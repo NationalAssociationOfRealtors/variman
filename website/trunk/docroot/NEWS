@@ -1,3 +1,12 @@
+Version 3.0.0b1 - 06 Apr 2009
+
+  * Merged rets-client into Variman base.
+  * Add ability to listen on specific IP address. Ticket #15.
+  * Metadata Loader warns on DBName for METADATA-CLASS. Ticket #16.
+  * Metadata Loader warns on StandardName for METADATA-OBJECT. Ticket #17.
+  * RETS 1.7.2 enhancements. Ticket #24.
+  * Added Metadata Editor to Admin tool. This is still experimental. Ticket #31.
+  
 Version 2.1.11 - 20 June 2007
 
   * On queries with Count=2 return total count, ignoring offset and limit.

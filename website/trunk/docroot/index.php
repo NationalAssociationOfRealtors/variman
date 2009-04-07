@@ -11,7 +11,7 @@
     <h3>Introduction</h3>
 
     <p>
-      Variman is a <a href="http://www.rets.org/">RETS</a> 1.0 and 1.5
+      Variman is a <a href="http://www.rets.org/">RETS</a> 1.0, 1.5, 1.7 and 1.7.2
       compliant server.  Variman is developed under a <a
       href="LICENSE.TXT">BSD-style license</a> at the Center for
       REALTOR(R) Technology.
@@ -26,14 +26,14 @@
     <h3>Features</h3>
 
     <ul>
-      <li> Certified RETS 1.0 and 1.5 compliant.  </li>
+      <li> Certified RETS 1.0, 1.5, 1.7 and 1.7.2 compliant.  </li>
       <li>
         Cross platform.  Runs on Microsoft Windows, Linux, Unix, Mac
-        OS X, and anywhere else a 1.3 version of Java is available.
+        OS X, and anywhere else a 1.5 version of Java is available.
       </li>
       <li>
         Minimal external installation requirements.  Embedded Tomcat
-        version requires only Java and a relational database.
+        version requires only Java 1.5 and a relational database.
       </li>
       <li>
         Supports PostgreSQL and Microsoft SQLServer with either the <a
@@ -49,6 +49,9 @@
     </para>
 
     <h3>News</h3>
+    <ul>
+      <li> <b>8 April 2009</b>: Version 3.0.0 Beta 1 released. </li>
+    </ul>
     <ul>
       <li> <b>20 June 2007</b>: Version 2.1.11 released. </li>
     </ul>
