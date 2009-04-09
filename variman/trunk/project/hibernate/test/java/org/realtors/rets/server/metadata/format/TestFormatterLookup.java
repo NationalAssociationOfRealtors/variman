@@ -32,7 +32,7 @@ public class TestFormatterLookup implements FormatterLookup
             {
                 // Print something so we can tell if recursive was invoked
                 // unintentionally
-                out.println("Empty list");
+                out.print("Empty list\n");
             }
         }
     }

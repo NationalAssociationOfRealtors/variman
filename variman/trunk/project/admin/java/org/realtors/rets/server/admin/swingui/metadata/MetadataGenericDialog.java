@@ -230,11 +230,12 @@ public class MetadataGenericDialog extends MetadataDialog
             	}
             	else
                 	/*
-                	 * Good to go. Clear the old value.
+                	 * Good to go. Clear the old value if it isn't a required field.
                 	 */
                 	try 
                 	{ 
-                		mMetaObject.setAttribute(attribute, "", false);
+            			if (!mMetaObject.isAttributeRequired(attribute))
+            				mMetaObject.setAttribute(attribute, "", false);
                 	} 
                 	catch (Exception e) {};
                 	

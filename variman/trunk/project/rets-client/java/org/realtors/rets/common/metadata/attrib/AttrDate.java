@@ -53,23 +53,34 @@ public class AttrDate implements AttrType<Date> {
 	}
 
 	/**
-	 * Parse the timestamp using the RETS 1.7.2 rules.
+	 * Parse the timestamp.
 	 * @param value	A String containing the value to parse.
 	 * @param strict A boolean that indicates whether or not strict parsing
 	 * is to take place.
 	 */
 	public Date parse(String value, boolean strict) throws MetaParseException {
-		Date d; 
+		Date d;
 		
 		try 
 		{
 			d = RetsDateTime.parse1_7_2(value, strict);
+			if (d == null)
+				d = RetsDateTime.parse(value, RetsVersion.RETS_1_0, strict);
 		} 
 		catch (ParseException e) 
 		{
 			if( strict ) 
 				throw new MetaParseException(e);
-			return null;
+			try
+			{
+				d = RetsDateTime.parse(value, RetsVersion.RETS_1_0, strict);
+			}
+			catch (ParseException f)
+			{
+				if (strict)
+					throw new MetaParseException(f);
+				return null;
+			}
 		}
 		return d;
 	}

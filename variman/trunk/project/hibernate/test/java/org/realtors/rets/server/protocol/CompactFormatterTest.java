@@ -58,6 +58,7 @@ public class CompactFormatterTest extends LinesEqualTestCase
         // This is RETS 1.7.2 (the default) format.
         results = new MockResultSet();
         cal = new RetsDateTime();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT-7"));
         cal.set(2008, 4, 9, 12, 17, 0);
         results.addRow(new Object[] {cal});
         formatted = new StringWriter();

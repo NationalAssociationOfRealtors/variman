@@ -10,10 +10,14 @@
  */
 package org.realtors.rets.server.metadata.format;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.io.PrintWriter;
 
+import org.apache.commons.lang.StringUtils;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.Table;
@@ -62,13 +66,12 @@ public class StandardTableFormatter extends BaseStandardFormatter
         	String editMasks = "";
             if (table.getEditMasks() != null)
             {
-	            for (Iterator iterator = table.getEditMasks().iterator(); iterator.hasNext();)
-	            {
-	                EditMask editMask = (EditMask) iterator.next();
-	                if (editMasks.length() > 1)
-	                	editMasks += ",";
-	                editMasks += editMask.getEditMaskID();
-	            }
+                List strings = new ArrayList(table.getEditMasks().size());
+
+                for (Iterator iterator = table.getEditMasks().iterator(); iterator.hasNext();)
+                	strings.add(((EditMask)iterator.next()).getEditMaskID());
+                
+            	editMasks = StringUtils.join(strings.iterator(), ",");
             }
             TagBuilder.simpleTag(out, "EditMaskID", editMasks);
  

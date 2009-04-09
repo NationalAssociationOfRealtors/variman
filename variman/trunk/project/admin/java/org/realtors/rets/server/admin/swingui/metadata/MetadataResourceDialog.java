@@ -274,11 +274,12 @@ public class MetadataResourceDialog extends MetadataDialog
             	}
             	else
                 	/*
-                	 * Good to go. Clear the old value.
+                	 * Good to go. Clear the old value if it isn't a required field.
                 	 */
                 	try 
                 	{ 
-                		mResource.setAttribute(attribute, "", false);
+            			if (!mResource.isAttributeRequired(attribute))
+            				mResource.setAttribute(attribute, "", false);
                 	} 
                 	catch (Exception e) {};
             	

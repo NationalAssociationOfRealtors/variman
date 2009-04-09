@@ -67,6 +67,7 @@ import org.jdom.input.SAXBuilder;
 
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataClassDialog;
+import org.realtors.rets.server.admin.swingui.metadata.MetadataConversionDialog;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataDialog;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataGenericDialog;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataModel;
@@ -113,8 +114,9 @@ public class MetadataPanel extends AdminTab
         mMetadataMenu = metadataMenu;
         //mMetadataMenu.add(new CreateMetadataAction());
         mMetadataMenu.add(new MetadataReloadAction());
-        mStrictParsingMenuItem = new JCheckBoxMenuItem("Strict Parsing");
+        mStrictParsingMenuItem = new JCheckBoxMenuItem("Strict");
         mStrictParsingMenuItem.setSelected(true);
+        mStrictParsingMenuItem.setToolTipText("Enable or disable strict adherence to the RETS 1.7.2 spec when parsing.");
         mStrictParsing = true;
         mStrictParsingMenuItem.addItemListener(new ItemListener()
         {
@@ -126,6 +128,23 @@ public class MetadataPanel extends AdminTab
         	}
         });
         mMetadataMenu.add(mStrictParsingMenuItem);
+        
+        JMenuItem conversionMenuItem = new JMenuItem("Migrate");
+        conversionMenuItem.setToolTipText("Migrate Variman RETS 1.5 and earlier metadata to current standards.");
+        conversionMenuItem.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		MetadataConversionDialog dialog = new MetadataConversionDialog(mMetadataMenu);
+        		if (dialog.getResponse() == JOptionPane.OK_OPTION)
+        		{
+   	                Admin.setRetsConfigChanged(true);
+   	                refreshTab();
+        		}
+        	}
+        });
+        mMetadataMenu.add(conversionMenuItem);
+        
         mMetadataMenu.setEnabled(false);
         
         /*

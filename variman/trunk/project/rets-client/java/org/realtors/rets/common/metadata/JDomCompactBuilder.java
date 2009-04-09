@@ -44,7 +44,8 @@ public class JDomCompactBuilder extends MetadataBuilder {
 	public static final String CONTAINER_METADATA = "METADATA";
 	public static final String CONTAINER_SYSTEM = "METADATA-SYSTEM";
 	public static final String CONTAINER_RESOURCE = "METADATA-RESOURCE";
-	public static final String CONTAINER_FOREIGNKEY = "METADATA-FOREIGN_KEYS";
+	public static final String CONTAINER_FOREIGNKEY_1_7_2 = "METADATA-FOREIGN_KEYS";
+	public static final String CONTAINER_FOREIGNKEY = "METADATA-FOREIGNKEYS";
 	public static final String CONTAINER_CLASS = "METADATA-CLASS";
 	public static final String CONTAINER_TABLE = "METADATA-TABLE";
 	public static final String CONTAINER_UPDATE = "METADATA-UPDATE";
@@ -332,7 +333,9 @@ public class JDomCompactBuilder extends MetadataBuilder {
 	
 	private void attachForeignKey(Metadata metadata, Element root) {
 		MSystem system = metadata.getSystem();
-		List containers = root.getChildren(CONTAINER_FOREIGNKEY);
+		List containers = root.getChildren(CONTAINER_FOREIGNKEY_1_7_2);
+		if (containers != null && containers.isEmpty())
+			containers = root.getChildren(CONTAINER_FOREIGNKEY);
 		for (int i = 0; i < containers.size(); i++) {
 			Element container = (Element) containers.get(i);
 			MForeignKey[] resources = this.processForeignKey(container);
@@ -696,8 +699,23 @@ public class JDomCompactBuilder extends MetadataBuilder {
 		List containers = root.getChildren(CONTAINER_VALIDATIONEXTERNALTYPE);
 		for (int i = 0; i < containers.size(); i++) {
 			Element container = (Element) containers.get(i);
-			MValidationExternal parent = metadata.getValidationExternal(getNonNullAttribute(container,
-					ATTRIBUTE_RESOURCE), getNonNullAttribute(container, ATTRIBUTE_VALIDATIONEXTERNALNAME));
+			MValidationExternal parent = null;
+			try
+			{
+				parent = metadata.getValidationExternal(
+										getNonNullAttribute(container, ATTRIBUTE_RESOURCE), 
+										getNonNullAttribute(container, ATTRIBUTE_VALIDATIONEXTERNALNAME));
+			}
+			catch (Exception e)
+			{
+				/*
+				 * If this is RETS 1.5 metadata, the attribute could be called "ValidationExternal". Try
+				 * based on that. Do not catch the exception this time.
+				 */
+				parent = metadata.getValidationExternal(
+						getNonNullAttribute(container, ATTRIBUTE_RESOURCE), 
+						getNonNullAttribute(container, ATTRIBUTE_VALIDATIONEXTERNAL));
+			}
 			MValidationExternalType[] validationExternalTypes = processValidationExternalType(container);
 			for (int j = 0; j < validationExternalTypes.length; j++) {
 				parent.addChild(MetadataType.VALIDATION_EXTERNAL_TYPE, validationExternalTypes[j]);

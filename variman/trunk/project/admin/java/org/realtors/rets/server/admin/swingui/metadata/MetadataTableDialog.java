@@ -420,11 +420,12 @@ public class MetadataTableDialog extends MetadataDialog
             	}
             	else
                 	/*
-                	 * Good to go. Clear the old value.
+                	 * Good to go. Clear the old value if it is not a rqeuired field.
                 	 */
                 	try 
                 	{ 
-                		mTable.setAttribute(attribute, "", false);
+            			if (!mTable.isAttributeRequired(attribute))
+            				mTable.setAttribute(attribute, "", false);
                 	} 
                 	catch (Exception e) {};
                 	

@@ -63,7 +63,8 @@ public class TagBuilder
         mWriter.print(" ");
         mWriter.print(attribute);
         mWriter.print("=\"");
-        mWriter.print(value);
+        if (value != null)
+        	mWriter.print(value);
         mWriter.print("\"");
         return this;
     }
