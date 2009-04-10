@@ -17,13 +17,13 @@ public class MetadataDialog extends JDialog
 
     public void setResponse(int response)
     {
-    	mResponse = response;
+        mResponse = response;
     }
 
-    protected static final String sBoolean [] = {	"False",
-    												"True"
-	  											};
+    protected static final String sBoolean [] = {   "False",
+                                                    "True"
+                                                  };
 
-    private int 				mResponse;
-    protected static final int 	TEXT_WIDTH = 20;
+    private int                 mResponse;
+    protected static final int  TEXT_WIDTH = 20;
 }

@@ -326,11 +326,8 @@ public class InitServlet extends RetsServlet
     {
         try
         {
-            String metadataDir = mRetsConfig.getMetadataDir();
-            metadataDir = resolveFromContextRoot(metadataDir);
-            LOG.info("Reading metadata from: " + metadataDir);
             MetadataLoader loader = new MetadataLoader();
-            return loader.parseMetadataDirectory(metadataDir);
+            return loader.parseMetadataDirectory();
         }
         catch (RetsServerException e)
         {

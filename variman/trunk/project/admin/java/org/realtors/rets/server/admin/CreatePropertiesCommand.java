@@ -100,10 +100,8 @@ public class CreatePropertiesCommand
     private void loadMetadata()
         throws RetsServerException
     {
-        String metadataDir = Admin.getRetsConfig().getMetadataDir();
-        metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
         MetadataLoader loader = new MetadataLoader();
-        MSystem system = loader.parseMetadataDirectory(metadataDir);
+        MSystem system = loader.parseMetadataDirectory();
         Iterator j = system.getResources().iterator();
         while (j.hasNext())
         {
@@ -143,9 +141,9 @@ public class CreatePropertiesCommand
         }
         finally
         {
-        	if (statement != null)
-        		statement.close();
-        	helper.close(LOG);
+            if (statement != null)
+                statement.close();
+            helper.close(LOG);
         }
     }
 
@@ -154,7 +152,7 @@ public class CreatePropertiesCommand
     {
 
         PreparedStatement ps = null;
-    	ConnectionHelper helper = RetsServer.createHelper();
+        ConnectionHelper helper = RetsServer.createHelper();
         try
         {
             Connection con = helper.getConnectionTransaction();
@@ -202,7 +200,7 @@ public class CreatePropertiesCommand
         }
         finally
         {
-        	helper.close(LOG);
+            helper.close(LOG);
         }
     }
 

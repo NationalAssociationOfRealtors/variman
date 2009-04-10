@@ -783,7 +783,7 @@ public class RetsConfig
     	if (sMetadata == null)
     	{
 	    	RetsConfig retsConfig = RetsConfig.getInstance();
-	    	
+
 	    	File systemRoot = new File(retsConfig.getMetadataDir());
 	    	
 	    	if (systemRoot.isDirectory())
@@ -798,13 +798,13 @@ public class RetsConfig
 	    			if (metadata.isFile() && metadata.canRead())
 	    			{
 	    				files.add(metadata);
-	    				LOG.debug("Found metadata.xml at: " + metadata.getCanonicalPath());
+	    				LOG.info("Found metadata.xml at: " + metadata.getCanonicalPath());
 	    			}
 	    		}
 	    		catch (Exception e)
 	    		{
 	    			sMetadata = new Metadata(new MSystem());
-	    			LOG.debug("Unable to locate metadata.xml: " + e);
+	    			LOG.warn("Unable to locate metadata.xml: " + e);
 	    			return sMetadata;
 	    		}
 	    		/*
@@ -818,12 +818,12 @@ public class RetsConfig
 			            files = IOUtils.listFilesRecursive(
 							                new File(retsConfig.getMetadataDir()), 
 							                new MetadataFileFilter());
-			            LOG.debug("Looking for metadata in old format.");
+			            LOG.info("Looking for metadata in old format.");
 			        }
 			        catch (Exception e)
 			        {
 		    			sMetadata = new Metadata(new MSystem());
-		    			LOG.debug("Unable to locate metadata: " + e);
+		    			LOG.warn("Unable to locate metadata: " + e);
 		    			return sMetadata;
 			        }
 	    		}
@@ -841,7 +841,7 @@ public class RetsConfig
 		        catch (Exception e)
 		        {
 	    			sMetadata = new Metadata(new MSystem());
-	    			LOG.debug("Unable to merge metadata: " + e);
+	    			LOG.error("Unable to merge metadata: " + e);
 	    			return sMetadata;
 		        }
 	    	}

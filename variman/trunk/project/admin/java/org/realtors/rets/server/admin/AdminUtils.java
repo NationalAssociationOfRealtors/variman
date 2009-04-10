@@ -96,8 +96,8 @@ public class AdminUtils
         RetsConfig retsConfig = Admin.getRetsConfig();
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         String hibernateConfig = Admin.getHomeDirectory() + 
-        							"/webapp/WEB-INF/classes/" + 
-        							Admin.PROJECT_NAME + "-hbm-xml.jar";
+                                    "/webapp/WEB-INF/classes/" + 
+                                    Admin.PROJECT_NAME + "-hbm-xml.jar";
  
         Configuration config = new Configuration()
             .addJar(new File(hibernateConfig))

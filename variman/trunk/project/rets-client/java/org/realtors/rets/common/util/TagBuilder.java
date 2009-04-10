@@ -64,7 +64,7 @@ public class TagBuilder
         mWriter.print(attribute);
         mWriter.print("=\"");
         if (value != null)
-        	mWriter.print(value);
+            mWriter.print(value);
         mWriter.print("\"");
         return this;
     }
@@ -78,15 +78,15 @@ public class TagBuilder
         String retsDate;
         
         if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
-        	retsVersion.equals(RetsVersion.RETS_1_7))
-    	{
-        	// Done this way to allow for all future versions that use the 1.7.2 format.
-        	retsDate = formatter.format(date);
-    	}
+            retsVersion.equals(RetsVersion.RETS_1_7))
+        {
+            // Done this way to allow for all future versions that use the 1.7.2 format.
+            retsDate = formatter.format(date);
+        }
         else
         {
-    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    		retsDate = formatter.format(date);
+            formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            retsDate = formatter.format(date);
         }
         appendAttribute(attribute, retsDate);
         return this;
@@ -144,15 +144,15 @@ public class TagBuilder
         String retsDate;
         
         if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
-        	retsVersion.equals(RetsVersion.RETS_1_7))
-    	{
-        	// Done this way to allow for all future versions that use the 1.7.2 format.
-        	retsDate = formatter.format(date);
-    	}
+            retsVersion.equals(RetsVersion.RETS_1_7))
+        {
+            // Done this way to allow for all future versions that use the 1.7.2 format.
+            retsDate = formatter.format(date);
+        }
         else
         {
-    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    		retsDate = formatter.format(date);
+            formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            retsDate = formatter.format(date);
         }
         return print(retsDate);
     }
@@ -243,11 +243,11 @@ public class TagBuilder
             new TagBuilder(writer, tagName).beginContent().print(StringUtils.join(strings.iterator(), ",")).close();
         }
         else
-        	emptyTag(writer, tagName);
+            emptyTag(writer, tagName);
     }
     
     public static void simpleTag(PrintWriter writer, String tagName,
-    							Date date, RetsVersion retsVersion)
+                                Date date, RetsVersion retsVersion)
     {
         SimpleDateFormat formatter =
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
@@ -256,17 +256,17 @@ public class TagBuilder
         String retsDate;
         
         if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
-        	retsVersion.equals(RetsVersion.RETS_1_7))
-    	{
-        	// Done this way to allow for all future versions that use the 1.7.2 format.
-        	retsDate = formatter.format(date);
-    	}
+            retsVersion.equals(RetsVersion.RETS_1_7))
+        {
+            // Done this way to allow for all future versions that use the 1.7.2 format.
+            retsDate = formatter.format(date);
+        }
         else
         {
-    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    		retsDate = formatter.format(date);
+            formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            retsDate = formatter.format(date);
         }
-    	new TagBuilder(writer, tagName).beginContent().print(retsDate).close();
+        new TagBuilder(writer, tagName).beginContent().print(retsDate).close();
     }
     
     private String mTagName;

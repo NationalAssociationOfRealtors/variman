@@ -360,7 +360,7 @@ ALPHANUM
 
 protected
 TEXT
-	: (ALPHANUM | URL_ENCODED_CHAR)+ 
+	: (ALPHANUM | URL_ENCODED_CHAR | UNDERBAR)+ 
 	{ 
 	    String s = $getText;
 	    $setText(URLDecoder.decode(s));
@@ -384,6 +384,10 @@ protected
 INT
     : (DIGIT)+ ('.' (DIGIT)*)* ;
 
+protected
+UNDERBAR
+    : ('_');
+    
 protected OR : "OR" ;
 protected AND : "AND" ;
 protected NOT : "NOT" ;

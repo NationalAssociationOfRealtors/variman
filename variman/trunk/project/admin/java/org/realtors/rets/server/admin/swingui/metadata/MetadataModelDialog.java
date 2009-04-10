@@ -101,29 +101,29 @@ public class MetadataModelDialog extends MetadataDialog
         mAttributes = new ArrayList<JLabel>(mMetaObject.getAttributeNames().length);
         mAttributeTypes = new ArrayList<JComboBox>(mMetaObject.getAttributeNames().length);
         mRequiredBoxes = new ArrayList<JComboBox>(mMetaObject.getAttributeNames().length);
-		
+        
         for (String attribute : mMetaObject.getAttributeNames())
         {
-           	AttrType<?>	attrType 	= mMetaObject.getAttributeType(attribute);
-           	
-    		JComboBox	component	= new JComboBox(mAttributeNames);;
-       		JLabel		label 		= new JLabel(attribute + ":", JLabel.TRAILING);
-       		JComboBox	required	= new JComboBox(sRequired);
-       		
-        	mAttributes.add(label);
-       		mAttributeTypes.add(component);
-       		mRequiredBoxes.add(required);
-       		
-        	label.setLabelFor(component);
-        	component.setSelectedItem(MetaObject.getNameFromAttribute(attrType));
-       		if (mMetaObject.isAttributeRequired(attribute))
-       			required.setSelectedIndex(1);
-       			
-        	mPanel.add(label);
-        	mPanel.add(component);
-        	mPanel.add(required);
-        	
-        	mRows++;
+            AttrType<?> attrType        = mMetaObject.getAttributeType(attribute);
+               
+            JComboBox   component       = new JComboBox(mAttributeNames);;
+            JLabel      label           = new JLabel(attribute + ":", JLabel.TRAILING);
+            JComboBox   required        = new JComboBox(sRequired);
+               
+            mAttributes.add(label);
+            mAttributeTypes.add(component);
+            mRequiredBoxes.add(required);
+               
+            label.setLabelFor(component);
+            component.setSelectedItem(MetaObject.getNameFromAttribute(attrType));
+            if (mMetaObject.isAttributeRequired(attribute))
+                required.setSelectedIndex(1);
+                   
+            mPanel.add(label);
+            mPanel.add(component);
+            mPanel.add(required);
+            
+            mRows++;
         }
 
         SwingUtils.SpringLayoutGrid(mPanel, mRows, nCOLS, 6, 6, 6, 6);
@@ -162,97 +162,97 @@ public class MetadataModelDialog extends MetadataDialog
 
         public void actionPerformed(ActionEvent event)
         {
-        	/*
-        	 * Add a component to the dialog for new data.
-        	 */
-			String answer = (String) JOptionPane.showInputDialog(
-					SwingUtils.getAdminFrame(),
-					"Attribute Name?",
-					"Add Attribute",
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					null,
-					"X-Attribute");
-        	
-			if (answer != null)
-			{
-				/*
-				 * See if the name is a valid name.
-				 */
-				char[] chars = answer.toCharArray();
-				if (!answer.startsWith("X-"))
-				{
-  	    			JOptionPane.showMessageDialog(
-							SwingUtils.getAdminFrame(),
-							"Metadata extensions must begin with \"X-\"!");	
-					return;
-				}
-				for (int i = 2; i < chars.length; i++) 
-				{
-					char c = chars[i];
-					if (!Character.isLetterOrDigit(c)) 
-					{
-						/* 
-						 * Allow for dash and underscore.
-						 */
-						if ("-_".indexOf(c) == -1) 
-						{
-		  	    			JOptionPane.showMessageDialog(
-									SwingUtils.getAdminFrame(),
-									"\"" + answer + 
-									"\" can only contain alphanumeric characters,\n" +
-									"a dash, or an underscore!");	
-							return;
-						}
-					}
-				}
+            /*
+             * Add a component to the dialog for new data.
+             */
+            String answer = (String) JOptionPane.showInputDialog(
+                    SwingUtils.getAdminFrame(),
+                    "Attribute Name?",
+                    "Add Attribute",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    null,
+                    "X-Attribute");
+            
+            if (answer != null)
+            {
+                /*
+                 * See if the name is a valid name.
+                 */
+                char[] chars = answer.toCharArray();
+                if (!answer.startsWith("X-"))
+                {
+                      JOptionPane.showMessageDialog(
+                            SwingUtils.getAdminFrame(),
+                            "Metadata extensions must begin with \"X-\"!");    
+                    return;
+                }
+                for (int i = 2; i < chars.length; i++) 
+                {
+                    char c = chars[i];
+                    if (!Character.isLetterOrDigit(c)) 
+                    {
+                        /* 
+                         * Allow for dash and underscore.
+                         */
+                        if ("-_".indexOf(c) == -1) 
+                        {
+                              JOptionPane.showMessageDialog(
+                                    SwingUtils.getAdminFrame(),
+                                    "\"" + answer + 
+                                    "\" can only contain alphanumeric characters,\n" +
+                                    "a dash, or an underscore!");    
+                            return;
+                        }
+                    }
+                }
 
-				/*
-				 * See if the attribute already exists.
-				 */
-				if (mMetaObject.getAttributeType(answer) != null)
-				{
-  	    			JOptionPane.showMessageDialog(
-							SwingUtils.getAdminFrame(),
-							answer + " already exists!");	
-					return;
-				}
+                /*
+                 * See if the attribute already exists.
+                 */
+                if (mMetaObject.getAttributeType(answer) != null)
+                {
+                      JOptionPane.showMessageDialog(
+                            SwingUtils.getAdminFrame(),
+                            answer + " already exists!");    
+                    return;
+                }
 
-				for (int i = 0; i < mRows; i++)
-				{
-					String candidate = mAttributes.get(i).getText();
-					/*
-					 * The labels have a colon appended. Remove it.
-					 */
-					candidate = candidate.substring(0, candidate.length() - 1);
-					
-					if (candidate.equals(answer))
-					{
-	  	    			JOptionPane.showMessageDialog(
-								SwingUtils.getAdminFrame(),
-								candidate + " already exists!");	
-						return;
-					}
-				}
-				
-				JComboBox	component	= new JComboBox(mAttributeNames);
-	       		JLabel		label 		= new JLabel(answer + ":", JLabel.TRAILING);
-	       		JComboBox	required	= new JComboBox(sRequired);
+                for (int i = 0; i < mRows; i++)
+                {
+                    String candidate = mAttributes.get(i).getText();
+                    /*
+                     * The labels have a colon appended. Remove it.
+                     */
+                    candidate = candidate.substring(0, candidate.length() - 1);
+                    
+                    if (candidate.equals(answer))
+                    {
+                          JOptionPane.showMessageDialog(
+                                SwingUtils.getAdminFrame(),
+                                candidate + " already exists!");    
+                        return;
+                    }
+                }
+                
+                JComboBox    component   = new JComboBox(mAttributeNames);
+                JLabel       label       = new JLabel(answer + ":", JLabel.TRAILING);
+                JComboBox    required    = new JComboBox(sRequired);
 
-	        	mAttributes.add(label);
-	       		mAttributeTypes.add(component);
-	       		mRequiredBoxes.add(required);
-	       		
-	        	label.setLabelFor(component);
-	        	mPanel.add(label);
-	        	mPanel.add(component);
-	        	mPanel.add(required);
-	        	mRows++;
+                mAttributes.add(label);
+                mAttributeTypes.add(component);
+                mRequiredBoxes.add(required);
+                   
+                label.setLabelFor(component);
+                mPanel.add(label);
+                mPanel.add(component);
+                mPanel.add(required);
+                mRows++;
 
-	        	SwingUtils.SpringLayoutGrid(mPanel, mRows, nCOLS, 6, 6, 6, 6);
-	        	pack();
-	        	mPanel.repaint();
-			}
+                SwingUtils.SpringLayoutGrid(mPanel, mRows, nCOLS, 6, 6, 6, 6);
+                pack();
+                mPanel.repaint();
+            }
         }
     }
 
@@ -279,43 +279,43 @@ public class MetadataModelDialog extends MetadataDialog
 
         public void actionPerformed(ActionEvent event)
         {
-        	for (int i = 0; i < mRows; i++)
+            for (int i = 0; i < mRows; i++)
             {
-            	String key = (String)mAttributes.get(i).getText();
-		
-				/*
-				 * The labels have a colon appended. Remove it.
-				 */
-				key = key.substring(0, key.length() - 1);
-            	           	
-        		String value = (String)mAttributeTypes.get(i).getSelectedItem();
-        		int index = mRequiredBoxes.get(i).getSelectedIndex();
-            	AttrType<?> attrType	= MetaObject.getAttributeFromName(value);
-            	boolean required = (index == 1 ? true : false);
-            	
-            	// FIXME: Code for other classes.
-            	if (mMetaObject instanceof MClass)
-            		MClass.updateAttribute( key, attrType, required);
-           		
-            	setResponse(JOptionPane.OK_OPTION);
-        		setVisible(false);
+                String key = (String)mAttributes.get(i).getText();
+        
+                /*
+                 * The labels have a colon appended. Remove it.
+                 */
+                key = key.substring(0, key.length() - 1);
+                               
+                String value = (String)mAttributeTypes.get(i).getSelectedItem();
+                int index = mRequiredBoxes.get(i).getSelectedIndex();
+                AttrType<?> attrType    = MetaObject.getAttributeFromName(value);
+                boolean required = (index == 1 ? true : false);
+                
+                // FIXME: Code for other classes.
+                if (mMetaObject instanceof MClass)
+                    MClass.updateAttribute( key, attrType, required);
+                   
+                setResponse(JOptionPane.OK_OPTION);
+                setVisible(false);
             }
         }
     }
 
-    private static int			nCOLS	= 3;
-    private static String []	sRequired = {
-    											"",
-    											"Required"
-    										};
+    private static int          nCOLS    = 3;
+    private static String []    sRequired = {
+                                                "",
+                                                "Required"
+                                            };
 
-    private String []			mAttributeNames;
+    private String []           mAttributeNames;
 
-    private List<JComboBox>		mAttributeTypes;
-    private List<JLabel> 		mAttributes;
-    private List<JComboBox>		mRequiredBoxes;
+    private List<JComboBox>     mAttributeTypes;
+    private List<JLabel>        mAttributes;
+    private List<JComboBox>     mRequiredBoxes;
 
-    private JPanel				mPanel;
-    private MetaObject 			mMetaObject;
-    private int					mRows;
+    private JPanel              mPanel;
+    private MetaObject          mMetaObject;
+    private int                 mRows;
 }

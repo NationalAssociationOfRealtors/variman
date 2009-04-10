@@ -29,5 +29,11 @@ remove underscores, but you do need to verify your data to be sure it did so pro
 The format for RETS 1.7.2 dates in metadata now follows the RETS date spec everywhere. This is the same
 format as specified for dates in the SEARCH transaction.
 
+Note that there is also an anomaly in the RETS 1.7.2 spec as released to the KeyField in METADATA-RESOURCE 
+and the various references to that field in METADATA-FOREIGN_KEYS, METADATA-TABLE, etc. In METADATA-RESOURCE, 
+the KeyField is declared as a RETSID, yet it refers to the SystemName in the other tables, and they are 
+declared as RETSNAME. In a RETSNAME, underscores are permitted, but they are not in a RETSID. So, you may 
+need to remove underscores elsewhere to be compliant.
+
 From this point onward, the metadata is kept in single file called metadata.xml and the other files can 
 be archived and removed if so desired.

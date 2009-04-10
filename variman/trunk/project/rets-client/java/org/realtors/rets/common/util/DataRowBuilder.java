@@ -53,28 +53,28 @@ public class DataRowBuilder
 
     public void append(Date date, RetsVersion retsVersion)
     {
-    	if (date != null)
-    	{
-    	
-	        SimpleDateFormat formatter =
-	            new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-	        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-	        
-	        String retsDate;
-	        
-	        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
-	        	retsVersion.equals(RetsVersion.RETS_1_7))
-	    	{
-	        	// Done this way to allow for all future versions that use the 1.7.2 format.
-	        	retsDate = formatter.format(date);
-	    	}
-	        else
-	        {
-	    		formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-	    		retsDate = formatter.format(date);
-	        }
-	        mWriter.print(retsDate);
-    	}
+        if (date != null)
+        {
+        
+            SimpleDateFormat formatter =
+                new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            
+            String retsDate;
+            
+            if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+                retsVersion.equals(RetsVersion.RETS_1_7))
+            {
+                // Done this way to allow for all future versions that use the 1.7.2 format.
+                retsDate = formatter.format(date);
+            }
+            else
+            {
+                formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                retsDate = formatter.format(date);
+            }
+            mWriter.print(retsDate);
+        }
         mWriter.print(mDelimiter);
     }
 

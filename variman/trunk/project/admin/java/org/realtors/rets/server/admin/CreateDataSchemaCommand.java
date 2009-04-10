@@ -62,10 +62,8 @@ public class CreateDataSchemaCommand
     private void loadMetadata()
         throws RetsServerException
     {
-        String metadataDir = Admin.getRetsConfig().getMetadataDir();
-        metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
         MetadataLoader loader = new MetadataLoader();
-        MSystem system = loader.parseMetadataDirectory(metadataDir);
+        MSystem system = loader.parseMetadataDirectory();
         System.out.println("Got system" + system.getId());
         Iterator j = system.getResources().iterator();
         while (j.hasNext())

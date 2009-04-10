@@ -99,87 +99,87 @@ public class MetadataClassDialog extends MetadataDialog
         int rows = 0;
         int empty = 0;
         mComponents = new ArrayList<JComponent>(mClass.getAttributeNames().length);
-		
+        
         for (String attribute : mClass.getAttributeNames())
         {
-        	AttrType<?>	attrType 	= mClass.getAttributeType(attribute);
-    		JComponent	component;
-       		JLabel		label 		= new JLabel(attribute + ":", JLabel.TRAILING);
-        	String		value 		= mClass.getAttributeAsString(attribute);
-        	
-        	if (value == null)
-        	{
-        		value = new String("");
-        		empty++;
-        	}
-        	
-    		if (attrType instanceof AttrBoolean)
-    		{
-        		// FIXME: We should check boolean/lookup and take the values from LookupTypes. See RETS spec.
-       			if (value.equals("0"))
-    				value = "False";
-    			if (value.equals("1"))
-    				value = "True";
-    			component = new JComboBox(sBoolean);
-    			((JComboBox)component).setSelectedItem(value);
-    		}
-    		else
-    		if (attrType instanceof AttrDate)
-    		{
-    			/*
-    			 * This will be one of the date versions. If the value is empty, populate
-    			 * it from the System version date.
-    			 */
-   	           	component = new JTextField(TEXT_WIDTH);
-    			if (value == null || value.length() == 0)
-    			{
-    				value = metadata.getSystem().getAttributeAsString(MSystem.DATE);
-    			}
-            	((JTextField)component).setText(value);
-    		}
-    		else
-    		if (attrType instanceof AttrEnum)
-    		{
-    			if (value.length() > 0)
-    			{
-    				String [] values = ((AttrEnum)attrType).enumerate();
-    				component = new JComboBox(values);
-    				((JComboBox)component).setSelectedItem(value);
-    			}
-    			else
-    			{
-    				component = new JComboBox();
-    				((JComboBox)component).setEnabled(false);
-    			}
-    		}
-    		else
-    		if (attrType instanceof AttrVersion)
-    		{
-    			/*
-    			 * This will be one of the versions. If the value is empty, populate
-    			 * it from the System version.
-    			 */
-	           	component = new JTextField(TEXT_WIDTH);
+            AttrType<?>    attrType     = mClass.getAttributeType(attribute);
+            JComponent    component;
+               JLabel        label         = new JLabel(attribute + ":", JLabel.TRAILING);
+            String        value         = mClass.getAttributeAsString(attribute);
+            
+            if (value == null)
+            {
+                value = new String("");
+                empty++;
+            }
+            
+            if (attrType instanceof AttrBoolean)
+            {
+                // FIXME: We should check boolean/lookup and take the values from LookupTypes. See RETS spec.
+                   if (value.equals("0"))
+                    value = "False";
+                if (value.equals("1"))
+                    value = "True";
+                component = new JComboBox(sBoolean);
+                ((JComboBox)component).setSelectedItem(value);
+            }
+            else
+            if (attrType instanceof AttrDate)
+            {
+                /*
+                 * This will be one of the date versions. If the value is empty, populate
+                 * it from the System version date.
+                 */
+                      component = new JTextField(TEXT_WIDTH);
+                if (value == null || value.length() == 0)
+                {
+                    value = metadata.getSystem().getAttributeAsString(MSystem.DATE);
+                }
+                ((JTextField)component).setText(value);
+            }
+            else
+            if (attrType instanceof AttrEnum)
+            {
+                if (value.length() > 0)
+                {
+                    String [] values = ((AttrEnum)attrType).enumerate();
+                    component = new JComboBox(values);
+                    ((JComboBox)component).setSelectedItem(value);
+                }
+                else
+                {
+                    component = new JComboBox();
+                    ((JComboBox)component).setEnabled(false);
+                }
+            }
+            else
+            if (attrType instanceof AttrVersion)
+            {
+                /*
+                 * This will be one of the versions. If the value is empty, populate
+                 * it from the System version.
+                 */
+                   component = new JTextField(TEXT_WIDTH);
 
-    			if (value == null || value.length() == 0)
-    			{
-    				value = metadata.getSystem().getAttributeAsString(MSystem.VERSION);
-    			}
-               	((JTextField)component).setText(value);
-    		}
-    		else
-    		{
-            	component = new JTextField(TEXT_WIDTH);
-            	((JTextField)component).setText(value);
-    		}
+                if (value == null || value.length() == 0)
+                {
+                    value = metadata.getSystem().getAttributeAsString(MSystem.VERSION);
+                }
+                   ((JTextField)component).setText(value);
+            }
+            else
+            {
+                component = new JTextField(TEXT_WIDTH);
+                ((JTextField)component).setText(value);
+            }
 
-        	component.setToolTipText(attrType.getDescription());
-        	
-        	mComponents.add(component);
-        	label.setLabelFor(component);
-        	panel.add(label);
-        	panel.add(component);
-        	rows++;
+            component.setToolTipText(attrType.getDescription());
+            
+            mComponents.add(component);
+            label.setLabelFor(component);
+            panel.add(label);
+            panel.add(component);
+            rows++;
         }
         mTextFieldColor = mComponents.get(0).getBackground();
         SwingUtils.SpringLayoutGrid(panel, rows, 2, 6, 6, 6, 6);
@@ -216,102 +216,102 @@ public class MetadataClassDialog extends MetadataDialog
 
         public void actionPerformed(ActionEvent event)
         {
-        	int len = mClass.getAttributeNames().length;
-        	int row = 0;
-        	List<String> invalid = new ArrayList<String>();
-        	
-        	/*
-        	 * Reset the background color for the TextFields.
-        	 */
-        	for (int i = 0; i < len; i++)
-        	{
-        		mComponents.get(i).setBackground(mTextFieldColor);
-        	}
-        	
-            for (String attribute : mClass.getAttributeNames())
+            int len = mClass.getAttributeNames().length;
+            int row = 0;
+            List<String> invalid = new ArrayList<String>();
+            
+            /*
+             * Reset the background color for the TextFields.
+             */
+            for (int i = 0; i < len; i++)
             {
-            	AttrType<?> attrType	= mClass.getAttributeType(attribute);
-            	String value = null;
-            	            	
-            	if (mComponents.get(row) instanceof JTextField)
-            	{
-            		value = ((JTextField)mComponents.get(row)).getText();
-            	}
-            	else
-            	if (mComponents.get(row) instanceof JComboBox)
-            	{
-            		value = (String)((JComboBox)mComponents.get(row)).getSelectedItem();
-            		if (attrType instanceof AttrBoolean)
-            		{
-            			if (value == null)
-            				value = "0";
-            			else
-	            		if (value.equals("True"))
-	            			value = "1";
-	            		else
-	            		if (value.equals("False"))
-	            			value = "0";
-            		}
-            	}
-            	
-               	if ((value == null || value.length() < 1) && 
-            			mClass.isAttributeRequired(attribute))
-            	{
-            		mComponents.get(row).setBackground(Color.pink);
-            		invalid.add(attribute);
-            	}
-            	else
-                	/*
-                	 * Good to go. Clear the old value if it isn't a required field.
-                	 */
-                	try 
-                	{ 
-            			if (!mClass.isAttributeRequired(attribute))
-            				mClass.setAttribute(attribute, "", false);
-                	} 
-                	catch (Exception e) {};
-                	
-            	
-            	if (value != null && value.length() > 0)
-            	{
-	            	try
-	            	{
-	            		mClass.setAttribute(attribute, value, mStrictParsing);
-	            	}
-	            	catch (Exception e)
-	            	{
-	            		mComponents.get(row).setBackground(Color.pink);
-	            		invalid.add(attribute);
-	            	}
-            	}
-            	row++;
+                mComponents.get(i).setBackground(mTextFieldColor);
             }
             
-        	if (invalid.isEmpty())
-        	{
-        		setResponse(JOptionPane.OK_OPTION);
-        		setVisible(false);
-        	}
-        	else
-        	{
-        		String msg = new String();
-        		for (String attribute : invalid)
-        		{
-        			String required = "\n";
-        			
-        			AttrType<?> attrType = mClass.getAttributeType(attribute);
-        			
-        			if (mClass.isAttributeRequired(attribute))
-        				required = " (REQUIRED)\n";
-        			
-        			msg += attribute + ": " + attrType.getDescription() + required;
-        		}
+            for (String attribute : mClass.getAttributeNames())
+            {
+                AttrType<?> attrType    = mClass.getAttributeType(attribute);
+                String value = null;
+                                
+                if (mComponents.get(row) instanceof JTextField)
+                {
+                    value = ((JTextField)mComponents.get(row)).getText();
+                }
+                else
+                if (mComponents.get(row) instanceof JComboBox)
+                {
+                    value = (String)((JComboBox)mComponents.get(row)).getSelectedItem();
+                    if (attrType instanceof AttrBoolean)
+                    {
+                        if (value == null)
+                            value = "0";
+                        else
+                        if (value.equals("True"))
+                            value = "1";
+                        else
+                        if (value.equals("False"))
+                            value = "0";
+                    }
+                }
+                
+                   if ((value == null || value.length() < 1) && 
+                        mClass.isAttributeRequired(attribute))
+                {
+                    mComponents.get(row).setBackground(Color.pink);
+                    invalid.add(attribute);
+                }
+                else
+                    /*
+                     * Good to go. Clear the old value if it isn't a required field.
+                     */
+                    try 
+                    { 
+                        if (!mClass.isAttributeRequired(attribute))
+                            mClass.setAttribute(attribute, "", false);
+                    } 
+                    catch (Exception e) {};
+                    
+                
+                if (value != null && value.length() > 0)
+                {
+                    try
+                    {
+                        mClass.setAttribute(attribute, value, mStrictParsing);
+                    }
+                    catch (Exception e)
+                    {
+                        mComponents.get(row).setBackground(Color.pink);
+                        invalid.add(attribute);
+                    }
+                }
+                row++;
+            }
+            
+            if (invalid.isEmpty())
+            {
+                setResponse(JOptionPane.OK_OPTION);
+                setVisible(false);
+            }
+            else
+            {
+                String msg = new String();
+                for (String attribute : invalid)
+                {
+                    String required = "\n";
+                    
+                    AttrType<?> attrType = mClass.getAttributeType(attribute);
+                    
+                    if (mClass.isAttributeRequired(attribute))
+                        required = " (REQUIRED)\n";
+                    
+                    msg += attribute + ": " + attrType.getDescription() + required;
+                }
                 JOptionPane.showMessageDialog(
                         SwingUtils.getAdminFrame(),
                         msg,
                         "Validation Error",
                         JOptionPane.ERROR_MESSAGE);
-        	}
+            }
         }
     }
 
@@ -329,9 +329,9 @@ public class MetadataClassDialog extends MetadataDialog
         }
     }
     
-    private MClass 				mClass;
-    private List<JComponent> 	mComponents;
-    private boolean 			mStrictParsing;
-    private Color 				mTextFieldColor;
+    private MClass              mClass;
+    private List<JComponent>    mComponents;
+    private boolean             mStrictParsing;
+    private Color               mTextFieldColor;
 
 }

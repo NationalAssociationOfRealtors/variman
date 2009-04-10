@@ -48,6 +48,7 @@ import org.realtors.rets.common.metadata.types.MValidationLookupType;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.JdomUtils;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.config.RetsConfig;
 import org.xml.sax.InputSource;
 
 
@@ -126,23 +127,15 @@ public class MetadataLoader
         }
     }
 
-    public MSystem parseMetadataDirectory(String metadataDir)
+    public MSystem parseMetadataDirectory()
         throws RetsServerException
     {
         try
         {
-            List files = IOUtils.listFilesRecursive(
-                new File(metadataDir), new MetadataFileFilter());
-            List documents = parseAllFiles(files);
-            Document merged =
-                JdomUtils.mergeDocuments(documents, new Element("RETS"));
-            return parseMetadata(merged);
+        	mMetadata = RetsConfig.getMetadata();
+        	return parseMetadata();
         }
-        catch (IOException e)
-        {
-            throw new RetsServerException(e);
-        }
-        catch (JDOMException e)
+        catch (Exception e)
         {
             throw new RetsServerException(e);
         }

@@ -163,26 +163,12 @@ public class Admin
     
     public static MetadataLoader getMetadataLoader()
     {
-    	if (sMetadataLoader == null)
-    		sMetadataLoader = new MetadataLoader();
-    	
-    	return sMetadataLoader;
+        if (sMetadataLoader == null)
+            sMetadataLoader = new MetadataLoader();
+        
+        return sMetadataLoader;
     }
     
-//    public static MSystem getMetadata()
-//    	throws RetsServerException
-//    {
-//        String metadataDir = Admin.getRetsConfig().getMetadataDir();
-//        metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
-//        File file = new File(metadataDir);
-//        if (!file.isDirectory())
-//        	return null;
-//        
-//        MetadataLoader loader = new MetadataLoader();
-//        MSystem system = getMetadataLoader().parseMetadataDirectory(metadataDir);
-//        return system;
-//    }
-
     public static final String PROJECT_NAME = "variman";
     public static final String ADMIN_NAME = "Variman Admin";
     public static final String SERVER_NAME = "Variman";

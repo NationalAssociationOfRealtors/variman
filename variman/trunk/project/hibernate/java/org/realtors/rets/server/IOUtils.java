@@ -518,8 +518,14 @@ public class IOUtils
 
     public static String relativize(String base, String file)
     {
-        URI baseUri = URI.create(base);
-        URI fileUri = URI.create(file);
+        /*
+         * We create the URI this way to address
+         * the drive letter that can appear in Windows
+         * file and pathnames. File.toURI will properly
+         * normalize the paths on Windows this way.
+         */
+        URI baseUri = new File(base).toURI();
+        URI fileUri = new File(file).toURI();
         return baseUri.relativize(fileUri).getPath();
     }
 

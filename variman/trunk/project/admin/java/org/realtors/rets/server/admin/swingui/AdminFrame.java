@@ -111,22 +111,22 @@ public class AdminFrame extends JFrame
         metadataModelMenuItem.setSelected(false);
         metadataModelMenuItem.addItemListener(new ItemListener()
         {
-        	public void itemStateChanged(ItemEvent e)
-        	{
-        		if (e.getStateChange() == ItemEvent.DESELECTED)
-        		{
-        			if (mMetadataModelTab > -1)
-        			{
-        			   mTabbedPane.removeTabAt(mMetadataModelTab);    				
-        			}
-        			mMetadataModelTab = -1;
-        		}
-        		if (e.getStateChange() == ItemEvent.SELECTED)
-        		{
- 			       addTab("Metadata Model", mMetadataModel);
-    			   mMetadataModelTab = mTabbedPane.getTabCount() - 1;      				
-        		}
-        	}
+            public void itemStateChanged(ItemEvent e)
+            {
+                if (e.getStateChange() == ItemEvent.DESELECTED)
+                {
+                    if (mMetadataModelTab > -1)
+                    {
+                       mTabbedPane.removeTabAt(mMetadataModelTab);                    
+                    }
+                    mMetadataModelTab = -1;
+                }
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                {
+                    addTab("Metadata Model", mMetadataModel);
+                   mMetadataModelTab = mTabbedPane.getTabCount() - 1;                      
+                }
+            }
         });
         metadataMenu.add(metadataModelMenuItem);
         
@@ -189,7 +189,7 @@ public class AdminFrame extends JFrame
             retsConfig.toXml(Admin.getConfigFile());
             if (retsConfig.saveMetadata() == false)
             {
-            	LOG.error("Unable to save metadata!");
+                LOG.error("Unable to save metadata!");
             }
             Admin.setRetsConfigChanged(false);
         }

@@ -54,72 +54,72 @@ public class SwingUtils
     }
 
     private static SpringLayout.Constraints getConstraintsForComponent(
-											            int row, 
-											            int col,
-											            Container parent,
-											            int cols) 
+                                                        int row, 
+                                                        int col,
+                                                        Container parent,
+                                                        int cols) 
     {
-    	SpringLayout layout = (SpringLayout) parent.getLayout();
-		Component c = parent.getComponent(row * cols + col);
-		return layout.getConstraints(c);
+        SpringLayout layout = (SpringLayout) parent.getLayout();
+        Component c = parent.getComponent(row * cols + col);
+        return layout.getConstraints(c);
     }
     
-    public static void SpringLayoutGrid(	
-    							Container parent,
+    public static void SpringLayoutGrid(    
+                                Container parent,
                                 int rows, 
                                 int cols,
                                 int initialX, 
                                 int initialY,
                                 int xPad, 
                                 int yPad) 
-	{
+    {
         SpringLayout layout;
         layout = (SpringLayout) parent.getLayout();
         
         Spring x = Spring.constant(initialX);
         for (int col = 0; col < cols; col++)
         {
-        	Spring width = Spring.constant(0);
-        	/*
-        	 * Determine the maximum width for all components in this column.
-        	 */
-        	for (int row = 0; row < rows; row++)
-        	{
-        		width = Spring.max(width, getConstraintsForComponent(row, col, parent, cols).getWidth());
-        	}
-        	/*
-        	 * Set the width for each component in this column.
-        	 */
-        	for (int row = 0; row < rows; row++)
-        	{
-        		SpringLayout.Constraints constraints = getConstraintsForComponent(row, col, parent, cols);
-        		constraints.setX(x);
-        		constraints.setWidth(width);
-        	}
-        	x = Spring.sum(x, Spring.sum(width, Spring.constant(xPad)));
+            Spring width = Spring.constant(0);
+            /*
+             * Determine the maximum width for all components in this column.
+             */
+            for (int row = 0; row < rows; row++)
+            {
+                width = Spring.max(width, getConstraintsForComponent(row, col, parent, cols).getWidth());
+            }
+            /*
+             * Set the width for each component in this column.
+             */
+            for (int row = 0; row < rows; row++)
+            {
+                SpringLayout.Constraints constraints = getConstraintsForComponent(row, col, parent, cols);
+                constraints.setX(x);
+                constraints.setWidth(width);
+            }
+            x = Spring.sum(x, Spring.sum(width, Spring.constant(xPad)));
         }
         
         Spring y = Spring.constant(initialY);
         for (int row = 0; row < rows; row++)
         {
-        	Spring height = Spring.constant(0);
-        	/*
-        	 * Determine the maximum height for all components in this row.
-        	 */
-        	for (int col = 0; col < cols; col++)
-        	{
-        		height = Spring.max(height, getConstraintsForComponent(row, col, parent, cols).getHeight());
-        	}
-        	/*
-        	 * Set the height for each component in this row.
-        	 */
-        	for (int col = 0; col < cols; col++)
-        	{
-        		SpringLayout.Constraints constraints = getConstraintsForComponent(row, col, parent, cols);
-        		constraints.setY(y);
-        		constraints.setHeight(height);
-        	}
-        	y = Spring.sum(y, Spring.sum(height, Spring.constant(yPad)));
+            Spring height = Spring.constant(0);
+            /*
+             * Determine the maximum height for all components in this row.
+             */
+            for (int col = 0; col < cols; col++)
+            {
+                height = Spring.max(height, getConstraintsForComponent(row, col, parent, cols).getHeight());
+            }
+            /*
+             * Set the height for each component in this row.
+             */
+            for (int col = 0; col < cols; col++)
+            {
+                SpringLayout.Constraints constraints = getConstraintsForComponent(row, col, parent, cols);
+                constraints.setY(y);
+                constraints.setHeight(height);
+            }
+            y = Spring.sum(y, Spring.sum(height, Spring.constant(yPad)));
         }
         /*
          * Finally, set the constraints for the parent container.
@@ -127,7 +127,7 @@ public class SwingUtils
         SpringLayout.Constraints parentConstraints = layout.getConstraints(parent);
         parentConstraints.setConstraint(SpringLayout.SOUTH, y);
         parentConstraints.setConstraint(SpringLayout.EAST, x);
-	}
+    }
 
     private static AdminFrame sAdminFrame;
 }

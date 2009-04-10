@@ -108,7 +108,7 @@ import org.realtors.rets.server.config.RetsConfig;
 public class MetadataModel extends AdminTab
 {
 
-	public MetadataModel(JMenu metadataMenu)
+    public MetadataModel(JMenu metadataMenu)
     {
         super(new BorderLayout());
         
@@ -143,35 +143,35 @@ public class MetadataModel extends AdminTab
      */
     private void refreshMainPanel(MetaObject userObject)
     {
-		mMainPanel.removeAll();
+        mMainPanel.removeAll();
         
         JPanel panel = new JPanel(new SpringLayout());
         int rows = 0;
 
         for (String attribute : userObject.getAttributeNames())
         {
-        	AttrType<?> attrType	= userObject.getAttributeType(attribute);
-        	JLabel label = new JLabel(attribute + ":", JLabel.TRAILING);
-        	
-        	JLabel val = new JLabel(MetaObject.getNameFromAttribute(attrType));
-        	
-        	String required = "";
-        	if (userObject.isAttributeRequired(attribute))
-        		required = "Required";
-        	
-        	label.setLabelFor(val);
-        	panel.add(label);
-        	panel.add(val);
-        	panel.add(new JLabel(required));
-        	
-        	rows++;
+            AttrType<?> attrType    = userObject.getAttributeType(attribute);
+            JLabel label = new JLabel(attribute + ":", JLabel.TRAILING);
+            
+            JLabel val = new JLabel(MetaObject.getNameFromAttribute(attrType));
+            
+            String required = "";
+            if (userObject.isAttributeRequired(attribute))
+                required = "Required";
+            
+            label.setLabelFor(val);
+            panel.add(label);
+            panel.add(val);
+            panel.add(new JLabel(required));
+            
+            rows++;
         }
 
         SwingUtils.SpringLayoutGrid(panel, rows, 3, 6, 6, 6, 6);
         mTextScrollPane = new JScrollPane(panel);
         mMainPanel.add(mTextScrollPane, BorderLayout.CENTER);
-   	     	    	   	    
-	    mSplitPane.revalidate();
+                                   
+        mSplitPane.revalidate();
     }
     
     /**
@@ -179,22 +179,22 @@ public class MetadataModel extends AdminTab
      */
     private void populateTree(MetadataTreePanel treePanel)
     {
-    	mForeignKeyNode = treePanel.addObject(null, sFOREIGNKEY);
-    	mResourceNode = treePanel.addObject(null, sRESOURCE);
-    	mClassNode = treePanel.addObject(mResourceNode, sCLASS);
-    	mTableNode = treePanel.addObject(mClassNode, sTABLE);
-    	mUpdateNode = treePanel.addObject(mClassNode, sUPDATE);
-    	mUpdateTypeNode = treePanel.addObject(mUpdateNode, sUPDATETYPE);
-    	mObjectNode = treePanel.addObject(mResourceNode, sOBJECT);
-    	mSearchHelpNode = treePanel.addObject(mResourceNode, sSEARCHHELP);
-    	mEditMaskNode = treePanel.addObject(mResourceNode, sEDITMASK);
-    	mLookupNode = treePanel.addObject(mResourceNode, sLOOKUP);
-    	mLookupTypeNode = treePanel.addObject(mLookupNode, sLOOKUPTYPE);
-    	mValidationLookupNode = treePanel.addObject(mResourceNode, sVALIDATIONLOOKUP);
-    	mValidationLookupTypeNode = treePanel.addObject(mValidationLookupNode, sVALIDATIONLOOKUPTYPE);
-    	mValidationExternalNode = treePanel.addObject(mResourceNode, sVALIDATIONEXTERNAL);
-    	mValidationExternalTypeNode = treePanel.addObject(mValidationExternalNode, sVALIDATIONEXTERNALTYPE);
-    	mValidationExpressionNode = treePanel.addObject(mResourceNode, sVALIDATIONEXPRESSION);
+        mForeignKeyNode = treePanel.addObject(null, sFOREIGNKEY);
+        mResourceNode = treePanel.addObject(null, sRESOURCE);
+        mClassNode = treePanel.addObject(mResourceNode, sCLASS);
+        mTableNode = treePanel.addObject(mClassNode, sTABLE);
+        mUpdateNode = treePanel.addObject(mClassNode, sUPDATE);
+        mUpdateTypeNode = treePanel.addObject(mUpdateNode, sUPDATETYPE);
+        mObjectNode = treePanel.addObject(mResourceNode, sOBJECT);
+        mSearchHelpNode = treePanel.addObject(mResourceNode, sSEARCHHELP);
+        mEditMaskNode = treePanel.addObject(mResourceNode, sEDITMASK);
+        mLookupNode = treePanel.addObject(mResourceNode, sLOOKUP);
+        mLookupTypeNode = treePanel.addObject(mLookupNode, sLOOKUPTYPE);
+        mValidationLookupNode = treePanel.addObject(mResourceNode, sVALIDATIONLOOKUP);
+        mValidationLookupTypeNode = treePanel.addObject(mValidationLookupNode, sVALIDATIONLOOKUPTYPE);
+        mValidationExternalNode = treePanel.addObject(mResourceNode, sVALIDATIONEXTERNAL);
+        mValidationExternalTypeNode = treePanel.addObject(mValidationExternalNode, sVALIDATIONEXTERNALTYPE);
+        mValidationExpressionNode = treePanel.addObject(mResourceNode, sVALIDATIONEXPRESSION);
     }
  
     public void tabSelected()
@@ -221,20 +221,20 @@ public class MetadataModel extends AdminTab
    
     class MetadataTreeNode extends DefaultMutableTreeNode
     {
-    	public MetadataTreeNode(Object o)
-    	{
-    		super(o);
-    	}
-    	
-    	public String toString()
-    	{
-    		Object node = getUserObject();
-    		
-    		if (node instanceof MetaObject)
-    			return ((MetaObject) node).getId();
-    		
-    		return super.toString();
-    	}
+        public MetadataTreeNode(Object o)
+        {
+            super(o);
+        }
+        
+        public String toString()
+        {
+            Object node = getUserObject();
+            
+            if (node instanceof MetaObject)
+                return ((MetaObject) node).getId();
+            
+            return super.toString();
+        }
     }
 
     /**
@@ -248,366 +248,366 @@ public class MetadataModel extends AdminTab
      */
     class MetadataTreePanel extends JPanel 
     {
-    	protected MetadataTreeNode rootNode;
-		protected DefaultTreeModel treeModel;
-		protected JTree tree;
-		private Toolkit toolkit = Toolkit.getDefaultToolkit();
+        protected MetadataTreeNode rootNode;
+        protected DefaultTreeModel treeModel;
+        protected JTree tree;
+        private Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-		public MetadataTreePanel() 
-		{
-    	    super(new BorderLayout());
-    	    
-    	    /*
-    	     * The root node is "System". 
-    	     */
-   	    	rootNode = new MetadataTreeNode(new String("System"));
+        public MetadataTreePanel() 
+        {
+            super(new BorderLayout());
+            
+            /*
+             * The root node is "System". 
+             */
+               rootNode = new MetadataTreeNode(new String("System"));
 
-    	    treeModel = new DefaultTreeModel(rootNode);
-    	    
-    	    /*
-    	     * Create the tree and the panel containing the Add/Remove buttons.
-    	     */
-    	    tree = new JTree(treeModel);
-    	    tree.setEditable(false);
-    	    tree.getSelectionModel().setSelectionMode(
-    	        TreeSelectionModel.SINGLE_TREE_SELECTION);
-    	    tree.setShowsRootHandles(true);
-    	    
-    	    JScrollPane scrollPane = new JScrollPane(tree);
+            treeModel = new DefaultTreeModel(rootNode);
+            
+            /*
+             * Create the tree and the panel containing the Add/Remove buttons.
+             */
+            tree = new JTree(treeModel);
+            tree.setEditable(false);
+            tree.getSelectionModel().setSelectionMode(
+                TreeSelectionModel.SINGLE_TREE_SELECTION);
+            tree.setShowsRootHandles(true);
+            
+            JScrollPane scrollPane = new JScrollPane(tree);
 
-    	    scrollPane.setVerticalScrollBarPolicy(
-    	               JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    	    add(scrollPane, BorderLayout.CENTER);
-    	    
-    	    JPanel panel = new JPanel();
-    	       
-    	    mAddButton = new JButton("Add");
-    	    mEditButton = new JButton("Edit");
-    	    mDeleteButton = new JButton("Delete");
-    	    
-    	    //panel.add (mAddButton);
-    	    panel.add(mEditButton);
-    	    //panel.add (mDeleteButton);
-    	    add(panel, BorderLayout.SOUTH); 
+            scrollPane.setVerticalScrollBarPolicy(
+                       JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            add(scrollPane, BorderLayout.CENTER);
+            
+            JPanel panel = new JPanel();
+               
+            mAddButton = new JButton("Add");
+            mEditButton = new JButton("Edit");
+            mDeleteButton = new JButton("Delete");
+            
+            //panel.add (mAddButton);
+            panel.add(mEditButton);
+            //panel.add (mDeleteButton);
+            add(panel, BorderLayout.SOUTH); 
 
-    	    /*
-    	     * Add the tree selection listener. The listener is responsible for setting up the 
-    	     * action buttons based on the current state (e.g. node selected).
-    	     */
-    	    tree.addTreeSelectionListener(new TreeSelectionListener() 
-    	    {
-    	    	public void valueChanged(TreeSelectionEvent e)
-    	    	{
-    	    		final MetadataTreeNode selectedNode = (MetadataTreeNode)tree.getLastSelectedPathComponent();
-    	    		final MetaObject resource;
+            /*
+             * Add the tree selection listener. The listener is responsible for setting up the 
+             * action buttons based on the current state (e.g. node selected).
+             */
+            tree.addTreeSelectionListener(new TreeSelectionListener() 
+            {
+                public void valueChanged(TreeSelectionEvent e)
+                {
+                    final MetadataTreeNode selectedNode = (MetadataTreeNode)tree.getLastSelectedPathComponent();
+                    final MetaObject resource;
 
-    	    	    mAddButton.setEnabled(false);
-    	    	    mEditButton.setEnabled(false);
-    	    	    mDeleteButton.setEnabled(false);
+                    mAddButton.setEnabled(false);
+                    mEditButton.setEnabled(false);
+                    mDeleteButton.setEnabled(false);
 
-    	    	    if (selectedNode == null)
-    	    			return;
-    	    		
-    	    	    if (selectedNode.equals(rootNode))
-    	    	    {
-    	    	    	if (mSystem == null)
-    	    	    		mSystem = new MSystem();
-    	    	    	
-    	    	    	resource = mSystem;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mResourceNode))
-    	    	    {
-    	    	    	if (mResource == null)
-    	    	    		mResource = new MResource();
-    	    	    	
-    	    	    	resource = mResource;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mForeignKeyNode))
-    	    	    {
-    	    	    	if (mForeignKey == null)
-    	    	    		mForeignKey = new MForeignKey();
-    	    	    	
-    	    	    	resource = mForeignKey;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mClassNode))
-    	    	    {
-    	    	    	if (mClass == null)
-    	    	    		mClass = new MClass();
+                    if (selectedNode == null)
+                        return;
+                    
+                    if (selectedNode.equals(rootNode))
+                    {
+                        if (mSystem == null)
+                            mSystem = new MSystem();
+                        
+                        resource = mSystem;
+                    }
+                    else
+                    if (selectedNode.equals(mResourceNode))
+                    {
+                        if (mResource == null)
+                            mResource = new MResource();
+                        
+                        resource = mResource;
+                    }
+                    else
+                    if (selectedNode.equals(mForeignKeyNode))
+                    {
+                        if (mForeignKey == null)
+                            mForeignKey = new MForeignKey();
+                        
+                        resource = mForeignKey;
+                    }
+                    else
+                    if (selectedNode.equals(mClassNode))
+                    {
+                        if (mClass == null)
+                            mClass = new MClass();
 
-    	    	    	resource = mClass;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mTableNode))
-    	    	    {
-    	    	    	if (mTable == null)
-    	    	    		mTable = new MTable();
-    	    	    	
-    	    	    	resource = mTable;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mUpdateNode))
-    	    	    {
-    	    	    	if (mUpdate == null)
-    	    	    		mUpdate = new MUpdate();
-    	    	    	
-    	    	    	resource = mUpdate;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mUpdateTypeNode))
-    	    	    {
-    	    	    	if (mUpdateType == null)
-    	    	    		mUpdateType = new MUpdateType();
-    	    	    	
-    	    	    	resource = mUpdateType;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mUpdateHelpNode))
-    	    	    {
-    	    	    	if (mUpdateHelp == null)
-    	    	    		mUpdateHelp = new MUpdateHelp();
-    	    	    	
-    	    	    	resource = mUpdateHelp;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mObjectNode))
-    	    	    {
-    	    	    	if (mObject == null)
-    	    	    		mObject = new MObject();
-    	    	    	
-    	    	    	resource = mObject;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mSearchHelpNode))
-    	    	    {
-    	    	    	if (mSearchHelp == null)
-    	    	    		mSearchHelp = new MSearchHelp();
-    	    	    	
-    	    	    	resource = mSearchHelp;
-    	    	    }
-    	    	    else
-    	    	    if(selectedNode.equals(mEditMaskNode))
-    	    	    {
-    	    	    	if (mEditMask == null)
-    	    	    		mEditMask = new MEditMask();
-    	    	    	
-    	    	    	resource = mEditMask;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mLookupNode))
-    	    	    {
-    	    	    	if (mLookup == null)
-    	    	    		mLookup = new MLookup();
-    	    	    	
-    	    	    	resource = mLookup;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mLookupTypeNode))
-    	    	    {
-    	    	    	if (mLookupType == null)
-    	    	    		mLookupType = new MLookupType();
-    	    	    	
-    	    	    	resource = mLookupType;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mValidationLookupNode))
-    	    	    {
-    	    	    	if (mValidationLookup == null)
-    	    	    		mValidationLookup = new MValidationLookup();
-    	    	    	
-    	    	    	resource = mValidationLookup;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mValidationLookupTypeNode))
-    	    	    {
-    	    	    	if (mValidationLookupType == null)
-    	    	    		mValidationLookupType = new MValidationLookupType();
-    	    	    	
-    	    	    	resource = mValidationLookupType;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mValidationExternalNode))
-    	    	    {
-    	    	    	if (mValidationExternal == null)
-    	    	    		mValidationExternal = new MValidationExternal();
-    	    	    	
-    	    	    	resource = mValidationExternal;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mValidationExternalTypeNode))
-    	    	    {
-    	    	    	if (mValidationExternalType == null)
-    	    	    		mValidationExternalType = new MValidationExternalType();
-    	    	    	
-    	    	    	resource = mValidationExternalType;
-    	    	    }
-    	    	    else
-    	    	    if (selectedNode.equals(mValidationExpressionNode))
-    	    	    {
-    	    	    	if (mValidationExpression == null)
-    	    	    		mValidationExpression = new MValidationExpression();
-    	    	    	
-    	    	    	resource = mValidationExpression;
-    	    	    }
-    	    	    else
-    	    	    {
-    	    	    	mMainPanel.removeAll();
-    	    	    	mMainPanel.add(new JLabel(""));
-    	    	    	mSplitPane.revalidate();
-    	    	    	return;
-    	    	    }
-    	    	    
-    	    	    mEditButton.removeActionListener(mEditButtonListener);
-    	    	    mEditButtonListener = new ActionListener()
-    	    	    {
-    	    	    	public void actionPerformed(ActionEvent e)
-    	    	    	{
-    	    	    		/*
-    	    	    		 * Instantiate the dialog
-    	    	    		 */
-    	    	    		MetadataDialog dialog = new MetadataModelDialog(resource);
-    	    	    		
-    	    	    		dialog.setVisible(true);
-    	    	    		if (dialog.getResponse() == JOptionPane.OK_OPTION)
-    	    	    		{
-    	    	    			//FIXME: Code for other classes
-    	    	    			if (resource instanceof MClass)
-    	    	    			{
-    	    	    				mClass = new MClass();
-    	    	    				refreshMainPanel(mClass);
-    	    	    			}
-    	    	    		}
-    	    	    	}
-    	    	    };
-    	    	    
-    	    	    mEditButton.addActionListener(mEditButtonListener);
+                        resource = mClass;
+                    }
+                    else
+                    if (selectedNode.equals(mTableNode))
+                    {
+                        if (mTable == null)
+                            mTable = new MTable();
+                        
+                        resource = mTable;
+                    }
+                    else
+                    if (selectedNode.equals(mUpdateNode))
+                    {
+                        if (mUpdate == null)
+                            mUpdate = new MUpdate();
+                        
+                        resource = mUpdate;
+                    }
+                    else
+                    if (selectedNode.equals(mUpdateTypeNode))
+                    {
+                        if (mUpdateType == null)
+                            mUpdateType = new MUpdateType();
+                        
+                        resource = mUpdateType;
+                    }
+                    else
+                    if (selectedNode.equals(mUpdateHelpNode))
+                    {
+                        if (mUpdateHelp == null)
+                            mUpdateHelp = new MUpdateHelp();
+                        
+                        resource = mUpdateHelp;
+                    }
+                    else
+                    if (selectedNode.equals(mObjectNode))
+                    {
+                        if (mObject == null)
+                            mObject = new MObject();
+                        
+                        resource = mObject;
+                    }
+                    else
+                    if (selectedNode.equals(mSearchHelpNode))
+                    {
+                        if (mSearchHelp == null)
+                            mSearchHelp = new MSearchHelp();
+                        
+                        resource = mSearchHelp;
+                    }
+                    else
+                    if(selectedNode.equals(mEditMaskNode))
+                    {
+                        if (mEditMask == null)
+                            mEditMask = new MEditMask();
+                        
+                        resource = mEditMask;
+                    }
+                    else
+                    if (selectedNode.equals(mLookupNode))
+                    {
+                        if (mLookup == null)
+                            mLookup = new MLookup();
+                        
+                        resource = mLookup;
+                    }
+                    else
+                    if (selectedNode.equals(mLookupTypeNode))
+                    {
+                        if (mLookupType == null)
+                            mLookupType = new MLookupType();
+                        
+                        resource = mLookupType;
+                    }
+                    else
+                    if (selectedNode.equals(mValidationLookupNode))
+                    {
+                        if (mValidationLookup == null)
+                            mValidationLookup = new MValidationLookup();
+                        
+                        resource = mValidationLookup;
+                    }
+                    else
+                    if (selectedNode.equals(mValidationLookupTypeNode))
+                    {
+                        if (mValidationLookupType == null)
+                            mValidationLookupType = new MValidationLookupType();
+                        
+                        resource = mValidationLookupType;
+                    }
+                    else
+                    if (selectedNode.equals(mValidationExternalNode))
+                    {
+                        if (mValidationExternal == null)
+                            mValidationExternal = new MValidationExternal();
+                        
+                        resource = mValidationExternal;
+                    }
+                    else
+                    if (selectedNode.equals(mValidationExternalTypeNode))
+                    {
+                        if (mValidationExternalType == null)
+                            mValidationExternalType = new MValidationExternalType();
+                        
+                        resource = mValidationExternalType;
+                    }
+                    else
+                    if (selectedNode.equals(mValidationExpressionNode))
+                    {
+                        if (mValidationExpression == null)
+                            mValidationExpression = new MValidationExpression();
+                        
+                        resource = mValidationExpression;
+                    }
+                    else
+                    {
+                        mMainPanel.removeAll();
+                        mMainPanel.add(new JLabel(""));
+                        mSplitPane.revalidate();
+                        return;
+                    }
+                    
+                    mEditButton.removeActionListener(mEditButtonListener);
+                    mEditButtonListener = new ActionListener()
+                    {
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            /*
+                             * Instantiate the dialog
+                             */
+                            MetadataDialog dialog = new MetadataModelDialog(resource);
+                            
+                            dialog.setVisible(true);
+                            if (dialog.getResponse() == JOptionPane.OK_OPTION)
+                            {
+                                //FIXME: Code for other classes
+                                if (resource instanceof MClass)
+                                {
+                                    mClass = new MClass();
+                                    refreshMainPanel(mClass);
+                                }
+                            }
+                        }
+                    };
+                    
+                    mEditButton.addActionListener(mEditButtonListener);
 
-    	    	    mEditButton.setEnabled(true);
-    	    	    
-    	    	    refreshMainPanel(resource);
-	    			mSplitPane.revalidate();
-    	    	}
-    	    });
-	    }
+                    mEditButton.setEnabled(true);
+                    
+                    refreshMainPanel(resource);
+                    mSplitPane.revalidate();
+                }
+            });
+        }
 
-		/** Add child to the currently selected node. */
-    	public MetadataTreeNode addObject(Object child) 
-    	{
-    	    MetadataTreeNode parentNode = null;
-    	    TreePath parentPath = tree.getSelectionPath();
+        /** Add child to the currently selected node. */
+        public MetadataTreeNode addObject(Object child) 
+        {
+            MetadataTreeNode parentNode = null;
+            TreePath parentPath = tree.getSelectionPath();
 
-    	    if (parentPath == null) 
-    	    {
-    	        parentNode = rootNode;
-    	    } 
-    	    else 
-    	    {
-    	        parentNode = (MetadataTreeNode) (parentPath.getLastPathComponent());
-    	    }
+            if (parentPath == null) 
+            {
+                parentNode = rootNode;
+            } 
+            else 
+            {
+                parentNode = (MetadataTreeNode) (parentPath.getLastPathComponent());
+            }
 
-    	    return addObject(parentNode, child, true);
-    	}
+            return addObject(parentNode, child, true);
+        }
 
-    	public MetadataTreeNode addObject(MetadataTreeNode parent,
-    	      Object child) 
-    	{
-    	    return addObject(parent, child, true);
-    	}
-    	
-    	public MetadataTreeNode addObject(MetadataTreeNode parent,
-    		      Object child, boolean shouldBeVisible) 
-    	{
-    		MetadataTreeNode childNode = new MetadataTreeNode(child);
+        public MetadataTreeNode addObject(MetadataTreeNode parent,
+              Object child) 
+        {
+            return addObject(parent, child, true);
+        }
+        
+        public MetadataTreeNode addObject(MetadataTreeNode parent,
+                  Object child, boolean shouldBeVisible) 
+        {
+            MetadataTreeNode childNode = new MetadataTreeNode(child);
 
-    	    if (parent == null) 
-    	    {
-    	    	parent = rootNode;
-    		}
+            if (parent == null) 
+            {
+                parent = rootNode;
+            }
 
-   		    // It is key to invoke this on the TreeModel, and NOT DefaultMutableTreeNode
-   		    treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
+               // It is key to invoke this on the TreeModel, and NOT DefaultMutableTreeNode
+               treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
 
-   		    // Make sure the user can see the lovely new node.
-   		    if (shouldBeVisible) 
-   		    {
-   		    	tree.scrollPathToVisible(new TreePath(childNode.getPath()));
-    		}
-   		    
-    		return childNode;
-    	}
+               // Make sure the user can see the lovely new node.
+               if (shouldBeVisible) 
+               {
+                   tree.scrollPathToVisible(new TreePath(childNode.getPath()));
+            }
+               
+            return childNode;
+        }
     }
 
     private static final Logger LOG =
         Logger.getLogger(MetadataModel.class);
     
-	private static final String sFOREIGNKEY				= new String("ForeignKey");
-	private static final String sRESOURCE				= new String("Resource");
-	private static final String sCLASS					= new String("Class");
-	private static final String sTABLE					= new String("Table");
-	private static final String sUPDATE					= new String("Update");
-	private static final String sUPDATETYPE				= new String("UpdateType");
-	private static final String sOBJECT					= new String("Object");
-	private static final String sSEARCHHELP				= new String("SearchHelp");
-	private static final String sEDITMASK				= new String("EditMask");
-	private static final String sLOOKUP					= new String("Lookup");
-	private static final String sLOOKUPTYPE				= new String("LookupType");
-	private static final String sVALIDATIONLOOKUP		= new String("ValidationLookup");
-	private static final String sVALIDATIONLOOKUPTYPE	= new String("ValidationLookupType");
-	private static final String sVALIDATIONEXTERNAL		= new String("ValidationExternal");
-	private static final String sVALIDATIONEXTERNALTYPE	= new String("ValidationExternalType");
-	private static final String sVALIDATIONEXPRESSION	= new String("ValidationExpression");
+    private static final String sFOREIGNKEY             = new String("ForeignKey");
+    private static final String sRESOURCE               = new String("Resource");
+    private static final String sCLASS                  = new String("Class");
+    private static final String sTABLE                  = new String("Table");
+    private static final String sUPDATE                 = new String("Update");
+    private static final String sUPDATETYPE             = new String("UpdateType");
+    private static final String sOBJECT                 = new String("Object");
+    private static final String sSEARCHHELP             = new String("SearchHelp");
+    private static final String sEDITMASK               = new String("EditMask");
+    private static final String sLOOKUP                 = new String("Lookup");
+    private static final String sLOOKUPTYPE             = new String("LookupType");
+    private static final String sVALIDATIONLOOKUP       = new String("ValidationLookup");
+    private static final String sVALIDATIONLOOKUPTYPE   = new String("ValidationLookupType");
+    private static final String sVALIDATIONEXTERNAL     = new String("ValidationExternal");
+    private static final String sVALIDATIONEXTERNALTYPE = new String("ValidationExternalType");
+    private static final String sVALIDATIONEXPRESSION   = new String("ValidationExpression");
     
-    private JButton				mAddButton;
-    private ActionListener		mAddButtonListener;
-    private JButton				mEditButton;
-    private ActionListener		mEditButtonListener;
-    private JButton				mDeleteButton;
-    private ActionListener		mDeleteButtonListener;
-    private MetadataTreePanel 	mTreePanel;
-    private JPanel				mMainPanel;
-    private JSplitPane			mSplitPane;
-    private JScrollPane			mTextScrollPane;
-    private JMenu 				mMetadataMenu;
+    private JButton             mAddButton;
+    private ActionListener      mAddButtonListener;
+    private JButton             mEditButton;
+    private ActionListener      mEditButtonListener;
+    private JButton             mDeleteButton;
+    private ActionListener      mDeleteButtonListener;
+    private MetadataTreePanel   mTreePanel;
+    private JPanel              mMainPanel;
+    private JSplitPane          mSplitPane;
+    private JScrollPane         mTextScrollPane;
+    private JMenu               mMetadataMenu;
     
     
-    private MetadataTreeNode	mClassNode					= null;
-	private MetadataTreeNode	mForeignKeyNode				= null;
-	private MetadataTreeNode 	mResourceNode				= null;
-	private MetadataTreeNode 	mEditMaskNode 				= null;
-	private MetadataTreeNode 	mLookupNode 				= null;
-	private MetadataTreeNode	mLookupTypeNode				= null;
-	private MetadataTreeNode 	mObjectNode 				= null;
-	private MetadataTreeNode 	mSearchHelpNode 			= null;
-	private MetadataTreeNode	mTableNode					= null;
-	private MetadataTreeNode	mUpdateNode					= null;
-	private MetadataTreeNode	mUpdateTypeNode				= null;
-	private MetadataTreeNode 	mUpdateHelpNode 			= null;
-	private MetadataTreeNode 	mValidationLookupNode 		= null;
-	private MetadataTreeNode	mValidationLookupTypeNode	= null;
-	private MetadataTreeNode 	mValidationExternalNode 	= null;
-	private MetadataTreeNode	mValidationExternalTypeNode	= null;
-	private MetadataTreeNode 	mValidationExpressionNode 	= null;
-	
-	private MClass 					mClass					= null;
-	private MEditMask 				mEditMask				= null;
-	private MForeignKey				mForeignKey				= null;
-	private MLookup 				mLookup					= null;
-	private MLookupType 			mLookupType				= null;
-	private MObject					mObject					= null;
-	private MResource 				mResource				= null;
-	private MSearchHelp 			mSearchHelp				= null;
-	private MSystem					mSystem					= null;
-	private MTable 					mTable					= null;
-	private MUpdate 				mUpdate					= null;
-	private MUpdateHelp				mUpdateHelp				= null;
-	private MUpdateType 			mUpdateType				= null;
-	private MValidationExpression 	mValidationExpression	= null;
-	private MValidationExternal 	mValidationExternal		= null;
-	private MValidationExternalType	mValidationExternalType	= null;
-	private MValidationLookup 		mValidationLookup		= null;
-	private MValidationLookupType 	mValidationLookupType	= null;
+    private MetadataTreeNode    mClassNode                      = null;
+    private MetadataTreeNode    mForeignKeyNode                 = null;
+    private MetadataTreeNode    mResourceNode                   = null;
+    private MetadataTreeNode    mEditMaskNode                   = null;
+    private MetadataTreeNode    mLookupNode                     = null;
+    private MetadataTreeNode    mLookupTypeNode                 = null;
+    private MetadataTreeNode    mObjectNode                     = null;
+    private MetadataTreeNode    mSearchHelpNode                 = null;
+    private MetadataTreeNode    mTableNode                      = null;
+    private MetadataTreeNode    mUpdateNode                     = null;
+    private MetadataTreeNode    mUpdateTypeNode                 = null;
+    private MetadataTreeNode    mUpdateHelpNode                 = null;
+    private MetadataTreeNode    mValidationLookupNode           = null;
+    private MetadataTreeNode    mValidationLookupTypeNode       = null;
+    private MetadataTreeNode    mValidationExternalNode         = null;
+    private MetadataTreeNode    mValidationExternalTypeNode     = null;
+    private MetadataTreeNode    mValidationExpressionNode       = null;
+    
+    private MClass                      mClass                  = null;
+    private MEditMask                   mEditMask               = null;
+    private MForeignKey                 mForeignKey             = null;
+    private MLookup                     mLookup                 = null;
+    private MLookupType                 mLookupType             = null;
+    private MObject                     mObject                 = null;
+    private MResource                   mResource               = null;
+    private MSearchHelp                 mSearchHelp             = null;
+    private MSystem                     mSystem                 = null;
+    private MTable                      mTable                  = null;
+    private MUpdate                     mUpdate                 = null;
+    private MUpdateHelp                 mUpdateHelp             = null;
+    private MUpdateType                 mUpdateType             = null;
+    private MValidationExpression       mValidationExpression   = null;
+    private MValidationExternal         mValidationExternal     = null;
+    private MValidationExternalType     mValidationExternalType = null;
+    private MValidationLookup           mValidationLookup       = null;
+    private MValidationLookupType       mValidationLookupType   = null;
 
 }
 
