@@ -12,4 +12,9 @@ $tmpl_location = "Documentation";
       The <a href="manual/">manual</a>.
     </p>
 
+    <p>
+      The <a href="readme.metadata">Metadata Migration README</a>
+      also included with the distribution..
+    </p>
+
     <?php include("../footer.php"); ?>

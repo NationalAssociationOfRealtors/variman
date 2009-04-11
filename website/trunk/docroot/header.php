@@ -48,7 +48,7 @@ function enav($name)
 
 function ver()
 {
-    return "3.0.0b1";
+    return "3.0.0b2";
 }
 
 function print_ver()

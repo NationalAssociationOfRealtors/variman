@@ -13,7 +13,7 @@ following:
 
   - Windows NT, 2000, or XP
   - Java Runtime Environment (JRE) or Java Development Kit (JDK)
-    version 1.3 or higher
+    version 1.5 or higher
 
 Variman is installed as a Windows service.  It is started and stopped
 using the standard Services control panel.
@@ -22,7 +22,7 @@ Running Variman on Other Platforms
 ==================================
 
 The tar+gz binary version of Variman requires only a JRE or JDK,
-version 1.3 or higher.  To start Variman:
+version 1.5 or higher.  To start Variman:
 
   % cd <Variman installation directory>
   % java -jar variman.jar
@@ -31,7 +31,7 @@ Running Variman as a Web Application
 ====================================
 
 The web application version of Variman requires a JRE or JDK, version
-1.3 or higher and a servlet container, such as Tomcat, Resin, or
+1.5 or higher and a servlet container, such as Tomcat, Resin, or
 WebLogic.  Configure the "webapp" directory as a web application
 inside your servlet container.
 
@@ -87,6 +87,10 @@ You also need to create a metadata mapping to the data you want to
 have access to.  A sample metadata directory structure is provided on
 the Variman website.  You can use this is a starting point for your
 metadata mapping.
+
+There is also a metadata editor that as part of the GUI, as well as
+a migration tool to help migrate pre RETS 1.7.2 metadata for existing
+users. Also see the readme.metadata file in this directory.
 
 Resources
 =========
