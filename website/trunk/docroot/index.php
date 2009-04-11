@@ -45,9 +45,16 @@
 
     <para>
       The current version is <b><?php print_ver()?></b>.  View the
-      complete <a href="NEWS">version history</a>.
+      complete <a href="news.php">version history</a>.
     </para>
 
+    <?php if (beta_ver()) : ?>
+    <p>
+      The current beta version is <b><?php print_beta_ver() ?></b>. View the
+      complete <a href="news_beta.php">beta version history</a>.
+    </p>
+    <?php endif; ?>
+      
     <h3>News</h3>
     <ul>
       <li> <b>10 April 2009</b>: Version 3.0.0 Beta 2 released. </li>

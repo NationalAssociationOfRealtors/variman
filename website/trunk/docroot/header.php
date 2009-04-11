@@ -48,12 +48,23 @@ function enav($name)
 
 function ver()
 {
-    return "3.0.0b2";
+    return "2.1.11";
 }
 
 function print_ver()
 {
     echo ver();
+}
+
+function beta_ver()
+{     
+#    return null;
+    return "3.0.0b2";
+}     
+      
+function print_beta_ver()
+{
+    echo beta_ver();
 }
 
 ?> -->

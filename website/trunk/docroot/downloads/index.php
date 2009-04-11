@@ -90,7 +90,84 @@ function dl_file($file)
         <td>33k</td>
         <td>Sample metadata</td>
       </tr>
+      <tr>
+        <td><?php dl_file("sample-1.7.2-metadata.zip")?>
+        </td>
+        <td>33k</td>
+        <td>Sample RETS 1.7.2  metadata</td>
+      </tr>
     </table>
+
+    <?php if (beta_ver()) : ?>
+    <p>
+      The current beta version is <b><?php print_beta_ver()?></b>.
+    </p>
+
+    <table width="100%" border="1" cellspacing="0" cellpadding="5">
+      <tr>
+        <td class="dl-header">File&nbsp;Name</td>
+        <td class="dl-header">File&nbsp;Size</td>
+        <td class="dl-header">Description</td>
+      </tr>
+      <tr>
+        <td class="dl-group" colspan="3">Embedded Tomact Binary Downloads</td>
+      </tr>
+      <tr>
+        <td>
+          <?php dl_file("variman-" . beta_ver() . "-setup.exe")?>
+        </td>
+        <td>17M</td>
+        <td>
+          Embedded Tomcat Windows installer.  Installs a Service to
+          start and stop Variman.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <?php dl_file("variman-" . beta_ver() . ".tar.gz")?>
+        </td>
+        <td>17M</td>
+        <td>
+            Embedded Tomcat archive for all other platforms.  Command
+            line administration only.
+        </td>
+      </tr>
+      <tr>
+        <td class="dl-group" colspan="3">Web Application Binary Downloads</td>
+      </tr>
+      <tr>
+        <td>
+          <?php dl_file("variman-webapp-" . beta_ver() . ".tar.gz")?>
+        </td>
+        <td>13M</td>
+        <td> Web application archive, tar+gzipped. </td>
+      </tr>
+      <tr>
+        <td>
+          <?php dl_file("variman-webapp-" . beta_ver() . ".zip")?>
+        </td>
+        <td>13M</td>
+        <td> Web application archive, zipped. </td>
+      </tr>
+      <tr>
+        <td class="dl-group" colspan="3">Source Downloads</td>
+      </tr>
+      <tr>
+        <td>
+          <?php dl_file("variman-" . beta_ver() . "-src.tar.gz")?>
+        </td>
+        <td>31M</td>
+        <td>Source archive, tar+gzipped</td>
+      </tr>
+      <tr>
+        <td>
+          <?php dl_file("variman-" . beta_ver() . "-src.zip")?>
+        </td>
+        <td>32M</td>
+        <td>Source archive, zipped</td>
+      </tr>
+    </table>
+    <?php endif; ?>
 
     <p>
       All versions may be downloaded from <a href="<?php
