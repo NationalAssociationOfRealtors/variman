@@ -1,7 +1,7 @@
 Version 3.0.0b2 - 10 Apr 2009
 
   * Make Variman more tolerant of out of spec 1.5 metadata.
-  * Add Metadata Migration too. Ticket #33.
+  * Add Metadata Migration tool. Ticket #33.
 
 Version 3.0.0b1 - 06 Apr 2009
 

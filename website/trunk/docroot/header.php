@@ -58,8 +58,8 @@ function print_ver()
 
 function beta_ver()
 {     
-#    return null;
     return "3.0.0b2";
+#    return null;
 }     
       
 function print_beta_ver()

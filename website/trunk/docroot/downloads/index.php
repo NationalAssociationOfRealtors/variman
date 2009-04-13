@@ -134,7 +134,7 @@ function dl_filesize($file)
         <td>
 	  <?php dl_filesize("sample-1.7.2-metadata.zip")?>
         </td>
-        <td>Sample RETS 1.7.2  metadata</td>
+        <td>Sample RETS 1.7.2 metadata and sample database schema</td>
       </tr>
     </table>
 
