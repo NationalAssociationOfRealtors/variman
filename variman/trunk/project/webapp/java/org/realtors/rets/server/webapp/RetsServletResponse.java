@@ -56,19 +56,19 @@ public class RetsServletResponse extends HttpServletResponseWrapper
         }
         else if (retsVersion.equals(RetsVersion.RETS_1_7))
         {
-        	mRetsVersionheader = "RETS/1.7";
+            mRetsVersionheader = "RETS/1.7";
         }
         else if (retsVersion.equals(RetsVersion.RETS_1_7_2))
         {
-        	mRetsVersionheader = "RETS/1.7.2";
+            mRetsVersionheader = "RETS/1.7.2";
         }
         setRetsHttpHeaders();
     }
     
     public void setRetsRequestID(String retsRequestID)
     {
-    	mRetsRequestID = retsRequestID;
-    	setRetsHttpHeaders();
+        mRetsRequestID = retsRequestID;
+        setRetsHttpHeaders();
     }
 
     private void setRetsHttpHeaders()
@@ -80,7 +80,7 @@ public class RetsServletResponse extends HttpServletResponseWrapper
         setHeader("RETS-Server", sRetServerHeader);
         setHeader("Cache-Control", "private");
         if (mRetsRequestID != null)
-        	setHeader("RETS-Request-ID", mRetsRequestID);
+            setHeader("RETS-Request-ID", mRetsRequestID);
     }
 
     public void reset()

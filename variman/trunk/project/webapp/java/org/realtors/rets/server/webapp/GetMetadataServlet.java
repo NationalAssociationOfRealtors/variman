@@ -46,11 +46,11 @@ public class  GetMetadataServlet extends RetsServlet
             new GetMetadataTransaction(out, parameters, mMetadataFetcher, request.getRetsVersion());
         if (request.getRetsVersion().equals(RetsVersion.RETS_1_5))
         {
-        	// For RETS 1.5, getMetadata needs a Content-ID header containing the
-        	// name of the first metadata item returned.
-        	String metadataType = parameters.getType();
-        	if (metadataType.length() > 0)
-        		response.setHeader("Content-ID", "METADATA-" + metadataType);
+            // For RETS 1.5, getMetadata needs a Content-ID header containing the
+            // name of the first metadata item returned.
+            String metadataType = parameters.getType();
+            if (metadataType.length() > 0)
+                response.setHeader("Content-ID", "METADATA-" + metadataType);
         }
         transaction.execute();
     }

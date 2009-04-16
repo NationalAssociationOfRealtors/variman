@@ -39,6 +39,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.metadata.JDomCompactBuilder;
@@ -207,8 +208,9 @@ public class RetsConfig
         retsConfig.addContent(database);
         retsConfig.addContent(getSecurityContraintsElement());
 
-        XMLOutputter xmlOutputter = new XMLOutputter("  ", true);
-        xmlOutputter.setLineSeparator(SystemUtils.LINE_SEPARATOR);
+        Format xmlFormat = Format.getPrettyFormat();
+        xmlFormat.setLineSeparator(SystemUtils.LINE_SEPARATOR);
+        XMLOutputter xmlOutputter = new XMLOutputter(xmlFormat);
         return xmlOutputter.outputString(new Document(retsConfig));
     }
 

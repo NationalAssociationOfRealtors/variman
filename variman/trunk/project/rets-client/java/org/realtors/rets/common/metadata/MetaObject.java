@@ -30,6 +30,24 @@ import org.realtors.rets.common.metadata.attrib.AttrPositiveNumeric;
 import org.realtors.rets.common.metadata.attrib.AttrText;
 import org.realtors.rets.common.metadata.attrib.AttrTimeZone;
 import org.realtors.rets.common.metadata.attrib.AttrVersion;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MEditMask;
+import org.realtors.rets.common.metadata.types.MForeignKey;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
+import org.realtors.rets.common.metadata.types.MObject;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdate;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
+import org.realtors.rets.common.metadata.types.MUpdateType;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 import org.realtors.rets.common.util.CaseInsensitiveTreeMap;
 
 public abstract class MetaObject implements Serializable {
@@ -472,6 +490,7 @@ public abstract class MetaObject implements Serializable {
 		else 
 		{
 			this.attributes.put(key, value);
+			updateClassAttribute(this, key, sRETSNAME, false); // FIXME: We should preserve the metadata model in an XML file too!
 			if (!key.startsWith("X-"))
 				LOG.warn("Unknown key (" + toString() + "): " + key);
 		}
@@ -596,6 +615,72 @@ public abstract class MetaObject implements Serializable {
 		AttrType<?> oldType = (AttrType<?>)this.attrTypes.get(name);
 		this.attrTypes.put(name, attrType);
 		return oldType;
+	}
+	
+	/**
+	 * Update the class static attributes. This is used to adjust
+	 * the metadata model for custom attributes.
+	 * @param metaObject The Metadata Object
+	 * @param key A String containing the attribute name
+	 * @param attrType The Attribute Type
+	 * @param required A boolean indicating whether or not the attribute is required
+	 */
+	public static void updateClassAttribute(MetaObject metaObject, String key, 
+											AttrType<?> attrType, boolean required)
+	{
+        if (metaObject instanceof MResource)                                
+        	MResource.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MClass)
+        	MClass.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MEditMask)
+        	MEditMask.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MForeignKey)                                
+        	MForeignKey.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MLookup)                                
+        	MLookup.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MLookupType)                                
+        	MLookupType.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MObject)                                
+        	MObject.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MSearchHelp)                                
+        	MSearchHelp.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MSystem)                                
+        	MSystem.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MTable)                                
+        	MTable.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MUpdate)                                
+        	MUpdate.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MUpdateHelp)                                
+        	MUpdateHelp.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MUpdateType)                                
+        	MUpdateType.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MValidationExpression)                                
+        	MValidationExpression.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MValidationExternal)                                
+        	MValidationExternal.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MValidationExternalType)                                
+        	MValidationExternalType.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MValidationLookup)                                
+        	MValidationLookup.updateAttribute(key, attrType, required);
+        else
+        if (metaObject instanceof MValidationLookupType)
+        	MValidationLookupType.updateAttribute(key, attrType, required);
 	}
 
 	public abstract MetadataType[] getChildTypes();

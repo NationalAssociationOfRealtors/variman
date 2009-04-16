@@ -125,7 +125,7 @@ public class MetadataGenericDialog extends MetadataDialog
             {
                 if (value.length() > 0)
                 {
-                    String [] values = ((AttrEnum)attrType).enumerate();
+                    String [] values = ((AttrEnum)attrType).toArray();
                     component = new JComboBox(values);
                     ((JComboBox)component).setSelectedItem(value);
                 }

@@ -74,17 +74,17 @@ public class LoginServlet extends RetsServlet
         out.println("MetadataVersion = " + version);
         out.println("MinMetadataVersion = " + version);
         if (!retsVersion.equals(RetsVersion.RETS_1_0) && 
-        	!retsVersion.equals(RetsVersion.RETS_1_5))
+            !retsVersion.equals(RetsVersion.RETS_1_5))
         {
             SimpleDateFormat formatter =
                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
             
             if (retsVersion.equals(RetsVersion.RETS_1_7))
-            	formatter.applyPattern("E, d MMM yyyy HH:mm:ss z");
+                formatter.applyPattern("E, d MMM yyyy HH:mm:ss z");
             
-        	out.println("MetadataTimestamp = " + formatter.format(date));
-        	out.println("MinMetadataTimestamp = " + formatter.format(date));
+            out.println("MetadataTimestamp = " + formatter.format(date));
+            out.println("MinMetadataTimestamp = " + formatter.format(date));
         }
         out.println("User = " + user.getUsername() + ",NULL,NULL,NULL");
         out.println("Login = " + contextPath + Paths.LOGIN);

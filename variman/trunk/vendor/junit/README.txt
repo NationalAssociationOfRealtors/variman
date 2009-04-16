@@ -1,4 +1,4 @@
-JUnit version 3.8.1
+JUnit version 4.6
 ===================
 
 http://www.junit.org/

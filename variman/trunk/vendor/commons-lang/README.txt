@@ -1,3 +1,3 @@
-Jakarta Commons Lang version 2.0
+Jakarta Commons Lang version 2.4
 
-http://jakarta.apache.org/commons/lang/
+http://commons.apache.org/lang/

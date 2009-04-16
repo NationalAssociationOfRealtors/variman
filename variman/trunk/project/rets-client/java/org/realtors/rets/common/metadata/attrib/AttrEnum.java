@@ -45,7 +45,7 @@ public class AttrEnum extends AttrAbstractText {
 			throw new MetaParseException("Invalid key: " + value);
 	}
 	
-	public String [] enumerate()
+	public String [] toArray()
 	{
 		ArrayList<String> names = new ArrayList<String>();
 		Iterator iter = map.keySet().iterator();

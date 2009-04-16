@@ -1,3 +1,3 @@
-Jakarta Commons HTTPClient verison 3.0.1
+Jakarta Commons HTTPClient verison 3.1
 
-http://jakarta.apache.org/commons/httpclient/
+http://hc.apache.org/downloads.cgi

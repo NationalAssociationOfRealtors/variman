@@ -22,6 +22,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 /**
@@ -50,8 +51,11 @@ public class ConfigSerializer
         list.add(element);
 
         rootElement.setContent(list);
+        
+        Format xmlFormat = Format.getPrettyFormat();
+        xmlFormat.setEncoding("ISO-8859-1");
 
-        XMLOutputter out = new XMLOutputter("  ", true, "ISO-8859-1");
+        XMLOutputter out = new XMLOutputter(xmlFormat);
         out.output(doc, writer);
     }
 

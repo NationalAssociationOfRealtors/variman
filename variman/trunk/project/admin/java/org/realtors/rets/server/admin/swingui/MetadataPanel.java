@@ -654,13 +654,13 @@ public class MetadataPanel extends AdminTab
                                     if (answer == null)
                                         return;
                                     
-                                       if (answer.equals("Class"))
+                                    if (answer.equals("Class"))
                                     {
                                         metadataType = MetadataType.CLASS;
                                         resource = new MClass();
                                     }
                                     else                                   
-                                       if (answer.equals("Lookup"))
+                                    if (answer.equals("Lookup"))
                                     {
                                            boolean found = false;
                                            /*

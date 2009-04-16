@@ -1,3 +1,3 @@
-JavaService version 1.2.12
+JavaService version 2.0.10
 
 http://javaservice.objectweb.org/

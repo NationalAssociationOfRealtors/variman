@@ -472,11 +472,115 @@ public class MetadataModel extends AdminTab
                             dialog.setVisible(true);
                             if (dialog.getResponse() == JOptionPane.OK_OPTION)
                             {
-                                //FIXME: Code for other classes
+                                /*
+                                 * Rebuild the proper MetaObject with the new attributes.
+                                 */
+                                if (resource instanceof MResource)    
+                                {
+                                    mResource = new MResource();
+                                    refreshMainPanel(mResource);
+                                }
+                                else
                                 if (resource instanceof MClass)
                                 {
                                     mClass = new MClass();
                                     refreshMainPanel(mClass);
+                                }
+                                else
+                                if (resource instanceof MEditMask)
+                                {
+                                    mEditMask = new MEditMask();
+                                    refreshMainPanel(mEditMask);
+                                }
+                                else
+                                if (resource instanceof MForeignKey)
+                                {
+                                    mForeignKey = new MForeignKey();
+                                    refreshMainPanel(mForeignKey);
+                                }
+                                else
+                                if (resource instanceof MLookup)
+                                {
+                                    mLookup = new MLookup();
+                                    refreshMainPanel(mLookup);
+                                }
+                                else
+                                if (resource instanceof MLookupType)  
+                                {
+                                    mLookupType = new MLookupType();
+                                    refreshMainPanel(mLookupType);
+                                }
+                                else
+                                if (resource instanceof MObject)  
+                                {
+                                    mObject = new MObject();
+                                    refreshMainPanel(mObject);
+                                }
+                                else
+                                if (resource instanceof MSearchHelp)        
+                                {
+                                    mSearchHelp = new MSearchHelp();
+                                    refreshMainPanel(mSearchHelp);
+                                }
+                                else
+                                if (resource instanceof MSystem)    
+                                {
+                                    mSystem = new MSystem();
+                                    refreshMainPanel(mSystem);
+                                }
+                                else
+                                if (resource instanceof MTable)   
+                                {
+                                    mTable = new MTable();
+                                    refreshMainPanel(mTable);
+                                }
+                                else
+                                if (resource instanceof MUpdate)  
+                                {
+                                    mUpdate = new MUpdate();
+                                    refreshMainPanel(mUpdate);
+                                }
+                                else
+                                if (resource instanceof MUpdateHelp) 
+                                {
+                                    mUpdateHelp = new MUpdateHelp();
+                                    refreshMainPanel(mUpdateHelp);
+                                }
+                                else
+                                if (resource instanceof MUpdateType) 
+                                {
+                                    mUpdateType = new MUpdateType();
+                                    refreshMainPanel(mUpdateType);
+                                }
+                                else
+                                if (resource instanceof MValidationExpression)     
+                                {
+                                    mValidationExpression = new MValidationExpression();
+                                    refreshMainPanel(mValidationExpression);
+                                }
+                                else
+                                if (resource instanceof MValidationExternal)    
+                                {
+                                    mValidationExternal = new MValidationExternal();
+                                    refreshMainPanel(mValidationExternal);
+                                }
+                                else
+                                if (resource instanceof MValidationExternalType)      
+                                {
+                                    mValidationExternalType = new MValidationExternalType();
+                                    refreshMainPanel(mValidationExternalType);
+                                }
+                                else
+                                if (resource instanceof MValidationLookup)  
+                                {
+                                    mValidationLookup = new MValidationLookup();
+                                    refreshMainPanel(mValidationLookup);
+                                }
+                                else
+                                if (resource instanceof MValidationLookupType)
+                                {
+                                    mValidationLookupType = new MValidationLookupType();
+                                    refreshMainPanel(mValidationLookupType);
                                 }
                             }
                         }

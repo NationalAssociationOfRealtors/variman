@@ -1,3 +1,3 @@
-HTTPUnit version 1.5.4.
+HTTPUnit version 1.7
 
 http://httpunit.sourceforge.net/

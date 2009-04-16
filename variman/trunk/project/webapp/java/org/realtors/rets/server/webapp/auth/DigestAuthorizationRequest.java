@@ -114,7 +114,10 @@ public class DigestAuthorizationRequest
         if (!header.startsWith(PREFIX))
         {
             // HPMA sends a truncated header
-            if (WebApp.getHPMAMode()) return;
+            if (WebApp.getHPMAMode()) 
+            {
+                return;
+            }
             throw new IllegalArgumentException("Incorrect prefix <" + header +
                                                ">");
         }
@@ -159,7 +162,8 @@ public class DigestAuthorizationRequest
             else if (key.equals("nc"))
             {
                 // HPMA quotes NC
-                mNonceCount = WebApp.getHPMAMode() ? removeQuotes(value) : value;
+                mNonceCount = WebApp.getHPMAMode() ? 
+                                removeQuotes(value) : value;
             }
             else if (key.equals("cnonce"))
             {

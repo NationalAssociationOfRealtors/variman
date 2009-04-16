@@ -13,10 +13,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.SystemUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 public class JdomUtilsTest extends LinesEqualTestCase
@@ -34,11 +36,13 @@ public class JdomUtilsTest extends LinesEqualTestCase
         Element root = new Element("root");
         Document merged = JdomUtils.mergeDocuments(docs, root);
 
-        XMLOutputter outputter = new XMLOutputter();
-        outputter.setIndent("  ");
-        outputter.setNewlines(true);
-        outputter.setOmitDeclaration(true);
-        outputter.setLineSeparator(NL);
+        Format xmlFormat = Format.getRawFormat();
+        xmlFormat.setIndent("  ");
+//        xmlFormat.setNewlines(true);
+        xmlFormat.setOmitDeclaration(true);
+        xmlFormat.setLineSeparator(NL);
+        
+        XMLOutputter outputter = new XMLOutputter(xmlFormat);
         String mergedString = outputter.outputString(merged);
         assertLinesEqual(
             "<root>" + NL +

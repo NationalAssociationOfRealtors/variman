@@ -9,7 +9,7 @@
   <property file="${basedir}/build.properties" />
   <property file="${user.home}/.build.properties" />
   <property file="${basedir}/project/build.properties" />
-	
+
   <property name="rets-client.jar" value="${basedir}/build/rets-client/rets-client.jar" />
 
   <fileset id="hibernate.mapping.files" dir="project/hibernate/mappings">
@@ -32,6 +32,27 @@
     <pathelement path="${rets-client.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
     <pathelement path="${commons-collections.jar}"/>
+    <!-- Spring 3
+    <pathelement path="${spring.aop.jar}"/>
+    <pathelement path="${spring.aspects.jar}"/>
+    <pathelement path="${spring.beans.jar}"/>
+    <pathelement path="${spring.context.jar}"/>
+    <pathelement path="${spring.context.support.jar}"/>
+    <pathelement path="${spring.core.jar}"/>
+    <pathelement path="${spring.expression.jar}"/>
+    <pathelement path="${spring.instrument.jar}"/>
+    <pathelement path="${spring.instrument.classloading.jar}"/>
+    <pathelement path="${spring.integration.tests.jar}"/>
+    <pathelement path="${spring.jdbc.jar}"/>
+    <pathelement path="${spring.jms.jar}"/>
+    <pathelement path="${spring.orm.jar}"/>
+    <pathelement path="${spring.oxm.jar}"/>
+    <pathelement path="${spring.test.jar}"/>
+    <pathelement path="${spring.transaction.jar}"/>
+    <pathelement path="${spring.web.jar}"/>
+    <pathelement path="${spring.web.portlet.jar}"/>
+    <pathelement path="${spring.web.servlet.jar}"/>
+    -->
     <pathelement path="${spring.jar}"/>
   </path>
 
@@ -78,6 +99,8 @@
     <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
+    <pathelement path="${js.jar}"/>
+    <pathelement path="${nekohtml.jar}"/>
     <pathelement path="${antlr.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
   </path>
@@ -141,9 +164,9 @@
     <mkdir dir="build/admin/classes"/>
     <mkdir dir="build/admin/bin"/>
     <mkdir dir="build/admin/test/classes"/>
- 	<mkdir dir="build/rets-client/classes"/>
- 	<mkdir dir="build/rets-client/tests/classes"/>
-  	<mkdir dir="build/tests"/>
+    <mkdir dir="build/rets-client/classes"/>
+    <mkdir dir="build/rets-client/tests/classes"/>
+    <mkdir dir="build/tests"/>
     <mkdir dir="dist" />
   </target>
 
@@ -321,10 +344,10 @@
       <tag name="hibernate.map" scope="all" description="Hibernate Map"/>
       <tag name="hibernate.collection-index" scope="all"
            description="Hibernate Collection-Index"/>
-	  <tag name="hibernate.jcs-cache" scope="all"
-	       description="Hibernate JCD Cache"/>
-	  <tag name="hibernate.collection-jcs-cache" scope="all"
-	       description="Hibernate Collection JCD Cache"/>
+      <tag name="hibernate.jcs-cache" scope="all"
+          description="Hibernate JCD Cache"/>
+      <tag name="hibernate.collection-jcs-cache" scope="all"
+          description="Hibernate Collection JCD Cache"/>
       <tag name="web.servlet-mapping" scope="all"
            description="Servlet Mapping"/>
       <tag name="web.servlet" scope="all" description="Servlet"/>
@@ -446,76 +469,76 @@
   </target>
 
   <target name="build-rets-client" depends="prepare">
-	    <depend srcDir="project/rets-client/java"
-	            destDir="build/rets-client/classes"
-	            cache="build/rets-client/depcache" closure="yes">
-	      <classpath>
-	        <path refid="rets-client.path" />
-	      </classpath>
-	    </depend>
-	    <javac srcdir="project/rets-client/java"
-	           destdir="build/rets-client/classes"
-	           target="${compile.vmtarget}" source="${compile.vmsource}"
-	           optimize="${compile.optimize}"
-	           debug="${compile.debug}"
-	           deprecation="${compile.deprecation}">
-	      <classpath>
-	        <path refid="rets-client.path" />
-	      </classpath>
-	    </javac>
+      <depend srcDir="project/rets-client/java"
+              destDir="build/rets-client/classes"
+              cache="build/rets-client/depcache" closure="yes">
+          <classpath>
+              <path refid="rets-client.path" />
+          </classpath>
+      </depend>
+      <javac srcdir="project/rets-client/java"
+             destdir="build/rets-client/classes"
+             target="${compile.vmtarget}" source="${compile.vmsource}"
+             optimize="${compile.optimize}"
+             debug="${compile.debug}"
+             deprecation="${compile.deprecation}">
+          <classpath>
+            <path refid="rets-client.path" />
+          </classpath>
+      </javac>
 
-	    <copy todir="build/rets-server/server/conf">
-	      <fileset dir="project/rets-client/conf" includes="*"/>
-	    </copy>
+      <copy todir="build/rets-server/server/conf">
+          <fileset dir="project/rets-client/conf" includes="*"/>
+      </copy>
 
-	    <jar jarfile="${rets-client.jar}"
-	         basedir="build/rets-client/classes"/>
+      <jar jarfile="${rets-client.jar}"
+           basedir="build/rets-client/classes"/>
   </target>
-	
-	<target name="test-rets-client" depends="build-rets-client">
-		<depend srcDir="project/rets-client/junit"
-		        destDir="build/rets-client/tests/classes"
-		        cache="build/rets-client/tests/depcache" closure="yes">
-			<classpath>
-			    <pathelement path="${rets-client.jar}"/>
-		        <path refid="rets-client.path" />
-			</classpath>
-		</depend>
-		<javac srcdir="project/rets-client/junit"
-			destdir="build/rets-client/tests/classes"
-			target="${compile.vmtarget}" source="${compile.vmsource}"
-			optimize="${compile.optimize}"
-			debug="${compile.debug}"
-			deprecation="${compile.deprecation}">
-			<classpath>
-				<path refid="rets-client.path" />
-			    <pathelement path="${rets-client.jar}"/>
-			</classpath>
-		</javac>
-		<copy todir="build/rets-client/tests/classes">
-			<fileset dir="project/rets-client/junit" 
-				includes="**/*"
-				excludes="**/*.java"
-			/>
-		</copy>
-		
-		<junit printsummary="yes" haltonfailure="yes">
-			<classpath>
-				<pathelement location="build/rets-client/tests/classes"/>
-				<pathelement location="build/rets-client/classes"/>
-				<path refid="rets-client.path"/>
-				<pathelement path="${java.class.path}"/>
-			</classpath>
-			<formatter type="brief"/>
-			
-			<test name="org.realtors.rets.common.metadata.AllTests"
-				outfile="build/tests/metadata"
-			/>
-			<test name="org.realtors.rets.client.AllTests"
-				outfile="build/tests/results"
-			/>
-		</junit>
-	</target>	
+      
+  <target name="test-rets-client" depends="build-rets-client">
+      <depend srcDir="project/rets-client/junit"
+              destDir="build/rets-client/tests/classes"
+              cache="build/rets-client/tests/depcache" closure="yes">
+              <classpath>
+                  <pathelement path="${rets-client.jar}"/>
+              <path refid="rets-client.path" />
+              </classpath>
+      </depend>
+      <javac srcdir="project/rets-client/junit"
+              destdir="build/rets-client/tests/classes"
+              target="${compile.vmtarget}" source="${compile.vmsource}"
+              optimize="${compile.optimize}"
+              debug="${compile.debug}"
+              deprecation="${compile.deprecation}">
+              <classpath>
+                  <path refid="rets-client.path" />
+                  <pathelement path="${rets-client.jar}"/>
+              </classpath>
+      </javac>
+      <copy todir="build/rets-client/tests/classes">
+              <fileset dir="project/rets-client/junit" 
+                      includes="**/*"
+                      excludes="**/*.java"
+              />
+      </copy>
+      
+      <junit printsummary="yes" haltonfailure="yes">
+              <classpath>
+                    <pathelement location="build/rets-client/tests/classes"/>
+                    <pathelement location="build/rets-client/classes"/>
+                    <path refid="rets-client.path"/>
+                    <pathelement path="${java.class.path}"/>
+              </classpath>
+              <formatter type="brief"/>
+              
+              <test name="org.realtors.rets.common.metadata.AllTests"
+                      outfile="build/tests/metadata"
+              />
+              <test name="org.realtors.rets.client.AllTests"
+                      outfile="build/tests/results"
+              />
+      </junit>
+</target>
 <!--
     <classpath>
       <pathelement path="${java.class.path}"/>
@@ -549,7 +572,7 @@
 </target>
 -->
 
-	<target name="build-webapp-webdoclet">
+  <target name="build-webapp-webdoclet">
     <taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask">
       <classpath>
         <path refid="xdoclet.path"/>
@@ -653,6 +676,47 @@
           file="${commons-codec.jar}"/>
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${commons-collections.jar}"/>
+
+    <!-- Spring 3
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.aop.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.aspects.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.beans.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.context.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.context.support.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.core.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.expression.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.instrument.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.instrument.classloading.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.integration.tests.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.jdbc.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.jms.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.orm.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.oxm.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.test.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.transaction.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.web.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.web.portlet.jar}"/>
+    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+          file="${spring.web.servlet.jar}"/>
+    -->
     <copy todir="build/rets-server/webapp/WEB-INF/lib"
           file="${spring.jar}"/>
 
@@ -853,6 +917,7 @@
         <pathelement path="${servlet.jar}"/>
         <pathelement path="${log4j.jar}"/>
         <pathelement path="${commons-lang.jar}"/>
+        <pathelement path="${antlr.runtime.jar}"/>
         <pathelement location="build/hibernate/classes"/>
         <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
         <pathelement location="build/admin/classes"/>

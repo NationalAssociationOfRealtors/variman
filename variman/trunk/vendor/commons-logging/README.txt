@@ -1,3 +1,3 @@
-Jakarta Commons Logging version 1.0.3
+Jakarta Commons Logging version 1.1.1
 
-http://jakarta.apache.org/commons/logging/
+http://commons.apache.org/logging/

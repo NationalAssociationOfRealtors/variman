@@ -1,9 +1,9 @@
-This is Version 2.3
+This is version 3.2.1
 
-Jakarta Commons Collections
+Apache Commons Collections
 ===========================
 
-Welcome to the Collections component of the Jakarta Commons project.
+Welcome to the Collections component of the Apache Commons project.
 This component contains many new collections and collection utilities.
 
 Two jar files are produced by this component.
@@ -51,3 +51,4 @@ It can be found here :
   http://maven.apache.org/
 
 Once installed, the jars may be built with 'maven jar'.
+

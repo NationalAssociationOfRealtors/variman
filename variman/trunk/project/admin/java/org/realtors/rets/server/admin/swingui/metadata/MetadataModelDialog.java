@@ -293,13 +293,10 @@ public class MetadataModelDialog extends MetadataDialog
                 AttrType<?> attrType    = MetaObject.getAttributeFromName(value);
                 boolean required = (index == 1 ? true : false);
                 
-                // FIXME: Code for other classes.
-                if (mMetaObject instanceof MClass)
-                    MClass.updateAttribute( key, attrType, required);
-                   
-                setResponse(JOptionPane.OK_OPTION);
-                setVisible(false);
-            }
+                MetaObject.updateClassAttribute(mMetaObject,  key, attrType, required);
+            }   
+            setResponse(JOptionPane.OK_OPTION);
+            setVisible(false);
         }
     }
 

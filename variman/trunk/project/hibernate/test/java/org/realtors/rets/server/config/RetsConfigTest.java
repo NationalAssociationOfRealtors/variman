@@ -102,7 +102,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    <host>localhost</host>" + NL +
             "    <name>rets_test</name>" + NL +
             "    <username>dave</username>" + NL +
-            "    <password></password>" + NL +
+            "    <password />" + NL +
             "    <max-active>100</max-active>" + NL +
             "    <max-idle>10</max-idle>" + NL +
             "    <max-wait>120000</max-wait>" + NL +

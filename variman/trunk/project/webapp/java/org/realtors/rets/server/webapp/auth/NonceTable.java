@@ -109,7 +109,8 @@ public class NonceTable
 
         long currentCount = Long.parseLong(nonceCount, 16);
         // HPMA does not advance NC!
-        if (!(currentCount > entry.getCurrentNonceCount() || WebApp.getHPMAMode()))
+        if (!(currentCount > entry.getCurrentNonceCount() || 
+                WebApp.getHPMAMode()))
         {
             LOG.warn("nonce count failed assertion: " + currentCount + " > " +
                      entry.getCurrentNonceCount());

@@ -35,11 +35,11 @@ public class RetsServletRequest extends HttpServletRequestWrapper
             }
             else if (mRetsVersionHeader.equals("RETS/1.7"))
             {
-            	mVersion = RetsVersion.RETS_1_7;
+                mVersion = RetsVersion.RETS_1_7;
             }
             else if (mRetsVersionHeader.equals("RETS/1.7.2"))
             {
-            	mVersion = RetsVersion.RETS_1_7_2;
+                mVersion = RetsVersion.RETS_1_7_2;
             }
         }
         mRetsRequestID = request.getHeader("RETS-Request-ID");
@@ -72,7 +72,7 @@ public class RetsServletRequest extends HttpServletRequestWrapper
      */
     public String getRetsRequestID()
     {
-    	return mRetsRequestID;
+        return mRetsRequestID;
     }
  
     
