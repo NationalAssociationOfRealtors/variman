@@ -21,12 +21,22 @@ import junit.framework.TestCase;
 
 public class IOUtilsTest extends TestCase
 {
+    /*
+     * SystemUtils.IS_OS_UNIX doesn't detect the
+     * BSD variants as Unix.
+     */
+    public static final boolean IS_BSD;
+    static
+    {
+        IS_BSD = StringUtils.contains(System.getProperty("os.name"), "BSD");
+    }
+
     public static final String SEP = File.separator;
     public static final String ROOT_PREFIX;
 
     static
     {
-        if (SystemUtils.IS_OS_UNIX)
+        if (SystemUtils.IS_OS_UNIX || IS_BSD)
             ROOT_PREFIX = "/";
         else if (SystemUtils.IS_OS_WINDOWS)
             ROOT_PREFIX = "C:\\";

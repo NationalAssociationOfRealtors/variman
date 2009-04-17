@@ -66,11 +66,8 @@ public class StandardTableFormatter extends BaseStandardFormatter
         	String editMasks = "";
             if (table.getEditMasks() != null)
             {
-                List strings = new ArrayList(table.getEditMasks().size());
+                List strings = FormatUtil.toSortedStringList(table.getEditMasks());
 
-                for (Iterator iterator = table.getEditMasks().iterator(); iterator.hasNext();)
-                	strings.add(((EditMask)iterator.next()).getEditMaskID());
-                
             	editMasks = StringUtils.join(strings.iterator(), ",");
             }
             TagBuilder.simpleTag(out, "EditMaskID", editMasks);
