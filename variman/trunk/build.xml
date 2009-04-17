@@ -128,7 +128,6 @@
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${apple-java-ext.jar}"/> 
- <!--   <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/> -->
   </path>
 
   <path id="xdoclet.path">
@@ -136,7 +135,29 @@
     <fileset dir="${xdoclet.lib}" includes="*.jar"/>
   </path>
 
-  <target name="prepare">
+  <target name="test-jvm-version" description="Determine the JVM version">
+    <condition property="isJDK1.5">
+      <and>
+        <equals arg1="${ant.java.version}" arg2="1.5"/>
+      </and>
+    </condition>
+  </target>
+
+  <target name="setup-java-sql1.5" if="isJDK1.5">
+    <copy overwrite="yes"
+          file="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java1.5"
+        tofile="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java"
+    />
+  </target>
+
+  <target name="setup-java-sql1.6" unless="isJDK1.5">
+    <copy overwrite="yes"
+          file="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java1.6"
+        tofile="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java"
+    />
+  </target>
+
+  <target name="prepare" depends="test-jvm-version,setup-java-sql1.5,setup-java-sql1.6">
     <mkdir dir="build/hibernate/final/classes"/>
     <mkdir dir="build/hibernate/generated"/>
     <mkdir dir="build/hibernate/generated/org/realtors/rets/server/dmql"/>
@@ -306,7 +327,7 @@
              use="true"
              windowtitle="Retzilla API"
              private="${javadoc.private}"
-             doctitle="Retzilla API">
+             doctitle="Variman API">
       <link offline="true"
             href="http://java.sun.com/j2se/1.3/docs/api/"
             packageListLoc="${javadoc.1.3.local}"/>

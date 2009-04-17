@@ -1,4 +1,8 @@
-Version 3.0.0b2 - xx Apr 2009
+Version 3.0.0b3 - xx xxx 2009
+
+  * Update NullResultSet for JDBC 4.0. Ticket #34.
+
+Version 3.0.0b2 - 13 Apr 2009
 
   * Make Variman more tolerant of out of spec 1.5 metadata.
   * Add Metadata Migration tool. Ticket #33.
