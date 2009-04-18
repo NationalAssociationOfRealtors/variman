@@ -9,9 +9,12 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
 
 import javax.swing.AbstractAction;
@@ -31,6 +34,8 @@ import javax.swing.text.Document;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
+import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.Admin;
@@ -50,6 +55,7 @@ public class ConfigurationPanel extends AdminTab
 
         content.add(new HeaderPanel("RETS"));
         ConfigChangeListener changeListener = new ConfigChangeListener();
+        FocusListener focusListener = new DirectoryChangedListener();
 
         TextValuePanel retsConfig = new TextValuePanel();
 
@@ -80,6 +86,7 @@ public class ConfigurationPanel extends AdminTab
         mMetadataDir = new JTextField(IOUtils.resolve(webappRoot,
                                               config.getMetadataDir()));
         mMetadataDir.getDocument().addDocumentListener(changeListener);
+        mMetadataDir.addFocusListener(focusListener);
         box.add(mMetadataDir, c);
         c.weightx = 0.0;
         box.add(Box.createHorizontalStrut(5));
@@ -91,6 +98,7 @@ public class ConfigurationPanel extends AdminTab
         c.weightx = 1.0;
         mImageRootDir = new JTextField(config.getGetObjectRoot());
         mImageRootDir.getDocument().addDocumentListener(changeListener);
+        mImageRootDir.addFocusListener(focusListener);
         box.add(mImageRootDir, c);
         c.weightx = 0.0;
         box.add(Box.createHorizontalStrut(5));
@@ -214,7 +222,63 @@ public class ConfigurationPanel extends AdminTab
         }
     }
 
-     private class ChooseImageRootAction extends AbstractAction
+    private class DirectoryChangedListener implements FocusListener
+    {
+       	public void focusGained()
+    	{
+    	}
+    	
+    	public void focusLost()
+    	{
+    	}
+    	
+    	public void focusGained(FocusEvent e)
+    	{
+    	}
+    	
+    	public void focusLost(FocusEvent e)
+    	{
+    		/*
+    		 * See if the other component involved in the focus change is one
+    		 * of the JButtons that invoke the JFileChooser. If so, we do
+    		 * not want to process the directory name right now.
+    		 */
+    		if (e.getOppositeComponent() instanceof JButton)
+    			return;
+    		
+    		JTextField textField = (JTextField)e.getSource();
+    		String text = textField.getText();
+    		if (text != null && text.length() > 0)
+    		{
+    			File file = new File(text);
+    			if (!file.exists())
+    			{
+					int answer = (int) JOptionPane.showConfirmDialog(
+				                            SwingUtils.getAdminFrame(),
+				                            "Create the Directory?",
+				                            "Directory Doesn't Exist",
+				                            JOptionPane.OK_CANCEL_OPTION,
+				                            JOptionPane.QUESTION_MESSAGE);
+					if (answer == JOptionPane.OK_OPTION)
+					{
+						try
+						{
+							textField.setText(file.getCanonicalPath());
+							file.mkdirs();
+						}
+						catch (Exception f)
+						{
+                            JOptionPane.showMessageDialog(
+                                    SwingUtils.getAdminFrame(),
+                                    "Unable to create " + text + "\n" + f.getMessage());
+						}
+					}
+    			}
+    		}
+    	}
+    }
+    
+    private class ChooseImageRootAction extends AbstractAction
     {
         public ChooseImageRootAction()
         {
@@ -373,7 +437,6 @@ public class ConfigurationPanel extends AdminTab
         private JComboBox mAddressMenu;
         private JTextField mListeningAddress;
     }
-
 
     private AddressPanel mAddressPanel;
     private JTextField mPort;
