@@ -102,9 +102,9 @@ public class MetadataClassDialog extends MetadataDialog
         
         for (String attribute : mClass.getAttributeNames())
         {
-            AttrType<?>    attrType     = mClass.getAttributeType(attribute);
+            AttrType<?>   attrType     	= mClass.getAttributeType(attribute);
             JComponent    component;
-               JLabel        label         = new JLabel(attribute + ":", JLabel.TRAILING);
+            JLabel        label         = new JLabel(attribute + ":", JLabel.TRAILING);
             String        value         = mClass.getAttributeAsString(attribute);
             
             if (value == null)
@@ -130,7 +130,7 @@ public class MetadataClassDialog extends MetadataDialog
                  * This will be one of the date versions. If the value is empty, populate
                  * it from the System version date.
                  */
-                      component = new JTextField(TEXT_WIDTH);
+                component = new JTextField(TEXT_WIDTH);
                 if (value == null || value.length() == 0)
                 {
                     value = metadata.getSystem().getAttributeAsString(MSystem.DATE);
@@ -159,13 +159,13 @@ public class MetadataClassDialog extends MetadataDialog
                  * This will be one of the versions. If the value is empty, populate
                  * it from the System version.
                  */
-                   component = new JTextField(TEXT_WIDTH);
+            	component = new JTextField(TEXT_WIDTH);
 
                 if (value == null || value.length() == 0)
                 {
                     value = metadata.getSystem().getAttributeAsString(MSystem.VERSION);
                 }
-                   ((JTextField)component).setText(value);
+                ((JTextField)component).setText(value);
             }
             else
             {
@@ -254,7 +254,7 @@ public class MetadataClassDialog extends MetadataDialog
                     }
                 }
                 
-                   if ((value == null || value.length() < 1) && 
+                if ((value == null || value.length() < 1) && 
                         mClass.isAttributeRequired(attribute))
                 {
                     mComponents.get(row).setBackground(Color.pink);

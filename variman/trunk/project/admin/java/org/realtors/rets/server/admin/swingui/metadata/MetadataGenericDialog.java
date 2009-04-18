@@ -53,7 +53,9 @@ import org.realtors.rets.common.metadata.Metadata;
 import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.common.metadata.JDomCompactBuilder;
 import org.realtors.rets.common.metadata.attrib.AttrBoolean;
+import org.realtors.rets.common.metadata.attrib.AttrDate;
 import org.realtors.rets.common.metadata.attrib.AttrEnum;
+import org.realtors.rets.common.metadata.attrib.AttrVersion;
 import org.realtors.rets.common.metadata.types.MClass;
 import org.realtors.rets.common.metadata.types.MEditMask;
 import org.realtors.rets.common.metadata.types.MForeignKey;
@@ -99,9 +101,9 @@ public class MetadataGenericDialog extends MetadataDialog
         
         for (String attribute : mMetaObject.getAttributeNames())
         {
-            AttrType<?>    attrType     = mMetaObject.getAttributeType(attribute);
+        	AttrType<?>	  attrType		= mMetaObject.getAttributeType(attribute);
             JComponent    component;
-               JLabel        label         = new JLabel(attribute + ":", JLabel.TRAILING);
+            JLabel        label         = new JLabel(attribute + ":", JLabel.TRAILING);
             String        value         = mMetaObject.getAttributeAsString(attribute);
             
             if (value == null)
@@ -134,6 +136,35 @@ public class MetadataGenericDialog extends MetadataDialog
                     component = new JComboBox();
                     ((JComboBox)component).setEnabled(false);
                 }
+            }
+            else
+            if (attrType instanceof AttrDate)
+            {
+                /*
+                 * This will be one of the date versions. If the value is empty, populate
+                 * it from the System version date.
+                 */
+                component = new JTextField(TEXT_WIDTH);
+                if (value == null || value.length() == 0)
+                {
+                    value = metadata.getSystem().getAttributeAsString(MSystem.DATE);
+                }
+                ((JTextField)component).setText(value);
+            }
+            else
+            if (attrType instanceof AttrVersion)
+            {
+                /*
+                 * This will be one of the versions. If the value is empty, populate
+                 * it from the System version.
+                 */
+            	component = new JTextField(TEXT_WIDTH);
+
+                if (value == null || value.length() == 0)
+                {
+                    value = metadata.getSystem().getAttributeAsString(MSystem.VERSION);
+                }
+                ((JTextField)component).setText(value);
             }
             else
             {

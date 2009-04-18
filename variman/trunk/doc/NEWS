@@ -1,6 +1,8 @@
 Version 3.0.0b3 - xx xxx 2009
 
+  * Refresh third party support libraries. Ticket #29.
   * Update NullResultSet for JDBC 4.0. Ticket #34.
+  * Admin tool fails to delete Lookups. Ticket #37.
 
 Version 3.0.0b2 - 13 Apr 2009
 
