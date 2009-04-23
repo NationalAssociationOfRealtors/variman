@@ -531,7 +531,7 @@ public class MetadataPanel extends AdminTab
             /*
              * The root node is "System". If we have metadata, use it.
              */
-               rootNode = new MetadataTreeNode(mMetadata.getSystem());
+            rootNode = new MetadataTreeNode(mMetadata.getSystem());
 
             treeModel = new DefaultTreeModel(rootNode);
             
@@ -564,803 +564,8 @@ public class MetadataPanel extends AdminTab
             /*
              * Add the tree selection listener. The listener is responsible for setting up the 
              * action buttons based on the current state (e.g. node selected).
-             *    
-             * The general states for the "ADD" button are:
-             * 
-             * Node Selected            Action
-             * -------------            -------------------------
-             * "System"                    Add not allowed.
-             * "ForeignKey"                Add foreign key.
-             * "Resource"                Add MResource.
-             * "Lookups"                Add MLookup.
-             * "Object"                    Add MObject.
-             * "EditMask"                Add MEditMask.
-             * "SearchHelp"                Add MSearchHelp.
-             * "UpdateHelp"                Add MUpdateHelp.
-             * "ValidationLookup"        Add MValidationLookup.
-             * "ValidationExternal"        Add MValidationExternal.
-             * "ValidationExpression"    Add MValidationExpression.
-             * MResource                Add MClass, MLookup, MObject, MEditMask
-             *                                 MSearchHelp, MUpdateHelp, MValidationLookup,
-             *                                 MValidationExternal or MValidationExpression.
-             * MClass                    Add MTable or MUpdate.
-             * MTable                    Add not allowed.
-             * MUpdate                    Add MUpdateType.
-             * MLookup                    Add MLookupType.
-             * MLookupType                Add not allowed.
-             * MObject                    Add not allowed.
-             * MEditMask                Add not allowed.
-             * MSearchHelp                Add not allowed.
-             * MUpdateHelp                Add not allowed.
-             * MValidationLookup        Add MValidationLookupType.
-             * MValidationLookupType    Add not allowed.
-             * MValidationExternal        Add MValidationExternalType
-             * MValidationExternalType    Add not allowed.
-             * MValidationExpression    Add not allowed.
              */
-            tree.addTreeSelectionListener(new TreeSelectionListener() 
-            {
-                public void valueChanged(TreeSelectionEvent e)
-                {
-                    final MetadataTreeNode selectedNode = (MetadataTreeNode)tree.getLastSelectedPathComponent();
-
-                    mAddButton.setEnabled(false);
-                    mEditButton.setEnabled(false);
-                    mDeleteButton.setEnabled(false);
-
-                    if (selectedNode == null)
-                        return;
-                    
-                    final Object userObject = selectedNode.getUserObject();
-                    if (userObject instanceof MetaObject)
-                    {
- 
-                        mAddButton.setEnabled(false);
-                        mAddButton.removeActionListener(mAddButtonListener);
-                        mAddButtonListener = new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent e)
-                            {
-                                MetadataTreeNode node = selectedNode;
-                                MetadataType metadataType = null;
-                                MetaObject resource = null;
-                                
-                                /*
-                                 * userObject is the parent object that was selected.
-                                 */
-                                if (userObject instanceof MResource)                                
-                                {
-                                    /*
-                                     * We can only add METADATA-CLASS, METADATA-LOOKUP, METADATA-OBJECT,
-                                     * METADATA-EDITMASK, METADATA-SEARCH_HELP, METADATA-UPDATE_HELP,
-                                     * METADATA_VALIDATION_LOOKUP, METADATA_VALIDATION_EXTERNAL and
-                                     * METADATA-VALIDATION_EXPRESSION to METADATA-RESOURCE nodes.
-                                     */
-                                    Object[] ddl = {"Class",
-                                                    "Lookup",
-                                                    "Object",
-                                                    "EditMask",
-                                                    "SearchHelp",
-                                                    "UpdateHelp",
-                                                    "ValidationLookup",
-                                                    "ValidationExternal",
-                                                    "ValidationExpression"};
-                                    
-                                    String answer = (String) JOptionPane.showInputDialog(
-                                                                    SwingUtils.getAdminFrame(),
-                                                                    "Add Which?",
-                                                                    "Add to Resource",
-                                                                    JOptionPane.QUESTION_MESSAGE,
-                                                                    null,
-                                                                    ddl,
-                                                                    "Class");
-                                    if (answer == null)
-                                        return;
-                                    
-                                    if (answer.equals("Class"))
-                                    {
-                                        metadataType = MetadataType.CLASS;
-                                        resource = new MClass();
-                                    }
-                                    else                                   
-                                    if (answer.equals("Lookup"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "Lookups" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals(sLOOKUP))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */                                                                                              
-                                               node = addObject(selectedNode, sLOOKUP);
-                                           }
-                                        metadataType = MetadataType.LOOKUP;
-                                        resource = new MLookup();
-                                    }
-                                    else                                   
-                                    if (answer.equals("Object"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "Object" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals(sOBJECT))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */                                               
-                                               node = addObject(selectedNode, sOBJECT);
-                                           }
-                                        metadataType = MetadataType.OBJECT;
-                                        resource = new MObject();
-                                    }
-                                    else                                   
-                                    if (answer.equals("EditMask"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "EditMask" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals(sEDITMASK))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */
-                                               node = addObject(selectedNode, sEDITMASK);
-                                           }
-
-                                        metadataType = MetadataType.EDITMASK;
-                                        resource = new MEditMask();
-                                    }
-                                    else                                   
-                                    if (answer.equals("SearchHelp"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "SearchHelp" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals("sSEARCHHELP"))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */
-                                               node = addObject(selectedNode, sSEARCHHELP);
-                                           }
-
-                                        metadataType = MetadataType.SEARCH_HELP;
-                                        resource = new MSearchHelp();
-                                    }
-                                    else                                   
-                                    if (answer.equals("UpdatehHelp"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "UpdateHelp" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals(sUPDATEHELP))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */
-                                               node = addObject(selectedNode, sUPDATEHELP);
-                                           }
-
-                                        metadataType = MetadataType.UPDATE_HELP;
-                                        resource = new MUpdateHelp();
-                                    }
-                                    else                                   
-                                    if (answer.equals("ValidationLookup"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "ValidationLookup" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals(sVALIDATIONLOOKUP))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */
-                                               node = addObject(selectedNode, sVALIDATIONLOOKUP);
-                                           }
-
-                                        metadataType = MetadataType.VALIDATION_LOOKUP;
-                                        resource = new MValidationLookup();
-                                    }
-                                    else                                   
-                                    if (answer.equals("ValidationExternal"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "ValidationExternal" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals(sVALIDATIONEXTERNAL))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */
-                                               node = addObject(selectedNode, sVALIDATIONEXTERNAL);
-                                           }
-
-                                        metadataType = MetadataType.VALIDATION_EXTERNAL;
-                                        resource = new MValidationExternal();
-                                    }
-                                    else                                   
-                                    if (answer.equals("ValidationExpression"))
-                                    {
-                                           boolean found = false;
-                                           /*
-                                            * Determine if the "ValidationExpression" node is already in the tree. If so, switch
-                                            * to it. Otherwise, add it.
-                                            */
-                                           for (int i = 0; i < selectedNode.getChildCount(); i++)
-                                           {
-                                               MetadataTreeNode treeNode = (MetadataTreeNode)selectedNode.getChildAt(i);
-                                               Object userObject = treeNode.getUserObject();
-                                               if (userObject instanceof String && userObject.toString().equals(sVALIDATIONEXPRESSION))
-                                               {
-                                                   found = true;
-                                                   node = treeNode;
-                                                   break;
-                                               }
-                                           }
-                                           if (!found)
-                                           {
-                                               /*
-                                                * Never used before, so add the heading node and make it the current node.
-                                                */
-                                               node = addObject(selectedNode, new String (sVALIDATIONEXPRESSION));
-                                           }
-
-                                        metadataType = MetadataType.VALIDATION_EXPRESSION;
-                                        resource = new MValidationExpression();
-                                    }
-                                }
-                                else
-                                if (userObject instanceof MClass)
-                                {
-                                    /*
-                                     * We can only add Table and Update metadata to METADATA-CLASS.
-                                     */
-                                    Object[] ddl = {"Table",
-                                                    "Update"};
-                                    
-                                    String answer = (String) JOptionPane.showInputDialog(
-                                                                    SwingUtils.getAdminFrame(),
-                                                                    "Add Which?",
-                                                                    "Add to Class",
-                                                                    JOptionPane.QUESTION_MESSAGE,
-                                                                    null,
-                                                                    ddl,
-                                                                    "Table");
-                                    if (answer == null)
-                                        return;
-                                    
-                                    if (answer.equals("Table"))
-                                    {
-                                        metadataType = MetadataType.TABLE;
-                                        resource = new MTable();
-                                    }
-                                    else
-                                       if (answer.equals("Update"))
-                                    {
-                                        metadataType = MetadataType.UPDATE;
-                                        resource = new MUpdate();
-                                    }
-                                }
-                                else
-                                if (userObject instanceof MLookup)                                
-                                {
-                                    metadataType = MetadataType.LOOKUP_TYPE;
-                                    resource = new MLookupType();
-                                }
-                                else
-                                if (userObject instanceof MUpdate)                                
-                                {
-                                    metadataType = MetadataType.UPDATE_TYPE;
-                                    resource = new MUpdateType();
-                                }
-                                else
-                                if (userObject instanceof MValidationExternal)                                
-                                {
-                                    metadataType = MetadataType.VALIDATION_EXTERNAL_TYPE;
-                                    resource = new MValidationExternalType();
-                                }
-                                else
-                                if (userObject instanceof MValidationLookup)                                
-                                {
-                                    metadataType = MetadataType.VALIDATION_LOOKUP_TYPE;
-                                    resource = new MValidationLookupType();
-                                }
-                                else
-                                {
-                                    LOG.warn("*** Unexpected User Object selected: " + userObject);
-                                    resource = null;
-                                }
-                                  /*
-                                 * Instantiate the default or custom dialog, depending on the type of
-                                 * the metadata.
-                                 */                              
-                                MetadataDialog dialog = new MetadataGenericDialog(mStrictParsing, mMetadata, resource);
-                                   
-                                if (resource instanceof MTable)
-                                {
-                                    /*
-                                     * UserObject had better be an MClass, but check anyway.
-                                     */
-                                    if (userObject instanceof MClass)
-                                    {
-                                        /*
-                                         * Get the parent Resource and invoke the custom dialog.
-                                         */
-                                        DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent();
-                                        Object parentObject = parentNode.getUserObject();
-                                        dialog = new MetadataTableDialog(mStrictParsing,
-                                                                        mMetadata, 
-                                                                        (MResource)parentObject, 
-                                                                        (MTable)resource);
-                                    }
-                                    else
-                                        LOG.debug("*** userObject is not MClass when dealing with a table!!!");
-                                }
-                                else
-                                if (resource instanceof MClass)
-                                {
-                                    /*
-                                     * Invoke the custom dialog.
-                                     */
-                                    dialog = new MetadataClassDialog(mStrictParsing,
-                                                                    mMetadata, 
-                                                                    (MClass)resource);
-                                }
-                                
-                                dialog.setVisible(true);
-                                if (dialog.getResponse() == JOptionPane.OK_OPTION)
-                                {
-                                    if (((MetaObject)userObject).getChild(metadataType, resource.getId()) == null)
-                                    {
-                                        /*
-                                         * Add the object to the tree and to the metadata. 
-                                         */
-                                        MetadataTreeNode newNode = addObject(node, resource);
-                                        ((MetaObject)userObject).addChild(metadataType, resource);
-    
-                                        Admin.setRetsConfigChanged(true);
-                                        refreshMainPanel(userObject);
-                                        debugPrint(); // $$DEBUG
-                                    }
-                                    else
-                                    {
-                                           JOptionPane.showMessageDialog(
-                                                SwingUtils.getAdminFrame(),
-                                                ((MetaObject)resource).getId() + " already exists!");
-                                    }
-                                }
-                            }
-                        };
-                        mAddButton.addActionListener(mAddButtonListener);
-                        
-                        mEditButton.removeActionListener(mEditButtonListener);
-                        mEditButtonListener = new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent e)
-                            {
-                                /*
-                                 * Instantiate the default or custom dialog, depending on the type of
-                                 * the metadata.
-                                 */
-                                MetadataDialog dialog = new MetadataGenericDialog(mStrictParsing, mMetadata, userObject);
-                                
-                                if (userObject instanceof MTable)
-                                {
-                                    /*
-                                     * Get the parent Resource and invoke the custom dialog.
-                                     */
-                                    DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent().getParent();
-                                    Object parentObject = parentNode.getUserObject();
-                                    if (parentObject instanceof MResource)
-                                        dialog = new MetadataTableDialog(mStrictParsing,
-                                                                        mMetadata, 
-                                                                        (MResource) parentObject,
-                                                                        (MTable) userObject);
-                                    else 
-                                        LOG.warn("*** Can't locate parent Resource for " + userObject);
-                                }
-                                else
-                                   if (userObject instanceof MResource)
-                                {
-                                    /*
-                                     * Invoke the custom dialog.
-                                     */
-                                       dialog = new MetadataResourceDialog(mStrictParsing,
-                                                                        mMetadata, 
-                                                                        (MResource) userObject);
-                                }
-                                   else
-                                   if (userObject instanceof MClass)
-                                {
-                                    /*
-                                     * Invoke the custom dialog.
-                                     */
-                                       dialog = new MetadataClassDialog(mStrictParsing,
-                                                                        mMetadata, 
-                                                                        (MClass) userObject);
-                                }
-                                   
-                                dialog.setVisible(true);
-                                if (dialog.getResponse() == JOptionPane.OK_OPTION)
-                                {
-                                    Admin.setRetsConfigChanged(true);
-                                    refreshMainPanel(userObject);
-                                    debugPrint(); // $$DEBUG
-                                }
-                            }
-                        };
-                        
-                        mEditButton.addActionListener(mEditButtonListener);
-
-                        mEditButton.setEnabled(true);
-                        
-                        mDeleteButton.removeActionListener(mDeleteButtonListener);
-                        mDeleteButtonListener = new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent e)
-                            {
-                                if (userObject instanceof MetaObject)
-                                {
-									int answer = (int) JOptionPane.showConfirmDialog(
-									                            SwingUtils.getAdminFrame(),
-									                            "Are you sure?",
-									                            "Delete Confirmation",
-									                            JOptionPane.OK_CANCEL_OPTION,
-									                            JOptionPane.QUESTION_MESSAGE);
-									if (answer == JOptionPane.OK_OPTION)
-									{
-                                       /*
-                                        * Locate the parent node.
-                                        */
-                                       DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent();
-                                       Object parentObject = null;
-                                       
-										if (parentNode != null)
-											parentObject = parentNode.getUserObject();
-										if (parentObject instanceof MetaObject)
-										{
-										    /*
-										     * The parent object is some form of Metadata, so we're good to go.
-										     */
-										    Admin.setRetsConfigChanged(true);
-										    /*
-											 * Remove the object from the parent.
-											 */
-											((MetaObject)parentObject).deleteChild(
-											                               ((MetaObject)userObject).getMetadataType(), 
-											                               (MetaObject)userObject);                                               
-											removeCurrentNode();
-											/*
-											 * And set the parent as selected.
-											 */
-											tree.setSelectionPath(new TreePath(parentNode.getPath()));                                               
-											
-											refreshMainPanel(parentObject);
-											debugPrint(); // $$DEBUG
-										}
-										else
-                                        if (parentObject != null)
-                                        {
-                                            /*
-                                             * FOREIGNKEY, RESOURCE, LOOKUP, OBJECT, EDITMASK, SEARCHHELP, UPDATEHELP,
-                                             * VALIDATIONLOOKUP, VALIDATIONEXTERNAL and VALIDATIONEXPRESSION
-                                             * is the parent. These are simple string nodes that need special handling.
-                                             */
-                                            if (parentObject.equals(sRESOURCE))
-                                                mSystem.deleteChild(MetadataType.RESOURCE, (MetaObject) userObject);
-                                            else
-                                            if (parentObject.equals(sFOREIGNKEY))
-                                                mSystem.deleteChild(MetadataType.FOREIGNKEYS, (MetaObject) userObject);
-                                            else
-                                            {
-                                                DefaultMutableTreeNode parentsParentNode = (DefaultMutableTreeNode) parentNode.getParent();
-
-                                                MetaObject resource = null;
-                                                
-                                                if (parentsParentNode != null)
-                                                	resource = (MetaObject) parentsParentNode.getUserObject();
-                                            	if (resource != null)
-                                            	{
-		                                        	if (parentObject.equals(sLOOKUP))
-		                                                resource.deleteChild(MetadataType.LOOKUP, (MetaObject) userObject);
-		                                        	else
-		                                            if (parentObject.equals(sOBJECT))
-		                                                resource.deleteChild(MetadataType.OBJECT, (MetaObject) userObject);
-		                                            else
-		                                            if (parentObject.equals(sEDITMASK))
-		                                                resource.deleteChild(MetadataType.EDITMASK, (MetaObject) userObject);
-		                                            else
-		                                        	if (parentObject.equals(sSEARCHHELP))
-		                                                resource.deleteChild(MetadataType.SEARCH_HELP, (MetaObject) userObject);
-		                                            else
-		                                            if (parentObject.equals(sUPDATEHELP))
-		                                                resource.deleteChild(MetadataType.UPDATE_HELP, (MetaObject) userObject);
-		                                            else
-		                                        	if (parentObject.equals(sVALIDATIONLOOKUP))
-		                                                resource.deleteChild(MetadataType.VALIDATION_LOOKUP, (MetaObject) userObject);
-		                                        	else
-		                                            if (parentObject.equals(sVALIDATIONEXTERNAL))
-		                                                resource.deleteChild(MetadataType.VALIDATION_EXTERNAL, (MetaObject) userObject);
-		                                            else
-		                                            if (parentObject.equals(sVALIDATIONEXPRESSION))
-		                                                resource.deleteChild(MetadataType.VALIDATION_EXPRESSION, (MetaObject) userObject);
-                                            	}
-                                            }
-                                            
-                                            Admin.setRetsConfigChanged(true);
-                                            removeCurrentNode();
-                                            /*
-                                             * And set the parent as selected.
-                                             */
-                                            tree.setSelectionPath(new TreePath(parentNode.getPath()));                                               
-    
-                                            mMainPanel.removeAll();
-                                            mMainPanel.add(new JLabel(""));
-                                            mSplitPane.revalidate();
-                                            debugPrint(); // $$DEBUG
-                                        }
-                                    }
-                                }
-                            }
-                        };
-                        mDeleteButton.addActionListener(mDeleteButtonListener);
-                        if (!(userObject instanceof MSystem))
-                            mDeleteButton.setEnabled(true);
-                        
-                        if (userObject instanceof MResource
-                            ||    userObject instanceof MClass
-                            ||    userObject instanceof MUpdate
-                            ||    userObject instanceof MLookup
-                            ||    userObject instanceof MValidationLookup
-                            ||    userObject instanceof MValidationExternal)
-                        {
-                            mAddButton.setEnabled(true);
-                        }
-                        
-                        refreshMainPanel(userObject);
-                    }
-                    else
-                    if (userObject != null)
-                    {
-                        if (selectedNode.equals(mForeignKeyNode))
-                        {
-                            mAddButton.removeActionListener(mAddButtonListener);
-                            mAddButtonListener = new ActionListener()
-                            {
-                                public void actionPerformed(ActionEvent e)
-                                {
-                                    MForeignKey resource = new MForeignKey();
-                                    
-                                    MetadataDialog dialog = new MetadataGenericDialog(mStrictParsing, mMetadata, resource);
-                                                                           
-                                    dialog.setVisible(true);
-                                    if (dialog.getResponse() == JOptionPane.OK_OPTION)
-                                    {
-                                           MetadataTreeNode newNode = addObject(mForeignKeyNode, resource);
-                                           tree.setSelectionPath(new TreePath(newNode.getPath()));
-
-                                           mSystem.addChild(MetadataType.FOREIGNKEYS, resource);
-
-                                           Admin.setRetsConfigChanged(true);
-                                        refreshMainPanel(resource);
-                                        debugPrint(); // $$DEBUG
-                                    }
-                                }
-                            };
-                            mAddButton.addActionListener(mAddButtonListener);
-                            mAddButton.setEnabled(true);
- 
-                            mDeleteButton.removeActionListener(mDeleteButtonListener);
-                            mDeleteButtonListener = new ActionListener()
-                            {
-                                   public void actionPerformed(ActionEvent e)
-                                {
-                                    /*
-                                     * In this context, the FOREIGN-KEYS node has been selected. Delete
-                                     * everything beneath it.
-                                     */
-                                       int answer = (int) JOptionPane.showConfirmDialog(
-                                                                SwingUtils.getAdminFrame(),
-                                                                "Are you sure?",
-                                                                "Delete Confirmation",
-                                                                JOptionPane.OK_CANCEL_OPTION,
-                                                                JOptionPane.QUESTION_MESSAGE);
-                                       if (answer == JOptionPane.OK_OPTION)
-                                       {
-                                           /*
-                                            * The FOREIGNKEY node is a MetadataTreeNode containing a literal string.
-                                            * We have to go to the mSystem object to properly delete the children.
-                                            */
-                                        Admin.setRetsConfigChanged(true);
-                                        mSystem.deleteAllChildren(MetadataType.FOREIGNKEYS);
-                                        removeCurrentNode();
-                                        mForeignKeyNode = mTreePanel.addObject(null, sFOREIGNKEY);
-                                            mMainPanel.removeAll();
-                                           mMainPanel.add(new JLabel(""));
-                                           mSplitPane.revalidate();
-                                        debugPrint(); // $$DEBUG
-                                    }
-                                }
-                            };
-                            mDeleteButton.addActionListener(mDeleteButtonListener);
-                            mDeleteButton.setEnabled(true);
-                        }
-                        else
-                        if (selectedNode.equals(mResourceNode))
-                        {
-                            mAddButton.setEnabled(true);
-                            mAddButton.removeActionListener(mAddButtonListener);
-                            mAddButtonListener = new ActionListener()
-                            {
-                                public void actionPerformed(ActionEvent e)
-                                {
-                                    MResource resource = new MResource();
-                                    
-                                    MetadataDialog dialog = new MetadataResourceDialog(mStrictParsing, mMetadata, resource);
-                                                                           
-                                    dialog.setVisible(true);
-                                    if (dialog.getResponse() == JOptionPane.OK_OPTION)
-                                    {
-                                           MetadataTreeNode newNode = addObject(mResourceNode, resource);
-                                           tree.setSelectionPath(new TreePath(newNode.getPath()));
-
-                                           mSystem.addChild(MetadataType.RESOURCE, resource);
-
-                                           Admin.setRetsConfigChanged(true);
-                                        refreshMainPanel(resource);
-                                        debugPrint(); // $$DEBUG
-                                    }
-                                }
-                            };
-                            mAddButton.addActionListener(mAddButtonListener);
- 
-                            mDeleteButton.removeActionListener(mDeleteButtonListener);
-                            mDeleteButtonListener = new ActionListener()
-                            {
-                                public void actionPerformed(ActionEvent e)
-                                {
-                                    /*
-                                     * In this context, the RESOURCE node has been selected. Delete
-                                     * everything beneath it.
-                                     */
-                                       int answer = (int) JOptionPane.showConfirmDialog(
-                                                                SwingUtils.getAdminFrame(),
-                                                                "Are you sure?",
-                                                                "Delete Confirmation",
-                                                                JOptionPane.OK_CANCEL_OPTION,
-                                                                JOptionPane.QUESTION_MESSAGE);
-                                       if (answer == JOptionPane.OK_OPTION)
-                                       {
-                                           /*
-                                            * The RESOURCE node is a MetadataTreeNode containing a literal string.
-                                            * We have to go to the mSystem object to properly delete the children.
-                                            */
-                                        Admin.setRetsConfigChanged(true);
-                                        mSystem.deleteAllChildren(MetadataType.RESOURCE);
-                                        removeCurrentNode();
-                                        mResourceNode = mTreePanel.addObject(null, sRESOURCE);
-                                            mMainPanel.removeAll();
-                                           mMainPanel.add(new JLabel(""));
-                                           mSplitPane.revalidate();
-                                        debugPrint(); // $$DEBUG
-                                    }
-                                }
-                            };
-							mDeleteButton.addActionListener(mDeleteButtonListener);
-							mDeleteButton.setEnabled(true);
-                        }
-                        else
-                        {
-                            /*
-                             * One of the Strings under a given resource has been selected 
-                             * (e.g. "Lookups", "Object", etc. Set up the buttons for this
-                             * context.
-                             */
-                            // FIXME: Need to implement this code.
-                            LOG.debug("**** Misc string selected: " + userObject);
-                        }
-
-                        mMainPanel.removeAll();
-                        mMainPanel.add(new JLabel(""));
-                        mSplitPane.revalidate();
-                        
-                        LOG.debug("Tree Objected selected: " + userObject);
-                    }
-                    debugPrint(); // $$DEBUG
-                }
-            });
+            tree.addTreeSelectionListener(new MetadataTreeListener(tree));
         }
             
         /** Remove all nodes except the root node. */
@@ -1382,7 +587,6 @@ public class MetadataPanel extends AdminTab
               if (parent != null) 
               {
                   treeModel.removeNodeFromParent(currentNode);
-                  // TODO: Remove the corresponding entry from mMetadata.
                   return;
               }
             }
@@ -1454,123 +658,865 @@ public class MetadataPanel extends AdminTab
             tree.scrollPathToVisible(new TreePath(mResourceNode.getPath()));
             tree.setSelectionPath(tree.getPathForRow(0));
         }
+    }
+    
+    private class MetadataTreeListener implements TreeSelectionListener
+    {
+    	JTree			mTree;
+    	
+    	MetadataTreeListener(JTree tree)
+    	{
+    		super();
+    		mTree = tree;
+    	}
+        /*
+         * Add the tree selection listener. The listener is responsible for setting up the 
+         * action buttons based on the current state (e.g. node selected).
+         *    
+         * The general states for the "ADD" button are:
+         * 
+         * Node Selected            Action
+         * -------------            -------------------------
+         * "System"                 Add not allowed.
+         * "ForeignKey"             Add foreign key.
+         * "Resource"               Add MResource.
+         * "Lookups"                Add MLookup.
+         * "Object"                 Add MObject.
+         * "EditMask"               Add MEditMask.
+         * "SearchHelp"             Add MSearchHelp.
+         * "UpdateHelp"             Add MUpdateHelp.
+         * "ValidationLookup"       Add MValidationLookup.
+         * "ValidationExternal"     Add MValidationExternal.
+         * "ValidationExpression"   Add MValidationExpression.
+         * MResource                Add MClass, MLookup, MObject, MEditMask
+         *                                 MSearchHelp, MUpdateHelp, MValidationLookup,
+         *                                 MValidationExternal or MValidationExpression.
+         * MClass                   Add MTable or MUpdate.
+         * MTable                   Add not allowed.
+         * MUpdate                  Add MUpdateType.
+         * MLookup                  Add MLookupType.
+         * MLookupType              Add not allowed.
+         * MObject                  Add not allowed.
+         * MEditMask                Add not allowed.
+         * MSearchHelp              Add not allowed.
+         * MUpdateHelp              Add not allowed.
+         * MValidationLookup        Add MValidationLookupType.
+         * MValidationLookupType    Add not allowed.
+         * MValidationExternal      Add MValidationExternalType
+         * MValidationExternalType  Add not allowed.
+         * MValidationExpression    Add not allowed.
+         */
+    	
+    	private class MetaObjectAddButtonListener implements ActionListener
+    	{
+    		String mAnswer;
+    		MetaObject mMetaObject;
+    		MetadataTreeNode mSelectedNode;
+    		
+    		MetaObjectAddButtonListener(MetaObject userObject, MetadataTreeNode selectedNode, String answer)
+    		{
+      			super();
+    			mAnswer = answer;
+    			mMetaObject = userObject;
+    			mSelectedNode = selectedNode;
+    		}
 
-        public void debugPrint()
-        {
-            if (true)    // $$DEBUG
-                return; // $$DEBUG
-            
-            for (MForeignKey foreignKey : mSystem.getMForeignKeys())
+    		MetaObjectAddButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
+    		{
+    			this(userObject, selectedNode, null);
+    		}
+    		
+            public void actionPerformed(ActionEvent e)
             {
-                System.out.println(foreignKey.getMetadataTypeName());
-            }
-            
-            for (MResource resource : mSystem.getMResources())
-            {
-                System.out.println(resource.getMetadataTypeName() + ": " + resource.getId());
+                MetadataType metadataType = null;
+                MetadataTreeNode node = mSelectedNode;
+                MetaObject resource = null;
+                
                 /*
-                 * Enumerate the RETS classes and populate the tree.
+                 * mMetaObject is the parent object that was selected.
                  */
-                for (MClass clazz : resource.getMClasses())
+                if (mMetaObject instanceof MResource)                                
                 {
-                    System.out.println("  " + clazz.getMetadataTypeName() + ": " + clazz.getId());
                     /*
-                     * Iterate over the tables for this class.
+                     * We can only add METADATA-CLASS, METADATA-LOOKUP, METADATA-OBJECT,
+                     * METADATA-EDITMASK, METADATA-SEARCH_HELP, METADATA-UPDATE_HELP,
+                     * METADATA_VALIDATION_LOOKUP, METADATA_VALIDATION_EXTERNAL and
+                     * METADATA-VALIDATION_EXPRESSION to METADATA-RESOURCE nodes.
                      */
-                    for (MTable table : clazz.getMTables())
+                    Object[] ddl = {"Class",
+                                    "Lookup",
+                                    "Object",
+                                    "EditMask",
+                                    "SearchHelp",
+                                    "UpdateHelp",
+                                    "ValidationLookup",
+                                    "ValidationExternal",
+                                    "ValidationExpression"};
+                    
+                    if (mAnswer == null)
+                    	mAnswer = (String) JOptionPane.showInputDialog(
+                                                    SwingUtils.getAdminFrame(),
+                                                    "Add Which?",
+                                                    "Add to Resource",
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,
+                                                    ddl,
+                                                    "Class");
+                    if (mAnswer == null)
+                        return;
+                    
+                    if (mAnswer.equals("Class"))
                     {
-                        System.out.println("    " + table.getMetadataTypeName() + ": " + table.getId());
+                        metadataType = MetadataType.CLASS;
+                        resource = new MClass();
                     }
-                    /*
-                     * Iterate over the updates for this class.
-                     */
-                    for (MUpdate update : clazz.getMUpdates())
+                    else                                   
+                    if (mAnswer.equals("Lookup"))
                     {
-                        System.out.println("    " + update.getMetadataTypeName() + ": " + update.getId());
+                           boolean found = false;
+                           /*
+                            * Determine if the "Lookups" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals(sLOOKUP))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */                                                                                              
+                               node = mTreePanel.addObject(mSelectedNode, sLOOKUP);
+                           }
+                        metadataType = MetadataType.LOOKUP;
+                        resource = new MLookup();
+                    }
+                    else                                   
+                    if (mAnswer.equals("Object"))
+                    {
+                           boolean found = false;
+                           /*
+                            * Determine if the "Object" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals(sOBJECT))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */                                               
+                               node = mTreePanel.addObject(mSelectedNode, sOBJECT);
+                           }
+                        metadataType = MetadataType.OBJECT;
+                        resource = new MObject();
+                    }
+                    else                                   
+                    if (mAnswer.equals("EditMask"))
+                    {
+                           boolean found = false;
+                           /*
+                            * Determine if the "EditMask" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals(sEDITMASK))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */
+                               node = mTreePanel.addObject(mSelectedNode, sEDITMASK);
+                           }
+
+                        metadataType = MetadataType.EDITMASK;
+                        resource = new MEditMask();
+                    }
+                    else                                   
+                    if (mAnswer.equals("SearchHelp"))
+                    {
+                           boolean found = false;
+                           /*
+                            * Determine if the "SearchHelp" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals("sSEARCHHELP"))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */
+                               node = mTreePanel.addObject(mSelectedNode, sSEARCHHELP);
+                           }
+
+                        metadataType = MetadataType.SEARCH_HELP;
+                        resource = new MSearchHelp();
+                    }
+                    else                                   
+                    if (mAnswer.equals("UpdatehHelp"))
+                    {
+                           boolean found = false;
+                           /*
+                            * Determine if the "UpdateHelp" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals(sUPDATEHELP))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */
+                               node = mTreePanel.addObject(mSelectedNode, sUPDATEHELP);
+                           }
+
+                        metadataType = MetadataType.UPDATE_HELP;
+                        resource = new MUpdateHelp();
+                    }
+                    else                                   
+                    if (mAnswer.equals("ValidationLookup"))
+                    {
+                           boolean found = false;
+                           /*
+                            * Determine if the "ValidationLookup" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals(sVALIDATIONLOOKUP))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */
+                               node = mTreePanel.addObject(mSelectedNode, sVALIDATIONLOOKUP);
+                           }
+
+                        metadataType = MetadataType.VALIDATION_LOOKUP;
+                        resource = new MValidationLookup();
+                    }
+                    else                                   
+                    if (mAnswer.equals("ValidationExternal"))
+                    {
+                           boolean found = false;
+                           /*
+                            * Determine if the "ValidationExternal" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals(sVALIDATIONEXTERNAL))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */
+                               node = mTreePanel.addObject(mSelectedNode, sVALIDATIONEXTERNAL);
+                           }
+
+                        metadataType = MetadataType.VALIDATION_EXTERNAL;
+                        resource = new MValidationExternal();
+                    }
+                    else                                   
+                    if (mAnswer.equals("ValidationExpression"))
+                    {
+                           boolean found = false;
+                           /*
+                            * Determine if the "ValidationExpression" node is already in the tree. If so, switch
+                            * to it. Otherwise, add it.
+                            */
+                           for (int i = 0; i < mSelectedNode.getChildCount(); i++)
+                           {
+                               MetadataTreeNode treeNode = (MetadataTreeNode)mSelectedNode.getChildAt(i);
+                               Object userObject = treeNode.getUserObject();
+                               if (userObject instanceof String && userObject.toString().equals(sVALIDATIONEXPRESSION))
+                               {
+                                   found = true;
+                                   node = treeNode;
+                                   break;
+                               }
+                           }
+                           if (!found)
+                           {
+                               /*
+                                * Never used before, so add the heading node and make it the current node.
+                                */
+                               node = mTreePanel.addObject(mSelectedNode, sVALIDATIONEXPRESSION);
+                           }
+
+                        metadataType = MetadataType.VALIDATION_EXPRESSION;
+                        resource = new MValidationExpression();
+                    }
+                }
+                else
+                if (mMetaObject instanceof MClass)
+                {
+                    /*
+                     * We can only add Table and Update metadata to METADATA-CLASS.
+                     */
+                    Object[] ddl = {"Table",
+                                    "Update"};
+                    
+                    String mAnswer = (String) JOptionPane.showInputDialog(
+                                                    SwingUtils.getAdminFrame(),
+                                                    "Add Which?",
+                                                    "Add to Class",
+                                                    JOptionPane.QUESTION_MESSAGE,
+                                                    null,
+                                                    ddl,
+                                                    "Table");
+                    if (mAnswer == null)
+                        return;
+                    
+                    if (mAnswer.equals("Table"))
+                    {
+                        metadataType = MetadataType.TABLE;
+                        resource = new MTable();
+                    }
+                    else
+                       if (mAnswer.equals("Update"))
+                    {
+                        metadataType = MetadataType.UPDATE;
+                        resource = new MUpdate();
+                    }
+                }
+                else
+                if (mMetaObject instanceof MLookup)                                
+                {
+                    metadataType = MetadataType.LOOKUP_TYPE;
+                    resource = new MLookupType();
+                }
+                else
+                if (mMetaObject instanceof MUpdate)                                
+                {
+                    metadataType = MetadataType.UPDATE_TYPE;
+                    resource = new MUpdateType();
+                }
+                else
+                if (mMetaObject instanceof MValidationExternal)                                
+                {
+                    metadataType = MetadataType.VALIDATION_EXTERNAL_TYPE;
+                    resource = new MValidationExternalType();
+                }
+                else
+                if (mMetaObject instanceof MValidationLookup)                                
+                {
+                    metadataType = MetadataType.VALIDATION_LOOKUP_TYPE;
+                    resource = new MValidationLookupType();
+                }
+                else
+                {
+                    LOG.warn("*** Unexpected User Object selected: " + mMetaObject);
+                    resource = null;
+                }
+				/*
+				 * Instantiate the default or custom dialog, depending on the type of
+				 * the metadata.
+				 */                              
+                MetadataDialog dialog = new MetadataGenericDialog(mStrictParsing, mMetadata, resource);
+                   
+                if (resource instanceof MTable)
+                {
+                    /*
+                     * mMetaObject had better be an MClass, but check anyway.
+                     */
+                    if (mMetaObject instanceof MClass)
+                    {
                         /*
-                         * Iterate over the update types for this update.
+                         * Get the parent Resource and invoke the custom dialog.
                          */
-                        for (MUpdateType updateType: update.getMUpdateTypes())
+                        DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) mSelectedNode.getParent();
+                        Object parentObject = parentNode.getUserObject();
+                        dialog = new MetadataTableDialog(mStrictParsing,
+                                                        mMetadata, 
+                                                        (MResource)parentObject, 
+                                                        (MTable)resource);
+                    }
+                    else
+                        LOG.debug("*** mMetaObject is not MClass when dealing with a table!!!");
+                }
+                else
+                if (resource instanceof MClass)
+                {
+                    /*
+                     * Invoke the custom dialog.
+                     */
+                    dialog = new MetadataClassDialog(mStrictParsing,
+                                                    mMetadata, 
+                                                    (MClass)resource);
+                }
+                
+                dialog.setVisible(true);
+                if (dialog.getResponse() == JOptionPane.OK_OPTION)
+                {
+                    if (mMetaObject.getChild(metadataType, resource.getId()) == null)
+                    {
+                        /*
+                         * Add the object to the tree and to the metadata. 
+                         */
+                    	mTreePanel.addObject(node, resource);
+                        mMetaObject.addChild(metadataType, resource);
+						mTree.setSelectionPath(new TreePath(mSelectedNode.getPath()));
+
+                        Admin.setRetsConfigChanged(true);
+                        refreshMainPanel(mMetaObject);
+                    }
+                    else
+                    {
+                    	JOptionPane.showMessageDialog(
+                                SwingUtils.getAdminFrame(),
+                                ((MetaObject)resource).getId() + " already exists!");
+                    }
+                }
+            }
+    	}
+    	
+    	private class MetaObjectDeleteButtonListener implements ActionListener
+    	{
+    		MetaObject mMetaObject;
+    		MetadataTreeNode mSelectedNode;
+    		
+    		MetaObjectDeleteButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
+    		{
+    			super();
+    			mMetaObject = userObject;
+    			mSelectedNode = selectedNode;
+    		}
+    		
+            public void actionPerformed(ActionEvent e)
+            {
+                if (mMetaObject instanceof MetaObject)
+                {
+					int answer = (int) JOptionPane.showConfirmDialog(
+					                            SwingUtils.getAdminFrame(),
+					                            "Are you sure?",
+					                            "Delete Confirmation",
+					                            JOptionPane.OK_CANCEL_OPTION,
+					                            JOptionPane.QUESTION_MESSAGE);
+					if (answer == JOptionPane.OK_OPTION)
+					{
+                       /*
+                        * Locate the parent node.
+                        */
+                       DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) mSelectedNode.getParent();
+                       Object parentObject = null;
+                       
+						if (parentNode != null)
+							parentObject = parentNode.getUserObject();
+						if (parentObject instanceof MetaObject)
+						{
+						    /*
+						     * The parent object is some form of Metadata, so we're good to go.
+						     */
+						    Admin.setRetsConfigChanged(true);
+						    /*
+							 * Remove the object from the parent.
+							 */
+							((MetaObject)parentObject).deleteChild(
+							                               ((MetaObject)mMetaObject).getMetadataType(), 
+							                               (MetaObject)mMetaObject);                                               
+							mTreePanel.removeCurrentNode();
+							/*
+							 * And set the parent as selected.
+							 */
+							mTree.setSelectionPath(new TreePath(parentNode.getPath()));                                               
+							
+							refreshMainPanel(parentObject);
+						}
+						else
+                        if (parentObject != null)
                         {
-                            System.out.println("    " + updateType.getMetadataTypeName() + ": " + updateType.getId());
+                            /*
+                             * FOREIGNKEY, RESOURCE, LOOKUP, OBJECT, EDITMASK, SEARCHHELP, UPDATEHELP,
+                             * VALIDATIONLOOKUP, VALIDATIONEXTERNAL and VALIDATIONEXPRESSION
+                             * is the parent. These are simple string nodes that need special handling.
+                             */
+                            if (parentObject.equals(sRESOURCE))
+                                mSystem.deleteChild(MetadataType.RESOURCE, (MetaObject) mMetaObject);
+                            else
+                            if (parentObject.equals(sFOREIGNKEY))
+                                mSystem.deleteChild(MetadataType.FOREIGNKEYS, (MetaObject) mMetaObject);
+                            else
+                            {
+                                DefaultMutableTreeNode parentsParentNode = (DefaultMutableTreeNode) parentNode.getParent();
+
+                                MetaObject resource = null;
+                                
+                                if (parentsParentNode != null)
+                                	resource = (MetaObject) parentsParentNode.getUserObject();
+                            	if (resource != null)
+                            	{
+                                	if (parentObject.equals(sLOOKUP))
+                                        resource.deleteChild(MetadataType.LOOKUP, (MetaObject) mMetaObject);
+                                	else
+                                    if (parentObject.equals(sOBJECT))
+                                        resource.deleteChild(MetadataType.OBJECT, (MetaObject) mMetaObject);
+                                    else
+                                    if (parentObject.equals(sEDITMASK))
+                                        resource.deleteChild(MetadataType.EDITMASK, (MetaObject) mMetaObject);
+                                    else
+                                	if (parentObject.equals(sSEARCHHELP))
+                                        resource.deleteChild(MetadataType.SEARCH_HELP, (MetaObject) mMetaObject);
+                                    else
+                                    if (parentObject.equals(sUPDATEHELP))
+                                        resource.deleteChild(MetadataType.UPDATE_HELP, (MetaObject) mMetaObject);
+                                    else
+                                	if (parentObject.equals(sVALIDATIONLOOKUP))
+                                        resource.deleteChild(MetadataType.VALIDATION_LOOKUP, (MetaObject) mMetaObject);
+                                	else
+                                    if (parentObject.equals(sVALIDATIONEXTERNAL))
+                                        resource.deleteChild(MetadataType.VALIDATION_EXTERNAL, (MetaObject) mMetaObject);
+                                    else
+                                    if (parentObject.equals(sVALIDATIONEXPRESSION))
+                                        resource.deleteChild(MetadataType.VALIDATION_EXPRESSION, (MetaObject) mMetaObject);
+                            	}
+                            }
+                            
+                            Admin.setRetsConfigChanged(true);
+                            mTreePanel.removeCurrentNode();
+                            /*
+                             * And set the parent as selected.
+                             */
+                            mTree.setSelectionPath(new TreePath(parentNode.getPath()));                                               
+
+                            mMainPanel.removeAll();
+                            mMainPanel.add(new JLabel(""));
+                            mSplitPane.revalidate();
                         }
                     }
                 }
+            }
+    	}
+    	
+    	private class MetaObjectEditButtonListener implements ActionListener
+    	{
+    		MetaObject mMetaObject;
+    		MetadataTreeNode mSelectedNode;
+    		
+    		MetaObjectEditButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
+    		{
+    			super();
+    			mMetaObject = userObject;
+    			mSelectedNode = selectedNode;
+    		}
+    		
+            public void actionPerformed(ActionEvent e)
+            {
                 /*
-                 * Enumerate the lookups.
+                 * Instantiate the default or custom dialog, depending on the type of
+                 * the metadata.
                  */
-                for (MLookup lookup : resource.getMLookups())
+                MetadataDialog dialog = new MetadataGenericDialog(mStrictParsing, mMetadata, mMetaObject);
+                
+                if (mMetaObject instanceof MTable)
                 {
-                    System.out.println("  " + lookup.getMetadataTypeName() + ": " + lookup.getId());
+                    /*
+                     * Get the parent Resource and invoke the custom dialog.
+                     */
+                    DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) mSelectedNode.getParent().getParent();
+                    Object parentObject = parentNode.getUserObject();
+                    if (parentObject instanceof MResource)
+                        dialog = new MetadataTableDialog(mStrictParsing,
+                                                        mMetadata, 
+                                                        (MResource) parentObject,
+                                                        (MTable) mMetaObject);
+                    else 
+                        LOG.warn("*** Can't locate parent Resource for " + mMetaObject);
+                }
+                else
+            	if (mMetaObject instanceof MResource)
+                {
+                    /*
+                     * Invoke the custom dialog.
+                     */
+            	   dialog = new MetadataResourceDialog(mStrictParsing,
+                                                        mMetadata, 
+                                                        (MResource) mMetaObject);
+                }
+				else
+				if (mMetaObject instanceof MClass)
+                {
+                    /*
+                     * Invoke the custom dialog.
+                     */
+					dialog = new MetadataClassDialog(mStrictParsing,
+                                                     mMetadata, 
+                                                     (MClass) mMetaObject);
+                }
+                   
+                dialog.setVisible(true);
+                if (dialog.getResponse() == JOptionPane.OK_OPTION)
+                {
+                    Admin.setRetsConfigChanged(true);
+                    refreshMainPanel(mMetaObject);
+                }
+            }
+    	}
+    	
+    	/**
+    	 * A new node has been selected. Set up the buttons based on state.
+    	 */
+        public void valueChanged(TreeSelectionEvent e)
+        {
+            final MetadataTreeNode selectedNode = (MetadataTreeNode)mTree.getLastSelectedPathComponent();
+
+            mAddButton.setEnabled(false);
+            mEditButton.setEnabled(false);
+            mDeleteButton.setEnabled(false);
+
+            if (selectedNode == null)
+                return;
+            
+            final Object userObject = selectedNode.getUserObject();
+            if (userObject instanceof MetaObject)
+            {
+
+                mAddButton.setEnabled(false);
+                mAddButton.removeActionListener(mAddButtonListener);
+                mAddButtonListener = new MetaObjectAddButtonListener((MetaObject)userObject, selectedNode);
+                mAddButton.addActionListener(mAddButtonListener);
+                
+                mEditButton.removeActionListener(mEditButtonListener);
+                mEditButtonListener = new MetaObjectEditButtonListener((MetaObject)userObject, selectedNode);
+                mEditButton.addActionListener(mEditButtonListener);
+                mEditButton.setEnabled(true);
+                
+                mDeleteButton.removeActionListener(mDeleteButtonListener);
+                mDeleteButtonListener = new MetaObjectDeleteButtonListener((MetaObject)userObject, selectedNode);
+                mDeleteButton.addActionListener(mDeleteButtonListener);
+                if (!(userObject instanceof MSystem))
+                    mDeleteButton.setEnabled(true);
+                
+                if (userObject instanceof MResource
+                    ||    userObject instanceof MClass
+                    ||    userObject instanceof MUpdate
+                    ||    userObject instanceof MLookup
+                    ||    userObject instanceof MValidationLookup
+                    ||    userObject instanceof MValidationExternal)
+                {
+                    mAddButton.setEnabled(true);
+                }
+                
+                refreshMainPanel(userObject);
+            }
+            else
+            if (userObject != null)
+            {
+                if (selectedNode.equals(mForeignKeyNode))
+                {
+                    mAddButton.removeActionListener(mAddButtonListener);
+                    mAddButtonListener = new ActionListener()
+                    {
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            MForeignKey resource = new MForeignKey();
+                            
+                            MetadataDialog dialog = new MetadataGenericDialog(mStrictParsing, mMetadata, resource);
+                                                                   
+                            dialog.setVisible(true);
+                            if (dialog.getResponse() == JOptionPane.OK_OPTION)
+                            {
+								MetadataTreeNode newNode = mTreePanel.addObject(mForeignKeyNode, resource);
+								mTree.setSelectionPath(new TreePath(newNode.getPath()));
+								
+								mSystem.addChild(MetadataType.FOREIGNKEYS, resource);
+								
+								Admin.setRetsConfigChanged(true);
+								refreshMainPanel(resource);
+                            }
+                        }
+                    };
+                    mAddButton.addActionListener(mAddButtonListener);
+                    mAddButton.setEnabled(true);
+
+                    mDeleteButton.removeActionListener(mDeleteButtonListener);
+                    mDeleteButtonListener = new ActionListener()
+                    {
+                           public void actionPerformed(ActionEvent e)
+                        {
+							/*
+							 * In this context, the FOREIGN-KEYS node has been selected. Delete
+							 * everything beneath it.
+							 */
+							int answer = (int) JOptionPane.showConfirmDialog(
+							                            SwingUtils.getAdminFrame(),
+							                            "Are you sure?",
+							                            "Delete Confirmation",
+							                            JOptionPane.OK_CANCEL_OPTION,
+							                            JOptionPane.QUESTION_MESSAGE);
+							if (answer == JOptionPane.OK_OPTION)
+							{
+								/*
+								 * The FOREIGNKEY node is a MetadataTreeNode containing a literal string.
+								 * We have to go to the mSystem object to properly delete the children.
+								 */
+								Admin.setRetsConfigChanged(true);
+								mSystem.deleteAllChildren(MetadataType.FOREIGNKEYS);
+								mTreePanel.removeCurrentNode();
+								mForeignKeyNode = mTreePanel.addObject(null, sFOREIGNKEY);
+								mMainPanel.removeAll();
+								mMainPanel.add(new JLabel(""));
+								mSplitPane.revalidate();
+							}
+                        }
+                    };
+                    mDeleteButton.addActionListener(mDeleteButtonListener);
+                    mDeleteButton.setEnabled(true);
+                }
+                else
+                if (selectedNode.equals(mResourceNode))
+                {
+                    mAddButton.setEnabled(true);
+                    mAddButton.removeActionListener(mAddButtonListener);
+                    mAddButtonListener = new ActionListener()
+                    {
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            MResource resource = new MResource();
+                            
+                            MetadataDialog dialog = new MetadataResourceDialog(mStrictParsing, mMetadata, resource);
+                                                                   
+                            dialog.setVisible(true);
+                            if (dialog.getResponse() == JOptionPane.OK_OPTION)
+                            {
+								MetadataTreeNode newNode = mTreePanel.addObject(mResourceNode, resource);
+								mTree.setSelectionPath(new TreePath(newNode.getPath()));
+								
+								mSystem.addChild(MetadataType.RESOURCE, resource);
+								
+								Admin.setRetsConfigChanged(true);
+                                refreshMainPanel(resource);
+                            }
+                        }
+                    };
+                    mAddButton.addActionListener(mAddButtonListener);
+
+                    mDeleteButton.removeActionListener(mDeleteButtonListener);
+                    mDeleteButtonListener = new ActionListener()
+                    {
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            /*
+                             * In this context, the RESOURCE node has been selected. Delete
+                             * everything beneath it.
+                             */
+                               int answer = (int) JOptionPane.showConfirmDialog(
+                                                        SwingUtils.getAdminFrame(),
+                                                        "Are you sure?",
+                                                        "Delete Confirmation",
+                                                        JOptionPane.OK_CANCEL_OPTION,
+                                                        JOptionPane.QUESTION_MESSAGE);
+                               if (answer == JOptionPane.OK_OPTION)
+                               {
+                                   /*
+                                    * The RESOURCE node is a MetadataTreeNode containing a literal string.
+                                    * We have to go to the mSystem object to properly delete the children.
+                                    */
+                                Admin.setRetsConfigChanged(true);
+                                mSystem.deleteAllChildren(MetadataType.RESOURCE);
+                                mTreePanel.removeCurrentNode();
+                                mResourceNode = mTreePanel.addObject(null, sRESOURCE);
+                                mMainPanel.removeAll();
+                                mMainPanel.add(new JLabel(""));
+                                mSplitPane.revalidate();
+                            }
+                        }
+                    };
+					mDeleteButton.addActionListener(mDeleteButtonListener);
+					mDeleteButton.setEnabled(true);
+                }
+                else
+                {
+                    /*
+                     * One of the Strings under a given resource has been selected 
+                     * (e.g. "Lookups", "Object", etc. Set up the buttons for this
+                     * context.
+                     * 
+                     * In this case, our parent node is the "userObject" for this
+                     * context and will be a MetaObject. Determine which it is and 
+                     * then invoke the add button class as if we'd actually
+                     * selected the Resource node.
+                     */
+                    MetadataTreeNode parentNode = (MetadataTreeNode) selectedNode.getParent();
+                    Object parentObject = null;
+                    if (parentNode != null)
+                    	parentObject = parentNode.getUserObject();
                     
-                    for (MLookupType lookupType : lookup.getMLookupTypes())
+                    if (parentObject != null && parentObject instanceof MResource)
                     {
-                        System.out.println("    " + lookupType.getMetadataTypeName() + ": " + lookupType.getId());
+	                    mAddButton.setEnabled(true);
+	                    mAddButton.removeActionListener(mAddButtonListener);
+	                    mAddButtonListener = new MetaObjectAddButtonListener((MetaObject)parentObject, parentNode, userObject.toString());
+	                    mAddButton.addActionListener(mAddButtonListener);
                     }
                 }
-                /*
-                 * Enumerate the objects.
-                 */
-                for (MObject obj : resource.getMObjects())
-                {
-                    System.out.println("  " + obj.getMetadataTypeName() + ": " + obj.getId());
-                }
-                /*
-                 * Enumerate the edit masks.
-                 */
-                for (MEditMask editMask : resource.getMEditMasks())
-                {
-                    System.out.println("  " + editMask.getMetadataTypeName() + ": " + editMask.getId());
-                }
-                /*
-                 * Enumerate the search help.
-                 */
-                for (MSearchHelp searchHelp : resource.getMSearchHelps())
-                {
-                    System.out.println("  " + searchHelp.getMetadataTypeName() + ": " + searchHelp.getId());
-                }
-                /*
-                 * Enumerate the update help.
-                 */
-                for (MUpdateHelp updateHelp : resource.getMUpdateHelps())
-                {
-                    System.out.println("  " + updateHelp.getMetadataTypeName() + ": " + updateHelp.getId());
-                }
-                /*
-                 * Enumerate the validation lookups.
-                 */
-                for (MValidationLookup lookup : resource.getMValidationLookups())
-                {
-                    System.out.println("  " + lookup.getMetadataTypeName() + ": " + lookup.getId());
-                    /*
-                     * Enumerate the validation lookup types.
-                     */
-                    for (MValidationLookupType lookupType : lookup.getMValidationLookupTypes())
-                    {
-                        System.out.println("    " + lookupType.getMetadataTypeName() + ": " + lookupType.getId());
-                    }
-                }
-                /*
-                 * Enumerate the validation externals.
-                 */
-                for (MValidationExternal validation : resource.getMValidationExternal())
-                {
-                    System.out.println("  " + validation.getMetadataTypeName() + ": " + validation.getId());
-                    /*
-                     * Enumerate the validation external types.
-                     */
-                    for (MValidationExternalType externalType : validation.getMValidationExternalTypes())
-                    {
-                        System.out.println("    " + externalType.getMetadataTypeName() + ": " + externalType.getId());
-                    }
-                }
-                /*
-                 * Enumerate the validation expressions.
-                 */
-                for (MValidationExpression validationExpression : resource.getMValidationExpressions())
-                {
-                    System.out.println("  " + validationExpression.getMetadataTypeName() + ": " + validationExpression.getId());
-                }
+
+                mMainPanel.removeAll();
+                mMainPanel.add(new JLabel(""));
+                mSplitPane.revalidate();
+                
+                LOG.debug("Tree Objected selected: " + userObject);
             }
         }
     }

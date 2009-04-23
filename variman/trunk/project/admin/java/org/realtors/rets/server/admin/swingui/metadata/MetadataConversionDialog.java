@@ -174,7 +174,10 @@ public class MetadataConversionDialog extends MetadataDialog
                         {
                             updateStatus("Converting Class " + clazz.getId());
                             if (clazz.getAttributeAsString("DBname") != null)
+                            {
                                 clazz.setAttribute("X-DBName", clazz.getAttributeAsString("DBName"));
+                                clazz.removeAttribute("DBName");
+                            }
                             cleanupUnderscores(clazz);
                             cleanupKeyFields(clazz);
                             /*
@@ -200,9 +203,15 @@ public class MetadataConversionDialog extends MetadataDialog
                                  * "Date" and "Version" must be converted to "UpdateTypeDate" and "UpdateTypeVersion".
                                  */
                                    if (update.getAttributeAsString("Date") != null)
-                                    update.setAttribute(update.UPDATETYPEDATE, update.getAttributeAsString("Date"));
+                                   {
+                                	   update.setAttribute(update.UPDATETYPEDATE, update.getAttributeAsString("Date"));
+                                	   update.removeAttribute("Date");
+                                   }
                                    if (update.getAttributeAsString("Version") != null)
-                                    update.setAttribute(update.UPDATETYPEVERSION, update.getAttributeAsString("Version"));
+                                   {
+                                	   update.setAttribute(update.UPDATETYPEVERSION, update.getAttributeAsString("Version"));
+                                	   update.removeAttribute("Version");
+                                   }
                                 cleanupUnderscores(update);
                                 cleanupKeyFields(update);
                                 /*
@@ -249,6 +258,7 @@ public class MetadataConversionDialog extends MetadataDialog
                                     length = 32;
                                 obj.setAttribute(obj.METADATAENTRYID, obj.getVisibleName().substring(0, length - 1));
                             }
+                            obj.removeAttribute("StandardName");
                             cleanupUnderscores(obj);
                            }
                         /*
@@ -276,7 +286,7 @@ public class MetadataConversionDialog extends MetadataDialog
                          */
                         for (MUpdateHelp updateHelp : resource.getMUpdateHelps())
                         {
-                            updateStatus("Converting UpdateHelp" + updateHelp.getId());
+                            updateStatus("Converting UpdateHelp " + updateHelp.getId());
                             if (updateHelp.getUpdateHelpID() != null)
                                 updateHelp.setAttribute(updateHelp.METADATAENTRYID, updateHelp.getUpdateHelpID());
                             cleanupUnderscores(updateHelp);

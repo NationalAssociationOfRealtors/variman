@@ -30,6 +30,7 @@ import org.realtors.rets.common.metadata.types.MSearchHelp;
 import org.realtors.rets.common.metadata.types.MSystem;
 import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.common.metadata.types.MUpdate;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
 import org.realtors.rets.common.metadata.types.MUpdateType;
 import org.realtors.rets.common.metadata.types.MValidationExpression;
 import org.realtors.rets.common.metadata.types.MValidationExternal;
@@ -146,6 +147,10 @@ public class JDomCompactBuilder extends MetadataBuilder {
 		if (container != null) {
 			return processEditMask(container);
 		}
+		container = root.getChild(CONTAINER_UPDATEHELP);
+		if (container != null) {
+			return processUpdateHelp(container);
+		}
 		container = root.getChild(CONTAINER_LOOKUP);
 		if (container != null) {
 			return processLookup(container);
@@ -209,6 +214,7 @@ public class JDomCompactBuilder extends MetadataBuilder {
 		attachObject(metadata, root);
 		attachSearchHelp(metadata, root);
 		attachEditMask(metadata, root);
+		attachUpdateHelp(metadata, root);
 		attachLookup(metadata, root);
 		attachLookupType(metadata, root);
 		attachValidationLookup(metadata, root);
@@ -555,6 +561,32 @@ public class JDomCompactBuilder extends MetadataBuilder {
 			editMasks[i] = editMask;
 		}
 		return editMasks;
+	}
+	
+	private void attachUpdateHelp(Metadata metadata, Element root) throws MetaParseException {
+		List containers = root.getChildren(CONTAINER_UPDATEHELP);
+		for (int i = 0; i < containers.size(); i++) {
+			Element container = (Element) containers.get(i);
+			MResource parent = metadata.getResource(getNonNullAttribute(container, ATTRIBUTE_RESOURCE));
+			MUpdateHelp[] updateHelps = processUpdateHelp(container);
+			for (int j = 0; j < updateHelps.length; j++) {
+				parent.addChild(MetadataType.UPDATE_HELP, updateHelps[j]);
+			}
+		}
+	}
+
+	private MUpdateHelp[] processUpdateHelp(Element container) {
+		String[] columns = getColumns(container);
+		List rows = container.getChildren(DATA);
+		MUpdateHelp[] updateHelps = new MUpdateHelp[rows.size()];
+		for (int i = 0; i < rows.size(); i++) {
+			Element element = (Element) rows.get(i);
+			String[] data = split(element);
+			MUpdateHelp updateHelp = buildUpdateHelp();
+			setAttributes(updateHelp, columns, data);
+			updateHelps[i] = updateHelp;
+		}
+		return updateHelps;
 	}
 
 	private void attachLookup(Metadata metadata, Element root) throws MetaParseException {

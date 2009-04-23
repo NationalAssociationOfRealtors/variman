@@ -79,7 +79,7 @@ public abstract class MetaObject implements Serializable {
 	// RETS 1.7.2
 	public    static final AttrType sPOSITIVENUM = new AttrPositiveNumeric("A positive whole number.");
 	public    static final AttrType sRETSNAME = new AttrIDAlphanum(1,64, "Alpha Numeric including an underscore.");
-	public    static final AttrType sRETSID = new AttrAlphanum(1,32, "Alph Numeric, 1 to 32 characters.");
+	public    static final AttrType sRETSID = new AttrAlphanum(1,32, "Alpha Numeric, 1 to 32 characters.");
 	public    static final AttrType sTIMEZONEOFFSET = new AttrTimeZone("Z for UTC, [+-]00:00 for offset to UTC.");
 	
 	public    static final AttrType sAttrMetadataEntryId = sRETSID;
@@ -234,7 +234,8 @@ public abstract class MetaObject implements Serializable {
 				}
 				addAttributesToMap(map);
 				// Let's make sure no one mucks with the map later
-				map = Collections.unmodifiableMap(map);
+				// FIXME: Re-enable this if the metadata migrator is ever removed/obsoleted.
+				// map = Collections.unmodifiableMap(map);
 				sAttributeMapCache.put(new CacheKey(this, strictParsing), map);
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Adding to attribute cache: " + this.getClass().getName() + ", " + strictParsing);
@@ -615,6 +616,20 @@ public abstract class MetaObject implements Serializable {
 		AttrType<?> oldType = (AttrType<?>)this.attrTypes.get(name);
 		this.attrTypes.put(name, attrType);
 		return oldType;
+	}
+	
+	/**
+	 * Remove the attribute from the attribute and type maps.
+	 * @param key A String containing the attribute name.
+	 */
+	// FIXME: Disable this if the unmodifiable map is re-enabled above.
+	public void removeAttribute(String key) 
+	{
+		if (this.attributes.get(key) != null)
+		{
+			this.attributes.remove(key);
+			this.attrTypes.remove(key);
+		}
 	}
 	
 	/**

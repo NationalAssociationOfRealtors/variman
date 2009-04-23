@@ -194,6 +194,7 @@ public class MetadataCompactFormatter
 			formatObjects(resource);
 			formatSearchHelp(resource);
 			formatEditMasks(resource);
+			formatUpdateHelp(resource);
 			formatLookups(resource);
 			formatValidationLookup(resource);
 			formatValidationExternal(resource);
