@@ -37,3 +37,6 @@ need to remove underscores elsewhere to be compliant.
 
 From this point onward, the metadata is kept in single file called metadata.xml and the other files can 
 be archived and removed if so desired.
+
+If you use the metadata migrator to do some of the changes, you should save, exit and restart the
+admin utility before attempting to further edit the metadata. 
