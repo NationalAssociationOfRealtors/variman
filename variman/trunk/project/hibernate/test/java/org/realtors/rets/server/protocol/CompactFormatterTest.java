@@ -35,7 +35,17 @@ public class CompactFormatterTest extends LinesEqualTestCase
         MockResultSet results = new MockResultSet();
         String[] columns = new String[]{"r_DATE"};
         results.setColumns(columns);
-        // This is pre RETS 1.7.2 format
+        /*
+         * This is pre RETS 1.7.2 format. Times are all GMT.
+         * It appears that there is confusion over which format to use when
+         * rendering compact format, especially since the 1.5 spec itself
+         * is inconsistent:
+         * "A fourteen-digit string with separators as above, and a space 
+         * between the day and the hour, as YYYY-MM-DDThh:mm:ss[.sss], with 
+         * a three-digit optional fractions of a second separated from the 
+         * seconds with a decimal <".">"
+         * We'll use YYYY-MM-DD hh:mm:ss.
+         */
         RetsDateTime cal = new RetsDateTime();
         cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         cal.set(2008, 4, 9, 12, 17, 0);
@@ -53,7 +63,7 @@ public class CompactFormatterTest extends LinesEqualTestCase
         assertLinesEqual(
         		"<DELIMITER value=\"09\"/>\n" + 
         		"<COLUMNS>\tDATE\t</COLUMNS>\n" + 
-        		"<DATA>\tFri, 9 May 2008 12:17:00 GMT\t</DATA>\n", formatted.toString());
+        		"<DATA>\t2008-05-09 12:17:00\t</DATA>\n", formatted.toString());
         
         // This is RETS 1.7.2 (the default) format.
         results = new MockResultSet();
