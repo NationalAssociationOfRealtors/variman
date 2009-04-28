@@ -18,16 +18,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.catalina.Connector;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.Context;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
 import org.apache.catalina.InstanceEvent;
 import org.apache.catalina.InstanceListener;
 import org.apache.catalina.Wrapper;
-import org.apache.catalina.logger.FileLogger;
 import org.apache.catalina.realm.MemoryRealm;
 import org.apache.catalina.startup.Embedded;
+//import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -70,15 +70,14 @@ public class EmbeddedTomcat
         // Set the Tomcat home directory
         System.setProperty("catalina.home", mCatalinaHome);
         System.setProperty("catalina.base", mCatalinaHome);
-
+        // Set Tomcat logging to a file instead of to the console
+        System.setProperty("java.util.logging.config.file",
+        		mCatalinaHome + File.separator +
+        		"conf" + File.separator +
+        		"tomcat.logging.properties");
+        
         // Create an embedded server
         mEmbedded = new Embedded();
-        // Print all log statments to standard error
-        mEmbedded.setDebug(0);
-        FileLogger logger = new FileLogger();
-        logger.setDirectory(mHomeDirectory + File.separator + "server" +
-                            File.separator + "logs");
-        mEmbedded.setLogger(logger);
 
         // Create an engine
         Engine engine = mEmbedded.createEngine();
@@ -89,7 +88,7 @@ public class EmbeddedTomcat
         engine.addChild(mHost);
         engine.setRealm(new MemoryRealm());
 
-        // Install the assembed container hierarchy
+        // Install the assembled container hierarchy
         mEmbedded.addEngine(engine);
 
         // Assembled and install a default HTTP connector

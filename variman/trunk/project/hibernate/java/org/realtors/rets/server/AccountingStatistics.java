@@ -10,12 +10,13 @@
  */
 package org.realtors.rets.server;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 
 /**
  * @hibernate.class table="rets_accounting"
  */
-public class AccountingStatistics
+public class AccountingStatistics implements Serializable
 {
     public AccountingStatistics()
     {

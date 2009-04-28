@@ -30,6 +30,7 @@ import net.sf.hibernate.cfg.Configuration;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
@@ -137,6 +138,8 @@ public class InitServlet extends RetsServlet
             getContextInitParameter(
                 "log4j-init-file", "WEB-INF/classes/" +
                 WebApp.PROJECT_NAME + "-webapp-log4j.properties");
+        // Use Tomcat logging since log4j not fully initialized.
+        log("log4jInitFile: " + log4jInitFile);
         log4jInitFile = resolveFromContextRoot(log4jInitFile);
         WebApp.setLog4jFile(log4jInitFile);
         WebApp.loadLog4j();
@@ -150,6 +153,7 @@ public class InitServlet extends RetsServlet
     {
         String prefix = WebApp.PROJECT_NAME;
         String logHome = getContextInitParameter(prefix + "-log4j-home", null);
+
         if (logHome == null)
         {
             logHome = System.getProperty(prefix + ".log.home");
@@ -158,14 +162,23 @@ public class InitServlet extends RetsServlet
                 logHome = System.getProperty(prefix + ".home");
                 if (logHome == null)
                 {
-                    logHome = System.getProperty("user.dir");
+                	logHome = System.getProperty("catalina.home");
+                	if (logHome == null)
+                	{
+                		logHome = System.getProperty("user.dir");
+                	}
+                    else
+                    {
+	                    logHome = logHome + File.separator + "logs";
+                    }
                 }
-                else
+                else 
                 {
                     logHome = logHome + File.separator + "logs";
                 }
             }
         }
+        log("Log Home: " + logHome);
         System.setProperty(prefix + ".log.home", logHome);
     }
 
@@ -196,7 +209,7 @@ public class InitServlet extends RetsServlet
             if (name.startsWith(WebApp.PROJECT_NAME + "."))
             {
                 String value = logProperties.getProperty(name);
-                log("Set loging property: " + name + " to " + value);
+                log("Set logging property: " + name + " to " + value);
                 System.setProperty(name, value);
             }
         }

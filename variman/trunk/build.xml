@@ -68,7 +68,7 @@
   </path>
 
   <path id="embedded.path">
-    <fileset dir="${tomcat.server.lib}" includes="*.jar"/>
+    <fileset dir="${tomcat.lib}" includes="*.jar"/>
     <pathelement path="${tomcat.bootstrap.jar}"/>
   </path>
 
@@ -433,44 +433,19 @@
     </copy>
     <copy file="project/webapp/config/tomcat-users.xml"
           todir="build/rets-server/server/conf"/>
-    <copy file="${tomcat.bootstrap.jar}"
-      todir="build/rets-server/server/lib" />
+  	<copy file="project/webapp/config/tomcat.logging.properties"
+          todir="build/rets-server/server/conf"/>
+  	<copy todir="build/rets-server/server/lib">
+  	    <fileset dir="${tomcat.lib}">
+  	       <include name="*.jar"/>
+  	   	</fileset>
+  	</copy>
     <copy todir="build/rets-server/server/lib">
-      <fileset dir="${tomcat.common.lib}">
-        <include name="servlet.jar"/>
-        <include name="naming-common.jar"/>
-        <include name="naming-resources.jar"/>
-        <include name="commons-collections.jar"/>
-        <include name="jasper-compiler.jar"/>
-        <include name="jasper-runtime.jar"/>
-        <include name="ant.jar"/>
-      </fileset>
-    </copy>
-    <copy todir="build/rets-server/server/lib">
-      <fileset dir="${tomcat.server.lib}">
-        <include name="catalina.jar"/>
-        <include name="commons-digester.jar"/>
-        <include name="tomcat-coyote.jar"/>
-        <include name="tomcat-util.jar"/>
-        <include name="tomcat-http11.jar"/>
-        <include name="commons-logging.jar"/>
-        <include name="commons-beanutils.jar"/>
-        <include name="servlets-common.jar"/>
-        <include name="servlets-default.jar"/>
-        <include name="mx4j-jmx.jar"/>
-      </fileset>
-    </copy>
-    <copy todir="build/rets-server/server/lib">
-      <fileset dir="${tomcat.common.endorsed}">
-        <include name="xercesImpl.jar"/>
-        <include name="xmlParserAPIs.jar"/>
-      </fileset>
-    </copy>
-    <!-- Rename jakarta-regexp to not have version number in it -->
-    <copy tofile="build/rets-server/server/lib/jakarta-regexp.jar">
-      <fileset dir="${tomcat.server.lib}"
-               includes="jakarta-regexp-*.jar"/>
-    </copy>
+       <fileset dir="${tomcat.bin}">
+          <include name="*.jar"/>
+       </fileset>
+   </copy>
+  	
     <copy todir="build/rets-server/doc">
       <fileset dir="doc" includes="**/*"/>
     </copy>
@@ -560,38 +535,6 @@
               />
       </junit>
 </target>
-<!--
-    <classpath>
-      <pathelement path="${java.class.path}"/>
-      <pathelement location="build/hibernate/test/classes"/>
-      <pathelement location="build/webapp/test/classes"/>
-      <pathelement location="build/admin/test/classes"/>
-      <path refid="hibernate.path"/>
-      <path refid="webapp.path"/>
-      <path refid="lib.path"/>
-      <path refid="embedded.path"/>
-      <pathelement path="${servlet.jar}"/>
-      <pathelement path="${log4j.jar}"/>
-      <pathelement path="${commons-lang.jar}"/>
-      <pathelement location="build/hibernate/classes"/>
-      <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
-      <pathelement location="build/admin/classes"/>
-    </classpath>
-    <formatter type="brief" />
-    <jvmarg value="-Dtest.basedir=${basedir}"/>
-    <jvmarg value="-Dlog4j.configuration=${project.name}-test-log4j.xml"/>
-    <batchtest todir="build/tests">
-        <fileset dir="build/hibernate/test/classes"
-          includes="**/*Test.class" excludes="**/Abstract*.class" />
-        <fileset dir="build/webapp/test/classes"
-          includes="**/*Test.class" excludes="**/Abstract*.class" />
-        <fileset dir="build/admin/test/classes"
-          includes="**/*Test.class" excludes="**/Abstract*.class" />
-    </batchtest>
-  </junit>
-  <fail message="Tests failed" if="test.failure" />
-</target>
--->
 
   <target name="build-webapp-webdoclet">
     <taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask">
