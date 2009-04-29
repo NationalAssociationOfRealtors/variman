@@ -1,4 +1,4 @@
-Version 3.0.0b3 - xx xxx 2009
+Version 3.0.0b3 - 29 Apr 2009
 
   * Refresh embedded Tomcat server. Ticket #28.
   * Refresh third party support libraries. Ticket #29.
