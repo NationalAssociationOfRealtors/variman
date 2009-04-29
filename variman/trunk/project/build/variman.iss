@@ -113,8 +113,8 @@ begin
       Result := False;
       Exit;
     end
-    if JavaMinorVersion < 4 then begin
-      MsgBox('Java version 1.4 is required, detected: ' + JavaVersion + #13#13
+    if JavaMinorVersion < 5 then begin
+      MsgBox('Java version 1.5 is required, detected: ' + JavaVersion + #13#13
         'Cancel the installation and upgrade Java.', mbCriticalError, MB_OK);
       Result := False;
       Exit;
