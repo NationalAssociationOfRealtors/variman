@@ -1,4 +1,13 @@
-Version 3.0.0b2 - 10 Apr 2009
+Version 3.0.0b3 - 29 Apr 2009
+
+  * Refresh embedded Tomcat server. Ticket #28.
+  * Refresh third party support libraries. Ticket #29.
+  * Update NullResultSet for JDBC 4.0. Ticket #34.
+  * Create Metadata and Image directory if don't exist. Ticket #36.
+  * Admin tool fails to delete Lookups. Ticket #37.
+  * COMPACT date rendering for pre 1.7.2 is wrong. Ticket #38.
+
+Version 3.0.0b2 - 13 Apr 2009
 
   * Make Variman more tolerant of out of spec 1.5 metadata.
   * Add Metadata Migration tool. Ticket #33.
