@@ -36,7 +36,7 @@ function dl_filesize($file)
       The current version is <b><?php print_ver()?></b>.  The embedded
       Tomcat binary distributions include an embedded version of the
       <a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat
-      4.1</a> servlet container.  The web application distributions
+      6.0</a> servlet container.  The web application distributions
       are meant to be deployed in a separate servlet container.
     </p>
 
