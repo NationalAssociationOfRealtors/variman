@@ -93,7 +93,7 @@ public class CreateSchemaAction extends AbstractAction
             }
         };
         worker.start();
-        dialog.show();
+        dialog.setVisible(true);
     }
 
     private class CreateSchemaDialog extends JDialog
