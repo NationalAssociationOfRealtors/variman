@@ -172,7 +172,8 @@ public class MetadataGenericDialog extends MetadataDialog
                 ((JTextField)component).setText(value);
             }
 
-            component.setToolTipText(attrType.getDescription());
+            if (attrType != null)
+            	component.setToolTipText(attrType.getDescription());
             
             mComponents.add(component);
             label.setLabelFor(component);

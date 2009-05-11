@@ -199,6 +199,7 @@ public abstract class RetsServlet extends HttpServlet implements Constants
         }
         else
         {
+        	// FIXME: Appears to be obsolete/unused code.
             metadataFetcher =
                 new HibernateMetadataFetcher(RetsServer.getSessions());
         }        return metadataFetcher;

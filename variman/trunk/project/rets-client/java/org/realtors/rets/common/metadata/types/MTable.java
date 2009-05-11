@@ -71,7 +71,7 @@ public class MTable extends MetaObject {
     		add(new MetadataElement(INTERPRETATION, sInterpretations));
     		add(new MetadataElement(ALIGNMENT, sAlignments));
     		add(new MetadataElement(USESEPARATOR, sAttrBoolean));
-    		add(new MetadataElement(EDITMASKID, sAlphanum64)); // FIXME: but multiples are separated by commas
+    		add(new MetadataElement(EDITMASKID, sRETSNAME)); // FIXME: but multiples are separated by commas
     		add(new MetadataElement(LOOKUPNAME, sRETSNAME));
     		add(new MetadataElement(MAXSELECT, sAttrNumeric));
     		add(new MetadataElement(UNITS, sUnits));

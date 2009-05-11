@@ -27,7 +27,7 @@ import org.realtors.rets.server.metadata.MetadataSegment;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
-
+// FIXME: This looks to be obsolete/unused code.
 public class HibernateMetadataFetcher implements MetadataFetcher
 {
     static

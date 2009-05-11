@@ -2,6 +2,8 @@ Version 3.0.0b4 - xx xxx 2009
 
 Version 3.0.0b3 - 29 Apr 2009
 
+  * Update Windows installation to use current Java-Service. 
+    Ticket #25.
   * Update embedded Tommcat server to 6.0. Ticket #28.
   * Refresh third party support libraries. Ticket #29.
   * Update NullResultSet for JDBC 4.0. Ticket #34.
