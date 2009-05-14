@@ -10,7 +10,6 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.realtors.rets.common.util.CaseInsensitiveTreeMap;
 
 /** Base Http Request object */
 public abstract class RetsHttpRequest implements Serializable {
@@ -19,7 +18,7 @@ public abstract class RetsHttpRequest implements Serializable {
 	protected String mUrl;
 
 	public RetsHttpRequest() {
-		this.mHeaders = new CaseInsensitiveTreeMap<String,String>();
+		this.mHeaders = new TreeMap<String,String>(String.CASE_INSENSITIVE_ORDER);
 		this.mQueryParameters = new TreeMap<String,String>();
 	}
 

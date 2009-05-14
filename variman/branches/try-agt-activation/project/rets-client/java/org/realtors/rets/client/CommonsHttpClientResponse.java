@@ -3,6 +3,7 @@ package org.realtors.rets.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.httpclient.Header;
@@ -10,7 +11,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
-import org.realtors.rets.common.util.CaseInsensitiveTreeMap;
 
 public class CommonsHttpClientResponse implements RetsHttpResponse {
 	private static final Log WIRE_LOG = WireLogInputStream.getWireLog();
@@ -23,9 +23,10 @@ public class CommonsHttpClientResponse implements RetsHttpResponse {
 	public CommonsHttpClientResponse(int responseCode, HttpMethod method, Map<String,String> cookies) {
 		this.responseCode = responseCode;
 		this.method = method;
-		this.cookies = new CaseInsensitiveTreeMap<String,String>(cookies);
+		this.cookies = new TreeMap<String,String>(String.CASE_INSENSITIVE_ORDER);
+        this.cookies.putAll(cookies);
 
-		this.headers = new CaseInsensitiveTreeMap<String,String>();
+        this.headers = new TreeMap<String,String>(String.CASE_INSENSITIVE_ORDER);
 		for (Header header : this.method.getResponseHeaders()) 
 			this.headers.put(header.getName(), header.getValue());
 	}

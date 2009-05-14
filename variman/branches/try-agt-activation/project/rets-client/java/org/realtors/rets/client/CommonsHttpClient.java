@@ -1,6 +1,7 @@
 package org.realtors.rets.client;
 
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -18,7 +19,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
-import org.realtors.rets.common.util.CaseInsensitiveTreeMap;
 
 /** 
  * Requires http-client > 3.0 
@@ -141,7 +141,7 @@ public class CommonsHttpClient extends RetsHttpClient {
 	}
 	
 	private Map<String,String> getCookies() {
-		Map<String,String> cookieMap = new CaseInsensitiveTreeMap();
+		Map<String,String> cookieMap = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 		for (Cookie cookie : this.httpClient.getState().getCookies()) {
 			cookieMap.put(cookie.getName(), cookie.getValue());
 		}

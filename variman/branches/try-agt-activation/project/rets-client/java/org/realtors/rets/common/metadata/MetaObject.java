@@ -1,16 +1,7 @@
 package org.realtors.rets.common.metadata;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -48,7 +39,6 @@ import org.realtors.rets.common.metadata.types.MValidationExternal;
 import org.realtors.rets.common.metadata.types.MValidationExternalType;
 import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.common.metadata.types.MValidationLookupType;
-import org.realtors.rets.common.util.CaseInsensitiveTreeMap;
 
 public abstract class MetaObject implements Serializable {
 	private static final Log LOG = LogFactory.getLog(MetaObject.class);
@@ -213,7 +203,7 @@ public abstract class MetaObject implements Serializable {
 		if (strictParsing) {
 			this.attributes = new LinkedHashMap();
 		} else {
-			this.attributes = new CaseInsensitiveTreeMap();
+			this.attributes = new TreeMap(String.CASE_INSENSITIVE_ORDER);
 		}
 		this.attrTypes = this.getAttributeMap(strictParsing);
 		MetadataType[] types = getChildTypes();
@@ -230,7 +220,7 @@ public abstract class MetaObject implements Serializable {
 				if (strictParsing) {
 					map = new LinkedHashMap();
 				} else {
-					map = new CaseInsensitiveTreeMap();
+					map = new TreeMap(String.CASE_INSENSITIVE_ORDER);
 				}
 				addAttributesToMap(map);
 				// Let's make sure no one mucks with the map later
@@ -315,7 +305,6 @@ public abstract class MetaObject implements Serializable {
 	 * attributes for the subclass identified attributes.
 	 * @param key A String containing the name of the attribute.
 	 * @return The attribute as an Object.
-	 * @see getAttributeFromName()
 	 */
 	public Object getAttribute(String key) {
 		return this.attributes.get(key);
