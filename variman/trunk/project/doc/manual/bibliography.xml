@@ -9,9 +9,9 @@
 
   <biblioentry id="bib-tomcat">
     <abbrev>Tomcat</abbrev>
-    <title>Jakarta Tomcat Web Site</title>
+    <title>Apache Tomcat Web Site</title>
     <releaseinfo>
-      <ulink url="http://jakarta.apache.org/tomcat/">http://jakarta.apache.org/tomcat/</ulink>
+      <ulink url="http://tomcat.apache.org/">http://tomcat.apache.org/</ulink>
     </releaseinfo>
   </biblioentry>
 

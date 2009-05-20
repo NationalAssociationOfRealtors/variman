@@ -73,10 +73,13 @@ public class Bootstrap
             }
         });
 
-        for (int i = 0; i < jars.length; i++)
+        if (jars != null)
         {
-            File jar = jars[i].getAbsoluteFile();
-            urlList.add(jar.toURL());
+	        for (int i = 0; i < jars.length; i++)
+	        {
+	            File jar = jars[i].getAbsoluteFile();
+	            urlList.add(jar.toURL());
+	        }
         }
     }
 

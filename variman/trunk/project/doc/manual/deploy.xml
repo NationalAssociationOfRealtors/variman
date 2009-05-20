@@ -16,6 +16,22 @@
       as well as the ability to create new tables.
     </para>
 
+    <section id="variman-setup">
+      <title>Variman Setup</title>
+      <para>
+        Beneath the WEB-INF/rets directory you will find two files:
+        rets-config.xml.dist and rets-logging.properties.dist. You
+        will need to either rename or copy these to rets-config.xml and
+        rets-logging.properties in the same directory before you can even 
+        run the admin tool.
+        You may want to do some hand initiailization with your favorite
+        editor of the rets-logging.properties file to set up a higher
+        logging level until you get the server functional. Once it is
+        functional, set the level back to INFO or the log data will
+        get large quite fast.
+      </para>
+    </section>
+
     <section id="postgres">
       <title>PostgreSQL Setup</title>
       <para>
@@ -37,7 +53,7 @@
         tables in the database used by &name;.
       </para>
       <para>
-        The JDBC driver for Postgres version 7.4.x is included with
+        The JDBC driver for Postgres version 8.3.x is included with
         the distribution.
       </para>
     </section>
@@ -742,17 +758,6 @@
 
   </section> <!-- Groups -->
 
-  <section id="deploy-metadata">
-    <title>Configuring Metadata</title>
-    <para>
-      Metadata describes how to map property data in your relational
-      database to RETS names.  The metadata is stored as compact
-      format metadata, split into multiple files.  For more
-      information on compact metadata format, see RETS specification.
-      A sample set of metadata is provided on the &name; website, and
-      should be used as a starting point.
-    </para>
-  </section>
 </section> <!-- deploy -->
 
 <!--

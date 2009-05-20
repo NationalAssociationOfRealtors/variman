@@ -1,4 +1,7 @@
-Version 3.0.0b4 - xx xxx 2009
+Version 3.0.1 - xx xxx 2009
+
+  * Update User Documentation. Ticket #22.
+  * EditMask in Table Data Attribute wrong. Ticket #40.
 
 Version 3.0.0b3 - 29 Apr 2009
 

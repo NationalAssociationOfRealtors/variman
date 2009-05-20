@@ -5,6 +5,7 @@
 <!ENTITY intro SYSTEM "intro.xml">
 <!ENTITY install SYSTEM "install.xml">
 <!ENTITY deploy SYSTEM "deploy.xml">
+<!ENTITY metadata SYSTEM "metadata.xml">
 <!ENTITY object-set-example SYSTEM "LN1-example.xml">
 <!ENTITY bibliography SYSTEM "bibliography.xml">
 ]>
@@ -18,6 +19,11 @@
     <author>
       <firstname>Dave</firstname>
       <surname>Dribin</surname>
+    </author>
+
+    <author>
+      <firstname>Mark</firstname>
+      <surname>Klein</surname>
     </author>
 
     <revhistory>
@@ -64,11 +70,19 @@
           Add sections on time restrictions and query count limits.
         </revremark>
       </revision>
+      <revision>
+        <revnumber>1.6</revnumber>
+        <date>2009-05-15</date>
+        <revremark>
+          Add sections on metadata editor and expanded installation
+          instructions.
+        </revremark>
+      </revision>
     </revhistory>
     
     <abstract>
       <para>
-        &name; is a RETS 1.0 and 1.5 compliant server. &name; is
+        &name; is a RETS 1.5, 1.7 and 1.7.2  compliant server. &name; is
         developed under a BSD-style license at the Center for REALTOR
         &reg; Technology.  This manual describes how to install and
         deploy a &name; server.
@@ -79,6 +93,7 @@
   &intro;
   &install;
   &deploy;
+  &metadata;
   &bibliography;
   
 </article>
