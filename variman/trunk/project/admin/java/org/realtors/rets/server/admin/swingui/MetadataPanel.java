@@ -112,7 +112,6 @@ public class MetadataPanel extends AdminTab
         super(new BorderLayout());
                 
         mMetadataMenu = metadataMenu;
-        //mMetadataMenu.add(new CreateMetadataAction());
         mMetadataMenu.add(new MetadataReloadAction());
         mStrictParsingMenuItem = new JCheckBoxMenuItem("Strict");
         mStrictParsingMenuItem.setSelected(true);
@@ -152,22 +151,7 @@ public class MetadataPanel extends AdminTab
          *  because when the tree selection listener is fired, the components
          *  can't be null.
          */
-        //mMetadata = RetsConfig.getMetadata();
-        //mSystem = mMetadata.getSystem();
         mMainPanel = new JPanel(new BorderLayout());
-        //mTreePanel = new MetadataTreePanel();
-        //mSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mTreePanel, mMainPanel);
-        //mSplitPane.setDividerLocation(250);
-        //add(mSplitPane, BorderLayout.CENTER);
-                           
-        //PopupListener popupListener = new PopupListener();
-        //mSplitPane.addMouseListener(popupListener);
-
-        /*
-         * OK, it is safe to populate the tree.
-         */
-        //populateTree(mTreePanel);
-        //mTreePanel.collapseAll();
     }
     
     /**
@@ -184,7 +168,7 @@ public class MetadataPanel extends AdminTab
         for (String attribute : ((MetaObject)userObject).getAttributeNames())
         {
             AttrType<?> attrType    = ((MetaObject)userObject).getAttributeType(attribute);
-            String         value         = ((MetaObject)userObject).getAttributeAsString(attribute);
+            String      value       = ((MetaObject)userObject).getAttributeAsString(attribute);
             if (value == null)
                 value = new String("");
             JLabel label = new JLabel(attribute + ":", JLabel.TRAILING);
@@ -200,9 +184,9 @@ public class MetadataPanel extends AdminTab
             
             JLabel val = new JLabel(value);
             
-               if (userObject instanceof MResource && 
-                       attrType instanceof AttrPositiveNumeric && 
-                       attribute.equals(MResource.CLASSCOUNT))
+            if (userObject instanceof MResource && 
+                   attrType instanceof AttrPositiveNumeric && 
+                   attribute.equals(MResource.CLASSCOUNT))
             {
                 /*
                  * This is the class count field. Determine the count.
@@ -396,7 +380,6 @@ public class MetadataPanel extends AdminTab
 
     public void refreshTab()
     {
-        //System.out.println("refreshTab()"); // $$DEBUG
         mMetadataMenu.setEnabled(true);
 
         SwingWorker worker = new SwingWorker()
@@ -656,19 +639,19 @@ public class MetadataPanel extends AdminTab
             }
             
             tree.scrollPathToVisible(new TreePath(mResourceNode.getPath()));
-            tree.setSelectionPath(tree.getPathForRow(0));
+            tree.getSelectionModel().setSelectionPath(tree.getPathForRow(0));
         }
     }
     
     private class MetadataTreeListener implements TreeSelectionListener
     {
-    	JTree			mTree;
-    	
-    	MetadataTreeListener(JTree tree)
-    	{
-    		super();
-    		mTree = tree;
-    	}
+        JTree            mTree;
+        
+        MetadataTreeListener(JTree tree)
+        {
+            super();
+            mTree = tree;
+        }
         /*
          * Add the tree selection listener. The listener is responsible for setting up the 
          * action buttons based on the current state (e.g. node selected).
@@ -706,26 +689,26 @@ public class MetadataPanel extends AdminTab
          * MValidationExternalType  Add not allowed.
          * MValidationExpression    Add not allowed.
          */
-    	
-    	private class MetaObjectAddButtonListener implements ActionListener
-    	{
-    		String mAnswer;
-    		MetaObject mMetaObject;
-    		MetadataTreeNode mSelectedNode;
-    		
-    		MetaObjectAddButtonListener(MetaObject userObject, MetadataTreeNode selectedNode, String answer)
-    		{
-      			super();
-    			mAnswer = answer;
-    			mMetaObject = userObject;
-    			mSelectedNode = selectedNode;
-    		}
+        
+        private class MetaObjectAddButtonListener implements ActionListener
+        {
+            String mAnswer;
+            MetaObject mMetaObject;
+            MetadataTreeNode mSelectedNode;
+            
+            MetaObjectAddButtonListener(MetaObject userObject, MetadataTreeNode selectedNode, String answer)
+            {
+                super();
+                mAnswer = answer;
+                mMetaObject = userObject;
+                mSelectedNode = selectedNode;
+            }
 
-    		MetaObjectAddButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
-    		{
-    			this(userObject, selectedNode, null);
-    		}
-    		
+            MetaObjectAddButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
+            {
+                this(userObject, selectedNode, null);
+            }
+            
             public void actionPerformed(ActionEvent e)
             {
                 MetadataType metadataType = null;
@@ -754,7 +737,7 @@ public class MetadataPanel extends AdminTab
                                     "ValidationExpression"};
                     
                     if (mAnswer == null)
-                    	mAnswer = (String) JOptionPane.showInputDialog(
+                        mAnswer = (String) JOptionPane.showInputDialog(
                                                     SwingUtils.getAdminFrame(),
                                                     "Add Which?",
                                                     "Add to Resource",
@@ -1018,7 +1001,7 @@ public class MetadataPanel extends AdminTab
                     Object[] ddl = {"Table",
                                     "Update"};
                     
-                    String mAnswer = (String) JOptionPane.showInputDialog(
+                    mAnswer = (String) JOptionPane.showInputDialog(
                                                     SwingUtils.getAdminFrame(),
                                                     "Add Which?",
                                                     "Add to Class",
@@ -1070,10 +1053,16 @@ public class MetadataPanel extends AdminTab
                     LOG.warn("*** Unexpected User Object selected: " + mMetaObject);
                     resource = null;
                 }
-				/*
-				 * Instantiate the default or custom dialog, depending on the type of
-				 * the metadata.
-				 */                              
+                
+                /*
+                 * Clear mAnswer for next pass.
+                 */
+                mAnswer = null;
+                
+                /*
+                 * Instantiate the default or custom dialog, depending on the type of
+                 * the metadata.
+                 */                              
                 MetadataDialog dialog = new MetadataGenericDialog(mStrictParsing, mMetadata, resource);
                    
                 if (resource instanceof MTable)
@@ -1115,76 +1104,75 @@ public class MetadataPanel extends AdminTab
                         /*
                          * Add the object to the tree and to the metadata. 
                          */
-                    	mTreePanel.addObject(node, resource);
+                        mTreePanel.addObject(node, resource);
                         mMetaObject.addChild(metadataType, resource);
-						mTree.setSelectionPath(new TreePath(mSelectedNode.getPath()));
 
                         Admin.setRetsConfigChanged(true);
                         refreshMainPanel(mMetaObject);
                     }
                     else
                     {
-                    	JOptionPane.showMessageDialog(
+                        JOptionPane.showMessageDialog(
                                 SwingUtils.getAdminFrame(),
                                 ((MetaObject)resource).getId() + " already exists!");
                     }
                 }
             }
-    	}
-    	
-    	private class MetaObjectDeleteButtonListener implements ActionListener
-    	{
-    		MetaObject mMetaObject;
-    		MetadataTreeNode mSelectedNode;
-    		
-    		MetaObjectDeleteButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
-    		{
-    			super();
-    			mMetaObject = userObject;
-    			mSelectedNode = selectedNode;
-    		}
-    		
+        }
+        
+        private class MetaObjectDeleteButtonListener implements ActionListener
+        {
+            MetaObject mMetaObject;
+            MetadataTreeNode mSelectedNode;
+            
+            MetaObjectDeleteButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
+            {
+                super();
+                mMetaObject = userObject;
+                mSelectedNode = selectedNode;
+            }
+            
             public void actionPerformed(ActionEvent e)
             {
                 if (mMetaObject instanceof MetaObject)
                 {
-					int answer = (int) JOptionPane.showConfirmDialog(
-					                            SwingUtils.getAdminFrame(),
-					                            "Are you sure?",
-					                            "Delete Confirmation",
-					                            JOptionPane.OK_CANCEL_OPTION,
-					                            JOptionPane.QUESTION_MESSAGE);
-					if (answer == JOptionPane.OK_OPTION)
-					{
+                    int answer = (int) JOptionPane.showConfirmDialog(
+                                                SwingUtils.getAdminFrame(),
+                                                "Are you sure?",
+                                                "Delete Confirmation",
+                                                JOptionPane.OK_CANCEL_OPTION,
+                                                JOptionPane.QUESTION_MESSAGE);
+                    if (answer == JOptionPane.OK_OPTION)
+                    {
                        /*
                         * Locate the parent node.
                         */
                        DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) mSelectedNode.getParent();
                        Object parentObject = null;
                        
-						if (parentNode != null)
-							parentObject = parentNode.getUserObject();
-						if (parentObject instanceof MetaObject)
-						{
-						    /*
-						     * The parent object is some form of Metadata, so we're good to go.
-						     */
-						    Admin.setRetsConfigChanged(true);
-						    /*
-							 * Remove the object from the parent.
-							 */
-							((MetaObject)parentObject).deleteChild(
-							                               ((MetaObject)mMetaObject).getMetadataType(), 
-							                               (MetaObject)mMetaObject);                                               
-							mTreePanel.removeCurrentNode();
-							/*
-							 * And set the parent as selected.
-							 */
-							mTree.setSelectionPath(new TreePath(parentNode.getPath()));                                               
-							
-							refreshMainPanel(parentObject);
-						}
-						else
+                        if (parentNode != null)
+                            parentObject = parentNode.getUserObject();
+                        if (parentObject instanceof MetaObject)
+                        {
+                            /*
+                             * The parent object is some form of Metadata, so we're good to go.
+                             */
+                            Admin.setRetsConfigChanged(true);
+                            /*
+                             * Remove the object from the parent.
+                             */
+                            ((MetaObject)parentObject).deleteChild(
+                                                           ((MetaObject)mMetaObject).getMetadataType(), 
+                                                           (MetaObject)mMetaObject);                                               
+                            mTreePanel.removeCurrentNode();
+                            /*
+                             * And set the parent as selected.
+                             */
+                            mTree.getSelectionModel().setSelectionPath(new TreePath(parentNode.getPath()));                                               
+                            
+                            refreshMainPanel(parentObject);
+                        }
+                        else
                         if (parentObject != null)
                         {
                             /*
@@ -1204,33 +1192,33 @@ public class MetadataPanel extends AdminTab
                                 MetaObject resource = null;
                                 
                                 if (parentsParentNode != null)
-                                	resource = (MetaObject) parentsParentNode.getUserObject();
-                            	if (resource != null)
-                            	{
-                                	if (parentObject.equals(sLOOKUP))
+                                    resource = (MetaObject) parentsParentNode.getUserObject();
+                                if (resource != null)
+                                {
+                                    if (parentObject.equals(sLOOKUP))
                                         resource.deleteChild(MetadataType.LOOKUP, (MetaObject) mMetaObject);
-                                	else
+                                    else
                                     if (parentObject.equals(sOBJECT))
                                         resource.deleteChild(MetadataType.OBJECT, (MetaObject) mMetaObject);
                                     else
                                     if (parentObject.equals(sEDITMASK))
                                         resource.deleteChild(MetadataType.EDITMASK, (MetaObject) mMetaObject);
                                     else
-                                	if (parentObject.equals(sSEARCHHELP))
+                                    if (parentObject.equals(sSEARCHHELP))
                                         resource.deleteChild(MetadataType.SEARCH_HELP, (MetaObject) mMetaObject);
                                     else
                                     if (parentObject.equals(sUPDATEHELP))
                                         resource.deleteChild(MetadataType.UPDATE_HELP, (MetaObject) mMetaObject);
                                     else
-                                	if (parentObject.equals(sVALIDATIONLOOKUP))
+                                    if (parentObject.equals(sVALIDATIONLOOKUP))
                                         resource.deleteChild(MetadataType.VALIDATION_LOOKUP, (MetaObject) mMetaObject);
-                                	else
+                                    else
                                     if (parentObject.equals(sVALIDATIONEXTERNAL))
                                         resource.deleteChild(MetadataType.VALIDATION_EXTERNAL, (MetaObject) mMetaObject);
                                     else
                                     if (parentObject.equals(sVALIDATIONEXPRESSION))
                                         resource.deleteChild(MetadataType.VALIDATION_EXPRESSION, (MetaObject) mMetaObject);
-                            	}
+                                }
                             }
                             
                             Admin.setRetsConfigChanged(true);
@@ -1238,7 +1226,7 @@ public class MetadataPanel extends AdminTab
                             /*
                              * And set the parent as selected.
                              */
-                            mTree.setSelectionPath(new TreePath(parentNode.getPath()));                                               
+                            mTree.getSelectionModel().setSelectionPath(new TreePath(parentNode.getPath()));                                               
 
                             mMainPanel.removeAll();
                             mMainPanel.add(new JLabel(""));
@@ -1247,20 +1235,20 @@ public class MetadataPanel extends AdminTab
                     }
                 }
             }
-    	}
-    	
-    	private class MetaObjectEditButtonListener implements ActionListener
-    	{
-    		MetaObject mMetaObject;
-    		MetadataTreeNode mSelectedNode;
-    		
-    		MetaObjectEditButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
-    		{
-    			super();
-    			mMetaObject = userObject;
-    			mSelectedNode = selectedNode;
-    		}
-    		
+        }
+        
+        private class MetaObjectEditButtonListener implements ActionListener
+        {
+            MetaObject mMetaObject;
+            MetadataTreeNode mSelectedNode;
+            
+            MetaObjectEditButtonListener(MetaObject userObject, MetadataTreeNode selectedNode)
+            {
+                super();
+                mMetaObject = userObject;
+                mSelectedNode = selectedNode;
+            }
+            
             public void actionPerformed(ActionEvent e)
             {
                 /*
@@ -1285,22 +1273,22 @@ public class MetadataPanel extends AdminTab
                         LOG.warn("*** Can't locate parent Resource for " + mMetaObject);
                 }
                 else
-            	if (mMetaObject instanceof MResource)
+                if (mMetaObject instanceof MResource)
                 {
                     /*
                      * Invoke the custom dialog.
                      */
-            	   dialog = new MetadataResourceDialog(mStrictParsing,
+                   dialog = new MetadataResourceDialog(mStrictParsing,
                                                         mMetadata, 
                                                         (MResource) mMetaObject);
                 }
-				else
-				if (mMetaObject instanceof MClass)
+                else
+                if (mMetaObject instanceof MClass)
                 {
                     /*
                      * Invoke the custom dialog.
                      */
-					dialog = new MetadataClassDialog(mStrictParsing,
+                    dialog = new MetadataClassDialog(mStrictParsing,
                                                      mMetadata, 
                                                      (MClass) mMetaObject);
                 }
@@ -1312,11 +1300,11 @@ public class MetadataPanel extends AdminTab
                     refreshMainPanel(mMetaObject);
                 }
             }
-    	}
-    	
-    	/**
-    	 * A new node has been selected. Set up the buttons based on state.
-    	 */
+        }
+        
+        /**
+         * A new node has been selected. Set up the buttons based on state.
+         */
         public void valueChanged(TreeSelectionEvent e)
         {
             final MetadataTreeNode selectedNode = (MetadataTreeNode)mTree.getLastSelectedPathComponent();
@@ -1377,13 +1365,13 @@ public class MetadataPanel extends AdminTab
                             dialog.setVisible(true);
                             if (dialog.getResponse() == JOptionPane.OK_OPTION)
                             {
-								MetadataTreeNode newNode = mTreePanel.addObject(mForeignKeyNode, resource);
-								mTree.setSelectionPath(new TreePath(newNode.getPath()));
-								
-								mSystem.addChild(MetadataType.FOREIGNKEYS, resource);
-								
-								Admin.setRetsConfigChanged(true);
-								refreshMainPanel(resource);
+                                MetadataTreeNode newNode = mTreePanel.addObject(mForeignKeyNode, resource);
+                                mTree.getSelectionModel().setSelectionPath(new TreePath(newNode.getPath()));
+                                
+                                mSystem.addChild(MetadataType.FOREIGNKEYS, resource);
+                                
+                                Admin.setRetsConfigChanged(true);
+                                refreshMainPanel(resource);
                             }
                         }
                     };
@@ -1395,30 +1383,30 @@ public class MetadataPanel extends AdminTab
                     {
                            public void actionPerformed(ActionEvent e)
                         {
-							/*
-							 * In this context, the FOREIGN-KEYS node has been selected. Delete
-							 * everything beneath it.
-							 */
-							int answer = (int) JOptionPane.showConfirmDialog(
-							                            SwingUtils.getAdminFrame(),
-							                            "Are you sure?",
-							                            "Delete Confirmation",
-							                            JOptionPane.OK_CANCEL_OPTION,
-							                            JOptionPane.QUESTION_MESSAGE);
-							if (answer == JOptionPane.OK_OPTION)
-							{
-								/*
-								 * The FOREIGNKEY node is a MetadataTreeNode containing a literal string.
-								 * We have to go to the mSystem object to properly delete the children.
-								 */
-								Admin.setRetsConfigChanged(true);
-								mSystem.deleteAllChildren(MetadataType.FOREIGNKEYS);
-								mTreePanel.removeCurrentNode();
-								mForeignKeyNode = mTreePanel.addObject(null, sFOREIGNKEY);
-								mMainPanel.removeAll();
-								mMainPanel.add(new JLabel(""));
-								mSplitPane.revalidate();
-							}
+                            /*
+                             * In this context, the FOREIGN-KEYS node has been selected. Delete
+                             * everything beneath it.
+                             */
+                            int answer = (int) JOptionPane.showConfirmDialog(
+                                                        SwingUtils.getAdminFrame(),
+                                                        "Are you sure?",
+                                                        "Delete Confirmation",
+                                                        JOptionPane.OK_CANCEL_OPTION,
+                                                        JOptionPane.QUESTION_MESSAGE);
+                            if (answer == JOptionPane.OK_OPTION)
+                            {
+                                /*
+                                 * The FOREIGNKEY node is a MetadataTreeNode containing a literal string.
+                                 * We have to go to the mSystem object to properly delete the children.
+                                 */
+                                Admin.setRetsConfigChanged(true);
+                                mSystem.deleteAllChildren(MetadataType.FOREIGNKEYS);
+                                mTreePanel.removeCurrentNode();
+                                mForeignKeyNode = mTreePanel.addObject(null, sFOREIGNKEY);
+                                mMainPanel.removeAll();
+                                mMainPanel.add(new JLabel(""));
+                                mSplitPane.revalidate();
+                            }
                         }
                     };
                     mDeleteButton.addActionListener(mDeleteButtonListener);
@@ -1440,12 +1428,12 @@ public class MetadataPanel extends AdminTab
                             dialog.setVisible(true);
                             if (dialog.getResponse() == JOptionPane.OK_OPTION)
                             {
-								MetadataTreeNode newNode = mTreePanel.addObject(mResourceNode, resource);
-								mTree.setSelectionPath(new TreePath(newNode.getPath()));
-								
-								mSystem.addChild(MetadataType.RESOURCE, resource);
-								
-								Admin.setRetsConfigChanged(true);
+                                MetadataTreeNode newNode = mTreePanel.addObject(mResourceNode, resource);
+                                mTree.getSelectionModel().setSelectionPath(new TreePath(newNode.getPath()));
+                                
+                                mSystem.addChild(MetadataType.RESOURCE, resource);
+                                
+                                Admin.setRetsConfigChanged(true);
                                 refreshMainPanel(resource);
                             }
                         }
@@ -1483,8 +1471,8 @@ public class MetadataPanel extends AdminTab
                             }
                         }
                     };
-					mDeleteButton.addActionListener(mDeleteButtonListener);
-					mDeleteButton.setEnabled(true);
+                    mDeleteButton.addActionListener(mDeleteButtonListener);
+                    mDeleteButton.setEnabled(true);
                 }
                 else
                 {
@@ -1501,14 +1489,14 @@ public class MetadataPanel extends AdminTab
                     MetadataTreeNode parentNode = (MetadataTreeNode) selectedNode.getParent();
                     Object parentObject = null;
                     if (parentNode != null)
-                    	parentObject = parentNode.getUserObject();
+                        parentObject = parentNode.getUserObject();
                     
                     if (parentObject != null && parentObject instanceof MResource)
                     {
-	                    mAddButton.setEnabled(true);
-	                    mAddButton.removeActionListener(mAddButtonListener);
-	                    mAddButtonListener = new MetaObjectAddButtonListener((MetaObject)parentObject, parentNode, userObject.toString());
-	                    mAddButton.addActionListener(mAddButtonListener);
+                        mAddButton.setEnabled(true);
+                        mAddButton.removeActionListener(mAddButtonListener);
+                        mAddButtonListener = new MetaObjectAddButtonListener((MetaObject)parentObject, parentNode, userObject.toString());
+                        mAddButton.addActionListener(mAddButtonListener);
                     }
                 }
 
@@ -1524,17 +1512,17 @@ public class MetadataPanel extends AdminTab
     private static final Logger LOG =
         Logger.getLogger(MetadataPanel.class);
     
-    private static final String sRESOURCE   			= new String("Resource");
-    private static final String sFOREIGNKEY 			= new String("ForeignKey");
-    private static final String sLOOKUP     			= new String("Lookup");
-    private static final String sOBJECT     			= new String("Object");
-    private static final String sEDITMASK				= new String("EditMask");
-    private static final String sSEARCHHELP				= new String("SearchHelp");
-    private static final String sUPDATE					= new String("Update");
-    private static final String sUPDATEHELP				= new String("UpdateHelp");
-    private static final String sVALIDATIONLOOKUP		= new String("ValidationLookup");
-    private static final String sVALIDATIONEXTERNAL		= new String("ValidationExternal");
-    private static final String sVALIDATIONEXPRESSION	= new String("ValidationExpression");
+    private static final String sRESOURCE               = new String("Resource");
+    private static final String sFOREIGNKEY             = new String("ForeignKey");
+    private static final String sLOOKUP                 = new String("Lookup");
+    private static final String sOBJECT                 = new String("Object");
+    private static final String sEDITMASK                = new String("EditMask");
+    private static final String sSEARCHHELP                = new String("SearchHelp");
+    private static final String sUPDATE                    = new String("Update");
+    private static final String sUPDATEHELP                = new String("UpdateHelp");
+    private static final String sVALIDATIONLOOKUP        = new String("ValidationLookup");
+    private static final String sVALIDATIONEXTERNAL        = new String("ValidationExternal");
+    private static final String sVALIDATIONEXPRESSION    = new String("ValidationExpression");
 
     private JButton             mAddButton;
     private ActionListener      mAddButtonListener;

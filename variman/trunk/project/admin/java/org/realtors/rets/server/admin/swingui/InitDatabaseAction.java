@@ -23,7 +23,7 @@ public class InitDatabaseAction extends AbstractAction
 {
     public InitDatabaseAction()
     {
-        super("Initliaze Database...");
+        super("Initialize Database...");
     }
 
     public void execute()

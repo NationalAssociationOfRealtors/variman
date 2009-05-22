@@ -66,12 +66,12 @@ public class RetsConfig
     
     public static synchronized RetsConfig getInstance()
     {
-    	return _instance;
+        return sInstance;
     }
     
     public Object clone() throws CloneNotSupportedException
     {
-    	throw new CloneNotSupportedException();
+        throw new CloneNotSupportedException();
     }
 
     public String getAddress()
@@ -159,12 +159,12 @@ public class RetsConfig
     
     public boolean getStrictParsing()
     {
-    	return mStrictParsing;
+        return mStrictParsing;
     }
     
     public void setStrictParsing(boolean strict)
     {
-    	mStrictParsing = strict;
+        mStrictParsing = strict;
     }
     
     public String toString()
@@ -731,13 +731,13 @@ public class RetsConfig
 
     public void setMetadataDir(String metadataDir)
     {
-    	/*
-    	 * See if the metadata directory changed and we need to force a reload.
-    	 */
-    	if (mMetadataDir != null && !mMetadataDir.equals(metadataDir))
-    	{
-    		sMetadata = null;
-    	}
+        /*
+         * See if the metadata directory changed and we need to force a reload.
+         */
+        if (mMetadataDir != null && !mMetadataDir.equals(metadataDir))
+        {
+            sMetadata = null;
+        }
         mMetadataDir = metadataDir;
     }
 
@@ -782,147 +782,148 @@ public class RetsConfig
      */
     public static Metadata getMetadata()
     {
-    	if (sMetadata == null)
-    	{
-	    	RetsConfig retsConfig = RetsConfig.getInstance();
+        if (sMetadata == null)
+        {
+            RetsConfig retsConfig = RetsConfig.getInstance();
 
-	    	File systemRoot = new File(retsConfig.getMetadataDir());
-	    	
-	    	if (systemRoot.isDirectory())
-	    	{
-	    		List files = new ArrayList();
-	    		/*
-	    		 * See if metadata.xml exists. If so, open it and process it.
-	    		 */
-	    		try
-	    		{
-	    			File metadata = new File(systemRoot + File.separator + "metadata.xml");
-	    			if (metadata.isFile() && metadata.canRead())
-	    			{
-	    				files.add(metadata);
-	    				LOG.info("Found metadata.xml at: " + metadata.getCanonicalPath());
-	    			}
-	    		}
-	    		catch (Exception e)
-	    		{
-	    			sMetadata = new Metadata(new MSystem());
-	    			LOG.warn("Unable to locate metadata.xml: " + e);
-	    			return sMetadata;
-	    		}
-	    		/*
-	    		 * If metadata.xml doesn't exist, assume old metadata format and recurse the
-	    		 * directory, locating all .xml files.
-	    		 */
-	    		if (files.isEmpty())
-	    		{
-		    		try
-		    		{
-			            files = IOUtils.listFilesRecursive(
-							                new File(retsConfig.getMetadataDir()), 
-							                new MetadataFileFilter());
-			            LOG.info("Looking for metadata in old format.");
-			        }
-			        catch (Exception e)
-			        {
-		    			sMetadata = new Metadata(new MSystem());
-		    			LOG.warn("Unable to locate metadata: " + e);
-		    			return sMetadata;
-			        }
-	    		}
-			    try
-		        {
-			    	LOG.debug("Merging metadata into a single XML document.");
-		            List documents = parseAllFiles(files);
-		            Document merged = (Document)documents.get(0);
-		            if (documents.size() > 1)
-		            	merged = JdomUtils.mergeDocuments(documents, 
-		            										new Element("RETS"));
-		            JDomCompactBuilder builder = new JDomCompactBuilder();
-		            sMetadata = builder.build(merged);
-		        }
-		        catch (Exception e)
-		        {
-	    			sMetadata = new Metadata(new MSystem());
-	    			LOG.error("Unable to merge metadata: " + e);
-	    			return sMetadata;
-		        }
-	    	}
-	    	else
-	    	{
-	    		sMetadata = new Metadata(new MSystem());
-	    	}
-    	}
-    	return sMetadata;
+            File systemRoot = new File(retsConfig.getMetadataDir());
+            
+            if (systemRoot.isDirectory())
+            {
+                List files = new ArrayList();
+                /*
+                 * See if metadata.xml exists. If so, open it and process it.
+                 */
+                try
+                {
+                    File metadata = new File(systemRoot + File.separator + "metadata.xml");
+                    if (metadata.isFile() && metadata.canRead())
+                    {
+                        files.add(metadata);
+                        LOG.info("Found metadata.xml at: " + metadata.getCanonicalPath());
+                    }
+                }
+                catch (Exception e)
+                {
+                    sMetadata = new Metadata(new MSystem());
+                    LOG.warn("Unable to locate metadata.xml: " + e);
+                    return sMetadata;
+                }
+                /*
+                 * If metadata.xml doesn't exist, assume old metadata format and recurse the
+                 * directory, locating all .xml files.
+                 */
+                if (files.isEmpty())
+                {
+                    try
+                    {
+                        files = IOUtils.listFilesRecursive(
+                                            new File(retsConfig.getMetadataDir()), 
+                                            new MetadataFileFilter());
+                        LOG.info("Looking for metadata in old format.");
+                    }
+                    catch (Exception e)
+                    {
+                        sMetadata = new Metadata(new MSystem());
+                        LOG.warn("Unable to locate metadata: " + e);
+                        return sMetadata;
+                    }
+                }
+                try
+                {
+                    LOG.debug("Merging metadata into a single XML document.");
+                    List documents = parseAllFiles(files);
+                    Document merged = (Document)documents.get(0);
+                    if (documents.size() > 1)
+                        merged = JdomUtils.mergeDocuments(documents, 
+                                                            new Element("RETS"));
+                    JDomCompactBuilder builder = new JDomCompactBuilder();
+                    sMetadata = builder.build(merged);
+                }
+                catch (Exception e)
+                {
+                    sMetadata = new Metadata(new MSystem());
+                    LOG.error("Unable to merge metadata: " + e);
+                    return sMetadata;
+                }
+            }
+            else
+            {
+                sMetadata = new Metadata(new MSystem());
+            }
+        }
+        return sMetadata;
     }
     
     public static Metadata reloadMetadata()
     {
-    	sMetadata = null;
-    	return getMetadata();
+        sMetadata = null;
+        return getMetadata();
     }
     
     public static boolean saveMetadata()
     {
-    	if (sMetadata == null)
-    	{
-    		/*
-    		 * Nothing to save.
-    		 */
-    		return true;
-    	}
-    	RetsConfig retsConfig = RetsConfig.getInstance();
-    	
-		File systemRoot = new File(retsConfig.getMetadataDir());
-    	
-    	if (systemRoot.isDirectory())
-    	{
-    		/*
-    		 * See if metadata.xml exists. If so, open it and process it.
-    		 */
-    		try
-    		{
-    			File backup = new File(systemRoot + File.separator + "metadata.xml-");
-    			File metadata = new File(systemRoot + File.separator + "metadata.xml");
-    			/*
-    			 * If there is an old backup file, rmeove it.
-    			 */
-    			if (backup.isFile() && backup.canWrite())
-    			{
-    				LOG.debug("Deleteing " + backup.getCanonicalFile());
-    				backup.delete();
-    			}
-    			/*
-    			 * Rename the current file to the backup.
-    			 */
-    			if (metadata.isFile() && metadata.canWrite())
-    			{
-       				LOG.debug("Renaming " + metadata.getCanonicalPath() + 
-       							" to " + backup.getCanonicalFile());
-    				metadata.renameTo(backup);
-    			}
-    			if (!metadata.isFile() && !metadata.isDirectory())
-    			{
-    				metadata.createNewFile();
-    			}
-    			if (metadata.isFile() && metadata.canWrite())
-    			{
-    				LOG.debug("Formatting metadata into COMPACT format.");
-    				PrintWriter out = new PrintWriter(metadata);
-    				MetadataCompactFormatter formatter = new MetadataCompactFormatter(sMetadata, out, RetsVersion.RETS_1_7_2);
-    				formatter.output();
-    				out.close();
-    				return true;
-    			}
-    		}
-    		catch (Exception e)
-    		{
-    			LOG.error("Unable to save metadata: " + e);
-    		}
-    	}
-    	return false;
+        if (sMetadata == null)
+        {
+            /*
+             * Nothing to save.
+             */
+            return true;
+        }
+        RetsConfig retsConfig = RetsConfig.getInstance();
+        
+        File systemRoot = new File(retsConfig.getMetadataDir());
+        
+        if (systemRoot.isDirectory())
+        {
+            /*
+             * See if metadata.xml exists. If so, open it and process it.
+             */
+            try
+            {
+                File backup = new File(systemRoot + File.separator + "metadata.xml-");
+                File metadata = new File(systemRoot + File.separator + "metadata.xml");
+                /*
+                 * If there is an old backup file, rmeove it.
+                 */
+                if (backup.isFile() && backup.canWrite())
+                {
+                    LOG.debug("Deleteing " + backup.getCanonicalFile());
+                    backup.delete();
+                }
+                /*
+                 * Rename the current file to the backup.
+                 */
+                if (metadata.isFile() && metadata.canWrite())
+                {
+                       LOG.debug("Renaming " + metadata.getCanonicalPath() + 
+                                   " to " + backup.getCanonicalFile());
+                    metadata.renameTo(backup);
+                }
+                if (!metadata.isFile() && !metadata.isDirectory())
+                {
+                    metadata.createNewFile();
+                }
+                if (metadata.isFile() && metadata.canWrite())
+                {
+                    LOG.debug("Formatting metadata into COMPACT format.");
+                    PrintWriter out = new PrintWriter(metadata);
+                    MetadataCompactFormatter formatter = new MetadataCompactFormatter(sMetadata, 
+                                                                        out, RetsVersion.RETS_1_7_2);
+                    formatter.output();
+                    out.close();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                LOG.error("Unable to save metadata: " + e);
+            }
+        }
+        return false;
     }
         
-    	
+        
     /**
      * Parses all files, returning a list of JDOM Document objects.
      *
@@ -1040,6 +1041,6 @@ public class RetsConfig
     private boolean mBlockLocation;
     private boolean mStrictParsing;
     
-    private static RetsConfig _instance = new RetsConfig();
-    private static Metadata sMetadata = null;
+    private static RetsConfig    sInstance = new RetsConfig();
+    private static Metadata      sMetadata = null;
 }
