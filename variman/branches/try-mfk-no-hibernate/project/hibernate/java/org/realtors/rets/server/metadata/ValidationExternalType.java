@@ -1,0 +1,201 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Dave Dribin
+ * Copyright (c) 2004, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+package org.realtors.rets.server.metadata;
+
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
+/**
+ */
+public class ValidationExternalType
+    extends ServerMetadata
+    implements Serializable
+{
+    public ValidationExternalType()
+    {
+    }
+
+    public ValidationExternalType(long id)
+    {
+        this();
+        mId = new Long(id);
+    }
+
+    /**
+     *
+     * @return a Long object
+     *
+     */
+    public Long getId()
+    {
+        return mId;
+    }
+
+    public void setId(Long id)
+    {
+        mId = id;
+    }
+
+    /**
+     *
+     * @return returns a ValdiationExternal object
+     *
+     */
+    public ValidationExternal getValidationExternal()
+    {
+        return mValidationExternal;
+    }
+
+    public void setValidationExternal(ValidationExternal validationExternal)
+    {
+        mValidationExternal = validationExternal;
+    }
+
+    /**
+     *
+     * @return a Map of Strings that are key value pairs
+     *
+     */
+    public Map getResultFields()
+    {
+        return mResultFields;
+    }
+    public void setResultFields(Map resultFields)
+    {
+        mResultFields = resultFields;
+    }
+
+    /**
+     *
+     * @return a Set of Strings that are Table names
+     *
+     */
+    public Set getSearchField()
+    {
+        return mSearchField;
+    }
+
+    public void setSearchField(Set searchField)
+    {
+        mSearchField = searchField;
+    }
+
+    /**
+     *
+     * @return a Set of Strings that are Table names
+     *
+     */
+    public Set getDisplayField()
+    {
+        return mDisplayField;
+    }
+
+    public void setDisplayField(Set displayField)
+    {
+        mDisplayField = displayField;
+    }
+
+    /**
+     *  @return a String containing the MetadataEntryID
+     */
+    public String getMetadataEntryID()
+    {
+    	return mMetadataEntryID;
+    }
+    
+    public void setMetadataEntryID(String metadataEntryID)
+    {
+    	mMetadataEntryID = metadataEntryID;
+    }
+    
+    /**
+     * Returns the hierarchy level for this metadata object.
+     *
+     * @return the hierarchy level for this metadata object.
+     *
+     */
+    public String getLevel()
+    {
+        return mLevel;
+    }
+
+    public void setLevel(String level)
+    {
+        mLevel = level;
+    }
+
+    public void updateLevel()
+    {
+        mLevel = mValidationExternal.getPath();
+    }
+
+    public String getTableName()
+    {
+        return TABLE;
+    }
+
+    public String toString()
+    {
+        return new ToStringBuilder(this)
+            .append("id", getId())
+            .toString();
+    }
+
+    public boolean equals(Object other)
+    {
+        if (!(other instanceof ValidationExternalType))
+        {
+            return false;
+        }
+        ValidationExternalType castOther = (ValidationExternalType) other;
+        return new EqualsBuilder()
+            .append(this.getId(), castOther.getId())
+            .isEquals();
+    }
+
+    public int hashCode()
+    {
+        return new HashCodeBuilder()
+            .append(getId())
+            .toHashCode();
+    }
+
+    public Object accept(MetadataVisitor visitor)
+    {
+        return visitor.visit(this);
+    }
+
+
+    /** identifier field */
+    private Long mId;
+
+    /** nullable persistent field */
+    private ValidationExternal mValidationExternal;
+
+    /** persistent field */
+    private Map mResultFields;
+
+    /** persistent field */
+    private Set mSearchField;
+
+    /** persistent field */
+    private Set mDisplayField;
+    
+    /** nullable persistent field */
+    private String mMetadataEntryID;
+
+    private String mLevel;
+
+    public static final String TABLE = "VALIDATION_EXTERNAL_TYPE";
+}
