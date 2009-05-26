@@ -112,7 +112,7 @@ public class EmbeddedTomcat
         // all sorts of problems. In any case, we only need the port parameter,
         // so it's easy enough just to use DOM and grab that one XML tag.
         String configFile =
-            mHomeDirectory + "/webapp/WEB-INF/rets/rets-config.xml";
+            mHomeDirectory + "/variman/WEB-INF/rets/rets-config.xml";
         DocumentBuilder builder =
             DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = builder.parse(new File(configFile));
@@ -240,7 +240,7 @@ public class EmbeddedTomcat
 
             tomcat.startTomcat();
 
-            URL url = new URL("file:" + homeDirectory + "/webapp");
+            URL url = new URL("file:" + homeDirectory + "/variman");
             tomcat.registerWebapp("/", url);
             if (tomcat.initFailed())
             {

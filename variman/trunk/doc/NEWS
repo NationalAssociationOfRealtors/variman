@@ -2,6 +2,10 @@ Version 3.0.1 - xx xxx 2009
 
   * Update User Documentation. Ticket #22.
   * EditMask in Table Data Attribute wrong. Ticket #40.
+  * Include the Admin Tool in the WebApp dist. Ticket #42.
+    Note that the directory that used to be called "webapp"
+    is now called "variman" and can be copied to your
+    application server.
   * Add Button Context wrong after adding Class. Ticket #43.
 
 Version 3.0.0b3 - 29 Apr 2009

@@ -38,7 +38,7 @@ public class AdminUtils
     {
         initAdminProperties();
         File configFile = new File(Admin.getHomeDirectory() +
-                                   "/webapp/WEB-INF/rets/rets-config.xml");
+                                   "/variman/WEB-INF/rets/rets-config.xml");
         Admin.setConfigFile(configFile.getAbsolutePath());
         if (configFile.exists())
         {
@@ -64,7 +64,7 @@ public class AdminUtils
 
         File logConfigFile =
             new File(Admin.getHomeDirectory() +
-                     "/webapp/WEB-INF/rets/rets-logging.properties");
+                     "/variman/WEB-INF/rets/rets-logging.properties");
         Admin.setLogConfigFile(logConfigFile.getAbsolutePath());
     }
 
@@ -96,7 +96,7 @@ public class AdminUtils
         RetsConfig retsConfig = Admin.getRetsConfig();
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         String hibernateConfig = Admin.getHomeDirectory() + 
-                                    "/webapp/WEB-INF/classes/" + 
+                                    "/variman/WEB-INF/classes/" + 
                                     Admin.PROJECT_NAME + "-hbm-xml.jar";
  
         Configuration config = new Configuration()

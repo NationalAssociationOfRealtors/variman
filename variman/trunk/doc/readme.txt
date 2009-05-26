@@ -1,9 +1,9 @@
 			 Variman RETS Server
 			 ===================
 
-Variman is a RETS 1.0 and 1.5 compliant server. Variman is developed
-under an Open Source license (see LICENSE.TXT) at the Center for
-REALTOR(R) technology.
+Variman is a RETS 1.0, 1.5, 1.7 and 1.7.2  compliant server. Variman 
+is developed under an Open Source license (see LICENSE.TXT) at the 
+Center for REALTOR(R) technology.
 
 Running Variman on Windows
 ==========================
@@ -32,7 +32,7 @@ Running Variman as a Web Application
 
 The web application version of Variman requires a JRE or JDK, version
 1.5 or higher and a servlet container, such as Tomcat, Resin, or
-WebLogic.  Configure the "webapp" directory as a web application
+WebLogic.  Configure the "variman" directory as a web application
 inside your servlet container.
 
 Administration
@@ -48,7 +48,8 @@ forwarding.  To start the administration tool:
   % java -jar variman-admin.jar
 
 This will try the GUI version first, and fall back to the command
-line, if the GUI fails to start.
+line, if the GUI fails to start. The metadata editor is only available
+in GUI mode.
 
 In order to use the GUI on Windows, the DLLs should be in the path.
 The current directory is automatically included in the path, so just
@@ -75,7 +76,7 @@ Variman uses a database for storage of all user information.  You must
 first configure your database connection information.  This can be
 done via the GUI, or by editing this file:
 
-  webapp/WEB-INF/rets/rets-config.xml
+  variman/WEB-INF/rets/rets-config.xml
 
 You can use rets-config.xml.dist as a template for this file.
 

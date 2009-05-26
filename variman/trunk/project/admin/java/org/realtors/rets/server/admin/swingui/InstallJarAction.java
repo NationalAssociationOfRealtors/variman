@@ -34,7 +34,7 @@ public class InstallJarAction extends AbstractAction
             }
             File sourceJarFile = fileChooser.getSelectedFile();
             String homeDirectory = Admin.getHomeDirectory();
-            File libDirectory = new File(homeDirectory, "webapp/WEB-INF/lib");
+            File libDirectory = new File(homeDirectory, "variman/WEB-INF/lib");
             IOUtils.copyFile(sourceJarFile, libDirectory);
             JOptionPane.showMessageDialog(
                 frame,"You must restart " + Admin.ADMIN_NAME + " and " +

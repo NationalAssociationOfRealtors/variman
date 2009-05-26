@@ -108,7 +108,7 @@
   <path id="webapp.test.path">
     <path refid="webapp.path"/>
     <pathelement location="build/hibernate/test/classes"/>
-    <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+    <pathelement location="build/rets-server/variman/WEB-INF/classes"/>
   </path>
 
   <path id="admin.path">
@@ -174,10 +174,10 @@
     <mkdir dir="build/datagen/lib"/>
     <mkdir dir="build/datagen/bin"/>
     <mkdir dir="build/rets-server/server/lib"/>
-    <mkdir dir="build/rets-server/webapp/WEB-INF/classes"/>
-    <mkdir dir="build/rets-server/webapp/WEB-INF/lib"/>
-    <mkdir dir="build/rets-server/webapp/WEB-INF/tld"/>
-    <mkdir dir="build/rets-server/webapp/WEB-INF/rets"/>
+    <mkdir dir="build/rets-server/variman/WEB-INF/classes"/>
+    <mkdir dir="build/rets-server/variman/WEB-INF/lib"/>
+    <mkdir dir="build/rets-server/variman/WEB-INF/tld"/>
+    <mkdir dir="build/rets-server/variman/WEB-INF/rets"/>
     <mkdir dir="build/rets-server/admin/lib"/>
     <mkdir dir="build/rets-server/admin/classes"/>
     <mkdir dir="build/rets-server/logs"/>
@@ -274,7 +274,7 @@
     <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
          basedir="build/hibernate/xdoclet" index="true"
          excludes="**/metadata/*"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/classes"
+    <copy todir="build/rets-server/variman/WEB-INF/classes"
           file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
   </target>
 
@@ -548,14 +548,14 @@
       <fileset dir="project/webapp/java"/>
 
       <deploymentdescriptor servletspec="2.3"
-                            destdir="build/rets-server/webapp/WEB-INF"
+                            destdir="build/rets-server/variman/WEB-INF"
                             sessiontimeout="30"
                             mergedir="project/webapp/config/web-merge"
                             displayname="CRT RETS Server"
                             description="CRT RETS Server">
       </deploymentdescriptor>
       <jsptaglib jspversion="1.2"
-                 destdir="build/rets-server/webapp/WEB-INF/tld"
+                 destdir="build/rets-server/variman/WEB-INF/tld"
                  shortname="cct" filename="cct.tld" />
     </webdoclet>
   </target>
@@ -563,14 +563,14 @@
   <target name="build-webapp" depends="build-hibernate,build-embedded,build-rets-client"
           description="Build webapp">
     <depend srcDir="project/webapp/java"
-            destDir="build/rets-server/webapp/WEB-INF/classes"
+            destDir="build/rets-server/variman/WEB-INF/classes"
             cache="build/depcache" closure="yes">
       <classpath>
         <path refid="webapp.path"/>
       </classpath>
     </depend>
     <javac srcdir="project/webapp/java"
-           destdir="build/rets-server/webapp/WEB-INF/classes"
+           destdir="build/rets-server/variman/WEB-INF/classes"
            target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
@@ -600,99 +600,99 @@
       <fileset dir="project/webapp/content" includes="**/*"/>
     </copy>
 
-    <copy todir="build/rets-server/webapp/WEB-INF/classes">
+    <copy todir="build/rets-server/variman/WEB-INF/classes">
       <fileset dir="project/webapp/java" includes="**/*" excludes="**/*.java"/>
     </copy>
     <copy todir="build/webapp/test/classes">
       <fileset dir="project/webapp/test/java" includes="**/*"
                excludes="**/*.java"/>
     </copy>
-    <propertyfile file="build/rets-server/webapp/WEB-INF/classes/${project.name}-webapp.properties">
+    <propertyfile file="build/rets-server/variman/WEB-INF/classes/${project.name}-webapp.properties">
       <entry key="version" value="${project.version}" />
       <entry key="build-date" type="date" value="now" />
     </propertyfile>
 
     <antcall target="build-webapp-webdoclet"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="build/hibernate/jar/${project.name}-hibernate.jar"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/classes"
+    <copy todir="build/rets-server/variman/WEB-INF/classes"
           file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/classes"
+    <copy todir="build/rets-server/variman/WEB-INF/classes"
           file="project/hibernate/config/cache.ccf"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${rets-client.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${commons-lang.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${log4j.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${hibernate.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib">
+    <copy todir="build/rets-server/variman/WEB-INF/lib">
       <fileset dir="${hibernate.lib}" includes="*.jar" />
     </copy>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${postgres.jdbc.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${jtds.jdbc.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${antlr.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib" file="${jdom.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib" file="${antlr.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib" file="${jdom.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${commons-codec.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${commons-collections.jar}"/>
 
     <!-- Spring 3
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.aop.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.aspects.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.beans.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.context.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.context.support.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.core.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.expression.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.instrument.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.instrument.classloading.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.integration.tests.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.jdbc.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.jms.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.orm.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.oxm.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.test.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.transaction.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.web.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.web.portlet.jar}"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.web.servlet.jar}"/>
     -->
-    <copy todir="build/rets-server/webapp/WEB-INF/lib"
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.jar}"/>
 
-    <copy todir="build/rets-server/webapp/WEB-INF/rets"
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
           file="project/webapp/config/rets-config.xml"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/rets"
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
           file="project/webapp/config/rets-config.xml.dist"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/rets"
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
           file="project/webapp/config/rets-logging.properties"/>
-    <copy todir="build/rets-server/webapp/WEB-INF/rets"
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
           file="project/webapp/config/rets-logging.properties.dist"/>
-    <copy todir="build/rets-server/webapp/WEB-INF"
+    <copy todir="build/rets-server/variman/WEB-INF"
           file="project/webapp/config/spring-appContext.xml"/>
   </target>
 
@@ -883,7 +883,7 @@
         <pathelement path="${commons-lang.jar}"/>
         <pathelement path="${antlr.runtime.jar}"/>
         <pathelement location="build/hibernate/classes"/>
-        <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
+        <pathelement location="build/rets-server/variman/WEB-INF/classes"/>
         <pathelement location="build/admin/classes"/>
       </classpath>
       <formatter type="brief" />
@@ -933,14 +933,14 @@
          compression="gzip" longfile="gnu">
       <tarfileset dir="build/rets-server"
                   prefix="${project.name}-webapp-${project.version}"
-                  includes="webapp/**,doc/**">
+                  includes="admin/**,variman-admin.jar,variman/**,doc/**">
         <excludesfile name="project/build/dist-bin-excludes"/>
       </tarfileset>
     </tar>
     <zip destfile="dist/${project.name}-webapp-${project.version}.zip">
       <zipfileset dir="build/rets-server"
                   prefix="${project.name}-webapp-${project.version}"
-                  includes="webapp/**,doc/**">
+                  includes="admin/**,variman-admin.jar,variman/**,doc/**">
         <excludesfile name="project/build/dist-bin-excludes"/>
       </zipfileset>
     </zip>

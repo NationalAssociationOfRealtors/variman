@@ -35,7 +35,7 @@ public class Bootstrap
         initHomeDirectory();
         List urlList = new ArrayList();
         addJars(urlList, "admin/lib");
-        addJars(urlList, "webapp/WEB-INF/lib");
+        addJars(urlList, "variman/WEB-INF/lib");
         //addJars(urlList, "WEB-INF/lib");
         urlList.add(new File(mHomeDirectory, "admin/classes/").toURL());
         //System.out.println("admin/classes: " + new File(mHomeDirectory, "admin/classes/").toURL()); // $$DEBUG
