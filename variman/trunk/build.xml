@@ -61,6 +61,7 @@
     <pathelement path="${hibernate.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${hibernate-ext.tools.jar}"/>
+  	<pathelement path="${mysql.jdbc.jar}"/>
     <pathelement path="${postgres.jdbc.jar}"/>
     <pathelement path="${jtds.jdbc.jar}"/>
     <pathelement path="${jdom.jar}"/>
@@ -312,6 +313,7 @@
         <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
         <pathelement location="build/hibernate/jar"/>
         <fileset dir="${hibernate.lib}" includes="*.jar"/>
+      	<pathelement location="${mysql.jdbc.jar}"/>
         <pathelement location="${postgres.jdbc.jar}"/>
         <pathelement location="${jtds.jdbc.jar}"/>
       </classpath>
@@ -631,6 +633,8 @@
       <fileset dir="${hibernate.lib}" includes="*.jar" />
     </copy>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${mysql.jdbc.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${postgres.jdbc.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${jtds.jdbc.jar}"/>
@@ -742,6 +746,7 @@
           file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/datagen/classes"
           file="project/hibernate/config/cache.ccf"/>
+    <copy todir="build/datagen/lib" file="${mysql.jdbc.jar}"/>
     <copy todir="build/datagen/lib" file="${postgres.jdbc.jar}"/>
     <copy todir="build/datagen/lib" file="${jtds.jdbc.jar}"/>
   </target>
@@ -797,6 +802,7 @@
     <copy todir="build/importer/classes"
           file="project/hibernate/config/cache.ccf"/>
 
+    <copy todir="build/importer/lib" file="${mysql.jdbc.jar}"/>
     <copy todir="build/importer/lib" file="${postgres.jdbc.jar}"/>
     <copy todir="build/importer/lib" file="${jtds.jdbc.jar}"/>
   </target>

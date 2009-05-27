@@ -28,6 +28,7 @@ public abstract class DatabaseType
         return (DatabaseType) sKnownTypes.get(name);
     }
 
+    public static final DatabaseType MYSQL = new MySQLType();
     public static final DatabaseType POSTGRESQL = new PostgreSQLType();
     public static final DatabaseType SQLSERVER_JSQL = new SQLServerJSQLType();
     public static final DatabaseType SQLSERVER_JTDS = new SQLServerjTDSType();
@@ -37,6 +38,7 @@ public abstract class DatabaseType
     static
     {
         sKnownTypes = new HashMap();
+        registerType(MYSQL);
         registerType(POSTGRESQL);
         registerType(SQLSERVER_JSQL);
         registerType(SQLSERVER_JTDS);

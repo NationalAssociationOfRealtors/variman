@@ -76,6 +76,7 @@ public class DatabasePropertiesDialog extends JDialog
         mDatabaseTypes = new JComboBox();
         mDatabaseTypeObjects = new DatabaseType[]{
             DatabaseType.POSTGRESQL,
+            DatabaseType.MYSQL,
             DatabaseType.SQLSERVER_JSQL,
             DatabaseType.SQLSERVER_JTDS,
         };

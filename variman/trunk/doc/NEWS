@@ -7,6 +7,7 @@ Version 3.0.1 - xx xxx 2009
     is now called "variman" and can be copied to your
     application server.
   * Add Button Context wrong after adding Class. Ticket #43.
+  * Add MySQL support. Ticket #44.
 
 Version 3.0.0b3 - 29 Apr 2009
 

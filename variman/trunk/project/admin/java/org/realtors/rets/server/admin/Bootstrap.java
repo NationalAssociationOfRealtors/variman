@@ -36,9 +36,7 @@ public class Bootstrap
         List urlList = new ArrayList();
         addJars(urlList, "admin/lib");
         addJars(urlList, "variman/WEB-INF/lib");
-        //addJars(urlList, "WEB-INF/lib");
         urlList.add(new File(mHomeDirectory, "admin/classes/").toURL());
-        //System.out.println("admin/classes: " + new File(mHomeDirectory, "admin/classes/").toURL()); // $$DEBUG
         URL[] urls = (URL[]) urlList.toArray(new URL[urlList.size()]);
         URLClassLoader classLoader = new URLClassLoader(urls);
         Thread.currentThread().setContextClassLoader(classLoader);

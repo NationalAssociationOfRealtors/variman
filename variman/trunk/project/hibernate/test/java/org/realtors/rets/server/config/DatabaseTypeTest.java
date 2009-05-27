@@ -12,6 +12,17 @@ import junit.framework.TestCase;
 
 public class DatabaseTypeTest extends TestCase
 {
+    public void testMySQLType()
+    {
+        DatabaseType type = DatabaseType.getType("mysql");
+        assertNotNull(type);
+        assertEquals("com.mysql.jdbc.Driver", type.getDriverClass());
+        assertEquals("net.sf.hibernate.dialect.MySQLDialect",
+                     type.getDialectClass());
+        assertEquals("jdbc:mysql://localhost/db_name",
+                     type.getUrl("localhost", "db_name"));
+    }
+    
     public void testPostgresType()
     {
         DatabaseType type = DatabaseType.getType("postgresql");
