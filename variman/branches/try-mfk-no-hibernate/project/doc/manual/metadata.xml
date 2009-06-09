@@ -1,0 +1,753 @@
+<section id="metadata">
+  <title>Metadata</title>
+  <para>
+    This chapter describes how to configure the metadata using the Metadata
+    Editor in the Adminstrative Tool. You may also create metadata by hand
+    as one or more XML files.
+  </para>
+
+  <section id="deploy-metadata">
+    <title>Configuring Metadata</title>
+    <para>
+      Metadata describes how to map property data in your relational
+      database to RETS names.  The metadata is stored as compact
+      format metadata, split into multiple files or in a single
+      metadata.xml file if creating the metadata using the Metadata
+      Editor in the Administrative Tool.  For more
+      information on compact metadata format, see the RETS specification.
+      A sample set of metadata is provided on the &name; website, and
+      can be used as a starting point.
+    </para>
+  </section> <!-- deploy-metadata -->
+
+  <section id="example-schema">
+    <title>Example Schema</title>
+    <para>
+      For the purposes of this discussion, let's use a very simple sample
+      schema that describes our database. Our database will have a table
+      representing the Agent, a table for Residential Property, and a
+      table for Commercial Property. The SQL to create it is:
+      <programlisting>
+      <![CDATA[
+          create table agent (
+              agent_id          int unique primary key,
+              first_name        varchar (30),
+              last_name         varchar (30),
+              phone             varchar (12),
+              modified_time     timestamp without time zone,
+              status            char (2)
+              );
+
+          create table res_prop (
+              listing_id        int unique primary key,
+              agent_id          int references agent (agent_id),
+              street_name       varchar (80),
+              street_number     varchar (10),
+              city              varchar (20),
+              state             varchar (2),
+              zip               varchar (10),
+              asking            int,
+              status            char (2),
+              modified_time     timestamp without time zone,
+              beds              int,
+              baths             int
+          );
+
+          create table com_prop (
+              listing_id        int unique primary key,
+              agent_id          int references agent (agent_id),
+              street_name       varchar (80),
+              street_number     varchar (80),
+              city              varchar (20),
+              state             varchar (2),
+              zip               varchar (10),
+              asking            int,
+              status            char (2),
+              modified_time     timestamp without time zone,
+              sqft              int,
+              offices           int
+          );
+      ]]>
+      </programlisting>
+    </para>
+  </section> <!-- example-schema -->
+
+  <section id="create-system">
+    <title>Create SYSTEM Entry</title>
+    <para>
+      The first step (after configuring and testing data base access as 
+      described earlier in this manual), we need to create the 
+      <code>SYSTEM</code> metadata entry. Select
+      the <guibutton>METADATA</guibutton> tab and you should see:
+    </para>
+
+    <figure id="fig-metadata-tab">
+      <title>Metadata Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="editor.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>
+        Since metadata is usually represented as a tree hierarchy, the editor
+        will do the same. The left panel in this case shows an empty tree
+        since nothing has yet been added to it. The right panel shows the
+        the current value for the node selected. In this case, it is also
+        empty.
+    </para>
+    
+    <para>
+        The first thing we want to
+        do is identify the system. Select the <guibutton>System</guibutton> 
+        node in the tree and select the <guibutton>Edit</guibutton> button. 
+        A dialog box will pop
+        up that allows you to enter text for the <code>SystemID</code>,
+        <code>SystemDescription</code>, the <code>Date</code> and 
+        <code>Version</code> values that relate to this version of the 
+        metadata, the <code>COMMENTS</code> and <code>TimeZoneOffset</code>
+        for this server. Again, refer to the RETS documentation for the legal
+        values for these fields.
+    </para>
+    
+    <note>
+        Beginning with version 3.0 of &name;, for compliance
+        purposes, metadata will be strictly parsed according to the RETS
+        1.7.2 Specification. This strictness check may be disabled by
+        toggling the 
+        <menuchoice>
+            <guimenu>Metadata</guimenu>
+            <guimenuitem>Strict</guimenuitem>
+        </menuchoice>
+        menu item.
+    </note>
+    
+    <para>
+        For this example, let's use the following details for our
+        hpothetical MLS:
+        <programlisting>
+        <![CDATA[
+          SystemID:     CRTDemo
+          Description:  CRT Demo
+          Date:         2009-05-15T00:00:00Z
+          Version:      1.01.00001
+          Comments:     Example MLS for Demo Purposes
+          TimeZone:     -08:00
+          ]]>
+        </programlisting>
+        Press the <guibutton>Save</guibutton> button to complete the dialog. 
+        This will
+        preserve what you entered and should show up in the details panel 
+        whenever the <guibutton>System</guibutton> node in the tree is selected. 
+        The metadata is not yet saved on disk. You may either save it with the
+        <menuchoice>
+            <guimenu>File</guimenu>
+            <guimenuitem>Save</guimenuitem>
+        </menuchoice>
+        menu item, or you will be prompted as to whether or not you want to
+        save the data when you exit the Administrative Tool if you currently
+        have any unsaved changed.
+    </para>
+    
+  </section> <!-- create-system -->
+  
+  <section id="create-resource">
+    <title>Create RETS Resources</title>
+    <para>
+        The next step will be to create the RETS Resources for our MLS. For this
+        example, we only have two: Agent and Property. Let's set up the Agent
+        Resource first.
+    </para>
+    
+    <section id="craete-agent-example">
+      <title>Create Agent Resource and Classes</title>
+
+    <para>
+        Select the <guibutton>Resource</guibutton> node in the
+        tree and press the <guibutton>Add</guibutton> button.This will bring
+        up the dialog for adding a Resource. If you properly initialized the
+        Date and Version in the <code>SYSTEM</code> metadata, the various date
+        and version fields will be pre-initialized with those values. Since we
+        are creating a new site, there is no reason to adjust any of these
+        fields:
+    </para>
+
+    <figure id="fig-agent-dialog">
+      <title>Add Resource Dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="agentdialog.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>
+        Now that the Agent resource is created, we need to create the RETS
+        Classes associated with that resource. The Class can be thought of as
+        a SQL table and in fact, using a RETS extension, that's how we will
+        tell &name; where to find the Agent data. From this point on, there
+        will be confusion as to what "table" means because within a database
+        it refers to a collection of like elements, whereas in RETS, it 
+        refers to a single data element. We'll use "Table" with a capital "T" to
+        mean a RETS "Table", and "table" with a lowercase "t" to represent
+        a relational database "table".
+    </para>
+    
+    <para>
+        Select the <guibutton>Agent</guibutton> node in the tree and press
+        <guibutton>Add</guibutton>. This will
+        pop up a dialog box that will allow you to specify whether or not you
+        want to add
+        <guibutton>Class</guibutton>
+        <guibutton>Lookup</guibutton>
+        <guibutton>Object</guibutton>
+        <guibutton>EditMask</guibutton>
+        <guibutton>SearchHelp</guibutton>
+        <guibutton>UpdateHelp</guibutton>
+        <guibutton>ValidationLookup</guibutton>
+        <guibutton>ValidationExternal</guibutton>. 
+        Select <guibutton>Class</guibutton> entry in the drop down list and 
+        then press
+        <guibutton>OK</guibutton> in order to launch the dialog for adding
+        the RETS Class.
+    </para>
+    
+    <para>
+        We've decided that we will preserve history such that
+        no tuples will be deleted from the database. For that reason, we will
+        have a status value that indicates the particular agent entity has been
+        logically deleted. We also need to tell &name; which table in our
+        database relates to this Class. It so happens in this case the 
+        <code>Agent</code> Class will relate to the <code>agent</code> table
+        in the database. That is done with the
+        <code>X-DBName</code> field.
+    </para>
+    
+    <para>
+        Let's use the following details for the Agent Class:
+        <programlisting>
+        <![CDATA[
+          ClassName:        AGT
+          VisibleName:      Agent
+          StandardName:     REAgent
+          Description:      Agent
+          ClassTimeStamp:   ModifiedTimestamp
+          DeletedFlagField  Status
+          DeletedFlagValue  DE
+          X-DBName          agent
+          ]]>
+        </programlisting>
+        Press the <guibutton>Save</guibutton> button to complete the dialog.
+        Your tree view should now show:
+    </para>
+    
+    <figure id="fig-agent-class">
+      <title>Agent Class Entered</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="agentclass.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>
+        With the Class in place, it is time to enter the RETS Table information
+        in order to relate the RETS data to the corresponding elements in the
+        database. Select the <guibutton>AGT</guibutton> node in the tree and
+        press <guibutton>Add</guibutton>. This will pop up a dialog box that
+        will allow you to specify whether or not you want to add
+        <guibutton>Table</guibutton> or <guibutton>Update</guibutton>
+        information. Select <guibutton>Table</guibutton> and press
+        <guibutton>OK</guibutton> in order to launch the dialog for adding
+        the RETS Table data. Here is the example for entering 
+        <code>AgentID</code>:
+    </para>
+    
+    <figure id="fig-agent-id-dialog">
+      <title>Agent ID Dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="agentiddialog.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para>
+        You can fill in the details for the other elements the same way. But
+        first, we would like to create an <code>EditMask</code> for the
+        <code>Phone</code> element and a <code>Lookup</code> for the
+        <code>Status</code> element. We do this the same way we enter the
+        RETS Class, but select either <guibutton>EditMask</guibutton> or
+        <guibutton>Lookup</guibutton>. Select the <guibutton>Agent</guibutton>
+        node and then press <guibutton>Add</guibutton> to begin.
+    </para>
+    
+    <para>
+        Let's use the following for the Phone Number EditMask:
+        <programlisting>
+        <![CDATA[
+          MetadataEntryID:  PhoneMask
+          EditMaskID:       PhoneMask
+          Value:            [2-9][0-8][0-9]-[2-9][0-9]{2}-[0-9]{4}
+          ]]>
+        </programlisting>
+        And, let's use the following for the Lookup:
+        <programlisting>
+        <![CDATA[
+          MetadataEntryID:  AgentStatus
+          LookupName:       AgentStatus
+          VisibleName:      Status
+          ]]>
+        </programlisting>
+        And for the Lookup Types:
+        <programlisting>
+        <![CDATA[
+          MetadataEntryID:  AgentDeleted
+          LongValue:        Agent Deleted
+          ShortValue:       Deleted
+          Value:            DE
+          
+          MetadataEntryID:  AgentActive
+          LongValue:        Agent Active
+          ShortValue        Active
+          Value:            AC
+          ]]>
+        </programlisting>
+        After everything has been entered, your tree should now look like:
+    </para>
+    
+    <figure id="fig-agent-tree">
+      <title>Agent Metadata Entered</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="agententered.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    </section> <!-- create-agent-example -->
+    
+    <section id="create-property-example">
+      <title>Create Property Resource and Classes</title>
+      
+      <para>
+        As with the <code>Agent</code> resource, to enter the 
+        <code>Property</code> resource, begin by selecting 
+        the <guibutton>Resource</guibutton> node in the
+        tree and press the <guibutton>Add</guibutton> button.This will bring
+        up the dialog for adding a Resource as above. Here's what it should
+        look like:
+      </para>
+
+      <figure id="fig-property-dialog">
+          <title>Property Dialog</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="propertydialog.png"/>
+            </imageobject>
+          </mediaobject>
+      </figure>
+      
+      <para>
+        For the Property classes, we will have <code>ResidentialProperty</code>
+        and <code>Commercial</code>. Let's use the following details for these
+        Classes:
+        
+        <programlisting>
+        <![CDATA[
+          ClassName:        ResidentialProperty
+          VisibleName:      ResidentialProperty
+          StandardName:     ResidentialProperty
+          Description:      Single Family Residence
+          ClassTimeStamp:   ModifiedTimestamp
+          DeletedFlagField  Status
+          DeletedFlagValue  DE
+          X-DBName          res_prop
+          
+          ClassName:        Commercial
+          VisibleName:      Commercial
+          StandardName:     
+          Description:      Commercial Office Space
+          ClassTimeStamp:   ModifiedTimestamp
+          DeletedFlagField  Status
+          DeletedFlagValue  DE
+          X-DBName          com_prop
+          ]]>
+        </programlisting>
+      </para>
+
+      <para>
+        We also know that we are going to use a Lookup and EditMask as we did
+        above. We might as well enter them now. We can use the same exact
+        process and data as we did above with the Agent Resource.         
+        Your tree view should now show:
+      </para>
+    
+      <figure id="fig-property-class">
+        <title>Property Classes, EditMask and Lookup Entered</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="propertyentered.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      
+      <para>
+        The last step is to enter the Table data for both Property Classes.
+        Let's use the following details for Residential (only non-default 
+        values shown below):
+        
+        <programlisting>
+        <![CDATA[
+          MetadataEntryID:  ListingID
+          SystemName:       ListingID
+          StandardName:     ListingID
+          LongName:         Listing Number
+          DBName            listing_id
+          ShortName:        LN
+          MaximumLength:    7
+          DataType:         Int
+          Searchable:       True
+          Interpretation:   Number
+          Alignment:        Right
+          Minimum:          1
+          Maximum:          9999999
+          Unique:           true
+          ModTimeStamp:     true
+          
+          MetadataEntryID:  StreetNumber
+          SystemName:       StreetNumber
+          StandardName:     StreetNumber
+          LongName:         Street Number
+          DBName            street_number
+          ShortName:        STNum
+          MaximumLength:    10
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+                    
+          MetadataEntryID:  StreetName
+          SystemName:       StreetName
+          StandardName:     StreetName
+          LongName:         Street Name
+          DBName            street_name
+          ShortName:        STName
+          MaximumLength:    80
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+                    
+          MetadataEntryID:  City
+          SystemName:       City
+          StandardName:     City
+          LongName:         City
+          DBName            city
+          ShortName:        City
+          MaximumLength:    20
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+
+          MetadataEntryID:  State
+          SystemName:       State
+          StandardName:     StateOrProvince
+          LongName:         State
+          DBName            state
+          ShortName:        State
+          MaximumLength:    2
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+                              
+          MetadataEntryID:  ZipCode
+          SystemName:       ZipCode
+          StandardName:     PostalCode
+          LongName:         Zip Code
+          DBName            zip
+          ShortName:        Zip
+          MaximumLength:    10
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+
+          MetadataEntryID:  ListPrice
+          SystemName:       ListPrice
+          StandardName:     ListPrice
+          LongName:         Listing Price
+          DBName            asking
+          ShortName:        Price
+          MaximumLength:    10
+          DataType:         int
+          Searchable:       True
+          Interpretation:   Currency
+          UseSeparator:     True
+          ModTimeStamp:     true
+  
+          MetadataEntryID:  Status
+          SystemName:       Status
+          StandardName:     ListingStatus
+          LongName:         Listing Status
+          DBName            status
+          ShortName:        Status
+          MaximumLength:    2
+          DataType:         Character
+          Searchable:       True
+          Interpretation:   Lookup
+          LookupName:       Status
+          ModTimeStamp:     true
+                    
+          MetadataEntryID:  ModifiedTimestamp
+          SystemName:       ModifiedTimestamp
+          StandardName:     ModificationTimestamp
+          LongName:         Listing Modified Date
+          DBName            modified_time
+          ShortName:        Modified
+          DataType:         DateTime
+          Searchable:       True
+                              
+          MetadataEntryID:  Bedrooms
+          SystemName:       Beds
+          StandardName:     Beds
+          LongName:         Bedrooms
+          DBName            beds
+          ShortName:        Beds
+          MaximumLength:    2
+          DataType:         Int
+          Searchable:       True
+          Interpretation:   Number
+          Alignment:        Right
+          Minimum:          1
+          Maximum:          99
+          ModTimeStamp:     true
+          
+          MetadataEntryID:  Baths
+          SystemName:       Baths
+          StandardName:     Baths
+          LongName:         Bathrooms
+          DBName            baths
+          ShortName:        Baths
+          MaximumLength:    2
+          DataType:         Int
+          Searchable:       True
+          Interpretation:   Number
+          Alignment:        Right
+          Minimum:          1
+          Maximum:          99
+          ModTimeStamp:     true
+          ]]>
+        </programlisting>
+      </para>
+      
+      <para>
+        And for Commercial (only non-default 
+        values shown below):
+        
+        <programlisting>
+        <![CDATA[
+          MetadataEntryID:  ListingID
+          SystemName:       ListingID
+          StandardName:     ListingID
+          LongName:         Listing Number
+          DBName            listing_id
+          ShortName:        LN
+          MaximumLength:    7
+          DataType:         Int
+          Searchable:       True
+          Interpretation:   Number
+          Alignment:        Right
+          Minimum:          1
+          Maximum:          9999999
+          Unique:           true
+          ModTimeStamp:     true
+          
+          MetadataEntryID:  StreetNumber
+          SystemName:       StreetNumber
+          StandardName:     StreetNumber
+          LongName:         Street Number
+          DBName            street_number
+          ShortName:        STNum
+          MaximumLength:    10
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+                    
+          MetadataEntryID:  StreetName
+          SystemName:       StreetName
+          StandardName:     StreetName
+          LongName:         Street Name
+          DBName            street_name
+          ShortName:        STName
+          MaximumLength:    80
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+                    
+          MetadataEntryID:  City
+          SystemName:       City
+          StandardName:     City
+          LongName:         City
+          DBName            city
+          ShortName:        City
+          MaximumLength:    20
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+
+          MetadataEntryID:  State
+          SystemName:       State
+          StandardName:     StateOrProvince
+          LongName:         State
+          DBName            state
+          ShortName:        State
+          MaximumLength:    2
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+                              
+          MetadataEntryID:  ZipCode
+          SystemName:       ZipCode
+          StandardName:     PostalCode
+          LongName:         Zip Code
+          DBName            zip
+          ShortName:        Zip
+          MaximumLength:    10
+          DataType:         Character
+          Searchable:       True
+          ModTimeStamp:     true
+
+          MetadataEntryID:  ListPrice
+          SystemName:       ListPrice
+          StandardName:     ListPrice
+          LongName:         Listing Price
+          DBName            asking
+          ShortName:        Price
+          MaximumLength:    10
+          DataType:         int
+          Searchable:       True
+          Interpretation:   Currency
+          UseSeparator:     True
+          ModTimeStamp:     true
+  
+          MetadataEntryID:  Status
+          SystemName:       Status
+          StandardName:     ListingStatus
+          LongName:         Listing Status
+          DBName            status
+          ShortName:        Status
+          MaximumLength:    2
+          DataType:         Character
+          Searchable:       True
+          Interpretation:   Lookup
+          LookupName:       Status
+          ModTimeStamp:     true
+                    
+          MetadataEntryID:  ModifiedTimestamp
+          SystemName:       ModifiedTimestamp
+          StandardName:     ModificationTimestamp
+          LongName:         Listing Modified Date
+          DBName            modified_time
+          ShortName:        Modified
+          DataType:         DateTime
+          Searchable:       True
+                              
+          MetadataEntryID:  SQFT
+          SystemName:       SQFT
+          StandardName:     
+          LongName:         Rentable Area
+          DBName            sqft
+          ShortName:        SQFT
+          MaximumLength:    5
+          DataType:         Int
+          Searchable:       True
+          Interpretation:   Number
+          Alignment:        Right
+          Minimum:          1
+          Maximum:          99999
+          ModTimeStamp:     true
+          
+          MetadataEntryID:  Offices
+          SystemName:       Offices
+          StandardName:     
+          LongName:         Offices
+          DBName            offices
+          ShortName:        Offices
+          MaximumLength:    3
+          DataType:         Int
+          Searchable:       True
+          Interpretation:   Number
+          Alignment:        Right
+          Minimum:          1
+          Maximum:          999
+          ModTimeStamp:     true
+          ]]>
+        </programlisting>
+      </para>
+      
+      <para>
+        After entering all the details above using the 
+        <guibutton>Table</guibutton> dialog as we did above, your tree should 
+        look like (with Agent node collapsed and window resized to show more 
+        details):
+      </para>
+
+      <figure id="fig-fully-populated">
+        <title>Agent Class Entered</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="fullypopulated.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+          
+      <para>
+        We have one more element to add to each Class: the AgentID. This 
+        references a foreign key what we'll create first. Here's the 
+        Agent/ResidentialProperty foreign key:
+      </para>
+      
+      <figure id="fig-foreign-key">
+        <title>Foreign Key</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="foreignkey.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      
+      <para>
+        Do the same for the Agent/Commercial foreign key and then we can
+        add the AgentID element to both Classes:
+      </para>
+      
+      <figure id="fig-agentid">
+        <title>Agent ID</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="agentid.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+      
+      <para>
+        Finally, use the 
+        <menuchoice>
+            <guimenu>File</guimenu>
+            <guimenuitem>Save</guimenuitem>
+        </menuchoice>
+        menu item to save the data. The resulting file will be called
+        <code>metadata.xml</code> in the directory you selected for the
+        location for your Metadata in
+        <xref linkend="rets"/>.
+      </para>
+    </section> <!-- create-property-example -->
+    
+  </section> <!-- create-resource -->
+
+</section> <!-- deploy -->
+
+<!--
+Local Variables:
+mode: xml
+sgml-parent-document: ("manual.xml" "" "section")
+End:
+-->
