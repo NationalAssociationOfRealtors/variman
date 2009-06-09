@@ -1,9 +1,0 @@
-<context-param>
-<param-name>contextConfigLocation</param-name>
-<param-value>/WEB-INF/spring-*.xml</param-value>
-</context-param>
-
-<listener>
-<display-name>Spring Context Loader Listener</display-name>
-<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-</listener>
