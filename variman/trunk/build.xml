@@ -177,7 +177,6 @@
     <mkdir dir="build/rets-server/server/lib"/>
     <mkdir dir="build/rets-server/variman/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/variman/WEB-INF/lib"/>
-    <mkdir dir="build/rets-server/variman/WEB-INF/tld"/>
     <mkdir dir="build/rets-server/variman/WEB-INF/rets"/>
     <mkdir dir="build/rets-server/admin/lib"/>
     <mkdir dir="build/rets-server/admin/classes"/>
@@ -261,16 +260,21 @@
   <target name="build-hibernate-xdoclet" depends="prepare"
           description="Run xdoclet on the hibernate classes">
     <taskdef name="hibernatedoclet"
-             classname="xdoclet.modules.hibernate.HibernateDocletTask">
+             classname="org.xdoclet.ant.XDocletTask">
       <classpath>
         <path refid="xdoclet.path"/>
         <path location="${xdoclet.hibernate.jar}"/>
       </classpath>
     </taskdef>
-    <hibernatedoclet destdir="build/hibernate/xdoclet" verbose="false"
-                     mergedir="project/hibernate/java">
+
+    <hibernatedoclet>
       <fileset dir="project/hibernate/java" includes="**/*.java"/>
-      <hibernate version="2.0"/>
+      <component
+                classname="org.xdoclet.plugin.hibernate.HibernateMappingPlugin"
+                destdir="build/hibernate/xdoclet"
+                mergedir="project/hibernate/java"
+                version="2.0"
+        />
     </hibernatedoclet>
     <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
          basedir="build/hibernate/xdoclet" index="true"
@@ -539,26 +543,31 @@
 </target>
 
   <target name="build-webapp-webdoclet">
-    <taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask">
+    <taskdef name="webdoclet" classname="org.xdoclet.ant.XDocletTask">
       <classpath>
         <path refid="xdoclet.path"/>
         <path location="${xdoclet.web.jar}"/>
         <pathelement location="${servlet.jar}"/>
       </classpath>
     </taskdef>
-    <webdoclet destdir="build/webapp/generated" verbose="false">
-      <fileset dir="project/webapp/java"/>
+  	
+    <webdoclet>
+        <fileset dir="project/webapp/java" includes="**/*.java"/>
 
-      <deploymentdescriptor servletspec="2.3"
-                            destdir="build/rets-server/variman/WEB-INF"
-                            sessiontimeout="30"
-                            mergedir="project/webapp/config/web-merge"
-                            displayname="CRT RETS Server"
-                            description="CRT RETS Server">
-      </deploymentdescriptor>
-      <jsptaglib jspversion="1.2"
-                 destdir="build/rets-server/variman/WEB-INF/tld"
-                 shortname="cct" filename="cct.tld" />
+    	<component
+            classname="org.xdoclet.plugin.web.WebPlugin"
+    		destdir="build/rets-server/variman/WEB-INF"
+            mergedir="file:project/webapp/config/web-merge/"
+    		servletversion="2.3"
+    		/>
+    	<component
+    		classname="org.xdoclet.plugin.web.TaglibPlugin"
+    		jspversion="1.2"
+            destdir="build/rets-server/variman/WEB-INF"
+            filereplace="cct.tld"
+    	    shortname="cct"
+    		validate="false"
+		   />
     </webdoclet>
   </target>
 

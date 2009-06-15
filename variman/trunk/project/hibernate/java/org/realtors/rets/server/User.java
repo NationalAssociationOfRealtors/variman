@@ -204,8 +204,8 @@ public class User implements Serializable, Comparable
     /**
      * @hibernate.set table="rets_user_groups" lazy="true"
      *   sort="natural"
-     * @hibernate.collection-key column="user_id"
-     * @hibernate.collection-many-to-many column="group_id"
+     * @hibernate.key column="user_id"
+     * @hibernate.many-to-many column="group_id"
      *   class="org.realtors.rets.server.Group"
      */
     protected SortedSet getGroups()

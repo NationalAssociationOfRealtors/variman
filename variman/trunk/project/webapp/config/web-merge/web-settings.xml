@@ -1,0 +1,9 @@
+<j:jelly xmlns:j="jelly:core">
+  <display-name>CRT RETS Server</display-name>
+  <description>CRT RETS Server</description>
+  <distributable/>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/spring-*.xml</param-value>
+  </context-param>
+</j:jelly>
