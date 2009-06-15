@@ -45,8 +45,7 @@ import net.sf.hibernate.HibernateException;
  *   description="Performs digest authentication"
  * @web.filter-init-param name="user-map"
  *   value="org.realtors.rets.server.webapp.auth.HibernateUserMap"
- *
- *   valuex="org.realtors.rets.server.webapp.auth.AuthenticationFilter"
+ * @web.filter-mapping url-pattern="/rets/*"
  */
 public class AuthenticationFilter implements Filter, UserMap
 {

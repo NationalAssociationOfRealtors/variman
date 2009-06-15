@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 /**
  * @web.filter name="session-filter"
  *   description="Handles session management after the user is authenticated"
+ * @web.filter-mapping url-pattern="/rets/*"
  */
 public class SessionFilter implements Filter
 {

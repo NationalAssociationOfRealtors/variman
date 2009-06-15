@@ -36,6 +36,8 @@ import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 /**
  * @web.filter name="accounting-filter"
  *   description="Keeps track of usage statistics for accounting"
+ *
+ * @web.filter-mapping url-pattern="/rets/*"
  */
 public class AccountingFilter implements Filter, Constants
 {

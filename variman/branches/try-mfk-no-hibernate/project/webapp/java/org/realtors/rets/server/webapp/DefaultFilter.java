@@ -17,6 +17,8 @@ import javax.servlet.ServletResponse;
  *
  * @web.filter name="default-filter"
  *   description="Default filter"
+ *
+ * @web.filter-mapping url-pattern="/"
  */
 public class DefaultFilter implements Filter
 {
