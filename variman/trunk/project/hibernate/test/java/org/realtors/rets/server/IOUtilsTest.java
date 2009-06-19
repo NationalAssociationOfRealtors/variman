@@ -227,13 +227,27 @@ public class IOUtilsTest extends TestCase
         assertEquals(expected, relative);
 
         relative = IOUtils.relativize(base, other);
-        expected = "/some/other/directory";
         String root;
-        if (SystemUtils.IS_OS_UNIX || IS_BSD) {
+        if (SystemUtils.IS_OS_UNIX || IS_BSD) 
+        {
             root = "/";
-        } else if (SystemUtils.IS_OS_WINDOWS) {
-            root = "/C:/";
-        } else {
+        } 
+        else 
+        if (SystemUtils.IS_OS_WINDOWS) 
+        {
+            String [] userDir = StringUtils.split(
+                                    System.getProperty("user.dir"), ":");
+            if (userDir != null && userDir[0] != null)
+            {
+                root = "/" + userDir[0] + ":/";
+            }
+            else
+            {
+                root = "/C:/";
+            }
+        } 
+        else 
+        {
             root = "";
         }
         expected = root + "some/other/directory";
