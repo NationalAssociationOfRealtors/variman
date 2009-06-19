@@ -228,6 +228,16 @@ public class IOUtilsTest extends TestCase
 
         relative = IOUtils.relativize(base, other);
         expected = "/some/other/directory";
+        String root;
+        if (SystemUtils.IS_OS_UNIX || IS_BSD) {
+            root = "/";
+        } else if (SystemUtils.IS_OS_WINDOWS) {
+            root = "/C:/";
+        } else {
+            root = "";
+        }
+        expected = root + "some/other/directory";
+
         assertEquals(expected, relative);
     }
 

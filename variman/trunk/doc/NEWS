@@ -8,6 +8,8 @@ Version 3.0.1 - xx xxx 2009
     application server.
   * Add Button Context wrong after adding Class. Ticket #43.
   * Add MySQL support. Ticket #44.
+  * Make junit.jar an explicit dependency. Ticket #45.
+  * IOUtilsTest fails on Windows. Ticket #46.
 
 Version 3.0.0b3 - 29 Apr 2009
 

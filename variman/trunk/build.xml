@@ -61,7 +61,7 @@
     <pathelement path="${hibernate.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${hibernate-ext.tools.jar}"/>
-  	<pathelement path="${mysql.jdbc.jar}"/>
+    <pathelement path="${mysql.jdbc.jar}"/>
     <pathelement path="${postgres.jdbc.jar}"/>
     <pathelement path="${jtds.jdbc.jar}"/>
     <pathelement path="${jdom.jar}"/>
@@ -245,6 +245,7 @@
       <classpath>
         <path refid="hibernate.path" />
         <pathelement location="build/hibernate/classes"/>
+        <pathelement path="${junit.jar}"/>
       </classpath>
     </javac>
     <copy todir="build/hibernate/test/classes">
@@ -317,7 +318,7 @@
         <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
         <pathelement location="build/hibernate/jar"/>
         <fileset dir="${hibernate.lib}" includes="*.jar"/>
-      	<pathelement location="${mysql.jdbc.jar}"/>
+        <pathelement location="${mysql.jdbc.jar}"/>
         <pathelement location="${postgres.jdbc.jar}"/>
         <pathelement location="${jtds.jdbc.jar}"/>
       </classpath>
@@ -439,19 +440,19 @@
     </copy>
     <copy file="project/webapp/config/tomcat-users.xml"
           todir="build/rets-server/server/conf"/>
-  	<copy file="project/webapp/config/tomcat.logging.properties"
+    <copy file="project/webapp/config/tomcat.logging.properties"
           todir="build/rets-server/server/conf"/>
-  	<copy todir="build/rets-server/server/lib">
-  	    <fileset dir="${tomcat.lib}">
-  	       <include name="*.jar"/>
-  	   	</fileset>
-  	</copy>
+    <copy todir="build/rets-server/server/lib">
+        <fileset dir="${tomcat.lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </copy>
     <copy todir="build/rets-server/server/lib">
        <fileset dir="${tomcat.bin}">
           <include name="*.jar"/>
        </fileset>
    </copy>
-  	
+
     <copy todir="build/rets-server/doc">
       <fileset dir="doc" includes="**/*"/>
     </copy>
@@ -515,6 +516,7 @@
               <classpath>
                   <path refid="rets-client.path" />
                   <pathelement path="${rets-client.jar}"/>
+                  <pathelement path="${junit.jar}"/>
               </classpath>
       </javac>
       <copy todir="build/rets-client/tests/classes">
@@ -530,6 +532,7 @@
                     <pathelement location="build/rets-client/classes"/>
                     <path refid="rets-client.path"/>
                     <pathelement path="${java.class.path}"/>
+                    <pathelement path="${junit.jar}"/>
               </classpath>
               <formatter type="brief"/>
               
@@ -550,24 +553,24 @@
         <pathelement location="${servlet.jar}"/>
       </classpath>
     </taskdef>
-  	
+
     <webdoclet>
         <fileset dir="project/webapp/java" includes="**/*.java"/>
 
-    	<component
+        <component
             classname="org.xdoclet.plugin.web.WebPlugin"
-    		destdir="build/rets-server/variman/WEB-INF"
+            destdir="build/rets-server/variman/WEB-INF"
             mergedir="file:project/webapp/config/web-merge/"
-    		servletversion="2.3"
-    		/>
-    	<component
-    		classname="org.xdoclet.plugin.web.TaglibPlugin"
-    		jspversion="1.2"
+            servletversion="2.3"
+        />
+        <component
+            classname="org.xdoclet.plugin.web.TaglibPlugin"
+            jspversion="1.2"
             destdir="build/rets-server/variman/WEB-INF"
             filereplace="cct.tld"
-    	    shortname="cct"
-    		validate="false"
-		   />
+            shortname="cct"
+            validate="false"
+        />
     </webdoclet>
   </target>
 
@@ -595,6 +598,7 @@
             cache="build/depcache" closure="yes">
       <classpath>
         <path refid="webapp.test.path"/>
+        <pathelement path="${junit.jar}"/>
       </classpath>
     </depend>
     <javac srcdir="project/webapp/test/java"
@@ -604,6 +608,7 @@
            deprecation="${compile.deprecation}">
       <classpath>
         <path refid="webapp.test.path"/>
+        <pathelement path="${junit.jar}"/>
       </classpath>
     </javac>
 
@@ -874,6 +879,7 @@
       <classpath>
         <path refid="admin.path"/>
         <pathelement location="build/admin/classes"/>
+        <pathelement path="${junit.jar}"/>
       </classpath>
     </javac>
 
@@ -897,6 +903,7 @@
         <pathelement path="${log4j.jar}"/>
         <pathelement path="${commons-lang.jar}"/>
         <pathelement path="${antlr.runtime.jar}"/>
+        <pathelement path="${junit.jar}"/>
         <pathelement location="build/hibernate/classes"/>
         <pathelement location="build/rets-server/variman/WEB-INF/classes"/>
         <pathelement location="build/admin/classes"/>
