@@ -9,6 +9,7 @@ public interface ActivationManager {
     /**
      * Checks if Variman has been activated.
      * @return True if activated has been successfully completed.
+     * @param host
      */
-    boolean isActivated();
+    boolean isActivated(String host);
 }

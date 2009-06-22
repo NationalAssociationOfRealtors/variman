@@ -14,10 +14,10 @@ public class MD5ActivationStrategy implements ActivationStrategy {
 
     private static final Log logger = LogFactory.getLog(MD5ActivationStrategy.class);
 
-    public boolean isCodeValid(String name, String email, String code) {
+    public boolean isCodeValid(String host, String email, String code) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
-            String nameAndEmail = name + email;
+            String nameAndEmail = host + email;
             md5.update(nameAndEmail.getBytes());
             String result = new BigInteger(md5.digest()).toString();
             return code.equals(result);

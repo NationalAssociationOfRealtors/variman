@@ -2,7 +2,6 @@ package org.realtors.rets.server.webapp;
 
 import org.junit.Test;
 import org.junit.Before;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.jmock.Mockery;
 import org.jmock.Expectations;
@@ -35,9 +34,10 @@ public class ActivationFilterTest {
 
     final ActivationFilter activationFilter = new ActivationFilter();
     final ActivationManager activationManager = context.mock(ActivationManager.class);
+    final String hostname = "test.host.com";
     final HttpServletRequest request = context.mock(HttpServletRequest.class);
     final HttpServletResponse response = context.mock(HttpServletResponse.class);
-    final FilterChain filterChain = context.mock(FilterChain.class);
+    final FilterChain filterChain = context.mock(FilterChain.class);    
 
     @Before
     public void setup() {
@@ -58,7 +58,8 @@ public class ActivationFilterTest {
     @Test
     public void doFilterPassesDownChainWhenActivationTrue() throws Exception {
         context.checking(new Expectations() {{
-            allowing(activationManager).isActivated(); will(returnValue(true));
+            allowing(request).getRemoteHost(); will(returnValue(hostname));
+            allowing(activationManager).isActivated(hostname); will(returnValue(true));
             oneOf(filterChain).doFilter(request, response);
         }});
         activationFilter.doFilter(request, response, filterChain);
@@ -67,7 +68,8 @@ public class ActivationFilterTest {
     @Test
     public void doFilterPassesDownChainWhenActivationFalseAndTimeoutHasNotExpired() throws Exception {
         context.checking(new Expectations() {{
-            allowing(activationManager).isActivated(); will(returnValue(false));
+            allowing(request).getRemoteHost(); will(returnValue(hostname));
+            allowing(activationManager).isActivated(hostname); will(returnValue(false));
             oneOf(filterChain).doFilter(request, response);
         }});
         activationFilter.setTimeout(3600000);
@@ -79,7 +81,8 @@ public class ActivationFilterTest {
     public void doFilterReturns503AndMessageWhenActivationFalseAndTimeoutHasExpired() throws Exception {
         final PrintWriter writer = context.mock(PrintWriter.class);
         context.checking(new Expectations() {{
-            allowing(activationManager).isActivated(); will(returnValue(false));
+            allowing(request).getRemoteHost(); will(returnValue(hostname));
+            allowing(activationManager).isActivated(hostname); will(returnValue(false));
             oneOf(response).setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             oneOf(response).setContentType("text/plain");
             allowing(response).getWriter(); will(returnValue(writer));

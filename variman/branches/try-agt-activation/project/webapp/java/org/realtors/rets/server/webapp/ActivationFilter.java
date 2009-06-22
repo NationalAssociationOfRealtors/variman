@@ -1,6 +1,5 @@
 package org.realtors.rets.server.webapp;
 
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.context.support.ServletContextResource;
 import org.realtors.rets.server.activation.ActivationManager;
 import org.realtors.rets.server.activation.ResourceBasedActivationManager;
@@ -67,7 +66,7 @@ public class ActivationFilter implements Filter  {
 
     private void doActivationCheck(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-        if(activationManager.isActivated() || timeLeft()) {
+        if(activationManager.isActivated(request.getRemoteHost()) || timeLeft()) {
             filterChain.doFilter(request, response);
         } else {
             response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);

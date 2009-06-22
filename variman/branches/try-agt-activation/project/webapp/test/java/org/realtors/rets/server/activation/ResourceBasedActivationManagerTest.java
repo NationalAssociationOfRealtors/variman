@@ -25,8 +25,8 @@ public class ResourceBasedActivationManagerTest {
 
     final Mockery context = new JUnit4Mockery();
     //The activation information that will get passed to the ActivationStrategy
-    final String name = "Test Name";
     final String email = "test@test.com";
+    final String host = "test.hotst.com";
     final String code = "testcode";
 
 
@@ -35,48 +35,48 @@ public class ResourceBasedActivationManagerTest {
 
         //Create the activationManager and run the test
         ResourceBasedActivationManager activationManager = new ResourceBasedActivationManager(
-                createResource(true, name, email, code), createStrategy(true, name, email, code));
+                createResource(true, email, code), createStrategy(true, host, email, code));
         assertTrue("isActivated should be true when the resources exists, and the activation code is valid",
-                activationManager.isActivated());       
+                activationManager.isActivated(host));
     }
 
     @Test
     public void invalidActivationCodeReturnsIsActivatedFalse() throws Exception {
         //THe resource exists, but the code returned will be invalid
         ResourceBasedActivationManager activationManager = new ResourceBasedActivationManager(
-                createResource(true, name, email, code), createStrategy(false, name, email, code));
+                createResource(true, email, code), createStrategy(false, host, email, code));
         assertFalse("isActivated should be false when the resources exists, but the activation code is invalid",
-                activationManager.isActivated());
+                activationManager.isActivated(host));
     }
 
     @Test
     public void nonExistantResourceReturnsIsActivatedFals() throws Exception {
         //The resource will say it does not exist
         ResourceBasedActivationManager activationManager = new ResourceBasedActivationManager(
-                createResource(false, null, null, null), null);
-        assertFalse("isActivated should be false when the resources doesn't exist.", activationManager.isActivated());
+                createResource(false, null, null), null);
+        assertFalse("isActivated should be false when the resources doesn't exist.",
+                activationManager.isActivated(host));
     }
 
-    private ActivationStrategy createStrategy(final boolean valid, final String name,
+    private ActivationStrategy createStrategy(final boolean valid, final String host,
                                               final String email, final String code) {
         final ActivationStrategy activationStrategy = context.mock(ActivationStrategy.class);
         context.checking(new Expectations() {{
-            allowing(activationStrategy).isCodeValid(name, email, code); will(returnValue(valid));
+            allowing(activationStrategy).isCodeValid(host, email, code); will(returnValue(valid));
         }});
         return activationStrategy;
     }
 
-    private Resource createResource(final boolean exists, String name, String email, String code) throws Exception {
+    private Resource createResource(final boolean exists, String email, String code) throws Exception {
         final Resource activationResource = context.mock(Resource.class, "activationResource");
         context.checking(new Expectations() {{
             allowing (activationResource).exists(); will(returnValue(exists));
 
         }});
 
-        if(name != null && email != null && code != null) {
+        if(email != null && code != null) {
             //The resource returns the property string
-            Properties activationProperties = new Properties();
-            activationProperties.setProperty(ResourceBasedActivationManager.VARIMAN_ACTIVATION_NAME, name);
+            Properties activationProperties = new Properties();           
             activationProperties.setProperty(ResourceBasedActivationManager.VARIMAN_ACTIVATION_EMAIL, email);
             activationProperties.setProperty(ResourceBasedActivationManager.VARIMAN_ACTIVATION_CODE, code);
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
