@@ -28,6 +28,7 @@ import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.XmlRetsConfigUtils;
 
 public class AdminFrame extends JFrame
 {
@@ -145,7 +146,7 @@ public class AdminFrame extends JFrame
                 mConfigurationPanel.getPhotoPattern());
             retsConfig.setObjectSetPattern(
                 mConfigurationPanel.getObjectSetPattern());
-            retsConfig.toXml(Admin.getConfigFile());
+            XmlRetsConfigUtils.toXml(retsConfig, Admin.getConfigFile());
             Admin.setRetsConfigChanged(false);
         }
         catch (RetsServerException e)

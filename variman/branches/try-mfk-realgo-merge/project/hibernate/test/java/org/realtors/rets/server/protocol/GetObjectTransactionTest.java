@@ -18,9 +18,15 @@ import junit.framework.TestCase;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.GlobalTestSetup;
 
 public class GetObjectTransactionTest extends TestCase
 {
+    public void setUp()
+    {
+        GlobalTestSetup.globalSetup();
+    }
+
     public void testSingleJpeg() throws IOException, RetsServerException
     {
         GetObjectTransaction transaction = createTransaction("abc123:1");
@@ -426,12 +432,14 @@ public class GetObjectTransactionTest extends TestCase
     }
 
     private GetObjectTransaction createTransaction(String id)
+            throws RetsServerException
     {
         return createTransaction(id, false);
     }
 
     private GetObjectTransaction createTransaction(String id,
                                                    boolean useLocation)
+            throws RetsServerException
     {
         GetObjectParameters parameters =
             new GetObjectParameters("Property", "Photo", id, useLocation);

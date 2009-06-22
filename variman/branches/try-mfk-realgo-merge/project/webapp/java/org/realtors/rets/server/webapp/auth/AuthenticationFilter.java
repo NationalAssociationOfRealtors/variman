@@ -135,9 +135,11 @@ public class AuthenticationFilter implements Filter, UserMap
             LOG.debug("Authorizing URI: " + method + " " + uri + " " + query);
             LOG.debug("User-Agent: " + userAgent);
         }
-        String retsPrefix = request.getContextPath() + "/rets";
-        String cctPrefix = request.getContextPath() + "/cct";
-        if (!uri.startsWith(retsPrefix) && !uri.startsWith(cctPrefix))
+        String contextPath = request.getContextPath(),
+        	   retsPrefix  = contextPath + "/rets",
+               cctPrefix   = contextPath + "/cct",
+               hpmaPrefix  = contextPath + "/server";
+        if (!uri.startsWith(retsPrefix) && !uri.startsWith(cctPrefix) && !uri.startsWith(hpmaPrefix))
         {
             filterChain.doFilter(request, response);
             return;
@@ -261,14 +263,16 @@ public class AuthenticationFilter implements Filter, UserMap
                 Group group = (Group) iterator.next();
                 GroupRules rules =
                     securityConstraints.getRulesForGroup(group.getName());
-                TimeRestriction timeRestriction = rules.getTimeRestriction();
-                if ((timeRestriction != null) &&
-                    !timeRestriction.isAllowedNow())
-                {
-                    LOG.info("Group <" + group.getName() + "> does not " +
-                             "allow access at this time.");
-                    allowed = false;
-                    break;
+                if (rules != null) {
+                    TimeRestriction timeRestriction = rules.getTimeRestriction();
+                    if ((timeRestriction != null) &&
+                        !timeRestriction.isAllowedNow())
+                    {
+                        LOG.info("Group <" + group.getName() + "> does not " +
+                                 "allow access at this time.");
+                        allowed = false;
+                        break;
+                    }
                 }
             }
             return allowed;

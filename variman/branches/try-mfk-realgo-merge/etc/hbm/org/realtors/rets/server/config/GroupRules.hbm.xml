@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: GroupRules.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.config.HibernateGroupRules" table="RetsGroupRules" mutable="false">
+
+        <id name="id" type="java.lang.Integer">
+            <column name="RetsGroupRule_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one
+            name="group"
+            class="org.realtors.rets.server.Group"
+        >
+            <column name="Group_ID" sql-type="int" length="4" unique="true" not-null="true"/>
+        </many-to-one>
+
+        <property
+            name="recordLimit"
+            type="integer"
+            update="true"
+            insert="true"
+        >
+            <column name="RecordLimit" sql-type="int" length="4" not-null="true"/>
+        </property>
+
+<!-- 
+        <component
+            name="queryLimit"
+            class="org.realtors.rets.server.QueryLimit"
+        >
+-->
+        <property
+            name="limit"
+            type="long"
+            update="true"
+            insert="true"
+        >
+            <column name="QueryCountLimit" sql-type="bigint" length="8" not-null="true"/>
+        </property>
+
+        <property
+            name="period"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="QueryCountLimitPeriod" sql-type="varchar(10)" not-null="false"/>
+        </property>
+        
+<!-- 
+        </component>
+-->
+<!-- 
+        <component
+            name="timeRestriction"
+            class="org.realtors.rets.server.config.TimeRestriction"
+        >
+-->
+            <property
+                name="policyName"
+                type="java.lang.String"
+                update="true"
+                insert="true"
+            >
+                <column name="TRPolicy" sql-type="varchar(5)" not-null="false"/>
+            </property>
+
+            <property
+                name="startHour"
+                type="integer"
+                update="true"
+                insert="true"
+            >
+                <column name="TRStartHour" sql-type="int" length="4" not-null="false"/>
+            </property>
+
+            <property
+                name="startMinute"
+                type="integer"
+                update="true"
+                insert="true"
+            >
+                <column name="TRStartMinute" sql-type="int" length="4" not-null="false"/>
+            </property>
+
+            <property
+                name="endHour"
+                type="integer"
+                update="true"
+                insert="true"
+            >
+                <column name="TREndHour" sql-type="int" length="4" not-null="false"/>
+            </property>
+
+            <property
+                name="endMinute"
+                type="integer"
+                update="true"
+                insert="true"
+            >
+                <column name="TREndMinute" sql-type="int" length="4" not-null="false"/>
+            </property>
+<!-- 
+        </component>
+-->
+
+        <set
+            name="conditionRulesSet"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsGroupRules_RetsGroupConditionRules_RetsGroupRule_ID">
+                <column name="RetsGroupRule_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.config.HibernateConditionRule"/>
+        </set>
+
+        <set
+            name="filterRulesSet"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsGroupRules_RetsGroupFilterRules_RetsGroupRule_ID">
+                <column name="RetsGroupRule_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.config.HibernateFilterRule"/>
+        </set>
+
+
+<!-- 
+        <subclass
+            name="org.realtors.rets.server.config.HibernateGroupRules"
+            discriminator-value="org.realtors.rets.server.config.HibernateGroupRules"
+            lazy="false"
+        >
+        </subclass>
+-->
+    </class>
+</hibernate-mapping>

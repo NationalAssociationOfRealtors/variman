@@ -23,6 +23,14 @@ public class PatternObjectSet implements ObjectSet
         mPatternContext = new GetObjectPatternContext();
         mResourceKey = resourceKey;
     }
+    
+    public void setResource(String resource)
+    {
+    }
+    
+    public void setResourceEntity(String resourceEntity)
+    {
+    }
 
     public List findAllObjects(String type) throws RetsServerException
     {

@@ -1,0 +1,13 @@
+    
+    <!-- Expected by the Spring Context Loader Listener -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring-*.xml</param-value>
+    </context-param>
+    
+    <!-- Expected by the Web App Initialization Listener -->
+    <context-param>
+        <param-name>runInHpmaMode</param-name>
+        <param-value>true</param-value>
+    </context-param>
+        

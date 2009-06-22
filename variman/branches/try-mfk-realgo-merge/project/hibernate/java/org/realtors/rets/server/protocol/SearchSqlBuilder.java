@@ -1,37 +1,78 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Dave Dribin and modified by Danny Hurlburt
+ * Copyright (c) 2007, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+/*
+ */
 package org.realtors.rets.server.protocol;
 
-import java.util.SortedSet;
 import java.util.List;
 
+import org.realtors.rets.server.dmql.DmqlParserMetadata;
 import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.ServerDmqlMetadata;
-import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsServerException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: dave
- * Date: Sep 11, 2006
- * Time: 4:22:35 PM
- * To change this template use File | Settings | File Templates.
+ * A search sql builder generates SQL statements for search transaction.
  */
 public interface SearchSqlBuilder
 {
-    void setParameters(SearchParameters parameters);
-
-    void setGroups(SortedSet groups);
-
-    void perpareForQuery(MetadataManager manager)
-        throws RetsReplyException;
-
-    MClass getMetadataClass();
-
-    List getColumns()
-        throws RetsReplyException;
-
-    ServerDmqlMetadata getMetadata();
-
-    String getSelectClause() throws RetsReplyException;
-
-    String getFromClause();
+    public String getResourceId();
+    
+    public void setResourceId(String resourceId);
+    
+    public String getClassName();
+    
+    public void setClassName(String className);
+    
+    public List/*String*/ getSelectList();
+    
+    public void setSelectList(List/*String*/ selectList);
+    
+    public DmqlQuery getDmqlQuery();
+    
+    public void setDmqlQuery(DmqlQuery dmqlQuery);
+    
+    public List/*DmqlQuery*/ getDmqlConstraints();
+    
+    public void setDmqlConstraints(List/*DmqlQuery*/ dmqlConstraints);
+    
+    public List/*String*/ getSqlConstraints();
+    
+    public void setSqlConstraints(List/*String*/ sqlConstraints);
+    
+    public Integer getLimit();
+    
+    public void setLimit(Integer limit);
+    
+    public MetadataManager getMetadataManager();
+    
+    public void setMetadataManager(MetadataManager metadataManager);
+    
+    public SqlStatements createSqlStatements() throws RetsServerException;
+    
+    public static interface SqlStatements
+    {
+        public Query getCountQuery();
+        
+        public SearchQuery getSearchQuery();
+        
+        public static interface Query
+        {
+            public String getSql();
+        }
+        
+        public static interface SearchQuery extends Query
+        {
+            public List/*String*/ getSelectedColumnNames();
+            
+            public DmqlParserMetadata getDmqlParserMetadata();
+        }
+        
+    }
+    
 }

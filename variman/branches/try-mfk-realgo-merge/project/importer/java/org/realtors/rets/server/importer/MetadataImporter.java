@@ -389,7 +389,7 @@ public class MetadataImporter extends MetadataLoader
     private Session mSession;
     private String mUsername;
     static final String CVSID =
-        "$Id: MetadataImporter.java,v 1.43 2004/03/31 15:37:03 dribin Exp $";
+        "$Id: MetadataImporter.java 26415 2007-06-27 20:04:51Z todd $";
 
     private static final Logger LOG = Logger.getLogger(MetadataImporter.class);
 

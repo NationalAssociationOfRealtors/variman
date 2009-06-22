@@ -30,7 +30,7 @@ public class ConditionRulesPanel extends JPanel
             new OnConditionRuleSelectionChanged());
         JScrollPane scrollPane = new JScrollPane(mRulesList);
         scrollPane.setVerticalScrollBarPolicy(
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         box.add(scrollPane);
         box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(box, BorderLayout.CENTER);
@@ -94,15 +94,29 @@ public class ConditionRulesPanel extends JPanel
             StringBuffer buffer = new StringBuffer();
 
             buffer.append("In ");
-            buffer.append(rule.getResource()).append(":")
-                .append(rule.getRetsClass());
+            buffer.append(rule.getResourceID()).append(":")
+                .append(rule.getRetsClassName());
             buffer.append(", SQL constraint: ");
-            buffer.append(rule.getSqlConstraint());
+            buffer.append(ifEmptyFilter(rule.getSqlConstraint(), "None"));
+            buffer.append(", DMQL constraint: ");
+            buffer.append(ifEmptyFilter(rule.getDmqlConstraint(), "None"));
 
             return buffer.toString();
         }
-    }
+        
+        private static String ifEmptyFilter(final String str, final String displayInstead)
+        {
+            if (str == null) {
+                if (displayInstead == null) {
+                    return "";
+                }
+                return displayInstead;
+            }
+            return str;
+        }
 
+    }
+    
     private class OnConditionRuleSelectionChanged
         implements ListSelectionListener
     {

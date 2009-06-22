@@ -1,15 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
-<beans>   
-  <bean name="beanFactory" 
-        class="org.realtors.rets.server.RetsServer" />
+<beans>
+  <bean id="beanFactory" 
+        class="org.realtors.rets.server.RetsServer"/>
 
-  <bean name="SearchTransaction" singleton="false"
-        class="org.realtors.rets.server.protocol.DefaultSearchTransaction">
-    <property name="searchSqlBuilder"><ref bean="SearchSqlBuilder" /></property>
+  <bean id="retsConfig" class="org.realtors.rets.server.config.SpringXmlRetsConfigFactory" factory-method="initFromXmlFile">
+    <constructor-arg index="0" type="org.springframework.core.io.Resource" value="WEB-INF/rets/rets-config.xml"/>
   </bean>
 
-  <bean name="SearchSqlBuilder" singleton="false"
-        class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder" />
+  <bean id="searchTransaction" singleton="false" 
+        class="org.realtors.rets.server.protocol.DefaultSearchTransaction">
+    <property name="searchSqlBuilder"><ref bean="searchSqlBuilder"/></property>
+  </bean>
+
+  <bean id="searchSqlBuilder" singleton="false" 
+        class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder"/>
+
+  <bean id="metadataFetcher" 
+        class="org.realtors.rets.server.webapp.WebAppMetadataFetcher"/>
+        
+  <!-- Choose one of the following metadataLoader implementations: -->
+  <!-- Metadata from XML files: -->
+  <bean id="metadataLoader" 
+        class="org.realtors.rets.server.metadata.XmlMetadataLoader">
+    <constructor-arg index="0" value="WEB-INF/rex/metadata"/>
+  </bean>
+
+  <!-- Metadata from Database: -->
+  <!-- 
+    This requires that the appropriate HBM files are packaged into the
+    WEB-INF/classes/variman-hbm-xml.jar. This file is created during the build
+    process. Just make sure you have copied the HBM files to the appropriate
+    directory first.
+  -->
+<!-- 
+  <bean id="retsDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="org.postgresql.Driver"/>
+    <property name="url" value="jdbc:postgresql://localhost/rex_test"/>
+    <property name="username" value="dave"/>
+    <property name="password" value="password"/>
+    <property name="validationQuery" value="select 1"/>
+    <property name="maxActive" value="100"/>
+    <property name="minIdle" value="30"/>
+    <property name="maxIdle" value="50"/>
+    <property name="maxWait" value="120000"/>
+    <property name="poolPreparedStatements" value="true"/>
+    <property name="maxOpenPreparedStatements" value="30"/>
+    <property name="timeBetweenEvictionRunsMillis" value="300000"/>
+    <property name="numTestsPerEvictionRun" value="3"/>
+    <property name="minEvictableIdleTimeMillis" value="300000"/>
+  </bean>
+
+  <bean id="hibernate2SessionFactory" class="org.springframework.orm.hibernate.LocalSessionFactoryBean">
+    <property name="dataSource" ref="retsDataSource"/>
+    <property name="mappingJarLocations">
+      <list>
+        <value>WEB-INF/classes/variman-hbm-xml.jar</value>
+      </list>
+    </property>
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">net.sf.hibernate.dialect.PostgreSQLDialect</prop>
+        <prop key="hibernate.show_sql">false</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="metadataLoader" class="org.realtors.rets.server.metadata.SpringHibernate2MetadataLoader">
+    <property name="sessionFactory">
+      <ref bean="hibernate2SessionFactory"/>
+    </property>
+  </bean>
+-->
+
 </beans>

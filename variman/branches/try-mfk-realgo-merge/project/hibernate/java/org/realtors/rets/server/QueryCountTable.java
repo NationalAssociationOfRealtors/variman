@@ -36,13 +36,12 @@ public class QueryCountTable
         {
             for (int i = 0; i < allGroupRules.size(); i++)
             {
-                GroupRules rules = (GroupRules) allGroupRules.get(i);
-                if (rules.hasNoQueryLimit())
+                GroupRules groupRules = (GroupRules) allGroupRules.get(i);
+                QueryLimit queryLimit = groupRules.getQueryLimit();
+                if (queryLimit.hasNoQueryLimit())
                     continue;
 
-                QueryCount newCount =
-                    new QueryCount(rules.getQueryCountLimit(),
-                                   rules.getQueryCountLimitPeriod());
+                QueryCount newCount = new QueryCount(queryLimit);
                 if (newCount.isMoreRestrictiveThan(count))
                     count = newCount;
             }

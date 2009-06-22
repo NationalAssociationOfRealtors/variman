@@ -23,10 +23,12 @@ import org.apache.commons.lang.StringUtils;
 
 /***
  * Helper class to facilitate building rows in compact format. Each append()
- * method appends a value plus a tab character.
+ * method appends a value plus the delimiter character.
  */
 public class DataRowBuilder
 {
+
+    protected static final String CRLF = "\r\n";
 
     public DataRowBuilder(PrintWriter writer)
     {
@@ -47,7 +49,8 @@ public class DataRowBuilder
 
     public void end()
     {
-        mWriter.print("</DATA>\n");
+        mWriter.print("</DATA>");
+        mWriter.print(CRLF);
     }
     public void append(Object object)
     {
@@ -60,10 +63,42 @@ public class DataRowBuilder
 
     public void append(Date date)
     {
-        DateFormat formatter =
-            new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        mWriter.print(formatter.format(date));
+        if (date != null) {
+            DateFormat formatter =
+                new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            mWriter.print(formatter.format(date));
+        }
+        mWriter.print(mDelimiter);
+    }
+
+    public void appendDate(Date date)
+    {
+        if (date != null) {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            mWriter.print(formatter.format(date));
+        }
+        mWriter.print(mDelimiter);
+    }
+
+    public void appendTime(Date time)
+    {
+        if (time != null) {
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            mWriter.print(formatter.format(time));
+        }
+        mWriter.print(mDelimiter);
+    }
+
+    public void appendDateTime(Date dateTime)
+    {
+        if (dateTime != null) {
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            mWriter.print(formatter.format(dateTime));
+        }
         mWriter.print(mDelimiter);
     }
 

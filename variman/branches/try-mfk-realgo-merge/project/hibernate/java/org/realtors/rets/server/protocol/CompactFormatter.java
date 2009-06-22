@@ -11,17 +11,25 @@
 package org.realtors.rets.server.protocol;
 
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.enums.Enum;
 
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
+import org.realtors.rets.server.metadata.DataTypeEnum;
+import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.format.DataRowBuilder;
 import org.realtors.rets.server.metadata.format.TagBuilder;
 
@@ -30,6 +38,8 @@ import org.realtors.rets.server.metadata.format.TagBuilder;
  */
 public class CompactFormatter implements SearchResultsFormatter
 {
+    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+    
     public CompactFormatter(LookupDecoding lookupDecoding)
     {
         mLookupDecoding = lookupDecoding;
@@ -47,7 +57,7 @@ public class CompactFormatter implements SearchResultsFormatter
         try
         {
             PrintWriter out = context.getWriter();
-            out.print("<DELIMITER value=\"09\"/>\n");
+            out.print("<DELIMITER value=\"09\"/>\r\n");
             formatColumns(context);
             int numColumns = context.getNumberOfColumns();
             while (context.hasNext())
@@ -68,7 +78,7 @@ public class CompactFormatter implements SearchResultsFormatter
         columnsTag.print(DELIMITER);
         Collection fields = columnsToFields(context.getColumns(),
                                             context.getMetadata());
-        columnsTag.print(StringUtils.join(fields.iterator(), "\t"));
+        columnsTag.print(StringUtils.join(fields.iterator(), DELIMITER));
         columnsTag.print(DELIMITER);
         columnsTag.close();
     }
@@ -85,15 +95,37 @@ public class CompactFormatter implements SearchResultsFormatter
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter(), DELIMITER);
         row.begin();
+        DmqlParserMetadata metadata = context.getMetadata();
         for (int i = 0; i < numColumns; i++)
         {
-            String value = context.getResultString(i);
-            if ((mLookupDecoding == DECODE_LOOKUPS) &&
-                context.isColumnALookup(i))
-            {
-                value = context.decodeLookupValue(i, value);
+            if ((mLookupDecoding == DECODE_LOOKUPS) && context.isColumnALookup(i)) {
+                String strValue = context.getResultString(i);
+                strValue = context.decodeLookupValue(i, strValue);
+                row.append(strValue);
+            } else {
+                Calendar cal = Calendar.getInstance(GMT);
+                ResultSet rs = context.getResultSet();
+                String columnName = context.getColumn(i);
+                String fieldName = metadata.columnToField(columnName);
+                Table table = metadata.getTable(fieldName);
+                DataTypeEnum dataType = table.getDataType();
+                if (dataType == DataTypeEnum.DATE) {
+                    Date date = rs.getDate(i + 1, cal);
+                    row.appendDate(date);
+                } else if (dataType == DataTypeEnum.DATETIME) {
+                    Timestamp dateTime = rs.getTimestamp(i + 1, cal);
+                    row.appendDateTime(dateTime);
+                } else if (dataType == DataTypeEnum.TIME) {
+                    Time time = rs.getTime(i + 1, cal);
+                    row.appendTime(time);
+                } else if (dataType == DataTypeEnum.BOOLEAN) {
+                    boolean bit = rs.getBoolean(i + 1);
+                    row.append(bit);
+                } else {
+                    String strValue = context.getResultString(i);
+                    row.append(strValue);
+                }
             }
-            row.append(value);
         }
         row.end();
     }

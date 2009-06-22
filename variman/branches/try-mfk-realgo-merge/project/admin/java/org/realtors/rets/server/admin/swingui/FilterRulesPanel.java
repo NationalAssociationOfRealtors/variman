@@ -96,9 +96,9 @@ public class FilterRulesPanel extends JPanel
             StringBuffer buffer = new StringBuffer();
 
             buffer.append("In ");
-            buffer.append(rule.getResource()).append(":")
-                .append(rule.getRetsClass());
-            if (rule.getType() == FilterRule.INCLUDE)
+            buffer.append(rule.getResourceID()).append(":")
+                .append(rule.getRetsClassName());
+            if (rule.getType() == FilterRule.Type.INCLUDE)
             {
                 buffer.append(", include ");
             }

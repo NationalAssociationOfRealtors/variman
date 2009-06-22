@@ -1,3 +1,13 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Danny Hurlburt
+ * Copyright (c) 2007, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+/*
+ */
 package org.realtors.rets.server.protocol;
 
 import org.apache.commons.lang.enums.Enum;
@@ -19,4 +29,5 @@ public class SearchFormat extends Enum
     {
         return (SearchFormat) getEnum(SearchFormat.class, format);
     }
+    
 }

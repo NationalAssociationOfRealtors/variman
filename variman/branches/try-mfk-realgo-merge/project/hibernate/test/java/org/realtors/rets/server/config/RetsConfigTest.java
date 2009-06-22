@@ -5,17 +5,16 @@ package org.realtors.rets.server.config;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.realtors.rets.server.Group;
 import org.realtors.rets.server.LinesEqualTestCase;
+import org.realtors.rets.server.QueryLimit;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.QueryCount;
-import org.jdom.Element;
 
 public class RetsConfigTest extends LinesEqualTestCase
 {
     public void testToXml()
-        throws RetsServerException
     {
-        RetsConfig retsConfig = new RetsConfig();
+        RetsConfig retsConfig = new RetsConfigImpl();
         retsConfig.setGetObjectRoot("/tmp/pictures");
         retsConfig.setPhotoPattern("%k-%i.jpg");
         retsConfig.setObjectSetPattern("%k.xml");
@@ -39,51 +38,57 @@ public class RetsConfigTest extends LinesEqualTestCase
         database.setShowSql(true);
         retsConfig.setDatabase(database);
 
-        List securityConstraints = new ArrayList();
-        GroupRules groupRules = new GroupRules("newspaper");
+        List/*GroupRules*/ allGroupRules = new ArrayList/*GroupRules*/();
+        GroupRules groupRules = new GroupRulesImpl(new Group("newspaper"));
         groupRules.setRecordLimit(25);
-        FilterRule filterRule = new FilterRule();
-        filterRule.setType(FilterRule.INCLUDE);
-        filterRule.setResource("Property");
-        filterRule.setRetsClass("RES");
-        List systemNames = new ArrayList();
+        FilterRule filterRule = new FilterRuleImpl();
+        filterRule.setType(FilterRule.Type.INCLUDE);
+        filterRule.setResourceID("Property");
+        filterRule.setRetsClassName("RES");
+        List/*String*/ systemNames = new ArrayList/*String*/();
         systemNames.add("LP");
         systemNames.add("LN");
         filterRule.setSystemNames(systemNames);
         groupRules.addFilterRule(filterRule);
-        filterRule = new FilterRule();
-        filterRule.setType(FilterRule.EXCLUDE);
-        filterRule.setResource("Property");
-        filterRule.setRetsClass("COM");
-        systemNames = new ArrayList();
+        filterRule = new FilterRuleImpl();
+        filterRule.setType(FilterRule.Type.EXCLUDE);
+        filterRule.setResourceID("Property");
+        filterRule.setRetsClassName("COM");
+        systemNames = new ArrayList/*String*/();
         systemNames.add("EF");
         filterRule.setSystemNames(systemNames);
         groupRules.addFilterRule(filterRule);
-        ConditionRule conditionRule = new ConditionRule();
-        conditionRule.setResource("Property");
-        conditionRule.setRetsClass("RES");
+        ConditionRule conditionRule = new ConditionRuleImpl();
+        conditionRule.setResourceID("Property");
+        conditionRule.setRetsClassName("RES");
         conditionRule.setSqlConstraint("r_lp < 500000");
+        conditionRule.setDmqlConstraint("(lp=500000-)");
         groupRules.addConditionRule(conditionRule);
-        groupRules.setQueryCountLimit(500, QueryCount.PER_DAY);
-        securityConstraints.add(groupRules);
-
-        groupRules = new GroupRules("aggregators");
+        groupRules.setQueryLimit(
+            QueryLimit.valueOf(500L, QueryLimit.Period.PER_DAY));
+        allGroupRules.add(groupRules);
+        
+        groupRules = new GroupRulesImpl(new Group("aggregators"));
         groupRules.setTimeRestriction(
             new TimeRestriction(TimeRestriction.DENY, 9, 0, 17, 30));
-        groupRules.setQueryCountLimit(50, QueryCount.PER_HOUR);
-        securityConstraints.add(groupRules);
-
-        groupRules = new GroupRules("admins");
+        groupRules.setQueryLimit(
+            QueryLimit.valueOf(50L, QueryLimit.Period.PER_HOUR));
+        allGroupRules.add(groupRules);
+        
+        groupRules = new GroupRulesImpl(new Group("admins"));
         groupRules.setTimeRestriction(
             new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 30));
-        groupRules.setQueryCountLimit(5, QueryCount.PER_MINUTE);
-        securityConstraints.add(groupRules);
+        groupRules.setQueryLimit(
+            QueryLimit.valueOf(5L, QueryLimit.Period.PER_MINUTE));
+        allGroupRules.add(groupRules);
 
         // Test empty group rules
-        securityConstraints.add(new GroupRules("agent"));
+        allGroupRules.add(new GroupRulesImpl(new Group("agent")));
+        SecurityConstraints securityConstraints = new SecurityConstraints();
+        securityConstraints.setAllGroupRules(allGroupRules);
         retsConfig.setSecurityConstraints(securityConstraints);
 
-        String xml = retsConfig.toXml();
+        String xml = XmlRetsConfigUtils.toXml(retsConfig);
         assertLinesEqual(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL +
             "<rets-config>" + NL +
@@ -120,6 +125,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      </exclude-rule>" + NL +
             "      <condition-rule resource=\"Property\" class=\"RES\">" + NL +
             "        <sql-constraint>r_lp &lt; 500000</sql-constraint>" + NL +
+            "        <dmql-constraint>(lp=500000-)</dmql-constraint>" + NL +
             "      </condition-rule>" + NL +
             "      <query-count-limit period=\"per-day\">500</query-count-limit>" + NL +
             "    </group-rules>" + NL +
@@ -175,6 +181,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "      </include-rule>\n" +
             "      <condition-rule resource=\"Property\" class=\"RES\">\n" +
             "        <sql-constraint>r_lp &lt; 500000</sql-constraint>\n" +
+            "        <dmql-constraint>(lp=500000-)</dmql-constraint>\n" +
             "      </condition-rule>\n" +
             "      <exclude-rule resource=\"Property\" class=\"COM\">\n" +
             "        <system-names>LN</system-names>\n" +
@@ -196,7 +203,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    </group-rules>\n" +
             "  </security-constraints>\n" +
             "</rets-config>";
-        RetsConfig retsConfig = RetsConfig.initFromXml(xml);
+        RetsConfig retsConfig = XmlRetsConfigUtils.initFromXml(xml);
         assertEquals("192.168.1.1", retsConfig.getAddress());
         assertEquals(7103, retsConfig.getPort());
         assertEquals("WEB-INF/rets/metadata", retsConfig.getMetadataDir());
@@ -223,31 +230,31 @@ public class RetsConfigTest extends LinesEqualTestCase
         assertEquals(5, database.getMaxPsIdle());
         assertTrue(database.getShowSql());
 
-        List securityConstraints = retsConfig.getAllGroupRules();
-        assertEquals(3, securityConstraints.size());
-
-        GroupRules groupRules = (GroupRules) securityConstraints.get(0);
-        assertEquals("newspaper", groupRules.getGroupName());
+        List/*GroupRules*/ allGroupRules = retsConfig.getSecurityConstraints().getAllGroupRules();
+        assertEquals(3, allGroupRules.size());
+        
+        GroupRules groupRules = (GroupRules) allGroupRules.get(0);
+        assertEquals("newspaper", groupRules.getGroup().getName());
         assertEquals(0, groupRules.getRecordLimit());
 
         /* Check filter rules */
         List rules = groupRules.getFilterRules();
         assertEquals(2, rules.size());
         FilterRule filterRule = (FilterRule) rules.get(0);
-        assertEquals(FilterRule.INCLUDE, filterRule.getType());
-        assertEquals("Property", filterRule.getResource());
-        assertEquals("RES", filterRule.getRetsClass());
-        List expected = new ArrayList();
+        assertEquals(FilterRule.Type.INCLUDE, filterRule.getType());
+        assertEquals("Property", filterRule.getResourceID());
+        assertEquals("RES", filterRule.getRetsClassName());
+        List/*String*/ expected = new ArrayList/*String*/();
         expected.add("LN");
         expected.add("LP");
         expected.add("EF");
-        List systemNames = filterRule.getSystemNames();
+        List/*String*/ systemNames = filterRule.getSystemNames();
         assertEquals(expected, systemNames);
 
         filterRule = (FilterRule) rules.get(1);
-        assertEquals(FilterRule.EXCLUDE, filterRule.getType());
-        assertEquals("Property", filterRule.getResource());
-        assertEquals("COM", filterRule.getRetsClass());
+        assertEquals(FilterRule.Type.EXCLUDE, filterRule.getType());
+        assertEquals("Property", filterRule.getResourceID());
+        assertEquals("COM", filterRule.getRetsClassName());
         expected.clear();
         expected.add("LN");
         systemNames = filterRule.getSystemNames();
@@ -257,37 +264,40 @@ public class RetsConfigTest extends LinesEqualTestCase
         rules = groupRules.getConditionRules();
         assertEquals(1, rules.size());
         ConditionRule conditionRule = (ConditionRule) rules.get(0);
-        assertEquals("Property", conditionRule.getResource());
-        assertEquals("RES", conditionRule.getRetsClass());
+        assertEquals("Property", conditionRule.getResourceID());
+        assertEquals("RES", conditionRule.getRetsClassName());
         assertEquals("r_lp < 500000", conditionRule.getSqlConstraint());
+        assertEquals("(lp=500000-)", conditionRule.getDmqlConstraint());
 
         TimeRestriction timeRestriction =
             new TimeRestriction(TimeRestriction.ALLOW, 9, 0, 17, 30);
         assertEquals(timeRestriction, groupRules.getTimeRestriction());
 
         /* Check query count limits */
-        assertFalse(groupRules.hasNoQueryLimit());
-        assertEquals(QueryCount.PER_DAY, groupRules.getQueryCountLimitPeriod());
-        assertEquals(50, groupRules.getQueryCountLimit());
+        QueryLimit queryLimit = groupRules.getQueryLimit();
+        assertFalse(queryLimit.hasNoQueryLimit());
+        assertEquals(QueryLimit.Period.PER_DAY, queryLimit.getPeriod());
+        assertEquals(50, queryLimit.getLimit());
 
-        groupRules = (GroupRules) securityConstraints.get(1);
-        assertEquals("agent", groupRules.getGroupName());
+        groupRules = (GroupRules) allGroupRules.get(1);
+        assertEquals("agent", groupRules.getGroup().getName());
         assertEquals(25, groupRules.getRecordLimit());
         assertNull(groupRules.getTimeRestriction());
         rules = groupRules.getFilterRules();
         assertEquals(1, rules.size());
         filterRule = (FilterRule) rules.get(0);
-        assertEquals(FilterRule.EXCLUDE, filterRule.getType());
-        assertEquals("Property", filterRule.getResource());
-        assertEquals("COM", filterRule.getRetsClass());
+        assertEquals(FilterRule.Type.EXCLUDE, filterRule.getType());
+        assertEquals("Property", filterRule.getResourceID());
+        assertEquals("COM", filterRule.getRetsClassName());
         expected.clear();
         expected.add("LN");
         expected.add("LF");
 
-        assertTrue(groupRules.hasNoQueryLimit());
+        queryLimit = groupRules.getQueryLimit();
+        assertTrue(queryLimit.hasNoQueryLimit());
 
-        groupRules = (GroupRules) securityConstraints.get(2);
-        assertEquals("aggregators", groupRules.getGroupName());
+        groupRules = (GroupRules) allGroupRules.get(2);
+        assertEquals("aggregators", groupRules.getGroup().getName());
         assertEquals(0, groupRules.getRecordLimit());
         assertEquals(0, groupRules.getFilterRules().size());
         assertEquals(0, groupRules.getConditionRules().size());
@@ -295,11 +305,12 @@ public class RetsConfigTest extends LinesEqualTestCase
             new TimeRestriction(TimeRestriction.DENY, 9, 0, 17, 30);
         assertEquals(timeRestriction, groupRules.getTimeRestriction());
 
-        assertFalse(groupRules.hasNoQueryLimit());
-        assertEquals(QueryCount.PER_HOUR, groupRules.getQueryCountLimitPeriod());
-        assertEquals(15, groupRules.getQueryCountLimit());
+        queryLimit = groupRules.getQueryLimit();
+        assertFalse(queryLimit.hasNoQueryLimit());
+        assertEquals(QueryLimit.Period.PER_HOUR, queryLimit.getPeriod());
+        assertEquals(15, queryLimit.getLimit());
     }
-
+    
     public void testFromXmlDefaults()
         throws RetsServerException
     {
@@ -307,43 +318,16 @@ public class RetsConfigTest extends LinesEqualTestCase
             "<?xml version='1.0' ?>\n" +
             "<rets-config>\n" +
             "</rets-config>";
-        RetsConfig retsConfig = RetsConfig.initFromXml(xml);
+        RetsConfig retsConfig = XmlRetsConfigUtils.initFromXml(xml);
         assertNull(retsConfig.getPhotoPattern());
         assertNull(retsConfig.getGetObjectRoot());
         assertEquals(-1, retsConfig.getNonceInitialTimeout());
         assertEquals(-1, retsConfig.getNonceSuccessTimeout());
     }
 
-    public void testAddStringChild() throws RetsServerException
-    {
-        Element element = new Element("foo");
-        RetsConfig.addChild(element, "bar", "baz");
-        Element child = element.getChild("bar");
-        assertNotNull(child);
-        assertEquals("baz", child.getText());
-    }
-
-    public void testAddNullStringChild() throws RetsServerException
-    {
-        Element element = new Element("foo");
-        RetsConfig.addChild(element, "bar", null);
-        Element child = element.getChild("bar");
-        assertNotNull(child);
-        assertEquals("", child.getText());
-    }
-
-    public void testAddEmptyStringChild() throws RetsServerException
-    {
-        Element element = new Element("foo");
-        RetsConfig.addChild(element, "bar", "");
-        Element child = element.getChild("bar");
-        assertNotNull(child);
-        assertEquals("", child.getText());
-    }
-
     public void testSetBlankAddress()
     {
-        RetsConfig retsConfig = new RetsConfig();
+        RetsConfig retsConfig = new RetsConfigImpl();
         assertNull(retsConfig.getAddress());
         retsConfig.setAddress("");
         assertNull(retsConfig.getAddress());
@@ -355,12 +339,12 @@ public class RetsConfigTest extends LinesEqualTestCase
 
     public void testGetDefaults()
     {
-        RetsConfig retsConfig = new RetsConfig();
-        assertEquals("/", retsConfig.getGetObjectRoot("/"));
-        assertEquals("%i.jpg", retsConfig.getPhotoPattern("%i.jpg"));
-        assertEquals("foo", retsConfig.getObjectSetPattern("foo"));
-        assertEquals(2, retsConfig.getNonceInitialTimeout(2));
-        assertEquals(2, retsConfig.getNonceSuccessTimeout(2));
+        RetsConfig retsConfig = new RetsConfigImpl();
+        assertEquals("/", RetsConfigUtils.getGetObjectRoot(retsConfig, "/"));
+        assertEquals("%i.jpg", RetsConfigUtils.getPhotoPattern(retsConfig, "%i.jpg"));
+        assertEquals("foo", RetsConfigUtils.getObjectSetPattern(retsConfig, "foo"));
+        assertEquals(2, RetsConfigUtils.getNonceInitialTimeout(retsConfig, 2));
+        assertEquals(2, RetsConfigUtils.getNonceSuccessTimeout(retsConfig, 2));
 
         retsConfig.setGetObjectRoot("/tmp/pictures");
         retsConfig.setPhotoPattern("%k-%i.jpg");
@@ -368,10 +352,11 @@ public class RetsConfigTest extends LinesEqualTestCase
         retsConfig.setNonceInitialTimeout(5);
         retsConfig.setNonceSuccessTimeout(10);
 
-        assertEquals("/tmp/pictures", retsConfig.getGetObjectRoot("/"));
-        assertEquals("%k-%i.jpg", retsConfig.getPhotoPattern("%i.jpg"));
-        assertEquals("%k.xml", retsConfig.getObjectSetPattern("foo"));
-        assertEquals(5, retsConfig.getNonceInitialTimeout(2));
-        assertEquals(10, retsConfig.getNonceSuccessTimeout(2));
+        assertEquals("/tmp/pictures", RetsConfigUtils.getGetObjectRoot(retsConfig, "/"));
+        assertEquals("%k-%i.jpg", RetsConfigUtils.getPhotoPattern(retsConfig, "%i.jpg"));
+        assertEquals("%k.xml", RetsConfigUtils.getObjectSetPattern(retsConfig, "foo"));
+        assertEquals(5, RetsConfigUtils.getNonceInitialTimeout(retsConfig, 2));
+        assertEquals(10, RetsConfigUtils.getNonceSuccessTimeout(retsConfig, 2));
     }
+    
 }

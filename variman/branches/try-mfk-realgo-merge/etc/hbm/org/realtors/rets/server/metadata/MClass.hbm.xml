@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: MClass.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.MClass" table="RetsMetaClass" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaClass_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="className"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="ClassName"
+                sql-type="varchar(32)"
+                length="32"
+                not-null="true"
+                unique="true"
+                index="NDX_RetsMetaClass_ClassName"
+            />
+        </property>
+
+        <property
+            name="standardName"
+            type="org.realtors.rets.server.metadata.ClassStandardNameEnum"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="RetsMetaClassStandardName_ID"
+                sql-type="int"
+                not-null="false"
+                unique="false"
+                index="NDX_RetsMetaClass_RetsMetaClassStandardName_ID"
+            />
+        </property>
+
+        <property
+            name="visibleName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="VisibleName"
+                sql-type="varchar(32)"
+                length="32"
+                not-null="false"
+                unique="false"
+                index="NDX_RetsMetaClass_VisibleName"
+            />
+        </property>
+
+        <property
+            name="description"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Description" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+        <many-to-one
+            name="resource"
+            class="org.realtors.rets.server.metadata.Resource"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaClass_RetsMetaResource_RetsMetaResource_ID"
+        >
+            <column name="RetsMetaResource_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <set
+            name="tables"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaClass_RetsMetaTable_RetsMetaClass_ID">
+                <column name="RetsMetaClass_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="com.realgo.model.metadata.RetsMetaTable"/>
+        </set>
+
+        <set
+            name="updates"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaClass_RetsMetaUpdate_RetsMetaClass_ID">
+                <column name="RetsMetaClass_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.Update"/>
+        </set>
+
+        <property
+            name="dbTable"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="DBTable" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

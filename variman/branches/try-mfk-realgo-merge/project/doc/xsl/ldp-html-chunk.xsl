@@ -4,7 +4,7 @@
                 xmlns="http://www.w3.org/TR/xhtml1/transitional"
                 exclude-result-prefixes="#default">
 
-<!-- $Id: ldp-html-chunk.xsl,v 1.1 2004/08/19 22:23:47 dribin Exp $ -->
+<!-- $Id: ldp-html-chunk.xsl 26415 2007-06-27 20:04:51Z todd $ -->
 
 <!-- This stylesheet calls Norman Walsh's 'docbook.xsl' stylesheet
      and therefore generates MULTIPLE HTML FILES as output. -->

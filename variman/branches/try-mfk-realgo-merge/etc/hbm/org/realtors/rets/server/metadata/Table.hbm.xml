@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: Table.hbm.xml 45226 2009-03-23 19:57:24Z danny $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <!-- class name="org.realtors.rets.server.metadata.Table" table="RetsMetaTable"-->
+    <class name="com.realgo.model.metadata.RetsMetaTable" table="RetsMetaTable" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaTable_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="systemName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="SystemName"
+                sql-type="varchar(32)"
+                length="32"
+                not-null="true"
+                unique="true"
+                index="NDX_RetsMetaTable_SystemName"
+            />
+        </property>
+
+        <many-to-one
+            name="standardName"
+            class="org.realtors.rets.server.metadata.TableStandardName"
+            cascade="none"
+            outer-join="auto"
+            update="false"
+            insert="false"
+            foreign-key="FK_RetsMetaTable_RetsMetaTableStandardName_RetsMetaClass_ID"
+        >
+            <column name="RetsMetaTableStandardName_ID" sql-type="int" not-null="false" />
+        </many-to-one>
+
+        <property
+            name="longName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="LongName" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+
+        <property
+            name="dbName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="DBName" sql-type="varchar(10)" length="10" not-null="true"/>
+        </property>
+
+        <property
+            name="shortName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="ShortName" sql-type="varchar(24)" length="24" not-null="true"/>
+        </property>
+
+        <property
+            name="maximumLength"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="MaximumLength" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="dataType"
+            type="org.realtors.rets.server.metadata.DataTypeEnum"
+            update="true"
+            insert="true"
+        >
+            <column name="RetsMetaTableDataType_ID" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="precision"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="[Precision]" sql-type="int" not-null="false"/>
+        </property>
+
+        <property
+            name="searchable"
+            type="boolean"
+            update="true"
+            insert="true"
+        >
+            <column name="Searchable" sql-type="bit" not-null="true"/>
+        </property>
+
+        <property
+            name="interpretation"
+            type="org.realtors.rets.server.metadata.InterpretationEnum"
+            update="true"
+            insert="true"
+        >
+            <column name="RetsMetaTableInterpretation_ID" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="alignment"
+            type="org.realtors.rets.server.metadata.AlignmentEnum"
+            update="true"
+            insert="true"
+        >
+            <column name="RetsMetaTableAlignment_ID" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="useSeparator"
+            type="boolean"
+            update="true"
+            insert="true"
+        >
+            <column name="UseSeparator" sql-type="bit" not-null="true"/>
+        </property>
+
+        <property
+            name="maxSelect"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="MaxSelect" sql-type="int" not-null="false"/>
+        </property>
+
+        <property
+            name="units"
+            type="org.realtors.rets.server.metadata.UnitEnum"
+            update="true"
+            insert="true"
+        >
+            <column name="RetsMetaTableUnit_ID" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="index"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="[Index]" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="minimum"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="Minimum" sql-type="int" not-null="false"/>
+        </property>
+
+        <property
+            name="maximum"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="Maximum" sql-type="int" not-null="false"/>
+        </property>
+
+        <property
+            name="default"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="[Default]" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="required"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="Required" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="unique"
+            type="boolean"
+            update="true"
+            insert="true"
+        >
+            <column name="[Unique]" sql-type="bit" not-null="true"/>
+        </property>
+
+        <many-to-one
+            name="MClass"
+            class="org.realtors.rets.server.metadata.MClass"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaTable_RetsMetaClass_RetsMetaClass_ID"
+        >
+            <column name="RetsMetaClass_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <set
+            name="editMasks"
+            table="RetsMetaTableXEditMask"
+            lazy="false"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaTableXEditMask_RetsMetaTable_RetsMetaTable_ID">
+                <column name="RetsMetaTable_ID" sql-type="int" not-null="true"/>
+            </key>
+            <many-to-many
+                class="org.realtors.rets.server.metadata.EditMask"
+                outer-join="auto"
+                foreign-key="FK_RetsMetaTableXEditMask_RetsMetaEditMask_RetsMetaEditMask_ID"
+            >
+                <column name="RetsMetaEditMask_ID" sql-type="int" not-null="true"/>
+            </many-to-many>
+        </set>
+
+        <many-to-one
+            name="lookup"
+            class="org.realtors.rets.server.metadata.Lookup"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaTable_RetsMetaLookup_RetsMetaLookup_ID"
+        >
+            <column name="RetsMetaLookup_ID" sql-type="int" not-null="false"/>
+        </many-to-one>
+
+        <many-to-one
+            name="searchHelp"
+            class="org.realtors.rets.server.metadata.SearchHelp"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaTable_RetsMetaSearchHelp_RetsMetaSearchHelp_ID"
+        >
+            <column name="RetsMetaSearchHelp_ID" sql-type="int" not-null="false"/>
+        </many-to-one>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+        <many-to-one
+            name="entityColumnMetadata"
+            class="com.realgo.core.entity.metadata.EntityColumnMetadataMap"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaTable_EntityColumnMetadata"
+        >
+            <column name="EntityColumnMetadata_ID" sql-type="int" not-null="false"/>
+        </many-to-one>
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: RetsConfig.hbm.xml 28187 2008-02-25 21:16:52Z danny $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.config.HibernateRetsConfig" table="RetsConfig" mutable="false">
+
+        <id name="id" type="integer">
+            <column name="RetsConfig_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="nonceInitialTimeout"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="NonceInitialTimeout" sql-type="int" length="4" not-null="true"/>
+        </property>
+
+        <property
+            name="nonceSuccessTimeout"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="NonceSuccessTimeout" sql-type="int" length="4" not-null="true"/>
+        </property>
+
+        <property
+            name="getObjectRoot"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="GetObjectRoot" sql-type="varchar(255)" not-null="false"/>
+        </property>
+
+        <property
+            name="photoPattern"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="PhotoPattern" sql-type="varchar(20)" not-null="false"/>
+        </property>
+
+        <property
+            name="objectSetPattern"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="ObjectSetPattern" sql-type="varchar(20)" not-null="false"/>
+        </property>
+
+<!--
+        <component
+            name="securityConstraints"
+            class="org.realtors.rets.server.config.SecurityConstraints"
+            update="true"
+            insert="true"
+        >
+-->
+            <set
+                name="allGroupRules"
+                lazy="false"
+                inverse="true"
+                cascade="none"
+                sort="unsorted"
+            >
+                <!-- element type="org.realtors.rets.server.config.GroupRules" column="RetsGroupRule_ID" not-null="true" unique="true"/-->
+                <key foreign-key="FK_RetsConfig_RetsGroupRules_RetsGroupRules_ID">
+                    <column name="RetsConfig_ID" sql-type="int" not-null="true"/>
+                </key>
+                <one-to-many class="org.realtors.rets.server.config.HibernateGroupRules"/>
+            </set>
+<!--
+        </component>
+-->
+<!-- 
+        <subclass
+            name="org.realtors.rets.server.config.HibernateRetsConfig"
+            discriminator-value="org.realtors.rets.server.config.HibernateRetsConfig"
+            lazy="false"
+        >
+        </subclass>
+-->
+    </class>
+</hibernate-mapping>

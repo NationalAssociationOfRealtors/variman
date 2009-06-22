@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
-import org.realtors.rets.server.QueryCount;
+import org.realtors.rets.server.QueryLimit;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
@@ -168,18 +168,18 @@ public class GroupsPanel extends AdminTab
 
     private String queryCountToString()
     {
-        if (mGroupRules.hasNoQueryLimit())
+        QueryLimit queryLimit = mGroupRules.getQueryLimit();
+        if (queryLimit.hasNoQueryLimit())
             return "None";
 
         StringBuffer text = new StringBuffer();
-        text.append(mGroupRules.getQueryCountLimit());
-        QueryCount.LimitPeriod limitPeriod =
-            mGroupRules.getQueryCountLimitPeriod();
-        if (limitPeriod.equals(QueryCount.PER_DAY))
+        text.append(queryLimit.getLimit());
+        QueryLimit.Period limitPeriod = queryLimit.getPeriod();
+        if (limitPeriod.equals(QueryLimit.Period.PER_DAY))
             text.append(" per day");
-        else if (limitPeriod.equals(QueryCount.PER_HOUR))
+        else if (limitPeriod.equals(QueryLimit.Period.PER_HOUR))
             text.append(" per hour");
-        else if (limitPeriod.equals(QueryCount.PER_MINUTE))
+        else if (limitPeriod.equals(QueryLimit.Period.PER_MINUTE))
             text.append(" per minute");
         return text.toString();
     }

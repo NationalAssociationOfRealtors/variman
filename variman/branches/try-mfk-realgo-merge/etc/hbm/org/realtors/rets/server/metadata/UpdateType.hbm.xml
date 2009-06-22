@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: UpdateType.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.UpdateType" table="RetsMetaUpdateType" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaUpdateType_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <many-to-one
+            name="table"
+            class="com.realgo.model.metadata.RetsMetaTable"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaUpdateType_RetsMetaTable_RetsMetaTable_ID"
+        >
+            <column name="RetsMetaTable_ID" sql-type="int" not-null="true"
+                index="NDX_RetsMetaUpdateType_RetsMetaTable_ID"
+            />
+        </many-to-one>
+
+        <property
+            name="sequence"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="Sequence" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="default"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="[Default]" sql-type="varchar(64)" not-null="true"/>
+        </property>
+
+        <many-to-one
+            name="update"
+            class="org.realtors.rets.server.metadata.Update"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaUpdateType_RetsMetaUpdate_RetsMetaUpdate_ID"
+        >
+            <column name="RetsMetaUpdate_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <many-to-one
+            name="updateHelp"
+            class="org.realtors.rets.server.metadata.UpdateHelp"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaUpdateType_RetsMetaUpdateHelp_RetsMetaUpdateHelp_ID"
+        >
+            <column name="RetsMetaUpdateHelp_ID" sql-type="int" not-null="false"/>
+        </many-to-one>
+
+        <many-to-one
+            name="validationLookup"
+            class="org.realtors.rets.server.metadata.ValidationLookup"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaUpdateType_RetsMetaValidationLookup_RetsMetaValidationLookup_ID"
+        >
+            <column name="RetsMetaValidationLookup_ID" sql-type="int" not-null="false"/>
+        </many-to-one>
+
+        <many-to-one
+            name="validationExternal"
+            class="org.realtors.rets.server.metadata.ValidationExternal"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaUpdateType_RetsMetaValidationExternal_RetsMetaValidationExternal_ID"
+        >
+            <column name="RetsMetaValidationExternal_ID" sql-type="int" not-null="false"/>
+        </many-to-one>
+
+        <set
+            name="attributes"
+            table="RetsMetaUpdateTypeXAttribute"
+            lazy="false"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaUpdateTypeXAttribute_RetsMetaUpdateType_RetsMetaUpdateType_ID">
+                <column name="RetsMetaUpdateType_ID" sql-type="int" not-null="true"/>
+            </key>
+            <element type="org.realtors.rets.server.metadata.UpdateTypeAttributeEnum">
+                <column name="Attributes" sql-type="varchar(32)" length="32" not-null="false" unique="false"/>
+            </element>
+        </set>
+
+        <set
+            name="validationExpressions"
+            table="RetsMetaUpdateTypeXValidationExpression"
+            lazy="false"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaUpdateTypeXValidationExpression_RetsMetaUpdateType_RetsMetaUpdateType_ID">
+                <column name="RetsMetaUpdateType_ID" sql-type="int" not-null="true"/>
+            </key>
+            <many-to-many
+                class="org.realtors.rets.server.metadata.ValidationExpression"
+                outer-join="auto"
+                foreign-key="FK_RetsMetaUpdateTypeXValidationExpression_RetsMetaValidationExpression_RetsMetaValidationExpression_ID"
+            >
+                <column name="RetsMetaValidationExpression_ID" sql-type="int" not-null="true"/>
+            </many-to-many>
+        </set>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

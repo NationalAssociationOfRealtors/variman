@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
  *
  * @web.servlet name="login-servlet"
  * @web.servlet-mapping url-pattern="/rets/login"
+ * @web.servlet-mapping url-pattern="/server/login"
  */
 public class LoginServlet extends RetsServlet
 {
@@ -53,10 +54,16 @@ public class LoginServlet extends RetsServlet
 
         PrintWriter out = response.getXmlWriter();
         RetsUtils.printOpenRetsSuccess(out);
-        if (request.getRetsVersion() != RetsVersion.RETS_1_0)
+        if (request.getRetsVersion() != RetsVersion.RETS_1_0 || WebApp.getHPMAMode())
         {
             RetsUtils.printOpenRetsResponse(out);
         }
+
+        // HPMA needs relative URLs
+        if (WebApp.getHPMAMode()) {
+            contextPath.replace(0, contextPath.lastIndexOf("/"), "");
+        }
+        
         out.println("Broker = " + user.getBrokerCode());
         out.println("MemberName = " + user.getName());
         out.println("MetadataVersion = " + version);
@@ -69,7 +76,7 @@ public class LoginServlet extends RetsServlet
         out.println("GetObject = " + contextPath + Paths.GET_OBJECT);
         out.println("Balance = " + statitics.getTotalBalanceFormatted());
         out.println("TimeoutSeconds = " + session.getMaxInactiveInterval());
-        if (request.getRetsVersion() != RetsVersion.RETS_1_0)
+        if (request.getRetsVersion() != RetsVersion.RETS_1_0 || WebApp.getHPMAMode())
         {
             RetsUtils.printCloseRetsResponse(out);
         }

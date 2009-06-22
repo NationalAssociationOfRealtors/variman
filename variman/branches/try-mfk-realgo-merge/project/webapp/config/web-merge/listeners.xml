@@ -1,9 +1,15 @@
-<context-param>
-<param-name>contextConfigLocation</param-name>
-<param-value>/WEB-INF/spring-*.xml</param-value>
-</context-param>
-
-<listener>
-<display-name>Spring Context Loader Listener</display-name>
-<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-</listener>
+    
+    <listener>
+        <display-name>Spring Context Loader Listener</display-name>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <!--
+      The Web App Initialization Listener depends on Spring loading first,
+      hence the reason it follows the Spring Context Loader Listener.
+    -->
+    <listener>
+        <display-name>Web App Initialization Listener</display-name>
+        <listener-class>org.realtors.rets.server.webapp.WebAppLifecycleListener</listener-class>
+    </listener>
+    

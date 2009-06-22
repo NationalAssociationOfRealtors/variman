@@ -24,6 +24,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class TagBuilder
 {
 
+    protected static final String CRLF = "\r\n";
+
     public TagBuilder(PrintWriter writer)
     {
         mWriter = writer;
@@ -47,20 +49,23 @@ public class TagBuilder
     {
         mWriter.print("</");
         mWriter.print(mTagName);
-        mWriter.print(">\n");
+        mWriter.print(">");
+        mWriter.print(CRLF);
     }
 
     public void close()
     {
         if (mContentIsEmpty)
         {
-            mWriter.print("/>\n");
+            mWriter.print("/>");
+            mWriter.print(CRLF);
         }
         else
         {
             mWriter.print("</");
             mWriter.print(mTagName);
-            mWriter.print(">\n");
+            mWriter.print(">");
+            mWriter.print(CRLF);
         }
     }
 
@@ -85,7 +90,8 @@ public class TagBuilder
 
     public void endAttributes()
     {
-        mWriter.print(">\n");
+        mWriter.print(">");
+        mWriter.print(CRLF);
     }
 
     public TagBuilder beginContent()
@@ -98,7 +104,7 @@ public class TagBuilder
     public TagBuilder beginContentOnNewLine()
     {
         mWriter.print(">");
-        mWriter.print("\n");
+        mWriter.print(CRLF);
         mContentIsEmpty = false;
         return this;
     }
@@ -107,7 +113,8 @@ public class TagBuilder
     {
         mWriter.print("<COLUMNS>\t");
         mWriter.print(StringUtils.join(columns, "\t"));
-        mWriter.print("\t</COLUMNS>\n");
+        mWriter.print("\t</COLUMNS>");
+        mWriter.print(CRLF);
         return this;
     }
 

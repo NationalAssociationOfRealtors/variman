@@ -18,7 +18,9 @@ import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 import org.realtors.rets.server.config.FilterRule;
+import org.realtors.rets.server.config.FilterRuleImpl;
 import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.GroupRulesImpl;
 
 public class TableFormatterTest extends FormatterTestCase
 {
@@ -110,12 +112,11 @@ public class TableFormatterTest extends FormatterTestCase
         mGroups = new HashSet();
         mGroups.add(mNewspapers);
 
-        FilterRule filterRule = new FilterRule(
-            FilterRule.EXCLUDE);
-        filterRule.setResource("Property");
-        filterRule.setRetsClass("MOB");
+        FilterRule filterRule = new FilterRuleImpl(FilterRule.Type.EXCLUDE);
+        filterRule.setResourceID("Property");
+        filterRule.setRetsClassName("MOB");
         filterRule.addSystemName("LISTING_PRICE");
-        GroupRules rules = new GroupRules(mNewspapers.getName());
+        GroupRules rules = new GroupRulesImpl(mNewspapers);
         rules.addFilterRule(filterRule);
         mGroupFilter.addRules(rules);
     }

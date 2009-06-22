@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: Resource.hbm.xml 26674 2007-08-27 19:30:43Z danny $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.Resource" table="RetsMetaResource" mutable="false">
+    
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaResource_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="resourceID"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="ResourceID" 
+                sql-type="varchar(32)"
+                length="32"
+                not-null="true"
+                unique="true"
+                index="NDX_RetsMetaResource_ResourceID"
+            />
+        </property>
+
+        <property
+            name="standardName"
+            type="org.realtors.rets.server.metadata.ResourceStandardNameEnum"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="RetsMetaResourceStandardName_ID"
+                sql-type="int"
+                not-null="false"
+                unique="false"
+                index="NDX_RetsMetaResource_RetsMetaResourceStandardName_ID"
+            />
+        </property>
+
+        <property
+            name="visibleName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="VisibleName" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+
+        <property
+            name="description"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Description" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+        <property
+            name="keyField"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="KeyField" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+
+        <many-to-one
+            name="system"
+            class="org.realtors.rets.server.metadata.MSystem"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaResource_RetsMetaSystem_RetsMetaSystem_ID"
+        >
+            <column name="RetsMetaSystem_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <set
+            name="classes"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaClass_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.MClass"/>
+        </set>
+
+        <set
+            name="objects"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaObject_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.MObject"/>
+        </set>
+
+        <set
+            name="searchHelps"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaSearchHelp_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.SearchHelp"/>
+        </set>
+
+        <set
+            name="editMasks"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaEditMask_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.EditMask"/>
+        </set>
+
+        <set
+            name="lookups"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaLookup_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.Lookup"/>
+        </set>
+
+        <set
+            name="validationLookups"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaValidationLookup_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.ValidationLookup"/>
+        </set>
+
+        <set
+            name="validationExternals"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaValidationExternal_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.ValidationExternal"/>
+        </set>
+
+        <set
+            name="validationExpressions"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaValidationExpression_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.ValidationExpression"/>
+        </set>
+
+        <set
+            name="updateHelps"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaResource_RetsMetaUpdateHelp_RetsMetaResource_ID">
+                <column name="RetsMetaResource_ID" sql-type="int" not-null="false"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.UpdateHelp"/>
+        </set>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

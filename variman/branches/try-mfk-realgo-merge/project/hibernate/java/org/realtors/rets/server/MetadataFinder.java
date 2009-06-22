@@ -20,6 +20,7 @@ import net.sf.hibernate.SessionFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+// FIXME: This should be a static inner class of HibernateMetadataFetcher.
 public class MetadataFinder
 {
     public MetadataFinder(String hqlClass, int expectedLevels)

@@ -23,6 +23,7 @@ import org.realtors.rets.server.protocol.GetObjectResponse;
 /**
  * @web.servlet name="get-object-servlet"
  * @web.servlet-mapping  url-pattern="/rets/getObject"
+ * @web.servlet-mapping  url-pattern="/server/getObject"
  */
 public class GetObjectServlet extends RetsServlet
 {

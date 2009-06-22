@@ -24,22 +24,28 @@ import org.realtors.rets.server.metadata.MetadataSegment;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Fetches metadata from a MetadataManager.
+ * A {@link org.realtors.rets.server.MetadataFetcher} that fetches metadata
+ * from a
+ * {@link org.realtors.rets.server.metadata.MetadataManager MetadataManager}.
  */
 public class ManagerMetadataFetcher implements MetadataFetcher
 {
     public ManagerMetadataFetcher()
     {
-        this(null);
+        // Does nothing. Be sure to set the metadata manager before using.
     }
 
-    public ManagerMetadataFetcher(MetadataManager manager)
+    public ManagerMetadataFetcher(MetadataManager metadataManager)
     {
-        mManager = manager;
+        if (metadataManager == null) {
+            throw new NullPointerException("metadataManager is null.");
+        }
+        mManager = metadataManager;
     }
 
-    public List fetchMetadata(String type, String[] levels)
+    public List/*MetadataSegment*/ fetchMetadata(String type, String[] levels)
     {
+        assertInitialized();
         MetadataManager manager = getMetadataManager();
         MSystem system = findSystem(manager);
 
@@ -60,12 +66,14 @@ public class ManagerMetadataFetcher implements MetadataFetcher
 
     public String getSystemVersion() throws RetsServerException
     {
+        assertInitialized();
         MetadataManager manager = getMetadataManager();
         return findSystem(manager).getVersionString();
     }
 
-    public Date getSysetmDate() throws RetsServerException
+    public Date getSystemDate() throws RetsServerException
     {
+        assertInitialized();
         MetadataManager manager = getMetadataManager();
         return findSystem(manager).getDate();
     }
@@ -81,11 +89,39 @@ public class ManagerMetadataFetcher implements MetadataFetcher
     {
         return mManager;
     }
+    
+    /**
+     * Sets the
+     * {@link org.realtors.rets.server.metadata.MetadataManager MetadataManager}
+     * used by this metadata fetcher to fetch metadata.
+     *
+     * @param metadataManager the metadata manager used to fetch metadata. Must
+     *        not be <code>null</code>.
+     */
+    /*
+     * This method is provided to allow the metadata manager to be set if the
+     * default constructor is used.
+     */
+    public void setMetadataManager(MetadataManager metadataManager)
+    {
+        if (metadataManager == null) {
+            throw new NullPointerException("metadataManager is null.");
+        }
+        mManager = metadataManager;
+    }
 
     private MSystem findSystem(MetadataManager manager)
     {
         List systems = manager.find(MSystem.TABLE, "");
         return (MSystem) systems.get(0);
+    }
+    
+    private void assertInitialized()
+    {
+        MetadataManager manager = getMetadataManager();
+        if (manager == null) {
+            throw new IllegalStateException("Must set the MetadataManager before using this ManagerMetadataFetcher object.");
+        }
     }
 
     private MetadataManager mManager;

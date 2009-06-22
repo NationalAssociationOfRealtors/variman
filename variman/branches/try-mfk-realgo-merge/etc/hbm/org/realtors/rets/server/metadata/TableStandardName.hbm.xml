@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: TableStandardName.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.TableStandardName" table="RetsMetaTableStandardName" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaTableStandardName_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="name"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="StandardName" sql-type="varchar(32)" length="32" not-null="true" unique="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

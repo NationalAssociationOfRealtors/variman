@@ -7,7 +7,9 @@ import java.util.Collections;
 import junit.framework.TestCase;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.config.FilterRule;
+import org.realtors.rets.server.config.FilterRuleImpl;
 import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.GroupRulesImpl;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.ObjectMother;
 import org.realtors.rets.server.metadata.Table;
@@ -32,22 +34,21 @@ public class TableGroupFilterTest extends TestCase
         mAgent = new Group("mAgent");
         mBroker = new Group("mBroker");
 
-        FilterRule filterRule = new FilterRule(
-            FilterRule.INCLUDE);
-        filterRule.setResource("Property");
-        filterRule.setRetsClass("RES");
+        FilterRule filterRule = new FilterRuleImpl(FilterRule.Type.INCLUDE);
+        filterRule.setResourceID("Property");
+        filterRule.setRetsClassName("RES");
         filterRule.addSystemName("ListingNumber");
         filterRule.addSystemName("ListingPrice");
-        GroupRules rules = new GroupRules(mNewspaper.getName());
+        GroupRules rules = new GroupRulesImpl(mNewspaper);
         rules.addFilterRule(filterRule);
         mGroupFilter.addRules(rules);
 
-        filterRule = new FilterRule(FilterRule.EXCLUDE);
-        filterRule.setResource("Property");
-        filterRule.setRetsClass("RES");
+        filterRule = new FilterRuleImpl(FilterRule.Type.EXCLUDE);
+        filterRule.setResourceID("Property");
+        filterRule.setRetsClassName("RES");
         filterRule.addSystemName("ListingPrice");
         filterRule.addSystemName("AssociationFee");
-        rules = new GroupRules(mAgent.getName());
+        rules = new GroupRulesImpl(mAgent);
         rules.addFilterRule(filterRule);
         mGroupFilter.addRules(rules);
     }
@@ -108,13 +109,12 @@ public class TableGroupFilterTest extends TestCase
 
     public void testAddUnknownResource()
     {
-        FilterRule filterRule = new FilterRule(
-            FilterRule.INCLUDE);
-        filterRule.setResource("UNKNOWN");
-        filterRule.setRetsClass("RES");
+        FilterRule filterRule = new FilterRuleImpl(FilterRule.Type.INCLUDE);
+        filterRule.setResourceID("UNKNOWN");
+        filterRule.setRetsClassName("RES");
         filterRule.addSystemName("ListingNumber");
         filterRule.addSystemName("ListingPrice");
-        GroupRules rules = new GroupRules(mNewspaper.getName());
+        GroupRules rules = new GroupRulesImpl(mNewspaper);
         rules.addFilterRule(filterRule);
         // Make sure no exception is thrown
         mGroupFilter.addRules(rules);
@@ -122,13 +122,12 @@ public class TableGroupFilterTest extends TestCase
 
     public void testAddUnknownClass()
     {
-        FilterRule filterRule = new FilterRule(
-            FilterRule.INCLUDE);
-        filterRule.setResource("Property");
-        filterRule.setRetsClass("UNKNOWN");
+        FilterRule filterRule = new FilterRuleImpl(FilterRule.Type.INCLUDE);
+        filterRule.setResourceID("Property");
+        filterRule.setRetsClassName("UNKNOWN");
         filterRule.addSystemName("ListingNumber");
         filterRule.addSystemName("ListingPrice");
-        GroupRules rules = new GroupRules(mNewspaper.getName());
+        GroupRules rules = new GroupRulesImpl(mNewspaper);
         rules.addFilterRule(filterRule);
         // Make sure no exception is thrown
         mGroupFilter.addRules(rules);
@@ -136,13 +135,12 @@ public class TableGroupFilterTest extends TestCase
 
     public void testAddUnknownGroup()
     {
-        FilterRule filterRule = new FilterRule(
-            FilterRule.INCLUDE);
-        filterRule.setResource("Property");
-        filterRule.setRetsClass("RES");
+        FilterRule filterRule = new FilterRuleImpl(FilterRule.Type.INCLUDE);
+        filterRule.setResourceID("Property");
+        filterRule.setRetsClassName("RES");
         filterRule.addSystemName("ListingNumber");
         filterRule.addSystemName("ListingPrice");
-        GroupRules rules = new GroupRules("UNKNOWN");
+        GroupRules rules = new GroupRulesImpl(new Group("UNKNOWN"));
         rules.addFilterRule(filterRule);
         // Make sure no exception is thrown
         mGroupFilter.addRules(rules);

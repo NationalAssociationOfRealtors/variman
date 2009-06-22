@@ -26,6 +26,7 @@ import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.RetsConfigUtils;
 
 public class ConfigurationPanel extends AdminTab
 {
@@ -211,7 +212,7 @@ public class ConfigurationPanel extends AdminTab
         {
             RetsConfig config = Admin.getRetsConfig();
             String webappRoot = Admin.getWebAppRoot();
-            String getObjectRoot = config.getGetObjectRoot("");
+            String getObjectRoot = RetsConfigUtils.getGetObjectRoot(config, "");
             getObjectRoot = IOUtils.resolve(webappRoot, getObjectRoot);
 
             JFileChooser dirDialog = new JFileChooser();

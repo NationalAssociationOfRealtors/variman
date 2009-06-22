@@ -24,7 +24,7 @@ public class QueryCountTest extends TestCase
     public void testPerMinuteLimit()
     {
         QueryCount count =
-            new QueryCount(3, QueryCount.PER_MINUTE);
+            new QueryCount(QueryLimit.valueOf(3, QueryLimit.Period.PER_MINUTE));
 
         // Cause counter to fail due to reaching limit
         count.setLastResetTime(System.currentTimeMillis() -
@@ -59,7 +59,7 @@ public class QueryCountTest extends TestCase
     public void testPerHourLimit()
     {
         QueryCount count =
-            new QueryCount(3, QueryCount.PER_HOUR);
+            new QueryCount(QueryLimit.valueOf(3, QueryLimit.Period.PER_HOUR));
 
         // Cause counter to fail due to reaching limit
         count.setLastResetTime(System.currentTimeMillis() -
@@ -94,7 +94,7 @@ public class QueryCountTest extends TestCase
     public void testPerDayLimit()
     {
         QueryCount count =
-            new QueryCount(3, QueryCount.PER_DAY);
+            new QueryCount(QueryLimit.valueOf(3, QueryLimit.Period.PER_DAY));
 
         // Cause counter to fail due to reaching limit
         count.setLastResetTime(System.currentTimeMillis() -
@@ -129,12 +129,12 @@ public class QueryCountTest extends TestCase
     public void testIsMoreRestrictiveThan()
     {
         QueryCount noLimit = new QueryCount();
-        QueryCount twoPerDay = new QueryCount(2, QueryCount.PER_DAY);
-        QueryCount onePerDay = new QueryCount(1, QueryCount.PER_DAY);
-        QueryCount twoPerHour = new QueryCount(2, QueryCount.PER_HOUR);
-        QueryCount onePerHour = new QueryCount(1, QueryCount.PER_HOUR);
-        QueryCount twoPerMinute = new QueryCount(2, QueryCount.PER_MINUTE);
-        QueryCount onePerMinute = new QueryCount(1, QueryCount.PER_MINUTE);
+        QueryCount twoPerDay = new QueryCount(QueryLimit.valueOf(2, QueryLimit.Period.PER_DAY));
+        QueryCount onePerDay = new QueryCount(QueryLimit.valueOf(1, QueryLimit.Period.PER_DAY));
+        QueryCount twoPerHour = new QueryCount(QueryLimit.valueOf(2, QueryLimit.Period.PER_HOUR));
+        QueryCount onePerHour = new QueryCount(QueryLimit.valueOf(1, QueryLimit.Period.PER_HOUR));
+        QueryCount twoPerMinute = new QueryCount(QueryLimit.valueOf(2, QueryLimit.Period.PER_MINUTE));
+        QueryCount onePerMinute = new QueryCount(QueryLimit.valueOf(1, QueryLimit.Period.PER_MINUTE));
 
         assertFalse(noLimit.isMoreRestrictiveThan(noLimit));
         assertFalse(noLimit.isMoreRestrictiveThan(onePerDay));

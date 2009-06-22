@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: MObject.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.MObject" table="RetsMetaObject" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaObject_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="objectType"
+            type="org.realtors.rets.server.metadata.ObjectTypeEnum"
+            update="true"
+            insert="true"
+        >
+            <column name="RetsMetaObjectType_ID" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="mimeType"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="MIMEType" sql-type="varchar(24)" length="24" not-null="true"/>
+        </property>
+
+        <property
+            name="visibleName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="VisibleName" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+
+        <property
+            name="description"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Description" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+        <many-to-one
+            name="resource"
+            class="org.realtors.rets.server.metadata.Resource"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaObject_RetsMetaResource_RetsMetaResource_ID"
+        >
+            <column name="RetsMetaResource_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+    </class>
+
+</hibernate-mapping>

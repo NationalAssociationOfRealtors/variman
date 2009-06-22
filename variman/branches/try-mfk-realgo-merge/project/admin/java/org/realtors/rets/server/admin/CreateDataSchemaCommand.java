@@ -34,6 +34,7 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.XmlMetadataLoader;
 
 public class CreateDataSchemaCommand
 {
@@ -64,8 +65,8 @@ public class CreateDataSchemaCommand
     {
         String metadataDir = Admin.getRetsConfig().getMetadataDir();
         metadataDir = IOUtils.resolve(Admin.getWebAppRoot(), metadataDir);
-        MetadataLoader loader = new MetadataLoader();
-        MSystem system = loader.parseMetadataDirectory(metadataDir);
+        MetadataLoader loader = new XmlMetadataLoader(metadataDir);
+        MSystem system = loader.load();
         System.out.println("Got system" + system.getId());
         Iterator j = system.getResources().iterator();
         while (j.hasNext())

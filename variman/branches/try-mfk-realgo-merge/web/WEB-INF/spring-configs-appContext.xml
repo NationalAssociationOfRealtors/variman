@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: spring-configs-appContext.xml 35359 2008-09-02 15:58:32Z danny $ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="llamaAppSettingsConfiguration" class="com.realgo.preferences.AppSettingsConfiguration">
+        <constructor-arg index="0" ref="configsDataSource"/>
+        <constructor-arg index="1" value="Llama"/>
+    </bean>
+</beans>

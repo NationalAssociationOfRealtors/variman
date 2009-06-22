@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id: spring-dao-appContext.xml 47819 2009-05-23 18:12:08Z danny $ -->
+<!DOCTYPE beans PUBLIC "-//Spring//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="placeHolderConfig"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>WEB-INF/jdbc.properties</value>
+        </property>
+    </bean>
+
+    <bean id="iresisDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.iresis.driverClassName}" />
+        <property name="url" value="${db.iresis.url}" />
+        <property name="username" value="${db.iresis.username}" />
+        <property name="password" value="${db.iresis.password}" />
+        <property name="validationQuery" value="select 1" />
+        <property name="maxActive" value="100" />
+        <property name="maxIdle" value="50" />
+        <property name="maxWait" value="120000" />
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="60" />
+    </bean>
+
+    <bean id="iresisSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="iresisDataSource"/>
+        <property name="mappingDirectoryLocations">
+            <list>
+                <value>WEB-INF/classes/com/realgo/model/contacts</value>
+                <value>WEB-INF/classes/com/realgo/model/mls</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+                <!-- prop key="hibernate.show_sql">true</prop-->
+            </props>
+        </property>
+    </bean>
+
+    <bean id="logdbDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.logdb.driverClassName}" />
+        <property name="url" value="${db.logdb.url}" />
+        <property name="username" value="${db.logdb.username}" />
+        <property name="password" value="${db.logdb.password}" />
+        <property name="validationQuery" value="select 1" />
+        <property name="maxActive" value="100" />
+        <property name="maxIdle" value="50" />
+        <property name="maxWait" value="120000" />
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="60" />
+    </bean>
+
+    <bean id="hibernate2IresISSessionFactory" class="org.springframework.orm.hibernate.LocalSessionFactoryBean">
+        <property name="dataSource" ref="iresisDataSource"/>
+        <property name="mappingJarLocations">
+            <list>
+                <value>WEB-INF/classes/variman-hbm-xml.jar</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">net.sf.hibernate.dialect.SQLServerDialect</prop>
+                <!-- prop key="hibernate.show_sql">true</prop-->
+            </props>
+        </property>
+    </bean>
+
+    <bean id="configsDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.configs.driverClassName}" />
+        <property name="url" value="${db.configs.url}" />
+        <property name="username" value="${db.configs.username}" />
+        <property name="password" value="${db.configs.password}" />
+        <property name="validationQuery" value="select 1" />
+        <property name="maxActive" value="100" />
+        <property name="maxIdle" value="50" />
+        <property name="maxWait" value="120000" />
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="60" />
+    </bean>
+
+    <bean id="propertyPhotoDAO" singleton="false"
+        class="com.realgo.db.hibernate.mls.HibernatePropertyPhotoDAO">
+        <property name="sessionFactory">
+            <ref local="iresisSessionFactory"/>
+        </property>
+    </bean>
+
+    <!-- bean id="retsDAO" singleton="false"
+        class="com.realgo.db.hibernate.rets.HibernateRetsDAO">
+        <property name="sessionFactory">
+            <ref local="hibernate2IresISSessionFactory"/>
+        </property>
+    </bean-->
+
+    <bean id="hibernateDaoFactory" class="com.realgo.db.hibernate.SpringHibernateDAOFactory">
+    </bean>
+
+    <bean id="openSessionInViewFilter" class="com.realgo.db.hibernate.OpenSessionInViewFilter">
+        <property name="sessionFactoryBeanName" value="iresisSessionFactory"/>
+    </bean>
+
+    <!-- bean id="requestLogLogger" class="org.realtors.rets.server.NoOpRequestLogLogger">
+    </bean-->
+    <bean id="requestLogLogger" class="com.realgo.rets.server.RGRequestLogLogger">
+        <property name="dataSource" ref="logdbDataSource"/>
+    </bean>
+
+    <bean id="requestLogFilter" class="org.realtors.rets.server.webapp.RequestLogFilter">
+        <property name="requestLogLogger" ref="requestLogLogger"/>
+    </bean>
+
+</beans>

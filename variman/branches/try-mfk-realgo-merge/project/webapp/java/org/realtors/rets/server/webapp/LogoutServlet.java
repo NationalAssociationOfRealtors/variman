@@ -27,6 +27,7 @@ import org.realtors.rets.server.RetsServerException;
  *
  * @web.servlet name="logout-servlet"
  * @web.servlet-mapping url-pattern="/rets/logout"
+ * @web.servlet-mapping url-pattern="/server/logout"
  */
 public class LogoutServlet extends RetsServlet
 {

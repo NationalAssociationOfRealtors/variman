@@ -1,5 +1,16 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Dave Dribin, Danny Hurlburt
+ * Copyright (c) 2004, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+/*
+ */
 package org.realtors.rets.server.config;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -13,39 +24,42 @@ public class SecurityConstraints
 {
     public SecurityConstraints()
     {
+        mGroupRules = Collections.EMPTY_LIST;
         mGroupRulesByName = new HashMap();
     }
-
-    public void setAllConstraints(List constraints)
+    
+    /**
+     * @deprecated Use setAllGroupRules instead
+     */
+    public void setAllConstraints(List/*GroupRules*/ allGroupRules)
     {
-        mGroupRules = constraints;
+        setAllGroupRules(allGroupRules);
+    }
+    
+    protected void resetGroupRulesByName(List/*GroupRules*/ allGroupRules)
+    {
         mGroupRulesByName.clear();
-        for (int i = 0; i < mGroupRules.size(); i++)
+        for (Iterator iter = allGroupRules.iterator(); iter.hasNext(); )
         {
-            GroupRules groupRules = (GroupRules) mGroupRules.get(i);
-            mGroupRulesByName.put(groupRules.getGroupName(), groupRules);
+            GroupRules groupRules = (GroupRules)iter.next();
+            mGroupRulesByName.put(groupRules.getGroup().getName(), groupRules);
         }
     }
 
-    public List getAllGroupRules()
+    public List/*GroupRules*/ getAllGroupRules()
     {
         return mGroupRules;
     }
-
-    public GroupRules getGroupRulesAt(int index)
+    
+    public void setAllGroupRules(List/*GroupRules*/ allGroupRules)
     {
-        return (GroupRules) mGroupRules.get(index);
+        mGroupRules = allGroupRules;
+        resetGroupRulesByName(mGroupRules);
     }
 
     public GroupRules getRulesForGroup(String groupName)
     {
-        GroupRules groupRules = (GroupRules) mGroupRulesByName.get(groupName);
-        if (groupRules == null)
-        {
-            groupRules = new GroupRules(groupName);
-            mGroupRules.add(groupRules);
-            mGroupRulesByName.put(groupName, groupRules);
-        }
+        GroupRules groupRules = (GroupRules)mGroupRulesByName.get(groupName);
         return groupRules;
     }
 
@@ -59,17 +73,20 @@ public class SecurityConstraints
         }
     }
 
-    public List getAllRulesForGroups(Collection groups)
+    public List/*GroupRules*/ getAllRulesForGroups(Collection/*Group*/ groups)
     {
-        List allRules = new ArrayList();
-        for (Iterator iterator = groups.iterator(); iterator.hasNext();)
+        List/*GroupRules*/ allRules = new ArrayList/*GroupRules*/();
+        for (Iterator iter = groups.iterator(); iter.hasNext();)
         {
-            Group group = (Group) iterator.next();
-            allRules.add(getRulesForGroup(group.getName()));
+            Group group = (Group)iter.next();
+            GroupRules groupRules = getRulesForGroup(group.getName());
+            if (groupRules != null) {
+                allRules.add(groupRules);
+            }
         }
         return allRules;
     }
 
-    private List mGroupRules;
-    private Map mGroupRulesByName;
+    private List/*GroupRules*/ mGroupRules;
+    private Map/*String,GroupRules*/ mGroupRulesByName;
 }

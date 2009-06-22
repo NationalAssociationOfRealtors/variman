@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ValidationLookup.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.ValidationLookup" table="RetsMetaValidationLookup" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaValidationLookup_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="validationLookupName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="ValidationLookupName"
+                sql-type="varchar(32)"
+                length="32"
+                not-null="true"
+                unique="true"
+                index="NDX_RetsMetaValidationLookup_ValidationLookupName"
+            />
+        </property>
+
+        <property
+            name="parent1Field"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Parent1Field" sql-type="varchar(32)" length="32" not-null="false"/>
+        </property>
+
+        <property
+            name="parent2Field"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Parent2Field" sql-type="varchar(32)" length="32" not-null="false"/>
+        </property>
+
+        <many-to-one
+            name="resource"
+            class="org.realtors.rets.server.metadata.Resource"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaValidationLookup_RetsMetaResource_RetsMetaResource_ID"
+        >
+            <column name="RetsMetaResource_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <set
+            name="validationLookupTypes"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaValidationLookup_RetsMetaValidationLookupType_RetsMetaValidationLookupType_ID">
+                <column name="RetsMetaValidationLookup_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.ValidationLookupType"/>
+        </set>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

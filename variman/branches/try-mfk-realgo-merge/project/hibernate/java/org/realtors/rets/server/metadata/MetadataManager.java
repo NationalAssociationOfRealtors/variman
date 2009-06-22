@@ -24,7 +24,7 @@ public class MetadataManager
 {
     public MetadataManager()
     {
-        mTablesByLevel = new HashMap();
+        mTablesByLevel = new HashMap/*String,Map<String,List>*/();
         mTablesByPath = new HashMap();
     }
 
@@ -40,23 +40,23 @@ public class MetadataManager
         addByPath(metadata);
     }
 
-    private static Map getMap(Map map, String key)
+    private static Map/*String,Object*/ getMap(Map/*String,Map*/ map, String key)
     {
-        Map subMap = (Map) map.get(key);
+        Map/*String,Object*/ subMap = (Map/*String,Object*/)map.get(key);
         if (subMap == null)
         {
-            subMap = new HashMap();
+            subMap = new HashMap/*String,Object*/();
             map.put(key, subMap);
         }
         return subMap;
     }
 
-    private static List getList(Map map, String key)
+    private static List/*ServerMetadata*/ getList(Map/*String,List<ServerMetadata>*/ map, String key)
     {
-        List subList = (List) map.get(key);
+        List/*ServerMetadata*/ subList = (List/*ServerMetadata*/)map.get(key);
         if (subList == null)
         {
-            subList = new ArrayList();
+            subList = new ArrayList/*ServerMetadata*/();
             map.put(key, subList);
         }
         return subList;
@@ -83,7 +83,7 @@ public class MetadataManager
     public List find(String tableName, String level)
     {
         List found = Collections.EMPTY_LIST;
-        Map table = (Map) mTablesByLevel.get(tableName);
+        Map/*String,List*/ table = (Map/*String,List*/)mTablesByLevel.get(tableName);
         if (table != null)
         {
             List data = (List) table.get(level);
@@ -138,7 +138,7 @@ public class MetadataManager
     {
         Map found = new HashMap();
 
-        Map table = (Map) mTablesByLevel.get(tableName);
+        Map/*String,List*/ table = (Map/*String,List*/)mTablesByLevel.get(tableName);
         if (table != null)
         {
             Set levels = table.keySet();
@@ -193,16 +193,27 @@ public class MetadataManager
         return match;
     }
 
-    /**
-     * A map of maps to lists:
+    /*
+     * A map of maps to list of metadata:
      *
      * +------------+
      * | Table name | -> +-------+
-     * +------------+    | Level | -> Data, data, ...
+     * +------------+    | Level | -> metadata, metadata, ...
      * |    ...     |    +-------+
      * +------------+    |  ...  |
      *                   +-------+
      */
-    private Map mTablesByLevel;
-    private Map mTablesByPath;
+    private Map/*String,Map<String,List<ServerMetadata>>*/ mTablesByLevel;
+    
+    /*
+     * A map of maps to metadata:
+     * 
+     * +------------+
+     * | Table name | -> +-------+
+     * +------------+    | Path  | -> metadata, metadata, ...
+     * |    ...     |    +-------+
+     * +------------+    |  ...  |
+     *                   +-------+
+     */
+    private Map/*String,Map<String,ServerMetadata>*/ mTablesByPath;
 }

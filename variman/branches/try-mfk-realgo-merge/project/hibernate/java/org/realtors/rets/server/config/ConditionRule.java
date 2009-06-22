@@ -1,38 +1,31 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Danny Hurlburt
+ * Copyright (c) 2007, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+/*
+ */
 package org.realtors.rets.server.config;
 
-public class ConditionRule
+public interface ConditionRule
 {
-    public String getResource()
-    {
-        return mResource;
-    }
+    public String getResourceID();
 
-    public void setResource(String resource)
-    {
-        mResource = resource;
-    }
+    public void setResourceID(String resourceId);
 
-    public String getRetsClass()
-    {
-        return mRetsClass;
-    }
+    public String getRetsClassName();
 
-    public void setRetsClass(String retsClass)
-    {
-        mRetsClass = retsClass;
-    }
+    public void setRetsClassName(String retsClassName);
 
-    public String getSqlConstraint()
-    {
-        return mSqlConstraint;
-    }
+    public String getSqlConstraint();
 
-    public void setSqlConstraint(String sqlConstraint)
-    {
-        mSqlConstraint = sqlConstraint;
-    }
+    public void setSqlConstraint(String sqlConstraint);
 
-    private String mResource;
-    private String mRetsClass;
-    private String mSqlConstraint;
+    public String getDmqlConstraint(); // TODO: Change this to return DmqlQuery
+
+    public void setDmqlConstraint(String dmqlConstraint); // TODO: Change this to accept DmqlQuery
+    
 }

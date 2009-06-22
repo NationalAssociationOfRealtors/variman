@@ -5,9 +5,6 @@
  * Copyright (c) 2004, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
-
-/*
- */
 package org.realtors.rets.server.metadata.format;
 
 import java.io.PrintWriter;
@@ -25,6 +22,7 @@ import org.realtors.rets.server.metadata.MObject;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.server.metadata.ServerMetadata;
 import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.Update;
 import org.realtors.rets.server.metadata.UpdateHelp;
@@ -43,67 +41,67 @@ public class ClassFormatterLookup implements FormatterLookup
 {
     public ClassFormatterLookup(int format)
     {
-        mFormmatters = new HashMap();
+        mFormatters = new HashMap();
         if (format == MetadataFormatter.COMPACT)
         {
-            mFormmatters.put(MSystem.class, new CompactSystemFormatter());
-            mFormmatters.put(Resource.class, new CompactResourceFormatter());
-            mFormmatters.put(MClass.class, new CompactClassFormatter());
-            mFormmatters.put(Table.class, new CompactTableFormatter());
-            mFormmatters.put(Update.class, new CompactUpdateFormatter());
-            mFormmatters.put(UpdateType.class,
+            mFormatters.put(MSystem.class, new CompactSystemFormatter());
+            mFormatters.put(Resource.class, new CompactResourceFormatter());
+            mFormatters.put(MClass.class, new CompactClassFormatter());
+            mFormatters.put(Table.class, new CompactTableFormatter());
+            mFormatters.put(Update.class, new CompactUpdateFormatter());
+            mFormatters.put(UpdateType.class,
                              new CompactUpdateTypeFormatter());
-            mFormmatters.put(MObject.class, new CompactObjectFormatter());
-            mFormmatters.put(SearchHelp.class,
+            mFormatters.put(MObject.class, new CompactObjectFormatter());
+            mFormatters.put(SearchHelp.class,
                              new CompactSearchHelpFormatter());
-            mFormmatters.put(EditMask.class, new CompactEditMaskFormatter());
-            mFormmatters.put(Lookup.class, new CompactLookupFormatter());
-            mFormmatters.put(UpdateHelp.class,
+            mFormatters.put(EditMask.class, new CompactEditMaskFormatter());
+            mFormatters.put(Lookup.class, new CompactLookupFormatter());
+            mFormatters.put(UpdateHelp.class,
                              new CompactUpdateHelpFormatter());
-            mFormmatters.put(LookupType.class,
+            mFormatters.put(LookupType.class,
                              new CompactLookupTypeFormatter());
-            mFormmatters.put(ValidationLookup.class,
+            mFormatters.put(ValidationLookup.class,
                              new CompactValidationLookupFormatter());
-            mFormmatters.put(ValidationLookupType.class,
+            mFormatters.put(ValidationLookupType.class,
                              new CompactValidationLookupTypeFormatter());
-            mFormmatters.put(ValidationExternal.class,
+            mFormatters.put(ValidationExternal.class,
                              new CompactValidationExternalFormatter());
-            mFormmatters.put(ValidationExternalType.class,
+            mFormatters.put(ValidationExternalType.class,
                              new CompactValidationExternalTypeFormatter());
-            mFormmatters.put(ValidationExpression.class,
+            mFormatters.put(ValidationExpression.class,
                              new CompactValidationExpressionFormatter());
-            mFormmatters.put(ForeignKey.class,
+            mFormatters.put(ForeignKey.class,
                              new CompactForeignKeyFormatter());
         }
         else if (format == MetadataFormatter.STANDARD)
         {
-            mFormmatters.put(MSystem.class, new StandardSystemFormatter());
-            mFormmatters.put(Resource.class, new StandardResourceFormatter());
-            mFormmatters.put(MClass.class, new StandardClassFormatter());
-            mFormmatters.put(Table.class, new StandardTableFormatter());
-            mFormmatters.put(Update.class, new StandardUpdateFormatter());
-            mFormmatters.put(UpdateType.class,
+            mFormatters.put(MSystem.class, new StandardSystemFormatter());
+            mFormatters.put(Resource.class, new StandardResourceFormatter());
+            mFormatters.put(MClass.class, new StandardClassFormatter());
+            mFormatters.put(Table.class, new StandardTableFormatter());
+            mFormatters.put(Update.class, new StandardUpdateFormatter());
+            mFormatters.put(UpdateType.class,
                              new StandardUpdateTypeFormatter());
-            mFormmatters.put(MObject.class, new StandardObjectFormatter());
-            mFormmatters.put(SearchHelp.class,
+            mFormatters.put(MObject.class, new StandardObjectFormatter());
+            mFormatters.put(SearchHelp.class,
                              new StandardSearchHelpFormatter());
-            mFormmatters.put(EditMask.class, new StandardEditMaskFormatter());
-            mFormmatters.put(Lookup.class, new StandardLookupFormatter());
-            mFormmatters.put(UpdateHelp.class,
+            mFormatters.put(EditMask.class, new StandardEditMaskFormatter());
+            mFormatters.put(Lookup.class, new StandardLookupFormatter());
+            mFormatters.put(UpdateHelp.class,
                              new StandardUpdateHelpFormatter());
-            mFormmatters.put(LookupType.class,
+            mFormatters.put(LookupType.class,
                              new StandardLookupTypeFormatter());
-            mFormmatters.put(ValidationLookup.class,
+            mFormatters.put(ValidationLookup.class,
                              new StandardValidationLookupFormatter());
-            mFormmatters.put(ValidationLookupType.class,
+            mFormatters.put(ValidationLookupType.class,
                              new StandardValidationLookupTypeFormatter());
-            mFormmatters.put(ValidationExternal.class,
+            mFormatters.put(ValidationExternal.class,
                              new StandardValidationExternalFormatter());
-            mFormmatters.put(ValidationExternalType.class,
+            mFormatters.put(ValidationExternalType.class,
                              new StandardValidationExternalTypeFormatter());
-            mFormmatters.put(ValidationExpression.class,
+            mFormatters.put(ValidationExpression.class,
                              new StandardValidationExpressionFormatter());
-//            mFormmatters.put(ForeignKey.class,
+//            mFormatters.put(ForeignKey.class,
 //                             new StandardForeignKeyFormatter());
         }
         else
@@ -120,7 +118,8 @@ public class ClassFormatterLookup implements FormatterLookup
      */
     MetadataFormatter lookupFormatter(Class clazz)
     {
-        return (MetadataFormatter) mFormmatters.get(clazz);
+        MetadataFormatter metadataFormatter = recursivelyLookupFormatter(clazz);
+        return metadataFormatter;
     }
 
     public MetadataFormatter lookupFormatter(Collection metadataCollection)
@@ -128,7 +127,10 @@ public class ClassFormatterLookup implements FormatterLookup
         Iterator i = metadataCollection.iterator();
         if (i.hasNext())
         {
-            return lookupFormatter(i.next().getClass());
+            ServerMetadata metadata = (ServerMetadata)i.next();
+            Class clazz = metadata.getClass();
+            MetadataFormatter metadataFormatter = recursivelyLookupFormatter(clazz);
+            return metadataFormatter;
         }
         else
         {
@@ -136,8 +138,27 @@ public class ClassFormatterLookup implements FormatterLookup
         }
     }
 
+    /*
+     * Searches for an appropriate formatter for the specified class. The
+     * appropriate formatter is based off the specified class or one of its
+     * super classes. This allows the appropriate formatter to be found when
+     * metadata classes are subclassed.
+     */
+    private MetadataFormatter recursivelyLookupFormatter(Class clazz)
+    {
+        MetadataFormatter metadataFormatter = null;
+        if (clazz != null) {
+            metadataFormatter = (MetadataFormatter)mFormatters.get(clazz);
+            if (metadataFormatter == null) {
+                Class superClazz = clazz.getSuperclass();
+                metadataFormatter = recursivelyLookupFormatter(superClazz);
+            }
+        }
+        return metadataFormatter;
+    }
+
     protected PrintWriter mOut;
-    private Map mFormmatters;
+    private Map mFormatters;
     private static final MetadataFormatter NULL_FORMATTER =
         new NullMetadataFormatter();
 }

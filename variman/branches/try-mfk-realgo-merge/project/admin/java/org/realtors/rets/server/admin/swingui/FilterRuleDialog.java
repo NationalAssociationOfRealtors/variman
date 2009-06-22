@@ -9,6 +9,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang.StringUtils;
 
 import org.realtors.rets.server.config.FilterRule;
+import org.realtors.rets.server.config.FilterRuleImpl;
 
 public class FilterRuleDialog extends JDialog
 {
@@ -26,8 +27,8 @@ public class FilterRuleDialog extends JDialog
         TextValuePanel tvp = new TextValuePanel();
         mRuleType = new JComboBox(new String[] {"Include", "Exclude"});
         tvp.addRow("Rule Type:", mRuleType);
-        mResourceName = new JTextField(TEXT_WIDTH);
-        tvp.addRow("Resource Name:", mResourceName);
+        mResourceId = new JTextField(TEXT_WIDTH);
+        tvp.addRow("Resource ID:", mResourceId);
         mClassName = new JTextField(TEXT_WIDTH);
         tvp.addRow("Class Name:", mClassName);
         mFields = new JTextArea();
@@ -65,7 +66,7 @@ public class FilterRuleDialog extends JDialog
 
     public FilterRule createRule()
     {
-        FilterRule filterRule = new FilterRule();
+        FilterRule filterRule = new FilterRuleImpl();
         updateRule(filterRule);
         return filterRule;
     }
@@ -74,15 +75,15 @@ public class FilterRuleDialog extends JDialog
     {
         if (mRuleType.getSelectedIndex() == INCLUDE_INDEX)
         {
-            filterRule.setType(FilterRule.INCLUDE);
+            filterRule.setType(FilterRule.Type.INCLUDE);
         }
         else
         {
-            filterRule.setType(FilterRule.EXCLUDE);
+            filterRule.setType(FilterRule.Type.EXCLUDE);
         }
 
-        filterRule.setResource(mResourceName.getText());
-        filterRule.setRetsClass(mClassName.getText());
+        filterRule.setResourceID(mResourceId.getText());
+        filterRule.setRetsClassName(mClassName.getText());
 
         String[] systemNames = StringUtils.split(mFields.getText());
         filterRule.setSystemNames(Arrays.asList(systemNames));
@@ -90,7 +91,7 @@ public class FilterRuleDialog extends JDialog
 
     public void populateFromRule(FilterRule filterRule)
     {
-        if (filterRule.getType().equals(FilterRule.INCLUDE))
+        if (filterRule.getType().equals(FilterRule.Type.INCLUDE))
         {
             mRuleType.setSelectedIndex(0);
         }
@@ -99,8 +100,8 @@ public class FilterRuleDialog extends JDialog
             mRuleType.setSelectedIndex(1);
         }
 
-        mResourceName.setText(filterRule.getResource());
-        mClassName.setText(filterRule.getRetsClass());
+        mResourceId.setText(filterRule.getResourceID());
+        mClassName.setText(filterRule.getRetsClassName());
         String systemNames = StringUtils.join(
             filterRule.getSystemNames().iterator(), " ");
        mFields.setText(systemNames);
@@ -115,8 +116,8 @@ public class FilterRuleDialog extends JDialog
 
         public void actionPerformed(ActionEvent event)
         {
-            if (warnIfBlank(mResourceName, "Please enter a resource name.",
-                            "Blank Resource Name"))
+            if (warnIfBlank(mResourceId, "Please enter a resource ID.",
+                            "Blank Resource ID"))
             {
                 return;
             }
@@ -169,7 +170,7 @@ public class FilterRuleDialog extends JDialog
     private static final int INCLUDE_INDEX = 0;
 
     private JComboBox mRuleType;
-    private JTextField mResourceName;
+    private JTextField mResourceId;
     private JTextField mClassName;
     private JTextArea mFields;
     private int mResponse;

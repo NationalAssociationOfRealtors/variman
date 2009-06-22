@@ -39,6 +39,7 @@ public class SessionFilter implements Filter
         mLoginPaths.add(Paths.LOGIN);
         mLoginPaths.add(Paths.CCT_LOGIN);
         mLoginPaths.add(Paths.CCT_ALT_LOGIN);
+        mLoginPaths.add(Paths.HPMA_LOGIN);
     }
 
     public void doFilter(ServletRequest servletRequest,
@@ -71,7 +72,8 @@ public class SessionFilter implements Filter
         //
         // Anything else is fine, and we let it go.
         boolean isLoginPath = isLoginPath(contextUrl);
-        if (isLoginPath && isSessionValid)
+        // HPMA logs in an extra time and does not log out!
+        if (isLoginPath && isSessionValid && !WebApp.getHPMAMode())
         {
             LOG.info("Logging in while session is valid, sending response");
             sendAdditionalLoginNotPermitted(response);

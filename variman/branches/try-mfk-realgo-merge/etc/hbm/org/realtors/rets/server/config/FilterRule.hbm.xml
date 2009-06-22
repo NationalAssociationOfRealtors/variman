@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: FilterRule.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.config.HibernateFilterRule" table="RetsGroupFilterRules" mutable="false">
+
+        <id name="id" type="java.lang.Integer">
+            <column name="RetsGroupFilterRule_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+        
+        <many-to-one
+            name="groupRule"
+            class="org.realtors.rets.server.config.HibernateGroupRules"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsGroupRules_RetsGroupFilterRules_RetsGroupRule_ID"
+        >
+            <column name="RetsGroupRule_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <many-to-one
+            name="metaClass"
+            class="org.realtors.rets.server.metadata.MClass"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsGroupRules_RetsMetaClass_RetsMetaClass_ID"
+        >
+            <column name="RetsMetaClass_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <set
+            name="retsMetaTables"
+            table="RetsGroupFilterRulesXRetsMetaTable"
+            lazy="false"
+        >
+            <key column="RetsGroupFilterRule_ID"/>
+            <many-to-many class="com.realgo.model.metadata.RetsMetaTable" column="RetsMetaTable_ID"/>
+        </set>
+        
+        <property
+            name="filterRuleType"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="RetsGroupFilterRuleType" sql-type="varchar(10)" not-null="true"/>
+        </property>
+        
+        <property
+            name="note"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Note" sql-type="varchar(500)" not-null="true"/>
+        </property>
+        
+    </class>
+</hibernate-mapping>

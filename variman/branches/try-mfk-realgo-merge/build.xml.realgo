@@ -1,0 +1,548 @@
+<!--
+     This build script assumes that the source code of your web application
+     is organized into the following subdirectories underneath the source
+     code directory from which you execute the build script:
+
+        docs                 Static documentation files to be copied to
+                             the "docs" subdirectory of your distribution.
+
+        src                  Java source code (and associated resource files)
+                             to be compiled to the "WEB-INF/classes"
+                             subdirectory of your web applicaiton.
+
+        web                  Static HTML, JSP, and other content (such as
+                             image files), including the WEB-INF subdirectory
+                             and its configuration file contents.
+
+-->
+
+<!-- A "project" describes a set of targets that may be requested
+     when Ant is executed.  The "default" attribute defines the
+     target which is executed if no specific target is requested,
+     and the "basedir" attribute defines the current working directory
+     from which Ant executes the requested task.  This is normally
+     set to the current working directory.
+-->
+
+<project name="RealGo Rets" default="compile" basedir=".">
+
+<!-- ===================== Property Definitions =========================== -->
+<!--
+
+  Each of the following properties are used in the build script.
+  Values for these properties are set by the first place they are
+  defined, from the following list:
+
+  * Definitions on the "ant" command line (ant -Dfoo=bar compile).
+
+  * Definitions from a "build.properties" file in the top level
+    source directory of this application.
+
+  * Definitions from a "build.properties" file in the developer's
+    home directory.
+
+  * Default definitions in this build.xml file.
+
+  You will note below that property values can be composed based on the
+  contents of previously defined properties.  This is a powerful technique
+  that helps you minimize the number of changes required when your development
+  environment is modified.  Note that property composition is allowed within
+  "build.properties" files as well as in the "build.xml" script.
+
+-->
+
+    <property file="build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+
+<!-- ==================== File and Directory Names ======================== -->
+<!--
+
+  These properties generally define file and directory names (or paths) that
+  affect where the build process stores its outputs.
+
+  app.name             Base name of this application, used to
+                       construct filenames and directories.
+                       Defaults to "myapp".
+
+  app.path             Context path to which this application should be
+                       deployed (defaults to "/" plus the value of the
+                       "app.name" property).
+
+  app.version          Version number of this iteration of the application.
+
+  build.home           The directory into which the "prepare" and
+                       "compile" targets will generate their output.
+                       Defaults to "build".
+
+  catalina.home        The directory in which you have installed
+                       a binary distribution of Tomcat 4.  This will
+                       be used by the "deploy" target.
+
+  dist.home            The name of the base directory in which
+                       distribution files are created.
+                       Defaults to "dist".
+
+-->
+               
+    <property name="app.name"      value="guanaco"/>
+    <property name="build.home"    value="${basedir}/variman-2.1.11/build/rets-server/webapp"/>
+    <property name="build.classes" value="${build.home}/WEB-INF/classes"/>
+    <property name="catalina.home" value="${env.catalina.home}"/>
+    <property name="dist.home"     value="${basedir}/dist"/>
+    <property name="docs.home"     value="${basedir}/docs"/>
+    <property name="src.home"      value="${basedir}/src"/>
+    <property name="web.home"      value="${basedir}/web"/>
+    <property name="etc"           value="${basedir}/etc"/>
+ 
+    <property name="variman.base"  value="${basedir}/variman-2.1.11"/>
+
+    <property name="test.home"     value="${basedir}/test"/>
+    <property name="test.src"      value="${test.home}/src"/>
+    <property name="test.classes"  value="${test.home}/classes"/>
+    <property name="test.reports"  value="${test.home}/reports"/>
+    <property name="test.file.pattern" value="*Test"/>
+
+<!--  ==================== Compilation Control Options ==================== -->
+<!--
+
+  These properties control option settings on the Javac compiler when it
+  is invoked using the <javac> task.
+
+  compile.debug        Should compilation include the debug option?
+
+  compile.deprecation  Should compilation include the deprecation option?
+
+  compile.optimize     Should compilation include the optimize option?
+
+-->
+    <property name="compile.debug"       value="true"/>
+    <property name="compile.deprecation" value="false"/>
+    <property name="compile.optimize"    value="true"/>
+	<property name="compile.source" value="1.5" />
+	<property name="compile.target" value="1.5" />
+
+
+<!-- ==================== External Dependencies =========================== -->
+<!--
+
+  Use property values to define the locations of external JAR files on which
+  your application will depend.  In general, these values will be used for
+  two purposes:
+  * Inclusion on the classpath that is passed to the Javac compiler
+  * Being copied into the "/WEB-INF/lib" directory during execution
+    of the "deploy" target.
+
+  Because we will automatically include all of the Java classes that Tomcat 4
+  exposes to web applications, we will not need to explicitly list any of those
+  dependencies.  You only need to worry about external dependencies for JAR
+  files that you are going to include inside your "/WEB-INF/lib" directory.
+
+-->
+
+<!-- Dummy external dependency -->
+<!--
+  <property name="foo.jar"
+           value="/path/to/foo.jar"/>
+-->
+
+               
+<!-- ==================== Compilation Classpath =========================== -->
+<!--
+
+  Rather than relying on the CLASSPATH environment variable, Ant includes
+  features that makes it easy to dynamically construct the classpath you
+  need for each compilation.  The example below constructs the compile
+  classpath to include the servlet.jar file, as well as the other components
+  that Tomcat makes available to web applications automatically, plus anything
+  that you explicitly added.
+
+-->
+
+    <path id="compile.classpath">
+        <!-- Include all JAR files that will be included in /WEB-INF/lib -->
+        <fileset dir="${build.home}/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${web.home}/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+
+        <!-- Include Variman compiled classes -->
+        <pathelement location="${build.home}/WEB-INF/classes"/>
+
+        <!-- Include all elements that Tomcat exposes to applications -->
+        <pathelement location="${catalina.home}/common/classes"/>
+
+        <fileset dir="${catalina.home}/common/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${catalina.home}/server/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement location="${catalina.home}/shared/classes"/>
+    </path>
+    
+    <path id="test.classpath">
+        <fileset dir="${basedir}/lib">
+            <include name="*.jar"/>
+        </fileset>
+        
+        <!-- Include compiled test classes -->
+        <pathelement location="${test.classes}"/>
+    </path>
+
+    <path id="lib.path">
+        <pathelement path="${commons-lang.jar}"/>
+        <pathelement path="${hibernate.jar}"/>
+        <fileset dir="${hibernate.lib}" includes="*.jar"/>
+        <pathelement path="${hibernate-ext.tools.jar}"/>
+        <fileset dir="${mssql.jdbc.lib}" includes="ms*.jar"/>
+        <pathelement path="${jtds.jdbc.jar}"/>
+        <pathelement path="${jdom.jar}"/>
+        <pathelement path="${log4j.jar}"/>
+    </path>
+
+    <path id="vendor.classpath">
+        <pathelement path="${antlr.jar}" />
+        <pathelement path="${ant.jar}" />
+        <pathelement path="${apple-java-ext.jar}" />
+        <pathelement path="${tomcat-bootstrap.jar}" />
+        <pathelement path="${catalina.jar}" />
+        <pathelement path="${commons-cli.jar}" />
+        <pathelement path="${commons-codec.jar}" />
+        <pathelement path="${commons-dbcp.jar}" />
+        <pathelement path="${commons-lang.jar}" />
+        <pathelement path="${commons-pool.jar}" />
+        <pathelement path="${hibernate.jar}" />
+        <pathelement path="${jdom.jar}" />
+        <pathelement path="${jtds.jdbc.jar}" />
+        <pathelement path="${log4j.jar}" />
+        <pathelement path="${spring.jar}" />
+        <pathelement path="${commons-httpclient.jar}" />
+        <pathelement path="${httpunit.jar}" />
+        <pathelement path="${junit.jar}" />
+        <pathelement path="${rets-client.jar}" />
+    </path>
+
+    <path id="project.classpath">
+        <fileset dir="${basedir}/lib/main/java">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="${web.home}/WEB-INF/lib">
+            <include name="*.jar" />
+        </fileset>
+        <path refid="vendor.classpath" />
+        <fileset dir="${basedir}/lib/test/java">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <path id="fmpp.lib">
+        <fileset dir="${env.fmpp.home}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <taskdef
+        name="fmpp"
+        classname="fmpp.tools.AntTask"
+    >
+        <classpath refid="fmpp.lib" />
+    </taskdef>
+
+<!-- ==================== All Target ====================================== -->
+<!--
+
+  The "all" target is a shortcut for running the "clean" target followed
+  by the "compile" target, to force a complete recompile.
+
+-->
+
+    <target name="all"
+         depends="clean,compile"
+     description="Clean build and dist directories, then compile and test"
+    />
+
+
+<!-- ==================== Clean Target ==================================== -->
+<!--
+
+  The "clean" target deletes any previous "build" and "dist" directory,
+  so that you can be ensured the application can be built from scratch.
+
+-->
+
+    <target name="clean" description="Delete old build and dist directories">
+        <delete dir="${build.home}"/>
+        <delete dir="${dist.home}"/>
+        <delete dir="${test.classes}"/>
+        <ant dir="${variman.base}" target="clean"/>
+    </target>
+
+
+<!-- ==================== Compile Target ================================== -->
+<!--
+
+  The "compile" target transforms source files (from your "src" directory)
+  into object files in the appropriate location in the build directory.
+  This example assumes that you will be including your classes in an
+  unpacked directory hierarchy under "/WEB-INF/classes".
+
+-->
+
+    <target name="compile" depends="prepare" description="Compile Java sources">
+        <ant dir="${variman.base}" target="build-full"/>
+
+        <!-- Compile Java classes as necessary -->
+        <mkdir dir="${build.classes}"/>
+        <javac srcdir="${src.home}"
+              destdir="${build.classes}"
+                debug="${compile.debug}"
+          deprecation="${compile.deprecation}"
+             optimize="${compile.optimize}"
+			   source="${compile.source}"
+			   target="${compile.target}">
+            <classpath refid="compile.classpath"/>
+        </javac>
+
+        <!-- Copy application resources -->
+        <copy todir="${build.classes}">
+            <fileset dir="${src.home}" excludes="**/*.java"/>
+        </copy>
+
+        <!-- Copy the appropriate log4j.xml file -->
+        <copy tofile="${build.home}/WEB-INF/classes/log4j.xml" 
+                file="${etc}/log4j-${env.type}.xml" 
+           overwrite="true"
+        />
+     
+        <!-- Copy Xml Metadata files to expected location -->
+        <!--copy todir="${build.home}/WEB-INF/rets/metadata">
+            <fileset dir="${basedir}/metadata" includes="**/*.xml"/>
+        </copy-->
+        
+        <!-- Copy RealGo's HBM Xmls to expected location -->
+        <copy todir="${variman.base}/build/hibernate/xdoclet/org/realtors/rets/server"
+          overwrite="true">
+            <fileset dir="${basedir}/etc/hbm/org/realtors/rets/server">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${variman.base}/build/hibernate/xdoclet/org/realtors/rets/server/config"
+          overwrite="true">
+            <fileset dir="${basedir}/etc/hbm/org/realtors/rets/server/config">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${variman.base}/build/hibernate/xdoclet/org/realtors/rets/server/metadata"
+          overwrite="true">
+            <fileset dir="${basedir}/etc/hbm/org/realtors/rets/server/metadata">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${variman.base}/build/hibernate/xdoclet/com/realgo/core/entity/metadata"
+          overwrite="true">
+            <fileset dir="${basedir}/etc/hbm/com/realgo/core/entity/metadata">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </copy>
+        <jar destfile="${variman.base}/build/hibernate/jar/variman-hbm-xml.jar"
+              basedir="${variman.base}/build/hibernate/xdoclet"
+                index="true"
+        >
+            <include name="org/realtors/rets/server/*"/>
+            <include name="org/realtors/rets/server/config/*"/>
+            <include name="org/realtors/rets/server/metadata/*"/>
+            <include name="com/realgo/core/entity/metadata/*"/>
+        </jar>
+        <copy todir="${variman.base}/build/rets-server/webapp/WEB-INF/classes"
+               file="${variman.base}/build/hibernate/jar/variman-hbm-xml.jar"
+        />
+    </target>
+
+
+<!-- ==================== Dist Target ===================================== -->
+<!--
+
+  The "dist" target creates a binary distribution of your application
+  in a directory structure ready to be archived in a tar.gz or zip file.
+  Note that this target depends on two others:
+
+  * "compile" so that the entire web application (including external
+    dependencies) will have been assembled
+
+  * "javadoc" so that the application Javadocs will have been created
+
+-->
+
+    <target name="dist" depends="clean,compile" description="Create binary distribution">
+        <tstamp>
+            <format property="timestamp" pattern="yyyy-MM-dd_HHmmss" locale="en"/>
+        </tstamp>
+    
+        <!-- Create application WAR file -->
+        <jar jarfile="${dist.home}/${app.name}_${timestamp}.war" basedir="${build.home}">
+        </jar>
+    </target>
+
+    <target name="test" depends="compile">
+        <ant dir="${variman.base}">
+            <target name="test"/>
+        </ant>
+    </target>
+                
+<!-- ==================== Test Target ================================== -->
+<!--
+  The "test" target is for use with junit.  It compiles the source, the
+  test code, then runs all tests that match the pattern test.toRun (default
+  is Test*).
+  
+  Many of the tests require that the RETS server is running.
+  
+-->
+<!--
+    <target name="test" depends="compiletest">
+        <mkdir dir="${test.classes}"/>
+        <mkdir dir="${test.reports}"/>
+-->
+        <!-- This code prints out test.classpath
+        <pathconvert targetos="windows" property="test.classpath.windows" refid="test.classpath">
+        </pathconvert>
+        <echo level="error">Classpath = ${test.classpath.windows}</echo>
+        -->
+<!--
+        <junit printsummary="on" fork="yes" haltonfailure="no" haltonerror="yes">
+            <classpath refid="test.classpath"/>
+            
+            <formatter type="xml"/>
+            
+            <batchtest todir="${test.reports}">
+                <fileset dir="${test.classes}">
+                    <include name="**/${test.file.pattern}.class" />
+                </fileset>
+            </batchtest>
+        </junit>
+        <junitreport todir="${test.reports}">
+            <fileset dir="${test.reports}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${test.reports}"/>
+        </junitreport>
+    </target>
+-->
+                
+    <target name="compiletest" depends="" description="Compile Java test code">
+        <!-- Compile Java test classes as necessary -->
+        <mkdir dir="${test.classes}"/>
+        <javac srcdir="${test.src}"
+              destdir="${test.classes}"
+                debug="${compile.debug}"
+          deprecation="${compile.deprecation}"
+             optimize="${compile.optimize}"
+			   source="${compile.source}"
+			   target="${compile.target}">
+            <classpath refid="test.classpath"/>
+            <exclude name="**/contracts*.java"/>
+            <exclude name="com/realgo/db/tms*.java"/>
+        </javac>
+        
+        <!-- Copy test resources -->
+        <copy todir="${test.classes}">
+            <fileset dir="${test.src}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+
+<!-- ==================== Prepare Target ================================== -->
+<!--
+
+  The "prepare" target is used to create the "build" destination directory,
+  and copy the static contents of your web application to it.  If you need
+  to copy static files from external dependencies, you can customize the
+  contents of this task.
+
+  Normally, this task is executed indirectly when needed.
+
+-->
+
+    <target name="prepare">
+        <!-- Create build directories as needed -->
+        <mkdir dir="${build.home}"/>
+        <mkdir dir="${build.home}/WEB-INF"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${dist.home}"/>
+
+        <!-- Copy static content of this web application -->
+        <copy todir="${build.home}">
+            <fileset dir="${web.home}"/>
+        </copy>
+    </target>
+
+    <target name="build-hibernate-xschema" description="creates the schema">
+        <ant dir="${variman.base}" target="build-hibernate"/>
+        <taskdef name="schemaexport" classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
+            <classpath>
+                <path refid="lib.path"/>
+                <pathelement path="${variman.base}/build/hibernate/classes"/>
+            </classpath>
+        </taskdef>
+
+        <schemaexport properties="${variman.base}/project/hibernate/config/hibernate.properties"
+                           quiet="no"
+                            text="yes"
+                            drop="no"
+                       delimiter=";"
+                          output="${variman.base}/build/hibernate/schema/xschema-export.sql">
+            <!--fileset dir="${variman.base}/build/hibernate/xdoclet">
+                <include name="**/*.hbm.xml"/>
+            </fileset-->
+            <fileset dir="${basedir}/etc/hbm/org/realtors/rets/server/metadata">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </schemaexport>
+    </target>
+
+    <target name="eclipse-config" description="Configures this project to run in Eclipse.">
+        <fmpp sourcefile="${basedir}/etc/eclipse/dotproject.ftl" outputfile="${basedir}/.project" data="ant:antProperties(),antproj:antProject()">
+        </fmpp>
+        <fmpp sourcefile="${basedir}/etc/eclipse/dotclasspath.ftl" outputfile="${basedir}/.classpath" data="ant:antProperties(),antproj:antProject()">
+        </fmpp>
+        <!--mkdir dir="${basedir}/.launches" />
+        <fmpp sourceroot="${basedir}/etc/eclipse/dotLaunches" outputroot="${basedir}/.launches" replaceextension="ftl, launch" data="ant:antProperties(),antproj:antProject()">
+            <include name="*.ftl" />
+        </fmpp-->
+    </target>
+
+    <target name="zip-for-crt">
+        <delete dir="${dist.home}">
+            <include name="variman-2.1.11b-realgo-src.zip"/>
+        </delete>
+        <zip destfile="${dist.home}/variman-2.1.11b-realgo-src.zip">
+            <zipfileset dir="${basedir}" prefix="">
+                <exclude name="/.*/**"/>
+                <exclude name="/guanaco.jpg*"/>
+                <exclude name="/bin/**"/>
+                <exclude name="/dist/**"/>
+                <exclude name="/docs/**"/>
+                <exclude name="/etc/*"/>
+                <exclude name="/etc/dtds/**"/>
+                <exclude name="/etc/hbm/com/realgo/core/entity/metadata/**"/>
+                <exclude name="/lib/**"/>
+                <exclude name="/patches/**"/>
+                <exclude name="/sql/**"/>
+                <exclude name="/src/com/realgo/db**"/>
+                <exclude name="/src/com/realgo/model**"/>
+                <exclude name="/src/com/realgo/utils**"/>
+                <exclude name="/src/**"/>
+                <exclude name="/test/**"/>
+                <exclude name="/web/WEB-INF/lib/**"/>
+                <exclude name="/web/WEB-INF/rets/**"/>
+                <exclude name="/web/WEB-INF/jdbc.properties"/>
+                <exclude name="/variman-2.1.11/build/**"/>
+                <exclude name="/variman-2.1.11/vendor/**"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+</project>

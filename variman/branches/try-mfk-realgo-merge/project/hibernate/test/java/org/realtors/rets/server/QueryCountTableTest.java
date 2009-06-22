@@ -5,6 +5,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.GroupRulesImpl;
 
 public class QueryCountTableTest extends TestCase
 {
@@ -27,15 +28,15 @@ public class QueryCountTableTest extends TestCase
         List allRules = new ArrayList();
         GroupRules rules;
 
-        rules = new GroupRules("threePerDay");
-        rules.setQueryCountLimit(3, QueryCount.PER_DAY);
+        rules = new GroupRulesImpl(new Group("threePerDay"));
+        rules.setQueryLimit(QueryLimit.valueOf(3, QueryLimit.Period.PER_DAY));
         allRules.add(rules);
 
-        rules = new GroupRules("fourPerHour");
-        rules.setQueryCountLimit(4, QueryCount.PER_HOUR);
+        rules = new GroupRulesImpl(new Group("fourPerHour"));
+        rules.setQueryLimit(QueryLimit.valueOf(4, QueryLimit.Period.PER_HOUR));
         allRules.add(rules);
 
-        rules = new GroupRules("noLimit");
+        rules = new GroupRulesImpl(new Group("noLimit"));
         allRules.add(rules);
 
         // Most restrictive rules in list is fourPerHour
@@ -44,7 +45,7 @@ public class QueryCountTableTest extends TestCase
         assertNotNull(queryCount);
         assertFalse(queryCount.isNoQueryLimit());
         assertEquals(4, queryCount.getLimit());
-        assertEquals(QueryCount.PER_HOUR, queryCount.getLimitPeriod());
+        assertEquals(QueryLimit.Period.PER_HOUR, queryCount.getLimitPeriod());
         assertEquals(0, table.getCacheHit());
 
         // This should hit the cache
@@ -52,7 +53,7 @@ public class QueryCountTableTest extends TestCase
         assertNotNull(queryCount);
         assertFalse(queryCount.isNoQueryLimit());
         assertEquals(4, queryCount.getLimit());
-        assertEquals(QueryCount.PER_HOUR, queryCount.getLimitPeriod());
+        assertEquals(QueryLimit.Period.PER_HOUR, queryCount.getLimitPeriod());
         assertEquals(1, table.getCacheHit());
     }
 }

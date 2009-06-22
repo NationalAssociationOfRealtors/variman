@@ -1,3 +1,13 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: ?, Danny Hurlburt
+ * Copyright (c) 200?, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+/*
+ */
 package org.realtors.rets.server.protocol;
 
 import java.util.HashMap;
@@ -16,59 +26,98 @@ public class ConditionRuleSet
 {
     public ConditionRuleSet()
     {
-        mConstraints = new HashMap();
+        mSqlConstraints = new HashMap/*String,String*/();
+        mDmqlConstraints = new HashMap/*String,String*/(); // TODO: Change this to hold /*String,DmqlQuery*/
     }
 
-    public void addRules(GroupRules rules)
+    public void addRules(final GroupRules groupRules)
     {
-        List conditionRules = rules.getConditionRules();
-        for (int i = 0; i < conditionRules.size(); i++)
-        {
-            ConditionRule rule = (ConditionRule) conditionRules.get(i);
-            String constraintsKey = rules.getGroupName() + ":" +
-                                    rule.getResource() + ":" +
-                                    rule.getRetsClass();
-            mConstraints.put(constraintsKey, rule.getSqlConstraint());
+        final String groupName = groupRules.getGroup().getName();
+        final List/*ConditionRule*/ conditionRules = groupRules.getConditionRules();
+        for (int i = 0; i < conditionRules.size(); i++) {
+            final ConditionRule rule = (ConditionRule)conditionRules.get(i);
+            final String resourceID = rule.getResourceID();
+            final String className = rule.getRetsClassName();
+            final String constraintsKey = getConstraintsKey(groupName, resourceID, className);
+            final String sqlConstraint = rule.getSqlConstraint();
+            if (sqlConstraint != null) {
+                mSqlConstraints.put(constraintsKey, sqlConstraint);
+            }
+            final String dmqlConstraint = rule.getDmqlConstraint();
+            if (dmqlConstraint != null) {
+                mDmqlConstraints.put(constraintsKey, dmqlConstraint);
+            }
         }
     }
 
-    public String findSqlConstraint(Set groups, String resource,
-                                    String retsClass)
+    public String findSqlConstraint(final Set/*Group*/ groups, final String resourceID, final String className)
     {
-        StringBuffer allConstraints = new StringBuffer();
+        final StringBuffer allSqlConstaints = new StringBuffer();
         int count = 0;
         String prefix = "(";
-        for (Iterator iterator = groups.iterator(); iterator.hasNext();)
-        {
-            Group group = (Group) iterator.next();
-            String constraint = findSqlConstraint(group, resource, retsClass);
-            if (StringUtils.isNotBlank(constraint))
-            {
-                allConstraints.append(prefix).append(constraint).append(")");
+        for (Iterator/*Group*/ iterator = groups.iterator(); iterator.hasNext(); ) {
+            final Group group = (Group)iterator.next();
+            final String sqlConstraint = findSqlConstraint(group, resourceID, className);
+            if (StringUtils.isNotBlank(sqlConstraint)) {
+                allSqlConstaints.append(prefix).append(sqlConstraint).append(")");
                 prefix = " AND (";
                 count++;
             }
         }
-        if (count > 1)
-        {
-            allConstraints.insert(0, "(").append(")");
+        if (count > 1) {
+            // Surround with parentheses
+            allSqlConstaints.insert(0, "(").append(")");
         }
-        return allConstraints.toString();
+        return allSqlConstaints.toString();
     }
 
-    private String findSqlConstraint(Group group, String resource,
-                                     String retsClass)
+    private String findSqlConstraint(final Group group, final String resourceID, final String className)
     {
-        String constraintsKey = group.getName() + ":" +
-                                resource + ":" +
-                                retsClass;
-        String constraint = (String) mConstraints.get(constraintsKey);
-        if (constraint == null)
-        {
+        final String groupName = group.getName();
+        final String constraintsKey = getConstraintsKey(groupName, resourceID, className);
+        final String sqlConstraint = (String)mSqlConstraints.get(constraintsKey);
+        if (sqlConstraint == null) {
             return "";
         }
-        return constraint;
+        return sqlConstraint;
     }
 
-    private Map mConstraints;
+    public String findDmqlConstraint(final Set/*Group*/ groups, final String resourceID, final String className)
+    {
+        final StringBuffer allDmqlConstaints = new StringBuffer();
+        int count = 0;
+        String prefix = "(";
+        for (Iterator/*Group*/ iterator = groups.iterator(); iterator.hasNext(); ) {
+            final Group group = (Group)iterator.next();
+            final String dmqlConstraint = findDmqlConstraint(group, resourceID, className);
+            if (StringUtils.isNotBlank(dmqlConstraint)) {
+                allDmqlConstaints.append(prefix).append(dmqlConstraint).append(")");
+                prefix = ",(";
+                count++;
+            }
+        }
+        if (count > 1) {
+            // Surround with parentheses
+            allDmqlConstaints.insert(0, "(").append(")");
+        }
+        return allDmqlConstaints.toString();
+    }
+
+    private String findDmqlConstraint(final Group group, final String resourceID, final String className) // TODO: Change this to return DmqlQuery.
+    {
+        final String groupName = group.getName();
+        final String constraintsKey = getConstraintsKey(groupName, resourceID, className);
+        final String dmqlConstraint = (String)mDmqlConstraints.get(constraintsKey); // TODO: Change this to return DmqlQuery.
+        return dmqlConstraint;
+    }
+    
+    protected static String getConstraintsKey(final String groupName, final String resourceID, final String className)
+    {
+        final String constraintKey = groupName + ":" + resourceID + ":" + className;
+        return constraintKey;
+    }
+
+    private Map/*String,String*/ mSqlConstraints;
+    private Map/*String,String*/ mDmqlConstraints; // TODO: Change this to hold /*String,DmqlQuery*/
+    
 }

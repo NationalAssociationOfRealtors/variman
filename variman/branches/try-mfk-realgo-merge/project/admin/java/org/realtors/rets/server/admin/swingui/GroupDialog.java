@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import net.sf.hibernate.HibernateException;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
+import org.realtors.rets.server.QueryLimit;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.TimeRestriction;
 
@@ -113,16 +114,17 @@ public class GroupDialog extends JDialog
             mTimeRestriction.setTimeRestriction(rules.getTimeRestriction());
         }
         syncTimeRestrictionComponents();
-
-        if (rules.hasNoQueryLimit())
+        
+        QueryLimit queryLimit = rules.getQueryLimit();
+        if (queryLimit.hasNoQueryLimit())
         {
             mEnableQueryCountLimit.setSelected(false);
         }
         else
         {
             mEnableQueryCountLimit.setSelected(true);
-            mQueryCountLimit.setLimit(rules.getQueryCountLimit());
-            mQueryCountLimit.setLimitPeriod(rules.getQueryCountLimitPeriod());
+            mQueryCountLimit.setLimit(queryLimit.getLimit());
+            mQueryCountLimit.setLimitPeriod(queryLimit.getPeriod());
         }
         syncQueryCountComponents();
     }
@@ -131,12 +133,12 @@ public class GroupDialog extends JDialog
     {
         if (mEnableQueryCountLimit.isSelected())
         {
-            rules.setQueryCountLimit(mQueryCountLimit.getLimit(),
-                                     mQueryCountLimit.getLimitPeriod());
+            rules.setQueryLimit(QueryLimit.valueOf(mQueryCountLimit.getLimit(),
+                                mQueryCountLimit.getLimitPeriod()));
         }
         else
         {
-            rules.setNoQueryCountLimit();
+            rules.setQueryLimit(QueryLimit.NO_QUERY_LIMIT);
         }
 
         if (mEnableRecordLimit.isSelected())

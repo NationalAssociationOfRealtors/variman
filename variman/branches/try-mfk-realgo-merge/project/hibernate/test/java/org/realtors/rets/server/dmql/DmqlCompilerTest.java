@@ -2,23 +2,38 @@
  */
 package org.realtors.rets.server.dmql;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.realtors.rets.server.dmql.DmqlCompiler.ParserResults;
+
 import antlr.ANTLRException;
 
 public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 {
+    /**
+     * This method is expected and recognized by JUnit 2.0 or newer.
+     *
+     * @return the test to be run by test runners expecting this method to
+     *         exist.
+     */
+    public static Test suite() { 
+        return new TestSuite(DmqlCompilerTest.class); 
+    }
+    
     public DmqlCompilerTest()
     {
         super();
     }
 
-    protected SqlConverter parse(String dmql, boolean traceParser,
+    protected ParserResults parse(String dmql, boolean traceParser,
                                boolean traceLexer)
         throws ANTLRException
     {
         return DmqlCompiler.parseDmql(dmql, mMetadata, traceParser, traceLexer);
     }
 
-    protected SqlConverter parse(String dmql) throws ANTLRException
+    protected ParserResults parse(String dmql) throws ANTLRException
     {
         return parse(dmql, false, false);
     }
@@ -61,12 +76,14 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         assertInvalidParse("(LDATE=TODAY)");
         assertInvalidParse("(LDATE=NOW)");
 
-        SqlConverter sql = parse("(OWNER=TODAY)");
+        ParserResults parserResults = parse("(OWNER=TODAY)");
+        SqlConverter sql = parserResults.getSqlConverter();
         DmqlStringList list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("TODAY"));
         assertEquals(list, sql);
 
-        sql = parse("(OWNER=NOW)");
+        parserResults = parse("(OWNER=NOW)");
+        sql = parserResults.getSqlConverter();
         list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("NOW"));
         assertEquals(list, sql);
@@ -85,7 +102,8 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testCompoundOr() throws ANTLRException
     {
-        SqlConverter sql = parse("(AR=|BATV,GENVA)|(OWNER=foo)");
+        ParserResults parserResults = parse("(AR=|BATV,GENVA)|(OWNER=foo)");
+        SqlConverter sql = parserResults.getSqlConverter();
         LookupList lookupList = new LookupList(LookupListType.OR, "r_AR");
         lookupList.addLookup("BATV");
         lookupList.addLookup("GENVA");
@@ -101,7 +119,8 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testCompoundAnd() throws ANTLRException
     {
-        SqlConverter sql = parse("(AR=|BATV,GENVA),(OWNER=foo)");
+        ParserResults parserResults = parse("(AR=|BATV,GENVA),(OWNER=foo)");
+        SqlConverter sql = parserResults.getSqlConverter();
         LookupList lookupList = new LookupList(LookupListType.OR, "r_AR");
         lookupList.addLookup("BATV");
         lookupList.addLookup("GENVA");

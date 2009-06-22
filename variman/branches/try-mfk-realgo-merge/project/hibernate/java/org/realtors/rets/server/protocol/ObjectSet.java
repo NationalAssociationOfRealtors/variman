@@ -13,10 +13,14 @@ import org.realtors.rets.server.RetsServerException;
  */
 public interface ObjectSet
 {
-    List findAllObjects(String type) throws RetsServerException;
+    public List findAllObjects(String type) throws RetsServerException;
 
-    ObjectDescriptor findObject(String type, int objectId)
+    public ObjectDescriptor findObject(String type, int objectId)
         throws RetsServerException;
+    
+    public void setResource(String resource);
+    
+    public void setResourceEntity(String resourceEntity);
 
     public static final int DEFAULT_OBJECT_ID = 0;
 }

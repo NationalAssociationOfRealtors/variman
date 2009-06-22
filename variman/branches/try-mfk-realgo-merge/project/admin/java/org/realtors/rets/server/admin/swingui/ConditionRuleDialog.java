@@ -1,11 +1,15 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
 import org.realtors.rets.server.config.ConditionRule;
+import org.realtors.rets.server.config.ConditionRuleImpl;
 
 public class ConditionRuleDialog extends JDialog
 {
@@ -20,8 +24,8 @@ public class ConditionRuleDialog extends JDialog
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
         TextValuePanel tvp = new TextValuePanel();
-        mResourceName = new JTextField(TEXT_WIDTH);
-        tvp.addRow("Resource Name:", mResourceName);
+        mResourceId = new JTextField(TEXT_WIDTH);
+        tvp.addRow("Resource ID:", mResourceId);
         mClassName = new JTextField(TEXT_WIDTH);
         tvp.addRow("Class Name:", mClassName);
         mSqlConstraint = new JTextArea();
@@ -32,6 +36,15 @@ public class ConditionRuleDialog extends JDialog
         scrollPane.setVerticalScrollBarPolicy(
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         tvp.addRow("SQL Constraint:", scrollPane);
+
+        mDmqlConstraint = new JTextArea();
+        mDmqlConstraint.setRows(5);
+        mDmqlConstraint.setLineWrap(true);
+        mDmqlConstraint.setWrapStyleWord(true);
+        scrollPane = new JScrollPane(mDmqlConstraint);
+        scrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        tvp.addRow("DMQL Constraint:", scrollPane);
 
         tvp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         content.add(tvp);
@@ -58,23 +71,25 @@ public class ConditionRuleDialog extends JDialog
 
     public ConditionRule createRule()
     {
-        ConditionRule rule = new ConditionRule();
+        ConditionRule rule = new ConditionRuleImpl();
         updateRule(rule);
         return rule;
     }
 
     public void updateRule(ConditionRule rule)
     {
-        rule.setResource(mResourceName.getText());
-        rule.setRetsClass(mClassName.getText());
+        rule.setResourceID(mResourceId.getText());
+        rule.setRetsClassName(mClassName.getText());
         rule.setSqlConstraint(mSqlConstraint.getText());
+        rule.setDmqlConstraint(mDmqlConstraint.getText());
     }
 
     public void populateFromRule(ConditionRule rule)
     {
-        mResourceName.setText(rule.getResource());
-        mClassName.setText(rule.getRetsClass());
+        mResourceId.setText(rule.getResourceID());
+        mClassName.setText(rule.getRetsClassName());
         mSqlConstraint.setText(rule.getSqlConstraint());
+        mDmqlConstraint.setText(rule.getDmqlConstraint());
     }
 
     private class AddRuleButtonAction extends AbstractAction
@@ -86,8 +101,8 @@ public class ConditionRuleDialog extends JDialog
 
         public void actionPerformed(ActionEvent event)
         {
-            if (warnIfBlank(mResourceName, "Please enter a resource name.",
-                            "Blank Resource Name"))
+            if (warnIfBlank(mResourceId, "Please enter a resource ID.",
+                            "Blank Resource ID"))
             {
                 return;
             }
@@ -97,9 +112,12 @@ public class ConditionRuleDialog extends JDialog
             {
                 return;
             }
-
-            if (warnIfBlank(mSqlConstraint, "Please enter SQL constraint.",
-                            "Blank SQL Constraint"))
+            
+            List/*JTextComponent*/ components = new ArrayList/*JTextComponent*/();
+            components.add(mSqlConstraint);
+            components.add(mDmqlConstraint);
+            if (warnIfBlank(components, "Please enter SQL constraint and/or DMQL constraint.",
+                            "Blank SQL and DMQL Constraints"))
             {
                 return;
             }
@@ -107,18 +125,40 @@ public class ConditionRuleDialog extends JDialog
             mResponse = JOptionPane.OK_OPTION;
             dispose();
         }
+        
+        private boolean warnIfBlank(List/*JTextComponent*/ components,
+                String message, String title)
+        {
+            if (allBlank(components)) {
+                JOptionPane.showMessageDialog(
+                        ConditionRuleDialog.this,
+                        message, title, JOptionPane.WARNING_MESSAGE);
+                return true;
+            }
+            return false;
+        }
 
         private boolean warnIfBlank(JTextComponent component, String message,
                                  String title)
         {
-            if (component.getText().equals(""))
-            {
-                JOptionPane.showMessageDialog(
-                    ConditionRuleDialog.this,
-                    message, title, JOptionPane.WARNING_MESSAGE);
-                return true;
+            List/*JTextComponent*/ components = new ArrayList/*JTextComponent*/();
+            components.add(component);
+            return warnIfBlank(components, message, title);
+        }
+        
+        private boolean allBlank(List/*JTextComponent*/ components)
+        {
+            boolean allBlank = true;
+            
+            for (Iterator/*JTextComponent*/ iter = components.iterator(); iter.hasNext(); ) {
+                JTextComponent component = (JTextComponent)iter.next();
+                if (!"".equals(component.getText())) {
+                    allBlank = false;
+                    break;
+                }
             }
-            return false;
+            
+            return allBlank;
         }
     }
 
@@ -139,7 +179,8 @@ public class ConditionRuleDialog extends JDialog
     private static final int TEXT_WIDTH = 20;
 
     private int mResponse;
-    private JTextField mResourceName;
+    private JTextField mResourceId;
     private JTextField mClassName;
     private JTextArea mSqlConstraint;
+    private JTextArea mDmqlConstraint;
 }

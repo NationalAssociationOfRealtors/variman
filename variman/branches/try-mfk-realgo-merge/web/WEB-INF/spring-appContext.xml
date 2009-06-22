@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: spring-appContext.xml 35359 2008-09-02 15:58:32Z danny $ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  This file replaces Variman's spring-appContext.xml file during the build
+  process.
+-->
+<beans>
+    <bean id="beanFactory" class="org.realtors.rets.server.RetsServer"/>
+
+    <!-- bean id="retsConfigLoader" class="org.realtors.rets.server.config.SpringXmlRetsConfigLoader">
+        <description>
+            Loads the RETS configuration from an XML file.
+        </description>
+        <constructor-arg index="0" type="org.springframework.core.io.Resource" value="WEB-INF/rets/rets-config.xml"/>
+    </bean-->
+
+    <bean id="retsConfigLoader" class="org.realtors.rets.server.config.SpringHibernate2RetsConfigLoader">
+        <description>
+            Loads the RETS configuration from the database.
+        </description>
+        <constructor-arg index="0" type="net.sf.hibernate.SessionFactory" ref="hibernate2IresISSessionFactory"/>
+    </bean>
+
+    <!-- RetsServer.class expects a bean named sessionFactory -->
+    <alias name="hibernate2IresISSessionFactory" alias="sessionFactory"/>
+
+    <bean id="searchTransaction" singleton="false"
+        class="org.realtors.rets.server.protocol.DefaultSearchTransaction">
+        <property name="searchSqlBuilder">
+            <ref bean="searchSqlBuilder"/>
+        </property>
+    </bean>
+
+    <bean id="searchSqlBuilder" singleton="false"
+        class="com.realgo.rets.server.protocol.RGSearchSqlBuilder">
+    </bean>
+
+    <bean id="mediaUtil" class="com.realgo.media.MediaUtil">
+        <property name="configuration" ref="llamaAppSettingsConfiguration" />
+    </bean>
+
+    <bean id="customObjectSet" singleton="false"
+        class="com.realgo.rets.server.protocol.RGObjectSet">
+        <property name="mediaUtil" ref="mediaUtil" />
+        <property name="daoFactory" ref="hibernateDaoFactory" />
+    </bean>
+
+    <bean id="metadataFetcher" class="org.realtors.rets.server.webapp.WebAppMetadataFetcher">
+    </bean>
+
+    <bean id="metadataLoader" class="org.realtors.rets.server.metadata.SpringHibernate2MetadataLoader">
+        <property name="sessionFactory">
+            <ref bean="hibernate2IresISSessionFactory"/>
+        </property>
+    </bean>
+
+    <!-- bean id="metadataLoader" class="org.realtors.rets.server.metadata.SpringHibernate3MetadataLoader">
+        <property name="sessionFactory">
+            <ref bean="iresisSessionFactory"/>
+        </property>
+    </bean-->
+
+    <!-- bean id="metadataLoader" class="org.realtors.rets.server.metadata.SpringXmlMetadataLoader">
+        <constructor-arg index="0" value="/WEB-INF/rets/metadata" type="org.springframework.core.io.Resource"/>
+    </bean-->
+
+</beans>

@@ -2,6 +2,7 @@ package org.realtors.rets.server.config;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -10,7 +11,18 @@ public class TimeRestriction
 {
     public static final Policy ALLOW = new Policy("allow");
     public static final Policy DENY = new Policy("deny");
-
+    
+    /**
+     * Constructs a new <code>TimeRestriction</code>.
+     * <p>
+     * Be sure to set the policy, start hour, start minute, end hour, and
+     * the end minute before using.
+     */
+    public TimeRestriction()
+    {
+        // Required by Hibernate. 
+    }
+    
     public TimeRestriction(Policy policy, int startHour, int startMinute,
                            int endHour, int endMinute)
     {
@@ -53,6 +65,26 @@ public class TimeRestriction
         {
             return !inInterval;
         }
+    }
+    
+    public int getStartHour()
+    {
+        return mStartHour;
+    }
+
+    public int getStartMinute()
+    {
+        return mStartMinute;
+    }
+
+    public int getEndHour()
+    {
+        return mEndHour;
+    }
+
+    public int getEndMinute()
+    {
+        return mEndMinute;
     }
 
     public Calendar getStartAsCalendar()
@@ -112,9 +144,14 @@ public class TimeRestriction
 
     public static class Policy extends Enum
     {
-        private Policy(String policy)
+        Policy(String policy)
         {
             super(policy);
+        }
+        
+        public static List getEnumList()
+        {
+            return getEnumList(Policy.class);
         }
     }
 

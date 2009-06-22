@@ -23,7 +23,19 @@ public class ClassStandardNameEnum implements PersistentEnum
         new ClassStandardNameEnum(2);
     public static final ClassStandardNameEnum MULTI_FAMILY =
         new ClassStandardNameEnum(3);
-
+    public static final ClassStandardNameEnum RE_AGENT =
+        new ClassStandardNameEnum(4);
+    public static final ClassStandardNameEnum RE_OFFICE =
+        new ClassStandardNameEnum(5);
+    public static final ClassStandardNameEnum INCOME_PROPERTY =
+        new ClassStandardNameEnum(6);
+    public static final ClassStandardNameEnum LEASE =
+        new ClassStandardNameEnum(7);
+    public static final ClassStandardNameEnum MOBILE_HOME =
+        new ClassStandardNameEnum(8);
+    public static final ClassStandardNameEnum FARM =
+        new ClassStandardNameEnum(9);
+    
     private static Map mStringMap;
 
     static
@@ -35,6 +47,12 @@ public class ClassStandardNameEnum implements PersistentEnum
         mStringMap.put("lotsandland", LOTS_AND_LAND);
         mStringMap.put("commoninterest", COMMON_INTEREST);
         mStringMap.put("multifamily", MULTI_FAMILY);
+        mStringMap.put("reagent", RE_AGENT);
+        mStringMap.put("reoffice", RE_OFFICE);
+        mStringMap.put("incomeproperty", INCOME_PROPERTY);
+        mStringMap.put("lease", LEASE);
+        mStringMap.put("mobilehome", MOBILE_HOME);
+        mStringMap.put("farm", FARM);
     }
 
     private ClassStandardNameEnum(int code)
@@ -55,6 +73,12 @@ public class ClassStandardNameEnum implements PersistentEnum
             case 1: return LOTS_AND_LAND;
             case 2: return COMMON_INTEREST;
             case 3: return MULTI_FAMILY;
+            case 4: return RE_AGENT;
+            case 5: return RE_OFFICE;
+            case 6: return INCOME_PROPERTY;
+            case 7: return LEASE;
+            case 8: return MOBILE_HOME;
+            case 9: return FARM;
             default:
                 throw new RuntimeException("Unknown Class Standard Name");
         }
@@ -85,6 +109,12 @@ public class ClassStandardNameEnum implements PersistentEnum
             case 1: return "LotsAndLand";
             case 2: return "CommonInterest";
             case 3: return "MultiFamily";
+            case 4: return "REAgent";
+            case 5: return "REOffice";
+            case 6: return "IncomeProperty";
+            case 7: return "Lease";
+            case 8: return "MobileHome";
+            case 9: return "Farm";
             default:
                 throw new RuntimeException("Unknown Class Standard Name");
         }

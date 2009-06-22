@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: MSystem.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.MSystem" table="RetsMetaSystem" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaSystem_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="systemID"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="SystemID" sql-type="varchar(10)" length="10" not-null="true"/>
+        </property>
+
+        <property
+            name="description"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Description" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+        <property
+            name="comments"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Comments" sql-type="varchar(1024)" not-null="false"/>
+        </property>
+
+        <property
+            name="version"
+            type="int"
+            update="true"
+            insert="true"
+        >
+            <column name="Version" sql-type="int" not-null="true"/>
+        </property>
+
+        <property
+            name="date"
+            type="date"
+            update="true"
+            insert="true"
+        >
+            <column name="Date" sql-type="datetime" not-null="true"/>
+        </property>
+
+        <set
+            name="resources"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaSystem_RetsMetaResource_RetsMetaSystem_ID">
+                <column name="RetsMetaSystem_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.Resource"/>
+        </set>
+
+        <set
+            name="foreignKeys"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaSystem_RetsMetaForeignKey_RetsMetaSystem_ID">
+                <column name="RetsMetaSystem_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.ForeignKey"/>
+        </set>
+
+    </class>
+</hibernate-mapping>

@@ -6,6 +6,8 @@
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
+/*
+ */
 package org.realtors.rets.server.admin;
 
 import java.io.File;
@@ -13,7 +15,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
@@ -29,6 +30,9 @@ import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.DatabaseType;
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.RetsConfigImpl;
+import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.config.XmlRetsConfigUtils;
 
 public class AdminUtils
 {
@@ -42,12 +46,12 @@ public class AdminUtils
         if (configFile.exists())
         {
             Admin.setRetsConfig(
-                RetsConfig.initFromXmlFile(Admin.getConfigFile()));
+                XmlRetsConfigUtils.initFromXmlFile(Admin.getConfigFile()));
             Admin.setRetsConfigChanged(false);
         }
         else
         {
-            RetsConfig retsConfig = new RetsConfig();
+            RetsConfig retsConfig = new RetsConfigImpl();
             String defaultDirectory = SystemUtils.USER_DIR + File.separator;
             retsConfig.setMetadataDir(defaultDirectory + "metadata");
             retsConfig.setGetObjectRoot(defaultDirectory + "pictures");
@@ -56,7 +60,7 @@ public class AdminUtils
             databaseConfig.setDatabaseType(DatabaseType.POSTGRESQL);
             databaseConfig.setHostName("localhost");
             retsConfig.setDatabase(databaseConfig);
-            retsConfig.setSecurityConstraints(new ArrayList());
+            retsConfig.setSecurityConstraints(new SecurityConstraints());
             Admin.setRetsConfig(retsConfig);
             Admin.setRetsConfigChanged(true);
         }
@@ -96,7 +100,7 @@ public class AdminUtils
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         Configuration config = new Configuration()
             .addJar(Admin.PROJECT_NAME + "-hbm-xml.jar")
-            .setProperties(retsConfig.createHibernateProperties());
+            .setProperties(retsConfig.getDatabase().createHibernateProperties());
         SessionFactory sessionFactory =
             config.buildSessionFactory();
         PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,

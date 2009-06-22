@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ValidationExternalType.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.ValidationExternalType" table="RetsMetaValidationExternalType" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaValidationExternalType_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <many-to-one
+            name="validationExternal"
+            class="org.realtors.rets.server.metadata.ValidationExternal"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaValidationExternalType_RetsMetaValidationExternal_RetsMetaValidationExternal_ID"
+        >
+            <column
+                name="RetsMetaValidationExternal_ID"
+                sql-type="int"
+                not-null="true"
+                index="NDX_RetsMetaValidationExternalType_RetsMetaValidationExternal_ID"
+            />
+        </many-to-one>
+
+        <map
+            name="resultFields"
+            table="RetsMetaValidationExternalTypeXResultFields"
+            lazy="false"
+            sort="unsorted"
+            cascade="none"
+        >
+            <key foreign-key="FK_RetsMetaValidationExternalTypeXResultFields_RetsMetaValidationExternalType_RetsMetaValidationExternalType_ID">
+                <column name="RetsMetaValidationExternalType_ID" sql-type="int" not-null="true"/>
+            </key>
+            <!-- Map's key -->
+            <index type="string">
+                <column name="TargetField" sql-type="varchar(32)" length="32" not-null="true" unique="false"/>
+            </index>
+            <!-- Map's key associated value -->
+            <element type="string">
+                <column name="SourceField" sql-type="varchar(32)" length="32" not-null="true" unique="false"/>
+            </element>
+        </map>
+
+        <set
+            name="searchField"
+            table="RetsMetaValidationExternalTypeXSearchField"
+            lazy="false"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaValidationExternalTypeXSearchField_RetsMetaValidationExternalType_RetsMetaValidationExternalType_ID">
+                <column name="RetsMetaValidationExternalType_ID" sql-type="int" not-null="true"/>
+            </key>
+            <element type="string">
+                <column name="SearchField" sql-type="varchar(32)" length="32" not-null="true" unique="false"/>
+            </element>
+        </set>
+
+        <set
+            name="displayField"
+            table="RetsMetaValidationExternalTypeXDisplayField"
+            lazy="false"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaValidationExternalTypeXDisplayField_RetsMetaValidationExternalType_RetsMetaValidationExternalType_ID">
+                <column name="RetsMetaValidationExternalType_ID" sql-type="int" not-null="true"/>
+            </key>
+            <element type="string">
+                <column name="DisplayField" sql-type="varchar(32)" length="32" not-null="true" unique="false"/>
+            </element>
+        </set>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

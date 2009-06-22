@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ValidationExternal.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.ValidationExternal" table="RetsMetaValidationExternal" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaValidationExternal_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="validationExternalName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="ValidationExternalName"
+                sql-type="varchar(32)"
+                length="32"
+                not-null="true"
+                unique="true"
+                index="NDX_RetsMetaValidationExternal_ValidationExternalName"
+            />
+        </property>
+
+        <many-to-one
+            name="resource"
+            class="org.realtors.rets.server.metadata.Resource"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaValidationExternal_RetsMetaResource_RetsMetaResource_ID"
+        >
+            <column name="RetsMetaResource_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <many-to-one
+            name="searchClass"
+            class="org.realtors.rets.server.metadata.MClass"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaValidationExternal_RetsMetaClass_SearchClassId"
+        >
+            <column name="SearchClassId" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <set
+            name="validationExternalTypes"
+            lazy="false"
+            inverse="true"
+            cascade="none"
+            sort="unsorted"
+        >
+            <key foreign-key="FK_RetsMetaValidationExternal_RetsMetaValidationExternalType_RetsMetaValidationExternal_ID">
+                <column name="RetsMetaValidationExternal_ID" sql-type="int" not-null="true"/>
+            </key>
+            <one-to-many class="org.realtors.rets.server.metadata.ValidationExternalType"/>
+        </set>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

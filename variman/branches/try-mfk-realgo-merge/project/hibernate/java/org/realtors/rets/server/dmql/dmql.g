@@ -237,43 +237,16 @@ string_list [AST name]
     ;
 
 string
-    : string_eq
-    | string_start
-    | string_contains
-    | string_char1
-    | string_char2
+    : (text)+ (string_wildcard)? {#string = #([STRING], #string);}
+    | STAR (text)* STAR          {#string = #([STRING], #string);}
+    | QUESTION (text)?           {#string = #([STRING], #string);}
     ;
 
-string_eq
-    : text {#string_eq = #([STRING], #string_eq);}
-    ;
-
-string_start
-    : text STAR
-        {#string_start = #([STRING], #string_start);}
-    ;
-
-string_contains
-    : STAR (text)* STAR
-        {#string_contains = #([STRING], #string_contains);}
-    ;
-
-// Need to split string_char into 2 separate rules, otherwise ANTLR
-// cannot differentiate between a string_eq and a string_char
-// string_char
-//     : (TEXT)? QUESTION (TEXT)?
-//     ;
-
-string_char1
-    : text QUESTION (text)?
-        {#string_char1 = #([STRING], #string_char1);}
-    ;
-
-string_char2
-    : QUESTION (text)?
-        {#string_char2 = #([STRING], #string_char2);}
-    ;
-
+string_wildcard
+	: STAR
+	| QUESTION (text)*
+	;
+	
 text
     { Token t; }
     : t=text_token

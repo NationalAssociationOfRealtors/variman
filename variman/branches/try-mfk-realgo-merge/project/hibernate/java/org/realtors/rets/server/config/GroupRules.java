@@ -1,122 +1,52 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Dave Dribin
+ * Copyright (c) 2004, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+/*
+ */
 package org.realtors.rets.server.config;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.realtors.rets.server.QueryCount;
+import org.realtors.rets.server.Group;
+import org.realtors.rets.server.QueryLimit;
 
-public class GroupRules
+public interface GroupRules
 {
-    public GroupRules(String groupName)
-    {
-        mGroupName = groupName;
-        mFilterRules = new ArrayList();
-        mReadOnlyFilterRules = Collections.unmodifiableList(mFilterRules);
-        mConditionRules = new ArrayList();
-        mReadOnlyConditionRules = Collections.unmodifiableList(mConditionRules);
-        setNoQueryCountLimit();
-    }
+    public Group getGroup();
+    
+    public void setGroup(Group group);
 
-    public String getGroupName()
-    {
-        return mGroupName;
-    }
+    public List/*FilterRule*/ getFilterRules();
+    
+    public void setFilterRules(List/*FilterRule*/ filterRules);
 
-    public List /* FilterRule */ getFilterRules()
-    {
-        return mReadOnlyFilterRules;
-    }
+    public boolean addFilterRule(FilterRule filterRule);
 
-    public void addFilterRule(FilterRule filterRule)
-    {
-        mFilterRules.add(filterRule);
-    }
+    public boolean removeFilterRule(FilterRule filterRule);
+    
+    public List/*ConditionRule*/ getConditionRules();
+    
+    public void setConditionRules(List/*ConditionRule*/ conditionRules);
 
-    public void removeFilterRule(FilterRule filterRule)
-    {
-        mFilterRules.remove(filterRule);
-    }
+    public boolean addConditionRule(ConditionRule conditionRule);
 
-    public List /* ConditionRule */ getConditionRules()
-    {
-        return mReadOnlyConditionRules;
-    }
+    public boolean removeConditionRule(ConditionRule conditionRule);
+    
+    public int getRecordLimit();
 
-    public void addConditionRule(ConditionRule conditionRule)
-    {
-        mConditionRules.add(conditionRule);
-    }
+    public void setRecordLimit(int recordLimit);
 
-    public void removeConditionRule(ConditionRule conditionRule)
-    {
-        mConditionRules.remove(conditionRule);
-    }
+    public TimeRestriction getTimeRestriction();
 
-    public int getRecordLimit()
-    {
-        return mRecordLimit;
-    }
+    public void setTimeRestriction(TimeRestriction timeRestriction);
 
-    public void setRecordLimit(int recordLimit)
-    {
-        mRecordLimit = recordLimit;
-    }
-
-    public TimeRestriction getTimeRestriction()
-    {
-        return mTimeRestriction;
-    }
-
-    public void setTimeRestriction(TimeRestriction timeRestriction)
-    {
-        mTimeRestriction = timeRestriction;
-    }
-
-    public void setQueryCountLimit(long limit, QueryCount.LimitPeriod limitPeriod)
-    {
-        if (limit <= 0)
-        {
-            throw new IllegalArgumentException("limit must be greater than 0: "
-                                               + limit);
-        }
-        if (limitPeriod == null)
-        {
-            throw new IllegalArgumentException("limitPeriod must not be null");
-        }
-
-        mQueryCountLimit = limit;
-        mQueryCountLimitPeriod = limitPeriod;
-    }
-
-    public void setNoQueryCountLimit()
-    {
-        mQueryCountLimit = 0;
-        mQueryCountLimitPeriod = null;
-    }
-
-    public boolean hasNoQueryLimit()
-    {
-        return (mQueryCountLimitPeriod == null);
-    }
-
-    public long getQueryCountLimit()
-    {
-        return mQueryCountLimit;
-    }
-
-    public QueryCount.LimitPeriod getQueryCountLimitPeriod()
-    {
-        return mQueryCountLimitPeriod;
-    }
-
-    private String mGroupName;
-    private List mFilterRules;
-    private List mReadOnlyFilterRules;
-    private List mConditionRules;
-    private List mReadOnlyConditionRules;
-    private int mRecordLimit;
-    private TimeRestriction mTimeRestriction;
-    private long mQueryCountLimit;
-    private QueryCount.LimitPeriod mQueryCountLimitPeriod;
+    public QueryLimit getQueryLimit();
+    
+    public void setQueryLimit(QueryLimit queryLimit);
+    
 }

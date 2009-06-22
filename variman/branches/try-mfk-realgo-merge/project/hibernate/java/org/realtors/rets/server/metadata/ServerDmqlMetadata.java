@@ -46,17 +46,17 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         init(clazz.getTables(), standardNames);
     }
 
-    public ServerDmqlMetadata(Collection tables, boolean standardNames)
+    public ServerDmqlMetadata(Collection/*Table*/ tables, boolean standardNames)
     {
         this();
         init(tables, standardNames);
     }
 
-    private void init(Collection tables, boolean standardNames)
+    private void init(Collection/*Table*/ tables, boolean standardNames)
     {
-        for (Iterator i = tables.iterator(); i.hasNext();)
+        for (Iterator/*Table*/ i = tables.iterator(); i.hasNext(); )
         {
-            Table table = (Table) i.next();
+            Table table = (Table)i.next();
             String dbName = table.getDbName();
 
             String fieldName = getTableName(table,  standardNames);

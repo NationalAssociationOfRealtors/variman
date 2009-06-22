@@ -1,100 +1,53 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Danny Hurlburt
+ * Copyright (c) 2007, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
+/*
+ */
 package org.realtors.rets.server.config;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import org.apache.commons.lang.enums.Enum;
-import org.apache.commons.lang.StringUtils;
 
-public class FilterRule
-{
-    public FilterRule()
-    {
-        this(INCLUDE);
-    }
+public interface FilterRule {
 
-    public FilterRule(Type type)
-    {
-        mType = type;
-        mSystemNames = new ArrayList();
-    }
+    public Type getType();
 
-    public Type getType()
-    {
-        return mType;
-    }
+    public void setType(Type type);
 
-    public void setType(Type type)
-    {
-        mType = type;
-    }
+    public String getResourceID();
 
-    public String getResource()
-    {
-        return mResource;
-    }
+    public void setResourceID(String resourceId);
 
-    public void setResource(String resource)
-    {
-        mResource = resource;
-    }
+    public String getRetsClassName();
 
-    public String getRetsClass()
-    {
-        return mRetsClass;
-    }
+    public void setRetsClassName(String retsClassName);
 
-    public void setRetsClass(String retsClass)
-    {
-        mRetsClass = retsClass;
-    }
+    public List/*String*/getSystemNames();
 
-    public List getSystemNames()
-    {
-        return mSystemNames;
-    }
+    public void setSystemNames(List/*String*/systemNames);
 
-    public void setSystemNames(List systemNames)
-    {
-        mSystemNames = systemNames;
-    }
-
-    public void addSystemName(String systemName)
-    {
-        mSystemNames.add(systemName);
-    }
-
-    public boolean includeSystemName(String systemName)
-    {
-        boolean includeSystemName = mSystemNames.contains(systemName);
-        if (mType == EXCLUDE)
-        {
-            includeSystemName = !includeSystemName;
-        }
-        return includeSystemName;
-    }
-
-    public String toString()
-    {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("For ").append(mResource).append(":").append(mRetsClass);
-        buffer.append(", ").append(mType).append(" fields: ");
-        buffer.append(StringUtils.join(mSystemNames.iterator(), " "));
-        return buffer.toString();
-    }
+    public void addSystemName(String systemName);
 
     public static class Type extends Enum
     {
-        private Type(String type)
+        public static final Type INCLUDE = new Type("include");
+        public static final Type EXCLUDE = new Type("exclude");
+        
+        Type(String type)
         {
             super(type);
         }
+        
+        public static List getEnumList()
+        {
+            return getEnumList(Type.class);
+        }
     }
 
-    public static final Type INCLUDE = new Type("include");
-    public static final Type EXCLUDE = new Type("exclude");
-    private Type mType;
-    private String mResource;
-    private String mRetsClass;
-    private List mSystemNames;
 }

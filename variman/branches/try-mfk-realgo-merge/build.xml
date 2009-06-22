@@ -30,6 +30,7 @@
     <pathelement path="${rets-client.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
     <pathelement path="${spring.jar}"/>
+    <pathelement path="${junit.jar}"/>
   </path>
 
   <path id="lib.path">
@@ -68,6 +69,7 @@
 
   <path id="webapp.path">
     <pathelement path="${servlet.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
     <pathelement location="build/embedded/classes"/>
@@ -81,6 +83,7 @@
 
   <path id="webapp.test.path">
     <path refid="webapp.path"/>
+    <pathelement path="${junit.jar}"/>
     <pathelement location="build/hibernate/test/classes"/>
     <pathelement location="build/rets-server/webapp/WEB-INF/classes"/>
   </path>
@@ -94,7 +97,12 @@
     <pathelement path="${apple-java-ext.jar}"/>
     <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </path>
-
+  
+  <path id="admin.test.path">
+    <path refid="admin.path"/>
+    <pathelement path="${junit.jar}"/>
+  </path>
+  
   <path id="xdoclet.path">
     <pathelement path="${ant.home}/lib/ant.jar" />
     <fileset dir="${xdoclet.lib}" includes="*.jar"/>
@@ -439,7 +447,10 @@
       </classpath>
     </taskdef>
     <webdoclet destdir="build/webapp/generated" verbose="false">
-      <fileset dir="project/webapp/java"/>
+      <fileset dir="project/webapp/java">
+        <exclude name="**/org/realtors/rets/server/webapp/InitServlet.java"/>
+        <exclude name="**/org/realtors/rets/server/webapp/WebAppLifecycleListener.java"/>
+      </fileset>
 
       <deploymentdescriptor servletspec="2.3"
                             destdir="build/rets-server/webapp/WEB-INF"
@@ -698,7 +709,7 @@
             destDir="build/admin/test/classes"
             cache="build/admin/test/depcache" closure="yes">
       <classpath>
-        <path refid="admin.path"/>
+        <path refid="admin.test.path"/>
         <pathelement location="build/admin/classes"/>
       </classpath>
     </depend>
@@ -708,7 +719,7 @@
            optimize="${compile.optimize}" debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <classpath>
-        <path refid="admin.path"/>
+        <path refid="admin.test.path"/>
         <pathelement location="build/admin/classes"/>
       </classpath>
     </javac>

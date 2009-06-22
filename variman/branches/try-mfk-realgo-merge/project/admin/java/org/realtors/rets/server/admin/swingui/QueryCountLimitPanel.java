@@ -2,7 +2,7 @@ package org.realtors.rets.server.admin.swingui;
 
 import javax.swing.*;
 
-import org.realtors.rets.server.QueryCount;
+import org.realtors.rets.server.QueryLimit;
 
 public class QueryCountLimitPanel extends JPanel
 {
@@ -47,15 +47,15 @@ public class QueryCountLimitPanel extends JPanel
         mLimitField.setValue((int) limit);
     }
 
-    public QueryCount.LimitPeriod getLimitPeriod()
+    public QueryLimit.Period getLimitPeriod()
     {
         Object selectedLimitPeriod = mLimitPeriod.getSelectedItem();
         if (selectedLimitPeriod.equals(PER_MINUTE))
-            return QueryCount.PER_MINUTE;
+            return QueryLimit.Period.PER_MINUTE;
         else if (selectedLimitPeriod.equals(PER_HOUR))
-            return QueryCount.PER_HOUR;
+            return QueryLimit.Period.PER_HOUR;
         else if (selectedLimitPeriod.equals(PER_DAY))
-            return QueryCount.PER_DAY;
+            return QueryLimit.Period.PER_DAY;
         else
         {
             throw new IllegalArgumentException(
@@ -63,13 +63,13 @@ public class QueryCountLimitPanel extends JPanel
         }
     }
 
-    public void setLimitPeriod(QueryCount.LimitPeriod limitPeriod)
+    public void setLimitPeriod(QueryLimit.Period limitPeriod)
     {
-        if (limitPeriod.equals(QueryCount.PER_DAY))
+        if (limitPeriod.equals(QueryLimit.Period.PER_DAY))
             mLimitPeriod.setSelectedItem(PER_DAY);
-        else if (limitPeriod.equals(QueryCount.PER_HOUR))
+        else if (limitPeriod.equals(QueryLimit.Period.PER_HOUR))
             mLimitPeriod.setSelectedItem(PER_HOUR);
-        else if (limitPeriod.equals(QueryCount.PER_MINUTE))
+        else if (limitPeriod.equals(QueryLimit.Period.PER_MINUTE))
             mLimitPeriod.setSelectedItem(PER_MINUTE);
         else
         {

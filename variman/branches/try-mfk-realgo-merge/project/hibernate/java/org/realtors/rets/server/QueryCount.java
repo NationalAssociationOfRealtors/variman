@@ -1,6 +1,5 @@
 package org.realtors.rets.server;
 
-import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -21,62 +20,63 @@ public class QueryCount
      * @param limit Limit count
      * @param limitPeriod Time period
      */
-    public QueryCount(long limit,  LimitPeriod limitPeriod)
+    public QueryCount(QueryLimit queryLimit)
     {
         init();
-        setLimit(limit, limitPeriod);
+        setLimit(queryLimit);
     }
 
     private void init()
     {
         mLastResetTime = System.currentTimeMillis();
         mQueryCount = 0;
-
     }
 
-    public void setLimit(long limit, LimitPeriod limitPeriod)
+    public void setLimit(QueryLimit queryLimit)
     {
-        if (limitPeriod.equals(PER_MINUTE))
+        if (queryLimit == null) {
+            throw new NullPointerException("queryLimit is null.");
+        }
+        QueryLimit.Period period = queryLimit.getPeriod();
+        if (period.equals(QueryLimit.Period.PER_MINUTE))
         {
             mResetPeriod = DateUtils.MILLIS_PER_MINUTE;
         }
-        else if (limitPeriod.equals(PER_HOUR))
+        else if (period.equals(QueryLimit.Period.PER_HOUR))
         {
             mResetPeriod = DateUtils.MILLIS_PER_HOUR;
         }
-        else if (limitPeriod.equals(PER_DAY))
+        else if (period.equals(QueryLimit.Period.PER_DAY))
         {
             mResetPeriod = DateUtils.MILLIS_PER_DAY;
         }
         else
         {
-            throw new IllegalArgumentException("Invalid LimitPeriod: " +
-                                               limitPeriod);
+            throw new IllegalArgumentException("Invalid limit period: " +
+                    period);
         }
-        mLimit = limit;
-        mLimitPeriod = limitPeriod;
+        mQueryLimit = queryLimit;
     }
 
     public void setNoQueryLimit()
     {
-        mLimit = Long.MAX_VALUE;
+        mQueryLimit = QueryLimit.NO_QUERY_LIMIT;
         mResetPeriod = 0;
-        mLimitPeriod = null;
     }
 
     public boolean isNoQueryLimit()
     {
-        return (mLimitPeriod == null);
+        return mQueryLimit.hasNoQueryLimit();
     }
 
     public long getLimit()
     {
-        return mLimit;
+        return mQueryLimit.getLimit();
     }
 
-    public LimitPeriod getLimitPeriod()
+    public QueryLimit.Period getLimitPeriod()
     {
-        return mLimitPeriod;
+        return mQueryLimit.getPeriod();
     }
 
     protected long getCurrentCount()
@@ -95,7 +95,7 @@ public class QueryCount
             mLastResetTime = System.currentTimeMillis();
         }
 
-        if (mQueryCount >= mLimit)
+        if (mQueryCount >= getLimit())
             return false;
 
         mQueryCount++;
@@ -123,7 +123,7 @@ public class QueryCount
             return true;
 
         // Reset periods are equal, check the limit
-        if (queryCount.mLimit <= mLimit)
+        if (queryCount.getLimit() <= getLimit())
             return false;
 
         return true;
@@ -132,28 +132,14 @@ public class QueryCount
     public String dump()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
-            .append("limit", mLimit)
-            .append("limitPeriod", mLimitPeriod)
+            .append("limit", mQueryLimit)
             .append("queryCount", mQueryCount)
             .append("resetPeriod", mResetPeriod)
             .append("lastResetTime", mLastResetTime)
             .toString();
     }
 
-    public static final class LimitPeriod extends Enum
-    {
-        public LimitPeriod(String s)
-        {
-            super(s);
-        }
-    }
-
-    public static final LimitPeriod PER_MINUTE = new LimitPeriod("per minute");
-    public static final LimitPeriod PER_HOUR = new LimitPeriod("per hour");
-    public static final LimitPeriod PER_DAY = new LimitPeriod("per day");
-
-    private long mLimit;
-    private LimitPeriod mLimitPeriod;
+    private QueryLimit mQueryLimit;
     private long mResetPeriod;
     private long mQueryCount;
     private long mLastResetTime;

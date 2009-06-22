@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: User.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.User" table="RetsUsers">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsUser_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="firstName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="FirstName" sql-type="varchar(80)" length="80" not-null="true"/>
+        </property>
+
+        <property
+            name="lastName"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="LastName" sql-type="varchar(80)" length="80" not-null="true"/>
+        </property>
+
+        <property
+            name="username"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="UserName" sql-type="varchar(32)" length="32" not-null="true" unique="true"/>
+        </property>
+
+        <property
+            name="passwordMethod"
+            type="org.realtors.rets.server.PasswordMethodType"
+            update="true"
+            insert="true"
+        >
+            <column name="PasswordMethod" sql-type="varchar(255)" length="255" not-null="false"/>
+        </property>
+
+        <property
+            name="password"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Password" sql-type="varchar(80)" length="80" not-null="false"/>
+        </property>
+
+        <property
+            name="agentCode"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="AgentCode" sql-type="varchar(80)" length="80" not-null="false"/>
+        </property>
+
+        <property
+            name="brokerCode"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="BrokerCode" sql-type="varchar(80)" length="80" not-null="false"/>
+        </property>
+
+        <set
+            name="groups"
+            table="UsersXGroups"
+            lazy="true"
+            inverse="false"
+            cascade="none"
+            sort="natural"
+        >
+            <key foreign-key="FK_UsersXGroups_Users_User_ID">
+                <column name="User_ID" sql-type="int" not-null="true"/>
+            </key>
+            <many-to-many
+                class="org.realtors.rets.server.Group"
+                outer-join="auto"
+                foreign-key="FK_UsersXGroups_Groups_Groups_ID"
+            >
+                <column name="Group_ID" sql-type="int" not-null="true"/>
+            </many-to-many>
+        </set>
+
+    </class>
+</hibernate-mapping>

@@ -30,5 +30,5 @@ public interface MetadataFetcher
 
     public String getSystemVersion() throws RetsServerException;
 
-    public Date getSysetmDate() throws RetsServerException;
+    public Date getSystemDate() throws RetsServerException;
 }

@@ -18,15 +18,18 @@ import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.realtors.rets.server.RetsServerException;
 
 public class GetObjectParameters extends TransactionParameters
 {
-    public GetObjectParameters(Map parameterMap)
+    public GetObjectParameters(Map parameterMap) throws RetsServerException
     {
-        mResource = getParameter(parameterMap, "Resource");
-        LOG.debug("Resource:" + mResource);
-        mType = getParameter(parameterMap, "Type");
-        LOG.debug("Type: " + mType);
+        String resource = getParameter(parameterMap, "Resource");
+        setResource(resource);
+        
+        String type = getParameter(parameterMap, "Type");
+        setType(type);
+        
         String id = getParameter(parameterMap, "ID");
         if (id == null)
         {
@@ -37,15 +40,17 @@ public class GetObjectParameters extends TransactionParameters
     }
 
     public GetObjectParameters(String resource, String type, String id)
+            throws RetsServerException
     {
         this(resource, type, id, false);
     }
 
     public GetObjectParameters(String resource, String type, String id,
                                boolean useLocation)
+            throws RetsServerException
     {
-        mResource = resource;
-        mType = type;
+        setResource(resource);
+        setType(type);
         initID(id);
         mUseLocation = useLocation;
     }
@@ -55,9 +60,12 @@ public class GetObjectParameters extends TransactionParameters
         mUseLocation = (locationString != null) && locationString.equals("1");
     }
 
-    private void initID(String id)
+    private void initID(String id) throws RetsServerException
     {
-        LOG.debug("ID: " + id);    
+        if (StringUtils.isBlank(id)) {
+            throw new RetsServerException("Missing required ID parameter.");
+        }
+        LOG.debug("ID: " + id);
         mResourceSets = new ArrayList();
         String[] resourceSets = StringUtils.split(id, ",");
         if (resourceSets.length > 1)
@@ -76,14 +84,23 @@ public class GetObjectParameters extends TransactionParameters
             String[] resourceSetParameter =
                 StringUtils.split(stringResourceSet, ":", 2);
             resourceSet.setResourceEntity(resourceSetParameter[0]);
-            // Split object-id-list into object-id
-            String[] objectIds =
-                StringUtils.split(resourceSetParameter[1], ":");
-            if ((objectIds.length > 1) || ArrayUtils.contains(objectIds, "*"))
-            {
-                mMultipartId = true;
+            
+            if (resourceSetParameter.length == 1) {
+                resourceSet.addObjectId("0");
+                resourceSet.setDoGetPreferredObject(true);
+            } else {
+                // Split object-id-list into object-id
+                String[] objectIds =
+                    StringUtils.split(resourceSetParameter[1], ":");
+                if ((objectIds.length > 1) || ArrayUtils.contains(objectIds, "*"))
+                {
+                    mMultipartId = true;
+                }
+                if (ArrayUtils.contains(objectIds, "0")) {
+                    resourceSet.setDoGetPreferredObject(true);
+                }
+                resourceSet.addObjectIds(objectIds);
             }
-            resourceSet.addObjectIds(objectIds);
             mResourceSets.add(resourceSet);
         }
     }
@@ -93,14 +110,39 @@ public class GetObjectParameters extends TransactionParameters
         return mType;
     }
 
+    private void setType(String type) throws RetsServerException
+    {
+        if (StringUtils.isBlank(type)) {
+            throw new RetsServerException("Missing required Type parameter.");
+        }
+        mType = type;
+        LOG.debug("Type: " + mType);
+    }
+
     public String getResource()
     {
         return mResource;
+    }
+    
+    private void setResource(String resource) throws RetsServerException
+    {
+        if (StringUtils.isBlank(resource)) {
+            throw new RetsServerException("Missing required Resource parameter.");
+        }
+        mResource = resource;
+        LOG.debug("Resource:" + mResource);
     }
 
     public int numberOfResources()
     {
         return mResourceSets.size();
+    }
+
+    public boolean doGetPreferredObject(int resourceIndex)
+    {
+        ResourceSet resourceSet =
+            (ResourceSet) mResourceSets.get(resourceIndex);
+        return resourceSet.doGetPreferredObject();
     }
 
     public String getResourceEntity(int resourceIndex)
@@ -136,7 +178,17 @@ public class GetObjectParameters extends TransactionParameters
     {
         public ResourceSet()
         {
-            mObjectIds = new ArrayList();
+            mObjectIds = new ArrayList/*String*/();
+        }
+        
+        public boolean doGetPreferredObject()
+        {
+            return mDoGetPreferred;
+        }
+
+        public void setDoGetPreferredObject(boolean doGetPreferred)
+        {
+            mDoGetPreferred = doGetPreferred;
         }
 
         public String getResourceEntity()
@@ -154,7 +206,7 @@ public class GetObjectParameters extends TransactionParameters
             mObjectIds.add(objectId);
         }
 
-        public List getObjectIds()
+        public List/*String*/ getObjectIds()
         {
             return mObjectIds;
         }
@@ -164,11 +216,12 @@ public class GetObjectParameters extends TransactionParameters
             mObjectIds.addAll(Arrays.asList(objectIds));
         }
 
+        private boolean mDoGetPreferred;
         private String mResourceEntity;
-        private List mObjectIds;
+        private List/*String*/ mObjectIds;
     }
 
-    private static final Logger LOG =
+    private static final Logger LOG = 
         Logger.getLogger(GetObjectParameters.class);
     private String mType;
     private String mResource;

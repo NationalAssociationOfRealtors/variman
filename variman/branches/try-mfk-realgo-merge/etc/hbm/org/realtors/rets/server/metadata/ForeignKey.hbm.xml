@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ForeignKey.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.ForeignKey" table="RetsMetaForeignKey" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaForeignKey_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="foreignKeyID"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="ForeignKeyID" 
+                sql-type="varchar(32)"
+                length="32"
+                not-null="true"
+                unique="true"
+                index="NDX_RetsMetaForeignKey_ForeignKeyID"
+            />
+        </property>
+
+        <many-to-one
+            name="system"
+            class="org.realtors.rets.server.metadata.MSystem"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaForeignKey_RetsMetaSystem_RetsMetaSystem_ID"
+        >
+            <column name="RetsMetaSystem_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <many-to-one
+            name="parentTable"
+            class="com.realgo.model.metadata.RetsMetaTable"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaForeignKey_RetsMetaTable_ParentTableId"
+        >
+            <column name="ParentTableId" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <many-to-one
+            name="childTable"
+            class="com.realgo.model.metadata.RetsMetaTable"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaForeignKey_RetsMetaTable_ChildTableId"
+        >
+            <column name="ChildTableId" sql-type="int" not-null="true"/>
+        </many-to-one>
+        
+    </class>
+
+</hibernate-mapping>

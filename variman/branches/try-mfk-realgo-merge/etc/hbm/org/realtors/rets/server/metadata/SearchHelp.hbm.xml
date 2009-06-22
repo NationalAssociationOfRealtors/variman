@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: SearchHelp.hbm.xml 26536 2007-07-20 07:21:39Z todd $ -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.realtors.rets.server.metadata.SearchHelp" table="RetsMetaSearchHelp" mutable="false">
+
+        <id name="id" type="java.lang.Long" unsaved-value="null">
+            <column name="RetsMetaSearchHelp_ID" sql-type="int" length="4" not-null="true"/>
+            <generator class="native"/>
+        </id>
+
+        <property
+            name="searchHelpID"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column
+                name="SearchHelpID"
+                sql-type="varchar(32)"
+                length="32"
+                not-null="true"
+                unique="true"
+                index="NDX_RetsMetaSearchHelp_SearchHelpID"
+            />
+        </property>
+
+        <property
+            name="value"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Value" sql-type="varchar(256)" length="256" not-null="true"/>
+        </property>
+
+        <many-to-one
+            name="resource"
+            class="org.realtors.rets.server.metadata.Resource"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            foreign-key="FK_RetsMetaSearchHelp_RetsMetaResource_RetsMetaResource_ID"
+        >
+            <column name="RetsMetaResource_ID" sql-type="int" not-null="true"/>
+        </many-to-one>
+
+        <property
+            name="level"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+        >
+            <column name="Level" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+
+    </class>
+
+</hibernate-mapping>

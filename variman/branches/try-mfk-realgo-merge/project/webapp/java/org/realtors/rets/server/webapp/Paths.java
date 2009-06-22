@@ -21,4 +21,6 @@ public class Paths
 
     public static final String CCT_LOGIN = "/rets/cct/login";
     public static final String CCT_ALT_LOGIN = "/rets/cct/loginAlt";
+    
+    public static final String HPMA_LOGIN = "/server/login";
 }

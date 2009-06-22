@@ -911,7 +911,7 @@ public class MetadataLoader
 
     private MSystem mSystem;
     public static final String CVSID =
-        "$Id: MetadataLoader.java,v 1.15 2004/03/31 15:37:20 dribin Exp $";
+        "$Id: MetadataLoader.java 26415 2007-06-27 20:04:51Z todd $";
 
     private static final Logger LOG = Logger.getLogger(MetadataLoader.class);
     protected Map mClasses;
