@@ -71,6 +71,7 @@ public class ResourceBasedActivationManagerTest {
         final Resource activationResource = context.mock(Resource.class, "activationResource");
         context.checking(new Expectations() {{
             allowing (activationResource).exists(); will(returnValue(exists));
+            allowing (activationResource).getDescription(); will(returnValue("Mock Resource"));
 
         }});
 

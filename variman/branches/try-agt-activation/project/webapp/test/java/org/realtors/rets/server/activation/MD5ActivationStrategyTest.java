@@ -16,26 +16,21 @@ import java.math.BigInteger;
 public class MD5ActivationStrategyTest {
 
     MD5ActivationStrategy activationStrategy = new MD5ActivationStrategy();
-    String name = "testname";
-    String email = "testemail";
+    String host = "127.0.0.1";
+    String email = "test@test.com";
+    String md5hash = "f74fbaa374a1afb2971d12b00da109a2";
 
     @Test
-    public void validActivationCodeReturnsTrue() throws Exception {
+    public void validActivationCodeReturnsTrue() throws Exception {        
         assertTrue("Should have returned true when given a valid hash",
-                activationStrategy.isCodeValid(name, email, createMD5Hash(name, email)));
-    }
+                activationStrategy.isCodeValid(host, email, md5hash));
 
-    private String createMD5Hash(String name, String email) throws Exception {
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
-        String nameAndEmail = name + email;
-        md5.update(nameAndEmail.getBytes());
-        return new BigInteger(1,md5.digest()).toString();
     }
 
     @Test
     public void invalidActivationCodeReturnsFalse() {
         assertFalse("Should have returned false when given an invalid hash",
-                activationStrategy.isCodeValid(name, email, "somecodethatwontwork"));
+                activationStrategy.isCodeValid(host, email, "somecodethatwontwork"));
     }
 
 }

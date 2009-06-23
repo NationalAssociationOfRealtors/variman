@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: atillman
- * Date: Jun 9, 2009
- * Time: 1:38:43 PM
- * To change this template use File | Settings | File Templates.
+ * @web.filter
+ *      name="activation-filter"
+ *      description="Checks to see if Variman has been activated."
+ *
+ * @web.filter-mapping
+ *      url-pattern="/rets/*"
+ *      servlet-name="activation-filter"
  */
 public class ActivationFilter implements Filter  {
 
@@ -25,7 +27,7 @@ public class ActivationFilter implements Filter  {
 
     public static final String ACTIVATION_FILE = "activationFile";
 
-    private long timeout = 3600000;
+    private long timeout = 3600000;    
     private long starttime = 0;
     private ActivationManager activationManager;
 
@@ -48,10 +50,10 @@ public class ActivationFilter implements Filter  {
         this.activationManager = activationManager;
     }
 
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) throws ServletException {               
         activationManager = new ResourceBasedActivationManager(
                 new ServletContextResource(filterConfig.getServletContext(),
-                        filterConfig.getInitParameter(ACTIVATION_FILE)), new MD5ActivationStrategy());
+                        "/WEB-INF/activation.properties"), new MD5ActivationStrategy());
         starttime = System.currentTimeMillis();
     }
 
@@ -65,13 +67,23 @@ public class ActivationFilter implements Filter  {
     }
 
     private void doActivationCheck(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws IOException, ServletException {
-        if(activationManager.isActivated(request.getRemoteHost()) || timeLeft()) {
+            throws IOException, ServletException {        
+        if(activationManager.isActivated(request.getRemoteHost())) {
+            logger.info("Variman is activated.");
             filterChain.doFilter(request, response);
         } else {
-            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-            response.setContentType("text/plain");
-            response.getWriter().print(ACTIVATE_MESSAGE);
+            if(timeLeft()) {
+                logger.warn("Variman needs to be activated or it will stop working after an hour.  " +
+                        "Please visit ADD ACTIVATION URL to get an activation code");
+                filterChain.doFilter(request, response);
+
+            } else {
+                response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+                response.setContentType("text/plain");
+                response.getWriter().print(ACTIVATE_MESSAGE);
+                logger.error("Variman needs to be activated in order to run more than an hour.  " +
+                        "Please visit ADD ACTIVATION URL to get an activation code");
+            }
         }
     }
 

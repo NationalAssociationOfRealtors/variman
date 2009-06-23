@@ -19,27 +19,34 @@ public class ResourceBasedActivationManager implements ActivationManager {
     public static final String VARIMAN_ACTIVATION_CODE = "variman.activation.code";
 
     private final ActivationStrategy activationStrategy;
-    private final Properties activationProperties;
+    private final Resource activationInformation;
 
     public ResourceBasedActivationManager(Resource activationInformation, ActivationStrategy activationStrategy) {
         this.activationStrategy = activationStrategy;
-        if (activationInformation.exists()) {
-            activationProperties = new Properties();
-            try {
-                activationProperties.load(activationInformation.getInputStream());
-            } catch (IOException e) {
-                logger.warn("Unable to load activation information", e);
-            }
-        } else {
-            activationProperties = null;
-        }
+        this.activationInformation = activationInformation;
     }
 
 
     public boolean isActivated(String host) {
-        return activationProperties != null && activationStrategy.isCodeValid(host,               
+        Properties activationProperties = getActivationProperties();   
+        return activationProperties != null && activationStrategy.isCodeValid(host,
                 activationProperties.getProperty(VARIMAN_ACTIVATION_EMAIL),
                 activationProperties.getProperty(VARIMAN_ACTIVATION_CODE));
+    }
 
+    private Properties getActivationProperties() {
+        if (activationInformation.exists()) {
+            Properties activationProperties = new Properties();
+            try {
+                activationProperties.load(activationInformation.getInputStream());
+                return activationProperties;
+            } catch (IOException e) {
+                logger.warn("Unable to load activation information", e);
+                return null;
+            }
+        } else {
+            logger.warn("Unable to locate activation resource: " + activationInformation.getDescription());
+            return null;
+        }
     }
 }
