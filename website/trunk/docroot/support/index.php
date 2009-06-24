@@ -5,7 +5,7 @@
     <h3>Support</h3>
     <p>
       Please join the <a
-        href="http://www.crt.realtors.org/mailman/listinfo/variman-users">variman-users mailing list</a>, and send questions there.
+        href="http://mail.crt.realtors.org/mailman/listinfo/variman-users">variman-users mailing list</a>, and send questions there.
     </p>
     <p>
       If you are having trouble with HTTP digest authentication, try
