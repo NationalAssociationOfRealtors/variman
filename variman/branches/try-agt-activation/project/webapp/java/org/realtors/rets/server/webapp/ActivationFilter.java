@@ -74,7 +74,8 @@ public class ActivationFilter implements Filter  {
         } else {
             if(timeLeft()) {
                 logger.warn("Variman needs to be activated or it will stop working after an hour.  " +
-                        "Please visit ADD ACTIVATION URL to get an activation code");
+                        "Please visit http://www.crt.realtors.org/projects/rets/variman/support/activation.php" +
+                        " to get an activation code");
                 filterChain.doFilter(request, response);
 
             } else {
@@ -82,7 +83,8 @@ public class ActivationFilter implements Filter  {
                 response.setContentType("text/plain");
                 response.getWriter().print(ACTIVATE_MESSAGE);
                 logger.error("Variman needs to be activated in order to run more than an hour.  " +
-                        "Please visit ADD ACTIVATION URL to get an activation code");
+                        "Please visit http://www.crt.realtors.org/projects/rets/variman/support/activation.php" +
+                        " to get an activation code");
             }
         }
     }
