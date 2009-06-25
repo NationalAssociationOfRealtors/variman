@@ -5,14 +5,44 @@
 
 <?php
  $email = $_POST['email'];
- $hash = md5($_POST['host'].$email);
+ $host = $_POST['host'];
+ $hash = md5($host.$email);
  $properties = "#This is your activation file.  Put it in \$VARIMAN_HOME/webapps/WEB-INF\n";
  $properties .= "variman.activation.email=$email\n";
  $properties .= "variman.activation.code=$hash" ;
 
 $message = "Your variman activation file is attached as the file activation.properties.  Please put this file in \$VARIMAN_HOME/webapps/WEB-INF\n";
 
-$results = send_activation($email, "Your Variman Activation File", $message, $properties);
+
+
+if(store_activation($host, $email)) {
+	send_activation($email, "Your Variman Activation File", $message, $properties);
+} else {
+	echo "Could not create activation!";
+	exit();
+}
+
+function store_activation($host, $email){
+	$dbcnx = mysql_connect("localhost", "variman_act", "stuc9A5e");	
+	if($dbcnx) {
+		if(mysql_select_db("variman_activation", $dbcnx)) {		
+			$scrubbed_host = mysql_real_escape_string($host);
+			$scrubbed_email = mysql_real_escape_string($email);
+			$query_sql = "select * from activation_information where host='$scrubbed_host' and email='$scrubbed_email'";
+			$result = mysql_query($query_sql);
+			if($result and mysql_fetch_array($result)) {				
+				return true;
+			} else {
+				$insert_sql = "insert into activation_information(host, email) values('$scrubbed_host','$scrubbed_email')";
+				return mysql_query($insert_sql);
+			}
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
 
 function send_activation($to,$subject,$body,$attachment){
 
