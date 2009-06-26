@@ -15,8 +15,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -213,17 +215,31 @@ public class MetadataPanel extends AdminTab
      */
     private void populateTree(MetadataTreePanel treePanel)
     {
+        Comparator<MetaObject> MetaObjectComparator = new Comparator<MetaObject>()
+            {
+                public int compare (MetaObject one, MetaObject two)
+                {
+                    return one.getId().compareTo(two.getId());
+                }
+            };
+        
         mForeignKeyNode = treePanel.addObject(null, sFOREIGNKEY);
         mResourceNode = treePanel.addObject(null, sRESOURCE);
         
         if (mMetadata != null)
         {
+            MForeignKey [] foreignKeys = mSystem.getMForeignKeys();
+            Arrays.sort(foreignKeys, MetaObjectComparator);
+            
             for (MForeignKey foreignKey : mSystem.getMForeignKeys())
             {
                 treePanel.addObject(mForeignKeyNode, foreignKey);
             }
             
-            for (MResource resource : mSystem.getMResources())
+            MResource [] resources = mSystem.getMResources();
+            Arrays.sort(resources, MetaObjectComparator);
+            
+            for (MResource resource : resources)
             {
                 MetadataTreeNode editMaskNode = null;
                 MetadataTreeNode lookupNode = null;
@@ -239,27 +255,39 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the RETS classes and populate the tree.
                  */
-                for (MClass clazz : resource.getMClasses())
+                MClass [] classes = resource.getMClasses();
+                Arrays.sort(classes, MetaObjectComparator);
+                
+                for (MClass clazz : classes)
                 {
                     MetadataTreeNode classNode = treePanel.addObject(resourceNode, clazz);
                     /*
                      * Iterate over the tables for this class.
                      */
-                    for (MTable table : clazz.getMTables())
+                    MTable [] tables = clazz.getMTables();
+                    Arrays.sort(tables, MetaObjectComparator);
+                    
+                    for (MTable table : tables)
                     {
                         treePanel.addObject(classNode, table);
                     }
                     /*
                      * Iterate over the updates for this class.
                      */
-                    for (MUpdate update : clazz.getMUpdates())
+                    MUpdate [] updates = clazz.getMUpdates();
+                    Arrays.sort(updates, MetaObjectComparator);
+                    
+                    for (MUpdate update : updates)
                     {
                         MetadataTreeNode node = treePanel.addObject(classNode, sUPDATE);
                         MetadataTreeNode updateNode = treePanel.addObject(node, update);
                         /*
                          * Iterate over the update types for this update.
                          */
-                        for (MUpdateType updateType: update.getMUpdateTypes())
+                        MUpdateType [] updateTypes = update.getMUpdateTypes();
+                        Arrays.sort(updateTypes, MetaObjectComparator);
+                      
+                        for (MUpdateType updateType: updateTypes)
                         {
                             treePanel.addObject(updateNode, updateType);
                         }
@@ -268,14 +296,20 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the lookups.
                  */
-                for (MLookup lookup : resource.getMLookups())
+                MLookup [] lookups = resource.getMLookups();
+                Arrays.sort(lookups, MetaObjectComparator);
+                
+                for (MLookup lookup : lookups)
                 {
                     if (lookupNode == null)
                         lookupNode = treePanel.addObject(resourceNode, sLOOKUP);
                     
                     MetadataTreeNode node = treePanel.addObject(lookupNode, lookup);
                     
-                    for (MLookupType lookupType : lookup.getMLookupTypes())
+                    MLookupType [] lookupTypes = lookup.getMLookupTypes();
+                    Arrays.sort(lookupTypes, MetaObjectComparator);
+                    
+                    for (MLookupType lookupType : lookupTypes)
                     {
                         treePanel.addObject(node, lookupType);
                     }
@@ -283,7 +317,10 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the objects.
                  */
-                for (MObject obj : resource.getMObjects())
+                MObject [] objects = resource.getMObjects();
+                Arrays.sort(objects, MetaObjectComparator);
+                
+                for (MObject obj : objects)
                 {
                     if (objectNode == null)
                         objectNode = treePanel.addObject(resourceNode, sOBJECT);
@@ -293,7 +330,10 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the edit masks.
                  */
-                for (MEditMask editMask : resource.getMEditMasks())
+                MEditMask [] editMasks = resource.getMEditMasks();
+                Arrays.sort(editMasks, MetaObjectComparator);
+                
+                for (MEditMask editMask : editMasks)
                 {
                     if (editMaskNode == null)
                         editMaskNode = treePanel.addObject(resourceNode, sEDITMASK);
@@ -303,7 +343,10 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the search help.
                  */
-                for (MSearchHelp searchHelp : resource.getMSearchHelps())
+                MSearchHelp [] searchHelps = resource.getMSearchHelps();
+                Arrays.sort(searchHelps, MetaObjectComparator);
+                
+                for (MSearchHelp searchHelp : searchHelps)
                 {
                     if (searchHelpNode == null)
                         searchHelpNode = treePanel.addObject(resourceNode, sSEARCHHELP);
@@ -313,7 +356,10 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the update help.
                  */
-                for (MUpdateHelp updateHelp : resource.getMUpdateHelps())
+                MUpdateHelp [] updateHelps = resource.getMUpdateHelps();
+                Arrays.sort(updateHelps, MetaObjectComparator);
+                
+                for (MUpdateHelp updateHelp : updateHelps)
                 {
                     if (updateHelpNode == null)
                         updateHelpNode = treePanel.addObject(resourceNode, sUPDATEHELP);
@@ -323,7 +369,10 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the validation lookups.
                  */
-                for (MValidationLookup lookup : resource.getMValidationLookups())
+                MValidationLookup [] validationLookups = resource.getMValidationLookups();
+                Arrays.sort(validationLookups, MetaObjectComparator);
+                
+                for (MValidationLookup lookup : validationLookups)
                 {
                     if (validationLookupNode == null)
                         validationLookupNode = treePanel.addObject(resourceNode, sVALIDATIONLOOKUP);
@@ -332,7 +381,10 @@ public class MetadataPanel extends AdminTab
                     /*
                      * Enumerate the validation lookup types.
                      */
-                    for (MValidationLookupType lookupType : lookup.getMValidationLookupTypes())
+                    MValidationLookupType [] validationLookupTypes = lookup.getMValidationLookupTypes();
+                    Arrays.sort(validationLookupTypes, MetaObjectComparator);
+                    
+                    for (MValidationLookupType lookupType : validationLookupTypes)
                     {
                         treePanel.addObject(node, lookupType);
                     }
@@ -340,7 +392,10 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the validation externals.
                  */
-                for (MValidationExternal validation : resource.getMValidationExternal())
+                MValidationExternal [] validationExternals = resource.getMValidationExternal();
+                Arrays.sort(validationExternals, MetaObjectComparator);
+                
+                for (MValidationExternal validation : validationExternals)
                 {
                     if (validationExternalNode == null)
                         validationExternalNode = treePanel.addObject(resourceNode, sVALIDATIONEXTERNAL);
@@ -349,7 +404,10 @@ public class MetadataPanel extends AdminTab
                     /*
                      * Enumerate the validation external types.
                      */
-                    for (MValidationExternalType externalType : validation.getMValidationExternalTypes())
+                    MValidationExternalType [] validationExternalTypes = validation.getMValidationExternalTypes();
+                    Arrays.sort(validationExternalTypes, MetaObjectComparator);
+                    
+                    for (MValidationExternalType externalType : validationExternalTypes)
                     {
                         treePanel.addObject(node, externalType);
                     }
@@ -357,7 +415,10 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the validation expressions.
                  */
-                for (MValidationExpression validationExpression : resource.getMValidationExpressions())
+                MValidationExpression [] validationExpressions = resource.getMValidationExpressions();
+                Arrays.sort(validationExpressions, MetaObjectComparator);
+                
+                for (MValidationExpression validationExpression : validationExpressions)
                 {
                     if (validationExpressionNode == null)
                         validationExpressionNode = treePanel.addObject(resourceNode, sVALIDATIONEXPRESSION);

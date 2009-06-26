@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
 
 import org.apache.commons.httpclient.HeaderElement;
 import org.apache.commons.httpclient.NameValuePair;
@@ -12,7 +13,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.realtors.rets.common.util.CaseInsensitiveTreeMap;
 
 public class GetObjectResponse{
 	private static final int DEFAULT_BUFFER_SIZE = 8192;
@@ -31,7 +31,7 @@ public class GetObjectResponse{
 			/* no op */
 		}
 	};
-    private final Map headers;
+    private final Map<String, String> headers;
     private final InputStream inputStream;
 	private final boolean isMultipart;
 	/** Indicate whether the response was empty */
@@ -39,11 +39,12 @@ public class GetObjectResponse{
 	/** Indicate whether this GetObjectResponse is exhausted, i.e. has no objects */
 	private boolean exhausted;
 
-	public GetObjectResponse(Map headers, InputStream in) throws RetsException {
+	public GetObjectResponse(Map<String, String> headers, InputStream in) throws RetsException {
 		this.emptyResponse = false;
 		this.exhausted = false;
-		this.headers = new CaseInsensitiveTreeMap(headers);
-	    this.isMultipart = getType().contains("multipart");
+		this.headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+        this.headers.putAll(headers);
+        this.isMultipart = getType().contains("multipart");
 	    this.inputStream = in;
 	    
 	    boolean isXml = getType().equals("text/xml");

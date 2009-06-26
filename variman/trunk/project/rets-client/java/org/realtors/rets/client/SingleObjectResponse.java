@@ -2,8 +2,8 @@ package org.realtors.rets.client;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.TreeMap;
 
-import org.realtors.rets.common.util.CaseInsensitiveTreeMap;
 
 /**
  * Representation of a single object returned
@@ -19,12 +19,13 @@ public class SingleObjectResponse {
 	public static final String OBJECT_ID = "Object-ID";
 	public static final String CONTENT_ID = "Content-ID";
 
-	private Map headers;
+	private Map<String, String> headers;
 	private InputStream inputStream;
 
-	public SingleObjectResponse(Map headers, InputStream in) {
-		this.headers = new CaseInsensitiveTreeMap(headers);
-		this.inputStream = in;
+	public SingleObjectResponse(Map<String, String> headers, InputStream in) {
+		this.headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+        this.headers.putAll(headers);
+        this.inputStream = in;
 	}
 
 	public String getType() {

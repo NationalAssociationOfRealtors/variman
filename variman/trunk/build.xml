@@ -104,10 +104,13 @@
     <pathelement path="${nekohtml.jar}"/>
     <pathelement path="${antlr.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
+    <pathelement path="${spring.jar}"/>
   </path>
 
   <path id="webapp.test.path">
     <path refid="webapp.path"/>
+    <fileset dir="${hamcrest.lib}" includes="*.jar"/>
+    <fileset dir="${jmock.lib}" includes="*.jar"/>
     <pathelement location="build/hibernate/test/classes"/>
     <pathelement location="build/rets-server/variman/WEB-INF/classes"/>
   </path>
@@ -167,6 +170,7 @@
     <mkdir dir="build/hibernate/classes"/>
     <mkdir dir="build/hibernate/test/classes"/>
     <mkdir dir="build/hibernate/doc"/>
+    <mkdir dir="build/hibernate/xdoclet"/>
     <mkdir dir="build/embedded/classes"/>
     <mkdir dir="build/importer/classes"/>
     <mkdir dir="build/importer/lib"/>
@@ -897,6 +901,7 @@
         <pathelement location="build/admin/test/classes"/>
         <path refid="hibernate.path"/>
         <path refid="webapp.path"/>
+        <path refid="webapp.test.path"/>
         <path refid="lib.path"/>
         <path refid="embedded.path"/>
         <pathelement path="${servlet.jar}"/>
