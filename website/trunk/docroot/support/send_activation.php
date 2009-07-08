@@ -7,11 +7,11 @@
  $email = $_POST['email'];
  $host = $_POST['host'];
  $hash = md5($host.$email);
- $properties = "#This is your activation file.  Put it in \$VARIMAN_HOME/webapps/WEB-INF\n";
+ $properties = "#This is your activation file.  Put it in \$VARIMAN_HOME/WEB-INF\n";
  $properties .= "variman.activation.email=$email\n";
  $properties .= "variman.activation.code=$hash" ;
 
-$message = "Your variman activation file is attached as the file activation.properties.  Please put this file in \$VARIMAN_HOME/webapps/WEB-INF\n";
+$message = "Your variman activation file is attached as the file activation.properties.  Please put this file in \$VARIMAN_HOME/WEB-INF\n";
 
 
 
