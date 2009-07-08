@@ -71,4 +71,4 @@ $message = "This is a multi-part message in MIME format.\n\n".
 
 <h3>Variman Activation</h3>
 <p>The activation file has been sent to you via email at the address '<?php echo $email?>'.  This email will have the file "activation.properties" attached to it.  
-Put it in your Variman install in the directory "$VARIMAN_HOME/webapp/WEB-INF".  </p>
+Put it in your Variman install in the directory "$VARIMAN_HOME/WEB-INF".  </p>
