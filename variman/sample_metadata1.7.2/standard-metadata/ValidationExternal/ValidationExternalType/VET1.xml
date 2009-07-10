@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<METADATA-VALIDATION_EXTERNAL_TYPE Resource="Property" ValidationExternalName="VET1" Version="1.01.000" Date="2009-01-20T00:00:00Z">
-<COLUMNS>	MetadataEntryID	SearchField	DisplayField	ResultFields	</COLUMNS>
-<DATA>	AgentValidationExt	AgentID, AgentCode	AgentName, OfficeName	SaleAgentID=AgentID, SaleAgentName=AgentName, SaleOfficeID=OfficeID, SaleOfficeName=OfficeName	</DATA>
-</METADATA-VALIDATION_EXTERNAL_TYPE>

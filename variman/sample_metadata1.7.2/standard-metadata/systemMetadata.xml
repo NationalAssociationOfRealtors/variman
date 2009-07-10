@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE METADATA-SYSTEM SYSTEM "http://www.rets.org/dtd/2008/08/rets-compact-metadata-1_7_2.dtd">
-<METADATA-SYSTEM Version="01.01.000" Date="2009-01-20T00:00:00Z">
-<SYSTEM SystemID="CRT_RETS" SystemDescription="Center for REALTOR Technology" TimeZoneOffset="-06:00"/>
-<COMMENTS>The reference implementation of a RETS Server</COMMENTS>
-</METADATA-SYSTEM>

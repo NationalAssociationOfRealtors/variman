@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<METADATA-VALIDATION_LOOKUP Resource="Property" Version="1.01.000" Date="2009-01-20T00:00:00Z">
-<COLUMNS>	MetadataEntryID	ValidationLookupName	Parent1Field	Parent2Field	Version	Date	</COLUMNS>
-<DATA>	SchoolArea	School	Area	Subarea	1.01.000	2009-01-20T00:00:00Z	</DATA>
-</METADATA-VALIDATION_LOOKUP>

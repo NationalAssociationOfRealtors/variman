@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<METADATA-LOOKUP_TYPE Resource="Property" Lookup="MSCHOOL" Version="1.01.000" Date="2009-01-20T00:00:00Z">
-<COLUMNS>	MetadataEntryID	LongValue	ShortValue	Value	</COLUMNS>
-<DATA>	Aurora306	Aurora 306	306	306	</DATA>
-<DATA>	Batavia306	Batavia 300	300	300	</DATA>
-<DATA>	Elgin42	Elgin 42	42	42	</DATA>
-<DATA>	Geneva304	Geneva 304	304	304	</DATA>
-<DATA>	StCharles303	St. Charles 303	303	303	</DATA>
-</METADATA-LOOKUP_TYPE>
