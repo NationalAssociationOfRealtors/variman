@@ -93,7 +93,7 @@ public class CompactFormatter implements SearchResultsFormatter
     private void formatRow(SearchFormatterContext context, int numColumns)
         throws SQLException
     {
-        DataRowBuilder row = new DataRowBuilder(context.getWriter(), DELIMITER);
+        DataRowBuilder row = new DataRowBuilder(context.getWriter(), DELIMITER, DELIMITER_REPL);
         
         row.begin();
         for (int i = 0; i < numColumns; i++)
@@ -171,6 +171,7 @@ public class CompactFormatter implements SearchResultsFormatter
         new LookupDecoding("decode lookups");
 
     private static final String DELIMITER = "\t";
+    private static final String DELIMITER_REPL = "    ";
     private LookupDecoding mLookupDecoding;
     private RetsVersion mRetsVersion;
     private static final AttrDate mAttrDate = new AttrDate();

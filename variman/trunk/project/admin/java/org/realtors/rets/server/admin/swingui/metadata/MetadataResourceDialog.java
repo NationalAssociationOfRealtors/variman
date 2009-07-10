@@ -130,12 +130,12 @@ public class MetadataResourceDialog extends MetadataDialog
                  * This will be one of the date versions. If the value is empty, populate
                  * it from the System version date.
                  */
-                      component = new JTextField(TEXT_WIDTH);
+                component = new JTextField(TEXT_WIDTH);
                 if (value == null || value.length() == 0)
                 {
                     value = metadata.getSystem().getAttributeAsString(MSystem.DATE);
-                    ((JTextField)component).setText(value);
                 }
+                ((JTextField)component).setText(value);
             }
             else
             if (attrType instanceof AttrEnum)
@@ -159,7 +159,7 @@ public class MetadataResourceDialog extends MetadataDialog
                  * This is the class count field. Determine it and display it, but make the box
                  * uneditable.
                  */
-                      component = new JTextField(TEXT_WIDTH);
+                component = new JTextField(TEXT_WIDTH);
                 value = Integer.toString(resource.getClassCount());
                 ((JTextField)component).setText(value);
                 ((JTextField)component).setEnabled(false);
@@ -176,8 +176,8 @@ public class MetadataResourceDialog extends MetadataDialog
                 if (value == null || value.length() == 0)
                 {
                     value = metadata.getSystem().getAttributeAsString(MSystem.VERSION);
-                    ((JTextField)component).setText(value);
                 }
+                ((JTextField)component).setText(value);
             }
             else
             {

@@ -23,13 +23,14 @@ public class DataRowBuilder
 
     public DataRowBuilder(PrintWriter writer)
     {
-        this(writer, "\t");
+        this(writer, "\t", "    ");
     }
 
-    public DataRowBuilder(PrintWriter writer, String delimiter)
+    public DataRowBuilder(PrintWriter writer, String delimiter, String delimiterRepl)
     {
         mWriter = writer;
         mDelimiter = delimiter;
+        mDelimiterRepl = delimiterRepl;
     }
 
     public void begin()
@@ -46,7 +47,9 @@ public class DataRowBuilder
     {
         if (object != null)
         {
-            mWriter.print(StringEscapeUtils.escapeXml(object.toString()));
+            String data = object.toString();
+            data = data.replace(mDelimiter, mDelimiterRepl);
+            mWriter.print(StringEscapeUtils.escapeXml(data));
         }
         mWriter.print(mDelimiter);
     }
@@ -124,4 +127,6 @@ public class DataRowBuilder
 
     private PrintWriter mWriter;
     private String mDelimiter;
+    private String mDelimiterRepl;
+
 }

@@ -39,11 +39,17 @@ public class DataRowBuilderTest extends TestCase
         row.append(list);
         row.append((Collection) null);
 
+        // Append a string with the delimiter
+        row.append("a\tb");
+        row.append((String) null);
+
         assertEquals(
             "a&amp;b&lt;c&gt;d&quot;e\t\t" +
             "f&amp;g&lt;h&gt;i&quot;j\t\t" +
             "5\t" +
-            "k&amp;,l&lt;,m&gt;,n&quot;,o\t\t",
+            "k&amp;,l&lt;,m&gt;,n&quot;,o\t\t" +
+            "a    b\t\t"
+            ,
             formatted.toString());
     }
 }

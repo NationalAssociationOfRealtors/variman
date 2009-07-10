@@ -30,7 +30,7 @@ import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 public abstract class MetadataBuilder {
 	protected MetadataBuilder() {
-		this.mStrict = false;
+		this.mStrict = MetaObject.DEFAULT_PARSING;
 	}
 
 	public boolean isStrict() {
