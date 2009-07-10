@@ -189,11 +189,11 @@ COPY agents (id, first_name, last_name, office_phone, cell_phone, url) FROM stdi
 --
 
 COPY commercial_properties (id, agent_id, street_number, street_direction, street_name, city, state, zip, county, board, sqft, status, list_date, list_price, contract_date, close_date, close_price, modification_timestamp, building_number, building_name, year_built, number_of_floors, tenency_type) FROM stdin;
-8	1	875	N	Michigan Ave.	Chicago	IL	60611	Cook	ChicagoFakeCommercialMLS	325000	A	2009-02-12	125000000	\N	\N	\N	\N	\N	John Hancock Center	1970	100	Mixed
-9	1	150	N	Michigan Ave.	Chicago	IL	60611	Cook	ChicagoFakeCommercialMLS	110000	A	2008-06-06	50000000	\N	\N	\N	\N	\N	Smurfit-Stone Building	1983	41	Office
-10	1	1	N	Wacker Dr.	Chicago	IL	60606	Cook	ChicagoFakeCommercialMLS	200000	A	2009-03-15	5000000	\N	\N	\N	\N	\N	UBS Tower	1999	40	Office
-7	1	233	S	Wacker Dr.	Chicago	IL	60606	Cook	ChicagoFakeCommercialMLS	350000	C	2008-11-12	100000000	\N	2009-05-01	95000000	\N	\N	Sears Tower	1974	110	Mixed
-6	1	430	N	Michigan Ave	Chicago	IL	60611	Cook	ChicagoFakeCommercialMLS	40000	A	2009-01-01	5000000	\N	\N	\N	\N	\N	REALTOR Building	1963	12	Office
+9	1	150	N	Michigan Ave.	Chicago	IL	60611	Cook	ChicagoFakeCommercialMLS	110000	A	2008-06-06	50000000	\N	\N	\N	2009-02-01 00:00:00	\N	Smurfit-Stone Building	1983	41	Office
+10	1	1	N	Wacker Dr.	Chicago	IL	60606	Cook	ChicagoFakeCommercialMLS	200000	A	2009-03-15	5000000	\N	\N	\N	2009-02-01 00:00:00	\N	UBS Tower	1999	40	Office
+7	1	233	S	Wacker Dr.	Chicago	IL	60606	Cook	ChicagoFakeCommercialMLS	350000	C	2008-11-12	100000000	\N	2009-05-01	95000000	2009-02-01 00:00:00	\N	Sears Tower	1974	110	Mixed
+6	1	430	N	Michigan Ave	Chicago	IL	60611	Cook	ChicagoFakeCommercialMLS	40000	A	2009-01-01	5000000	\N	\N	\N	2009-02-01 00:00:00	\N	REALTOR Building	1963	12	Office
+8	1	875	N	Michigan Ave.	Chicago	IL	60611	Cook	ChicagoFakeCommercialMLS	325000	A	2009-02-12	125000000	\N	\N	\N	2008-12-31 00:00:00	\N	John Hancock Center	1970	100	Mixed
 \.
 
 
@@ -210,11 +210,11 @@ COPY properties (id, agent_id, street_number, street_direction, street_name, cit
 --
 
 COPY residential_properties (id, agent_id, street_number, street_direction, street_name, city, state, zip, county, board, sqft, status, list_date, list_price, contract_date, close_date, close_price, modification_timestamp, rooms, garage, year_built, living_area, unit, beds, baths) FROM stdin;
-1	1	83	\N	Fox Hill	Buffalo Grove	IL	60089	Lake	TestMLS	4000	A	2008-05-30	380000	\N	\N	\N	\N	12	3	1985	2000	\N	4	3
-2	1	1250	W	Armitage Ave	Chicago	IL	60613	Cook	FakeMLS	900	A	2009-03-23	250000	\N	\N	\N	\N	8	1	1975	900	22B	3	1
-4	1	120	\N	Main St.	Evenston	IL	60533	Cook	TestMLS	3000	A	2008-10-03	425000	\N	\N	\N	\N	14	3	1922	2500	\N	5	3
-5	1	5429	S	Harper Ave.	Chicago	IL	60615	Cook	FakeMLS	1000	A	2009-02-22	150000	\N	\N	\N	\N	5	\N	1915	1000	2N	1	1
-3	1	625	N	Michigan Ave.	Chicago	IL	60611	Cook	FakeMLS	1100	C	2009-01-22	250000	\N	2009-04-15	233000	\N	9	2	1978	1100	6	4	3
+1	1	83	\N	Fox Hill	Buffalo Grove	IL	60089	Lake	TestMLS	4000	A	2008-05-30	380000	\N	\N	\N	2008-12-31 00:00:00	12	3	1985	2000	\N	4	3
+2	1	1250	W	Armitage Ave	Chicago	IL	60613	Cook	FakeMLS	900	A	2009-03-23	250000	\N	\N	\N	2009-02-01 00:00:00	8	1	1975	900	22B	3	1
+4	1	120	\N	Main St.	Evenston	IL	60533	Cook	TestMLS	3000	A	2008-10-03	425000	\N	\N	\N	2009-02-01 00:00:00	14	3	1922	2500	\N	5	3
+5	1	5429	S	Harper Ave.	Chicago	IL	60615	Cook	FakeMLS	1000	A	2009-02-22	150000	\N	\N	\N	2008-12-31 00:00:00	5	\N	1915	1000	2N	1	1
+3	1	625	N	Michigan Ave.	Chicago	IL	60611	Cook	FakeMLS	1100	C	2009-01-22	250000	\N	2009-04-15	233000	2008-12-31 00:00:00	9	2	1978	1100	6	4	3
 \.
 
 

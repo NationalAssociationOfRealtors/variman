@@ -4,123 +4,123 @@
 <COMMENTS></COMMENTS>
 </METADATA-SYSTEM>
 <METADATA-FOREIGN_KEYS Version="1.00.00001" Date="2003-08-18T17:00:00Z">
-<COLUMNS>	ForeignKeyID	ParentResourceID	ParentClassID	ParentSystemName	ChildResourceID	ChildClassID	ChildSystemName	ConditionalParentField	ConditionalParentValue	</COLUMNS>
-<DATA>	ResPropertyAgent	Agent	AGT	AgentID	Property	RES	AgentID			</DATA>
+<COLUMNS>	ChildClassID	ChildResourceID	ChildSystemName	ConditionalParentField	ConditionalParentValue	ForeignKeyID	ParentClassID	ParentResourceID	ParentSystemName	</COLUMNS>
+<DATA>	RES	Property	AgentID			ResPropertyAgent	AGT	Agent	AgentID	</DATA>
 </METADATA-FOREIGN_KEYS>
 <METADATA-RESOURCE Version="1.00.00001" Date="2003-08-18T17:00:00Z">
-<COLUMNS>	ResourceID	StandardName	VisibleName	Description	KeyField	ClassCount	ClassVersion	ClassDate	ObjectVersion	ObjectDate	SearchHelpVersion	SearchHelpDate	EditMaskVersion	EditMaskDate	LookupVersion	LookupDate	UpdateHelpVersion	UpdateHelpDate	ValidationExpressionVersion	ValidationExpressionDate	ValidationLookupVersion	ValidationLookupDate	ValidationExternalVersion	ValidationExternalDate	</COLUMNS>
-<DATA>	Property	Property	Property	Property Database	ListingID	2	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	</DATA>
-<DATA>	Agent	Agent	Agent	Agent Database	AgentID	1	1.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	</DATA>
+<COLUMNS>	ClassCount	ClassDate	ClassVersion	Description	EditMaskDate	EditMaskVersion	KeyField	LookupDate	LookupVersion	ObjectDate	ObjectVersion	ResourceID	SearchHelpDate	SearchHelpVersion	StandardName	UpdateHelpDate	UpdateHelpVersion	ValidationExpressionDate	ValidationExpressionVersion	ValidationExternalDate	ValidationExternalVersion	ValidationLookupDate	ValidationLookupVersion	VisibleName	</COLUMNS>
+<DATA>	1	2002-03-20T12:03:38Z	1.00.00000	Agent Database	2002-03-20T12:03:38Z	0.00.00000	AgentID	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	Agent	2002-03-20T12:03:38Z	0.00.00000	Agent	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	2002-03-20T12:03:38Z	0.00.00000	Agent	</DATA>
+<DATA>	2	2002-03-20T12:03:38Z	1.00.00000	Property Database	2002-03-20T12:03:38Z	1.00.00000	ListingID	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	Property	2002-03-20T12:03:38Z	1.00.00000	Property	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	Property	</DATA>
 </METADATA-RESOURCE>
-<METADATA-CLASS Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property">
-<COLUMNS>	ClassName	VisibleName	StandardName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	ClassTimeStamp	DeletedFlagField	DeletedFlagValue	HasKeyIndex	X-DBName	</COLUMNS>
-<DATA>	COM	Commercial	CommercialProperty	Commercial Property	1.00.00001	2003-08-18T17:00:00Z	1.00.00001	2003-08-18T17:00:00Z				0	commercial_properties	</DATA>
-<DATA>	RES	Single Family	ResidentialProperty	Single Family Residential	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z				0	residential_properties	</DATA>
+<METADATA-CLASS Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Agent">
+<COLUMNS>	ClassName	ClassTimeStamp	DeletedFlagField	DeletedFlagValue	Description	HasKeyIndex	StandardName	TableDate	TableVersion	UpdateDate	UpdateVersion	VisibleName	X-DBName	</COLUMNS>
+<DATA>	AGT				Agent	0	REAgent	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	Agent	agents	</DATA>
 </METADATA-CLASS>
-<METADATA-TABLE Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property" Class="COM">
-<COLUMNS>	MetadataEntryID	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	ModTimeStamp	ForeignKeyName	ForeignField	KeyQuery	KeySelect	InKeyIndex	</COLUMNS>
-<DATA>	BuildingName	BuildingName		Building Name	building_name	Bld Nm	50	Character	0	0		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	Status	Status	ListingStatus	Listing Status	status	Status	12	Character	0	1	Lookup	Left	0		Status	0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	AgentID	AgentID	AgentID	Agend ID	agent_id	aid	12	Int	0	1		Left	0			0		0	0	0	0	0		0	0	PropertyAgent		0	0	0	</DATA>
-<DATA>	ListDate	ListDate	ListDate	Listing Date	list_date	LstDate	10	Date	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	State	State	StateOrProvince	State Or Province	state	State	24	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	ZipCode	ZipCode	PostalCode	Zip/Postal Code	zip	Zip	10	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	City	City	City	City	city	City	24	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	ContractDate	ContractDate	ContractDate	Contract Date	contract_date	Con Date	10	Date	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	SqFt	SqFt		Square Footage	sqft	SqFt	15	Decimal	5	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	ClosePrice	ClosePrice	ClosePrice	Close Price	close_price	Cls Pr	10	Int	0	1	Currency	Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	County	County	County	County	county	County	24	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	YearBuilt	YearBuilt	YearBuilt	Year Built	year_built	Year	4	Int	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	StreetNumber	StreetNumber	StreetNumber	Street Number	street_number	StNum	12	Character	0	0		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	TenencyType	TenencyType		Tenency Type	tenency_type	Tenency	10	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	StreetDirection	StreetDirection	StreetDirectionPrefix	Street Direction Prefix	street_direction	StreetDir	12	Character	0	0		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	NumberOfFloors	NumberOfFloors		Number of Floors	number_of_floors	Floors	10	Int	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	BuildingNumber	BuildingNumber		Building Number	building_number	Bld No	12	Character	0	0		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	Board	Board	Board	Local Board	board	Board	24	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	ListPrice	ListPrice	ListPrice	Listing Price	list_price	Lst Pr	10	Int	0	1	Currency	Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	ListingID	ListingID	ListingID	ListingID	id	ID	12	Int	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	ModificationTimestamp	ModificationTimestamp	ModificationTimestamp	Modification Timestamp	modification_timestamp	Mod TS	24	DateTime	0	1		Left	0			0		0	0	0	3	0		0	0			0	0	0	</DATA>
-<DATA>	StreetName	StreetName	StreetName	Street Name	street_name	StName	24	Character	0	0		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	CloseDate	CloseDate	CloseDate	Close Date	close_date	Cls Dt	10	DateTime	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
+<METADATA-TABLE Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Agent" Class="AGT">
+<COLUMNS>	Alignment	DataType	DBName	Default	EditMaskID	ForeignField	ForeignKeyName	Index	InKeyIndex	Interpretation	KeyQuery	KeySelect	LongName	LookupName	Maximum	MaximumLength	MaxSelect	MetadataEntryID	Minimum	ModTimeStamp	Precision	Required	Searchable	SearchHelpID	ShortName	StandardName	SystemName	Unique	Units	UseSeparator	</COLUMNS>
+<DATA>	Left	Character	cell_phone	0				0	0		0	0	Agent Cell Phone		0	11	0	CellPhone	0	0	0	0	1		Cell	ListAgentCellPhone	CellPhone	0		0	</DATA>
+<DATA>	Left	Character	office_phone	0				0	0		0	0	Agent Office Phone		0	11	0	OfficePhone	0	0	0	0	1		Office	ListAgentOfficePhone	OfficePhone	0		0	</DATA>
+<DATA>	Left	Character	first_name	2				0	0		0	0	First Name		0	12	0	FirstName	0	0	0	0	1		FName	ListAgentFirstName	FirstName	0		0	</DATA>
+<DATA>	Left	Character	last_name	3				0	0		0	0	Last Name		0	18	0	LastName	0	0	0	0	1		LName	ListAgentLastName	LastName	0		0	</DATA>
+<DATA>	Left	Character	url	4				0	0		0	0	Agent Website		0	40	0	URL	0	0	0	0	1		URL	ListAgentWWW	URL	0		0	</DATA>
+<DATA>	Left	Character	id	1				0	0		0	0	Agent ID		0	7	0	AgentID	1	0	0	1	1		AID	ListAgentAgentID	AgentID	1		0	</DATA>
 </METADATA-TABLE>
+<METADATA-CLASS Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property">
+<COLUMNS>	ClassName	ClassTimeStamp	DeletedFlagField	DeletedFlagValue	Description	HasKeyIndex	StandardName	TableDate	TableVersion	UpdateDate	UpdateVersion	VisibleName	X-DBName	</COLUMNS>
+<DATA>	RES	ModificationTimestamp			Single Family Residential	0	ResidentialProperty	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	Single Family	residential_properties	</DATA>
+<DATA>	COM	ModificationTimestamp			Commercial Property	0	CommercialProperty	2003-08-18T17:00:00Z	1.00.00001	2003-08-18T17:00:00Z	1.00.00001	Commercial	commercial_properties	</DATA>
+</METADATA-CLASS>
 <METADATA-TABLE Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property" Class="RES">
-<COLUMNS>	MetadataEntryID	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	ModTimeStamp	ForeignKeyName	ForeignField	KeyQuery	KeySelect	InKeyIndex	</COLUMNS>
-<DATA>	Status	Status	ListingStatus	Listing Status	status	Status	12	Character	0	1	Lookup	Left	0		Status	0		0	0	0	10	1		0	0			0	0	0	</DATA>
-<DATA>	Rooms	Rooms	TotalRooms	TotalRooms	rooms	Rooms	8	Int	0	1		Left	0			0		0	0	0	20	0		0	0			0	0	0	</DATA>
-<DATA>	ZipCode	ZipCode	PostalCode	Zip Code	zip	Zip	10	Character	0	0		Left	0			0		0	0	0	16	0		0	0			0	0	0	</DATA>
-<DATA>	City	City	City	City	city	City	24	Character	0	1		Left	0			0		0	0	0	13	0		0	0			0	0	0	</DATA>
-<DATA>	ContractDate	ContractDate	ContractDate	Contract Date	contract_date	Con Date	10	Date	0	1		Left	0			0		0	0	0	2	0	DATE_SEARCH_HELP	0	0			0	0	0	</DATA>
-<DATA>	ClosePrice	ClosePrice	ClosePrice	Close Price	close_price	Cls Pr	8	Int	0	1	Currency	Right	1			0		0	14	0	4	0		0	0			0	0	0	</DATA>
-<DATA>	County	County	County	County	county	County	24	Character	0	1		Left	0			0		0	0	0	14	0		0	0			0	0	0	</DATA>
-<DATA>	Garage	Garage	Garage	Garage	garage	Garage	8	Int	0	1		Left	0			0		0	0	0	18	0		0	0			0	0	0	</DATA>
-<DATA>	YearBuilt	YearBuilt	YearBuilt	YearBuilt	year_built	YearBuilt	4	Int	0	1		Left	0			0		0	0	0	17	0		0	0			0	0	0	</DATA>
-<DATA>	StreetNumber	StreetNumber	StreetNumber	Street Number	street_number	St Num	12	Character	0	0		Left	0			0		0	0	0	10	0		0	0			0	0	0	</DATA>
-<DATA>	LivingArea	LivingArea	LivingArea	LivingArea	living_area	LivingArea	8	Int	0	1		Left	0			0		0	0	0	19	0		0	0			0	0	0	</DATA>
-<DATA>	StreetDirection	StreetDirection	StreetDirPrefix	Street Direction Prefix	street_direction	StreetDir	12	Character	0	1		Left	0			0		0	0	0	11	0		0	0			0	0	0	</DATA>
-<DATA>	Board	Board	Board	Local Board	board	Board	24	Character	0	1		Left	0			0		0	0	0	7	0		0	0			0	0	0	</DATA>
-<DATA>	ModificationTimestamp	ModificationTimestamp	ModificationTimestamp	Modification Timestamp	modification_timestamp	ModTS	24	DateTime	0	1		Left	0			0		0	0	0	3	0		0	0			0	0	0	</DATA>
-<DATA>	StreetName	StreetName	StreetName	Street Name	street_name	St Nam	24	Character	0	1		Left	0			0		0	0	0	12	0		0	0			0	0	0	</DATA>
-<DATA>	AgentID	AgentID	AgentID	Agent ID	agent_id	aid	12	Int	0	1		Left	0			0		0	0	0	5	0		0	0	ResPropertyAgent		0	0	0	</DATA>
-<DATA>	ListDate	ListDate	ListDate	Listing Date	list_date	Lst Dt	10	Date	0	1		Left	0			0		0	0	0	2	0	DATE_SEARCH_HELP	0	0			0	0	0	</DATA>
-<DATA>	State	State	StateOrProvince	State	state	State	24	Character	0	1		Left	0			0		0	0	0	15	0		0	0			0	0	0	</DATA>
-<DATA>	Unit	Unit	UnitNumber	Unit Number	unit	Un Num	12	Character	0	0		Left	0			0		0	0	0	10	0		0	0			0	0	0	</DATA>
-<DATA>	SqFt	SqFt		Square Footage	sqft	SqrFt	15	Decimal	5	1		Left	0			0	SqFt	0	0	0	21	0		0	0			0	0	0	</DATA>
-<DATA>	Bedrooms	Bedrooms	Beds	Bedrooms	beds	Beds	8	Int	0	1		Left	0			0		0	0	0	9	0		0	0			0	0	0	</DATA>
-<DATA>	ListPrice	ListPrice	ListPrice	Listing Price	list_price	Lst Pr	8	Int	0	1	Currency	Right	1			0		0	14	0	4	0		0	0			0	0	0	</DATA>
-<DATA>	ListingID	ListingID	ListingID	Listing ID	id	id	40	Int	0	1	Number	Left	0			0		0	1	0	1	0	LN_SEARCH_HELP	1	0			0	0	0	</DATA>
-<DATA>	Baths	Baths	Baths	Baths Total	baths	Baths	8	Int	0	1		Left	0			0		0	0	0	8	0		0	0			0	0	0	</DATA>
-<DATA>	CloseDate	CloseDate	CloseDate	Close Date	close_date	Cls Dt	10	Date	0	1		Left	0			0		0	0	0	2	0	DATE_SEARCH_HELP	0	0			0	0	0	</DATA>
+<COLUMNS>	Alignment	DataType	DBName	Default	EditMaskID	ForeignField	ForeignKeyName	Index	InKeyIndex	Interpretation	KeyQuery	KeySelect	LongName	LookupName	Maximum	MaximumLength	MaxSelect	MetadataEntryID	Minimum	ModTimeStamp	Precision	Required	Searchable	SearchHelpID	ShortName	StandardName	SystemName	Unique	Units	UseSeparator	</COLUMNS>
+<DATA>	Right	Int	list_price	4				0	0	Currency	0	0	Listing Price		0	8	0	ListPrice	14	0	0	0	1		Lst Pr	ListPrice	ListPrice	0		1	</DATA>
+<DATA>	Left	Int	garage	18				0	0		0	0	Garage		0	8	0	Garage	0	0	0	0	1		Garage	Garage	Garage	0		0	</DATA>
+<DATA>	Left	Date	list_date	2				0	0		0	0	Listing Date		0	10	0	ListDate	0	0	0	0	1	DATE_SEARCH_HELP	Lst Dt	ListDate	ListDate	0		0	</DATA>
+<DATA>	Left	Int	baths	8				0	0		0	0	Baths Total		0	8	0	Baths	0	0	0	0	1		Baths	Baths	Baths	0		0	</DATA>
+<DATA>	Left	Int	living_area	19				0	0		0	0	LivingArea		0	8	0	LivingArea	0	0	0	0	1		LivingArea	LivingArea	LivingArea	0		0	</DATA>
+<DATA>	Left	Character	unit	10				0	0		0	0	Unit Number		0	12	0	Unit	0	0	0	0	0		Un Num	UnitNumber	Unit	0		0	</DATA>
+<DATA>	Left	Int	year_built	17				0	0		0	0	YearBuilt		0	4	0	YearBuilt	0	0	0	0	1		YearBuilt	YearBuilt	YearBuilt	0		0	</DATA>
+<DATA>	Left	Decimal	sqft	21				0	0		0	0	Square Footage		0	15	0	SqFt	0	0	5	0	1		SqrFt		SqFt	0	SqFt	0	</DATA>
+<DATA>	Left	Date	contract_date	2				0	0		0	0	Contract Date		0	10	0	ContractDate	0	0	0	0	1	DATE_SEARCH_HELP	Con Date	ContractDate	ContractDate	0		0	</DATA>
+<DATA>	Left	Character	board	7				0	0		0	0	Local Board		0	24	0	Board	0	0	0	0	1		Board	Board	Board	0		0	</DATA>
+<DATA>	Right	Int	close_price	4				0	0	Currency	0	0	Close Price		0	8	0	ClosePrice	14	0	0	0	1		Cls Pr	ClosePrice	ClosePrice	0		1	</DATA>
+<DATA>	Left	Int	beds	9				0	0		0	0	Bedrooms		0	8	0	Bedrooms	0	0	0	0	1		Beds	Beds	Bedrooms	0		0	</DATA>
+<DATA>	Left	Int	id	1				0	0	Number	0	0	Listing ID		0	40	0	ListingID	1	0	0	0	1	LN_SEARCH_HELP	id	ListingID	ListingID	1		0	</DATA>
+<DATA>	Left	Character	street_number	10				0	0		0	0	Street Number		0	12	0	StreetNumber	0	0	0	0	0		St Num	StreetNumber	StreetNumber	0		0	</DATA>
+<DATA>	Left	Character	zip	16				0	0		0	0	Zip Code		0	10	0	ZipCode	0	0	0	0	0		Zip	PostalCode	ZipCode	0		0	</DATA>
+<DATA>	Left	Character	street_direction	11				0	0		0	0	Street Direction Prefix		0	12	0	StreetDirection	0	0	0	0	1		StreetDir	StreetDirPrefix	StreetDirection	0		0	</DATA>
+<DATA>	Left	Character	city	13				0	0		0	0	City		0	24	0	City	0	0	0	0	1		City	City	City	0		0	</DATA>
+<DATA>	Left	Int	agent_id	5			ResPropertyAgent	0	0		0	0	Agent ID		0	12	0	AgentID	0	0	0	0	1		aid	AgentID	AgentID	0		0	</DATA>
+<DATA>	Left	Character	status	10				0	0	Lookup	0	0	Listing Status	Status	0	12	0	Status	0	0	0	1	1		Status	ListingStatus	Status	0		0	</DATA>
+<DATA>	Left	Character	county	14				0	0		0	0	County		0	24	0	County	0	0	0	0	1		County	County	County	0		0	</DATA>
+<DATA>	Left	Int	rooms	20				0	0		0	0	TotalRooms		0	8	0	Rooms	0	0	0	0	1		Rooms	TotalRooms	Rooms	0		0	</DATA>
+<DATA>	Left	Character	state	15				0	0		0	0	State		0	24	0	State	0	0	0	0	1		State	StateOrProvince	State	0		0	</DATA>
+<DATA>	Left	Character	street_name	12				0	0		0	0	Street Name		0	24	0	StreetName	0	0	0	0	1		St Nam	StreetName	StreetName	0		0	</DATA>
+<DATA>	Left	Date	close_date	2				0	0		0	0	Close Date		0	10	0	CloseDate	0	0	0	0	1	DATE_SEARCH_HELP	Cls Dt	CloseDate	CloseDate	0		0	</DATA>
+<DATA>	Left	DateTime	modification_timestamp	3				0	0		0	0	Modification Timestamp		0	24	0	ModificationTimestamp	0	0	0	0	1		ModTS	ModificationTimestamp	ModificationTimestamp	0		0	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property" Class="COM">
+<COLUMNS>	Alignment	DataType	DBName	Default	EditMaskID	ForeignField	ForeignKeyName	Index	InKeyIndex	Interpretation	KeyQuery	KeySelect	LongName	LookupName	Maximum	MaximumLength	MaxSelect	MetadataEntryID	Minimum	ModTimeStamp	Precision	Required	Searchable	SearchHelpID	ShortName	StandardName	SystemName	Unique	Units	UseSeparator	</COLUMNS>
+<DATA>	Left	Int	list_price	0				0	0	Currency	0	0	Listing Price		0	10	0	ListPrice	0	0	0	0	1		Lst Pr	ListPrice	ListPrice	0		0	</DATA>
+<DATA>	Left	Date	list_date	0				0	0		0	0	Listing Date		0	10	0	ListDate	0	0	0	0	1		LstDate	ListDate	ListDate	0		0	</DATA>
+<DATA>	Left	Int	close_price	0				0	0	Currency	0	0	Close Price		0	10	0	ClosePrice	0	0	0	0	1		Cls Pr	ClosePrice	ClosePrice	0		0	</DATA>
+<DATA>	Left	Character	tenency_type	0				0	0		0	0	Tenency Type		0	10	0	TenencyType	0	0	0	0	1		Tenency		TenencyType	0		0	</DATA>
+<DATA>	Left	Int	id	0				0	0		0	0	ListingID		0	12	0	ListingID	0	0	0	0	1		ID	ListingID	ListingID	0		0	</DATA>
+<DATA>	Left	Character	street_number	0				0	0		0	0	Street Number		0	12	0	StreetNumber	0	0	0	0	0		StNum	StreetNumber	StreetNumber	0		0	</DATA>
+<DATA>	Left	Character	zip	0				0	0		0	0	Zip/Postal Code		0	10	0	ZipCode	0	0	0	0	1		Zip	PostalCode	ZipCode	0		0	</DATA>
+<DATA>	Left	Character	street_direction	0				0	0		0	0	Street Direction Prefix		0	12	0	StreetDirection	0	0	0	0	0		StreetDir	StreetDirectionPrefix	StreetDirection	0		0	</DATA>
+<DATA>	Left	Int	agent_id	0			PropertyAgent	0	0		0	0	Agend ID		0	12	0	AgentID	0	0	0	0	1		aid	AgentID	AgentID	0		0	</DATA>
+<DATA>	Left	Character	city	0				0	0		0	0	City		0	24	0	City	0	0	0	0	1		City	City	City	0		0	</DATA>
+<DATA>	Left	Character	status	0				0	0	Lookup	0	0	Listing Status	Status	0	12	0	Status	0	0	0	0	1		Status	ListingStatus	Status	0		0	</DATA>
+<DATA>	Left	Int	number_of_floors	0				0	0		0	0	Number of Floors		0	10	0	NumberOfFloors	0	0	0	0	1		Floors		NumberOfFloors	0		0	</DATA>
+<DATA>	Left	Decimal	sqft	0				0	0		0	0	Square Footage		0	15	0	SqFt	0	0	5	0	1		SqFt		SqFt	0		0	</DATA>
+<DATA>	Left	Int	year_built	0				0	0		0	0	Year Built		0	4	0	YearBuilt	0	0	0	0	1		Year	YearBuilt	YearBuilt	0		0	</DATA>
+<DATA>	Left	Character	county	0				0	0		0	0	County		0	24	0	County	0	0	0	0	1		County	County	County	0		0	</DATA>
+<DATA>	Left	Character	state	0				0	0		0	0	State Or Province		0	24	0	State	0	0	0	0	1		State	StateOrProvince	State	0		0	</DATA>
+<DATA>	Left	Character	street_name	0				0	0		0	0	Street Name		0	24	0	StreetName	0	0	0	0	0		StName	StreetName	StreetName	0		0	</DATA>
+<DATA>	Left	Date	contract_date	0				0	0		0	0	Contract Date		0	10	0	ContractDate	0	0	0	0	1		Con Date	ContractDate	ContractDate	0		0	</DATA>
+<DATA>	Left	Character	building_name	0				0	0		0	0	Building Name		0	50	0	BuildingName	0	0	0	0	0		Bld Nm		BuildingName	0		0	</DATA>
+<DATA>	Left	Character	board	0				0	0		0	0	Local Board		0	24	0	Board	0	0	0	0	1		Board	Board	Board	0		0	</DATA>
+<DATA>	Left	DateTime	close_date	0				0	0		0	0	Close Date		0	10	0	CloseDate	0	0	0	0	1		Cls Dt	CloseDate	CloseDate	0		0	</DATA>
+<DATA>	Left	DateTime	modification_timestamp	3				0	0		0	0	Modification Timestamp		0	24	0	ModificationTimestamp	0	0	0	0	1		Mod TS	ModificationTimestamp	ModificationTimestamp	0		0	</DATA>
+<DATA>	Left	Character	building_number	0				0	0		0	0	Building Number		0	12	0	BuildingNumber	0	0	0	0	0		Bld No		BuildingNumber	0		0	</DATA>
 </METADATA-TABLE>
 <METADATA-OBJECT Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property">
-<COLUMNS>	MetadataEntryID	ObjectType	MIMEType	VisibleName	Description	ObjectTimeStamp	ObjectCount	</COLUMNS>
-<DATA>	BrandedPhoto	BrandedPhoto	image/jpeg	Full, Branded Photos	A branded image image (Not covered by the RETS Specification)			</DATA>
-<DATA>	BrandedThumbnailPhoto	BrandedThumbnail	image/jpeg	Small, Branded Photos	A branded lower-resolution image (Not covered by the RETS Specification)			</DATA>
-<DATA>	EnlargedPhoto	Enlarged	image/jpeg	Enlarged  Photos	An enlarged image (Not covered by the RETS Specification)			</DATA>
-<DATA>	ThumbnailPhoto	Thumbnail	image/jpeg	Small Photos	A lower-resolution image related to the element defined by the resource KeyField			</DATA>
-<DATA>	BrandedEnlargedPhoto	BrandedEnlarged	image/jpeg	Enlarged, Branded Photos	A branded and enlarged image (Not covered by the RETS Specification)			</DATA>
-<DATA>	Photo	Photo	image/jpeg	Full Photos	A representation image related to the element defined by the resource KeyField			</DATA>
+<COLUMNS>	Description	MetadataEntryID	MIMEType	ObjectCount	ObjectTimeStamp	ObjectType	VisibleName	</COLUMNS>
+<DATA>	A branded image image (Not covered by the RETS Specification)	BrandedPhoto	image/jpeg			BrandedPhoto	Full, Branded Photos	</DATA>
+<DATA>	A branded and enlarged image (Not covered by the RETS Specification)	BrandedEnlargedPhoto	image/jpeg			BrandedEnlarged	Enlarged, Branded Photos	</DATA>
+<DATA>	An enlarged image (Not covered by the RETS Specification)	EnlargedPhoto	image/jpeg			Enlarged	Enlarged  Photos	</DATA>
+<DATA>	A lower-resolution image related to the element defined by the resource KeyField	ThumbnailPhoto	image/jpeg			Thumbnail	Small Photos	</DATA>
+<DATA>	A representation image related to the element defined by the resource KeyField	Photo	image/jpeg			Photo	Full Photos	</DATA>
+<DATA>	A branded lower-resolution image (Not covered by the RETS Specification)	BrandedThumbnailPhoto	image/jpeg			BrandedThumbnail	Small, Branded Photos	</DATA>
 </METADATA-OBJECT>
 <METADATA-SEARCH_HELP Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property">
 <COLUMNS>	MetadataEntryID	SearchHelpID	Value	</COLUMNS>
-<DATA>	LNSEARCHHELP	LN_SEARCH_HELP	Listing Number (all numbers)	</DATA>
-<DATA>	DATESEARCHHELP	DATE_SEARCH_HELP	Date (YYYY-MM-DD)	</DATA>
 <DATA>	LISTINGSTATUSSEARCHHELP	LISTING_STATUS_SEARCH_HELP	Status of the Listing	</DATA>
+<DATA>	DATESEARCHHELP	DATE_SEARCH_HELP	Date (YYYY-MM-DD)	</DATA>
+<DATA>	LNSEARCHHELP	LN_SEARCH_HELP	Listing Number (all numbers)	</DATA>
 </METADATA-SEARCH_HELP>
 <METADATA-EDITMASK Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property">
-<COLUMNS>	MetadataEntryID	EditMaskID	Value	</COLUMNS>
-<DATA>	DATETIMEEDITMASK	DATETIME_EDITMASK	[0-9]{4}-[0-9]{2}-[0-9]{2}	</DATA>
-<DATA>	LNEDITMASK	LN_EDITMASK	[0-9]{4,8}	</DATA>
-<DATA>	SQFTEDITMASK	SQFT_EDITMASK	[0-9]{1,3}[x][0-9]{1,3}	</DATA>
-<DATA>	DATEEDITMASK	DATE_EDITMASK	[0-9]{4}-[0-9]{2}-[0-9]{2}	</DATA>
+<COLUMNS>	EditMaskID	MetadataEntryID	Value	</COLUMNS>
+<DATA>	DATE_EDITMASK	DATEEDITMASK	[0-9]{4}-[0-9]{2}-[0-9]{2}	</DATA>
+<DATA>	LN_EDITMASK	LNEDITMASK	[0-9]{4,8}	</DATA>
+<DATA>	DATETIME_EDITMASK	DATETIMEEDITMASK	[0-9]{4}-[0-9]{2}-[0-9]{2}	</DATA>
+<DATA>	SQFT_EDITMASK	SQFTEDITMASK	[0-9]{1,3}[x][0-9]{1,3}	</DATA>
 </METADATA-EDITMASK>
 <METADATA-LOOKUP Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property">
-<COLUMNS>	MetadataEntryID	LookupName	VisibleName	Version	Date	</COLUMNS>
-<DATA>	Status	Status	Listing Status	1.00.00000	2002-03-20T12:03:38Z	</DATA>
+<COLUMNS>	Date	LookupName	MetadataEntryID	Version	VisibleName	</COLUMNS>
+<DATA>	2002-03-20T12:03:38Z	Status	Status	1.00.00000	Listing Status	</DATA>
 </METADATA-LOOKUP>
 <METADATA-LOOKUP_TYPE Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Property" Lookup="Status">
-<COLUMNS>	MetadataEntryID	LongValue	ShortValue	Value	</COLUMNS>
-<DATA>	S	Sold	S	S	</DATA>
-<DATA>	0	Off Market	0	O	</DATA>
-<DATA>	A	Active	A	A	</DATA>
-<DATA>	W	Withdrawn	W	W	</DATA>
-<DATA>	U	Under Contract	U	U	</DATA>
-<DATA>	C	Closed	C	C	</DATA>
-<DATA>	T	Temp Off Market	T	T	</DATA>
-<DATA>	P	Pending	P	P	</DATA>
-<DATA>	L	Leased	L	L	</DATA>
-<DATA>	X	Expired	X	X	</DATA>
+<COLUMNS>	LongValue	MetadataEntryID	ShortValue	Value	</COLUMNS>
+<DATA>	Under Contract	U	U	U	</DATA>
+<DATA>	Temp Off Market	T	T	T	</DATA>
+<DATA>	Withdrawn	W	W	W	</DATA>
+<DATA>	Pending	P	P	P	</DATA>
+<DATA>	Active	A	A	A	</DATA>
+<DATA>	Sold	S	S	S	</DATA>
+<DATA>	Closed	C	C	C	</DATA>
+<DATA>	Leased	L	L	L	</DATA>
+<DATA>	Off Market	0	0	O	</DATA>
+<DATA>	Expired	X	X	X	</DATA>
 </METADATA-LOOKUP_TYPE>
-<METADATA-CLASS Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Agent">
-<COLUMNS>	ClassName	VisibleName	StandardName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	ClassTimeStamp	DeletedFlagField	DeletedFlagValue	HasKeyIndex	X-DBName	</COLUMNS>
-<DATA>	AGT	Agent	REAgent	Agent	1.00.00000	2002-03-20T12:03:38Z	1.00.00000	2002-03-20T12:03:38Z				0	agents	</DATA>
-</METADATA-CLASS>
-<METADATA-TABLE Version="1.00.00000" Date="2002-03-20T12:03:38Z" Resource="Agent" Class="AGT">
-<COLUMNS>	MetadataEntryID	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	ModTimeStamp	ForeignKeyName	ForeignField	KeyQuery	KeySelect	InKeyIndex	</COLUMNS>
-<DATA>	OfficePhone	OfficePhone	ListAgentOfficePhone	Agent Office Phone	office_phone	Office	11	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	AgentID	AgentID	ListAgentAgentID	Agent ID	id	AID	7	Character	0	1		Left	0			0		0	1	0	1	1		1	0			0	0	0	</DATA>
-<DATA>	FirstName	FirstName	ListAgentFirstName	First Name	first_name	FName	12	Character	0	1		Left	0			0		0	0	0	2	0		0	0			0	0	0	</DATA>
-<DATA>	URL	URL	ListAgentWWW	Agent Website	url	URL	40	Character	0	1		Left	0			0		0	0	0	4	0		0	0			0	0	0	</DATA>
-<DATA>	CellPhone	CellPhone	ListAgentCellPhone	Agent Cell Phone	cell_phone	Cell	11	Character	0	1		Left	0			0		0	0	0	0	0		0	0			0	0	0	</DATA>
-<DATA>	LastName	LastName	ListAgentLastName	Last Name	last_name	LName	18	Character	0	1		Left	0			0		0	0	0	3	0		0	0			0	0	0	</DATA>
-</METADATA-TABLE>
 </RETS>
