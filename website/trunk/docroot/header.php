@@ -58,7 +58,7 @@ function print_ver()
 
 function beta_ver()
 {     
-    return "3.0.0b3";
+    return "3.0.0b4";
 #    return null;
 }     
       

@@ -1,6 +1,27 @@
+Version 3.0.0b4 - 15 Jul 2009
+
+  * Update User Documentation. Ticket #22.
+  * EditMask in Table Data Attribute wrong. Ticket #40.
+  * Include the Admin Tool in the WebApp dist. Ticket #42.
+    Note that the directory that used to be called "webapp"
+    is now called "variman" and can be copied to your
+    application server.
+  * Add Button Context wrong after adding Class. Ticket #43.
+  * Add MySQL support. Ticket #44.
+  * Switch to XDoclet2. Ticket #45.
+  * Make junit.jar an explicit dependency. Ticket #46.
+  * IOUtilsTest fails on Windows. Ticket #47.
+  * Metadata Editor should render tree in Alpha order.
+    Ticket #48.
+  * Added Activation. Ticket #49.
+  * COMPACT Fomat Delimiter found in data stream breaks
+    response. Ticket #51.
+
 Version 3.0.0b3 - 29 Apr 2009
 
-  * Update Tomcat server to 6.0. Ticket #28.
+  * Update Windows installation to use current Java-Service. 
+    Ticket #25.
+  * Update embedded Tommcat server to 6.0. Ticket #28.
   * Refresh third party support libraries. Ticket #29.
   * Update NullResultSet for JDBC 4.0. Ticket #34.
   * Create Metadata and Image directory if don't exist. Ticket #36.

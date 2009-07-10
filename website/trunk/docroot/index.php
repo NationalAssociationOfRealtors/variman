@@ -57,6 +57,9 @@
       
     <h3>News</h3>
     <ul>
+      <li> <b>15 July 2009</b>: Version 3.0.0 Beta 4 released. </li>
+    </ul>
+    <ul>
       <li> <b>29 April 2009</b>: Version 3.0.0 Beta 3 released. </li>
     </ul>
     <ul>
