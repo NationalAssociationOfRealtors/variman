@@ -16,6 +16,7 @@ Version 3.0.0b4 - 15 Jul 2009
   * Added Activation. Ticket #49.
   * COMPACT Fomat Delimiter found in data stream breaks
     response. Ticket #51.
+  * .ANY. is failing on Lookup. Ticket #52.
 
 Version 3.0.0b3 - 29 Apr 2009
 
