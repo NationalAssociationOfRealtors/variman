@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>   
+  <bean name="beanFactory" 
+        class="org.realtors.rets.server.RetsServer" />
+
+  <bean name="SearchTransaction" singleton="false"
+        class="org.realtors.rets.server.protocol.DefaultSearchTransaction">
+    <property name="searchSqlBuilder"><ref bean="SearchSqlBuilder" /></property>
+  </bean>
+
+  <bean name="SearchSqlBuilder" singleton="false"
+        class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder" />
+</beans>
