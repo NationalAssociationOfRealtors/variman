@@ -1,5 +1,0 @@
-<j:jelly xmlns:j="jelly:core">
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
-</j:jelly>
