@@ -187,7 +187,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
     {
         if (lookup == null)
         {
-            LOG.warn("Ignorig null lookup for field: " + fieldName);
+            LOG.warn("Ignoring null lookup for field: " + fieldName);
             return;
         }
 
@@ -206,9 +206,12 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
         Map lookupTypesMap = new ListOrderedMap();
         Set lookupTypes = lookup.getLookupTypes();
+        LookupType saveLookupType = null;
         for (Iterator iterator = lookupTypes.iterator(); iterator.hasNext();)
         {
             LookupType lookupType = (LookupType) iterator.next();
+            if (saveLookupType == null)
+                saveLookupType = lookupType;
             String lookupValue = lookupType.getValue();
             lookupTypesMap.put(lookupValue, lookupType);
             if (generateDbValues)
@@ -218,6 +221,15 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
                 dbValues.put(lookupValue, lookupValue);
             }
         }
+        /*
+         * Dummy up an entry to handle .ANY.
+         */
+        saveLookupType.setLongValue(".ANY.");
+        saveLookupType.setMetadataEntryID(".ANY.");
+        saveLookupType.setShortValue(".ANY.");
+        saveLookupType.setValue(".ANY.");
+        dbValues.put(".ANY.", ".ANY.");
+        lookupTypesMap.put(".ANY.", saveLookupType);
 
         mLookupsDbMap.put(fieldName, dbValues);
         mLookupTypesMap.put(fieldName, lookupTypesMap);

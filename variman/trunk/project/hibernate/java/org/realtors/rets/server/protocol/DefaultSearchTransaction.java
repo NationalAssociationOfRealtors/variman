@@ -397,7 +397,7 @@ public class DefaultSearchTransaction implements SearchTransaction
             if (e.toString().contains("No such field"))
             	throw new RetsReplyException(ReplyCode.INVALID_QUERY_FIELD, e.toString());
             
-            if (e.toString().contains("No Such lookup value"))
+            if (e.toString().contains("No such lookup value"))
             	throw new RetsReplyException(ReplyCode.INVALID_QUERY_FIELD, e.toString());
             
             throw new RetsReplyException(ReplyCode.INVALID_QUERY_SYNTAX,

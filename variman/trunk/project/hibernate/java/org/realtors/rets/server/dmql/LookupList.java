@@ -140,10 +140,27 @@ public class LookupList implements SqlConverter
 
     private void printLookupCondition(PrintWriter out, String lookup)
     {
-        out.print(mSqlColumn);
-        out.print(" = '");
-        out.print(lookup);
-        out.print("'");
+        if (!lookup.equals(".ANY."))
+        {
+            out.print(mSqlColumn);
+            out.print(" = '");
+            out.print(lookup);
+            out.print("'");
+        }
+        else
+        {
+            // FIXME: Are there referential integrity issues? 
+            // In the BNF for Search in 1.7.2, .ANY. can represent
+            // any possible value. From a SQL standpoint, that should
+            // be the same as simply ignoring the field. But, because we
+            // could end up with an empty WHERE clause, it would be best
+            // to check the field both null and not null.
+            out.print("(");
+            out.print(mSqlColumn);
+            out.print(" is null or ");
+            out.print(mSqlColumn);
+            out.print(" is not null)");
+        }
     }
 
     private void toSqlLookupMultiTable(PrintWriter out)
