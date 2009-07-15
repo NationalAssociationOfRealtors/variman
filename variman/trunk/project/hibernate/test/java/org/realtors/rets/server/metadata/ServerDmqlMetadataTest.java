@@ -96,6 +96,7 @@ public class ServerDmqlMetadataTest extends TestCase
         assertTrue(metadata.isValidLookupValue("STATUS", "S"));
         assertTrue(metadata.isValidLookupValue("STATUS", "A"));
         assertTrue(metadata.isValidLookupValue("STATUS", "P"));
+        assertTrue(metadata.isValidLookupValue("STATUS", ".ANY."));
         assertFalse(metadata.isValidLookupValue("STATUS", "Z"));
         assertNull(metadata.getFieldType("ListingStatus"));
 
@@ -179,6 +180,7 @@ public class ServerDmqlMetadataTest extends TestCase
         // Check lookups
         assertTrue(metadata.isValidLookupValue("Area", "GENVA"));
         assertTrue(metadata.isValidLookupValue("Area", "BATV"));
+        assertTrue(metadata.isValidLookupValue("Area", ".ANY."));
         assertFalse(metadata.isValidLookupValue("Area", "STC"));
         assertNull(metadata.getFieldType("AR"));
 
@@ -200,6 +202,7 @@ public class ServerDmqlMetadataTest extends TestCase
         // Check listing status uses lookup values from DTD
         assertTrue(metadata.isValidLookupValue("ListingStatus", "Pending"));
         assertTrue(metadata.isValidLookupValue("ListingStatus", "Active"));
+        assertTrue(metadata.isValidLookupValue("ListingStatus", ".ANY."));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "Z"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "A"));
         assertFalse(metadata.isValidLookupValue("ListingStatus", "P"));

@@ -206,12 +206,15 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
         Map lookupTypesMap = new ListOrderedMap();
         Set lookupTypes = lookup.getLookupTypes();
-        LookupType saveLookupType = null;
+        Long saveId = new Long(-1);
+        String saveLevel = null;
         for (Iterator iterator = lookupTypes.iterator(); iterator.hasNext();)
         {
             LookupType lookupType = (LookupType) iterator.next();
-            if (saveLookupType == null)
-                saveLookupType = lookupType;
+            if (lookupType.getId() > saveId)
+                saveId = lookupType.getId();
+            if (saveLevel == null)
+                saveLevel = lookupType.getLevel();
             String lookupValue = lookupType.getValue();
             lookupTypesMap.put(lookupValue, lookupType);
             if (generateDbValues)
@@ -224,12 +227,15 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         /*
          * Dummy up an entry to handle .ANY.
          */
-        saveLookupType.setLongValue(".ANY.");
-        saveLookupType.setMetadataEntryID(".ANY.");
-        saveLookupType.setShortValue(".ANY.");
-        saveLookupType.setValue(".ANY.");
+        LookupType lookupType = new LookupType();
+        lookupType.setId(saveId + 1);
+        lookupType.setLevel(saveLevel);
+        lookupType.setLongValue(".ANY.");
+        lookupType.setMetadataEntryID(".ANY.");
+        lookupType.setShortValue(".ANY.");
+        lookupType.setValue(".ANY.");
         dbValues.put(".ANY.", ".ANY.");
-        lookupTypesMap.put(".ANY.", saveLookupType);
+        lookupTypesMap.put(".ANY.", lookupType);
 
         mLookupsDbMap.put(fieldName, dbValues);
         mLookupTypesMap.put(fieldName, lookupTypesMap);

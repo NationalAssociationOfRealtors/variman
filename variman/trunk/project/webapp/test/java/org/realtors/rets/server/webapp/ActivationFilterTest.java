@@ -16,6 +16,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.net.UnknownHostException;
 
 
 /**
@@ -34,14 +35,15 @@ public class ActivationFilterTest {
 
     final ActivationFilter activationFilter = new ActivationFilter();
     final ActivationManager activationManager = context.mock(ActivationManager.class);
-    final String hostname = "test.host.com";
+    String hostname;
     final HttpServletRequest request = context.mock(HttpServletRequest.class);
     final HttpServletResponse response = context.mock(HttpServletResponse.class);
     final FilterChain filterChain = context.mock(FilterChain.class);    
 
     @Before
-    public void setup() {
+    public void setup() throws UnknownHostException {
         activationFilter.setActivationManager(activationManager);
+        hostname = java.net.InetAddress.getLocalHost().getHostName();
     }
 
     @Test
@@ -58,7 +60,6 @@ public class ActivationFilterTest {
     @Test
     public void doFilterPassesDownChainWhenActivationTrue() throws Exception {
         context.checking(new Expectations() {{
-            allowing(request).getRemoteHost(); will(returnValue(hostname));
             allowing(activationManager).isActivated(hostname); will(returnValue(true));
             oneOf(filterChain).doFilter(request, response);
         }});
@@ -68,7 +69,6 @@ public class ActivationFilterTest {
     @Test
     public void doFilterPassesDownChainWhenActivationFalseAndTimeoutHasNotExpired() throws Exception {
         context.checking(new Expectations() {{
-            allowing(request).getRemoteHost(); will(returnValue(hostname));
             allowing(activationManager).isActivated(hostname); will(returnValue(false));
             oneOf(filterChain).doFilter(request, response);
         }});
@@ -81,7 +81,6 @@ public class ActivationFilterTest {
     public void doFilterReturns503AndMessageWhenActivationFalseAndTimeoutHasExpired() throws Exception {
         final PrintWriter writer = context.mock(PrintWriter.class);
         context.checking(new Expectations() {{
-            allowing(request).getRemoteHost(); will(returnValue(hostname));
             allowing(activationManager).isActivated(hostname); will(returnValue(false));
             oneOf(response).setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             oneOf(response).setContentType("text/plain");
