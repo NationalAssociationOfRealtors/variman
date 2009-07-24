@@ -54,6 +54,12 @@ public class AdminFrame extends JFrame
     private AdminFrame(String title)
     {
         super(title);
+        /*
+         * Enable default text component actions (copy, paste, etc).
+         * Do this before any text components have been created.
+         */
+        SwingUtils.addTextComponentActions();
+        
         SwingUtils.setAdminFrame(this);
         initConfig();
 
@@ -76,7 +82,7 @@ public class AdminFrame extends JFrame
             menu.add(new QuitAction());
         }
 
-        JMenu editMenu = new JMenu("Edit");
+        JMenu editMenu = SwingUtils.createEditMenu();
         menuBar.add(editMenu);
 
         menu = new JMenu("Database");
@@ -133,8 +139,7 @@ public class AdminFrame extends JFrame
         mCurrentAdminTab = mUsersPanel;
         mTabbedPane.addChangeListener(new OnTabChanged());
         content.add(mTabbedPane, BorderLayout.CENTER);
-        mLogPanel.addToEditMenu(editMenu);
-
+ 
         if (!Admin.isMacOS())
         {
             menu = new JMenu("Help");

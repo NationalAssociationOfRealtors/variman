@@ -2,30 +2,22 @@ package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
-import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
-import javax.swing.text.DefaultEditorKit;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -200,41 +192,6 @@ public class LogPanel extends AdminTab implements LogPropertiesConstants
             LOG.error("Caught", e);
             return "";
         }
-    }
-
-    public void addToEditMenu(JMenu editMenu)
-    {
-        Action[] actions = mTextArea.getActions();
-        Map actionMap = new HashMap();
-        for (int i = 0; i < actions.length; i++)
-        {
-            Action action = actions[i];
-            actionMap.put(action.getValue(Action.NAME), action);
-        }
-
-        int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
-        Action action = (Action) actionMap.get(DefaultEditorKit.copyAction);
-        action.putValue(Action.NAME, "Copy");
-        action.putValue(Action.ACCELERATOR_KEY,
-                        KeyStroke.getKeyStroke(KeyEvent.VK_C,
-                                               keyMask));
-        editMenu.add(action);
-
-        action = (Action) actionMap.get(DefaultEditorKit.pasteAction);
-        action.putValue(Action.NAME, "Paste");
-        action.putValue(Action.ACCELERATOR_KEY,
-                        KeyStroke.getKeyStroke(KeyEvent.VK_V,
-                                               keyMask));
-        editMenu.add(action);
-
-        editMenu.addSeparator();
-        action = (Action) actionMap.get(DefaultEditorKit.selectAllAction);
-        action.putValue(Action.NAME, "Select All");
-        action.putValue(Action.ACCELERATOR_KEY,
-                        KeyStroke.getKeyStroke(KeyEvent.VK_A,
-                                               keyMask));
-        editMenu.add(action);
     }
 
     private class OnLogAppenderChanged extends AbstractAction
