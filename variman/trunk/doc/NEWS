@@ -1,6 +1,7 @@
-Version 3.0.1 - xx xxx 2009
+Version 3.0.0b5 - 31 Jul 2009
 
   * Add cut/paste to all text components. Ticket #53.
+  * Log additional information if activation fails. Ticket #54.
 
 Version 3.0.0b4 - 15 Jul 2009
 

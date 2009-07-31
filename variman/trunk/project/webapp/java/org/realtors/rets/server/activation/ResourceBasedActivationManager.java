@@ -29,6 +29,11 @@ public class ResourceBasedActivationManager implements ActivationManager {
 
     public boolean isActivated(String host) {
         Properties activationProperties = getActivationProperties();   
+        if (activationProperties != null && LOG.isDebugEnabled())
+        {
+                LOG.debug(VARIMAN_ACTIVATION_EMAIL + ": " + activationProperties.getProperty(VARIMAN_ACTIVATION_EMAIL));
+                LOG.debug(VARIMAN_ACTIVATION_CODE + ": " + activationProperties.getProperty(VARIMAN_ACTIVATION_CODE));
+        }
         return activationProperties != null && activationStrategy.isCodeValid(host,
                 activationProperties.getProperty(VARIMAN_ACTIVATION_EMAIL),
                 activationProperties.getProperty(VARIMAN_ACTIVATION_CODE));
