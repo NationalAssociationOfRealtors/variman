@@ -1,0 +1,17 @@
+<section id="introduction">
+  <title>Introduction</title>
+  <para>
+    &name; is a RETS <xref linkend="bib-rets"/> 1.5, 1.7 and 1.7.2  compliant
+    server. &name; is developed under a BSD-style license at the
+    Center for REALTOR(R) Technology <xref linkend="bib-crt"/>.  The
+    latest version of &name; and its manual may always be found at the
+    &name; web site <xref linkend="bib-variman"/>.
+  </para>
+</section>
+
+<!--
+Local Variables:
+mode: xml
+sgml-parent-document: ("manual.xml" "" "section")
+End:
+-->
