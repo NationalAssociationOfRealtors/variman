@@ -55,7 +55,7 @@ import javax.swing.tree.TreeSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

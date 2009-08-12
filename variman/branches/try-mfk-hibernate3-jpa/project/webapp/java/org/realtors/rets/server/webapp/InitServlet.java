@@ -19,19 +19,24 @@ import java.sql.DatabaseMetaData;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.cfg.Configuration;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
 import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.LogPropertiesUtils;
@@ -285,19 +290,16 @@ public class InitServlet extends RetsServlet
         try
         {
             LOG.debug("Initializing hibernate");
-            Configuration cfg = new Configuration();
-            File hbmXmlFile = new File(resolveFromContextRoot(
-                "WEB-INF/classes/" + WebApp.PROJECT_NAME + "-hbm-xml.jar"));
-            LOG.debug("HBM file: " + hbmXmlFile);
-            cfg.addJar(hbmXmlFile);
             LOG.info("JDBC URL: " + mRetsConfig.getDatabase().getUrl());
-            cfg.setProperties(mRetsConfig.createHibernateProperties());
-            RetsServer.setSessions(cfg.buildSessionFactory());
+            Map properties = mRetsConfig.createHibernateProperties();
+            RetsServer.setEntityManagerFactory(
+                    Persistence.createEntityManagerFactory(
+                            WebApp.PROJECT_NAME, properties));
             logDatabaseInfo();
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
-            throw new ServletException("Could not initialize hibernate", e);
+            throw new ServletException("Could not initialize the Java Persistence provider", e);
         }
     }
 

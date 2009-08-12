@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
 
@@ -46,6 +47,19 @@ public abstract class PasswordMethod implements Serializable
     public String toString()
     {
         return getId();
+    }
+    
+    public int hashCode()
+    {
+        return new HashCodeBuilder()
+            .append(mMethod)
+            .append(mOptions)
+            .toHashCode();
+    }
+    
+    public static int hashCode(PasswordMethod x)
+    {
+        return x.hashCode();
     }
 
     public static String makeId(String method, String options)

@@ -5,11 +5,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.Group;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
 
@@ -42,7 +42,7 @@ public class EditGroupAction extends AbstractAction
             }
 
             group.setDescription(dialog.getDescription());
-            HibernateUtils.update(group);
+            ORMUtils.update(group);
             // Update this after hibernate, just in case of DB failure
             dialog.transferToGropuRules(rules);
             frame.setStatusText("Group " + group.getName() + " changed");

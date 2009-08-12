@@ -8,13 +8,13 @@
 
 package org.realtors.rets.server.config;
 
-public class PostgreSQLType extends DatabaseType
+public class SQLServerjTDSType extends DatabaseType
 {
-    public static final String NAME = "postgresql";
-    public static final String LONG_NAME = "PostgreSQL";
-    public static final String DRIVER = "org.postgresql.Driver";
+    public static final String NAME = "sqlserver-jtds";
+    public static final String LONG_NAME = "SQLServer (jTDS)";
     public static final String DIALECT =
-        "net.sf.hibernate.dialect.PostgreSQLDialect";
+        "org.hibernate.dialect.SQLServerDialect";
+    public static final String DRIVER = "net.sourceforge.jtds.jdbc.Driver";
 
     public String getName()
     {
@@ -26,30 +26,31 @@ public class PostgreSQLType extends DatabaseType
         return LONG_NAME;
     }
 
-    public String getDriverClass()
-    {
-        return DRIVER;
-    }
-
     public String getDialectClass()
     {
         return DIALECT;
     }
 
+    public String getDriverClass()
+    {
+        return DRIVER;
+    }
+
     /**
-     * Returns a Postgres JDBC URL.  Postgres URLs take the form:
+     * Returns a jTDS JDBC URL.  jTDS URLs take the form:
      *
-     *   jdbc:postgresql://[host]/[database]
+     *   jdbc:jtds:sqlserver://[hostName]/[databaseName]
      *
      * @param hostName Host name of database server
      * @param databaseName Name of database instance
-     * @return a Postgres JDBC URL
+     * @return a SQL Server JDBC URL
      */
     public String getUrl(String hostName, String databaseName)
     {
         StringBuffer url = new StringBuffer();
-        url.append("jdbc:postgresql://");
-        url.append(hostName).append("/").append(databaseName);
+        url.append("jdbc:jtds:sqlserver://");
+        url.append(hostName);
+        url.append("/").append(databaseName);
         return url.toString();
     }
 }

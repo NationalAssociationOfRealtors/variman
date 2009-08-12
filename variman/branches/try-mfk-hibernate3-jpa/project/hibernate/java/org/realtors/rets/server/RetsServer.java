@@ -1,21 +1,25 @@
 /*
  * Variman RETS Server
  *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Author: Dave Dribin, Mark Klein
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
 package org.realtors.rets.server;
 
-import net.sf.hibernate.SessionFactory;
+import java.util.Map;
+
+import javax.persistence.*;
 
 import org.apache.log4j.Logger;
+
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.ObjectSet;
 import org.realtors.rets.server.protocol.SearchTransaction;
 import org.realtors.rets.server.protocol.TableGroupFilter;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -23,24 +27,30 @@ import org.springframework.context.ApplicationContextAware;
 
 public class RetsServer implements ApplicationContextAware
 {
-    public static void setSessions(SessionFactory sessionFactory)
+    public static void setEntityManagerFactory(EntityManagerFactory emFactory)
     {
-        sSessions = sessionFactory;
+        setEntityManagerFactory(emFactory, null);
+    }
+    
+    public static void setEntityManagerFactory(EntityManagerFactory emFactory, Map properties)
+    {
+        sEntityManager = emFactory;
+        sEntityManagerProperties = properties;
     }
 
-    public static SessionFactory getSessions()
+    public static EntityManagerFactory getEntityManagerFactory()
     {
-        return sSessions;
+        return sEntityManager;
     }
 
     public static ConnectionHelper createHelper()
     {
-        return new SessionHelper(sSessions);
+        return new EntityManagerHelper(sEntityManager);
     }
 
-    public static SessionHelper createSessionHelper()
+    public static EntityManagerHelper createEntityManagerHelper()
     {
-        return new SessionHelper(sSessions);
+        return new EntityManagerHelper(sEntityManager);
     }
 
     public static void setTableGroupFilter(TableGroupFilter tableGroupFilter)
@@ -112,7 +122,9 @@ public class RetsServer implements ApplicationContextAware
 
     private static final Logger LOG =
         Logger.getLogger(RetsServer.class);
-    private static SessionFactory sSessions;
+    private static EntityManagerFactory sEntityManager;
+    private static Map sEntityManagerProperties;
+    
     private static TableGroupFilter sTableGroupFilter;
     private static ConditionRuleSet sConditionRuleSet;
     private static SecurityConstraints sSecurityConstraints;

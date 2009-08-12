@@ -20,16 +20,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import antlr.ANTLRException;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
 
-import org.realtors.rets.client.RetsVersion;
-
+import org.realtors.rets.server.EntityManagerHelper;
 import org.realtors.rets.server.QueryCount;
 import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.ReplyCode;
@@ -73,7 +73,7 @@ public class DefaultSearchTransaction implements SearchTransaction
             mSearchSqlBuilder.setParameters(mParameters);
             mSearchSqlBuilder.setGroups(mGroups);
         }
-        catch (HibernateException e)
+        catch (PersistenceException e)
         {
             throw new RetsServerException(e);
         }
@@ -125,10 +125,10 @@ public class DefaultSearchTransaction implements SearchTransaction
     }
 
     public void execute(PrintWriter out, MetadataManager manager,
-                        SessionFactory sessions)
+                        EntityManagerFactory emf)
         throws RetsServerException
     {
-        mSessions = sessions;
+        mEntityManagerHelper = new EntityManagerHelper(emf);
         mSearchSqlBuilder.prepareForQuery(manager);
         generateWhereClause(mSearchSqlBuilder.getMetadataClass());
 
@@ -159,21 +159,20 @@ public class DefaultSearchTransaction implements SearchTransaction
     private void printData(PrintWriter out)
         throws RetsServerException
     {
-        Session session = null;
+        EntityManager entityManager = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try
         {
             String sql = generateSql(mSearchSqlBuilder.getSelectClause());
             logSql(sql);
-            session = mSessions.openSession();
-            Connection connection = session.connection();
+            Connection connection = mEntityManagerHelper.getConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
             advance(resultSet);
             printResults(out, mSearchSqlBuilder.getColumns(), resultSet);
         }
-        catch (HibernateException e)
+        catch (PersistenceException e)
         {
             throw new RetsServerException(e);
         }
@@ -185,7 +184,6 @@ public class DefaultSearchTransaction implements SearchTransaction
         {
             close(resultSet);
             close(statement);
-            close(session);
         }
     }
 
@@ -205,14 +203,12 @@ public class DefaultSearchTransaction implements SearchTransaction
 
         String countSql = generateSql("COUNT(*)");
         LOG.debug("Count SQL: " + countSql);
-        Session session = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try
         {
             logSql(countSql);
-            session = mSessions.openSession();
-            Connection connection = session.connection();
+            Connection connection = mEntityManagerHelper.getConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(countSql);
             if (resultSet.next())
@@ -224,7 +220,7 @@ public class DefaultSearchTransaction implements SearchTransaction
                 LOG.warn("COUNT(*) returned no rows");
             }
         }
-        catch (HibernateException e)
+        catch (PersistenceException e)
         {
             LOG.error("Caught", e);
             throw new RetsServerException(e);
@@ -238,7 +234,6 @@ public class DefaultSearchTransaction implements SearchTransaction
         {
             close(resultSet);
             close(statement);
-            close(session);
         }
     }
 
@@ -405,21 +400,6 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private void close(Session session)
-    {
-        try
-        {
-            if (session != null)
-            {
-                session.close();
-            }
-        }
-        catch (HibernateException e)
-        {
-            LOG.error("Caught", e);
-        }
-    }
-
     private void close(Statement statement)
     {
         try
@@ -462,6 +442,6 @@ public class DefaultSearchTransaction implements SearchTransaction
     private boolean mExecuteQuery;
     private String mWhereClause;
     private int mCount;
-    private SessionFactory mSessions;
+    private EntityManagerHelper mEntityManagerHelper;
     private int mLimit;
 }

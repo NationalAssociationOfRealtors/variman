@@ -18,8 +18,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import net.sf.hibernate.cfg.Configuration;
-import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.admin.Admin;

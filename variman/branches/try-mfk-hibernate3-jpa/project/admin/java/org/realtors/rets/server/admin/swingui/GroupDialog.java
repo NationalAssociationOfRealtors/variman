@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 import org.apache.commons.lang.StringUtils;
 import org.realtors.rets.server.Group;

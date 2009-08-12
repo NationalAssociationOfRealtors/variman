@@ -5,10 +5,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 import org.apache.log4j.Logger;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.UserUtils;
 
@@ -44,7 +44,7 @@ public class AddUserAction extends AbstractAction
             user.setAgentCode(dialog.getAgentCode());
             user.setBrokerCode(dialog.getBrokerCode());
 
-            HibernateUtils.save(user);
+            ORMUtils.save(user);
             AdminFrame frame = SwingUtils.getAdminFrame();
             frame.setStatusText("User " + user + " added");
             frame.refreshUsers();

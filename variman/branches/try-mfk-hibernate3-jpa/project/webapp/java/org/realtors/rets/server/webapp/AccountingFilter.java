@@ -1,8 +1,8 @@
 /*
  * Variman RETS Server
  *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Author: Dave Dribin, Mark Klein
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -21,15 +21,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.sf.hibernate.Session;
+import javax.persistence.EntityManager;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.realtors.rets.server.AccountingStatistics;
 import org.realtors.rets.server.AccountingStatisticsUtils;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.RetsServer;
-import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.EntityManagerHelper;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 
@@ -92,17 +92,17 @@ public class AccountingFilter implements Filter, Constants
     private AccountingStatistics findOrCreateStatistics(User user)
     {
         AccountingStatistics statistics = null;
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
-            Session session = helper.beginTransaction();
+            EntityManager entityManager = helper.beginTransaction();
             statistics = AccountingStatisticsUtils.findByUser(user, helper);
             if (statistics == null)
             {
                 LOG.debug("Creating new statistics");
                 statistics = new AccountingStatistics();
                 statistics.setUser(user);
-                session.save(statistics);
+                entityManager.merge(statistics);
             }
             helper.commit();
         }
@@ -130,7 +130,7 @@ public class AccountingFilter implements Filter, Constants
         try
         {
             LOG.debug("Saving statistics");
-            HibernateUtils.update(statistics);
+            ORMUtils.update(statistics);
         }
         catch (Exception e)
         {

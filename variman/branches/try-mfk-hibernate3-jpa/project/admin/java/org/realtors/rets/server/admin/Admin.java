@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import net.sf.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Configuration;
 
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;

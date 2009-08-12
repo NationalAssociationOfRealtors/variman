@@ -11,7 +11,7 @@ package org.realtors.rets.server.config;
 import java.io.Serializable;
 import java.util.Properties;
 
-import net.sf.hibernate.cfg.Environment;
+import org.hibernate.cfg.Environment;
 
 import org.realtors.rets.server.Util;
 
@@ -177,7 +177,7 @@ public class DatabaseConfig implements Serializable
      * Hibernate.
      *
      * @return Hibernate configuration properties.
-     * @see net.sf.hibernate.cfg.Configuration#setProperties
+     * @see org.hibernate.cfg.Configuration#setProperties
      */
     public Properties createHibernateProperties()
     {
@@ -193,21 +193,21 @@ public class DatabaseConfig implements Serializable
         properties.setProperty(Environment.SHOW_SQL,
                                Util.toString(mShowSql));
 
-        properties.setProperty(Environment.DBCP_MAXACTIVE,
+        properties.setProperty(Environment.C3P0_MAX_SIZE,
                                Integer.toString(mMaxActive));
-        properties.setProperty(Environment.DBCP_WHENEXHAUSTED, "1");
-        properties.setProperty(Environment.DBCP_MAXWAIT,
+        properties.setProperty(Environment.C3P0_ACQUIRE_INCREMENT, "1");
+        properties.setProperty(Environment.C3P0_TIMEOUT,
                                Integer.toString(mMaxWait));
-        properties.setProperty(Environment.DBCP_MAXIDLE,
-                               Integer.toString(mMaxIdle));
+        //properties.setProperty(Environment.C3P0_TIMEOUT,
+        //                       Integer.toString(mMaxIdle));
 
-        properties.setProperty(Environment.DBCP_PS_MAXACTIVE,
+        properties.setProperty(Environment.C3P0_MAX_STATEMENTS,
                                Integer.toString(mMaxPsActive));
-        properties.setProperty(Environment.DBCP_PS_WHENEXHAUSTED,  "1");
-        properties.setProperty(Environment.DBCP_PS_MAXWAIT,
-                               Integer.toString(mMaxPsWait));
-        properties.setProperty(Environment.DBCP_PS_MAXIDLE,
-                               Integer.toString(mMaxPsIdle));
+        //properties.setProperty(Environment.DBCP_PS_WHENEXHAUSTED,  "1");
+        //properties.setProperty(Environment.DBCP_PS_MAXWAIT,
+        //                       Integer.toString(mMaxPsWait));
+        //properties.setProperty(Environment.DBCP_PS_MAXIDLE,
+        //                       Integer.toString(mMaxPsIdle));
         return properties;
     }
 

@@ -1,8 +1,8 @@
 /*
  * Variman RETS Server
  *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Author: Dave Dribin, Mark Klein
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -13,18 +13,17 @@ import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
 
-import net.sf.hibernate.Hibernate;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.LockMode;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 public class UserUtils
 {
     public static User findByUsername(String username)
-        throws HibernateException
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
             return findByUsername(username, helper);
@@ -35,19 +34,18 @@ public class UserUtils
         }
     }
 
-    public static User findByUsername(String username, SessionHelper helper)
-        throws HibernateException
+    public static User findByUsername(String username, EntityManagerHelper helper)
     {
         Query query = helper.createQuery(
             " FROM User user " +
             "WHERE user.username = :username");
-        query.setString("username", username);
-        return (User) query.uniqueResult();
+        query.setParameter("username", username);
+        return (User) query.getSingleResult();
     }
 
-    public static List findAll() throws HibernateException
+    public static List findAll()
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
             return findAll(helper);
@@ -58,34 +56,28 @@ public class UserUtils
         }
     }
 
-    public static List findAll(SessionHelper helper) throws HibernateException
+    public static List findAll(EntityManagerHelper helper)
     {
         Query query = helper.createQuery(
             "  FROM User user " +
             "ORDER BY user.lastName, user.firstName");
-        return query.list();
+        return query.getResultList();
     }
 
-    public static void delete(User user) throws HibernateException, RetsServerException
+    public static void delete(User user) throws RetsServerException
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
-            Session session = helper.beginTransaction();
-            // Must reassociate this object with this session, otherwise the
-            // User object from the statistics gets loaded. This causes two
-            // User objects with the same ID to be loaded into the same
-            // session, which pisses off Hibernate.
-            LOG.debug("Reassociating user");
-            session.lock(user, LockMode.NONE);
-            LOG.debug("Getting accounting statistics");
+            EntityManager entityManager = helper.beginTransaction();
+            
             AccountingStatistics statistics =
                 AccountingStatisticsUtils.findByUser(user, helper);
             if (statistics != null)
             {
-                session.delete(statistics);
+                entityManager.remove(statistics);
             }
-            session.delete(user);
+            entityManager.remove(user);
             helper.commit();
         }
         finally
@@ -94,15 +86,13 @@ public class UserUtils
         }
     }
 
-    public static SortedSet getGroups(User user) throws HibernateException
+    public static SortedSet getGroups(User user)
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
-            Session session = helper.beginSession();
-            session.lock(user, LockMode.NONE);
             SortedSet groups = user.getGroups();
-            Hibernate.initialize(groups);
+            int i = groups.size(); // Force it to be loaded if set for lazy loading.
             return groups;
         }
         finally
@@ -112,14 +102,14 @@ public class UserUtils
     }
 
     public static void updateGroups(User user, SortedSet groups)
-        throws HibernateException, RetsServerException
+        throws RetsServerException
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
             helper.beginTransaction();
             user.setGroups(groups);
-            HibernateUtils.update(user);
+            ORMUtils.update(user);
             helper.commit();
         }
         finally

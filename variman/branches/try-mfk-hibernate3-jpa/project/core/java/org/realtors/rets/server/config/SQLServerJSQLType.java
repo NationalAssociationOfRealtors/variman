@@ -8,13 +8,13 @@
 
 package org.realtors.rets.server.config;
 
-public class SQLServerjTDSType extends DatabaseType
+public class SQLServerJSQLType extends DatabaseType
 {
-    public static final String NAME = "sqlserver-jtds";
-    public static final String LONG_NAME = "SQLServer (jTDS)";
+    public static final String NAME = "sqlserver-jsql";
+    public static final String LONG_NAME = "SQLServer (JSQLConnect)";
     public static final String DIALECT =
-        "net.sf.hibernate.dialect.SQLServerDialect";
-    public static final String DRIVER = "net.sourceforge.jtds.jdbc.Driver";
+        "org.hibernate.dialect.SQLServerDialect";
+    public static final String DRIVER = "com.jnetdirect.jsql.JSQLDriver";
 
     public String getName()
     {
@@ -37,9 +37,9 @@ public class SQLServerjTDSType extends DatabaseType
     }
 
     /**
-     * Returns a jTDS JDBC URL.  jTDS URLs take the form:
+     * Returns a JSQL JDBC URL.  JSQL URLs take the form:
      *
-     *   jdbc:jtds:sqlserver://[hostName]/[databaseName]
+     *   jdbc:JSQLConnect://[hostName]/selectMethod=cursor/database=[databaseName]
      *
      * @param hostName Host name of database server
      * @param databaseName Name of database instance
@@ -48,9 +48,10 @@ public class SQLServerjTDSType extends DatabaseType
     public String getUrl(String hostName, String databaseName)
     {
         StringBuffer url = new StringBuffer();
-        url.append("jdbc:jtds:sqlserver://");
+        url.append("jdbc:JSQLConnect://");
         url.append(hostName);
-        url.append("/").append(databaseName);
+        url.append("/selectMethod=cursor");
+        url.append("/database=").append(databaseName);
         return url.toString();
     }
 }

@@ -17,9 +17,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import net.sf.hibernate.Hibernate;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.UserType;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.usertype.UserType;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -96,5 +96,25 @@ public class PasswordMethodType implements Serializable, UserType
         return false;
     }
 
+    public Object assemble(Serializable cached, Object owner)
+    {
+        return deepCopy(cached);
+    }
+    
+    public Serializable disassemble(Object value)
+    {
+        return (Serializable) deepCopy(value);
+    }
+    
+    public int hashCode(Object x)
+    {
+        return PasswordMethod.hashCode((PasswordMethod)x);
+    }
+    
+    public Object replace(Object original, Object target, Object owner)
+    {
+        return deepCopy(original);
+    }
+    
     private static final int[] TYPES = {Types.VARCHAR};
 }

@@ -1,20 +1,25 @@
+/*
+ * Variman RETS Server
+ *
+ * Author: Dave Dribin, Mark Klein
+ * Copyright (c) 2004-2009, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
+
 package org.realtors.rets.server;
 
 import java.util.List;
 import java.util.SortedSet;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.LockMode;
-import net.sf.hibernate.Hibernate;
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 
 public class GroupUtils
 {
-    public static List findAll() throws HibernateException
+    public static List findAll()
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
             return findAll(helper);
@@ -25,17 +30,17 @@ public class GroupUtils
         }
     }
 
-    public static List findAll(SessionHelper helper) throws HibernateException
+    public static List findAll(EntityManagerHelper helper)
     {
         Query query = helper.createQuery(
             "  FROM Group aGroup " +
             "ORDER BY aGroup.name");
-        return query.list();
+        return query.getResultList();
     }
 
-    public static Group findByName(String name) throws HibernateException
+    public static Group findByName(String name)
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
             return findByName(name, helper);
@@ -46,25 +51,22 @@ public class GroupUtils
         }
     }
 
-    public static Group findByName(String name, SessionHelper helper)
-        throws HibernateException
+    public static Group findByName(String name, EntityManagerHelper helper)
     {
         Query query = helper.createQuery(
             " From Group aGroup " +
             "WHERE aGroup.name = :name");
-        query.setString("name", name);
-        return (Group) query.uniqueResult();
+        query.setParameter("name", name);
+        return (Group) query.getSingleResult();
     }
 
-    public static SortedSet getUsers(Group group) throws HibernateException
+    public static SortedSet getUsers(Group group)
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
-            Session session = helper.beginSession();
-            session.lock(group, LockMode.NONE);
             SortedSet users = group.getUsers();
-            Hibernate.initialize(users);
+            int i = users.size(); // Force initialization for the collection if it is lazy.
             return users;
         }
         finally

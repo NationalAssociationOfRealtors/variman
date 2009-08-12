@@ -14,18 +14,20 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
+
+import javax.persistence.Persistence;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AnnotationConfiguration;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.EntityManagerHelper;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.DatabaseType;
 import org.realtors.rets.server.config.RetsConfig;
@@ -96,11 +98,10 @@ public class AdminUtils
         RetsConfig retsConfig = Admin.getRetsConfig();
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         String hibernateConfig = Admin.getHomeDirectory() + 
-                                    "/variman/WEB-INF/classes/" + 
-                                    Admin.PROJECT_NAME + "-hbm-xml.jar";
+                                    "/variman/WEB-INF/classes/persistence.xml";
  
-        Configuration config = new Configuration()
-            .addJar(new File(hibernateConfig))
+        AnnotationConfiguration config = new AnnotationConfiguration()
+            .addFile(new File(hibernateConfig))
             .setProperties(retsConfig.createHibernateProperties());
         SessionFactory sessionFactory =
             config.buildSessionFactory();
@@ -108,18 +109,22 @@ public class AdminUtils
                                         PasswordMethod.RETS_REALM);
         LOG.debug("Hibernate initialized");
         Admin.setHibernateConfiguration(config);
-        RetsServer.setSessions(sessionFactory);
+        
+        Map properties = retsConfig.createHibernateProperties();
+        RetsServer.setEntityManagerFactory(
+                Persistence.createEntityManagerFactory(
+                        Admin.PROJECT_NAME, properties));
         logDatabaseInfo();
     }
 
     private static void logDatabaseInfo() throws RetsServerException
     {
-        SessionHelper helper = RetsServer.createSessionHelper();
+        EntityManagerHelper helper = RetsServer.createEntityManagerHelper();
         try
         {
-            Session session = helper.beginSession();
-            Connection connection = session.connection();
+            Connection connection = helper.getConnection();
             DatabaseMetaData metaData = connection.getMetaData();
+            
             LOG.info("JDBC Driver info: " + metaData.getDriverName() +
                      " version " + metaData.getDriverVersion());
             LOG.info("JDBC DB info: " + metaData.getDatabaseProductName() +

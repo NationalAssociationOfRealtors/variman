@@ -1,8 +1,8 @@
 /*
  * Variman RETS Server
  *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Author: Dave Dribin, Mark Klein
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -12,10 +12,9 @@ package org.realtors.rets.server;
 
 import java.util.List;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -37,24 +36,24 @@ public class MetadataFinder
         }
     }
 
-    public List findMetadata(String[] levels, SessionFactory sessions)
+    public List findMetadata(String[] levels, EntityManagerFactory entityManagerFactory)
         throws RetsReplyException
     {
         assertLevelLength(levels);
         String level = StringUtils.join(levels, ":");
-        SessionHelper helper = new SessionHelper(sessions);
+        EntityManagerHelper helper = new EntityManagerHelper(entityManagerFactory);
         List metadata = null;
         try
         {
-            Session session = helper.beginTransaction();
-            Query query = session.createQuery(mHql);
+            EntityManager entityManager = helper.beginTransaction();
+            Query query = entityManager.createQuery(mHql);
             if (mExpectedLevels > 0)
             {
-                query.setString("level", level);
+                query.setParameter("level", level);
             }
-            metadata = query.list();
+            metadata = query.getResultList();
         }
-        catch (HibernateException e)
+        catch (Exception e)
         {
             LOG.warn("Caught", e);
             helper.rollback(LOG);

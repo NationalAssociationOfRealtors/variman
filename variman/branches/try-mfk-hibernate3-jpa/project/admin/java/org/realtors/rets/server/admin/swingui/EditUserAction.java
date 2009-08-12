@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.User;
 
 public class EditUserAction extends AbstractAction
@@ -40,7 +40,7 @@ public class EditUserAction extends AbstractAction
             user.setLastName(dialog.getLastName());
             user.setAgentCode(dialog.getAgentCode());
             user.setBrokerCode(dialog.getBrokerCode());
-            HibernateUtils.update(user);
+            ORMUtils.update(user);
             frame.setStatusText("User " + user.getName() + " changed");
             frame.refreshUsers();
             LOG.debug("Changed user: " + user);

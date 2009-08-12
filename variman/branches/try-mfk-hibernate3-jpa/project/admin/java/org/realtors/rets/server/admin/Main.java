@@ -11,13 +11,13 @@ package org.realtors.rets.server.admin;
 import java.io.PrintStream;
 import java.util.List;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.cfg.Configuration;
-import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.HibernateException;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.UserUtils;
@@ -153,7 +153,7 @@ public class Main
         user.setFirstName(args[1]);
         user.setLastName(args[2]);
         user.changePassword(args[3]);
-        HibernateUtils.save(user);
+        ORMUtils.save(user);
         System.out.println("Added user " + user.getUsername());
     }
 

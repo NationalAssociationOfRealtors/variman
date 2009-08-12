@@ -5,11 +5,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.Group;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
@@ -37,7 +37,7 @@ public class AddGroupAction extends AbstractAction
             Group group = new Group(dialog.getGroupName());
             group.setDescription(dialog.getDescription());
 
-            HibernateUtils.save(group);
+            ORMUtils.save(group);
 
             // Update this after hibernate, just in case of DB failure
             RetsConfig retsConfig = Admin.getRetsConfig();

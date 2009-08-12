@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.User;
 
 public class ChangePasswordAction extends AbstractAction
@@ -37,7 +37,7 @@ public class ChangePasswordAction extends AbstractAction
             }
 
             user.changePassword(dialog.getPassword());
-            HibernateUtils.update(user);
+            ORMUtils.update(user);
             frame.setStatusText("Password changed for " + user.getName());
             LOG.debug("Password changed for: " + user);
         }

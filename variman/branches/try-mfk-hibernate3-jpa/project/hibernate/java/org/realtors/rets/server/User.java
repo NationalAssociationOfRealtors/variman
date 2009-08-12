@@ -13,16 +13,65 @@ package org.realtors.rets.server;
 import java.io.Serializable;
 import java.util.SortedSet;
 
+import javax.persistence.*;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.Type;
+
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * @hibernate.class table="rets_user"
+ *  This is hibernate specific. Most JPA providers also have such an
+ *  extension, so if the JPA provider is switched from hibernate, this
+ *  and the Type definition below will need to change.
  */
+@TypeDef(name="PasswordMethodType", typeClass=PasswordMethodType.class)
+
+@Entity
+@Table(name = "rets-user")
 public class User implements Serializable, Comparable
 {
+    @Id @GeneratedValue
+    @Column(name = "id")
+    private Long mId;
+    
+    @Column(name = "firstname",length=80,nullable=false)
+    private String mFirstName;
+    
+    @Column(name = "lastname",length=80,nullable=false)
+    private String mLastName;
+    
+    @Column(name = "username",length=32,nullable=false,unique=true)
+    private String mUsername;
+    
+    @Column(name = "password",length=80)
+    private String mPassword;
+    
+    @Column(name = "passwordmethod")
+    @Type(type="PasswordMethodType")
+    private PasswordMethod mPasswordMethod;
+    
+    @Column(name = "agentcode",length=80)
+    private String mAgentCode;
+    
+    @Column(name="brokercode",length=80)
+    private String mBrokerCode;
+
+    @ManyToMany(
+            targetEntity=Group.class,
+            fetch=FetchType.LAZY)
+    @JoinTable(
+            name = "rets_user_groups", 
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns=@JoinColumn(name="group_id"))
+    @Sort(type = SortType.NATURAL)
+    private SortedSet mGroups;
+    
     public User()
     {
         mPasswordMethod = PasswordMethod.getDefaultMethod();
@@ -31,8 +80,6 @@ public class User implements Serializable, Comparable
     /**
      *
      * @return a Long object
-     *
-     * @hibernate.id generator-class="native"
      */
     public Long getId()
     {
@@ -52,9 +99,6 @@ public class User implements Serializable, Comparable
     /**
      *
      * @return a String
-     *
-     * @hibernate.property length="80"
-     *   not-null="true"
      */
     public String getFirstName()
     {
@@ -69,9 +113,6 @@ public class User implements Serializable, Comparable
     /**
      *
      * @return a String
-     *
-     * @hibernate.property length="80"
-     *   not-null="true"
      */
     public String getLastName()
     {
@@ -86,10 +127,6 @@ public class User implements Serializable, Comparable
     /**
      *
      * @return a String
-     *
-     * @hibernate.property unique="true"
-     *   not-null="true"
-     *   length="32"
      */
     public String getUsername()
     {
@@ -104,9 +141,6 @@ public class User implements Serializable, Comparable
     /**
      *
      * @return a PasswordMethod object
-     *
-     * @hibernate.property
-     *   type="org.realtors.rets.server.PasswordMethodType"
      */
     public PasswordMethod getPasswordMethod()
     {
@@ -131,8 +165,6 @@ public class User implements Serializable, Comparable
 
     /**
      * @return The hashed password
-     *
-     * @hibernate.property length="80"
      */
     public String getPassword()
     {
@@ -171,8 +203,6 @@ public class User implements Serializable, Comparable
      * Returns the agent code.
      *
      * @return The agent code
-     *
-     * @hibernate.property length="80"
      */
     public String getAgentCode()
     {
@@ -188,8 +218,6 @@ public class User implements Serializable, Comparable
      * Returns the broker code.
      *
      * @return The broker code
-     *
-     * @hibernate.property length="80"
      */
     public String getBrokerCode()
     {
@@ -201,13 +229,6 @@ public class User implements Serializable, Comparable
         mBrokerCode = brokerCode;
     }
 
-    /**
-     * @hibernate.set table="rets_user_groups" lazy="true"
-     *   sort="natural"
-     * @hibernate.key column="user_id"
-     * @hibernate.many-to-many column="group_id"
-     *   class="org.realtors.rets.server.Group"
-     */
     protected SortedSet getGroups()
     {
         return mGroups;
@@ -264,13 +285,5 @@ public class User implements Serializable, Comparable
             .toComparison();
     }
 
-    private Long mId;
-    private String mFirstName;
-    private String mLastName;
-    private String mUsername;
-    private String mPassword;
-    private PasswordMethod mPasswordMethod;
-    private String mAgentCode;
-    private String mBrokerCode;
-    private SortedSet mGroups;
+
 }

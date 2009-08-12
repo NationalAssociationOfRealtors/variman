@@ -1,8 +1,8 @@
 /*
  * Variman RETS Server
  *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Author: Dave Dribin, Mark Klein
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -12,51 +12,44 @@ package org.realtors.rets.server;
 
 import java.io.PrintStream;
 
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
 import java.sql.Connection;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
-public class SessionHelper implements ConnectionHelper
+
+public class EntityManagerHelper implements ConnectionHelper
 {
-    public SessionHelper(SessionFactory factory)
+    public EntityManagerHelper(EntityManagerFactory factory)
     {
         mFactory = factory;
-        mSession = null;
+        mEntityManager = null;
         mTx = null;
     }
 
-    public Session beginSession() throws HibernateException
+    public EntityManager beginSession()
     {
         LOG.debug("beginSession");
-        mSession = mFactory.openSession();
+        mEntityManager = mFactory.createEntityManager();
         mTx = null;
-        return mSession;
+        return mEntityManager;
     }
     
     public Connection getConnection() throws RetsServerException 
     {
-    	try
-    	{
-    		beginSession();
-	    	return mSession.connection();
-    	}
-    	catch(HibernateException e)
-    	{
-    		throw new RetsServerException(e);
-    	}
+        return ORMUtils.getConnection();
     }
 
-    public Session beginTransaction() throws HibernateException
+    public EntityManager beginTransaction()
     {
         LOG.debug("beginTransaction");
-        mSession = mFactory.openSession();
-        mTx = mSession.beginTransaction();
-        return mSession;
+        mEntityManager = mFactory.createEntityManager();
+        mTx = mEntityManager.getTransaction();
+        return mEntityManager;
     }
 
 
@@ -65,22 +58,22 @@ public class SessionHelper implements ConnectionHelper
     	try
     	{
 			beginTransaction();
-    		return mSession.connection();
+    		return getConnection();
     	}
-    	catch(HibernateException e)
+    	catch(Exception e)
     	{
     		throw new RetsServerException(e);
     	}
     }
     
-    public Query createQuery(String queryString) throws HibernateException
+    public Query createQuery(String queryString)
     {
         LOG.debug("createQuery");
-        if (mSession == null)
+        if (mEntityManager == null)
         {
             beginSession();
         }
-        return mSession.createQuery(queryString);
+        return mEntityManager.createQuery(queryString);
     }
 
     public void commit() throws RetsServerException
@@ -93,7 +86,7 @@ public class SessionHelper implements ConnectionHelper
         		mTx.commit();
         		mTx = null;
         	}
-        	catch(HibernateException e)
+        	catch(Exception e)
         	{
         		throw new RetsServerException(e);
         	}
@@ -107,11 +100,11 @@ public class SessionHelper implements ConnectionHelper
         {
         	try
         	{
-        		Transaction tx = mTx;
+        		EntityTransaction tx = mTx;
         		mTx = null;
         		tx.rollback();
         	}
-        	catch(HibernateException e)
+        	catch(Exception e)
         	{
         		throw new RetsServerException(e);
         	}
@@ -145,7 +138,7 @@ public class SessionHelper implements ConnectionHelper
     public void close() throws RetsServerException
     {
         LOG.debug("close");
-        if (mSession != null)
+        if (mEntityManager != null)
         {
         	try
         	{
@@ -153,9 +146,9 @@ public class SessionHelper implements ConnectionHelper
         		{
         			rollback();
         		}
-        		mSession.close();
+        		mEntityManager.close();
         	}
-        	catch(HibernateException e)
+        	catch(Exception e)
         	{
         		throw new RetsServerException(e);
         	}
@@ -170,7 +163,7 @@ public class SessionHelper implements ConnectionHelper
         }
         catch (RetsServerException e)
         {
-            mSession = null;
+            mEntityManager = null;
             log.warn("Exception", e);
         }
     }
@@ -183,14 +176,14 @@ public class SessionHelper implements ConnectionHelper
         }
         catch (RetsServerException e)
         {
-            mSession = null;
+            mEntityManager = null;
             e.printStackTrace(stream);
         }
     }
 
     private static final Logger LOG =
-        Logger.getLogger(SessionHelper.class);
-    private SessionFactory mFactory;
-    private Session mSession;
-    private Transaction mTx;
+        Logger.getLogger(EntityManagerHelper.class);
+    private EntityManagerFactory mFactory;
+    private EntityManager mEntityManager;
+    private EntityTransaction mTx;
 }

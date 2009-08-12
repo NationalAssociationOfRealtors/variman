@@ -1,8 +1,8 @@
 /*
  * Variman RETS Server
  *
- * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Author: Dave Dribin, Mark Klein
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -39,7 +39,7 @@ public class SearchServlet extends RetsServlet
         SearchTransaction search = RetsServer.createSearchTransaction();
         search.setParameters(parameters);
         search.execute(out, WebApp.getMetadataManager(),
-                       RetsServer.getSessions());
+                       RetsServer.getEntityManagerFactory());
     }
 
     private static final Logger LOG =

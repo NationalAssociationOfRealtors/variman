@@ -21,11 +21,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.dialect.Dialect;
-import org.realtors.rets.server.IOUtils;
+import org.hibernate.ejb.HibernateEntityManagerFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.dialect.Dialect;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.metadata.InterpretationEnum;
@@ -42,7 +42,9 @@ public class CreateDataSchemaCommand
         mClasses = new HashMap();
         mTables = new HashMap();
         mLs = System.getProperty("line.separator");
-        mSessions = RetsServer.getSessions();
+        HibernateEntityManagerFactory hibEMF = (HibernateEntityManagerFactory) RetsServer.getEntityManagerFactory();
+        
+        mSessions = hibEMF.getSessionFactory();
     }
 
     public void execute()
@@ -136,7 +138,8 @@ public class CreateDataSchemaCommand
                         case 1:
                             sb.append(
                                 dialect.getTypeName(Types.VARCHAR,
-                                                    table.getMaximumLength()));
+                                                    table.getMaximumLength(),
+                                                    table.getPrecision(), 0));
                             break;
                         case 2:
                             sb.append(dialect.getTypeName(Types.DATE));
@@ -205,10 +208,10 @@ public class CreateDataSchemaCommand
                 sb.append("\tparent_id ").append(bigint).append(" NOT NULL, ");
                 sb.append(mLs);
                 sb.append("\tlookup_name ");
-                sb.append(dialect.getTypeName(Types.VARCHAR, 64));
+                sb.append(dialect.getTypeName(Types.VARCHAR, 64, 0, 0));
                 sb.append(" NOT NULL, ").append(mLs);
                 sb.append("\tvalue ");
-                sb.append(dialect.getTypeName(Types.VARCHAR, 128)).append(mLs);
+                sb.append(dialect.getTypeName(Types.VARCHAR, 128, 0, 0)).append(mLs);
                 sb.append(");").append(mLs);
 
                 // Do the primary key
@@ -222,7 +225,7 @@ public class CreateDataSchemaCommand
                 sb.append(dialect.getAddForeignKeyConstraintString(
                     lmTable + "_fk",
                     new String[]{"parent_id"}, sqlTableName,
-                    new String[]{"id"})).append(";").append(mLs);
+                    new String[]{"id"}, false)).append(";").append(mLs);
             }
         }
 

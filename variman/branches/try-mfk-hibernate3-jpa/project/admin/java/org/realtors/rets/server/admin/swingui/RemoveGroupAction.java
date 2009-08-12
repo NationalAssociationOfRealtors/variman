@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.GroupUtils;
-import org.realtors.rets.server.HibernateUtils;
+import org.realtors.rets.server.ORMUtils;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.SecurityConstraints;
@@ -55,7 +55,7 @@ public class RemoveGroupAction extends AbstractAction
                 return;
             }
 
-            HibernateUtils.delete(group);
+            ORMUtils.delete(group);
 
             // Group rules are stored in RetsConfig
             RetsConfig retsConfig = Admin.getRetsConfig();
