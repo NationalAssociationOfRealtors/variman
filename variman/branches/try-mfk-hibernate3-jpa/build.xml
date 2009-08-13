@@ -11,6 +11,8 @@
   <property file="${basedir}/project/build.properties" />
 
   <property name="rets-client.jar" value="${basedir}/build/rets-client/rets-client.jar" />
+  <property name="variman-core.jar" value="${basedir}/build/core/variman-core.jar" />
+  <property name="persistence.xml" value="${basedir}/project/persistence.xml" />
 
   <fileset id="hibernate.mapping.files" dir="project/hibernate/mappings">
     <include name="**/*.hbm.xml" />
@@ -26,12 +28,18 @@
   <path id="hibernate.path">
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${hibernate.jar}"/>
+  	<pathelement path="${hibernate-annotations.jar}"/>
+  	<pathelement path="${hibernate-entitymanager.jar}"/>
+    <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${antlr.jar}"/>
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${rets-client.jar}"/>
+  	<pathelement path="${variman-core.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
     <pathelement path="${commons-collections.jar}"/>
+  	<pathelement path="${commons-logging.jar}"/>
+    <pathelement path="${junit.jar}"/>
     <!-- Spring 3
     <pathelement path="${spring.aop.jar}"/>
     <pathelement path="${spring.aspects.jar}"/>
@@ -58,10 +66,13 @@
 
   <path id="lib.path">
     <pathelement path="${commons-lang.jar}"/>
+  	<pathelement path="${commons-logging.jar}"/>
     <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${hibernate-annotations.jar}"/>
+    <pathelement path="${hibernate-entitymanager.jar}"/>
     <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${hibernate-ext.tools.jar}"/>
-  	<pathelement path="${mysql.jdbc.jar}"/>
+    <pathelement path="${mysql.jdbc.jar}"/>
     <pathelement path="${postgres.jdbc.jar}"/>
     <pathelement path="${jtds.jdbc.jar}"/>
     <pathelement path="${jdom.jar}"/>
@@ -73,30 +84,29 @@
     <pathelement path="${tomcat.bootstrap.jar}"/>
   </path>
 
-  <path id="importer.path">
-    <pathelement path="build/hibernate/classes"/>
-    <pathelement location="${rets-client.jar}"/>
-    <pathelement location="${commons-cli.jar}"/>
-    <pathelement path="${commons-lang.jar}"/>
-    <pathelement path="${hibernate.jar}"/>
-    <pathelement path="${log4j.jar}"/>
-    <pathelement path="${jdom.jar}"/>
-  </path>
-
   <path id="datagen.path">
+    <pathelement path="${variman-core.jar}"/>
     <pathelement path="build/hibernate/classes"/>
     <pathelement location="${commons-cli.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${hibernate-annotations.jar}"/>
+    <pathelement path="${hibernate-entitymanager.jar}"/>
   </path>
 
   <path id="webapp.path">
     <pathelement path="${servlet.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${rets-client.jar}"/>
+    <pathelement path="${variman-core.jar}"/>
     <pathelement location="build/embedded/classes"/>
     <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${hibernate-annotations.jar}"/>
+    <pathelement path="${hibernate-entitymanager.jar}"/>
+    <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${httpunit.jar}"/>
@@ -115,9 +125,14 @@
   <path id="admin.path">
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${hibernate-annotations.jar}"/>
+    <pathelement path="${hibernate-entitymanager.jar}"/>
+    <fileset dir="${hibernate.lib}" includes="*.jar"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${rets-client.jar}"/>
+    <pathelement path="${variman-core.jar}"/>
     <pathelement path="${apple-java-ext.jar}"/>
     <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
   </path>
@@ -159,18 +174,16 @@
   </target>
 
   <target name="prepare" depends="test-jvm-version,setup-java-sql1.5,setup-java-sql1.6">
-    <mkdir dir="build/hibernate/final/classes"/>
-    <mkdir dir="build/hibernate/generated"/>
-    <mkdir dir="build/hibernate/generated/org/realtors/rets/server/dmql"/>
+  	<mkdir dir="build/core/classes"/>
+    <mkdir dir="build/core/generated"/>
+    <mkdir dir="build/core/generated/org/realtors/rets/server/dmql"/>
+  	<mkdir dir="build/hibernate/final/classes"/>
     <mkdir dir="build/hibernate/schema"/>
     <mkdir dir="build/hibernate/jar"/>
     <mkdir dir="build/hibernate/classes"/>
     <mkdir dir="build/hibernate/test/classes"/>
     <mkdir dir="build/hibernate/doc"/>
     <mkdir dir="build/embedded/classes"/>
-    <mkdir dir="build/importer/classes"/>
-    <mkdir dir="build/importer/lib"/>
-    <mkdir dir="build/importer/bin"/>
     <mkdir dir="build/datagen/classes"/>
     <mkdir dir="build/datagen/lib"/>
     <mkdir dir="build/datagen/bin"/>
@@ -192,13 +205,13 @@
   </target>
 
   <target name="build" description="Build all"
-          depends="build-hibernate,build-webapp,build-importer,build-admin" />
+          depends="build-core,build-hibernate,build-webapp,build-admin" />
 
-  <target name="build-hibernate" depends="build-hibernate-xdoclet,build-rets-client">
+  <target name="build-core" depends="build-rets-client">
     <property name="src.antlr.dir"
-              value="${basedir}/project/hibernate/java/org/realtors/rets/server/dmql"/>
+              value="${basedir}/project/core/java/org/realtors/rets/server/dmql"/>
     <property name="build.antlr.dir"
-              value="${basedir}/build/hibernate/generated/org/realtors/rets/server/dmql"/>
+              value="${basedir}/build/core/generated/org/realtors/rets/server/dmql"/>
     <antlr dir="${src.antlr.dir}"
            target="${src.antlr.dir}/dmql.g"
            outputdirectory="${build.antlr.dir}"
@@ -225,13 +238,30 @@
         <pathelement location="${antlr.jar}"/>
       </classpath>
     </antlr>
+    <javac destdir="build/core/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <src path="project/core/java"/>
+      <src path="build/core/generated"/>
+      <classpath>
+        <path refid="hibernate.path" />
+      </classpath>
+    </javac>
+    <jar destfile="${variman-core.jar}"
+         basedir="build/core/classes"
+         index="true"/>
+
+  </target>
+
+  <target name="build-hibernate" depends="build-hibernate-xdoclet,build-rets-client">
     <javac destdir="build/hibernate/classes"
            target="${compile.vmtarget}" source="${compile.vmsource}"
            optimize="${compile.optimize}"
            debug="${compile.debug}"
            deprecation="${compile.deprecation}">
       <src path="project/hibernate/java"/>
-      <src path="build/hibernate/generated"/>
       <classpath>
         <path refid="hibernate.path" />
       </classpath>
@@ -256,7 +286,7 @@
          basedir="build/hibernate/classes"
          excludes="hibernate.properties" index="true"/>
   </target>
-
+	
   <target name="build-hibernate-xdoclet" depends="prepare"
           description="Run xdoclet on the hibernate classes">
     <taskdef name="hibernatedoclet"
@@ -317,7 +347,7 @@
         <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
         <pathelement location="build/hibernate/jar"/>
         <fileset dir="${hibernate.lib}" includes="*.jar"/>
-      	<pathelement location="${mysql.jdbc.jar}"/>
+        <pathelement location="${mysql.jdbc.jar}"/>
         <pathelement location="${postgres.jdbc.jar}"/>
         <pathelement location="${jtds.jdbc.jar}"/>
       </classpath>
@@ -340,7 +370,6 @@
       <sourcepath>
         <pathelement location="project/embedded/java"/>
         <pathelement location="project/hibernate/java"/>
-        <pathelement location="project/importer/java"/>
         <pathelement location="project/webapp/java"/>
         <pathelement location="project/datagen/java"/>
       </sourcepath>
@@ -348,7 +377,6 @@
         <path refid="hibernate.path"/>
         <path refid="lib.path"/>
         <path refid="embedded.path"/>
-        <path refid="importer.path"/>
         <path refid="webapp.path"/>
       </classpath>
       <tag name="hibernate.class" scope="all" description="Hibernate Class"/>
@@ -439,19 +467,19 @@
     </copy>
     <copy file="project/webapp/config/tomcat-users.xml"
           todir="build/rets-server/server/conf"/>
-  	<copy file="project/webapp/config/tomcat.logging.properties"
+        <copy file="project/webapp/config/tomcat.logging.properties"
           todir="build/rets-server/server/conf"/>
-  	<copy todir="build/rets-server/server/lib">
-  	    <fileset dir="${tomcat.lib}">
-  	       <include name="*.jar"/>
-  	   	</fileset>
-  	</copy>
+        <copy todir="build/rets-server/server/lib">
+          <fileset dir="${tomcat.lib}">
+            <include name="*.jar"/>
+          </fileset>
+        </copy>
     <copy todir="build/rets-server/server/lib">
        <fileset dir="${tomcat.bin}">
           <include name="*.jar"/>
        </fileset>
    </copy>
-  	
+
     <copy todir="build/rets-server/doc">
       <fileset dir="doc" includes="**/*"/>
     </copy>
@@ -550,24 +578,24 @@
         <pathelement location="${servlet.jar}"/>
       </classpath>
     </taskdef>
-  	
+
     <webdoclet>
         <fileset dir="project/webapp/java" includes="**/*.java"/>
 
-    	<component
+        <component
             classname="org.xdoclet.plugin.web.WebPlugin"
-    		destdir="build/rets-server/variman/WEB-INF"
+            destdir="build/rets-server/variman/WEB-INF"
             mergedir="file:project/webapp/config/web-merge/"
-    		servletversion="2.3"
-    		/>
-    	<component
-    		classname="org.xdoclet.plugin.web.TaglibPlugin"
-    		jspversion="1.2"
+            servletversion="2.3"
+        />
+        <component
+            classname="org.xdoclet.plugin.web.TaglibPlugin"
+            jspversion="1.2"
             destdir="build/rets-server/variman/WEB-INF"
             filereplace="cct.tld"
-    	    shortname="cct"
-    		validate="false"
-		   />
+            shortname="cct"
+            validate="false"
+        />
     </webdoclet>
   </target>
 
@@ -630,14 +658,24 @@
           file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
     <copy todir="build/rets-server/variman/WEB-INF/classes"
           file="project/hibernate/config/cache.ccf"/>
+    <copy todir="build/rets-server/variman/WEB-INF/classes"
+          file="${persistence.xml}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${rets-client.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${variman-core.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${commons-lang.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${commons-logging.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${log4j.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${hibernate.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${hibernate-annotations.jar}"/>   
+  	<copy todir="build/rets-server/variman/WEB-INF/lib"
+  	      file="${hibernate-entitymanager.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib">
       <fileset dir="${hibernate.lib}" includes="*.jar" />
     </copy>
@@ -751,6 +789,10 @@
     </copy>
     <copy todir="build/datagen/lib"
           file="${hibernate.jar}"/>
+    <copy todir="build/datagen/lib"
+          file="${hibernate-annotations.jar}"/>   
+  	<copy todir="build/datagen/lib"
+          file="${hibernate-entitymanager.jar}"/>
     <copy todir="build/datagen/classes"
           file="project/hibernate/config/hibernate.properties"/>
     <copy todir="build/datagen/classes"
@@ -760,61 +802,6 @@
     <copy todir="build/datagen/lib" file="${jtds.jdbc.jar}"/>
   </target>
 
-
-
-  <target name="build-importer" depends="build-hibernate,build-rets-client"
-          description="Builds the data and metadata importers">
-    <depend srcDir="project/importer/java"
-            destDir="build/importer/classes"
-            cache="build/importer/depcache" closure="yes">
-      <classpath>
-        <path refid="importer.path"/>
-      </classpath>
-    </depend>
-    <javac srcdir="project/importer/java"
-           destdir="build/importer/classes"
-           target="${compile.vmtarget}" source="${compile.vmsource}"
-           optimize="${compile.optimize}" debug="${compile.debug}"
-           deprecation="${compile.deprecation}">
-      <classpath>
-        <path refid="importer.path"/>
-      </classpath>
-    </javac>
-
-    <copy file="project/importer/shell/runImporter"
-          todir="build/importer/bin"/>
-    <chmod file="build/importer/bin/runImporter" perm="ugo+rx"/>
-    <copy file="project/importer/shell/runSchema"
-          todir="build/importer/bin"/>
-    <chmod file="build/importer/bin/runSchema" perm="ugo+rx"/>
-    <copy file="${rets-client.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-lang.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-httpclient.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-logging.jar}" todir="build/importer/lib"/>
-    <copy file="${log4j.jar}" todir="build/importer/lib"/>
-    <copy file="${jdom.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-cli.jar}" todir="build/importer/lib"/>
-    <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
-          todir="build/importer/lib"/>
-    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
-          todir="build/importer/classes"/>
-
-    <!-- this copies the hibernate stuff we need -->
-    <copy todir="build/importer/lib">
-      <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar,commons-lang.jar" />
-    </copy>
-    <copy todir="build/importer/lib"
-          file="${hibernate.jar}"/>
-    <copy todir="build/importer/classes"
-          file="project/hibernate/config/hibernate.properties"/>
-    <copy todir="build/importer/classes"
-          file="project/hibernate/config/cache.ccf"/>
-
-    <copy todir="build/importer/lib" file="${mysql.jdbc.jar}"/>
-    <copy todir="build/importer/lib" file="${postgres.jdbc.jar}"/>
-    <copy todir="build/importer/lib" file="${jtds.jdbc.jar}"/>
-  </target>
 
   <target name="build-admin" depends="build-hibernate"
           description="Builds the admin tool">
@@ -896,6 +883,7 @@
         <pathelement path="${servlet.jar}"/>
         <pathelement path="${log4j.jar}"/>
         <pathelement path="${commons-lang.jar}"/>
+        <pathelement path="${commons-lagging.jar}"/>
         <pathelement path="${antlr.runtime.jar}"/>
         <pathelement location="build/hibernate/classes"/>
         <pathelement location="build/rets-server/variman/WEB-INF/classes"/>
@@ -995,7 +983,6 @@
       <path refid="hibernate.path"/>
       <path refid="lib.path"/>
       <path refid="embedded.path"/>
-      <path refid="importer.path"/>
       <path refid="webapp.path"/>
     </path>
     <property name="cp" refid="full-classpath"/>
@@ -1011,7 +998,6 @@
       <fileset dir="project/datagen/java" includes="**/*.java"/>
       <fileset dir="project/embedded/java" includes="**/*.java"/>
       <fileset dir="project/hibernate/java" includes="**/*.java"/>
-      <fileset dir="project/importer/java" includes="**/*.java"/>
       <fileset dir="project/webapp/java" includes="**/*.java"/>
       <property key="checkstyle.cache.file" file="build/client/cs-cache"/>
     </checkstyle>
