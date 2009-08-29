@@ -140,7 +140,7 @@ public class LookupList implements SqlConverter
 
     private void printLookupCondition(PrintWriter out, String lookup)
     {
-        if (!lookup.equals(".ANY."))
+        if (!lookup.equals(".ANY.") && !lookup.equals(".EMPTY."))
         {
             out.print(mSqlColumn);
             out.print(" = '");
@@ -154,12 +154,18 @@ public class LookupList implements SqlConverter
             // any possible value. From a SQL standpoint, that should
             // be the same as simply ignoring the field. But, because we
             // could end up with an empty WHERE clause, it would be best
-            // to check the field both null and not null.
+            // to check the field both null and not null. For the .EMPTY.
+            // case, only check for null.
             out.print("(");
+            
+            if (lookup.equals(".ANY."))
+            {
+                out.print(mSqlColumn);
+                out.print(" is not null or ");
+            }
+            
             out.print(mSqlColumn);
-            out.print(" is null or ");
-            out.print(mSqlColumn);
-            out.print(" is not null)");
+            out.print(" is null)");
         }
     }
 

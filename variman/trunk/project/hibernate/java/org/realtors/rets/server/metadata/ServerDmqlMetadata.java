@@ -236,6 +236,18 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         lookupType.setValue(".ANY.");
         dbValues.put(".ANY.", ".ANY.");
         lookupTypesMap.put(".ANY.", lookupType);
+        
+        /*
+         * Dummy up an entry to handle .EMPTY.
+         */
+        lookupType.setId(saveId + 2);
+        lookupType.setLevel(saveLevel);
+        lookupType.setLongValue(".EMPTY.");
+        lookupType.setMetadataEntryID(".EMPTY.");
+        lookupType.setShortValue(".EMPTY.");
+        lookupType.setValue(".EMPTY.");
+        dbValues.put(".EMPTY.", ".EMPTY.");
+        lookupTypesMap.put(".EMPTY.", lookupType);
 
         mLookupsDbMap.put(fieldName, dbValues);
         mLookupTypesMap.put(fieldName, lookupTypesMap);
