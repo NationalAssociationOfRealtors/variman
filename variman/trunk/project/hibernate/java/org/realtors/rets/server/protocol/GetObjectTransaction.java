@@ -51,6 +51,7 @@ public class GetObjectTransaction
         mBoundaryGenerator = DEFAULT_BOUNDARY_GENERATOR;
         mBaseLocationUrl = "http://images.invalid/";
         mBlockLocation = false;
+        mWildObject = false;
     }
 
     public void setRootDirectory(String rootDirectory)
@@ -152,8 +153,16 @@ public class GetObjectTransaction
             {
                 out.writeBytes("Content-Description: " + description + CRLF);
             }
-            out.writeBytes("Object-ID: " + objectDescriptor.getObjectId() +
+            if (objectDescriptor.getRetsReplyCode() != ReplyCode.SUCCESSFUL &&
+                    allObjects.size() == 1 && mWildObject)
+            {
+                out.writeBytes("Object-ID: *" + CRLF);
+            }
+            else
+            {
+                out.writeBytes("Object-ID: " + objectDescriptor.getObjectId() +
                            CRLF);
+            }
             if (useLocation())
             {
                 out.writeBytes("Content-Type: text/xml" + CRLF);
@@ -212,6 +221,7 @@ public class GetObjectTransaction
                 String objectIdString = (String) objectIdList.get(j);
                 if (objectIdString.equals("*"))
                 {
+                    mWildObject = true;
                     objects.addAll(objectSet.findAllObjects(mType));
                 }
                 else
@@ -382,4 +392,5 @@ public class GetObjectTransaction
     private String mObjectSetPattern;
     private String mResource;
     private String mType;
+    private boolean mWildObject;
 }
