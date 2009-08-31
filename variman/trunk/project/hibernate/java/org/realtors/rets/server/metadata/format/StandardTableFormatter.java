@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -18,6 +18,7 @@ import java.util.List;
 import java.io.PrintWriter;
 
 import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.Table;
@@ -27,7 +28,9 @@ public class StandardTableFormatter extends BaseStandardFormatter
     public void format(FormatterContext context, Collection tables,
                        String[] levels)
     {
+        RetsVersion retsVersion = context.getRetsVersion();
         PrintWriter out = context.getWriter();
+        
         String resource = levels[RESOURCE_LEVEL];
         String retsClass = levels[CLASS_LEVEL];
         TagBuilder metadata = new TagBuilder(out, "METADATA-TABLE")
@@ -47,7 +50,11 @@ public class StandardTableFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "Field").
                 beginContentOnNewLine();
 
-            TagBuilder.simpleTag(out, "MetadataEntryID", table.getMetadataEntryID());
+            if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
+            {
+                // Added 1.7 DTD
+                TagBuilder.simpleTag(out, "MetadataEntryID", table.getMetadataEntryID());
+            }
             TagBuilder.simpleTag(out, "SystemName", table.getSystemName());
             TagBuilder.simpleTag(out, "StandardName", table.getStandardName());
             TagBuilder.simpleTag(out, "LongName", table.getLongName());
@@ -89,14 +96,21 @@ public class StandardTableFormatter extends BaseStandardFormatter
             TagBuilder.simpleTag(out, "SearchHelpID", table.getSearchHelp());
             TagBuilder.simpleTag(out, "Unique", table.isUnique());
             
-            //1.7.2
-            TagBuilder.simpleTag(out, "ModTimeStamp", table.getModTimeStamp());
-            TagBuilder.simpleTag(out, "ForeignKeyName", table.getForeignKeyName());
-            TagBuilder.simpleTag(out, "ForeignField", table.getForeignField());
-            TagBuilder.simpleTag(out, "KeyQuery", table.getKeyQuery());
-            TagBuilder.simpleTag(out, "KeySelect", table.getKeySelect());
-            TagBuilder.simpleTag(out, "InKeyIndex", table.getInKeyIndex());            
-
+            if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
+            {
+                // Added in 1.7 DTD
+                TagBuilder.simpleTag(out, "ModTimeStamp", table.getModTimeStamp());
+                TagBuilder.simpleTag(out, "ForeignKeyName", table.getForeignKeyName());
+                TagBuilder.simpleTag(out, "ForeignField", table.getForeignField());
+                TagBuilder.simpleTag(out, "KeyQuery", table.getKeyQuery());
+                TagBuilder.simpleTag(out, "KeySelect", table.getKeySelect());
+                if (!retsVersion.equals(RetsVersion.RETS_1_7))
+                {
+                    // Added in 1.7.2 DTD
+                    TagBuilder.simpleTag(out, "InKeyIndex", table.getInKeyIndex());        
+                }
+            }
+            
             tag.close();
         }
 

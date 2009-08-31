@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.ForeignKey;
 import org.realtors.rets.server.metadata.Table;
@@ -30,12 +31,26 @@ public class StandardForeignKeyFormatter extends BaseStandardFormatter
 			return;
 		}
 		
+		RetsVersion retsVersion = context.getRetsVersion();
 	    PrintWriter out = context.getWriter();
-		TagBuilder metadata = new TagBuilder(context.getWriter(),
+	    TagBuilder metadata;
+	    
+        // 1.7.2 DTD makes changes.
+        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+                retsVersion.equals(RetsVersion.RETS_1_7))
+        {
+            metadata = new TagBuilder(context.getWriter(),
+                                "METADATA-FOREIGN_KEY")
+                                .beginContentOnNewLine();
+        }
+        else
+        {
+            metadata = new TagBuilder(context.getWriter(),
 		                             "METADATA-FOREIGN_KEYS")
-				 .appendAttribute("Version", context.getVersion())
-				 .appendAttribute("Date", context.getDate(), context.getRetsVersion())
-				 .beginContentOnNewLine();
+                    				 .appendAttribute("Version", context.getVersion())
+                    				 .appendAttribute("Date", context.getDate(), context.getRetsVersion())
+                    				 .beginContentOnNewLine();
+        }
 		
 		for (Iterator iterator = foreignKeys.iterator(); iterator.hasNext();)
 		{
@@ -75,9 +90,13 @@ public class StandardForeignKeyFormatter extends BaseStandardFormatter
 			TagBuilder.simpleTag(out, "ChildClassID", paths[1]);
 			TagBuilder.simpleTag(out, "ChildSystemName", name);
 
-			TagBuilder.simpleTag(out, "ConditionalParentField", foreignKey.getConditionalParentField());
-			TagBuilder.simpleTag(out, "ConditionalParentValue", foreignKey.getConditionalParentValue());
-
+	        if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
+	        {
+	            // Added in 1.7 DTD
+    			TagBuilder.simpleTag(out, "ConditionalParentField", foreignKey.getConditionalParentField());
+    			TagBuilder.simpleTag(out, "ConditionalParentValue", foreignKey.getConditionalParentValue());
+	        }
+	        
 			tag.close();
 		}
 		

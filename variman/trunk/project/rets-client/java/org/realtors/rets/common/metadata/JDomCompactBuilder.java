@@ -339,9 +339,10 @@ public class JDomCompactBuilder extends MetadataBuilder {
 	
 	private void attachForeignKey(Metadata metadata, Element root) {
 		MSystem system = metadata.getSystem();
-		List containers = root.getChildren(CONTAINER_FOREIGNKEY_1_7_2);
+		List containers = root.getChildren(CONTAINER_FOREIGNKEY);
+		// In case someone is following the Spec and not the DTD.
 		if (containers != null && containers.isEmpty())
-			containers = root.getChildren(CONTAINER_FOREIGNKEY);
+			containers = root.getChildren(CONTAINER_FOREIGNKEY_1_7_2);
 		for (int i = 0; i < containers.size(); i++) {
 			Element container = (Element) containers.get(i);
 			MForeignKey[] resources = this.processForeignKey(container);

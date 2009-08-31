@@ -13,6 +13,7 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.Lookup;
@@ -26,12 +27,25 @@ public class CompactLookupFormatter extends MetadataFormatter
         {
             return;
         }
+        RetsVersion retsVersion = context.getRetsVersion();
+        
         TagBuilder tag = new TagBuilder(context.getWriter(), "METADATA-LOOKUP")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
             .appendAttribute("Version", context.getVersion())
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
-            .beginContentOnNewLine()
-            .appendColumns(COLUMNS);
+            .beginContentOnNewLine();
+        
+        // Version and Date become LookupTypeVersion and LookupTypeDate in the 1.7.2 DTD.
+        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+                retsVersion.equals(RetsVersion.RETS_1_7))
+        {
+            tag.appendColumns(COLUMNS);
+        }
+        else
+        {
+            tag.appendColumns(COLUMNS_1_7_2);
+        }
+        
         for (Iterator iterator = lookups.iterator(); iterator.hasNext();)
         {
             Lookup lookup = (Lookup) iterator.next();
@@ -64,5 +78,8 @@ public class CompactLookupFormatter extends MetadataFormatter
 
     private static final String[] COLUMNS = new String[] {
         "MetadataEntryID", "LookupName", "VisibleName", "Version", "Date",
+    };
+    private static final String[] COLUMNS_1_7_2 = new String[] {
+        "MetadataEntryID", "LookupName", "VisibleName", "LookupTypeVersion", "LookupTypeDate",
     };
 }

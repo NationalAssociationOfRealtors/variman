@@ -539,7 +539,9 @@ public class JDomStandardBuilder extends MetadataBuilder {
 
 	public static final String CONTAINER_RESOURCE = "METADATA-RESOURCE";
 
-	public static final String CONTAINER_FOREIGNKEY = "METADATA-FOREIGN_KEYS";
+	public static final String CONTAINER_FOREIGNKEY = "METADATA-FOREIGN_KEY";
+
+    public static final String CONTAINER_FOREIGNKEY_1_7_2 = "METADATA-FOREIGN_KEYS";
 
 	public static final String CONTAINER_CLASS = "METADATA-CLASS";
 

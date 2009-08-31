@@ -1,3 +1,8 @@
+Version 3.1.0 - xx xxx 2009
+
+  * .EMPTY. is failing on Lookups. Ticket #55.
+  * Format=STANDARD-XML Metadata fails DTD check. Ticket #56.
+
 Version 3.0.0b5 - 31 Jul 2009
 
   * Add cut/paste to all text components. Ticket #53.

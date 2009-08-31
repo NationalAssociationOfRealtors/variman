@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.server.metadata.ForeignKey;
 import org.realtors.rets.server.metadata.Lookup;
 import org.realtors.rets.server.metadata.LookupType;
 import org.realtors.rets.server.metadata.MClass;
@@ -107,6 +108,7 @@ public class GetMetadataParameters extends TransactionParameters
         sValidTypes.add(ValidationExternal.TABLE);
         sValidTypes.add(ValidationExternalType.TABLE);
         sValidTypes.add(ValidationExpression.TABLE);
+        sValidTypes.add(ForeignKey.TABLE);
     }
 
     private String cleanUpType(String type) throws RetsReplyException

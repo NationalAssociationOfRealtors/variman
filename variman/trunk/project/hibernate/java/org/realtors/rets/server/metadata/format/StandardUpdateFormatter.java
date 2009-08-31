@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.Update;
 import org.realtors.rets.server.Util;
@@ -23,6 +24,7 @@ public class StandardUpdateFormatter extends BaseStandardFormatter
     public void format(FormatterContext context, Collection updates,
                        String[] levels)
     {
+        RetsVersion retsVersion = context.getRetsVersion();
         PrintWriter out = context.getWriter();
         TagBuilder metadata = new TagBuilder(out, "METADATA-UPDATE")
             .appendAttribute("Resource", levels[RESOURCE_LEVEL])
@@ -37,7 +39,11 @@ public class StandardUpdateFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "UpdateType")
                 .beginContentOnNewLine();
  
-            TagBuilder.simpleTag(out, "MetadataEntryID", update.getMetadataEntryID());
+            if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
+            {
+                // Added 1.7 DTD
+                TagBuilder.simpleTag(out, "MetadataEntryID", update.getMetadataEntryID());
+            }
             TagBuilder.simpleTag(out, "UpdateName", update.getUpdateName());
             TagBuilder.simpleTag(out, "Description", update.getDescription());
             TagBuilder.simpleTag(out, "KeyField", update.getKeyField());

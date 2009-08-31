@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.ForeignKey;
@@ -31,16 +32,31 @@ public class CompactForeignKeyFormatter extends MetadataFormatter
     public void format(FormatterContext context, Collection foreignKeys,
                        String[] levels)
     {
+        RetsVersion retsVersion = context.getRetsVersion();
         if (foreignKeys.size() == 0)
         {
             return;
         }
-        TagBuilder tag = new TagBuilder(context.getWriter(),
-                                        "METADATA-FOREIGN_KEYS")
-            .appendAttribute("Version", context.getVersion())
-            .appendAttribute("Date", context.getDate(), context.getRetsVersion())
-            .beginContentOnNewLine()
-            .appendColumns(COLUMNS);
+        TagBuilder tag;
+        
+        // 1.7.2 DTD makes changes.
+        if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
+                retsVersion.equals(RetsVersion.RETS_1_7))
+        {
+            tag = new TagBuilder(context.getWriter(),
+                                "METADATA-FOREIGNKEYS")
+                                .beginContentOnNewLine()
+                                .appendColumns(COLUMNS);
+        }
+        else
+        {
+            tag = new TagBuilder(context.getWriter(),
+                                "METADATA-FOREIGNKEYS")
+                                .appendAttribute("Version", context.getVersion())
+                                .appendAttribute("Date", context.getDate(), context.getRetsVersion())
+                                .beginContentOnNewLine()
+                                .appendColumns(COLUMNS);
+        }
         for (Iterator iterator = foreignKeys.iterator(); iterator.hasNext();)
         {
             ForeignKey foreignKey = (ForeignKey) iterator.next();

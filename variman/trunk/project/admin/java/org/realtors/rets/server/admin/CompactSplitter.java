@@ -34,6 +34,7 @@ public class CompactSplitter
         mFileMap.put("METADATA-SYSTEM", new SystemFile());
         mFileMap.put("METADATA-RESOURCE", new ResourceFile());
         mFileMap.put("METADATA-FOREIGN_KEYS", new ForeignKeysFile());
+        mFileMap.put("METADATA-FOREIGNKEYS", new ForeignKeysFile());
         mFileMap.put("METADATA-CLASS", new ClassFile());
         mFileMap.put("METADATA-TABLE", new TableFile());
         mFileMap.put("METADATA-UPDATE", new UpdateFile());

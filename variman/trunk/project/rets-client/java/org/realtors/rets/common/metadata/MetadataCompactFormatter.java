@@ -106,7 +106,7 @@ public class MetadataCompactFormatter
 		{
 			if (tag == null)
 			{
-				tag = new TagBuilder(mOut, "METADATA-FOREIGN_KEYS")
+				tag = new TagBuilder(mOut, "METADATA-FOREIGNKEYS")
 								.appendAttribute("Version", mSystemVersion)
 								.appendAttribute("Date", mSystemDate)
 								.beginContentOnNewLine()

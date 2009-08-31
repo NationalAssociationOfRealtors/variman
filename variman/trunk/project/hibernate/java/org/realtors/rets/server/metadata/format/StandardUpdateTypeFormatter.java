@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2004-2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.metadata.UpdateType;
 import org.realtors.rets.server.metadata.Table;
@@ -23,6 +24,7 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
     public void format(FormatterContext context, Collection updateTypes,
                        String[] levels)
     {
+        RetsVersion retsVersion = context.getRetsVersion();
         PrintWriter out = context.getWriter();
         String resource = levels[RESOURCE_LEVEL];
         String retsClass = levels[CLASS_LEVEL];
@@ -46,7 +48,11 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
             TagBuilder tag = new TagBuilder(out, "UpdateField")
                 .beginContentOnNewLine();
 
-            TagBuilder.simpleTag(out, "MetadataEntryID", updateType.getMetadataEntryID());
+            if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
+            {
+                // Added 1.7 DTD
+                TagBuilder.simpleTag(out, "MetadataEntryID", updateType.getMetadataEntryID());
+            }
             TagBuilder.simpleTag(out, "SystemName",
                                  table.getSystemName());
             TagBuilder.simpleTag(out, "Sequence", updateType.getSequence());
@@ -60,7 +66,11 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
                                  updateType.getValidationLookup());
             TagBuilder.simpleTag(out, "ValidationExternalName",
                                  updateType.getValidationExternal());
-            TagBuilder.simpleTag(out, "MaxUpdate", updateType.getMaxUpdate());
+            if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
+            {
+                // Added 1.7 DTD
+                TagBuilder.simpleTag(out, "MaxUpdate", updateType.getMaxUpdate());
+            }
             
             tag.close();
         }

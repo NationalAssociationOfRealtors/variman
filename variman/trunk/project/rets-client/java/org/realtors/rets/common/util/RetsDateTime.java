@@ -267,7 +267,7 @@ public class RetsDateTime extends java.util.GregorianCalendar
         {
             // Done this way to allow for all future versions that use the 1.7.2 format.
             // df.applyPattern("E, d MMM yyyy HH:mm:ss z");            
-            df.applyPattern("yyyy-MM-dd HH:mm:ss");
+            df.applyPattern("yyyy-MM-dd'T'HH:mm:ss");
             retsDate = df.format(value);
         }
         else

@@ -117,7 +117,7 @@ public class ForeignKey extends ServerMetadata implements Serializable
 
     public String getTableName()
     {
-        return null;
+        return TABLE;
     }
 
     public String getLevel()
@@ -176,4 +176,6 @@ public class ForeignKey extends ServerMetadata implements Serializable
     
     /** nullable persistent field */
     private String mConditionalParentValue;
+    
+    public static final String TABLE = "FOREIGN_KEYS";
 }
