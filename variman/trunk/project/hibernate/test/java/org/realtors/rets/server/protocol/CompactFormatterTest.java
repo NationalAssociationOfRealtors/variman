@@ -63,7 +63,7 @@ public class CompactFormatterTest extends LinesEqualTestCase
         assertLinesEqual(
         		"<DELIMITER value=\"09\"/>\n" + 
         		"<COLUMNS>\tDATE\t</COLUMNS>\n" + 
-        		"<DATA>\t2008-05-09 12:17:00\t</DATA>\n", formatted.toString());
+        		"<DATA>\t2008-05-09T12:17:00\t</DATA>\n", formatted.toString());
         
         // This is RETS 1.7.2 (the default) format.
         results = new MockResultSet();

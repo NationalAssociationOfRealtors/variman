@@ -40,7 +40,8 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
         PrintWriter writer = new PrintWriter(formatted);
         MutableFormatterContext context =
             new MutableFormatterContext("1.00.00001", DATE_OBJECT, recursive,
-                                        writer, lookup, RetsVersion.RETS_1_5);
+                                        writer, lookup, RetsVersion.RETS_1_7_2);
+        context.setRetsVersion(RetsVersion.RETS_1_7_2);
         context.setTableFilter(groupFilter, groups);
         formatter.format(context, data, levels);
         return formatted.toString();
@@ -70,6 +71,8 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getCompactFormatter(), getData(),
                                   getLevels(), FormatterContext.NOT_RECURSIVE);
+        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
+        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedCompact(), formatted);
     }
 
@@ -77,6 +80,8 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getCompactFormatter(), getData(),
                                   getLevels(), FormatterContext.RECURSIVE);
+        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
+        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedCompactRecursive(), formatted);
     }
 
@@ -84,6 +89,7 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getCompactFormatter(), EMPTY_LIST,
                                   getLevels(), FormatterContext.NOT_RECURSIVE);
+        
         assertLinesEqual("", formatted);
     }
 
@@ -97,6 +103,8 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getStandardFormatter(), getData(),
                                   getLevels(), FormatterContext.NOT_RECURSIVE);
+        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
+        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedStandard(), formatted);
     }
 
@@ -104,11 +112,13 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getStandardFormatter(), getData(),
                                   getLevels(), FormatterContext.RECURSIVE);
+        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
+        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedStandardRecursive(), formatted);
     }
 
     protected static final String VERSION = "1.00.00001";
-    protected static final String DATE = "Wed, 01 Jan 2003 00:01:00 GMT";
+    protected static final String DATE = "2003-01-01T00:01:00Z";
     protected static final String VERSION_DATE = "\t" + VERSION +  "\t" + DATE;
     protected static final String EOL = "\n";
     protected static final Date DATE_OBJECT;

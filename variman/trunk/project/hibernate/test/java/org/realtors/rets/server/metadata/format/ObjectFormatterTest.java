@@ -69,7 +69,6 @@ public class ObjectFormatterTest extends FormatterTestCase
             "<Object>" + EOL +
             "<MetadataEntryID>Thumbnail</MetadataEntryID>" + EOL +
             "<ObjectType>Thumbnail</ObjectType>" + EOL +
-            "<StandardName></StandardName>" + EOL +
             "<MimeType>image/jpeg</MimeType>" + EOL +
             "<VisibleName>Small Photos</VisibleName>" + EOL +
             "<Description>A lower-resolution image</Description>" + EOL +

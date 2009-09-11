@@ -59,12 +59,12 @@ public class LookupTypeFormatterTest extends FormatterTestCase
         return
             "<METADATA-LOOKUP_TYPE Resource=\"Property\" Lookup=\"E_SCHOOL\" " +
             "Version=\"" + VERSION + "\" Date=\"" + DATE + "\">" + EOL +
-            "<Lookup>" + EOL +
+            "<LookupType>" + EOL +
             "<MetadataEntryID>Aurora386</MetadataEntryID>" + EOL +
             "<LongValue>Aurora 306</LongValue>" + EOL +
             "<ShortValue>306</ShortValue>" + EOL +
             "<Value>306</Value>" + EOL +
-            "</Lookup>" + EOL +
+            "</LookupType>" + EOL +
             "</METADATA-LOOKUP_TYPE>" + EOL;
     }
 

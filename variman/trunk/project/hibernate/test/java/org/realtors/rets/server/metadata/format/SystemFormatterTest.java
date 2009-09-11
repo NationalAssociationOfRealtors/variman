@@ -17,7 +17,7 @@ public class SystemFormatterTest extends FormatterTestCase
         system.setSystemID("CRT_RETS");
         system.setDescription("Center for REALTOR Technology");
         system.setComments("The reference implementation of a RETS Server");
-        system.setTimeZoneOffset("-08:00");
+        system.setTimeZoneOffset("-03:00");
         system.setVersion(10000001);
         system.setDate(getDate());
         system.addResource(new Resource(1));
@@ -47,7 +47,7 @@ public class SystemFormatterTest extends FormatterTestCase
             "Date=\"" + DATE + "\">\n" +
             "<SYSTEM SystemID=\"CRT_RETS\" " +
             "SystemDescription=\"Center for REALTOR Technology\" " +
-            "TimeZoneOffset=\"-08:00\"/>\n" +
+            "TimeZoneOffset=\"-03:00\"/>\n" +
             "<COMMENTS>The reference implementation of a RETS Server" +
             "</COMMENTS>\n" +
             "</METADATA-SYSTEM>\n";
@@ -60,7 +60,7 @@ public class SystemFormatterTest extends FormatterTestCase
             "Date=\"" + DATE + "\">\n" +
             "<SYSTEM SystemID=\"CRT_RETS\" " +
             "SystemDescription=\"Center for REALTOR Technology\" " +
-            "TimeZoneOffset=\"-08:00\"/>\n" +
+            "TimeZoneOffset=\"-03:00\"/>\n" +
             "<COMMENTS>The reference implementation of a RETS Server" +
             "</COMMENTS>\n" +
             "</METADATA-SYSTEM>\n" +
@@ -73,14 +73,12 @@ public class SystemFormatterTest extends FormatterTestCase
         return
             "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">" + EOL +
-            "<System>" + EOL +
-            "<SystemID>CRT_RETS</SystemID>" + EOL +
-            "<SystemDescription>Center for REALTOR Technology" +
-            "</SystemDescription>" + EOL +
+            "<SYSTEM SystemID=\"CRT_RETS\" " +
+            "SystemDescription=\"Center for REALTOR Technology\" " +
+            "TimeZoneOffset=\"-03:00\">" + EOL +
             "<Comments>The reference implementation of a RETS Server" +
             "</Comments>" + EOL +
-            "<TimeZoneOffset>-08:00</TimeZoneOffset>" + EOL +
-            "</System>" + EOL +
+            "</SYSTEM>" + EOL +
             "</METADATA-SYSTEM>" + EOL;
     }
 
@@ -89,16 +87,14 @@ public class SystemFormatterTest extends FormatterTestCase
         return
             "<METADATA-SYSTEM Version=\"" + VERSION + "\" " +
             "Date=\"" + DATE + "\">" + EOL +
-            "<System>" + EOL +
-            "<SystemID>CRT_RETS</SystemID>" + EOL +
-            "<SystemDescription>Center for REALTOR Technology" +
-            "</SystemDescription>" + EOL +
+            "<SYSTEM SystemID=\"CRT_RETS\" " +
+            "SystemDescription=\"Center for REALTOR Technology\" " +
+            "TimeZoneOffset=\"-03:00\">" + EOL +
             "<Comments>The reference implementation of a RETS Server" +
             "</Comments>" + EOL +
-            "<TimeZoneOffset>-08:00</TimeZoneOffset>" + EOL +
             "Empty list" + EOL + 	// Place holder for foreign keys
             Resource.TABLE + EOL +
-            "</System>" + EOL +
+            "</SYSTEM>" + EOL +
             "</METADATA-SYSTEM>" + EOL;
     }
 }

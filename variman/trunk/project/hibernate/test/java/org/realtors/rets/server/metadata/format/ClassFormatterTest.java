@@ -97,6 +97,10 @@ public class ClassFormatterTest extends FormatterTestCase
             "<TableDate>" + DATE + "</TableDate>" + EOL +
             "<UpdateVersion>" + VERSION + "</UpdateVersion>" + EOL +
             "<UpdateDate>" + DATE + "</UpdateDate>" + EOL +
+            "<ClassTimeStamp></ClassTimeStamp>" + EOL +
+            "<DeletedFlagField></DeletedFlagField>" + EOL +
+            "<DeletedFlagValue></DeletedFlagValue>" + EOL +
+            "<HasKeyIndex>0</HasKeyIndex>" + EOL +
             "</Class>" + EOL +
             "</METADATA-CLASS>" + EOL;
     }
@@ -115,6 +119,10 @@ public class ClassFormatterTest extends FormatterTestCase
             "<TableDate>" + DATE + "</TableDate>" + EOL +
             "<UpdateVersion>" + VERSION + "</UpdateVersion>" + EOL +
             "<UpdateDate>" + DATE + "</UpdateDate>" + EOL +
+            "<ClassTimeStamp></ClassTimeStamp>" + EOL +
+            "<DeletedFlagField></DeletedFlagField>" + EOL +
+            "<DeletedFlagValue></DeletedFlagValue>" + EOL +
+            "<HasKeyIndex>0</HasKeyIndex>" + EOL +
             Table.TABLE + EOL +
             Update.TABLE + EOL +
             "</Class>" + EOL +

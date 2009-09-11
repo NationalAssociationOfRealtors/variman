@@ -83,17 +83,17 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
     public void testBetweenDateTimes() throws ANTLRException
     {
         SqlConverter sql = parse(
-            "(LDATE=1990-01-01T05:06:07-1991-01-01T05:06:07.000)");
+            "(LDATE=1990-01-01T05:06:07-00:00-1991-01-01T05:06:07.0Z)");
         // The milliseconds are deliberately different as an additional test
-        SqlConverter left = new DateTimeSqlConverter("1990-01-01T05:06:07.000");
-        SqlConverter right = new DateTimeSqlConverter("1991-01-01T05:06:07");
+        SqlConverter left = new DateTimeSqlConverter("1990-01-01T05:06:07.0Z");
+        SqlConverter right = new DateTimeSqlConverter("1991-01-01T05:06:07-00:00");
         BetweenClause between = new BetweenClause("r_LDATE", left, right);
         OrClause or = new OrClause();
         or.add(between);
         assertEquals(or, sql);
 
-        sql = parse("(LDATE=1990-01-01T05:06:07.000-NOW)");
-        left = new DateTimeSqlConverter("1990-01-01T05:06:07.000");
+        sql = parse("(LDATE=1990-01-01T05:06:07.0Z-NOW)");
+        left = new DateTimeSqlConverter("1990-01-01T05:06:07.0Z");
         right = new DateTimeSqlConverter();
         between = new BetweenClause("r_LDATE", left, right);
         or = new OrClause();
@@ -103,16 +103,16 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
 
     public void testBetweenTimes() throws ANTLRException
     {
-        SqlConverter sql = parse("(LDATE=05:06:07-13:57:02.468)");
-        SqlConverter left = new TimeSqlConverter("05:06:07");
-        SqlConverter right = new TimeSqlConverter("13:57:02.468");
+        SqlConverter sql = parse("(LDATE=05:06:07-03:00-13:57:02.4Z)");
+        SqlConverter left = new TimeSqlConverter("05:06:07-03:00");
+        SqlConverter right = new TimeSqlConverter("13:57:02.4Z");
         BetweenClause between = new BetweenClause("r_LDATE", left, right);
         OrClause or = new OrClause();
         or.add(between);
         assertEquals(or, sql);
     }
 
-    public void testBetweenNubmers() throws ANTLRException
+    public void testBetweenNumbers() throws ANTLRException
     {
         SqlConverter sql = parse("(LP=50-100)");
         StringSqlConverter left = new StringSqlConverter("50");
@@ -152,10 +152,10 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
 
     public void testLessThanDateTime() throws ANTLRException
     {
-        SqlConverter sql = parse("(LDATE=1990-01-01T05:06:07-)");
+        SqlConverter sql = parse("(LDATE=1990-01-01T05:06:07Z-)");
         LessThanClause lessThan =
             new LessThanClause(
-                "r_LDATE", new DateTimeSqlConverter("1990-01-01T05:06:07"));
+                "r_LDATE", new DateTimeSqlConverter("1990-01-01T05:06:07Z"));
         OrClause or = new OrClause();
         or.add(lessThan);
         assertEquals(or, sql);
@@ -169,9 +169,9 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
 
     public void testLessThanTime() throws ANTLRException
     {
-        SqlConverter sql = parse("(LDATE=13:57:02.468-)");
+        SqlConverter sql = parse("(LDATE=13:57:02.4Z-)");
         LessThanClause lessThan =
-            new LessThanClause("r_LDATE", new TimeSqlConverter("13:57:02.468"));
+            new LessThanClause("r_LDATE", new TimeSqlConverter("13:57:02.4Z"));
         OrClause or = new OrClause();
         or.add(lessThan);
         assertEquals(or, sql);
@@ -207,10 +207,10 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
 
     public void testGreaterThanDateTime() throws ANTLRException
     {
-        SqlConverter sql = parse("(LDATE=1990-01-01T05:06:07+)");
+        SqlConverter sql = parse("(LDATE=1990-01-01T05:06:07Z+)");
         GreaterThanClause greaterThan =
             new GreaterThanClause(
-                "r_LDATE", new DateTimeSqlConverter("1990-01-01T05:06:07"));
+                "r_LDATE", new DateTimeSqlConverter("1990-01-01T05:06:07Z"));
         OrClause or = new OrClause();
         or.add(greaterThan);
         assertEquals(or, sql);
@@ -225,10 +225,10 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
 
     public void testGreaterThanTime() throws ANTLRException
     {
-        SqlConverter sql = parse("(LDATE=13:57:02.468+)");
+        SqlConverter sql = parse("(LDATE=13:57:02.4Z+)");
         GreaterThanClause greaterThan =
             new GreaterThanClause(
-                "r_LDATE", new TimeSqlConverter("13:57:02.468"));
+                "r_LDATE", new TimeSqlConverter("13:57:02.4Z"));
         OrClause or = new OrClause();
         or.add(greaterThan);
         assertEquals(or, sql);

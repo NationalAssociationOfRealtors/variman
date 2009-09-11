@@ -43,7 +43,7 @@ public class LookupFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tMetadataEntryID\tLookupName\tVisibleName\tVersion\tDate\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tLookupName\tVisibleName\tLookupTypeVersion\tLookupTypeDate\t</COLUMNS>\n" +
 
             "<DATA>\tElementarySchoolDistrict\tE_SCHOOL\tElementary School District" + VERSION_DATE +
             "\t</DATA>\n" +
@@ -57,7 +57,7 @@ public class LookupFormatterTest extends FormatterTestCase
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">\n" +
 
-            "<COLUMNS>\tMetadataEntryID\tLookupName\tVisibleName\tVersion\tDate\t</COLUMNS>\n" +
+            "<COLUMNS>\tMetadataEntryID\tLookupName\tVisibleName\tLookupTypeVersion\tLookupTypeDate\t</COLUMNS>\n" +
 
             "<DATA>\tElementarySchoolDistrict\tE_SCHOOL\tElementary School District" + VERSION_DATE +
             "\t</DATA>\n" +
@@ -72,13 +72,13 @@ public class LookupFormatterTest extends FormatterTestCase
         return
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">" + EOL +
-            "<LookupType>" + EOL +
+            "<Lookup>" + EOL +
             "<MetadataEntryID>ElementarySchoolDistrict</MetadataEntryID>" + EOL +
             "<LookupName>E_SCHOOL</LookupName>" + EOL +
             "<VisibleName>Elementary School District</VisibleName>" + EOL +
             "<LookupTypeVersion>" + VERSION + "</LookupTypeVersion>" + EOL +
             "<LookupTypeDate>" + DATE + "</LookupTypeDate>" + EOL +
-            "</LookupType>" + EOL +
+            "</Lookup>" + EOL +
             "</METADATA-LOOKUP>" + EOL;
     }
 
@@ -87,14 +87,14 @@ public class LookupFormatterTest extends FormatterTestCase
         return
             "<METADATA-LOOKUP Resource=\"Property\" Version=\"" + VERSION +
             "\" Date=\"" + DATE + "\">" + EOL +
-            "<LookupType>" + EOL +
+            "<Lookup>" + EOL +
             "<MetadataEntryID>ElementarySchoolDistrict</MetadataEntryID>" + EOL +
             "<LookupName>E_SCHOOL</LookupName>" + EOL +
             "<VisibleName>Elementary School District</VisibleName>" + EOL +
             "<LookupTypeVersion>" + VERSION + "</LookupTypeVersion>" + EOL +
             "<LookupTypeDate>" + DATE + "</LookupTypeDate>" + EOL +
             LookupType.TABLE + EOL +
-            "</LookupType>" + EOL +
+            "</Lookup>" + EOL +
             "</METADATA-LOOKUP>" + EOL;
     }
 }

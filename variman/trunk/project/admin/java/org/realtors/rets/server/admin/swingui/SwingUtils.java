@@ -458,7 +458,6 @@ class TimedPasswordListener implements DocumentListener, ActionListener
     public void actionPerformed(ActionEvent e) 
     {
             pwf.setEchoChar(echoChar);
-            System.out.println("Password Listener Action Performed"); // $$DEBUG
     }
 }
 

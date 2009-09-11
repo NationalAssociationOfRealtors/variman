@@ -84,9 +84,9 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         equal = new EqualClause("r_LDATE", new TimeSqlConverter("01:02:03"));
         assertEquals(equal, sql);
 
-        sql = parse("(LDATE=1970-01-01T05:06:01.33)");
+        sql = parse("(LDATE=1970-01-01T05:06:01.3)");
         equal = new EqualClause(
-            "r_LDATE", new DateTimeSqlConverter("1970-01-01T05:06:01.33"));
+            "r_LDATE", new DateTimeSqlConverter("1970-01-01T05:06:01.3"));
         assertEquals(equal, sql);
 
         sql = parse("(LDATE=TODAY)");

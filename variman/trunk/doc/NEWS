@@ -1,7 +1,9 @@
 Version 3.1.0 - xx xxx 2009
 
+  * Object ID of * misreported in error response. Ticket #26.
   * .EMPTY. is failing on Lookups. Ticket #55.
   * Format=STANDARD-XML Metadata fails DTD check. Ticket #56.
+  * Search using various forms of 1.7.2 DATETIME fails. Ticket#57.
 
 Version 3.0.0b5 - 31 Jul 2009
 

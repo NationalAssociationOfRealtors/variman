@@ -38,10 +38,10 @@ tokens
     {
         String fieldName = t.getText();
         if (!mMetadata.isValidFieldName(fieldName)) {
-        	// Do not change the message below without also fixing the catch block
-        	// in DefaultSearchTransaction. It would be so much better to throw the
-        	// proper RETS exception, but we can't from here because we are bootstrapping
-        	// the code when this module is built.
+            // Do not change the message below without also fixing the catch block
+            // in DefaultSearchTransaction. It would be so much better to throw the
+            // proper RETS exception, but we can't from here because we are bootstrapping
+            // the code when this module is built.
             throw newSemanticException("No such field [" + fieldName + "]", t);
         }
     }
@@ -65,10 +65,10 @@ tokens
     {
         String lookupName = field.getText();
         String lookupValue = t.getText();
-       	// Do not change the message below without also fixing the catch block
-    	// in DefaultSearchTransaction. It would be so much better to throw the
-    	// proper RETS exception, but we can't from here because we are bootstrapping
-    	// the code when this module is built.
+           // Do not change the message below without also fixing the catch block
+        // in DefaultSearchTransaction. It would be so much better to throw the
+        // proper RETS exception, but we can't from here because we are bootstrapping
+        // the code when this module is built.
         if (!mMetadata.isValidLookupValue(lookupName, lookupValue)) {
             throw newSemanticException("No such lookup value [" +
                                        lookupName + "]: " + lookupValue, t);
@@ -304,8 +304,8 @@ class DmqlLexer extends Lexer;
 
 options
 {
-    k = 2;
-	testLiterals = false;
+    k = 3;
+    testLiterals = false;
 }
 
 
@@ -337,14 +337,71 @@ TILDE : '~';
 QUESTION : '?';
 SEMI : ';';
 
-protected DATETIME : YMD 'T' HMS;
-protected DATE : YMD;
-protected TIME : HMS;
+protected DATE_FULLYEAR
+    : DIGIT DIGIT DIGIT DIGIT
+    ;
+    
+protected DATE_MONTH
+    : DIGIT DIGIT
+    ;
+    
+protected DATE_MDAY
+    : DIGIT DIGIT
+    ;
+    
+protected TIME_HOUR
+    : DIGIT DIGIT
+    ;
+    
+protected TIME_MINUTE
+    : DIGIT DIGIT
+    ;
 
-// Year-Month-Day
-protected
-YMD 
-    : DIGIT DIGIT DIGIT DIGIT '-' DIGIT DIGIT '-' DIGIT DIGIT;
+protected TIME_SECOND
+    : DIGIT DIGIT;
+    
+protected TIME_SECFRAC
+    : '.' DIGIT
+    ;
+    
+protected TIME_NUMOFFSET
+    : ("+0" | "+1" | "-0" | "-1") DIGIT ':' TIME_MINUTE
+    ;
+    
+protected TIME_OFFSET
+    : 'Z'| TIME_NUMOFFSET
+    ;
+    
+protected  PARTIAL_TIME
+    : TIME_HOUR ':' TIME_MINUTE ':' TIME_SECOND (TIME_SECFRAC)?
+    ;
+    
+protected FULL_DATE
+    : DATE_FULLYEAR '-' DATE_MONTH '-' DATE_MDAY
+    ;
+    
+protected FULL_TIME
+    : PARTIAL_TIME (TIME_OFFSET)?
+    ;
+    
+protected DATE_TIME
+    : FULL_DATE 'T' FULL_TIME
+    ;
+    
+protected PARTIAL_DATE_TIME
+    : FULL_DATE 'T' PARTIAL_TIME
+    ;
+      
+protected DATETIME 
+    : FULL_DATE 'T' HMS
+    ;
+           
+protected DATETIME1_7_2 
+    : FULL_DATE 'T' PARTIAL_TIME (TIME_OFFSET)?
+    ;
+
+protected DATE : FULL_DATE;
+protected TIME : HMS;
 
 // Hour:Minute:Second[.Fraction]
 protected
@@ -360,12 +417,12 @@ ALPHANUM
 
 protected
 TEXT
-	: (ALPHANUM | URL_ENCODED_CHAR | UNDERBAR)+ 
-	{ 
-	    String s = $getText;
-	    $setText(URLDecoder.decode(s));
-	}
-	;
+    : (ALPHANUM | URL_ENCODED_CHAR | UNDERBAR)+ 
+    { 
+        String s = $getText;
+        $setText(URLDecoder.decode(s));
+    }
+    ;
     
 protected
 URL_ENCODED_CHAR
@@ -399,8 +456,10 @@ protected DOT_EMPTY : ".EMPTY.";
 // Since these all basically have overlapping patterns, we need to use
 // backtracking to try them in order.
 TEXT_OR_NUMBER_OR_PERIOD
-    : (YMD 'T') => DATETIME {$setType(DATETIME);}
+    : (DATETIME1_7_2) => DATETIME1_7_2 {$setType(DATETIME);}
+    | (FULL_DATE 'T') => DATETIME {$setType(DATETIME);}
     | (DATE) => DATE {$setType(DATE);}
+    | (FULL_TIME) => FULL_TIME {$setType(TIME);}
     | (TIME) => TIME {$setType(TIME);}
     | (OR) => OR {$setType(OR);}
     | (AND) => AND {$setType(AND);}
@@ -410,7 +469,7 @@ TEXT_OR_NUMBER_OR_PERIOD
     | (INT) => INT {$setType(INT);}
     | (DOT_ANY) => DOT_ANY {$setType(DOT_ANY);}
     | (DOT_EMPTY) => DOT_EMPTY {$setType(DOT_EMPTY);}
-	| (NUMBER) => NUMBER {$setType(NUMBER);}
+    | (NUMBER) => NUMBER {$setType(NUMBER);}
     | TEXT {$setType(TEXT);}
     ;
 
