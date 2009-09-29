@@ -57,8 +57,8 @@ public class StandardSystemFormatter extends MetadataFormatter
 
         if (context.isRecursive())
         {
-        	context.format(system.getForeignKeys(), system.getPathAsArray());
             context.format(system.getResources(), system.getPathAsArray());
+            context.format(system.getForeignKeys(), system.getPathAsArray());
         }
 
         tag.close();

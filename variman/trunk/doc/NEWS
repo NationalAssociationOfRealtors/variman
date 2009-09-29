@@ -1,5 +1,8 @@
 Version 3.1.1 - xx xxx 2009
 
+  * getMetadata in STANDARD-XML fails compliance check.
+    Ticket #60.
+
 Version 3.1.0 - 23 Sep 2009
 
   * Object ID of * misreported in error response. Ticket #26.
