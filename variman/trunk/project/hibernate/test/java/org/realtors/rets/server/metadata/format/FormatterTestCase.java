@@ -71,8 +71,6 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getCompactFormatter(), getData(),
                                   getLevels(), FormatterContext.NOT_RECURSIVE);
-        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
-        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedCompact(), formatted);
     }
 
@@ -80,8 +78,6 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getCompactFormatter(), getData(),
                                   getLevels(), FormatterContext.RECURSIVE);
-        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
-        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedCompactRecursive(), formatted);
     }
 
@@ -103,8 +99,6 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getStandardFormatter(), getData(),
                                   getLevels(), FormatterContext.NOT_RECURSIVE);
-        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
-        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedStandard(), formatted);
     }
 
@@ -112,8 +106,6 @@ public abstract class FormatterTestCase extends LinesEqualTestCase
     {
         String formatted = format(getStandardFormatter(), getData(),
                                   getLevels(), FormatterContext.RECURSIVE);
-        System.out.println("Expected  : " + getExpectedStandard()); // $$DEBUG
-        System.out.println("Formatted : " + formatted); // $$DEBUG
         assertLinesEqual(getExpectedStandardRecursive(), formatted);
     }
 

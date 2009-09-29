@@ -92,8 +92,8 @@ public class SystemFormatterTest extends FormatterTestCase
             "TimeZoneOffset=\"-03:00\">" + EOL +
             "<Comments>The reference implementation of a RETS Server" +
             "</Comments>" + EOL +
-            "Empty list" + EOL + 	// Place holder for foreign keys
             Resource.TABLE + EOL +
+            "Empty list" + EOL + 	// Place holder for foreign keys
             "</SYSTEM>" + EOL +
             "</METADATA-SYSTEM>" + EOL;
     }
