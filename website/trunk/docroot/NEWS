@@ -1,3 +1,10 @@
+Version 3.1.1 - 30 Sep 2009
+
+  * Strict Parsing flag not properly passed to
+    JDomCompactBuilder in admin tool. Ticket #59.
+  * getMetadata in STANDARD-XML fails compliance check.
+    Ticket #60.
+
 Version 3.1.0 - 23 Sep 2009
 
   * Object ID of * misreported in error response. Ticket #26.
