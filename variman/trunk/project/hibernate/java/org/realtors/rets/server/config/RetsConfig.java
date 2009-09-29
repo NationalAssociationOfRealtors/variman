@@ -838,6 +838,7 @@ public class RetsConfig
                         merged = JdomUtils.mergeDocuments(documents, 
                                                             new Element("RETS"));
                     JDomCompactBuilder builder = new JDomCompactBuilder();
+                    builder.setStrict(retsConfig.getStrictParsing());
                     sMetadata = builder.build(merged);
                 }
                 catch (Exception e)

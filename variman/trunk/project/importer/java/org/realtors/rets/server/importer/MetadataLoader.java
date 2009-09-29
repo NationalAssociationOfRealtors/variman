@@ -37,6 +37,7 @@ import org.realtors.rets.common.metadata.types.MValidationExternal;
 import org.realtors.rets.common.metadata.types.MValidationExternalType;
 import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.common.metadata.types.MValidationLookupType;
+import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.AlignmentEnum;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
@@ -136,6 +137,7 @@ public class MetadataLoader
     private void loadMetadataTables(InputStream in)
     {
         JDomCompactBuilder builder = new JDomCompactBuilder();
+        builder.setStrict(RetsConfig.getInstance().getStrictParsing());
         try
         {
             mMetadata = builder.build(new InputSource(in));

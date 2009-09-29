@@ -10,6 +10,7 @@ package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -238,7 +239,17 @@ public class AdminFrame extends JFrame
     {
         mStatusBar.setText(text);
     }
+    
+    public void setDefaultCursor()
+    {
+        setCursor(Cursor.getDefaultCursor());
+    }
 
+    public void setWaitCursor()
+    {
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    }
+    
     public void refreshUsers()
     {
         mUsersPanel.refreshTab();

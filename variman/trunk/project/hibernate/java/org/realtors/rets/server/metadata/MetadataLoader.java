@@ -103,6 +103,7 @@ public class MetadataLoader
         try
         {
             JDomCompactBuilder builder = new JDomCompactBuilder();
+            builder.setStrict(RetsConfig.getInstance().getStrictParsing());
             mMetadata = builder.build(new InputSource(in));
             return parseMetadata();
         }
@@ -118,6 +119,7 @@ public class MetadataLoader
         try
         {
             JDomCompactBuilder builder = new JDomCompactBuilder();
+            builder.setStrict(RetsConfig.getInstance().getStrictParsing());
             mMetadata = builder.build(document);
             return parseMetadata();
         }

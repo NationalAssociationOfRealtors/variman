@@ -118,7 +118,7 @@ public class MetadataPanel extends AdminTab
         mStrictParsingMenuItem = new JCheckBoxMenuItem("Strict");
         mStrictParsingMenuItem.setSelected(true);
         mStrictParsingMenuItem.setToolTipText("Enable or disable strict adherence to the RETS 1.7.2 spec when parsing.");
-        mStrictParsing = true;
+        mStrictParsing = RetsConfig.getInstance().getStrictParsing();
         mStrictParsingMenuItem.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)
@@ -126,6 +126,7 @@ public class MetadataPanel extends AdminTab
                 mStrictParsing = true;
                 if (e.getStateChange() == ItemEvent.DESELECTED)
                     mStrictParsing = false;
+                RetsConfig.getInstance().setStrictParsing(mStrictParsing);
             }
         });
         mMetadataMenu.add(mStrictParsingMenuItem);
@@ -449,6 +450,7 @@ public class MetadataPanel extends AdminTab
             public Object construct()
             {
                 AdminFrame.getInstance().setStatusText("Loading Metadata ...");
+                AdminFrame.getInstance().setWaitCursor();
 
                 try
                 {
@@ -479,6 +481,7 @@ public class MetadataPanel extends AdminTab
                 mTreePanel.collapseAll();
                 mSplitPane.revalidate();
                 AdminFrame.getInstance().setStatusText("Metadata Loaded Successfully");
+                AdminFrame.getInstance().setDefaultCursor();
             }
         };
         worker.start();

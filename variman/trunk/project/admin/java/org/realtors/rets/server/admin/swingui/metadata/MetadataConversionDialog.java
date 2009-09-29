@@ -361,6 +361,7 @@ public class MetadataConversionDialog extends MetadataDialog
 
             public void finished()
             {
+                updateStatus("Metadata converted Successfully");
                 AdminFrame.getInstance().setStatusText("Metadata converted Successfully");
             }
         };

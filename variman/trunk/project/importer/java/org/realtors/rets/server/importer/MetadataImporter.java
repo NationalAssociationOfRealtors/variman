@@ -33,6 +33,7 @@ import org.realtors.rets.client.RetsException;
 import org.realtors.rets.client.RetsSession;
 import org.realtors.rets.common.metadata.JDomCompactBuilder;
 import org.realtors.rets.server.SessionHelper;
+import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.TableStandardName;
 import org.xml.sax.InputSource;
@@ -81,6 +82,7 @@ public class MetadataImporter extends MetadataLoader
         {
             InputStream in = new FileInputStream(mFilename);
             JDomCompactBuilder builder = new JDomCompactBuilder();
+            builder.setStrict(RetsConfig.getInstance().getStrictParsing());
             mMetadata = builder.build(new InputSource(in));
         }
         
