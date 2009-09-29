@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://docbook.org/xml/4.1.2/docbookx.dtd" [
+<!ENTITY name "Variman">
+<!ENTITY intro SYSTEM "intro.xml">
+<!ENTITY install SYSTEM "install.xml">
+<!ENTITY deploy SYSTEM "deploy.xml">
+<!ENTITY metadata SYSTEM "metadata.xml">
+<!ENTITY object-set-example SYSTEM "LN1-example.xml">
+<!ENTITY bibliography SYSTEM "bibliography.xml">
+]>
+
+<article>
+  <articleinfo>
+    <title>
+      &name; User's Manual
+    </title>
+    
+    <author>
+      <firstname>Dave</firstname>
+      <surname>Dribin</surname>
+    </author>
+
+    <author>
+      <firstname>Mark</firstname>
+      <surname>Klein</surname>
+    </author>
+
+    <revhistory>
+      <revision>
+        <revnumber>1.0</revnumber>
+        <date>2004-08-19</date>
+        <revremark>
+          First release.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>1.1</revnumber>
+        <date>2004-12-17</date>
+        <revremark>
+          Name change edits.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>1.2</revnumber>
+        <date>2005-01-14</date>
+        <revremark>
+          Editorial changes and add seciton on condition rules.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>1.3</revnumber>
+        <date>2005-01-21</date>
+        <revremark>
+          Add group record limits.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>1.4</revnumber>
+        <date>2005-06-27</date>
+        <revremark>
+          Add more documentation on GetObject and object set
+          configuration.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>1.5</revnumber>
+        <date>2006-07-05</date>
+        <revremark>
+          Add sections on time restrictions and query count limits.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>1.6</revnumber>
+        <date>2009-05-15</date>
+        <revremark>
+          Add sections on metadata editor and expanded installation
+          instructions.
+        </revremark>
+      </revision>
+    </revhistory>
+    
+    <abstract>
+      <para>
+        &name; is a RETS 1.5, 1.7 and 1.7.2  compliant server. &name; is
+        developed under a BSD-style license at the Center for REALTOR
+        &reg; Technology.  This manual describes how to install and
+        deploy a &name; server.
+      </para>
+    </abstract>
+  </articleinfo>
+
+  &intro;
+  &install;
+  &deploy;
+  &metadata;
+  &bibliography;
+  
+</article>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+sgml-default-dtd-file:".manual.ced"
+End:
+-->

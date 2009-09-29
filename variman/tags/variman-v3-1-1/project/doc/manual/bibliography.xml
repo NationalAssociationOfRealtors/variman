@@ -1,0 +1,72 @@
+<bibliography id="bibliography">
+  <biblioentry id="bib-crt">
+    <abbrev>CRT</abbrev>
+    <title>Center for REALTOR Technology</title>
+    <releaseinfo>
+      <ulink url="http://www.realtors.org/crt/">http://www.realtors.org/crt/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-tomcat">
+    <abbrev>Tomcat</abbrev>
+    <title>Apache Tomcat Web Site</title>
+    <releaseinfo>
+      <ulink url="http://tomcat.apache.org/">http://tomcat.apache.org/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-java">
+    <abbrev>Java</abbrev>
+    <title>Java Web Site</title>
+    <releaseinfo>
+      <ulink url="http://java.sun.com/">http://java.sun.com/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-jnetdirect">
+    <abbrev>JNetDirect</abbrev>
+    <title>JNetDirect Web Site</title>
+    <releaseinfo>
+      <ulink url="http://www.jnetdirect.com/">http://www.jnetdirect.com/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-jtds">
+    <abbrev>jTDS</abbrev>
+    <title>jTDS Web Site</title>
+    <releaseinfo>
+      <ulink url="http://jtds.sourceforge.net/">http://jtds.sourceforge.net/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-postgres">
+    <abbrev>Postgres</abbrev>
+    <title>PostgreSQL Web Site</title>
+    <releaseinfo>
+      <ulink url="http://www.postgresql.org/">http://www.postgresql.org/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-rets">
+    <abbrev>RETS</abbrev>
+    <title>RETS Web Site</title>
+    <releaseinfo>
+      <ulink url="http://www.rets.org/">http://www.rets.org/</ulink>
+    </releaseinfo>
+  </biblioentry>
+
+  <biblioentry id="bib-variman">
+    <abbrev>&name;</abbrev>
+    <title>&name; Web Site</title>
+    <releaseinfo>
+      <ulink url="http://www.crt.realtors.org/projects/rets/variman/">http://www.crt.realtors.org/projects/rets/variman/</ulink>
+    </releaseinfo>
+  </biblioentry>
+</bibliography>
+
+<!--
+Local Variables:
+mode: xml
+sgml-parent-document: ("manual.xml" "" "bibliography")
+End:
+-->
