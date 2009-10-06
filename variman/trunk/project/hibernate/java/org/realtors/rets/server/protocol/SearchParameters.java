@@ -151,9 +151,10 @@ public class SearchParameters
 			char c = chars[i];
 			if (!Character.isLetterOrDigit(c)) 
 			{
-				throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
-						"Invalid Alphanum character at position " + i + 
-						"in RestrictedIndicator: " + c);
+			    if ("|<>@,;:\\\"/[]?={}".indexOf(c) >= 0 || Character.isISOControl(c))
+			        throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
+						"Invalid character at position " + i + 
+						" in RestrictedIndicator: " + c);
 			}
 		}
 		

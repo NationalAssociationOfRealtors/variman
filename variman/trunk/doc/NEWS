@@ -1,4 +1,8 @@
-Version 3.1.1 - xx xxx 2009
+Version 3.1.2 - xx xxx 2009
+ 
+  * RestrictedIndicator allows special characters. Ticket #61.
+
+Version 3.1.1 - 30 Sep 2009
 
   * Strict Parsing flag not properly passed to
     JDomCompactBuilder in admin tool. Ticket #59.
