@@ -276,7 +276,7 @@
       <fileset dir="project/hibernate/java" includes="**/*.java"/>
       <component
                 classname="org.xdoclet.plugin.hibernate.HibernateMappingPlugin"
-                destdir="build/hibernate/xdoclet"
+                destdir="${basedir}/build/hibernate/xdoclet"
                 mergedir="project/hibernate/java"
                 version="2.0"
         />
@@ -563,14 +563,14 @@
 
         <component
             classname="org.xdoclet.plugin.web.WebPlugin"
-            destdir="build/rets-server/variman/WEB-INF"
-            mergedir="file:project/webapp/config/web-merge/"
+            destdir="${basedir}/build/rets-server/variman/WEB-INF"
+            mergedir="file:${basedir}/project/webapp/config/web-merge/"
             servletversion="2.3"
         />
         <component
             classname="org.xdoclet.plugin.web.TaglibPlugin"
             jspversion="1.2"
-            destdir="build/rets-server/variman/WEB-INF"
+            destdir="${basedir}/build/rets-server/variman/WEB-INF"
             filereplace="cct.tld"
             shortname="cct"
             validate="false"
