@@ -23,9 +23,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.dialect.Dialect;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.dialect.Dialect;
 
 import org.realtors.rets.server.metadata.InterpretationEnum;
 import org.realtors.rets.server.metadata.MClass;
@@ -105,9 +105,11 @@ public class CreateSchema extends RetsHelpers
                             sb.append(dialect.getTypeName(Types.BIT));
                             break;
                         case 1 :
-                            sb.append(
-                                dialect.getTypeName(Types.VARCHAR,
-                                                    table.getMaximumLength()));
+                            sb.append(dialect.getTypeName(Types.VARCHAR,
+                                    table.getMaximumLength(),
+                                    -1,
+                                    -1
+                            ));
                             break;
                         case 2 :
                             sb.append(dialect.getTypeName(Types.DATE));
@@ -176,10 +178,10 @@ public class CreateSchema extends RetsHelpers
                 sb.append("\tparent_id ").append(bigint).append(" NOT NULL, ");
                 sb.append(mLs);
                 sb.append("\tlookup_name ");
-                sb.append(dialect.getTypeName(Types.VARCHAR, 32));
+                sb.append(dialect.getTypeName(Types.VARCHAR, 32, -1, -1));
                 sb.append(" NOT NULL, ").append(mLs);
                 sb.append("\tvalue ");
-                sb.append(dialect.getTypeName(Types.VARCHAR, 32)).append(mLs);
+                sb.append(dialect.getTypeName(Types.VARCHAR, 32, -1, -1)).append(mLs);
                 sb.append(");").append(mLs);
                 
                 // Do the primary key
@@ -190,10 +192,14 @@ public class CreateSchema extends RetsHelpers
                 
                 // do the foreign key
                 sb.append("alter table ").append(lmTable);
-                sb.append(
-                    dialect.getAddForeignKeyConstraintString(lmTable + "_fk",
-                        new String[] { "parent_id" }, sqlTableName,
-                        new String[] { "id" })).append(";").append(mLs);
+                sb.append(dialect.getAddForeignKeyConstraintString(
+                        lmTable + "_fk",
+                        new String[] { "parent_id" },
+                        sqlTableName,
+                        new String[] { "id" },
+                        true
+                ));
+                sb.append(";").append(mLs);
             }
         }
 
@@ -285,7 +291,7 @@ public class CreateSchema extends RetsHelpers
         CreateSchema cs = new CreateSchema();
         
         cs.setDialectClass(cmdl.getOptionValue('D',
-            "net.sf.hibernate.dialect.PostgreSQLDialect"));
+            "org.hibernate.dialect.PostgreSQLDialect"));
 
         cs.loadMetadata();
         String schema = cs.createTables();

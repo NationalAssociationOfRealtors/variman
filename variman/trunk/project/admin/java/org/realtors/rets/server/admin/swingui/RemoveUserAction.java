@@ -38,7 +38,7 @@ public class RemoveUserAction extends AbstractAction
             AdminFrame frame = SwingUtils.getAdminFrame();
             int response = JOptionPane.showConfirmDialog(
                 frame,
-                "Are you sure you wnat to delete " + user.getName() + "?",
+                "Are you sure you want to delete " + user.getName() + "?",
                 "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (response != JOptionPane.YES_OPTION)
             {

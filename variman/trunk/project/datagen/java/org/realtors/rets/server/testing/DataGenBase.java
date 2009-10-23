@@ -12,6 +12,7 @@
  */
 package org.realtors.rets.server.testing;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,12 +22,12 @@ import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.Table;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Transaction;
-import net.sf.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
 /**
  * @author kgarner
@@ -44,7 +45,8 @@ public abstract class DataGenBase
     private void initHibernate() throws HibernateException
     {
         Configuration cfg = new Configuration();
-        cfg.addJar("rex-hbm-xml.jar");
+        File mappingJar = new File("rex-hbm-xml.jar");
+        cfg.addJar(mappingJar);
         mSessions = cfg.buildSessionFactory();
     }
 

@@ -10,7 +10,7 @@ package org.realtors.rets.server.config;
 
 import java.util.Properties;
 
-import net.sf.hibernate.cfg.Environment;
+import org.hibernate.cfg.Environment;
 
 import junit.framework.TestCase;
 
@@ -23,7 +23,7 @@ public class DatabaseConfigTest extends TestCase
         config.setHostName("localhost");
         config.setDatabaseName("db_test");
         assertEquals("org.postgresql.Driver", config.getDriver());
-        assertEquals("net.sf.hibernate.dialect.PostgreSQLDialect",
+        assertEquals("org.hibernate.dialect.PostgreSQLDialect",
                      config.getDialect());
         assertEquals("jdbc:postgresql://localhost/db_test",
                      config.getUrl());
@@ -39,9 +39,7 @@ public class DatabaseConfigTest extends TestCase
         config.setPassword("");
         config.setMaxActive(100);
         config.setMaxWait(120000);
-        config.setMaxIdle(10);
         config.setMaxPsActive(50);
-        config.setMaxPsWait(60000);
         config.setMaxPsIdle(5);
         config.setShowSql(true);
 
@@ -52,23 +50,17 @@ public class DatabaseConfigTest extends TestCase
                      properties.getProperty(Environment.URL));
         assertEquals("dave", properties.getProperty(Environment.USER));
         assertEquals("", properties.getProperty(Environment.PASS));
-        assertEquals("net.sf.hibernate.dialect.PostgreSQLDialect",
+        assertEquals("org.hibernate.dialect.PostgreSQLDialect",
                      properties.getProperty(Environment.DIALECT));
         assertEquals("true", properties.getProperty(Environment.SHOW_SQL));
 
-        assertEquals("100", properties.getProperty(Environment.DBCP_MAXACTIVE));
+        assertEquals("100", properties.getProperty(Environment.C3P0_MAX_SIZE));
         assertEquals(
-            "1", properties.getProperty(Environment.DBCP_WHENEXHAUSTED));
-        assertEquals(
-            "120000", properties.getProperty(Environment.DBCP_MAXWAIT));
-        assertEquals("10", properties.getProperty(Environment.DBCP_MAXIDLE));
+            "120000", properties.getProperty(Environment.C3P0_TIMEOUT));
 
         assertEquals(
-            "50", properties.getProperty(Environment.DBCP_PS_MAXACTIVE));
+            "50", properties.getProperty(Environment.C3P0_MAX_STATEMENTS));
         assertEquals(
-            "1", properties.getProperty(Environment.DBCP_PS_WHENEXHAUSTED));
-        assertEquals(
-            "60000", properties.getProperty(Environment.DBCP_PS_MAXWAIT));
-        assertEquals("5", properties.getProperty(Environment.DBCP_PS_MAXIDLE));
+            "0", properties.getProperty(Environment.C3P0_ACQUIRE_INCREMENT));
     }
 }

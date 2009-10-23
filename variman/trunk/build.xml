@@ -32,6 +32,7 @@
     <pathelement path="${rets-client.jar}"/>
     <pathelement path="${commons-codec.jar}"/>
     <pathelement path="${commons-collections.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <!-- Spring 3
     <pathelement path="${spring.aop.jar}"/>
     <pathelement path="${spring.aspects.jar}"/>
@@ -57,15 +58,18 @@
   </path>
 
   <path id="lib.path">
+    <pathelement path="${ant.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <!--pathelement path="${dom4j.jar}"/-->
     <pathelement path="${hibernate.jar}"/>
-    <fileset dir="${hibernate.lib}" includes="*.jar"/>
+    <fileset dir="${vendor.path}/xml" includes="*.jar"/>
     <pathelement path="${hibernate-ext.tools.jar}"/>
     <pathelement path="${mysql.jdbc.jar}"/>
     <pathelement path="${postgres.jdbc.jar}"/>
     <pathelement path="${jtds.jdbc.jar}"/>
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${log4j.jar}"/>
+    <pathelement path="${slf4j-log4j12.jar}"/>
   </path>
 
   <path id="embedded.path">
@@ -120,6 +124,7 @@
     <pathelement path="${hibernate.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${rets-client.jar}"/>
     <pathelement path="${apple-java-ext.jar}"/>
     <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
@@ -278,7 +283,7 @@
                 classname="org.xdoclet.plugin.hibernate.HibernateMappingPlugin"
                 destdir="${basedir}/build/hibernate/xdoclet"
                 mergedir="project/hibernate/java"
-                version="2.0"
+                version="3.0"
         />
     </hibernatedoclet>
     <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
@@ -291,9 +296,10 @@
   <target name="build-hibernate-xschema" depends="build-hibernate"
           description="creates the schema">
     <taskdef name="schemaexport"
-             classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask">
+             classname="org.hibernate.tool.hbm2ddl.SchemaExportTask">
       <classpath>
         <path refid="lib.path"/>
+        <fileset dir="${hibernate.lib}" includes="*.jar"/>
         <pathelement path="build/hibernate/classes"/>
       </classpath>
     </taskdef>
@@ -644,11 +650,15 @@
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${commons-lang.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${commons-logging.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${log4j.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${slf4j-log4j12.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${hibernate.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib">
-      <fileset dir="${hibernate.lib}" includes="*.jar" />
+      <fileset dir="${hibernate.lib}" includes="*.jar" excludes="commons-collections*.jar" />
     </copy>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${mysql.jdbc.jar}"/>
@@ -656,7 +666,9 @@
           file="${postgres.jdbc.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${jtds.jdbc.jar}"/>
+    <!-- Antlr Jar is provided by "hibernate.lib".
     <copy todir="build/rets-server/variman/WEB-INF/lib" file="${antlr.jar}"/>
+    -->
     <copy todir="build/rets-server/variman/WEB-INF/lib" file="${jdom.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${commons-codec.jar}"/>
@@ -865,6 +877,7 @@
                    value="org.realtors.rets.server.admin.Bootstrap"/>
       </manifest>
     </jar>
+    <copy file="${commons-logging.jar}" todir="build/rets-server/admin/lib"/>
 
     <!-- build the test code -->
     <depend srcDir="project/admin/test/java"

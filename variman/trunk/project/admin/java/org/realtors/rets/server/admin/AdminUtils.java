@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
@@ -96,7 +96,7 @@ public class AdminUtils
         RetsConfig retsConfig = Admin.getRetsConfig();
         LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
         String hibernateConfig = Admin.getHomeDirectory() + 
-                                    "/variman/WEB-INF/classes/" + 
+                                    "/admin/classes/" + 
                                     Admin.PROJECT_NAME + "-hbm-xml.jar";
  
         Configuration config = new Configuration()

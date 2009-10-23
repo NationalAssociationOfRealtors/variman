@@ -22,10 +22,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.Group;
@@ -72,7 +73,7 @@ public class UsersPanel extends AdminTab
 
         JScrollPane scrollPane = new JScrollPane(mUserList);
         scrollPane.setVerticalScrollBarPolicy(
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                               scrollPane, panel);
         splitPane.setDividerLocation(200);
@@ -117,7 +118,7 @@ public class UsersPanel extends AdminTab
             new OnGroupSelectionChanged());
         JScrollPane scrollPane = new JScrollPane(mGroupsList);
         scrollPane.setVerticalScrollBarPolicy(
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         box.add(scrollPane);
         box.setBorder(BorderFactory.createEmptyBorder(5, 30, 5, 5));
         panel.add(box, BorderLayout.CENTER);

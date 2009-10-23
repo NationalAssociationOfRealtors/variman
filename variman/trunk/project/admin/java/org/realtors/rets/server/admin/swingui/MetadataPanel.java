@@ -1,85 +1,48 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import java.text.DateFormat;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-
 import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.Vector;
-
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
+import javax.swing.SwingConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import net.sf.hibernate.HibernateException;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataClassDialog;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataConversionDialog;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataDialog;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataGenericDialog;
-import org.realtors.rets.server.admin.swingui.metadata.MetadataModel;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataResourceDialog;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataTableDialog;
 
 import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.Metadata;
 import org.realtors.rets.common.metadata.MetaObject;
-import org.realtors.rets.common.metadata.JDomCompactBuilder;
 import org.realtors.rets.common.metadata.MetadataType;
 import org.realtors.rets.common.metadata.attrib.AttrBoolean;
 import org.realtors.rets.common.metadata.attrib.AttrPositiveNumeric;
@@ -102,9 +65,6 @@ import org.realtors.rets.common.metadata.types.MValidationExternalType;
 import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
-import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.JdomUtils;
-import org.realtors.rets.server.UserUtils;
 import org.realtors.rets.server.config.RetsConfig;
 
 public class MetadataPanel extends AdminTab
@@ -174,7 +134,7 @@ public class MetadataPanel extends AdminTab
             String      value       = ((MetaObject)userObject).getAttributeAsString(attribute);
             if (value == null)
                 value = new String("");
-            JLabel label = new JLabel(attribute + ":", JLabel.TRAILING);
+            JLabel label = new JLabel(attribute + ":", SwingConstants.TRAILING);
             
             if (attrType instanceof AttrBoolean)
             {
@@ -594,7 +554,7 @@ public class MetadataPanel extends AdminTab
             JScrollPane scrollPane = new JScrollPane(tree);
 
             scrollPane.setVerticalScrollBarPolicy(
-                       JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                       ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             add(scrollPane, BorderLayout.CENTER);
             
             JPanel panel = new JPanel();

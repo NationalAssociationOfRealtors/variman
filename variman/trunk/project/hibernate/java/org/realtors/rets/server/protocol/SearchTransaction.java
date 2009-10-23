@@ -9,7 +9,7 @@ package org.realtors.rets.server.protocol;
 
 import java.io.PrintWriter;
 
-import net.sf.hibernate.SessionFactory;
+import org.hibernate.SessionFactory;
 
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.metadata.MetadataManager;

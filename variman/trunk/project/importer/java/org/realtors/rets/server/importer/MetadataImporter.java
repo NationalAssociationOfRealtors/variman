@@ -8,6 +8,7 @@
 
 package org.realtors.rets.server.importer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -22,13 +23,13 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Parser;
 import org.apache.log4j.Logger;
 
-import net.sf.hibernate.Hibernate;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.MappingException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Transaction;
-import net.sf.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException;
+import org.hibernate.MappingException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.realtors.rets.client.RetsException;
 import org.realtors.rets.client.RetsSession;
 import org.realtors.rets.common.metadata.JDomCompactBuilder;
@@ -106,7 +107,8 @@ public class MetadataImporter extends MetadataLoader
         throws MappingException, HibernateException
     {
         Configuration cfg = new Configuration();
-        cfg.addJar("rex-hbm-xml.jar");
+        File mappingJar = new File("rex-hbm-xml.jar");
+        cfg.addJar(mappingJar);
         mSessions = cfg.buildSessionFactory();
     }
     
@@ -119,11 +121,13 @@ public class MetadataImporter extends MetadataLoader
             try
             {
                 Session session = helper.beginTransaction();
-                List results = session.find(
-                    "SELECT name" +
-                    "  FROM TableStandardName name" +
-                    " WHERE name.name = ?",
-                    standardName, Hibernate.STRING);
+                String hql = 
+                "SELECT name " +
+                "  FROM TableStandardName name " +
+                " WHERE name.name = :standardName ";
+                Query query = session.createQuery(hql);
+                query.setString("standardName", standardName);
+                List results = query.list();
                 if (results.size() == 1)
                 {
                     name = (TableStandardName) results.get(0);

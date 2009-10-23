@@ -17,10 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 // import java.util.Map;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 // import org.realtors.rets.server.metadata.Table;
 
@@ -45,8 +45,11 @@ public class DataBenchmarks extends DataGenBase
         Session session = mSessions.openSession();
         Transaction tx = session.beginTransaction();
 
-        Iterator i = session.iterate("SELECT data.id" +
-                                     "  FROM RetsData data");
+        String hql =
+        "SELECT data.id " +
+        "  FROM RetsData data ";
+        Query query = session.createQuery(hql);
+        Iterator i = query.iterate();
 
         int count = 0;
         int batchCount = 0;
@@ -78,8 +81,11 @@ public class DataBenchmarks extends DataGenBase
     {
         String ids = StringUtils.join(idList.iterator(), ", ");
         Transaction tx = session.beginTransaction();
-        List l = session.find("SELECT data FROM RetsData data " +
-                              "WHERE data.id in (" + ids + ")");
+        String hql =
+        "SELECT data FROM RetsData data " +
+        " WHERE data.id in (" + ids + ") ";
+        Query query = session.createQuery(hql);
+        List l = query.list();
         for (int i = 0; i < l.size(); i++)
         {
 //            RetsData element = (RetsData) l.get(i);
@@ -94,8 +100,11 @@ public class DataBenchmarks extends DataGenBase
         Transaction tx = session.beginTransaction();
 
         long start = System.currentTimeMillis();
-        List l = session.find("SELECT data" +
-                                  "  FROM RetsData data");
+        String hql =
+        "SELECT data " +
+        "  FROM RetsData data ";
+        Query query = session.createQuery(hql);
+        List l = query.list();
         System.out.println("Time: " + (System.currentTimeMillis() - start));
 
         tx.commit();

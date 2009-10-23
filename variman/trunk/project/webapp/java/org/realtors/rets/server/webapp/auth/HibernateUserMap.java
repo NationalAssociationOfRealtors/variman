@@ -10,7 +10,7 @@
  */
 package org.realtors.rets.server.webapp.auth;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.User;

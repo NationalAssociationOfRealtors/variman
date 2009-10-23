@@ -25,12 +25,11 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException;
+import org.hibernate.cfg.Configuration;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;

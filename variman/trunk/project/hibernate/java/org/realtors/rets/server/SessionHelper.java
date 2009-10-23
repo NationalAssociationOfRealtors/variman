@@ -12,11 +12,11 @@ package org.realtors.rets.server;
 
 import java.io.PrintStream;
 
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import java.sql.Connection;
 
 import org.apache.log4j.Logger;

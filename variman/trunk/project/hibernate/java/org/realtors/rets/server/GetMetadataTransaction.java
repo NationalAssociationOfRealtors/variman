@@ -24,7 +24,7 @@ import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
 import org.realtors.rets.server.metadata.format.FormatterLookup;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
 import org.realtors.rets.server.metadata.format.MutableFormatterContext;
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 public class GetMetadataTransaction
 {

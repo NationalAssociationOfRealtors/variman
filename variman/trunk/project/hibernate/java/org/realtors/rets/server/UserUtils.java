@@ -13,11 +13,11 @@ import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
 
-import net.sf.hibernate.Hibernate;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.LockMode;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 public class UserUtils
 {

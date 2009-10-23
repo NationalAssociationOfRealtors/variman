@@ -13,7 +13,7 @@ public class SQLServerjTDSType extends DatabaseType
     public static final String NAME = "sqlserver-jtds";
     public static final String LONG_NAME = "SQLServer (jTDS)";
     public static final String DIALECT =
-        "net.sf.hibernate.dialect.SQLServerDialect";
+        "org.hibernate.dialect.SQLServerDialect";
     public static final String DRIVER = "net.sourceforge.jtds.jdbc.Driver";
 
     public String getName()

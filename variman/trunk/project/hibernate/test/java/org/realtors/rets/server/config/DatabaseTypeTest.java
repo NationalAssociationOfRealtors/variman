@@ -17,7 +17,7 @@ public class DatabaseTypeTest extends TestCase
         DatabaseType type = DatabaseType.getType("mysql");
         assertNotNull(type);
         assertEquals("com.mysql.jdbc.Driver", type.getDriverClass());
-        assertEquals("net.sf.hibernate.dialect.MySQLDialect",
+        assertEquals("org.hibernate.dialect.MySQLDialect",
                      type.getDialectClass());
         assertEquals("jdbc:mysql://localhost/db_name",
                      type.getUrl("localhost", "db_name"));
@@ -28,7 +28,7 @@ public class DatabaseTypeTest extends TestCase
         DatabaseType type = DatabaseType.getType("postgresql");
         assertNotNull(type);
         assertEquals("org.postgresql.Driver", type.getDriverClass());
-        assertEquals("net.sf.hibernate.dialect.PostgreSQLDialect",
+        assertEquals("org.hibernate.dialect.PostgreSQLDialect",
                      type.getDialectClass());
         assertEquals("jdbc:postgresql://localhost/db_name",
                      type.getUrl("localhost", "db_name"));
@@ -39,7 +39,7 @@ public class DatabaseTypeTest extends TestCase
         DatabaseType type = DatabaseType.getType("sqlserver-jsql");
         assertNotNull(type);
         assertEquals("com.jnetdirect.jsql.JSQLDriver", type.getDriverClass());
-        assertEquals("net.sf.hibernate.dialect.SQLServerDialect",
+        assertEquals("org.hibernate.dialect.SQLServerDialect",
                      type.getDialectClass());
         assertEquals("jdbc:JSQLConnect://localhost" +
                      "/selectMethod=cursor" +
@@ -52,7 +52,7 @@ public class DatabaseTypeTest extends TestCase
         DatabaseType type = DatabaseType.getType("sqlserver-jtds");
         assertNotNull(type);
         assertEquals("net.sourceforge.jtds.jdbc.Driver", type.getDriverClass());
-        assertEquals("net.sf.hibernate.dialect.SQLServerDialect",
+        assertEquals("org.hibernate.dialect.SQLServerDialect",
                      type.getDialectClass());
         assertEquals("jdbc:jtds:sqlserver://localhost/db_name",
                      type.getUrl("localhost", "db_name"));

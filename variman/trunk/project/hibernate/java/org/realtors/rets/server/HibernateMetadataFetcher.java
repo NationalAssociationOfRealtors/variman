@@ -17,9 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataSegment;
@@ -127,7 +128,9 @@ public class HibernateMetadataFetcher implements MetadataFetcher
         {
             Session session = helper.beginTransaction();
             List results = new ArrayList();
-            Iterator iterator = session.iterate("from MSystem");
+            String hql = "from MSystem";
+            Query query =  session.createQuery(hql);
+            Iterator iterator = query.iterate();
             while (iterator.hasNext())
             {
                 results.add(iterator.next());

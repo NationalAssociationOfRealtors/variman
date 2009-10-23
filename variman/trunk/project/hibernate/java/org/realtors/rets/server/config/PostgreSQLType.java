@@ -14,7 +14,7 @@ public class PostgreSQLType extends DatabaseType
     public static final String LONG_NAME = "PostgreSQL";
     public static final String DRIVER = "org.postgresql.Driver";
     public static final String DIALECT =
-        "net.sf.hibernate.dialect.PostgreSQLDialect";
+        "org.hibernate.dialect.PostgreSQLDialect";
 
     public String getName()
     {

@@ -8,7 +8,7 @@
 
 package org.realtors.rets.server;
 
-import net.sf.hibernate.SessionFactory;
+import org.hibernate.SessionFactory;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.config.SecurityConstraints;
@@ -30,17 +30,27 @@ public class RetsServer implements ApplicationContextAware
 
     public static SessionFactory getSessions()
     {
-        return sSessions;
+        SessionFactory sessionFactory;
+        if (sApplicationContext != null) {
+            try {
+                sessionFactory = (SessionFactory)sApplicationContext.getBean("sessionFactory", SessionFactory.class);
+            } catch (NoSuchBeanDefinitionException e) {
+                sessionFactory = sSessions;
+            }
+        } else {
+            sessionFactory = sSessions;
+        }
+        return sessionFactory;
     }
 
     public static ConnectionHelper createHelper()
     {
-        return new SessionHelper(sSessions);
+        return new SessionHelper(getSessions());
     }
 
     public static SessionHelper createSessionHelper()
     {
-        return new SessionHelper(sSessions);
+        return new SessionHelper(getSessions());
     }
 
     public static void setTableGroupFilter(TableGroupFilter tableGroupFilter)

@@ -6,8 +6,6 @@
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
-/*
- */
 package org.realtors.rets.server;
 
 import java.io.Serializable;
@@ -17,20 +15,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import net.sf.hibernate.Hibernate;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.UserType;
-
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.usertype.UserType;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * Converts a database string in the form {@code method + ":" + options} into
+ * a {@link PasswordMethod} object and vice versa.
+ */
 public class PasswordMethodType implements Serializable, UserType
 {
-    public int[] sqlTypes()
+    private static final long serialVersionUID = -1948749150730071046L;
+
+	public int[] sqlTypes()
     {
         return TYPES;
     }
 
-    public Class returnedClass()
+    public Class<PasswordMethod> returnedClass()
     {
         return PasswordMethod.class;
     }
@@ -94,6 +97,26 @@ public class PasswordMethodType implements Serializable, UserType
     public boolean isMutable()
     {
         return false;
+    }
+
+    public Object assemble(Serializable cached, Object owner) throws HibernateException
+    {
+        return cached;
+    }
+
+    public Serializable disassemble(Object value) throws HibernateException
+    {
+        return (Serializable)value;
+    }
+
+    public int hashCode(Object x) throws HibernateException
+    {
+        return x.hashCode();
+    }
+
+    public Object replace(Object original, Object target, Object owner) throws HibernateException
+    {
+        return original;
     }
 
     private static final int[] TYPES = {Types.VARCHAR};

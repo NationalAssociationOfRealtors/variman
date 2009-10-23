@@ -10,7 +10,7 @@ public class MySQLType extends DatabaseType
     public static final String LONG_NAME = "MySQL";
     public static final String DRIVER = "com.mysql.jdbc.Driver";
     public static final String DIALECT =
-        "net.sf.hibernate.dialect.MySQLDialect";
+        "org.hibernate.dialect.MySQLDialect";
 
     public String getName()
     {

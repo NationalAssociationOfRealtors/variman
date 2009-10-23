@@ -10,13 +10,15 @@
  */
 package org.realtors.rets.server;
 
+import java.io.File;
 import java.util.List;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.cfg.Configuration;
-import net.sf.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 public class Admin
 {
@@ -28,7 +30,8 @@ public class Admin
     private void initHibernate() throws HibernateException
     {
         mCfg = new Configuration();
-        mCfg.addJar("variman-hbm-xml.jar");
+        File mappingJar = new File("variman-hbm-xml.jar");
+        mCfg.addJar(mappingJar);
         mSessions = mCfg.buildSessionFactory();
     }
 
@@ -43,7 +46,9 @@ public class Admin
         try
         {
             Session session = helper.beginTransaction();
-            List users = session.find("from User u where u.username = 'Joe'");
+            String hql = "from User u where u.username = 'Joe'";
+            Query query = session.createQuery(hql);
+            List users = query.list();
             if (users.size() == 0)
             {
                 User joe = new User();
@@ -55,7 +60,9 @@ public class Admin
                 System.out.println("New id: " + id);
             }
 
-            users = session.find("from User u where u.username = 'aphex'");
+            hql = "from User u where u.username = 'aphex'";
+            query = session.createQuery(hql);
+            users = query.list();
             if (users.size() == 0)
             {
                 User aphex = new User();
@@ -67,7 +74,9 @@ public class Admin
                 System.out.println("New id: " + id);
             }
 
-            users = session.find("from User");
+            hql = "from User";
+            query = session.createQuery(hql);
+            users = query.list();
             for (int i = 0; i < users.size(); i++)
             {
                 User user = (User) users.get(i);

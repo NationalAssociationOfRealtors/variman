@@ -38,7 +38,7 @@ import org.realtors.rets.server.webapp.WebApp;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
-import net.sf.hibernate.HibernateException;
+import org.hibernate.HibernateException;
 
 /**
  * @web.filter name="authentication-filter"
@@ -135,7 +135,8 @@ public class AuthenticationFilter implements Filter, UserMap
         }
         String retsPrefix = request.getContextPath() + "/rets";
         String cctPrefix = request.getContextPath() + "/cct";
-        if (!uri.startsWith(retsPrefix) && !uri.startsWith(cctPrefix))
+        String hpmaPrefix  = request.getContextPath() + "/server";
+        if (!uri.startsWith(retsPrefix) && !uri.startsWith(cctPrefix) && !uri.startsWith(hpmaPrefix))
         {
             filterChain.doFilter(request, response);
             return;

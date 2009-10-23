@@ -48,7 +48,7 @@ public class RemoveGroupAction extends AbstractAction
 
             int response = JOptionPane.showConfirmDialog(
                 frame,
-                "Are you sure you wnat to delete " + group + "?",
+                "Are you sure you want to delete " + group + "?",
                 "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (response != JOptionPane.YES_OPTION)
             {
