@@ -1,0 +1,8 @@
+<j:jelly xmlns:j="jelly:core">
+  <!--
+  <servlet-mapping>
+    <servlet-name>struts-action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  -->
+</j:jelly>

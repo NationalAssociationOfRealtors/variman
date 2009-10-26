@@ -1,0 +1,15 @@
+hibernate.connection.driver_class = org.postgresql.Driver
+hibernate.connection.url = jdbc:postgresql://localhost/retsdb2
+hibernate.connection.username = kgarner
+hibernate.connection.password = kgarner
+
+hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+hibernate.show_sql = true
+
+## connection pool
+
+hibernate.c3p0.acquire_increment = 2
+hibernate.c3p0.max_size = 100
+hibernate.c3p0.min_size = 20
+hibernate.c3p0.timeout = 120000
+hibernate.c3p0.max_statements = 100
