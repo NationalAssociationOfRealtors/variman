@@ -82,6 +82,8 @@ import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.JdomUtils;
+import org.realtors.rets.server.admin.Admin;
+import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.admin.swingui.AdminFrame;
 import org.realtors.rets.server.admin.swingui.MetadataPanel;
 import org.realtors.rets.server.admin.swingui.SwingUtils;
@@ -129,7 +131,8 @@ public class MetadataConversionDialog extends MetadataDialog
 
                 try
                 {
-                    mSystem = RetsConfig.getMetadata().getSystem();
+                    RetsConfig config = Admin.getRetsConfig();
+                    mSystem = config.getMetadata().getSystem();
                     updateStatus("Converting System");
 
                     if (mSystem.getTimeZoneOffset() == null || mSystem.getTimeZoneOffset().length() < 1)

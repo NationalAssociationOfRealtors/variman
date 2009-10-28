@@ -46,10 +46,10 @@ public class MetadataImporter extends MetadataLoader
      * Creates a new <code>MetadataImporter</code> instance.
      *
      */
-    public MetadataImporter()
+    public MetadataImporter(RetsConfig retsConfig)
         throws Exception
     {
-        super();
+        super(retsConfig);
         initHibernate();
         mFilename = null;
     }
@@ -83,7 +83,7 @@ public class MetadataImporter extends MetadataLoader
         {
             InputStream in = new FileInputStream(mFilename);
             JDomCompactBuilder builder = new JDomCompactBuilder();
-            builder.setStrict(RetsConfig.getInstance().getStrictParsing());
+            builder.setStrict(mRetsConfig.getStrictParsing());
             mMetadata = builder.build(new InputSource(in));
         }
         
@@ -364,7 +364,8 @@ public class MetadataImporter extends MetadataLoader
             System.exit(1);
         }
         
-        MetadataImporter mi = new MetadataImporter();
+        RetsConfig retsConfig = new RetsConfig();
+        MetadataImporter mi = new MetadataImporter(retsConfig);
         mi.setConnectionURL(
             cmdl.getOptionValue('c',
                                 "http://demo.crt.realtors.org:6103/login"));

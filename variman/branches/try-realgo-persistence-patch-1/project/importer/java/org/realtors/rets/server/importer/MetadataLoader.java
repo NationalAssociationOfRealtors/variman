@@ -80,7 +80,7 @@ public class MetadataLoader
      * Creates a new <code>MetadataImporter</code> instance.
      *
      */
-    public MetadataLoader()
+    public MetadataLoader(RetsConfig retsConfig)
     {
         mResources = new HashMap();
         mClasses = new HashMap();
@@ -94,6 +94,7 @@ public class MetadataLoader
         mUpdates = new HashMap();
         mUpdateHelps = new HashMap();
         mTableStandardNames = new HashMap();
+        mRetsConfig = retsConfig;
     }
 
     protected void save(Object object)
@@ -137,7 +138,7 @@ public class MetadataLoader
     private void loadMetadataTables(InputStream in)
     {
         JDomCompactBuilder builder = new JDomCompactBuilder();
-        builder.setStrict(RetsConfig.getInstance().getStrictParsing());
+        builder.setStrict(mRetsConfig.getStrictParsing());
         try
         {
             mMetadata = builder.build(new InputSource(in));
@@ -977,4 +978,5 @@ public class MetadataLoader
     protected Map mValidationLookups;
     protected Map mTableStandardNames;
     protected Metadata mMetadata;
+    protected RetsConfig mRetsConfig;
 }

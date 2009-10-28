@@ -26,6 +26,7 @@ import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
@@ -34,12 +35,13 @@ import org.realtors.rets.server.metadata.Table;
 
 public class CreatePropertiesCommand
 {
-    public CreatePropertiesCommand(int numProperties)
+    public CreatePropertiesCommand(RetsConfig config, int numProperties)
     {
         mClasses = new HashMap();
         mTables = new HashMap();
         mSessions = RetsServer.getSessions();
         mNumProperties = numProperties;
+        mRetsConfig = config;
         initData();
     }
 
@@ -100,7 +102,7 @@ public class CreatePropertiesCommand
     private void loadMetadata()
         throws RetsServerException
     {
-        MetadataLoader loader = new MetadataLoader();
+        MetadataLoader loader = new MetadataLoader(mRetsConfig);
         MSystem system = loader.parseMetadataDirectory();
         Iterator j = system.getResources().iterator();
         while (j.hasNext())
@@ -291,6 +293,7 @@ public class CreatePropertiesCommand
     private Map mTables;
     private int mNumProperties;
     private SessionFactory mSessions;
+    private RetsConfig mRetsConfig;
 
     private String[] mAgents;
     private String[] mBrokers;

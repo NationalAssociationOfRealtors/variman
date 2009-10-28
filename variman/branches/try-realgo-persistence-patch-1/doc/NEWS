@@ -2,6 +2,8 @@ Version 3.1.2 - xx xxx 2009
  
   * RestrictedIndicator allows special characters. Ticket #61.
   * Add $basedir to build.xml. Ticket #63.
+  * Change RetsConfig to allow for changeable persistence
+    mechanisms. Ticket #66.
 
 Version 3.1.1 - 30 Sep 2009
 

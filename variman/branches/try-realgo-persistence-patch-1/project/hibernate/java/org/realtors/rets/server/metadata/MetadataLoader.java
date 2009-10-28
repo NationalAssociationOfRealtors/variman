@@ -63,7 +63,7 @@ public class MetadataLoader
      * Creates a new <code>MetadataImporter</code> instance.
      *
      */
-    public MetadataLoader()
+    public MetadataLoader(RetsConfig retsConfig)
     {
         mResources = new ListOrderedMap();
         mForeignKeys = new ListOrderedMap();
@@ -79,6 +79,7 @@ public class MetadataLoader
         mUpdateHelps = new ListOrderedMap();
         mTableStandardNames = new ListOrderedMap();
         mNextId = 1;
+        mRetsConfig = retsConfig;
     }
 
     protected void save(Identifiable object)
@@ -103,7 +104,7 @@ public class MetadataLoader
         try
         {
             JDomCompactBuilder builder = new JDomCompactBuilder();
-            builder.setStrict(RetsConfig.getInstance().getStrictParsing());
+            builder.setStrict(mRetsConfig.getStrictParsing());
             mMetadata = builder.build(new InputSource(in));
             return parseMetadata();
         }
@@ -119,7 +120,7 @@ public class MetadataLoader
         try
         {
             JDomCompactBuilder builder = new JDomCompactBuilder();
-            builder.setStrict(RetsConfig.getInstance().getStrictParsing());
+            builder.setStrict(mRetsConfig.getStrictParsing());
             mMetadata = builder.build(document);
             return parseMetadata();
         }
@@ -134,7 +135,7 @@ public class MetadataLoader
     {
         try
         {
-        	mMetadata = RetsConfig.getMetadata();
+        	mMetadata = mRetsConfig.getMetadata();
         	return parseMetadata();
         }
         catch (Exception e)
@@ -1068,4 +1069,5 @@ public class MetadataLoader
     protected Map mTableStandardNames;
     protected Metadata mMetadata;
     protected long mNextId;
+    protected RetsConfig mRetsConfig;
 }
