@@ -148,7 +148,7 @@ public class Admin
     public static MetadataLoader getMetadataLoader()
     {
         if (sMetadataLoader == null)
-            sMetadataLoader = new MetadataLoader();
+            sMetadataLoader = new MetadataLoader(sRetsConfig);
         
         return sMetadataLoader;
     }

@@ -11,6 +11,7 @@ package org.realtors.rets.server;
 import org.hibernate.SessionFactory;
 
 import org.apache.log4j.Logger;
+import org.realtors.rets.server.config.RetsConfigDao;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.ObjectSet;
@@ -30,17 +31,33 @@ public class RetsServer implements ApplicationContextAware
 
     public static SessionFactory getSessions()
     {
-        SessionFactory sessionFactory;
-        if (sApplicationContext != null) {
-            try {
-                sessionFactory = (SessionFactory)sApplicationContext.getBean("sessionFactory", SessionFactory.class);
-            } catch (NoSuchBeanDefinitionException e) {
-                sessionFactory = sSessions;
+        if (sSessions == null && sApplicationContext != null)
+        {
+            try
+            {
+                // only lookup from spring if rets-config.xml didn't already load it
+                sSessions = (SessionFactory)sApplicationContext.getBean("sessionFactory", SessionFactory.class);
             }
-        } else {
-            sessionFactory = sSessions;
+            catch (NoSuchBeanDefinitionException e)
+            {
+                throw new IllegalStateException("No db connection properties or hibernate session factory has been configured via rets-config.xml or via spring config!");
+            }
         }
-        return sessionFactory;
+        return sSessions;
+    }
+
+    public static RetsConfigDao getRetsConfigDao()
+    {
+        RetsConfigDao retsConfig = null;
+        try
+        {
+            retsConfig = (RetsConfigDao)sApplicationContext.getBean("retsConfigDao", RetsConfigDao.class);
+        }
+        catch (NoSuchBeanDefinitionException e)
+        {
+            LOG.warn("No rets config dao has been configured via spring config, defaulting to reading rets config xml file.");
+        }
+        return retsConfig;
     }
 
     public static ConnectionHelper createHelper()

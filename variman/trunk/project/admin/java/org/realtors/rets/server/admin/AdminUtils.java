@@ -29,7 +29,8 @@ import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.DatabaseType;
 import org.realtors.rets.server.config.RetsConfig;
-
+import org.realtors.rets.server.config.RetsConfigDao;
+import org.realtors.rets.server.config.XmlRetsConfigDao;
 
 public class AdminUtils
 {
@@ -42,13 +43,14 @@ public class AdminUtils
         Admin.setConfigFile(configFile.getAbsolutePath());
         if (configFile.exists())
         {
-            Admin.setRetsConfig(
-                RetsConfig.initFromXmlFile(Admin.getConfigFile()));
+            RetsConfigDao configDao = new XmlRetsConfigDao(Admin.getConfigFile());
+            RetsConfig config = configDao.loadRetsConfig();
+            Admin.setRetsConfig(config);
             Admin.setRetsConfigChanged(false);
         }
         else
         {
-            RetsConfig retsConfig = RetsConfig.getInstance();
+            RetsConfig retsConfig = new RetsConfig();
             String defaultDirectory = SystemUtils.USER_DIR + File.separator;
             retsConfig.setMetadataDir(defaultDirectory + "metadata");
             retsConfig.setGetObjectRoot(defaultDirectory + "pictures");

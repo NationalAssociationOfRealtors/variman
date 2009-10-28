@@ -2,12 +2,19 @@ package org.realtors.rets.server.config;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.realtors.rets.server.QueryCount;
 
 public class GroupRules
 {
+    public GroupRules() {
+        this(null);
+    }
+
     public GroupRules(String groupName)
     {
         mGroupName = groupName;
@@ -23,9 +30,24 @@ public class GroupRules
         return mGroupName;
     }
 
+    public void setGroupName(String groupName)
+    {
+        mGroupName = groupName;
+    }
+
     public List /* FilterRule */ getFilterRules()
     {
         return mReadOnlyFilterRules;
+    }
+
+    public void setFilterRules(List filterRules)
+    {
+        Iterator itr = filterRules.iterator();
+        while( itr.hasNext() )
+        {
+            FilterRule filterRule = (FilterRule)itr.next();
+            addFilterRule(filterRule);
+        }
     }
 
     public void addFilterRule(FilterRule filterRule)
@@ -41,6 +63,16 @@ public class GroupRules
     public List /* ConditionRule */ getConditionRules()
     {
         return mReadOnlyConditionRules;
+    }
+
+    public void setConditionRules(List conditionRules)
+    {
+        Iterator itr = conditionRules.iterator();
+        while( itr.hasNext() )
+        {
+            ConditionRule conditionRule = (ConditionRule)itr.next();
+            addConditionRule(conditionRule);
+        }
     }
 
     public void addConditionRule(ConditionRule conditionRule)
@@ -105,9 +137,53 @@ public class GroupRules
         return mQueryCountLimit;
     }
 
+    public void setQueryCountLimit(long limit)
+    {
+        if (limit <= 0)
+        {
+            throw new IllegalArgumentException("limit must be greater than 0: "
+                                               + limit);
+        }
+
+        mQueryCountLimit = limit;
+    }
+
     public QueryCount.LimitPeriod getQueryCountLimitPeriod()
     {
         return mQueryCountLimitPeriod;
+    }
+
+    public void setQueryCountLimitPeriod(QueryCount.LimitPeriod limitPeriod)
+    {
+        mQueryCountLimitPeriod = limitPeriod;
+    }
+
+    public Integer getId() {
+        return this.mId;
+    }
+
+    public void setId(Integer id) {
+        this.mId = id;
+    }
+
+    public Map getExtendableProperties()
+    {
+        if (mExtendableProperties == null) {
+            mExtendableProperties = new LinkedHashMap();
+        }
+       return mExtendableProperties;
+    }
+
+    public void setExtendableProperties(Map extendableProperties) {
+           this.mExtendableProperties = extendableProperties;
+    }
+
+    public Object getExtendableProperty(String name) {
+        return getExtendableProperties().get(name);
+    }
+
+    public void setExtendableProperty(String name, Object value) {
+        getExtendableProperties().put(name, value);
     }
 
     private String mGroupName;
@@ -119,4 +195,6 @@ public class GroupRules
     private TimeRestriction mTimeRestriction;
     private long mQueryCountLimit;
     private QueryCount.LimitPeriod mQueryCountLimitPeriod;
+    private Integer mId;
+    private Map mExtendableProperties;
 }

@@ -15,7 +15,7 @@ public class RetsConfigTest extends LinesEqualTestCase
     public void testToXml()
         throws RetsServerException
     {
-        RetsConfig retsConfig = RetsConfig.getInstance();
+        RetsConfig retsConfig =  new RetsConfig();
         retsConfig.setGetObjectRoot("/tmp/pictures");
         retsConfig.setPhotoPattern("%k-%i.jpg");
         retsConfig.setObjectSetPattern("%k.xml");
@@ -84,7 +84,7 @@ public class RetsConfigTest extends LinesEqualTestCase
         securityConstraints.add(new GroupRules("agent"));
         retsConfig.setSecurityConstraints(securityConstraints);
 
-        String xml = retsConfig.toXml();
+        String xml = XmlRetsConfigUtils.toXml(retsConfig);
         assertLinesEqual(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL +
             "<rets-config>" + NL +
@@ -199,7 +199,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "    </group-rules>\n" +
             "  </security-constraints>\n" +
             "</rets-config>";
-        RetsConfig retsConfig = RetsConfig.initFromXml(xml);
+        RetsConfig retsConfig = XmlRetsConfigUtils.initFromXml(xml);
         assertEquals("192.168.1.1", retsConfig.getAddress());
         assertEquals(7103, retsConfig.getPort());
         assertEquals("WEB-INF/rets/metadata", retsConfig.getMetadataDir());
@@ -311,7 +311,7 @@ public class RetsConfigTest extends LinesEqualTestCase
             "<?xml version='1.0' ?>\n" +
             "<rets-config>\n" +
             "</rets-config>";
-        RetsConfig retsConfig = RetsConfig.initFromXml(xml);
+        RetsConfig retsConfig = XmlRetsConfigUtils.initFromXml(xml);
         assertNull(retsConfig.getPhotoPattern());
         assertNull(retsConfig.getGetObjectRoot());
         assertEquals(-1, retsConfig.getNonceInitialTimeout());
@@ -321,7 +321,7 @@ public class RetsConfigTest extends LinesEqualTestCase
     public void testAddStringChild() throws RetsServerException
     {
         Element element = new Element("foo");
-        RetsConfig.addChild(element, "bar", "baz");
+        XmlRetsConfigUtils.addChild(element, "bar", "baz");
         Element child = element.getChild("bar");
         assertNotNull(child);
         assertEquals("baz", child.getText());
@@ -330,7 +330,7 @@ public class RetsConfigTest extends LinesEqualTestCase
     public void testAddNullStringChild() throws RetsServerException
     {
         Element element = new Element("foo");
-        RetsConfig.addChild(element, "bar", null);
+        XmlRetsConfigUtils.addChild(element, "bar", null);
         Element child = element.getChild("bar");
         assertNotNull(child);
         assertEquals("", child.getText());
@@ -339,7 +339,7 @@ public class RetsConfigTest extends LinesEqualTestCase
     public void testAddEmptyStringChild() throws RetsServerException
     {
         Element element = new Element("foo");
-        RetsConfig.addChild(element, "bar", "");
+        XmlRetsConfigUtils.addChild(element, "bar", "");
         Element child = element.getChild("bar");
         assertNotNull(child);
         assertEquals("", child.getText());
@@ -347,7 +347,7 @@ public class RetsConfigTest extends LinesEqualTestCase
 
     public void testSetBlankAddress()
     {
-        RetsConfig retsConfig = RetsConfig.getInstance();
+        RetsConfig retsConfig = new RetsConfig();
         assertNull(retsConfig.getAddress());
         retsConfig.setAddress("");
         assertNull(retsConfig.getAddress());
@@ -359,7 +359,7 @@ public class RetsConfigTest extends LinesEqualTestCase
 
     public void testGetDefaults()
     {
-        RetsConfig retsConfig = RetsConfig.getInstance();
+        RetsConfig retsConfig = new RetsConfig();
         assertEquals("/", retsConfig.getGetObjectRoot("/"));
         assertEquals("%i.jpg", retsConfig.getPhotoPattern("%i.jpg"));
         assertEquals("foo", retsConfig.getObjectSetPattern("foo"));

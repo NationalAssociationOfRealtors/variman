@@ -12,7 +12,6 @@ package org.realtors.rets.server.webapp;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -40,6 +39,8 @@ import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.RetsConfigDao;
+import org.realtors.rets.server.config.XmlRetsConfigDao;
 import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MSystem;
 import org.realtors.rets.server.metadata.MetadataLoader;
@@ -218,11 +219,20 @@ public class InitServlet extends RetsServlet
     {
         try
         {
+            RetsConfigDao configDao = RetsServer.getRetsConfigDao();
+            if (configDao == null)
+            {
+                // TODO - long-term would be good to have it be spring injected
+                // but will need to migrate users from using web.xml to define
+                // the location of the rets-config file
             String configFile =
                 getContextInitParameter("rets-config-file",
                                         "WEB-INF/rets/rets-config.xml");
             configFile = resolveFromContextRoot(configFile);
-            mRetsConfig = RetsConfig.initFromXml(new FileReader(configFile));
+                configDao = new XmlRetsConfigDao(configFile);
+            }
+
+            mRetsConfig = configDao.loadRetsConfig();
 
             String address = mRetsConfig.getAddress();
             if  (address == null)
@@ -246,10 +256,6 @@ public class InitServlet extends RetsServlet
                 mRetsConfig.getSecurityConstraints());
 
             RetsServer.setQueryCountTable(new QueryCountTable());
-        }
-        catch (IOException e)
-        {
-            throw new ServletException(e);
         }
         catch (RetsServerException e)
         {
@@ -283,6 +289,10 @@ public class InitServlet extends RetsServlet
     {
         try
         {
+            if (mRetsConfig.getDatabase() != null)
+            {
+                // TODO - The database setup and hibernate initialization 
+                // should really be done in spring config outside of rets config
             LOG.debug("Initializing hibernate");
             Configuration cfg = new Configuration();
             File hbmXmlFile = new File(resolveFromContextRoot(
@@ -293,6 +303,7 @@ public class InitServlet extends RetsServlet
             cfg.setProperties(mRetsConfig.createHibernateProperties());
             RetsServer.setSessions(cfg.buildSessionFactory());
             logDatabaseInfo();
+        }
         }
         catch (HibernateException e)
         {
@@ -338,7 +349,7 @@ public class InitServlet extends RetsServlet
     {
         try
         {
-            MetadataLoader loader = new MetadataLoader();
+            MetadataLoader loader = new MetadataLoader(mRetsConfig);
             return loader.parseMetadataDirectory();
         }
         catch (RetsServerException e)

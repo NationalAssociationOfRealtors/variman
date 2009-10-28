@@ -11,6 +11,9 @@ public class TimeRestriction
     public static final Policy ALLOW = new Policy("allow");
     public static final Policy DENY = new Policy("deny");
 
+    public TimeRestriction() {
+    }
+
     public TimeRestriction(Policy policy, int startHour, int startMinute,
                            int endHour, int endMinute)
     {
@@ -26,6 +29,11 @@ public class TimeRestriction
     public Policy getPolicy()
     {
         return mPolicy;
+    }
+
+    public void setPolicy(Policy policy)
+    {
+        mPolicy = policy;
     }
 
     public boolean isAllowedNow()
@@ -53,6 +61,56 @@ public class TimeRestriction
         {
             return !inInterval;
         }
+    }
+
+    public int getAbsoluteStart()
+    {
+        return mAbsoluteStart;
+    }
+    
+    public void setAbsoluteStart(int absoluteStart)
+    {
+        mAbsoluteStart = absoluteStart;
+    }
+ 
+    public int getAbsoluteEnd() {
+        return mAbsoluteEnd;
+    }
+
+    public void setAbsoluteEnd(int absoluteEnd) {
+        mAbsoluteEnd = absoluteEnd;
+    }
+
+    public int getStartHour() {
+        return mStartHour;
+    }
+
+    public void setStartHour(int startHour) {
+        mStartHour = startHour;
+    }
+
+    public int getStartMinute() {
+        return mStartMinute;
+    }
+
+    public void setStartMinute(int startMinute) {
+        this.mStartMinute = startMinute;
+    }
+
+    public int getEndHour() {
+        return this.mEndHour;
+    }
+
+    public void setEndHour(int endHour) {
+        this.mEndHour = endHour;
+    }
+
+    public int getEndMinute() {
+        return this.mEndMinute;
+    }
+
+    public void setEndMinute(int endMinute) {
+        this.mEndMinute = endMinute;
     }
 
     public Calendar getStartAsCalendar()

@@ -206,7 +206,7 @@ public class Main
         AdminUtils.initConfig();
         AdminUtils.initDatabase();
 
-        new CreateDataSchemaCommand().execute();
+        new CreateDataSchemaCommand(Admin.getRetsConfig()).execute();
     }
 
     private static void createProperties(String[] args)
@@ -221,7 +221,7 @@ public class Main
         AdminUtils.initDatabase();
 
         int numProperties = NumberUtils.toInt(args[0]);
-        new CreatePropertiesCommand(numProperties).execute();
+        new CreatePropertiesCommand(Admin.getRetsConfig(), numProperties).execute();
         System.out.println("Created " + numProperties + " properties");
     }
 
