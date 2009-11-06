@@ -8,6 +8,7 @@
 package org.realtors.rets.server.config;
 
 import java.io.File;
+import java.util.Date;
 
 import org.realtors.rets.server.RetsServerException;
 
@@ -60,5 +61,13 @@ public class XmlRetsConfigDao implements RetsConfigDao {
         }
 
         XmlRetsConfigUtils.toXml(retsConfig, filePath);
+    }
+
+    /*- (non-Javadoc)
+     * @see org.realtors.rets.server.config.RetsConfigDao#isChanged()
+     */
+    public Date getConfigChangedDate() {
+        Date configChanged = new Date(new File(getFilePath()).lastModified());
+        return configChanged;
     }
 }

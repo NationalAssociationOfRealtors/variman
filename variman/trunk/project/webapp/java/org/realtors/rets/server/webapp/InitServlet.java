@@ -16,40 +16,20 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
-
-import org.apache.commons.lang.SystemUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.log4j.Logger;
 import org.realtors.rets.server.ConnectionHelper;
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.LogPropertiesUtils;
 import org.realtors.rets.server.PasswordMethod;
-import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.config.RetsConfigDao;
-import org.realtors.rets.server.config.XmlRetsConfigDao;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataLoader;
-import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.protocol.ConditionRuleSet;
-import org.realtors.rets.server.protocol.TableGroupFilter;
-import org.realtors.rets.server.webapp.auth.NonceReaper;
-import org.realtors.rets.server.webapp.auth.NonceTable;
 
 /**
  * FIXME: Change to a ServletContextListener. (This will still maintain
@@ -66,17 +46,15 @@ public class InitServlet extends RetsServlet
         try
         {
             LOG.info("Running init servlet");
-            initWebAppProperties();
-            WebApp.setServletContext(getServletContext());
-            PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,
-                                            PasswordMethod.RETS_REALM);
-            initRetsConfiguration();
+            WebApp.loadConfiguration(getServletContext());
+            PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1, PasswordMethod.RETS_REALM);
             initHibernate();
-            initMetadata();
-            initNonceTable();
-            initGroupFilter();
-            initConditionRuleSet();
             LOG.info("Init servlet completed successfully");
+        }
+        catch (RetsServerException e)
+        {
+            LOG.fatal("Caught exception when loading RETS configuration", e);
+            throw new ServletException(e.getMessage());
         }
         catch (ServletException e)
         {
@@ -97,27 +75,6 @@ public class InitServlet extends RetsServlet
         {
             LOG.fatal("Caught", e);
             throw e;
-        }
-    }
-
-    private void initWebAppProperties() throws ServletException
-    {
-        try
-        {
-            WebApp.initProperties();
-            LOG.info(WebApp.SERVER_NAME + " version " + WebApp.getVersion());
-            LOG.info("Build date " + WebApp.getBuildDate());
-            LOG.info("Java version " + SystemUtils.JAVA_VERSION);
-            LOG.info(SystemUtils.JAVA_RUNTIME_NAME + ", version " +
-                     SystemUtils.JAVA_RUNTIME_VERSION);
-            LOG.info(SystemUtils.JAVA_VM_NAME + ", version " +
-                     SystemUtils.JAVA_VM_VERSION);
-            LOG.info(SystemUtils.OS_NAME + ", version " +
-                     SystemUtils.OS_VERSION);
-        }
-        catch (IOException e)
-        {
-            throw new ServletException(e);
         }
     }
 
@@ -215,95 +172,22 @@ public class InitServlet extends RetsServlet
         }
     }
 
-    private void initRetsConfiguration() throws ServletException
-    {
-        try
-        {
-            RetsConfigDao configDao = RetsServer.getRetsConfigDao();
-            if (configDao == null)
-            {
-                // TODO - long-term would be good to have it be spring injected
-                // but will need to migrate users from using web.xml to define
-                // the location of the rets-config file
-            String configFile =
-                getContextInitParameter("rets-config-file",
-                                        "WEB-INF/rets/rets-config.xml");
-            configFile = resolveFromContextRoot(configFile);
-                configDao = new XmlRetsConfigDao(configFile);
-            }
-
-            mRetsConfig = configDao.loadRetsConfig();
-
-            String address = mRetsConfig.getAddress();
-            if  (address == null)
-                address = "all IP addresses";
-            LOG.info("Listening on " + address + ", port " +
-                     mRetsConfig.getPort());
-
-            String getObjectRoot = getGetObjectRoot();
-            WebApp.setGetObjectRoot(getObjectRoot);
-            LOG.info("GetObject root: " + getObjectRoot);
-
-            String photoPattern = mRetsConfig.getPhotoPattern();
-            WebApp.setPhotoPattern(photoPattern);
-            LOG.info("GetObject photo pattern: " + photoPattern);
-
-            String objectSetPattern = mRetsConfig.getObjectSetPattern();
-            WebApp.setObjectSetPattern(objectSetPattern);
-            LOG.info("GetObject object set pattern: " + objectSetPattern);
-
-            RetsServer.setSecurityConstraints(
-                mRetsConfig.getSecurityConstraints());
-
-            RetsServer.setQueryCountTable(new QueryCountTable());
-        }
-        catch (RetsServerException e)
-        {
-            throw new ServletException(e);
-        }
-    }
-
-    private String getGetObjectRoot()
-    {
-        ServletContext context = getServletContext();
-        String getObjectRoot =
-            mRetsConfig.getGetObjectRoot(context.getRealPath("/"));
-        File getObjectRootFile = new File(getObjectRoot);
-        if (!getObjectRootFile.exists())
-        {
-            LOG.warn("GetObject root does not exist: " + getObjectRoot);
-       }
-        else if (!getObjectRootFile.isDirectory())
-        {
-            LOG.warn("GetObject root is not a directory: " +
-                     getObjectRoot);
-       }
-        else if (!getObjectRootFile.canRead())
-        {
-            LOG.warn("GetObject root is not readable: " + getObjectRoot);
-       }
-        return getObjectRoot;
-    }
-
-    private void initHibernate() throws ServletException
-    {
-        try
-        {
-            if (mRetsConfig.getDatabase() != null)
-            {
-                // TODO - The database setup and hibernate initialization 
+    private void initHibernate() throws ServletException {
+        RetsConfig retsConfig = WebApp.getRetsConfiguration();
+        try {
+            if (retsConfig.getDatabase() != null) {
+                // TODO - The database setup and hibernate initialization
                 // should really be done in spring config outside of rets config
-            LOG.debug("Initializing hibernate");
-            Configuration cfg = new Configuration();
-            File hbmXmlFile = new File(resolveFromContextRoot(
-                "WEB-INF/classes/" + WebApp.PROJECT_NAME + "-hbm-xml.jar"));
-            LOG.debug("HBM file: " + hbmXmlFile);
-            cfg.addJar(hbmXmlFile);
-            LOG.info("JDBC URL: " + mRetsConfig.getDatabase().getUrl());
-            cfg.setProperties(mRetsConfig.createHibernateProperties());
-            RetsServer.setSessions(cfg.buildSessionFactory());
-            logDatabaseInfo();
-        }
+                LOG.debug("Initializing hibernate");
+                Configuration cfg = new Configuration();
+                File hbmXmlFile = new File(resolveFromContextRoot("WEB-INF/classes/" + WebApp.PROJECT_NAME + "-hbm-xml.jar"));
+                LOG.debug("HBM file: " + hbmXmlFile);
+                cfg.addJar(hbmXmlFile);
+                LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
+                cfg.setProperties(retsConfig.createHibernateProperties());
+                RetsServer.setSessions(cfg.buildSessionFactory());
+                logDatabaseInfo();
+            }
         }
         catch (HibernateException e)
         {
@@ -334,101 +218,6 @@ public class InitServlet extends RetsServlet
 
     }
 
-    private void initMetadata() throws ServletException
-    {
-        LOG.debug("Initializing metadata");
-        MSystem system = findSystem();
-        LOG.debug("Creating metadata manager");
-        MetadataManager manager = new MetadataManager();
-        manager.addRecursive(system);
-        LOG.debug("Adding metadata to servlet context");
-        WebApp.setMetadataManager(manager);
-    }
-
-    private MSystem findSystem() throws ServletException
-    {
-        try
-        {
-            MetadataLoader loader = new MetadataLoader(mRetsConfig);
-            return loader.parseMetadataDirectory();
-        }
-        catch (RetsServerException e)
-        {
-            throw new ServletException(e);
-        }
-    }
-
-    private void initNonceTable()
-    {
-        NonceTable nonceTable = new NonceTable();
-        int initialTimeout = mRetsConfig.getNonceInitialTimeout();
-        if (initialTimeout != -1)
-        {
-            nonceTable.setInitialTimeout(
-                initialTimeout * DateUtils.MILLIS_PER_MINUTE);
-            LOG.info("Set initial nonce timeout to " + initialTimeout +
-                      " minutes");
-        }
-
-        int successTimeout = mRetsConfig.getNonceSuccessTimeout();
-        if (successTimeout != -1)
-        {
-            nonceTable.setSuccessTimeout(
-                successTimeout * DateUtils.MILLIS_PER_MINUTE);
-            LOG.info("Set success nonce timeout to " + successTimeout +
-                      " minutes");
-        }
-        WebApp.setNonceTable(nonceTable);
-        WebApp.setNonceReaper(new NonceReaper(nonceTable));
-    }
-
-    private void initGroupFilter()
-    {
-        LOG.debug("Initializing group filter");
-        TableGroupFilter groupFilter = new TableGroupFilter();
-        MetadataManager metadataManager = WebApp.getMetadataManager();
-        MSystem system =
-            (MSystem) metadataManager.findUnique(MSystem.TABLE, "");
-        Set resources = system.getResources();
-        for (Iterator i = resources.iterator(); i.hasNext();)
-        {
-            Resource resource = (Resource) i.next();
-            String resourceID = resource.getResourceID();
-            Set classes = resource.getClasses();
-            for (Iterator j = classes.iterator(); j.hasNext();)
-            {
-                MClass aClass = (MClass) j.next();
-                String className = aClass.getClassName();
-                LOG.debug("Setting tables for " + resourceID + ":" + className);
-                groupFilter.setTables(resourceID, className,
-                                      aClass.getTables());
-            }
-        }
-        List securityConstraints = mRetsConfig.getAllGroupRules();
-        for (int i = 0; i < securityConstraints.size(); i++)
-        {
-            GroupRules rules = (GroupRules) securityConstraints.get(i);
-            LOG.debug("Adding rules for " + rules.getGroupName());
-            groupFilter.addRules(rules);
-        }
-
-        RetsServer.setTableGroupFilter(groupFilter);
-    }
-
-    private void initConditionRuleSet()
-    {
-        LOG.debug("Initializing condition rule set");
-        ConditionRuleSet ruleSet = new ConditionRuleSet();
-        List securityConstraints = mRetsConfig.getAllGroupRules();
-        for (int i = 0; i < securityConstraints.size(); i++)
-        {
-            GroupRules rules = (GroupRules) securityConstraints.get(i);
-            LOG.debug("Adding condition rules for " + rules.getGroupName());
-            ruleSet.addRules(rules);
-        }
-        RetsServer.setConditionRuleSet(ruleSet);
-    }
-
     protected void doRets(RetsServletRequest request, RetsServletResponse response)
             throws RetsServerException, IOException
     {
@@ -441,6 +230,5 @@ public class InitServlet extends RetsServlet
     }
     
     private static final Logger LOG = Logger.getLogger(InitServlet.class);
-    private RetsConfig mRetsConfig;
     
 }

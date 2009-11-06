@@ -151,6 +151,8 @@ public class RetsConfig
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
+            .append("Address", (this.mAddress == null) ? "all addresses" : this.mAddress)
+            .append("Port", this.mPort)
             .append("GetObject root", mGetObjectRoot)
             .append("GetObject photo pattern", mPhotoPattern)
             .append("nonce initial timeout", mNonceInitialTimeout)

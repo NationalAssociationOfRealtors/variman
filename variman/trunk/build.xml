@@ -97,6 +97,7 @@
   <path id="webapp.path">
     <pathelement path="${servlet.jar}"/>
     <pathelement path="${log4j.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
     <pathelement path="${rets-client.jar}"/>
     <pathelement location="build/embedded/classes"/>

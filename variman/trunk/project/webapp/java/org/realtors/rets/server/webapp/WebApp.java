@@ -15,8 +15,17 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.RetsServer;
+import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.config.RetsConfigDao;
+import org.realtors.rets.server.config.XmlRetsConfigDao;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
@@ -34,17 +43,16 @@ public class WebApp
 
     public static ServletContext getServletContext()
     {
-        return sServletContext;
+        synchronized (sLock) {
+            return sServletContext;
+        }
     }
 
     public static MetadataManager getMetadataManager()
     {
-        return sMetadataManager;
-    }
-
-    public static void setMetadataManager(MetadataManager metadataManager)
-    {
-        sMetadataManager = metadataManager;
+        synchronized (sLock) {
+            return sMetadataManager;
+        }
     }
 
     public static String getLog4jFile()
@@ -74,54 +82,52 @@ public class WebApp
 //        return RetsServer.createSessionHelper();
 //    }
 
-    public static void setGetObjectRoot(String getObjectRoot)
-    {
-        sGetObjectRoot = getObjectRoot;
-    }
-
     public static String getGetObjectRoot()
     {
-        return sGetObjectRoot;
+        return RetsServer.getRetsConfiguration().getGetObjectRoot();
     }
 
     public static void setPhotoPattern(String photoPattern)
     {
-        sPhotoPattern = photoPattern;
+        RetsServer.getRetsConfiguration().setPhotoPattern(photoPattern);
     }
 
     public static String getPhotoPattern()
     {
-        return sPhotoPattern;
-    }
-
-    public static void setObjectSetPattern(String objectSetPattern)
-    {
-        sObjectSetPattern = objectSetPattern;
+        return RetsServer.getRetsConfiguration().getPhotoPattern();
     }
 
     public static String getObjectSetPattern()
     {
-        return sObjectSetPattern;
+        return RetsServer.getRetsConfiguration().getObjectSetPattern();
     }
 
     public static void setNonceTable(NonceTable nonceTable)
     {
-        sNonceTable = nonceTable;
+    	synchronized (sLock) {
+	        sNonceTable = nonceTable;
+	    }
     }
 
     public static NonceTable getNonceTable()
     {
-        return sNonceTable;
+        synchronized (sLock) {
+            return sNonceTable;
+        }
     }
 
     public static void setNonceReaper(NonceReaper reaper)
     {
-        sReaper = reaper;
+        synchronized (sLock) {
+            sReaper = reaper;
+        }
     }
 
     public static NonceReaper getReaper()
     {
-        return sReaper;
+        synchronized (sLock) {
+            return sReaper;
+        }
     }
 
     public static void initProperties() throws IOException
@@ -137,27 +143,17 @@ public class WebApp
 
     public static String getVersion()
     {
-        return sVersion;
+        synchronized (sLock) {
+            return sVersion;
+        }
     }
 
     public static String getBuildDate()
     {
-        return sBuildDate;
+        synchronized (sLock) {
+            return sBuildDate;
+        }
     }
-
-    public static final String PROJECT_NAME = "variman";
-    public static final String SERVER_NAME = "Variman";
-
-    private static ServletContext sServletContext;
-    private static MetadataManager sMetadataManager;
-    private static String sLog4jFile;
-    private static String sGetObjectRoot;
-    private static String sPhotoPattern;
-    private static String sObjectSetPattern;
-    private static NonceTable sNonceTable;
-    private static NonceReaper sReaper;
-    private static String sVersion;
-    private static String sBuildDate;
     
     // This mode added by RealGo to allow a certain non-compliant client to log on,
     // namely HP Real Estate Marketing Assistant (HPMA or HP REMA)
@@ -171,4 +167,116 @@ public class WebApp
         return sHPMAMode;
     }
     
+    private static void initNonceTable(RetsConfig config)
+    {
+        NonceTable nonceTable = new NonceTable();
+        int initialTimeout = config.getNonceInitialTimeout();
+        if (initialTimeout != -1)
+        {
+            nonceTable.setInitialTimeout(
+                initialTimeout * DateUtils.MILLIS_PER_MINUTE);
+            LOG.info("Set initial nonce timeout to " + initialTimeout +
+            " minutes");
+        }
+
+        int successTimeout = config.getNonceSuccessTimeout();
+        if (successTimeout != -1)
+        {
+            nonceTable.setSuccessTimeout(
+                successTimeout * DateUtils.MILLIS_PER_MINUTE);
+            LOG.info("Set success nonce timeout to " + successTimeout +
+            " minutes");
+        }
+        sNonceTable = nonceTable;
+        sReaper = new NonceReaper(nonceTable);
+    }
+
+    public static void setHPMALoginPath(String path)
+    {
+        sHPMALoginPath = path;
+    }
+
+    public static boolean isHPMALoginPath(String path)
+    {
+        return sHPMAMode && sHPMALoginPath.equals(path);
+    }
+    
+    public static void loadConfiguration() throws RetsServerException
+    {
+        synchronized (sLock)
+        {
+            try
+            {
+                initProperties();
+                RetsConfig retsConfig = initRetsConfiguration();
+                RetsServer.setRetsConfiguration(retsConfig);
+                sMetadataManager = RetsServer.getMetadataManager();
+            }
+            catch (IOException e)
+            {
+                throw new RetsServerException(e);
+            }
+        }
+    }
+
+    public static void loadConfiguration(ServletContext servletContext) throws RetsServerException
+    {
+        synchronized (sLock)
+        {
+            setServletContext(servletContext);
+            loadConfiguration();
+        }
+    }
+
+    private static RetsConfig initRetsConfiguration() throws RetsServerException
+    {
+        RetsConfigDao configDao = RetsServer.getRetsConfigDao();
+        if (configDao == null)
+        {
+            // TODO - long-term would be good to have it be spring injected
+            // but will need to migrate users from using web.xml to define
+            // the location of the rets-config file
+            String configFile = getContextInitParameter("rets-config-file", "WEB-INF/rets/rets-config.xml");
+            configFile = IOUtils.resolve(getServletContext().getRealPath("/"), configFile);
+            configDao = new XmlRetsConfigDao(configFile);
+        }
+        RetsConfig config = configDao.loadRetsConfig();
+        LOG.info(config);
+
+        String runInHPMAModeParameter = getContextInitParameter("runInHpmaMode", "false");
+        WebApp.setHPMAMode(Boolean.valueOf(runInHPMAModeParameter).booleanValue());
+        LOG.info("HPMA compatibility mode: " + sHPMAMode);
+
+        String HPMALoginPath = getContextInitParameter("HpmaLoginPath", "/server/login");
+        WebApp.setHPMALoginPath(HPMALoginPath);
+        LOG.info("HPMA mode path: " + sHPMALoginPath);
+
+        initNonceTable(config);
+        return config;
+    }
+
+    public static RetsConfig getRetsConfiguration()
+    {
+        return RetsServer.getRetsConfiguration();
+    }
+
+    private static String getContextInitParameter(String param, String defaultValue)
+    {
+        String value = getServletContext().getInitParameter(param);
+        return (value == null) ? defaultValue : value;
+    }
+    
+    public static final String PROJECT_NAME = "variman";
+    public static final String SERVER_NAME = "Variman";
+
+    private static ServletContext sServletContext;
+    private static MetadataManager sMetadataManager;
+    private static String sLog4jFile;
+    private static NonceTable sNonceTable;
+    private static NonceReaper sReaper;
+    private static String sVersion;
+    private static String sBuildDate;
+    private static String sHPMALoginPath = "/server/login";
+    private static Log LOG = LogFactory.getLog(WebApp.class);
+    private static final WebApp sLock = new WebApp();
 }

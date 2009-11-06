@@ -8,11 +8,21 @@
 
 package org.realtors.rets.server;
 
-import org.hibernate.SessionFactory;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.RetsConfigDao;
 import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.metadata.MClass;
+import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.metadata.MetadataLoader;
+import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.ObjectSet;
 import org.realtors.rets.server.protocol.SearchTransaction;
@@ -26,24 +36,28 @@ public class RetsServer implements ApplicationContextAware
 {
     public static void setSessions(SessionFactory sessionFactory)
     {
-        sSessions = sessionFactory;
+        synchronized (sLock) {
+            sSessions = sessionFactory;
+        }
     }
 
     public static SessionFactory getSessions()
     {
-        if (sSessions == null && sApplicationContext != null)
-        {
-            try
+        synchronized (sLock) {
+            if (sSessions == null && sApplicationContext != null)
             {
-                // only lookup from spring if rets-config.xml didn't already load it
-                sSessions = (SessionFactory)sApplicationContext.getBean("sessionFactory", SessionFactory.class);
+                try
+                {
+                    // only lookup from spring if rets-config.xml didn't already load it
+                    sSessions = (SessionFactory)sApplicationContext.getBean("sessionFactory", SessionFactory.class);
+                }
+                catch (NoSuchBeanDefinitionException e)
+                {
+                    throw new IllegalStateException("No db connection properties or hibernate session factory has been configured via rets-config.xml or via spring config!");
+                }
             }
-            catch (NoSuchBeanDefinitionException e)
-            {
-                throw new IllegalStateException("No db connection properties or hibernate session factory has been configured via rets-config.xml or via spring config!");
-            }
+            return sSessions;
         }
-        return sSessions;
     }
 
     public static RetsConfigDao getRetsConfigDao()
@@ -72,49 +86,66 @@ public class RetsServer implements ApplicationContextAware
 
     public static void setTableGroupFilter(TableGroupFilter tableGroupFilter)
     {
-        sTableGroupFilter = tableGroupFilter;
+        synchronized (sLock) {
+            sTableGroupFilter = tableGroupFilter;
+        }
     }
 
     public static TableGroupFilter getTableGroupFilter()
     {
-        return sTableGroupFilter;
+        synchronized (sLock) {
+            return sTableGroupFilter;
+        }
     }
 
     public static void setConditionRuleSet(ConditionRuleSet conditionRuleSet)
     {
-        sConditionRuleSet = conditionRuleSet;
+        synchronized (sLock) {
+            sConditionRuleSet = conditionRuleSet;
+        }
     }
 
     public static ConditionRuleSet getConditionRuleSet()
     {
-        return sConditionRuleSet;
+        synchronized (sLock) {
+            return sConditionRuleSet;
+        }
     }
 
     public static void setSecurityConstraints(
         SecurityConstraints securityConstraints)
     {
-        sSecurityConstraints = securityConstraints;
+        synchronized (sLock) {
+            sSecurityConstraints = securityConstraints;
+        }
     }
 
-    public static SecurityConstraints getSecurityConstraints()
-    {
-        return sSecurityConstraints;
+    public static SecurityConstraints getSecurityConstraints() {
+        synchronized (sLock) {
+            return sSecurityConstraints;
+        }
     }
 
     public static QueryCountTable getQueryCountTable()
     {
-        return sQueryCountTable;
+        synchronized (sLock) {
+            return sQueryCountTable;
+        }
     }
 
     public static void setQueryCountTable(QueryCountTable queryCountTable)
     {
-        sQueryCountTable = queryCountTable;
+        synchronized (sLock) {
+            sQueryCountTable = queryCountTable;
+        }
     }
 
     public void setApplicationContext(ApplicationContext applicationContext)
         throws BeansException
     {
-        sApplicationContext = applicationContext;
+        synchronized (sLock) {
+            sApplicationContext = applicationContext;
+        }
     }
 
     public static SearchTransaction createSearchTransaction()
@@ -137,12 +168,111 @@ public class RetsServer implements ApplicationContextAware
         }
     }
 
+    public static void setRetsConfiguration(RetsConfig retsConfig) throws RetsServerException
+    {
+        synchronized (sLock)
+        {
+            sRetsConfig = retsConfig;
+            setSecurityConstraints(retsConfig.getSecurityConstraints());
+
+            ConditionRuleSet ruleSet = getConditionRuleSet(retsConfig);
+            setConditionRuleSet(ruleSet);
+
+            MetadataManager manager = getMetadataManager(retsConfig);
+            setMetadataManager(manager);
+
+            TableGroupFilter groupFilter = getTableGroupFilter(retsConfig, manager);
+            setTableGroupFilter(groupFilter);
+        }
+    }
+
+    public static RetsConfig getRetsConfiguration()
+    {
+        synchronized (sLock)
+        {
+            return sRetsConfig;
+        }
+    }
+
+    public static void setMetadataManager(MetadataManager manager)
+    {
+        synchronized (sLock)
+        {
+            sMetadataManager = manager;
+        }
+    }
+
+    public static MetadataManager getMetadataManager()
+    {
+        synchronized (sLock)
+        {
+            return sMetadataManager;
+        }
+    }
+
+    private static MetadataManager getMetadataManager(RetsConfig config) throws RetsServerException
+    {
+        LOG.debug("Initializing metadata");
+        MetadataLoader loader = new MetadataLoader(config);
+        LOG.debug("Creating metadata manager");
+        MetadataManager manager = new MetadataManager();
+        MSystem system = loader.parseMetadataDirectory();
+        manager.addRecursive(system);
+        return manager;
+    }
+
+    private static ConditionRuleSet getConditionRuleSet(RetsConfig config)
+    {
+        LOG.debug("Creating condition rule set");
+        ConditionRuleSet ruleSet = new ConditionRuleSet();
+        List<GroupRules> securityConstraints = config.getAllGroupRules();
+        for (int i = 0; i < securityConstraints.size(); i++)
+        {
+            GroupRules rules = securityConstraints.get(i);
+            LOG.debug("Adding condition rules for " + rules.getGroupName());
+            ruleSet.addRules(rules);
+        }
+        return ruleSet;
+    }
+
+    private static TableGroupFilter getTableGroupFilter(RetsConfig config, MetadataManager manager)
+    {
+        LOG.debug("Initializing group filter");
+        TableGroupFilter groupFilter = new TableGroupFilter();
+        MSystem system = (MSystem)manager.findUnique(MSystem.TABLE, "");
+        Set resources = system.getResources();
+        for (Iterator resIter = resources.iterator(); resIter.hasNext();)
+        {
+            Resource resource = (Resource)resIter.next();
+            String resourceID = resource.getResourceID();
+            Set classes = resource.getClasses();
+            for (Iterator clsIter = classes.iterator(); clsIter.hasNext();)
+            {
+                MClass aClass = (MClass)clsIter.next();
+                String className = aClass.getClassName();
+                LOG.debug("Setting tables for " + resourceID + ":" + className);
+                groupFilter.setTables(resourceID, className, aClass.getTables());
+            }
+        }
+        List<GroupRules> groupRulesSet = config.getSecurityConstraints().getAllGroupRules();
+        for (GroupRules rules : groupRulesSet)
+        {
+            LOG.debug("Adding rules for " + rules.getGroupName());
+            groupFilter.addRules(rules);
+        }
+
+        return groupFilter;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(RetsServer.class);
     private static SessionFactory sSessions;
     private static TableGroupFilter sTableGroupFilter;
     private static ConditionRuleSet sConditionRuleSet;
     private static SecurityConstraints sSecurityConstraints;
-    private static QueryCountTable sQueryCountTable;
+    private static QueryCountTable sQueryCountTable = new QueryCountTable();
     private static ApplicationContext sApplicationContext;
+    private static RetsConfig sRetsConfig;
+    private static MetadataManager sMetadataManager;
+    private static Object sLock = new Object();
 }
