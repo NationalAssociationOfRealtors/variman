@@ -209,7 +209,12 @@ string_literal returns [DmqlStringList list]
 
 number_value returns [SqlConverter sql]
     { String f; }
-    : #(NUMBER f=field n:NUMBER) { sql = newEqualClause(f, n.getText());}
+    : #(NUMBER f=field n:NUMBER) 
+            { if (mMetadata.getFieldType(f) == DmqlFieldType.BOOLEAN)
+                sql = newEqualClause(f, new BooleanSqlConverter(n.getText()));
+              else
+                sql = newEqualClause(f, n.getText());
+            }
     ;
 
 period_value returns [SqlConverter sql]

@@ -28,6 +28,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 {
     private ServerDmqlMetadata()
     {
+        mBooleans = new ListOrderedSet();
         mFields = new ListOrderedMap();
         mFieldTypes = new ListOrderedMap();
         mFieldToColumn = new ListOrderedMap();
@@ -88,6 +89,11 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
                 addLookups(fieldName, standardNames, table.getLookup());
                 mFieldTypes.put(fieldName, DmqlFieldType.LOOKUP_MULTI);
             }
+            else if (isBoolean(table))
+            {
+                mBooleans.add(fieldName);
+                mFieldTypes.put(fieldName, DmqlFieldType.BOOLEAN);
+            }
             else if (isNumeric(table))
             {
                 mNumerics.add(fieldName);
@@ -129,7 +135,20 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         };
         return false;
     }
-
+    
+    private boolean isBoolean(Table table)
+    {
+        DataTypeEnum type = table.getDataType();
+        if (type.equals(DataTypeEnum.BOOLEAN))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     private boolean isNumeric(Table table)
     {
         DataTypeEnum type = table.getDataType();
@@ -337,6 +356,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
+    private Set mBooleans;
     private Map mFields;
     private Map mFieldTypes;
     private Map mFieldToColumn;

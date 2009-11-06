@@ -10,6 +10,12 @@ import org.apache.commons.lang.enums.Enum;
 public final class DmqlFieldType extends Enum
 {
     /**
+     *  The data type of the field is Boolean.
+     *
+     */
+    public static final DmqlFieldType BOOLEAN = new DmqlFieldType("boolean");
+
+    /**
      * If the interpretation of the field is a lookup.  This basically
      * overrides the data type of the field.
      */
