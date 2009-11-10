@@ -27,10 +27,10 @@ public class BooleanSqlConverter implements SqlConverter
     public void toSql(PrintWriter out)
     {
         if (mString.equals("0"))
-            out.print("'f'");
+            out.print("'0'");
         else
         if (mString.equals("1"))
-            out.print("'t'");
+            out.print("'1'");
         else
             out.print(mString); // Shouldn't happen and will cause failure.
     }
