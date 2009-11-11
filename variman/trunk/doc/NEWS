@@ -8,6 +8,7 @@ Version 3.2.0 - xx xxx 2009
   * Detect RetsConfig changes and dynamically reload.
     Ticket #69.
   * .EMPTY. fails on Booleans. Ticket #70.
+  * Add Request Logging and Search Statistics. Ticket #71.
 
 Version 3.1.1 - 30 Sep 2009
 

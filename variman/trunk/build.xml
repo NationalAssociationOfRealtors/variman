@@ -99,6 +99,7 @@
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${rets-client.jar}"/>
     <pathelement location="build/embedded/classes"/>
     <pathelement path="${hibernate.jar}"/>

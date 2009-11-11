@@ -26,4 +26,9 @@
     <filter-name>activation-filter</filter-name>
     <url-pattern>/rets/*</url-pattern>
   </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>request-log-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
 </j:jelly>

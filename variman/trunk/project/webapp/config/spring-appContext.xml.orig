@@ -13,14 +13,6 @@
   <bean name="SearchSqlBuilder" singleton="false"
         class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder" />
 
-  <bean id="requestLogLogger" class="org.realtors.rets.server.Log4jRequestLogLogger">
-      <property name="logLevel" value="INFO"/>
-  </bean>
-
-  <bean id="requestLogFilter" class="org.realtors.rets.server.webapp.RequestLogFilter">
-      <property name="requestLogLogger" ref="requestLogLogger"/>
-  </bean>
-
   <!-- The config below will enable a RetsConfigChangedMonitor to look for
        changes to the rets-config.xml file and reload the configuration. This
        requires the path to rets-config.xml to be specified in this file,

@@ -21,7 +21,7 @@ public interface SearchTransaction
     
     public void setExecuteQuery(boolean executeQuery);
 
-    public void execute(PrintWriter out, MetadataManager manager,
-                        SessionFactory sessions)
+    public SearchTransactionStatistics execute(PrintWriter out,
+            MetadataManager manager, SessionFactory sessions)
         throws RetsServerException;
 }

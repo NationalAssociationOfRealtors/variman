@@ -53,6 +53,11 @@ public class DefaultSearchTransaction implements SearchTransaction
         LOG.debug("Creating DefaultSearchTransaction");
     }
 
+    public SearchSqlBuilder getSearchSqlBuilder()
+    {
+        return mSearchSqlBuilder;
+    }
+
     public void setSearchSqlBuilder(SearchSqlBuilder searchSqlBuilder)
     {
         mSearchSqlBuilder = searchSqlBuilder;
@@ -124,7 +129,7 @@ public class DefaultSearchTransaction implements SearchTransaction
         mExecuteQuery = executeQuery;
     }
 
-    public void execute(PrintWriter out, MetadataManager manager,
+    public SearchTransactionStatistics execute(PrintWriter out, MetadataManager manager,
                         SessionFactory sessions)
         throws RetsServerException
     {
@@ -135,17 +140,21 @@ public class DefaultSearchTransaction implements SearchTransaction
         if (!mExecuteQuery)
         {
             RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
+            SearchTransactionStatistics statistics =
+                new ImmutableSearchTransactionStatistics(ReplyCode.NO_RECORDS_FOUND.getValue(),
+                        ReplyCode.NO_RECORDS_FOUND.getName(), 0, 0);
+            return statistics;
         }
         else
         {
             getCount();
             if (mParameters.getCount() == SearchParameters.COUNT_ONLY)
             {
-                printCountOnly(out);
+                return printCountOnly(out);
             }
             else
             {
-                printData(out);
+                return printData(out);
             }
         }
     }
@@ -156,7 +165,7 @@ public class DefaultSearchTransaction implements SearchTransaction
      * @param out
      * @throws RetsServerException
      */
-    private void printData(PrintWriter out)
+    private SearchTransactionStatistics printData(PrintWriter out)
         throws RetsServerException
     {
         Session session = null;
@@ -171,7 +180,7 @@ public class DefaultSearchTransaction implements SearchTransaction
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
             advance(resultSet);
-            printResults(out, mSearchSqlBuilder.getColumns(), resultSet);
+            return printResults(out, mSearchSqlBuilder.getColumns(), resultSet);
         }
         catch (HibernateException e)
         {
@@ -275,11 +284,14 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private void printCountOnly(PrintWriter out)
+    private SearchTransactionStatistics printCountOnly(PrintWriter out)
     {
         RetsUtils.printOpenRetsSuccess(out);
         printCount(out);
         RetsUtils.printCloseRets(out);
+
+        SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(ReplyCode.SUCCESSFUL.getValue(), ReplyCode.SUCCESSFUL.getName(), mCount, null);
+        return statistics;
     }
 
     private void logSql(String sql)
@@ -298,7 +310,7 @@ public class DefaultSearchTransaction implements SearchTransaction
         LOG.info(message);
     }
 
-    private void printResults(PrintWriter out, List columns,
+    private SearchTransactionStatistics printResults(PrintWriter out, List columns,
                                      ResultSet resultSet)
         throws RetsServerException
     {
@@ -316,7 +328,10 @@ public class DefaultSearchTransaction implements SearchTransaction
         formatter.formatResults(context);
         LOG.debug("Row count: " + context.getRowCount());
         RetsUtils.printCloseRets(out);
-    }
+
+        SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(ReplyCode.SUCCESSFUL.getValue(), ReplyCode.SUCCESSFUL.getName(), mCount, context.getRowCount());
+        return statistics;
+	}
 
     private SearchResultsFormatter getFormatter() throws RetsServerException
     {
