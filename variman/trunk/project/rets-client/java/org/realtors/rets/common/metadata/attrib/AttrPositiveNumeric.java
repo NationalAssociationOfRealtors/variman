@@ -53,8 +53,10 @@ public class AttrPositiveNumeric implements AttrType<Integer> {
 	public Integer parse(String value, boolean strict) throws MetaParseException {
 		try {
 			Integer I = new Integer(value);
-			if (I >= 0)
+			if (I > 0)
 				return I;
+			if (strict)
+			    throw new MetaParseException("The value must be a positive number greater than zero.");
 			return 0;
 		} catch (NumberFormatException e) {
 			if( strict ) 

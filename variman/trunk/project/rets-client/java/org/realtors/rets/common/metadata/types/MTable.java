@@ -64,7 +64,7 @@ public class MTable extends MetaObject {
     		add(new MetadataElement(LONGNAME, sText256));
     		add(new MetadataElement(DBNAME, sRETSNAME, sREQUIRED));
     		add(new MetadataElement(SHORTNAME, sText64));
-    		add(new MetadataElement(MAXIMUMLENGTH, sPOSITIVENUM));
+    		add(new MetadataElement(MAXIMUMLENGTH, sPOSITIVENUM, sREQUIRED));
     		add(new MetadataElement(DATATYPE, sDataTypes));
     		add(new MetadataElement(PRECISION, sAttrNumeric));
     		add(new MetadataElement(SEARCHABLE, sAttrBoolean));

@@ -9,6 +9,7 @@ Version 3.2.0 - xx xxx 2009
     Ticket #69.
   * .EMPTY. fails on Booleans. Ticket #70.
   * Add Request Logging and Search Statistics. Ticket #71.
+  * MaximumLength in Table metadata must be > 0. Ticket #74.
 
 Version 3.1.1 - 30 Sep 2009
 
