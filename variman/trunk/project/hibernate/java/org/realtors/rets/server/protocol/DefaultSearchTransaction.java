@@ -27,6 +27,7 @@ import antlr.ANTLRException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import org.realtors.rets.client.RetsVersion;
 
@@ -426,6 +427,13 @@ public class DefaultSearchTransaction implements SearchTransaction
         {
             if (session != null)
             {
+                // With hibernate3, auto-commit semantics have changed. If there is an error
+                // before we post statistics, that post will also now fail. So, in case there was
+                // a failed transaction above, roll it back. Since we're not doing anything
+                // requiring a transaction, this should be OK in all cases.
+                Transaction tx = session.getTransaction();
+                if (tx != null && tx.isActive())
+                    tx.rollback();
                 session.close();
             }
         }
