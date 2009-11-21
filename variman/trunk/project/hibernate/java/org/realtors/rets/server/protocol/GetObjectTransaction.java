@@ -182,10 +182,26 @@ public class GetObjectTransaction
             }
             else
             {
-                ObjectStream stream = objectDescriptor.openObjectStream();
-                out.writeBytes("Content-Type: " + stream.getMimeType() + CRLF);
-                out.writeBytes(CRLF);
-                IOUtils.copyStream(stream.getInputStream(), out);
+                /*
+                 * Fetch the object and output it
+                 */
+                try
+                {
+                    ObjectStream stream = objectDescriptor.openObjectStream();
+                    out.writeBytes("Content-Type: " + stream.getMimeType() + CRLF);
+                    out.writeBytes(CRLF);
+                    IOUtils.copyStream(stream.getInputStream(), out);
+                }
+                catch (IOException e)
+                {
+                    /*
+                     * Log the error and masquerade as No Object Found
+                     */
+                    LOG.error(e);
+                    out.writeBytes("Content-Type: text/xml" + CRLF + CRLF);
+                    out.writeBytes("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>" +
+                                        CRLF);
+                }
             }
         }
         out.writeBytes(CRLF + "--" + boundary + "--" + CRLF);
