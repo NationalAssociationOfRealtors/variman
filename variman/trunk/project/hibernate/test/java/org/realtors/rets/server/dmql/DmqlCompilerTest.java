@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server.dmql;
 
+import org.realtors.rets.server.dmql.DmqlCompiler.ParserResults;
+
 import antlr.ANTLRException;
 
 public class DmqlCompilerTest extends AbstractDmqlCompilerTest
@@ -11,14 +13,14 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         super();
     }
 
-    protected SqlConverter parse(String dmql, boolean traceParser,
+    protected ParserResults parse(String dmql, boolean traceParser,
                                boolean traceLexer)
         throws ANTLRException
     {
         return DmqlCompiler.parseDmql(dmql, mMetadata, traceParser, traceLexer);
     }
 
-    protected SqlConverter parse(String dmql) throws ANTLRException
+    protected ParserResults parse(String dmql) throws ANTLRException
     {
         return parse(dmql, false, false);
     }
@@ -61,12 +63,22 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
         assertInvalidParse("(LDATE=TODAY)");
         assertInvalidParse("(LDATE=NOW)");
 
-        SqlConverter sql = parse("(OWNER=TODAY)");
+        ParserResults results = parse("(OWNER=TODAY)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+
         DmqlStringList list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("TODAY"));
         assertEquals(list, sql);
 
-        sql = parse("(OWNER=NOW)");
+        results = parse("(OWNER=NOW)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+
+        assertNotNull(results);
+        sql = results.getSqlConverter();
         list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("NOW"));
         assertEquals(list, sql);
@@ -85,7 +97,11 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testCompoundOr() throws ANTLRException
     {
-        SqlConverter sql = parse("(AR=|BATV,GENVA)|(OWNER=foo)");
+        ParserResults results = parse("(AR=|BATV,GENVA)|(OWNER=foo)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"AR","OWNER"}, results );
+
         LookupList lookupList = new LookupList(LookupListType.OR, "r_AR");
         lookupList.addLookup("BATV");
         lookupList.addLookup("GENVA");
@@ -101,7 +117,11 @@ public class DmqlCompilerTest extends AbstractDmqlCompilerTest
 
     public void testCompoundAnd() throws ANTLRException
     {
-        SqlConverter sql = parse("(AR=|BATV,GENVA),(OWNER=foo)");
+        ParserResults results = parse("(AR=|BATV,GENVA),(OWNER=foo)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"AR","OWNER"}, results );
+
         LookupList lookupList = new LookupList(LookupListType.OR, "r_AR");
         lookupList.addLookup("BATV");
         lookupList.addLookup("GENVA");

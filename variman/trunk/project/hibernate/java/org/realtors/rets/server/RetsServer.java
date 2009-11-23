@@ -223,15 +223,15 @@ public class RetsServer implements ApplicationContextAware
 
     private static ConditionRuleSet getConditionRuleSet(RetsConfig config)
     {
-        LOG.debug("Creating condition rule set");
-        ConditionRuleSet ruleSet = new ConditionRuleSet();
-        List<GroupRules> securityConstraints = config.getAllGroupRules();
-        for (int i = 0; i < securityConstraints.size(); i++)
+        ConditionRuleSetFactory conditionRuleSetFactory = null;
+        try
         {
-            GroupRules rules = securityConstraints.get(i);
-            LOG.debug("Adding condition rules for " + rules.getGroupName());
-            ruleSet.addRules(rules);
+            conditionRuleSetFactory = (ConditionRuleSetFactory)sApplicationContext.getBean("conditionRuleSetFactory", ConditionRuleSetFactory.class);
+        } catch (NoSuchBeanDefinitionException e) {
+            throw new IllegalStateException("No conditionRuleSetFactory has been configured via spring config!");
         }
+
+        ConditionRuleSet ruleSet = conditionRuleSetFactory.getConditionRuleSet(config);
         return ruleSet;
     }
 

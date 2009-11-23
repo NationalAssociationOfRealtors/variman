@@ -28,6 +28,17 @@ options
         mMetadata = metadata;
     }
 
+    /**
+     * To be called after parsing. Returns the set of fields (system names or
+     * standard names) found during the parse. Never returns <code>null</code>,
+     * however, may return an empty set.
+     *
+     * @return the set of fields found during the parse.
+     */
+    public Set/*String*/ getFoundFields() {
+        return mFields;
+    }
+
     private boolean isLookupMulti(String fieldName) {
         return (mMetadata.getFieldType(fieldName) ==
                 DmqlFieldType.LOOKUP_MULTI);
@@ -107,6 +118,7 @@ options
 
     private boolean mTrace = false;
     private DmqlParserMetadata mMetadata;
+    private Set/*String*/ mFields = new HashSet/*String*/();
 }
 
 query returns [SqlConverter sql]
@@ -133,7 +145,10 @@ field_criteria returns [SqlConverter sql]
     ;
 
 field returns [String text]
-    : t:TEXT {text = t.getText();}
+    : t:TEXT {
+        text = t.getText();
+        mFields.add(text); // Keep track of the fields stumbled upon.
+      }
     ;
 
 lookup_list returns [LookupList list]

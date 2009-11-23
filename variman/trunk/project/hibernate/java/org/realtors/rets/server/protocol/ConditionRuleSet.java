@@ -1,3 +1,9 @@
+/*
+ * Variman RETS Server
+ *
+ * Copyright (c) 2009, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
 package org.realtors.rets.server.protocol;
 
 import java.util.HashMap;
@@ -16,7 +22,7 @@ public class ConditionRuleSet
 {
     public ConditionRuleSet()
     {
-        mConstraints = new HashMap();
+        mSqlConstraints = new HashMap();
     }
 
     public void addRules(GroupRules rules)
@@ -25,10 +31,10 @@ public class ConditionRuleSet
         for (int i = 0; i < conditionRules.size(); i++)
         {
             ConditionRule rule = (ConditionRule) conditionRules.get(i);
-            String constraintsKey = rules.getGroupName() + ":" +
-                                    rule.getResource() + ":" +
-                                    rule.getRetsClass();
-            mConstraints.put(constraintsKey, rule.getSqlConstraint());
+            String constraintsKey = getConstraintsKey(rules.getGroupName(),
+                                                      rule.getResource(),
+                                                      rule.getRetsClass());
+            mSqlConstraints.put(constraintsKey, rule.getSqlConstraint());
         }
     }
 
@@ -57,12 +63,11 @@ public class ConditionRuleSet
     }
 
     private String findSqlConstraint(Group group, String resource,
-                                     String retsClass)
+                                  String retsClass)
     {
-        String constraintsKey = group.getName() + ":" +
-                                resource + ":" +
-                                retsClass;
-        String constraint = (String) mConstraints.get(constraintsKey);
+        String groupName = group.getName();
+        String constraintsKey = getConstraintsKey(groupName, resource, retsClass);
+        String constraint = (String) mSqlConstraints.get(constraintsKey);
         if (constraint == null)
         {
             return "";
@@ -70,5 +75,11 @@ public class ConditionRuleSet
         return constraint;
     }
 
-    private Map mConstraints;
+    protected static String getConstraintsKey(final String groupName, final String resourceID, final String className)
+    {
+        final String constraintKey = groupName + ":" + resourceID + ":" + className;
+        return constraintKey;
+    }
+
+    private Map mSqlConstraints;
 }

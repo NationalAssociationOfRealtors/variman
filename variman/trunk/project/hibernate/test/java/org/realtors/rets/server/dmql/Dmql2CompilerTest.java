@@ -2,6 +2,8 @@
  */
 package org.realtors.rets.server.dmql;
 
+import org.realtors.rets.server.dmql.DmqlCompiler.ParserResults;
+
 import antlr.ANTLRException;
 
 public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
@@ -11,7 +13,7 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         super();
     }
 
-    protected SqlConverter parse(String dmql, boolean traceParser,
+    protected ParserResults parse(String dmql, boolean traceParser,
                                  boolean traceLexer)
         throws ANTLRException
     {
@@ -19,31 +21,43 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
                                        traceLexer);
     }
 
-    protected SqlConverter parse(String dmql) throws ANTLRException
+    protected ParserResults parse(String dmql) throws ANTLRException
     {
         return parse(dmql, false, false);
     }
 
     public void testStringLiteral() throws ANTLRException
     {
-        SqlConverter sql;
+        ParserResults results;
 
-        sql = parse("(OWNER=\"\")");
+        results = parse("(OWNER=\"\")");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         DmqlStringList list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString(""));
         assertEquals(list, sql);
 
-        sql = parse("(OWNER=\"foo\")");
+        results = parse("(OWNER=\"foo\")");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("foo"));
         assertEquals(list, sql);
 
-        sql = parse("(OWNER=\"Foo Bar\")");
+        results = parse("(OWNER=\"Foo Bar\")");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("Foo Bar"));
         assertEquals(list, sql);
 
-        sql = parse("(OWNER=\"Vito \"\"The Don\"\" Corleone\")");
+        results = parse("(OWNER=\"Vito \"\"The Don\"\" Corleone\")");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("Vito \"The Don\" Corleone"));
         assertEquals(list, sql);
@@ -51,20 +65,32 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testNumber() throws ANTLRException
     {
-        SqlConverter sql = parse("(LP=5)");
+        ParserResults results = parse("(LP=5)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
         EqualClause equal =
             new EqualClause("r_LP", new StringSqlConverter("5"));
         assertEquals(equal, sql);
 
-        sql = parse("(LP=5.)");
+        results = parse("(LP=5.)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
         equal = new EqualClause("r_LP", new StringSqlConverter("5."));
         assertEquals(equal, sql);
 
-        sql = parse("(LP=5.0)");
+        results = parse("(LP=5.0)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
         equal = new EqualClause("r_LP", new StringSqlConverter("5.0"));
         assertEquals(equal, sql);
 
-        sql = parse("(LP=5-10)");
+        results = parse("(LP=5-10)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
         StringSqlConverter left = new StringSqlConverter("5");
         StringSqlConverter right = new StringSqlConverter("10");
         BetweenClause between = new BetweenClause("r_LP", left, right);
@@ -75,34 +101,55 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testPeriod() throws ANTLRException
     {
-        SqlConverter sql = parse("(LDATE=1970-01-01)");
+        ParserResults results = parse("(LDATE=1970-01-01)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LDATE"}, results );
         EqualClause equal =
             new EqualClause("r_LDATE", new DateSqlConverter("1970-01-01"));
         assertEquals(equal, sql);
 
-        sql = parse("(LDATE=01:02:03)");
+        results = parse("(LDATE=01:02:03)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LDATE"}, results );
         equal = new EqualClause("r_LDATE", new TimeSqlConverter("01:02:03"));
         assertEquals(equal, sql);
 
-        sql = parse("(LDATE=1970-01-01T05:06:01.3)");
+        results = parse("(LDATE=1970-01-01T05:06:01.3)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LDATE"}, results );
         equal = new EqualClause(
             "r_LDATE", new DateTimeSqlConverter("1970-01-01T05:06:01.3"));
         assertEquals(equal, sql);
 
-        sql = parse("(LDATE=TODAY)");
+        results = parse("(LDATE=TODAY)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LDATE"}, results );
         equal = new EqualClause("r_LDATE", new DateSqlConverter());
         assertEquals(equal, sql);
 
-        sql = parse("(LDATE=NOW)");
+        results = parse("(LDATE=NOW)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LDATE"}, results );
         equal = new EqualClause("r_LDATE", new DateTimeSqlConverter());
         assertEquals(equal, sql);
 
-        sql = parse("(OWNER=TODAY)");
+        results = parse("(OWNER=TODAY)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         DmqlStringList list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("TODAY"));
         assertEquals(list, sql);
 
-        sql = parse("(OWNER=NOW)");
+        results = parse("(OWNER=NOW)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("NOW"));
         assertEquals(list, sql);
@@ -110,7 +157,10 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testBetweenStrings() throws ANTLRException
     {
-        SqlConverter sql = parse("(OWNER=abc-xyz)");
+        ParserResults results = parse("(OWNER=abc-xyz)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         QuotedSqlConverter left = new QuotedSqlConverter("abc");
         QuotedSqlConverter right = new QuotedSqlConverter("xyz");
         BetweenClause between = new BetweenClause("r_OWNER", left, right);
@@ -121,7 +171,10 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testLessThanString() throws ANTLRException
     {
-        SqlConverter sql = parse("(OWNER=xyz-)");
+        ParserResults results = parse("(OWNER=xyz-)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         LessThanClause lessThan =
             new LessThanClause("r_OWNER", new QuotedSqlConverter("xyz"));
         OrClause or = new OrClause();
@@ -131,7 +184,10 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
 
     public void testGreaterThanString() throws ANTLRException
     {
-        SqlConverter sql = parse("(OWNER=xyz+)");
+        ParserResults results = parse("(OWNER=xyz+)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
         GreaterThanClause greaterThan =
             new GreaterThanClause("r_OWNER", new QuotedSqlConverter("xyz"));
         OrClause or = new OrClause();

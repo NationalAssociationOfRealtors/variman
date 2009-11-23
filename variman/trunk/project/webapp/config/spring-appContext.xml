@@ -13,6 +13,8 @@
   <bean name="SearchSqlBuilder" singleton="false"
         class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder" />
 
+  <bean id="conditionRuleSetFactory" class="org.realtors.rets.server.DefaultConditionRuleSetFactory"/>
+
   <bean id="requestLogLogger" class="org.realtors.rets.server.Log4jRequestLogLogger">
       <property name="logLevel" value="INFO"/>
   </bean>

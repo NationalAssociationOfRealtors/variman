@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2004, The National Association of REALTORS
+ * Copyright (c) 2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -11,7 +11,6 @@
 package org.realtors.rets.server.protocol;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,13 +22,10 @@ import java.util.SortedSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import antlr.ANTLRException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
-import org.realtors.rets.client.RetsVersion;
 
 import org.realtors.rets.server.QueryCount;
 import org.realtors.rets.server.QueryCountTable;
@@ -41,11 +37,9 @@ import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.UserUtils;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.SecurityConstraints;
-import org.realtors.rets.server.dmql.DmqlCompiler;
-import org.realtors.rets.server.dmql.SqlConverter;
-import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.ServerDmqlMetadata;
+import org.realtors.rets.server.protocol.SqlStatements.Query;
+import org.realtors.rets.server.protocol.SqlStatements.SearchQuery;
 
 public class DefaultSearchTransaction implements SearchTransaction
 {
@@ -77,6 +71,7 @@ public class DefaultSearchTransaction implements SearchTransaction
             mExecuteQuery = true;
 
             mSearchSqlBuilder.setParameters(mParameters);
+            mSearchSqlBuilder.setLimit(mLimit);
             mSearchSqlBuilder.setGroups(mGroups);
         }
         catch (HibernateException e)
@@ -136,10 +131,10 @@ public class DefaultSearchTransaction implements SearchTransaction
     {
         mSessions = sessions;
         mSearchSqlBuilder.prepareForQuery(manager);
-        generateWhereClause(mSearchSqlBuilder.getMetadataClass());
 
         if (!mExecuteQuery)
         {
+            
             RetsUtils.printEmptyRets(out, ReplyCode.NO_RECORDS_FOUND);
             SearchTransactionStatistics statistics =
                 new ImmutableSearchTransactionStatistics(ReplyCode.NO_RECORDS_FOUND.getValue(),
@@ -148,14 +143,17 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
         else
         {
-            getCount();
+            SqlStatements sqlStatements = mSearchSqlBuilder.createSqlStatements();
+            Query countQuery = sqlStatements.getCountQuery(); 
+            getCount(countQuery);
             if (mParameters.getCount() == SearchParameters.COUNT_ONLY)
             {
                 return printCountOnly(out);
             }
             else
             {
-                return printData(out);
+                SearchQuery searchQuery = sqlStatements.getSearchQuery();
+                return printData(searchQuery, out);
             }
         }
     }
@@ -166,7 +164,7 @@ public class DefaultSearchTransaction implements SearchTransaction
      * @param out
      * @throws RetsServerException
      */
-    private SearchTransactionStatistics printData(PrintWriter out)
+    private SearchTransactionStatistics printData(SearchQuery searchQuery, PrintWriter out)
         throws RetsServerException
     {
         Session session = null;
@@ -174,14 +172,14 @@ public class DefaultSearchTransaction implements SearchTransaction
         ResultSet resultSet = null;
         try
         {
-            String sql = generateSql(mSearchSqlBuilder.getSelectClause());
+            String sql = searchQuery.getSql();
             logSql(sql);
             session = mSessions.openSession();
             Connection connection = session.connection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
             advance(resultSet);
-            return printResults(out, mSearchSqlBuilder.getColumns(), resultSet);
+            return printResults(out, searchQuery, resultSet);
         }
         catch (HibernateException e)
         {
@@ -205,7 +203,7 @@ public class DefaultSearchTransaction implements SearchTransaction
      *
      * @throws RetsServerException
      */
-    private void getCount() throws RetsServerException
+    private void getCount(Query countQuery) throws RetsServerException
     {
         mCount = 0;
         if (!mParameters.countRequested())
@@ -213,7 +211,7 @@ public class DefaultSearchTransaction implements SearchTransaction
             return;
         }
 
-        String countSql = generateSql("COUNT(*)");
+        String countSql = countQuery.getSql();
         LOG.debug("Count SQL: " + countSql);
         Session session = null;
         Statement statement = null;
@@ -252,39 +250,6 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private String generateSql(String selectClause) throws RetsReplyException
-    {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("SELECT ");
-        buffer.append(selectClause);
-        buffer.append(" FROM ");
-        buffer.append(mSearchSqlBuilder.getFromClause());
-        buffer.append(" WHERE ");
-        buffer.append(mWhereClause);
-        return buffer.toString();
-    }
-
-    private void generateWhereClause(MClass aClass)
-        throws RetsServerException
-    {
-        ConditionRuleSet conditionRuleSet =
-            RetsServer.getConditionRuleSet();
-        String resourceName = aClass.getResource().getResourceID();
-        String className = aClass.getClassName();
-        String sqlConstraint =
-            conditionRuleSet.findSqlConstraint(mGroups, resourceName,
-                                               className);
-        SqlConverter sqlConverter = parse(mSearchSqlBuilder.getMetadata());
-        StringWriter stringWriter = new StringWriter();
-        sqlConverter.toSql(new PrintWriter(stringWriter));
-        mWhereClause = stringWriter.toString();
-
-        if (StringUtils.isNotEmpty(sqlConstraint))
-        {
-            mWhereClause = "(" + mWhereClause + ") AND " + sqlConstraint;
-        }
-    }
-
     private SearchTransactionStatistics printCountOnly(PrintWriter out)
     {
         RetsUtils.printOpenRetsSuccess(out);
@@ -311,13 +276,15 @@ public class DefaultSearchTransaction implements SearchTransaction
         LOG.info(message);
     }
 
-    private SearchTransactionStatistics printResults(PrintWriter out, List columns,
+    private SearchTransactionStatistics printResults(PrintWriter out,
+                                     SearchQuery searchQuery,
                                      ResultSet resultSet)
         throws RetsServerException
     {
+        List columns = searchQuery.getSelectedColumnNames();
         SearchFormatterContext context =
             new SearchFormatterContext(out, resultSet, columns,
-                                       mSearchSqlBuilder.getMetadata(),
+                                       searchQuery.getDmqlParserMetadata(),
                                        mParameters.getRetsVersion());
         context.setLimit(getLimit());
         mCount = Math.min(mCount, mLimit);
@@ -386,41 +353,6 @@ public class DefaultSearchTransaction implements SearchTransaction
         }
     }
 
-    private SqlConverter parse(ServerDmqlMetadata metadata)
-        throws RetsReplyException
-    {
-        try
-        {
-            if (mParameters.getQueryType().equals(SearchParameters.DMQL))
-            {
-                LOG.debug("Parsing using DMQL");
-                return DmqlCompiler.parseDmql(mParameters.getQuery(), metadata);
-            }
-            else // if DMQL2
-            {
-                LOG.debug("Parsing using DMQL2");
-                return DmqlCompiler.parseDmql2(mParameters.getQuery(),
-                                               metadata);
-            }
-        }
-        catch (ANTLRException e)
-        {
-            // This is not an error as bad DMQL can cause this to be thrown.
-            LOG.debug("Caught", e);
-            // This is ugly .. we need to match the error message to determine which
-            // RETS error to throw. Can't handle this another way because the grammar
-            // is built first and therefore, can't yet import the Rets Exception classes.
-            if (e.toString().contains("No such field"))
-            	throw new RetsReplyException(ReplyCode.INVALID_QUERY_FIELD, e.toString());
-            
-            if (e.toString().contains("No such lookup value"))
-            	throw new RetsReplyException(ReplyCode.INVALID_QUERY_FIELD, e.toString());
-            
-            throw new RetsReplyException(ReplyCode.INVALID_QUERY_SYNTAX,
-                                         e.toString());
-        }
-    }
-
     private void close(Session session)
     {
         try
@@ -483,7 +415,6 @@ public class DefaultSearchTransaction implements SearchTransaction
     private SortedSet mGroups;
     private SearchSqlBuilder mSearchSqlBuilder;
     private boolean mExecuteQuery;
-    private String mWhereClause;
     private int mCount;
     private SessionFactory mSessions;
     private int mLimit;

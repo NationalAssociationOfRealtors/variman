@@ -1,22 +1,20 @@
+/*
+ * Variman RETS Server
+ *
+ * Copyright (c) 2009, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
 package org.realtors.rets.server.protocol;
 
 import java.util.SortedSet;
-import java.util.List;
 
-import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.ServerDmqlMetadata;
 import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.metadata.MetadataManager;
 
-/**
- * Created by IntelliJ IDEA.
- * User: dave
- * Date: Sep 11, 2006
- * Time: 4:22:35 PM
- * To change this template use File | Settings | File Templates.
- */
 public interface SearchSqlBuilder
 {
+    // TODO - it would be better to make this totally stateless,
+    // and just pass all input into the createSqlStatements method as a request object
     public void setParameters(SearchParameters parameters);
 
     public void setGroups(SortedSet groups);
@@ -24,14 +22,7 @@ public interface SearchSqlBuilder
     public void prepareForQuery(MetadataManager manager)
         throws RetsReplyException;
 
-    public MClass getMetadataClass();
+    public void setLimit(Integer limit);
 
-    public List getColumns()
-        throws RetsReplyException;
-
-    public ServerDmqlMetadata getMetadata();
-
-    public String getSelectClause() throws RetsReplyException;
-
-    public String getFromClause() throws RetsReplyException;
+    public SqlStatements createSqlStatements() throws RetsReplyException;
 }
