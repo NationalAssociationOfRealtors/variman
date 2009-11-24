@@ -13,14 +13,15 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationLookupType;
 
 public class CompactValidationLookupTypeFormatter extends MetadataFormatter
 {
     public void format(FormatterContext context,
-                       Collection validationLookupTypes, String[] levels)
+                       Collection<MetaObject> validationLookupTypes, String[] levels)
     {
         if (validationLookupTypes.size() == 0)
         {
@@ -35,17 +36,17 @@ public class CompactValidationLookupTypeFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator i = validationLookupTypes.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationLookupTypes.iterator(); i.hasNext();)
         {
-            ValidationLookupType validationLookupType =
-                (ValidationLookupType) i.next();
+            MValidationLookupType validationLookupType =
+                (MValidationLookupType) i.next();
             appendDataRow(context, validationLookupType);
         }
         tag.close();
     }
 
     private void appendDataRow(FormatterContext context,
-                               ValidationLookupType validationLookupType)
+            MValidationLookupType validationLookupType)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -56,6 +57,8 @@ public class CompactValidationLookupTypeFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
         "MetadataEntryID", "ValidText", "Parent1Value", "Parent2Value",
     };

@@ -8,11 +8,25 @@
 
 package org.realtors.rets.server;
 
-import org.hibernate.SessionFactory;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.realtors.rets.common.metadata.Metadata;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.server.config.GroupRules;
+import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.RetsConfigDao;
 import org.realtors.rets.server.config.SecurityConstraints;
+import org.realtors.rets.server.metadata.MetadataDao;
+import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.ObjectSet;
 import org.realtors.rets.server.protocol.SearchTransaction;
@@ -26,38 +40,139 @@ public class RetsServer implements ApplicationContextAware
 {
     public static void setSessions(SessionFactory sessionFactory)
     {
-        sSessions = sessionFactory;
+        synchronized (sLock) {
+            sSessions = sessionFactory;
+        }
     }
 
     public static SessionFactory getSessions()
     {
-        if (sSessions == null && sApplicationContext != null)
-        {
-            try
+        synchronized (sLock) {
+            if (sSessions == null && sApplicationContext != null)
             {
-                // only lookup from spring if rets-config.xml didn't already load it
-                sSessions = (SessionFactory)sApplicationContext.getBean("sessionFactory", SessionFactory.class);
+                try
+                {
+                    // only lookup from spring if rets-config.xml didn't already load it
+                    sSessions = (SessionFactory)sApplicationContext.getBean("sessionFactory", SessionFactory.class);
+                }
+                catch (NoSuchBeanDefinitionException e)
+                {
+                    throw new IllegalStateException("No db connection properties or hibernate session factory has been configured via rets-config.xml or via spring config!");
+                }
             }
-            catch (NoSuchBeanDefinitionException e)
-            {
-                throw new IllegalStateException("No db connection properties or hibernate session factory has been configured via rets-config.xml or via spring config!");
-            }
+            return sSessions;
         }
-        return sSessions;
     }
 
     public static RetsConfigDao getRetsConfigDao()
     {
-        RetsConfigDao retsConfig = null;
+        RetsConfigDao retsConfigDao = null;
         try
         {
-            retsConfig = (RetsConfigDao)sApplicationContext.getBean("retsConfigDao", RetsConfigDao.class);
+            retsConfigDao = (RetsConfigDao)sApplicationContext.getBean("retsConfigDao", RetsConfigDao.class);
         }
         catch (NoSuchBeanDefinitionException e)
         {
             LOG.warn("No rets config dao has been configured via spring config, defaulting to reading rets config xml file.");
         }
-        return retsConfig;
+        return retsConfigDao;
+    }
+    
+    public static MetadataDao getMetadataDao()
+    {
+        MetadataDao metadataDao = null;
+        try
+        {
+            metadataDao = (MetadataDao)sApplicationContext.getBean("metadataDao", MetadataDao.class);
+        }
+        catch (NoSuchBeanDefinitionException e)
+        {
+            throw new IllegalStateException("No MetadataDao bean named 'metadataDao' has been configured in spring application context.");
+        }
+        return metadataDao;
+    }
+    
+    public static void setRetsConfiguration(RetsConfig retsConfig) throws RetsServerException{
+        synchronized (sLock) {
+            sRetsConfig = retsConfig;
+            setSecurityConstraints(retsConfig.getSecurityConstraints());
+            
+            ConditionRuleSet ruleSet = getConditionRuleSet(retsConfig);
+            setConditionRuleSet(ruleSet);
+            
+            MetadataManager manager = createMetadataManager();
+            setMetadataManager(manager);
+            
+            TableGroupFilter groupFilter = getTableGroupFilter(retsConfig, manager);
+            setTableGroupFilter(groupFilter);
+        }
+    }
+    
+    public static RetsConfig getRetsConfiguration() {
+        synchronized (sLock) {
+            return sRetsConfig;
+        }
+    }
+    
+    public static void setMetadataManager(MetadataManager manager) {
+        synchronized (sLock) {
+            sMetadataManager = manager;
+        }
+    }
+    
+    public static MetadataManager getMetadataManager() {
+        synchronized (sLock) {
+            return sMetadataManager;
+        }
+    }
+
+    private static MetadataManager createMetadataManager() throws RetsServerException
+    {
+        LOG.debug("Initializing metadata");
+        LOG.debug("Creating metadata manager");
+        MetadataManager manager = new MetadataManager();
+        MetadataDao metadataDao = getMetadataDao();
+        Metadata metadata = metadataDao.getMetadata();
+        MSystem system = metadata.getSystem();
+        manager.addRecursive(system);
+        return manager;
+    }
+
+    private static ConditionRuleSet getConditionRuleSet(RetsConfig config) {
+        LOG.debug("Creating condition rule set");
+        ConditionRuleSet ruleSet = new ConditionRuleSet();
+        List<GroupRules> securityConstraints = config.getAllGroupRules();
+        for (int i = 0; i < securityConstraints.size(); i++) {
+            GroupRules rules = securityConstraints.get(i);
+            LOG.debug("Adding condition rules for " + rules.getGroupName());
+            ruleSet.addRules(rules);
+        }
+        return ruleSet;
+    }
+    
+    private static TableGroupFilter getTableGroupFilter(RetsConfig config, MetadataManager manager) {
+        LOG.debug("Initializing group filter");
+        TableGroupFilter groupFilter = new TableGroupFilter();
+        MSystem system = (MSystem)manager.findUniqueByLevel(MetadataType.SYSTEM.name(), "");
+        MResource[] resources = system.getMResources();
+        for (MResource resource : resources) {
+            String resourceID = resource.getResourceID();
+            MClass[] classes = resource.getMClasses();
+            for (MClass aClass : classes) {
+                String className = aClass.getClassName();
+                LOG.debug("Setting tables for " + resourceID + ":" + className);
+                Set<MTable> tables = (Set<MTable>)aClass.getChildrenSet(MetadataType.TABLE);
+                groupFilter.setTables(resourceID, className, tables);
+            }
+        }
+        List<GroupRules> groupRulesSet = config.getSecurityConstraints().getAllGroupRules();
+        for (Iterator<GroupRules> iter = groupRulesSet.iterator(); iter.hasNext(); ) {
+            GroupRules rules = iter.next();
+            LOG.debug("Adding rules for " + rules.getGroupName());
+            groupFilter.addRules(rules);
+        }
+
+        return groupFilter;
     }
 
     public static ConnectionHelper createHelper()
@@ -72,67 +187,85 @@ public class RetsServer implements ApplicationContextAware
 
     public static void setTableGroupFilter(TableGroupFilter tableGroupFilter)
     {
-        sTableGroupFilter = tableGroupFilter;
+        synchronized (sLock) {
+            sTableGroupFilter = tableGroupFilter;
+        }
     }
 
     public static TableGroupFilter getTableGroupFilter()
     {
-        return sTableGroupFilter;
+        synchronized (sLock) {
+            return sTableGroupFilter;
+        }
     }
 
     public static void setConditionRuleSet(ConditionRuleSet conditionRuleSet)
     {
-        sConditionRuleSet = conditionRuleSet;
+        synchronized (sLock) {
+            sConditionRuleSet = conditionRuleSet;
+        }
     }
 
     public static ConditionRuleSet getConditionRuleSet()
     {
-        return sConditionRuleSet;
+        synchronized (sLock) {
+            return sConditionRuleSet;
+        }
     }
 
     public static void setSecurityConstraints(
         SecurityConstraints securityConstraints)
     {
-        sSecurityConstraints = securityConstraints;
+        synchronized (sLock) {
+            sSecurityConstraints = securityConstraints;
+        }
     }
 
     public static SecurityConstraints getSecurityConstraints()
     {
-        return sSecurityConstraints;
+        synchronized (sLock) {
+            return sSecurityConstraints;
+        }
     }
 
     public static QueryCountTable getQueryCountTable()
     {
-        return sQueryCountTable;
+        synchronized (sLock) {
+            return sQueryCountTable;
+        }
     }
 
     public static void setQueryCountTable(QueryCountTable queryCountTable)
     {
-        sQueryCountTable = queryCountTable;
+        synchronized (sLock) {
+            sQueryCountTable = queryCountTable;
+        }
     }
 
     public void setApplicationContext(ApplicationContext applicationContext)
         throws BeansException
     {
-        sApplicationContext = applicationContext;
+        synchronized (sLock) {
+            sApplicationContext = applicationContext;
+        }
     }
 
     public static SearchTransaction createSearchTransaction()
     {
         return (SearchTransaction)
-            sApplicationContext.getBean("SearchTransaction");
+            sApplicationContext.getBean("searchTransaction");
     }
-    
+
     public static ObjectSet createCustomObjectSet()
     {
         try
         {
             return (ObjectSet)
-                sApplicationContext.getBean("CustomObjectSet");
+                sApplicationContext.getBean("customObjectSet");
         }
         catch (NoSuchBeanDefinitionException e)
         {
-            LOG.debug("CustomObjectSet bean not found.");
+            LOG.debug("customObjectSet bean not found.");
             return null;
         }
     }
@@ -143,6 +276,9 @@ public class RetsServer implements ApplicationContextAware
     private static TableGroupFilter sTableGroupFilter;
     private static ConditionRuleSet sConditionRuleSet;
     private static SecurityConstraints sSecurityConstraints;
-    private static QueryCountTable sQueryCountTable;
+    private static QueryCountTable sQueryCountTable = new QueryCountTable();
     private static ApplicationContext sApplicationContext;
+    private static RetsConfig sRetsConfig;
+    private static MetadataManager sMetadataManager;
+    private static Object sLock = new Object();
 }

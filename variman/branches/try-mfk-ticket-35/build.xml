@@ -77,27 +77,11 @@
     <pathelement path="${tomcat.bootstrap.jar}"/>
   </path>
 
-  <path id="importer.path">
-    <pathelement path="build/hibernate/classes"/>
-    <pathelement location="${rets-client.jar}"/>
-    <pathelement location="${commons-cli.jar}"/>
-    <pathelement path="${commons-lang.jar}"/>
-    <pathelement path="${hibernate.jar}"/>
-    <pathelement path="${log4j.jar}"/>
-    <pathelement path="${jdom.jar}"/>
-  </path>
-
-  <path id="datagen.path">
-    <pathelement path="build/hibernate/classes"/>
-    <pathelement location="${commons-cli.jar}"/>
-    <pathelement path="${commons-lang.jar}"/>
-    <pathelement path="${hibernate.jar}"/>
-  </path>
-
   <path id="webapp.path">
     <pathelement path="${servlet.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
     <pathelement path="${rets-client.jar}"/>
     <pathelement location="build/embedded/classes"/>
     <pathelement path="${hibernate.jar}"/>
@@ -177,12 +161,6 @@
     <mkdir dir="build/hibernate/doc"/>
     <mkdir dir="build/hibernate/xdoclet"/>
     <mkdir dir="build/embedded/classes"/>
-    <mkdir dir="build/importer/classes"/>
-    <mkdir dir="build/importer/lib"/>
-    <mkdir dir="build/importer/bin"/>
-    <mkdir dir="build/datagen/classes"/>
-    <mkdir dir="build/datagen/lib"/>
-    <mkdir dir="build/datagen/bin"/>
     <mkdir dir="build/rets-server/server/lib"/>
     <mkdir dir="build/rets-server/variman/WEB-INF/classes"/>
     <mkdir dir="build/rets-server/variman/WEB-INF/lib"/>
@@ -201,7 +179,7 @@
   </target>
 
   <target name="build" description="Build all"
-          depends="build-hibernate,build-webapp,build-importer,build-admin" />
+          depends="build-hibernate,build-webapp,build-admin" />
 
   <target name="build-hibernate" depends="build-hibernate-xdoclet,build-rets-client">
     <property name="src.antlr.dir"
@@ -351,15 +329,12 @@
       <sourcepath>
         <pathelement location="project/embedded/java"/>
         <pathelement location="project/hibernate/java"/>
-        <pathelement location="project/importer/java"/>
         <pathelement location="project/webapp/java"/>
-        <pathelement location="project/datagen/java"/>
       </sourcepath>
       <classpath>
         <path refid="hibernate.path"/>
         <path refid="lib.path"/>
         <path refid="embedded.path"/>
-        <path refid="importer.path"/>
         <path refid="webapp.path"/>
       </classpath>
       <tag name="hibernate.class" scope="all" description="Hibernate Class"/>
@@ -730,113 +705,6 @@
           file="project/webapp/config/spring-appContext.xml"/>
   </target>
 
-  <target name="build-datagen" depends="build-hibernate"
-          description="Builds generates dummy data for testing">
-    <depend srcDir="project/datagen/java"
-            destDir="build/datagen/classes"
-            cache="build/datagen/depcache" closure="yes">
-      <classpath>
-        <path refid="datagen.path"/>
-      </classpath>
-    </depend>
-    <javac srcdir="project/datagen/java"
-           destdir="build/datagen/classes"
-           target="${compile.vmtarget}" source="${compile.vmsource}"
-           optimize="${compile.optimize}" debug="${compile.debug}"
-           deprecation="${compile.deprecation}">
-      <classpath>
-        <path refid="datagen.path"/>
-      </classpath>
-    </javac>
-
-    <copy file="project/datagen/shell/runDatagen"
-          todir="build/datagen/bin"/>
-    <chmod file="build/datagen/bin/runDatagen" perm="ugo+rx"/>
-    <copy file="project/datagen/shell/runBenchmark"
-          todir="build/datagen/bin"/>
-    <chmod file="build/datagen/bin/runBenchmark" perm="ugo+rx"/>
-    <copy file="${commons-lang.jar}" todir="build/datagen/lib"/>
-    <copy file="${commons-logging.jar}" todir="build/datagen/lib"/>
-    <copy file="${log4j.jar}" todir="build/datagen/lib"/>
-    <copy file="${jdom.jar}" todir="build/datagen/lib"/>
-    <copy file="${commons-cli.jar}" todir="build/datagen/lib"/>
-    <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
-          todir="build/datagen/lib"/>
-    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
-          todir="build/datagen/classes"/>
-
-    <!-- this copies the hibernate stuff we need -->
-    <copy todir="build/datagen/lib">
-      <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar" />
-    </copy>
-    <copy todir="build/datagen/lib"
-          file="${hibernate.jar}"/>
-    <copy todir="build/datagen/classes"
-          file="project/hibernate/config/hibernate.properties"/>
-    <copy todir="build/datagen/classes"
-          file="project/hibernate/config/cache.ccf"/>
-    <copy todir="build/datagen/lib" file="${mysql.jdbc.jar}"/>
-    <copy todir="build/datagen/lib" file="${postgres.jdbc.jar}"/>
-    <copy todir="build/datagen/lib" file="${jtds.jdbc.jar}"/>
-  </target>
-
-
-
-  <target name="build-importer" depends="build-hibernate,build-rets-client"
-          description="Builds the data and metadata importers">
-    <depend srcDir="project/importer/java"
-            destDir="build/importer/classes"
-            cache="build/importer/depcache" closure="yes">
-      <classpath>
-        <path refid="importer.path"/>
-      </classpath>
-    </depend>
-    <javac srcdir="project/importer/java"
-           destdir="build/importer/classes"
-           target="${compile.vmtarget}" source="${compile.vmsource}"
-           optimize="${compile.optimize}" debug="${compile.debug}"
-           deprecation="${compile.deprecation}">
-      <classpath>
-        <path refid="importer.path"/>
-      </classpath>
-    </javac>
-
-    <copy file="project/importer/shell/runImporter"
-          todir="build/importer/bin"/>
-    <chmod file="build/importer/bin/runImporter" perm="ugo+rx"/>
-    <copy file="project/importer/shell/runSchema"
-          todir="build/importer/bin"/>
-    <chmod file="build/importer/bin/runSchema" perm="ugo+rx"/>
-    <copy file="${rets-client.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-lang.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-httpclient.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-logging.jar}" todir="build/importer/lib"/>
-    <copy file="${log4j.jar}" todir="build/importer/lib"/>
-    <copy file="${jdom.jar}" todir="build/importer/lib"/>
-    <copy file="${commons-cli.jar}" todir="build/importer/lib"/>
-    <copy file="build/hibernate/jar/${project.name}-hibernate.jar"
-          todir="build/importer/lib"/>
-    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
-          todir="build/importer/classes"/>
-
-    <!-- this copies the hibernate stuff we need -->
-    <copy todir="build/importer/lib">
-      <fileset dir="${hibernate.lib}" includes="*.jar"
-               excludes="j2ee.jar,xerces.jar,ant.jar,junit.jar,jaas.jar,commons-lang.jar" />
-    </copy>
-    <copy todir="build/importer/lib"
-          file="${hibernate.jar}"/>
-    <copy todir="build/importer/classes"
-          file="project/hibernate/config/hibernate.properties"/>
-    <copy todir="build/importer/classes"
-          file="project/hibernate/config/cache.ccf"/>
-
-    <copy todir="build/importer/lib" file="${mysql.jdbc.jar}"/>
-    <copy todir="build/importer/lib" file="${postgres.jdbc.jar}"/>
-    <copy todir="build/importer/lib" file="${jtds.jdbc.jar}"/>
-  </target>
-
   <target name="build-admin" depends="build-hibernate"
           description="Builds the admin tool">
     <depend srcDir="project/admin/java"
@@ -1020,7 +888,6 @@
       <path refid="hibernate.path"/>
       <path refid="lib.path"/>
       <path refid="embedded.path"/>
-      <path refid="importer.path"/>
       <path refid="webapp.path"/>
     </path>
     <property name="cp" refid="full-classpath"/>
@@ -1033,10 +900,8 @@
 
     <checkstyle config="project/build/default_checks.xml">
       <fileset dir="project/admin/java" includes="**/*.java"/>
-      <fileset dir="project/datagen/java" includes="**/*.java"/>
       <fileset dir="project/embedded/java" includes="**/*.java"/>
       <fileset dir="project/hibernate/java" includes="**/*.java"/>
-      <fileset dir="project/importer/java" includes="**/*.java"/>
       <fileset dir="project/webapp/java" includes="**/*.java"/>
       <property key="checkstyle.cache.file" file="build/client/cs-cache"/>
     </checkstyle>

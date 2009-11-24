@@ -5,24 +5,31 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdate;
 import org.realtors.rets.server.metadata.ClassStandardNameEnum;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
 
 public class ClassFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MClass> getData()
     {
-        List classes = new ArrayList();
+        List<MClass> classes = new ArrayList<MClass>();
         MClass clazz = new MClass();
         clazz.setClassName("RES");
-        clazz.setStandardName(ClassStandardNameEnum.RESIDENTIAL);
+        clazz.setStandardName(ClassStandardNameEnum.RESIDENTIAL.toString());
         clazz.setVisibleName("Single Family");
         clazz.setDescription("Single Family Residential");
-        clazz.setDbTable("rets_Property_RES");
-        clazz.addTable(new Table(1));
-        clazz.addUpdate(new Update(1));
+        clazz.setXDBName("rets_Property_RES");
+        MTable table = new MTable();
+        table.setUniqueId(Long.valueOf(1));
+        table.setSystemName("MLSNumber");
+        clazz.addChild(MetadataType.TABLE, table);
+        MUpdate update = new MUpdate();
+        update.setUniqueId(Long.valueOf(1));
+        update.setUpdateName("Add");
+        clazz.addChild(MetadataType.UPDATE, update);
         classes.add(clazz);
         return classes;
     }
@@ -74,8 +81,8 @@ public class ClassFormatterTest extends FormatterTestCase
             "\t\t\t\t0\t</DATA>\n" +
 
             "</METADATA-CLASS>\n" +
-            Table.TABLE + "\n" +
-            Update.TABLE + "\n";
+            MetadataType.TABLE.name() + "\n" +
+            MetadataType.UPDATE.name() + "\n";
     }
 
     protected MetadataFormatter getStandardFormatter()
@@ -123,8 +130,8 @@ public class ClassFormatterTest extends FormatterTestCase
             "<DeletedFlagField></DeletedFlagField>" + EOL +
             "<DeletedFlagValue></DeletedFlagValue>" + EOL +
             "<HasKeyIndex>0</HasKeyIndex>" + EOL +
-            Table.TABLE + EOL +
-            Update.TABLE + EOL +
+            MetadataType.TABLE.name() + EOL +
+            MetadataType.UPDATE.name() + EOL +
             "</Class>" + EOL +
             "</METADATA-CLASS>" + EOL;
     }

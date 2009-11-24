@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
+
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.dmql.DmqlFieldType;
 
 public class ServerDmqlMetadataTest extends TestCase
@@ -223,150 +230,172 @@ public class ServerDmqlMetadataTest extends TestCase
         }
 
         int id = 1;
-        Resource resource = ObjectMother.createResource();
+        MResource resource = ObjectMother.createResource();
 
-        Lookup area = new Lookup(id++);
+        MLookup area = new MLookup();
+        area.setUniqueId(Long.valueOf(id++));
         area.setLookupName("AR");
-        resource.addLookup(area);
+        resource.addChild(MetadataType.LOOKUP, area);
 
-        LookupType lookupType = new LookupType(id++);
+        MLookupType lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("GENVA");
         lookupType.setShortValue("Geneva");
         lookupType.setLongValue("Geneva, Illinois, USA");
-        area.addLookupType(lookupType);
+        area.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        lookupType = new LookupType(id++);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("BATV");
         lookupType.setShortValue("Batavia");
         lookupType.setLongValue("Batavia, Illinois, USA");
-        area.addLookupType(lookupType);
+        area.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        Lookup status = new Lookup(id++);
+        MLookup status = new MLookup();
+        status.setUniqueId(Long.valueOf(id++));
         status.setLookupName("LISTING_STATUS");
-        resource.addLookup(status);
+        resource.addChild(MetadataType.LOOKUP, status);
 
-        lookupType = new LookupType(id++);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("S");
-        status.addLookupType(lookupType);
+        status.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        lookupType = new LookupType(id++);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("A");
-        status.addLookupType(lookupType);
+        status.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        lookupType = new LookupType(id++);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("P");
-        status.addLookupType(lookupType);
+        status.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        Lookup interiorFeatures = new Lookup(id++);
+        MLookup interiorFeatures = new MLookup();
+        interiorFeatures.setUniqueId(Long.valueOf(id++));
         interiorFeatures.setLookupName("INT_FEATURES");
-        resource.addLookup(interiorFeatures);
+        resource.addChild(MetadataType.LOOKUP, interiorFeatures);
 
-        lookupType = new LookupType(id++);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("FP");
-        interiorFeatures.addLookupType(lookupType);
+        interiorFeatures.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        lookupType = new LookupType(id++);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("HEAT");
-        interiorFeatures.addLookupType(lookupType);
+        interiorFeatures.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        lookupType = new LookupType(id++);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(id++));
         lookupType.setValue("COOL");
-        interiorFeatures.addLookupType(lookupType);
+        interiorFeatures.addChild(MetadataType.LOOKUP_TYPE, lookupType);
 
-        mClazz = new MClass(id++);
+        mClazz = new MClass();
+        mClazz.setUniqueId(Long.valueOf(id++));
         mClazz.setClassName("RES");
-        mClazz.setDbTable("rets_Property_RES");
-        resource.addClass(mClazz);
+        mClazz.setXDBName("rets_Property_RES");
+        resource.addChild(MetadataType.CLASS, mClazz);
 
-        mArea = new Table(id++);
+        mArea = new MTable();
+        mArea.setUniqueId(Long.valueOf(id++));
         mArea.setSystemName("AR");
-        mArea.setStandardName(new TableStandardName("Area"));
-        mArea.setLookup(area);
-        mArea.setDbName("r_AR");
-        mArea.setDataType(DataTypeEnum.CHARACTER);
-        mArea.setInterpretation(InterpretationEnum.LOOKUP);
+        mArea.setStandardName("Area");
+        mArea.setMLookup(area);
+        mArea.setDBName("r_AR");
+        mArea.setDataType(DataTypeEnum.CHARACTER.toString());
+        mArea.setInterpretation(InterpretationEnum.LOOKUP.toString());
         // Don't set default...
-        mClazz.addTable(mArea);
+        mClazz.addChild(MetadataType.TABLE, mArea);
 
-        mStatus = new Table(id++);
+        mStatus = new MTable();
+        mStatus.setUniqueId(Long.valueOf(id++));
         mStatus.setSystemName("STATUS");
-        mStatus.setStandardName(new TableStandardName("ListingStatus"));
-        mStatus.setLookup(status);
-        mStatus.setDbName("r_STATUS");
-        mStatus.setDataType(DataTypeEnum.CHARACTER);
-        mStatus.setInterpretation(InterpretationEnum.LOOKUP);
+        mStatus.setStandardName("ListingStatus");
+        mStatus.setMLookup(status);
+        mStatus.setDBName("r_STATUS");
+        mStatus.setDataType(DataTypeEnum.CHARACTER.toString());
+        mStatus.setInterpretation(InterpretationEnum.LOOKUP.toString());
         mStatus.setDefault(3);
-        mClazz.addTable(mStatus);
+        mClazz.addChild(MetadataType.TABLE, mStatus);
 
-        mInteriorFeatures = new Table(id++);
+        mInteriorFeatures = new MTable();
+        mInteriorFeatures.setUniqueId(Long.valueOf(id++));
         mInteriorFeatures.setSystemName("IF");
-        mInteriorFeatures.setDbName("r_IF");
-        mInteriorFeatures.setLookup(interiorFeatures);
-        mInteriorFeatures.setDataType(DataTypeEnum.CHARACTER);
-        mInteriorFeatures.setInterpretation(InterpretationEnum.LOOKUPMULTI);
-        mClazz.addTable(mInteriorFeatures);
+        mInteriorFeatures.setDBName("r_IF");
+        mInteriorFeatures.setMLookup(interiorFeatures);
+        mInteriorFeatures.setDataType(DataTypeEnum.CHARACTER.toString());
+        mInteriorFeatures.setInterpretation(InterpretationEnum.LOOKUPMULTI.toString());
+        mClazz.addChild(MetadataType.TABLE, mInteriorFeatures);
 
         // Create a table w/o a lookup
-        mOwner = new Table(id++);
+        mOwner = new MTable();
+        mOwner.setUniqueId(Long.valueOf(id++));
         mOwner.setSystemName("OWNER");
-        mOwner.setStandardName(new TableStandardName("Owner"));
-        mOwner.setDbName("r_OWNER");
-        mOwner.setDataType(DataTypeEnum.CHARACTER);
+        mOwner.setStandardName("Owner");
+        mOwner.setDBName("r_OWNER");
+        mOwner.setDataType(DataTypeEnum.CHARACTER.toString());
         mOwner.setDefault(4);
-        mClazz.addTable(mOwner);
+        mClazz.addChild(MetadataType.TABLE, mOwner);
 
-        mListingPrice = new Table(id++);
+        mListingPrice = new MTable();
+        mListingPrice.setUniqueId(Long.valueOf(id++));
         mListingPrice.setSystemName("LP");
-        mListingPrice.setStandardName(new TableStandardName("ListingPrice"));
-        mListingPrice.setDbName("r_LP");
-        mListingPrice.setDataType(DataTypeEnum.DECIMAL);
+        mListingPrice.setStandardName("ListingPrice");
+        mListingPrice.setDBName("r_LP");
+        mListingPrice.setDataType(DataTypeEnum.DECIMAL.toString());
         mListingPrice.setDefault(1);
-        mClazz.addTable(mListingPrice);
+        mClazz.addChild(MetadataType.TABLE, mListingPrice);
 
-        mListDate = new Table(id++);
+        mListDate = new MTable();
+        mListDate.setUniqueId(Long.valueOf(id++));
         mListDate.setSystemName("LD");
-        mListDate.setStandardName(new TableStandardName("ListDate"));
-        mListDate.setDbName("r_LD");
-        mListDate.setDataType(DataTypeEnum.DATE);
+        mListDate.setStandardName("ListDate");
+        mListDate.setDBName("r_LD");
+        mListDate.setDataType(DataTypeEnum.DATE.toString());
         mListDate.setDefault(2);
-        mClazz.addTable(mListDate);
+        mClazz.addChild(MetadataType.TABLE, mListDate);
 
-        mListTime = new Table(id++);
+        mListTime = new MTable();
+        mListTime.setUniqueId(Long.valueOf(id++));
         mListTime.setSystemName("LT");
-        mListTime.setDbName("r_LT");
-        mListTime.setDataType(DataTypeEnum.TIME);
+        mListTime.setDBName("r_LT");
+        mListTime.setDataType(DataTypeEnum.TIME.toString());
         mListTime.setDefault(5);
-        mClazz.addTable(mListTime);
+        mClazz.addChild(MetadataType.TABLE, mListTime);
 
-        mListDateTime = new Table(id++);
+        mListDateTime = new MTable();
+        mListDateTime.setUniqueId(Long.valueOf(id++));
         mListDateTime.setSystemName("LDT");
-        mListDateTime.setDbName("r_LDT");
-        mListDateTime.setDataType(DataTypeEnum.DATETIME);
+        mListDateTime.setDBName("r_LDT");
+        mListDateTime.setDataType(DataTypeEnum.DATETIME.toString());
         mListDateTime.setDefault(0);
-        mClazz.addTable(mListDateTime);
+        mClazz.addChild(MetadataType.TABLE, mListDateTime);
 
-        mHiddenTable = new Table(id++);
+        mHiddenTable = new MTable();
+        mHiddenTable.setUniqueId(Long.valueOf(id++));
         mHiddenTable.setSystemName("HIDDEN");
-        mHiddenTable.setDbName("r_HIDDEN");
-        mHiddenTable.setDataType(DataTypeEnum.CHARACTER);
+        mHiddenTable.setDBName("r_HIDDEN");
+        mHiddenTable.setDataType(DataTypeEnum.CHARACTER.toString());
         mHiddenTable.setDefault(-1);
-        mClazz.addTable(mHiddenTable);
+        mClazz.addChild(MetadataType.TABLE, mHiddenTable);
 
-        mNullDbNameTable = new Table(id++);
+        mNullDbNameTable = new MTable();
+        mNullDbNameTable.setUniqueId(Long.valueOf(id++));
         mNullDbNameTable.setSystemName("NULL_DBNAME");
-        mNullDbNameTable.setDataType(DataTypeEnum.CHARACTER);
-        mClazz.addTable(mNullDbNameTable);
+        mNullDbNameTable.setDataType(DataTypeEnum.CHARACTER.toString());
+        mClazz.addChild(MetadataType.TABLE, mNullDbNameTable);
     }
 
     private MClass mClazz = null;
-    private Table mArea;
-    private Table mStatus;
-    private Table mOwner;
-    private Table mListingPrice;
-    private Table mListDate;
-    private Table mListTime;
-    private Table mListDateTime;
-    private Table mHiddenTable;
-    private Table mInteriorFeatures;
-    private Table mNullDbNameTable;
+    private MTable mArea;
+    private MTable mStatus;
+    private MTable mOwner;
+    private MTable mListingPrice;
+    private MTable mListDate;
+    private MTable mListTime;
+    private MTable mListDateTime;
+    private MTable mHiddenTable;
+    private MTable mInteriorFeatures;
+    private MTable mNullDbNameTable;
 }

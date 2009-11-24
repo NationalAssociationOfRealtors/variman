@@ -14,34 +14,18 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Random;
-
-import org.hibernate.SessionFactory;
 
 import org.apache.log4j.Logger;
 import org.realtors.rets.server.ConnectionHelper;
-import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataLoader;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.Table;
 
 public class CreatePropertiesCommand
 {
-    public CreatePropertiesCommand(RetsConfig config, int numProperties)
+    public CreatePropertiesCommand(int numProperties)
     {
-        mClasses = new HashMap();
-        mTables = new HashMap();
-        mSessions = RetsServer.getSessions();
         mNumProperties = numProperties;
-        mRetsConfig = config;
         initData();
     }
 
@@ -89,7 +73,6 @@ public class CreatePropertiesCommand
     {
         try
         {
-            loadMetadata();
             dropData();
             createData();
         }
@@ -99,34 +82,6 @@ public class CreatePropertiesCommand
         }
     }
 
-    private void loadMetadata()
-        throws RetsServerException
-    {
-        MetadataLoader loader = new MetadataLoader(mRetsConfig);
-        MSystem system = loader.parseMetadataDirectory();
-        Iterator j = system.getResources().iterator();
-        while (j.hasNext())
-        {
-            Resource res = (Resource) j.next();
-            Iterator k = res.getClasses().iterator();
-            while (k.hasNext())
-            {
-                MClass clazz = (MClass) k.next();
-                mClasses.put(clazz.getPath(), clazz);
-                Iterator l = clazz.getTables().iterator();
-                while (l.hasNext())
-                {
-                    Table table = (Table) l.next();
-                    mTables.put(table.getPath(), table);
-                }
-            }
-        }
-    }
-
-    /**
-     *
-     *
-     */
     private void dropData()
         throws RetsServerException, SQLException
     {
@@ -289,12 +244,7 @@ public class CreatePropertiesCommand
 
     private static final Logger LOG =
         Logger.getLogger(CreatePropertiesCommand.class);
-    private Map mClasses;
-    private Map mTables;
     private int mNumProperties;
-    private SessionFactory mSessions;
-    private RetsConfig mRetsConfig;
-
     private String[] mAgents;
     private String[] mBrokers;
     private int mCount;

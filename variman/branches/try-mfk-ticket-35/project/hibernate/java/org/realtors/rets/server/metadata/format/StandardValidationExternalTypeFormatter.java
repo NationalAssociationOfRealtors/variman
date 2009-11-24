@@ -17,14 +17,15 @@ import java.util.List;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationExternalType;
 
 public class StandardValidationExternalTypeFormatter
     extends BaseStandardFormatter
 {
     public void format(FormatterContext context,
-                       Collection validationExternalTypes, String[] levels)
+                       Collection<MetaObject> validationExternalTypes, String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
         PrintWriter out = context.getWriter();
@@ -37,10 +38,10 @@ public class StandardValidationExternalTypeFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = validationExternalTypes.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationExternalTypes.iterator(); i.hasNext();)
         {
-            ValidationExternalType validationExternalType =
-                (ValidationExternalType) i.next();
+            MValidationExternalType validationExternalType =
+                (MValidationExternalType) i.next();
             TagBuilder tag = new TagBuilder(out, "ValidationExternal")
                 .beginContentOnNewLine();
             
@@ -50,28 +51,31 @@ public class StandardValidationExternalTypeFormatter
                 TagBuilder.simpleTag(out, "MetadataEntryID", validationExternalType.getMetadataEntryID());
             }
 
-            List sorted = FormatUtil.toSortedStringList(
-                validationExternalType.getSearchField());
+            String searchFieldCsv = validationExternalType.getSearchField();
+            List<?> sorted = FormatUtil.toSortedStringList(
+                    MValidationExternalType.toSearchFields(searchFieldCsv));
             for (int j = 0; j < sorted.size(); j++)
             {
                 TagBuilder.simpleTag(out, "SearchField", sorted.get(j));
             }
 
+            String displayFieldCsv = validationExternalType.getDisplayField();
             sorted = FormatUtil.toSortedStringList(
-                validationExternalType.getDisplayField());
+                    MValidationExternalType.toDisplayFields(displayFieldCsv));
             for (int j = 0; j < sorted.size(); j++)
             {
                 TagBuilder.simpleTag(out, "DisplayField", sorted.get(j));
             }
 
-            Map resultFields = validationExternalType.getResultFields();
-            sorted = FormatUtil.toSortedStringList(resultFields.keySet());
+            String resultFieldsCsv = validationExternalType.getResultFields();
+            Map<String, String> resultFieldsMap = MValidationExternalType.toResultFieldsMap(resultFieldsCsv);
+            sorted = FormatUtil.toSortedStringList(resultFieldsMap.keySet());
             for (int j = 0; j < sorted.size(); j++)
             {
                 TagBuilder resultFieldsTag = new TagBuilder(out, "ResultFields")
                     .beginContentOnNewLine();
                 String source = (String) sorted.get(j);
-                String target = (String) resultFields.get(source);
+                String target = resultFieldsMap.get(source);
                 TagBuilder.simpleTag(out, "Source", source);
                 TagBuilder.simpleTag(out, "Target", target);
                 resultFieldsTag.close();

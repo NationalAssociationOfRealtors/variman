@@ -13,13 +13,14 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MLookupType;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.LookupType;
 
 public class CompactLookupTypeFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection lookupTypes,
+    public void format(FormatterContext context, Collection<MetaObject> lookupTypes,
                        String[] levels)
     {
         if (lookupTypes.size() == 0)
@@ -34,15 +35,15 @@ public class CompactLookupTypeFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator i = lookupTypes.iterator(); i.hasNext();)
+        for (Iterator<?> i = lookupTypes.iterator(); i.hasNext();)
         {
-            LookupType lookupType = (LookupType) i.next();
+            MLookupType lookupType = (MLookupType) i.next();
             appendDataRow(context, lookupType);
         }
         tag.close();
     }
 
-    private void appendDataRow(FormatterContext context, LookupType lookupType)
+    private void appendDataRow(FormatterContext context, MLookupType lookupType)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -53,6 +54,8 @@ public class CompactLookupTypeFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
         "MetadataEntryID", "LongValue", "ShortValue", "Value",
     };

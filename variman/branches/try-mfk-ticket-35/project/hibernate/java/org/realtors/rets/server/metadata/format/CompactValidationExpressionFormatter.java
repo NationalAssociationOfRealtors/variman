@@ -13,14 +13,15 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationExpression;
 
 public class CompactValidationExpressionFormatter extends MetadataFormatter
 {
     public void format(FormatterContext context,
-                       Collection validationExpressions, String[] levels)
+                       Collection<MetaObject> validationExpressions, String[] levels)
     {
         if (validationExpressions.size() == 0)
         {
@@ -33,10 +34,10 @@ public class CompactValidationExpressionFormatter extends MetadataFormatter
         tag.appendAttribute("Date", context.getDate(), context.getRetsVersion());
         tag.endAttributes();
         tag.appendColumns(COLUMNS);
-        for (Iterator i = validationExpressions.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationExpressions.iterator(); i.hasNext();)
         {
-            ValidationExpression validationExpression =
-                (ValidationExpression) i.next();
+            MValidationExpression validationExpression =
+                (MValidationExpression) i.next();
             appendDataRow(context, validationExpression);
 
         }
@@ -44,7 +45,7 @@ public class CompactValidationExpressionFormatter extends MetadataFormatter
     }
 
     private void appendDataRow(FormatterContext context,
-                               ValidationExpression validationExpression)
+            MValidationExpression validationExpression)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -52,11 +53,17 @@ public class CompactValidationExpressionFormatter extends MetadataFormatter
         row.append(validationExpression.getValidationExpressionID());
         row.append(validationExpression.getValidationExpressionType());
         row.append(validationExpression.getValue());
+        // FIXME: The RETS spec does not show that version and date are valid
+        // columns. They are valid tag attributes. ValidationExternal has them
+        // but ValidationExpression does not.
         row.append(context.getVersion());
         row.append(context.getDate(), context.getRetsVersion());
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
+    // TODO: Remove version and date if they are not suppose to be here.
     private static final String[] COLUMNS = {
         "MetadataEntryID", "ValidationExpressionID", "ValidationExpressionType", "Value",
         "Version", "Date",

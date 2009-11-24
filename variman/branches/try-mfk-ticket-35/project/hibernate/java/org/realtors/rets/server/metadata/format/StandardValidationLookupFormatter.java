@@ -14,13 +14,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationLookup;
 
 public class StandardValidationLookupFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection validationLookups,
+    public void format(FormatterContext context, Collection<MetaObject> validationLookups,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -32,9 +36,9 @@ public class StandardValidationLookupFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = validationLookups.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationLookups.iterator(); i.hasNext();)
         {
-            ValidationLookup validationLookup = (ValidationLookup) i.next();
+            MValidationLookup validationLookup = (MValidationLookup) i.next();
             TagBuilder tag = new TagBuilder(out, "ValidationLookupType")
                 .beginContentOnNewLine();
 
@@ -42,7 +46,7 @@ public class StandardValidationLookupFormatter extends BaseStandardFormatter
             {
                 // Added 1.7 DTD
                 TagBuilder.simpleTag(out, "MetadataEntryID", 
-            					validationLookup.getMetadataEntryID());
+                                validationLookup.getMetadataEntryID());
             }
             TagBuilder.simpleTag(out, "ValidationLookupName",
                                  validationLookup.getValidationLookupName());
@@ -50,12 +54,14 @@ public class StandardValidationLookupFormatter extends BaseStandardFormatter
                                  validationLookup.getParent1Field());
             TagBuilder.simpleTag(out, "Parent2Field",
                                  validationLookup.getParent2Field());
+            // TODO: Check if these are suppose to be Version and Date or
+            // ValidationLookupTypeVersion and ValidationLookupTypeDate.
             formatVersionDateTags(context, VERSION_DATE_TAGS);
 
             if (context.isRecursive())
             {
-                context.format(validationLookup.getValidationLookupTypes(),
-                               validationLookup.getPathAsArray());
+                String[] path = StringUtils.split(validationLookup.getPath(), ":");
+                context.format(validationLookup.getChildren(MetadataType.VALIDATION_LOOKUP_TYPE), path);
             }
 
             tag.close();

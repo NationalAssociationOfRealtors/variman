@@ -5,41 +5,80 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.Resource;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MEditMask;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MObject;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.server.metadata.ResourceStandardNameEnum;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.UpdateHelp;
 
 public class ResourceFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MResource> getData()
     {
-        ArrayList resources = new ArrayList();
-        Resource resource = new Resource();
+        List<MResource> resources = new ArrayList<MResource>();
+        MResource resource = new MResource();
         resource.setResourceID("PropertyID");
-        resource.setStandardName(ResourceStandardNameEnum.PROPERTY);
+        resource.setStandardName(ResourceStandardNameEnum.PROPERTY.toString());
         resource.setVisibleName("Prop");
         resource.setDescription("Property Database");
         resource.setKeyField("LN");
-
-        resource.addClass(new MClass(1));
-        resource.addClass(new MClass(2));
-        resource.addObject(new MObject(1));
-        resource.addSearchHelp(new SearchHelp(1));
-        resource.addEditMask(new EditMask(1));
-        resource.addLookup(new Lookup(1));
-        resource.addUpdateHelp(new UpdateHelp(1));
-        resource.addValidationLookup(new ValidationLookup(1));
-        resource.addValidationExternal(new ValidationExternal(1));
-        resource.addValidationExpression(new ValidationExpression(1));
-
+        
+        MClass clazz = new MClass();
+        clazz.setUniqueId(Long.valueOf(1));
+        clazz.setClassName("RES");
+        resource.addChild(MetadataType.CLASS, clazz);
+        clazz = new MClass();
+        clazz.setClassName("ATD");
+        clazz.setUniqueId(Long.valueOf(2));
+        resource.addChild(MetadataType.CLASS, clazz);
+        
+        MObject object = new MObject();
+        object.setUniqueId(Long.valueOf(1));
+        object.setObjectType("Photo");
+        resource.addChild(MetadataType.OBJECT, object);
+        
+        MSearchHelp searchHelp = new MSearchHelp();
+        searchHelp.setUniqueId(Long.valueOf(1));
+        searchHelp.setSearchHelpID("PropertyMLSNumber");
+        resource.addChild(MetadataType.SEARCH_HELP, searchHelp);
+        
+        MEditMask editMask = new MEditMask();
+        editMask.setUniqueId(Long.valueOf(1));
+        editMask.setEditMaskID("PropertyMLSNumber");
+        resource.addChild(MetadataType.EDITMASK, editMask);
+        
+        MLookup lookup = new MLookup();
+        lookup.setUniqueId(Long.valueOf(1));
+        lookup.setLookupName("PropertyListingStatusId");
+        resource.addChild(MetadataType.LOOKUP, lookup);
+        
+        MUpdateHelp updateHelp = new MUpdateHelp();
+        updateHelp.setUniqueId(Long.valueOf(1));
+        updateHelp.setUpdateHelpID("PropertyListingStatusId");
+        resource.addChild(MetadataType.UPDATE_HELP, updateHelp);
+        
+        MValidationLookup validationLookup = new MValidationLookup();
+        validationLookup.setUniqueId(Long.valueOf(1));
+        validationLookup.setValidationLookupName("PropertyListingStatusId");
+        resource.addChild(MetadataType.VALIDATION_LOOKUP, validationLookup);
+        
+        MValidationExternal validationExternal = new MValidationExternal();
+        validationExternal.setUniqueId(Long.valueOf(1));
+        validationExternal.setValidationExternalName("PropertyListingStatusId");
+        resource.addChild(MetadataType.VALIDATION_EXTERNAL, validationExternal);
+        
+        MValidationExpression validationExpression = new MValidationExpression();
+        validationExpression.setUniqueId(Long.valueOf(1));
+        validationExpression.setValidationExpressionID("PropertyListingStatusId");
+        resource.addChild(MetadataType.VALIDATION_EXPRESSION, validationExpression);
+        
         resources.add(resource);
         return resources;
     }
@@ -105,16 +144,16 @@ public class ResourceFormatterTest extends FormatterTestCase
             VERSION_DATE + "\t</DATA>\n" +
 
             "</METADATA-RESOURCE>\n" +
-            MClass.TABLE + "\n" +
-            MClass.TABLE + "\n" +
-            MObject.TABLE + "\n" +
-            SearchHelp.TABLE + "\n" +
-            EditMask.TABLE + "\n" +
-            Lookup.TABLE + "\n" +
-            UpdateHelp.TABLE + "\n" +
-            ValidationLookup.TABLE + "\n" +
-            ValidationExternal.TABLE + "\n" +
-            ValidationExpression.TABLE + "\n";
+            MetadataType.CLASS.name() + "\n" +
+            MetadataType.CLASS.name() + "\n" +
+            MetadataType.OBJECT.name() + "\n" +
+            MetadataType.SEARCH_HELP.name() + "\n" +
+            MetadataType.EDITMASK.name() + "\n" +
+            MetadataType.LOOKUP.name() + "\n" +
+            MetadataType.UPDATE_HELP.name() + "\n" +
+            MetadataType.VALIDATION_LOOKUP.name() + "\n" +
+            MetadataType.VALIDATION_EXTERNAL.name() + "\n" +
+            MetadataType.VALIDATION_EXPRESSION.name() + "\n";
     }
 
     protected String getExpectedStandard()
@@ -195,17 +234,17 @@ public class ResourceFormatterTest extends FormatterTestCase
             "</ValidationExternalVersion>" + EOL +
             "<ValidationExternalDate>" + DATE +
             "</ValidationExternalDate>" + EOL +
-            MClass.TABLE + EOL +
-            MClass.TABLE + EOL +
-            MObject.TABLE + EOL +
-            SearchHelp.TABLE + EOL +
+            MetadataType.CLASS.name() + EOL +
+            MetadataType.CLASS.name() + EOL +
+            MetadataType.OBJECT.name() + EOL +
+            MetadataType.SEARCH_HELP.name() + EOL +
 
-            EditMask.TABLE + EOL +
-            Lookup.TABLE + EOL +
-            UpdateHelp.TABLE + EOL +
-            ValidationLookup.TABLE + EOL +
-            ValidationExpression.TABLE + EOL +
-            ValidationExternal.TABLE + EOL +
+            MetadataType.EDITMASK.name() + EOL +
+            MetadataType.LOOKUP.name() + EOL +
+            MetadataType.UPDATE_HELP.name() + EOL +
+            MetadataType.VALIDATION_LOOKUP.name() + EOL +
+            MetadataType.VALIDATION_EXPRESSION.name() + EOL +
+            MetadataType.VALIDATION_EXTERNAL.name() + EOL +
             "</Resource>" + EOL +
             "</METADATA-RESOURCE>" + EOL;
     }

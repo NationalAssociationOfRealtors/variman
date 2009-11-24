@@ -219,7 +219,7 @@ public class CompactSplitter
         public String getFile(Element element)
         {
             String resource = getResource(element);
-            return EDIT_MASK + FS + resource + XML;
+            return EDITMASK + FS + resource + XML;
         }
     }
 
@@ -237,7 +237,7 @@ public class CompactSplitter
         public String getFile(Element element)
         {
             String lookup = getLookup(element);
-            return LOOKUP + FS + LOOKUP_TYPTE + FS + lookup + XML;
+            return LOOKUP + FS + LOOKUP_TYPE + FS + lookup + XML;
         }
     }
 
@@ -318,9 +318,9 @@ public class CompactSplitter
     private static final String UPDATE_TYPE = "UpdateType";
     private static final String OBJECT = "Object";
     private static final String SEARCH_HELP = "SearchHelp";
-    private static final String EDIT_MASK = "EditMask";
+    private static final String EDITMASK = "EditMask";
     private static final String LOOKUP = "Lookup";
-    private static final String LOOKUP_TYPTE = "LookupType";
+    private static final String LOOKUP_TYPE = "LookupType";
     private static final String UPDATE_HELP = "UpdateHelp";
     private static final String VALIDATION_LOOKUP = "ValidationLookup";
     private static final String VALIDATION_LOOKUP_TYPE = "ValidatoinLookupType";

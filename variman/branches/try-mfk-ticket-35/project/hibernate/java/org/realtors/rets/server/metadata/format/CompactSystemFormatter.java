@@ -13,13 +13,18 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MSystem;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.Util;
 
 public class CompactSystemFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection systems,
+    public void format(FormatterContext context, Collection<MetaObject> systems,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -28,11 +33,13 @@ public class CompactSystemFormatter extends MetadataFormatter
             return;
         }
         PrintWriter out = context.getWriter();
-            
+        
+        // TODO: Many of the strings in this file can be changed to reference
+        // the equivalent constant in the MetaObject subclasses.
         // Get first element
         MSystem system = (MSystem) systems.iterator().next();
         TagBuilder tag = new TagBuilder(out, "METADATA-SYSTEM")
-            .appendAttribute("Version", system.getVersionString())
+            .appendAttribute("Version", Util.getVersionString(system.getVersion()))
             .appendAttribute("Date", system.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
@@ -42,14 +49,14 @@ public class CompactSystemFormatter extends MetadataFormatter
         {
             new TagBuilder(out, "SYSTEM")
                 .appendAttribute("SystemID", system.getSystemID())
-                .appendAttribute("SystemDescription", system.getDescription())
+                .appendAttribute("SystemDescription", system.getSystemDescription())
                 .close();
         }
         else
         {
             new TagBuilder(out, "SYSTEM")
                 .appendAttribute("SystemID", system.getSystemID())
-                .appendAttribute("SystemDescription", system.getDescription())
+                .appendAttribute("SystemDescription", system.getSystemDescription())
                 .appendAttribute("TimeZoneOffset", system.getTimeZoneOffset())
                 .close();
         }
@@ -59,9 +66,9 @@ public class CompactSystemFormatter extends MetadataFormatter
 
         if (context.isRecursive())
         {
-           	context.format(system.getForeignKeys(), system.getPathAsArray());
-            context.format(system.getResources(),
-                           system.getPathAsArray());
+            String[] path = StringUtils.split(system.getPath(), ":");
+            context.format(system.getChildren(MetadataType.RESOURCE), path);
+            context.format(system.getChildren(MetadataType.FOREIGN_KEYS), path);
         }
     }
 }

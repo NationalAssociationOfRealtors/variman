@@ -5,14 +5,14 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.EditMask;
+import org.realtors.rets.common.metadata.types.MEditMask;
 
 public class EditMaskFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MEditMask> getData()
     {
-        List editMasks = new ArrayList();
-        EditMask editMask = new EditMask();
+        List<MEditMask> editMasks = new ArrayList<MEditMask>();
+        MEditMask editMask = new MEditMask();
         editMask.setMetadataEntryID("EditMask");
         editMask.setEditMaskID("LN_EDITMASK");
         editMask.setValue("[0-9]{4,8}");

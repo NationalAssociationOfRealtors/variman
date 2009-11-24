@@ -10,21 +10,18 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationExternalType;
 
 public class CompactValidationExternalTypeFormatter extends MetadataFormatter
 {
     public void format(FormatterContext context,
-                       Collection validationExternalTypes, String[] levels)
+                       Collection<MetaObject> validationExternalTypes, String[] levels)
     {
         if (validationExternalTypes.size() == 0)
         {
@@ -39,42 +36,29 @@ public class CompactValidationExternalTypeFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator i = validationExternalTypes.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationExternalTypes.iterator(); i.hasNext();)
         {
-            ValidationExternalType validationExternalType =
-                (ValidationExternalType) i.next();
+            MValidationExternalType validationExternalType =
+                (MValidationExternalType) i.next();
             appendDataRow(context, validationExternalType);
         }
         tag.close();
     }
 
     private void appendDataRow(FormatterContext context,
-                               ValidationExternalType validationExternalType)
+            MValidationExternalType validationExternalType)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(validationExternalType.getMetadataEntryID());
         row.append(validationExternalType.getSearchField());
         row.append(validationExternalType.getDisplayField());
-        List formattedResultFields =
-            mapToKeyValues(validationExternalType.getResultFields());
-        row.append(formattedResultFields);
+        row.append(validationExternalType.getResultFields());
         row.end();
     }
 
-    private List mapToKeyValues(Map resultFields)
-    {
-        Set keys = resultFields.keySet();
-        List keyValues = new ArrayList();
-        for (Iterator iterator = keys.iterator(); iterator.hasNext();)
-        {
-            String key = (String) iterator.next();
-            String value = (String) resultFields.get(key);
-            keyValues.add(key + "=" + value);
-        }
-        return keyValues;
-    }
-
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
         "MetadataEntryID", "SearchField", "DisplayField", "ResultFields",
     };

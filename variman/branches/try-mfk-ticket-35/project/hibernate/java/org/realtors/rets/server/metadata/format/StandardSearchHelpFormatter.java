@@ -15,12 +15,13 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.SearchHelp;
 
 public class StandardSearchHelpFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection searchHelps,
+    public void format(FormatterContext context, Collection<MetaObject> searchHelps,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -32,9 +33,9 @@ public class StandardSearchHelpFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = searchHelps.iterator(); i.hasNext();)
+        for (Iterator<?> i = searchHelps.iterator(); i.hasNext();)
         {
-            SearchHelp searchHelp = (SearchHelp) i.next();
+            MSearchHelp searchHelp = (MSearchHelp) i.next();
             TagBuilder tag = new TagBuilder(out, "SearchHelp")
                 .beginContentOnNewLine();
 

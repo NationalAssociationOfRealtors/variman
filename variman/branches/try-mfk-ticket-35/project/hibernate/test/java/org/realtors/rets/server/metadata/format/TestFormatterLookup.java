@@ -6,26 +6,26 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.realtors.rets.server.metadata.ServerMetadata;
+import org.realtors.rets.common.metadata.MetaObject;
 
 public class TestFormatterLookup implements FormatterLookup
 {
-    public MetadataFormatter lookupFormatter(Collection metadataCollection)
+    public MetadataFormatter lookupFormatter(Collection<MetaObject> metadataCollection)
     {
         return sTestFormatter;
     }
 
     static class TestFormatter extends MetadataFormatter
     {
-        public void format(FormatterContext context, Collection metadatums,
+        public void format(FormatterContext context, Collection<MetaObject> metadatums,
                            String[] levels)
         {
             PrintWriter out = context.getWriter();
             int formatCount = 0;
-            for (Iterator iterator = metadatums.iterator(); iterator.hasNext();)
+            for (Iterator<MetaObject> iterator = metadatums.iterator(); iterator.hasNext();)
             {
-                ServerMetadata metadata = (ServerMetadata) iterator.next();
-                out.print(metadata.getTableName() + "\n");
+                MetaObject metadata = iterator.next();
+                out.print(metadata.getMetadataType().name() + "\n");
                 formatCount++;
             }
             if (formatCount == 0)

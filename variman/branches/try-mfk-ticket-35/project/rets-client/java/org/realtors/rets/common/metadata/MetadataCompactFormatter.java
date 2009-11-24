@@ -59,8 +59,8 @@ public class MetadataCompactFormatter
 			if (tag == null)
 			{
 				tag = new TagBuilder(mOut, "METADATA-CLASS")
-								.appendAttribute("Version", resource.getAttributeAsString(resource.CLASSVERSION))
-								.appendAttribute("Date", resource.getDateAttribute(resource.CLASSDATE), mRetsVersion)
+								.appendAttribute("Version", resource.getAttributeAsString(MResource.CLASSVERSION))
+								.appendAttribute("Date", resource.getDateAttribute(MResource.CLASSDATE), mRetsVersion)
 								.appendAttribute("Resource", resource.getResourceID())
 								.beginContentOnNewLine()
 								.appendColumns(clazz.getAttributeNames());
@@ -85,8 +85,8 @@ public class MetadataCompactFormatter
 			if (tag == null)
 			{
 				tag = new TagBuilder(mOut, "METADATA-EDITMASK")
-								.appendAttribute("Version", resource.getAttributeAsString(resource.EDITMASKVERSION))
-								.appendAttribute("Date", resource.getDateAttribute(resource.EDITMASKDATE), mRetsVersion)
+								.appendAttribute("Version", resource.getAttributeAsString(MResource.EDITMASKVERSION))
+								.appendAttribute("Date", resource.getDateAttribute(MResource.EDITMASKDATE), mRetsVersion)
 								.appendAttribute("Resource", resource.getResourceID())
 								.beginContentOnNewLine()
 								.appendColumns(editMask.getAttributeNames());
@@ -264,7 +264,7 @@ public class MetadataCompactFormatter
             .appendAttribute("TimeZoneOffset", mSystem.getTimeZoneOffset())
             .close();
 
-        TagBuilder.simpleTag(mOut, "COMMENTS", mSystem.getComment());
+        TagBuilder.simpleTag(mOut, "COMMENTS", mSystem.getComments());
         tag.end();
 	}
 	
@@ -390,7 +390,7 @@ public class MetadataCompactFormatter
 	{
 		TagBuilder tag = null;
 		
-		for (MValidationExternal external : resource.getMValidationExternal())
+		for (MValidationExternal external : resource.getMValidationExternals())
 		{
 			if (tag == null)
 			{
@@ -406,7 +406,7 @@ public class MetadataCompactFormatter
 		}
 		if (tag != null)
 			tag.close();
-		for (MValidationExternal external : resource.getMValidationExternal())
+		for (MValidationExternal external : resource.getMValidationExternals())
 		{
 			formatValidationExternalType(resource, external);
 		}
@@ -492,8 +492,7 @@ public class MetadataCompactFormatter
 		row.begin();
 		for (String attribute : metaObject.getAttributeNames())
         {
-        	AttrType<?> attrType	= metaObject.getAttributeType(attribute);
-        	String 		value 		= metaObject.getAttributeAsString(attribute);
+        	String value = metaObject.getAttributeAsString(attribute);
         	if (value == null)
         		value = sEmpty;
         	row.append(value);
@@ -522,5 +521,5 @@ public class MetadataCompactFormatter
 	private String mSystemDate;
 	private String mSystemVersion;
 	
-	private static final String sEmpty = new String("");
+	private static final String sEmpty = "";
 }

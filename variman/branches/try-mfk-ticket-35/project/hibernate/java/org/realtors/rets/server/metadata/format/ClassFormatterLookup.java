@@ -7,31 +7,30 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.ForeignKey;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.ServerMetadata;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MEditMask;
+import org.realtors.rets.common.metadata.types.MForeignKey;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
+import org.realtors.rets.common.metadata.types.MObject;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdate;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
+import org.realtors.rets.common.metadata.types.MUpdateType;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 /**
  * An implementation of FormatterLookup that uses the Class of the first
@@ -41,67 +40,71 @@ public class ClassFormatterLookup implements FormatterLookup
 {
     public ClassFormatterLookup(int format)
     {
-        mFormatters = new HashMap();
+        // TODO: Create two pre-defined formatters Maps for each format. Then
+        // choose based on format. No reason to create new MetadataFormatter
+        // objects each time. (First, confirm that MetadataFormatters are
+        // stateless.)
+        mFormatters = new HashMap<Class, MetadataFormatter>();
         if (format == MetadataFormatter.COMPACT)
         {
             mFormatters.put(MSystem.class, new CompactSystemFormatter());
-            mFormatters.put(Resource.class, new CompactResourceFormatter());
+            mFormatters.put(MResource.class, new CompactResourceFormatter());
             mFormatters.put(MClass.class, new CompactClassFormatter());
-            mFormatters.put(Table.class, new CompactTableFormatter());
-            mFormatters.put(Update.class, new CompactUpdateFormatter());
-            mFormatters.put(UpdateType.class,
+            mFormatters.put(MTable.class, new CompactTableFormatter());
+            mFormatters.put(MUpdate.class, new CompactUpdateFormatter());
+            mFormatters.put(MUpdateType.class,
                              new CompactUpdateTypeFormatter());
             mFormatters.put(MObject.class, new CompactObjectFormatter());
-            mFormatters.put(SearchHelp.class,
+            mFormatters.put(MSearchHelp.class,
                              new CompactSearchHelpFormatter());
-            mFormatters.put(EditMask.class, new CompactEditMaskFormatter());
-            mFormatters.put(Lookup.class, new CompactLookupFormatter());
-            mFormatters.put(UpdateHelp.class,
+            mFormatters.put(MEditMask.class, new CompactEditMaskFormatter());
+            mFormatters.put(MLookup.class, new CompactLookupFormatter());
+            mFormatters.put(MUpdateHelp.class,
                              new CompactUpdateHelpFormatter());
-            mFormatters.put(LookupType.class,
+            mFormatters.put(MLookupType.class,
                              new CompactLookupTypeFormatter());
-            mFormatters.put(ValidationLookup.class,
+            mFormatters.put(MValidationLookup.class,
                              new CompactValidationLookupFormatter());
-            mFormatters.put(ValidationLookupType.class,
+            mFormatters.put(MValidationLookupType.class,
                              new CompactValidationLookupTypeFormatter());
-            mFormatters.put(ValidationExternal.class,
+            mFormatters.put(MValidationExternal.class,
                              new CompactValidationExternalFormatter());
-            mFormatters.put(ValidationExternalType.class,
+            mFormatters.put(MValidationExternalType.class,
                              new CompactValidationExternalTypeFormatter());
-            mFormatters.put(ValidationExpression.class,
+            mFormatters.put(MValidationExpression.class,
                              new CompactValidationExpressionFormatter());
-            mFormatters.put(ForeignKey.class,
+            mFormatters.put(MForeignKey.class,
                              new CompactForeignKeyFormatter());
         }
         else if (format == MetadataFormatter.STANDARD)
         {
             mFormatters.put(MSystem.class, new StandardSystemFormatter());
-            mFormatters.put(Resource.class, new StandardResourceFormatter());
+            mFormatters.put(MResource.class, new StandardResourceFormatter());
             mFormatters.put(MClass.class, new StandardClassFormatter());
-            mFormatters.put(Table.class, new StandardTableFormatter());
-            mFormatters.put(Update.class, new StandardUpdateFormatter());
-            mFormatters.put(UpdateType.class,
+            mFormatters.put(MTable.class, new StandardTableFormatter());
+            mFormatters.put(MUpdate.class, new StandardUpdateFormatter());
+            mFormatters.put(MUpdateType.class,
                              new StandardUpdateTypeFormatter());
             mFormatters.put(MObject.class, new StandardObjectFormatter());
-            mFormatters.put(SearchHelp.class,
+            mFormatters.put(MSearchHelp.class,
                              new StandardSearchHelpFormatter());
-            mFormatters.put(EditMask.class, new StandardEditMaskFormatter());
-            mFormatters.put(Lookup.class, new StandardLookupFormatter());
-            mFormatters.put(UpdateHelp.class,
+            mFormatters.put(MEditMask.class, new StandardEditMaskFormatter());
+            mFormatters.put(MLookup.class, new StandardLookupFormatter());
+            mFormatters.put(MUpdateHelp.class,
                              new StandardUpdateHelpFormatter());
-            mFormatters.put(LookupType.class,
+            mFormatters.put(MLookupType.class,
                              new StandardLookupTypeFormatter());
-            mFormatters.put(ValidationLookup.class,
+            mFormatters.put(MValidationLookup.class,
                              new StandardValidationLookupFormatter());
-            mFormatters.put(ValidationLookupType.class,
+            mFormatters.put(MValidationLookupType.class,
                              new StandardValidationLookupTypeFormatter());
-            mFormatters.put(ValidationExternal.class,
+            mFormatters.put(MValidationExternal.class,
                              new StandardValidationExternalFormatter());
-            mFormatters.put(ValidationExternalType.class,
+            mFormatters.put(MValidationExternalType.class,
                              new StandardValidationExternalTypeFormatter());
-            mFormatters.put(ValidationExpression.class,
+            mFormatters.put(MValidationExpression.class,
                              new StandardValidationExpressionFormatter());
-            mFormatters.put(ForeignKey.class,
+            mFormatters.put(MForeignKey.class,
                              new StandardForeignKeyFormatter());
         }
         else
@@ -122,12 +125,12 @@ public class ClassFormatterLookup implements FormatterLookup
         return metadataFormatter;
     }
 
-    public MetadataFormatter lookupFormatter(Collection metadataCollection)
+    public MetadataFormatter lookupFormatter(Collection<MetaObject> metadataCollection)
     {
-        Iterator i = metadataCollection.iterator();
+        Iterator<MetaObject> i = metadataCollection.iterator();
         if (i.hasNext())
         {
-            ServerMetadata metadata = (ServerMetadata)i.next();
+            MetaObject metadata = i.next();
             Class clazz = metadata.getClass();
             MetadataFormatter metadataFormatter = recursivelyLookupFormatter(clazz);
             return metadataFormatter;
@@ -148,7 +151,7 @@ public class ClassFormatterLookup implements FormatterLookup
     {
         MetadataFormatter metadataFormatter = null;
         if (clazz != null) {
-            metadataFormatter = (MetadataFormatter)mFormatters.get(clazz);
+            metadataFormatter = mFormatters.get(clazz);
             if (metadataFormatter == null) {
                 Class superClazz = clazz.getSuperclass();
                 metadataFormatter = recursivelyLookupFormatter(superClazz);
@@ -157,8 +160,7 @@ public class ClassFormatterLookup implements FormatterLookup
         return metadataFormatter;
     }
 
-    protected PrintWriter mOut;
-    private Map mFormatters;
+    private Map<Class, MetadataFormatter> mFormatters;
     private static final MetadataFormatter NULL_FORMATTER =
         new NullMetadataFormatter();
 }

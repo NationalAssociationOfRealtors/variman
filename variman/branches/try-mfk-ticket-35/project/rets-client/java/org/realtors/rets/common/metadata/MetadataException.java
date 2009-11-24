@@ -7,9 +7,9 @@
  */
 package org.realtors.rets.common.metadata;
 
-import org.apache.commons.lang.exception.NestableException;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
-public class MetadataException extends NestableException {
+public class MetadataException extends NestableRuntimeException {
 	public MetadataException() {
 		super();
 	}

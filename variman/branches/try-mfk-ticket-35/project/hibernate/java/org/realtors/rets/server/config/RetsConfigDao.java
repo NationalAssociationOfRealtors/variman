@@ -7,6 +7,8 @@
 
 package org.realtors.rets.server.config;
 
+import java.util.Date;
+
 import org.realtors.rets.server.RetsServerException;
 
 /**
@@ -30,4 +32,14 @@ public interface RetsConfigDao
      * @throws RetsServerException if unable to save the configuration data.
      */
     public void saveRetsConfig(RetsConfig retsConfig) throws RetsServerException;
+
+
+    /**
+     * Return the DateTime that the RETS config was last changed. Ideally this
+     * is done with a non-intensive check such as a timestamp or MD5 hash.
+     * 
+     * @return Date containing the date and time the RETS config was changed
+     * @throws RetsServerException if unable to load the configuration data
+     */
+    public Date getConfigChangedDate();
 }

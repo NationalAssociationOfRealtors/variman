@@ -14,13 +14,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.MClass;
 
 public class StandardClassFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection classes,
+    public void format(FormatterContext context, Collection<MetaObject> classes,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -32,7 +36,7 @@ public class StandardClassFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = classes.iterator(); i.hasNext();)
+        for (Iterator<?> i = classes.iterator(); i.hasNext();)
         {
             MClass clazz = (MClass) i.next();
             TagBuilder tag = new TagBuilder(out, "Class")
@@ -42,6 +46,9 @@ public class StandardClassFormatter extends BaseStandardFormatter
             TagBuilder.simpleTag(out, "StandardName", clazz.getStandardName());
             TagBuilder.simpleTag(out, "VisibleName", clazz.getVisibleName());
             TagBuilder.simpleTag(out, "Description", clazz.getDescription());
+            // FIXME: The actual table and update version/date pairs are available
+            // in the common MClass class. Consider using those instead of the
+            // context's version and date.
             formatVersionDateTags(context, VERSION_DATE_TAGS);
             
             if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
@@ -60,9 +67,9 @@ public class StandardClassFormatter extends BaseStandardFormatter
 
             if (context.isRecursive())
             {
-                String[] path = clazz.getPathAsArray();
-                context.format(clazz.getTables(), path);
-                context.format(clazz.getUpdates(), path);
+                String[] path = StringUtils.split(clazz.getPath(), ":");
+                context.format(clazz.getChildren(MetadataType.TABLE), path);
+                context.format(clazz.getChildren(MetadataType.UPDATE), path);
             }
 
             tag.close();

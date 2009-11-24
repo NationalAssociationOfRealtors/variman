@@ -5,11 +5,11 @@
   <bean name="beanFactory" 
         class="org.realtors.rets.server.RetsServer" />
 
-  <bean name="SearchTransaction" singleton="false"
+  <bean name="searchTransaction" singleton="false"
         class="org.realtors.rets.server.protocol.DefaultSearchTransaction">
-    <property name="searchSqlBuilder"><ref bean="SearchSqlBuilder" /></property>
+    <property name="searchSqlBuilder"><ref bean="searchSqlBuilder" /></property>
   </bean>
 
-  <bean name="SearchSqlBuilder" singleton="false"
+  <bean name="searchSqlBuilder" singleton="false"
         class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder" />
 </beans>

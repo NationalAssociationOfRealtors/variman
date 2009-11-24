@@ -3,37 +3,40 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.realtors.rets.server.metadata.ValidationExternalType;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
 
 public class ValidationExternalTypeFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MValidationExternalType> getData()
     {
-        List validationExternalTypes = new ArrayList();
-        ValidationExternalType validationExternalType =
-            new ValidationExternalType();
+        List<MValidationExternalType> validationExternalTypes = new ArrayList<MValidationExternalType>();
+        MValidationExternalType validationExternalType =
+            new MValidationExternalType();
         
         validationExternalType.setMetadataEntryID("AgentValidation");
 
-        Set searchFields = new HashSet();
-        searchFields.add("AgentID");
+        Set<String> searchFields = new LinkedHashSet<String>();
         searchFields.add("AgentCode");
-        validationExternalType.setSearchField(searchFields);
+        searchFields.add("AgentID");
+        String searchField = MValidationExternalType.toSearchField(searchFields);
+        validationExternalType.setSearchField(searchField);
 
-        Set displayFields = new HashSet();
+        Set<String> displayFields = new LinkedHashSet<String>();
         displayFields.add("AgentName");
         displayFields.add("OfficeName");
-        validationExternalType.setDisplayField(displayFields);
+        String displayField = MValidationExternalType.toDisplayField(displayFields);
+        validationExternalType.setDisplayField(displayField);
 
-        Map resultFields = new HashMap();
-        resultFields.put("SaleAgentID", "AgentID");
-        resultFields.put("SaleAgentName", "AgentName");
+        Map<String, String> resultFieldsMap = new LinkedHashMap<String, String>();
+        resultFieldsMap.put("SaleAgentID", "AgentID");
+        resultFieldsMap.put("SaleAgentName", "AgentName");
+        String resultFields = MValidationExternalType.toResultFields(resultFieldsMap);
         validationExternalType.setResultFields(resultFields);
 
         validationExternalTypes.add(validationExternalType);

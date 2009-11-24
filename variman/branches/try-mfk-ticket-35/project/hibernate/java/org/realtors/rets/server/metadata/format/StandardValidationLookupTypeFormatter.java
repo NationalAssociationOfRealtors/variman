@@ -15,13 +15,14 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationLookupType;
 
 public class StandardValidationLookupTypeFormatter extends BaseStandardFormatter
 {
     public void format(FormatterContext context,
-                       Collection validationLookupTypes, String[] levels)
+                       Collection<MetaObject> validationLookupTypes, String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
         PrintWriter out = context.getWriter();
@@ -35,10 +36,10 @@ public class StandardValidationLookupTypeFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = validationLookupTypes.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationLookupTypes.iterator(); i.hasNext();)
         {
-            ValidationLookupType validationLookupType =
-                (ValidationLookupType) i.next();
+            MValidationLookupType validationLookupType =
+                (MValidationLookupType) i.next();
             TagBuilder tag = new TagBuilder(out, "ValidationLookup")
                 .beginContentOnNewLine();
 
@@ -46,7 +47,7 @@ public class StandardValidationLookupTypeFormatter extends BaseStandardFormatter
             {
                 // Added 1.7 DTD
                 TagBuilder.simpleTag(out, "MetadataEntryID", 
-            					validationLookupType.getMetadataEntryID());
+                                validationLookupType.getMetadataEntryID());
             }
             TagBuilder.simpleTag(out, "ValidText",
                                  validationLookupType.getValidText());

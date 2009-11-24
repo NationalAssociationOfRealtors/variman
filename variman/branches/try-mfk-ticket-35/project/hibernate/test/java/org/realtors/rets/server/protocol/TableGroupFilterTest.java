@@ -5,12 +5,14 @@ import java.util.HashSet;
 import java.util.Collections;
 
 import junit.framework.TestCase;
+
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.config.GroupRules;
-import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.ObjectMother;
-import org.realtors.rets.server.metadata.Table;
 
 public class TableGroupFilterTest extends TestCase
 {
@@ -18,15 +20,20 @@ public class TableGroupFilterTest extends TestCase
     {
         mGroupFilter = new TableGroupFilter();
         MClass aClass = ObjectMother.createClass();
-        mListingNumber = new Table("ListingNumber");
-        mListingPrice = new Table("ListingPrice");
-        mAssociationFee = new Table("AssociationFee");
-        mListingDate = new Table("ListingDate");
-        aClass.addTable(mListingNumber);
-        aClass.addTable(mListingPrice);
-        aClass.addTable(mAssociationFee);
-        aClass.addTable(mListingDate);
-        mGroupFilter.setTables("Property", "RES", aClass.getTables());
+        mListingNumber = new MTable();
+        mListingNumber.setSystemName("ListingNumber");
+        mListingPrice = new MTable();
+        mListingPrice.setSystemName("ListingPrice");
+        mAssociationFee = new MTable();
+        mAssociationFee.setSystemName("AssociationFee");
+        mListingDate = new MTable();
+        mListingDate.setSystemName("ListingDate");
+        aClass.addChild(MetadataType.TABLE, mListingNumber);
+        aClass.addChild(MetadataType.TABLE, mListingPrice);
+        aClass.addChild(MetadataType.TABLE, mAssociationFee);
+        aClass.addChild(MetadataType.TABLE, mListingDate);
+        Set<MTable> tables = (Set<MTable>)aClass.getChildrenSet(MetadataType.TABLE);
+        mGroupFilter.setTables("Property", "RES", tables);
 
         mNewspaper = new Group("mNewspaper");
         mAgent = new Group("mAgent");
@@ -149,10 +156,10 @@ public class TableGroupFilterTest extends TestCase
     }
 
     private TableGroupFilter mGroupFilter;
-    private Table mListingNumber;
-    private Table mListingPrice;
-    private Table mAssociationFee;
-    private Table mListingDate;
+    private MTable mListingNumber;
+    private MTable mListingPrice;
+    private MTable mAssociationFee;
+    private MTable mListingDate;
     private Group mNewspaper;
     private Group mAgent;
     private Group mBroker;

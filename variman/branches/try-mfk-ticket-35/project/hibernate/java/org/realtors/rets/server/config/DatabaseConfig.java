@@ -9,10 +9,6 @@
 package org.realtors.rets.server.config;
 
 import java.io.Serializable;
-import java.util.Properties;
-
-import org.hibernate.cfg.Environment;
-
 import org.realtors.rets.server.Util;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -170,38 +166,6 @@ public class DatabaseConfig implements Serializable
             .append("max ps idle", mMaxPsIdle)
             .append("show sql", mShowSql)
             .toString();
-    }
-
-    /**
-     * Returns a set of Hibernate properties, suitable for configuring
-     * Hibernate.
-     *
-     * @return Hibernate configuration properties.
-     * @see org.hibernate.cfg.Configuration#setProperties
-     */
-    public Properties createHibernateProperties()
-    {
-        Properties properties = new Properties();
-        properties.setProperty(Environment.DRIVER,
-                               mDatabaseType.getDriverClass());
-        properties.setProperty(Environment.URL,
-                               mDatabaseType.getUrl(mHostName, mDatabaseName));
-        properties.setProperty(Environment.USER, mUsername);
-        properties.setProperty(Environment.PASS, mPassword);
-        properties.setProperty(Environment.DIALECT,
-                               mDatabaseType.getDialectClass());
-        properties.setProperty(Environment.SHOW_SQL,
-                               Util.toString(mShowSql));
-
-        properties.setProperty(Environment.C3P0_ACQUIRE_INCREMENT, "0");
-        properties.setProperty(Environment.C3P0_MAX_SIZE,
-                               Integer.toString(mMaxActive));
-        properties.setProperty(Environment.C3P0_TIMEOUT,
-                               Integer.toString(mMaxWait));
-
-        properties.setProperty(Environment.C3P0_MAX_STATEMENTS,
-                               Integer.toString(mMaxPsActive));
-        return properties;
     }
 
     private DatabaseType mDatabaseType;

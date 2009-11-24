@@ -15,13 +15,13 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MObject;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.ObjectTypeEnum;
 
 public class StandardObjectFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection objects,
+    public void format(FormatterContext context, Collection<MetaObject> objects,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -33,7 +33,7 @@ public class StandardObjectFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = objects.iterator(); i.hasNext();)
+        for (Iterator<?> i = objects.iterator(); i.hasNext();)
         {
             MObject object = (MObject) i.next();
             TagBuilder tag = new TagBuilder(out, "Object")
@@ -44,14 +44,14 @@ public class StandardObjectFormatter extends BaseStandardFormatter
                 // Added 1.7 DTD
                 TagBuilder.simpleTag(out, "MetadataEntryID", object.getMetadataEntryID());
             }
-            TagBuilder.simpleTag(out, "ObjectType", ObjectTypeEnum.toString(object.getObjectType()));
+            TagBuilder.simpleTag(out, "ObjectType", object.getObjectType());
             // Deleted in 1.7.2 DTD
             if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
                     retsVersion.equals(RetsVersion.RETS_1_7))
             {
                 TagBuilder.simpleTag(out, "StandardName", (Object) null);
             }
-            TagBuilder.simpleTag(out, "MimeType", object.getMimeType());
+            TagBuilder.simpleTag(out, "MimeType", object.getMIMEType());
             if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5) &&
                     !retsVersion.equals(RetsVersion.RETS_1_7))
             {

@@ -12,7 +12,7 @@ package org.realtors.rets.server.dmql;
 
 import java.util.List;
 
-import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.common.metadata.types.MTable;
 
 /**
  * The DMQL parser's interface to the RETS metadata.
@@ -56,7 +56,7 @@ public interface DmqlParserMetadata
 
     public String columnToField(String columnName);
 
-    public List getAllColumns();
+    public List<String> getAllColumns();
 
-    public Table getTable(String fieldName);
+    public MTable getTable(String fieldName);
 }

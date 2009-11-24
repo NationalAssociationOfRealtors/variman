@@ -221,7 +221,7 @@ public class Main
         AdminUtils.initDatabase();
 
         int numProperties = NumberUtils.toInt(args[0]);
-        new CreatePropertiesCommand(Admin.getRetsConfig(), numProperties).execute();
+        new CreatePropertiesCommand(numProperties).execute();
         System.out.println("Created " + numProperties + " properties");
     }
 

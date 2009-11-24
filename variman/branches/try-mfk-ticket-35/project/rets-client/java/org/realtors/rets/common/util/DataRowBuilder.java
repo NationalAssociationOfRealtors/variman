@@ -105,6 +105,27 @@ public class DataRowBuilder
         mWriter.print(mDelimiter);
     }
 
+    /**
+     * Appends a "1" if <code>true</code> and "0" if false.
+     *
+     * @param b boolean value
+     */
+    public void append(Boolean b)
+    {
+        if (b == null) {
+            mWriter.print("");
+        }
+        if (b.booleanValue())
+        {
+            mWriter.print("1");
+        }
+        else
+        {
+            mWriter.print("0");
+        }
+        mWriter.print(mDelimiter);
+    }
+
     public void append(Collection<?> collection)
     {
         if (collection != null)

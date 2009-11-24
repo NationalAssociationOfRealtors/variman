@@ -14,7 +14,7 @@ class TestMetaObject extends MetaObject {
 
 	@Override
 	public MetadataType[] getChildTypes() {
-		return sNoChildren;
+		return sNO_CHILDREN;
 	}
 
 	@Override

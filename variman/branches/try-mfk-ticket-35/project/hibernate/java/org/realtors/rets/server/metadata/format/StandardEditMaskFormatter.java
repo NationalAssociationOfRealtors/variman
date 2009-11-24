@@ -15,12 +15,13 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MEditMask;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.EditMask;
 
 public class StandardEditMaskFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection editMasks,
+    public void format(FormatterContext context, Collection<MetaObject> editMasks,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -32,9 +33,9 @@ public class StandardEditMaskFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = editMasks.iterator(); i.hasNext();)
+        for (Iterator<?> i = editMasks.iterator(); i.hasNext();)
         {
-            EditMask editMask = (EditMask) i.next();
+            MEditMask editMask = (MEditMask) i.next();
             TagBuilder tag = new TagBuilder(out, "EditMask")
                 .beginContentOnNewLine();
 

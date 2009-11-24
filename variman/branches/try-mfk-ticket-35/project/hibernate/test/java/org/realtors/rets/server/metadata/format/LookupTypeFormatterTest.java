@@ -5,14 +5,14 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.LookupType;
+import org.realtors.rets.common.metadata.types.MLookupType;
 
 public class LookupTypeFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MLookupType> getData()
     {
-        List lookupTypes = new ArrayList();
-        LookupType lookupType = new LookupType();
+        List<MLookupType> lookupTypes = new ArrayList<MLookupType>();
+        MLookupType lookupType = new MLookupType();
         lookupType.setMetadataEntryID("Aurora386");
         lookupType.setLongValue("Aurora 306");
         lookupType.setShortValue("306");

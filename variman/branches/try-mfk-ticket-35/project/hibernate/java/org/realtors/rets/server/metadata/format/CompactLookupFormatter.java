@@ -13,14 +13,18 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MLookup;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.Lookup;
 
 public class CompactLookupFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection lookups,
+    public void format(FormatterContext context, Collection<MetaObject> lookups,
                        String[] levels)
     {
         if (lookups.size() == 0)
@@ -46,25 +50,25 @@ public class CompactLookupFormatter extends MetadataFormatter
             tag.appendColumns(COLUMNS_1_7_2);
         }
         
-        for (Iterator iterator = lookups.iterator(); iterator.hasNext();)
+        for (Iterator<?> iterator = lookups.iterator(); iterator.hasNext();)
         {
-            Lookup lookup = (Lookup) iterator.next();
+            MLookup lookup = (MLookup) iterator.next();
             appendDataRow(context, lookup);
         }
         tag.close();
 
         if (context.isRecursive())
         {
-            for (Iterator iterator = lookups.iterator(); iterator.hasNext();)
+            for (Iterator<?> iterator = lookups.iterator(); iterator.hasNext();)
             {
-                Lookup lookup = (Lookup) iterator.next();
-                context.format(lookup.getLookupTypes(),
-                               lookup.getPathAsArray());
+                MLookup lookup = (MLookup) iterator.next();
+                String[] path = StringUtils.split(lookup.getPath(), ":");
+                context.format(lookup.getChildren(MetadataType.LOOKUP_TYPE), path);
             }
         }
     }
 
-    private void appendDataRow(FormatterContext context, Lookup lookup)
+    private void appendDataRow(FormatterContext context, MLookup lookup)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -76,6 +80,8 @@ public class CompactLookupFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
         "MetadataEntryID", "LookupName", "VisibleName", "Version", "Date",
     };

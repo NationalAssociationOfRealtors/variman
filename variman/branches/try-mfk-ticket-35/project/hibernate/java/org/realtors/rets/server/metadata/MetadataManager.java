@@ -6,148 +6,160 @@
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
-/*
- */
 package org.realtors.rets.server.metadata;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.server.Util;
 
 public class MetadataManager
 {
     public MetadataManager()
     {
-        mTablesByLevel = new ListOrderedMap();
-        mTablesByPath = new ListOrderedMap();
+        mMetadataByLevel = new LinkedHashMap<String, Map<String,List<MetaObject>>>();
+        mMetadataByPath = new LinkedHashMap<String, Map<String,MetaObject>>();
     }
 
     public void clear()
     {
-        mTablesByLevel.clear();
-        mTablesByPath.clear();
+        mMetadataByLevel.clear();
+        mMetadataByPath.clear();
     }
 
-    public void add(ServerMetadata metadata)
+    public void add(MetaObject metadata)
     {
         addByLevel(metadata);
         addByPath(metadata);
     }
 
-    private static Map getMap(Map map, String key)
+    private void addByLevel(MetaObject metadata)
     {
-        Map subMap = (Map) map.get(key);
-        if (subMap == null)
-        {
-            subMap = new ListOrderedMap();
-            map.put(key, subMap);
+        String metadataTypeName = metadata.getMetadataType().name();
+        Map<String, List<MetaObject>> table = mMetadataByLevel.get(metadataTypeName);
+        if (table == null) {
+            table = new LinkedHashMap<String, List<MetaObject>>();
+            mMetadataByLevel.put(metadataTypeName, table);
         }
-        return subMap;
-    }
-
-    private static List getList(Map map, String key)
-    {
-        List subList = (List) map.get(key);
-        if (subList == null)
-        {
-            subList = new ArrayList();
-            map.put(key, subList);
+        String level = metadata.getLevel();
+        List<MetaObject> metadataList = table.get(level);
+        if (metadataList == null) {
+            metadataList = new ArrayList<MetaObject>();
+            table.put(level, metadataList);
         }
-        return subList;
+        metadataList.add(metadata);
     }
 
-    private void addByLevel(ServerMetadata metadata)
-    {
-        Map table = getMap(mTablesByLevel, metadata.getTableName());
-        List data = getList(table, metadata.getLevel());
-        data.add(metadata);
-    }
-
-    private void addByPath(ServerMetadata metadata)
+    private void addByPath(MetaObject metadata)
     {
         String path = metadata.getPath();
-        if (path.equals(""))
+        if (path == null || path.equals(""))
         {
             return;
         }
-        Map table = getMap(mTablesByPath, metadata.getTableName());
+        String metadataTypeName = metadata.getMetadataType().name();
+        Map<String, MetaObject> table = mMetadataByPath.get(metadataTypeName);
+        if (table == null)
+        {
+            table = new LinkedHashMap<String, MetaObject>();
+            mMetadataByPath.put(metadataTypeName, table);
+        }
         table.put(path, metadata);
     }
 
-    public List find(String tableName, String level)
+    /*
+     * TODO: Determine whether visibility should be set to private. This is
+     * currently being used by unit tests and other methods in this class.
+     */
+    List<MetaObject> findByLevel(String metadataTypeName, String level)
     {
-        List found = Collections.EMPTY_LIST;
-        Map table = (Map) mTablesByLevel.get(tableName);
+        List<MetaObject> found = Collections.emptyList();
+        Map<String, List<MetaObject>> table = mMetadataByLevel.get(metadataTypeName);
         if (table != null)
         {
-            List data = (List) table.get(level);
-            if (data != null)
+            List<MetaObject> metadataList = table.get(level);
+            if (metadataList != null)
             {
-                found = data;
+                found = metadataList;
             }
         }
 
         return found;
     }
 
-    public ServerMetadata findUnique(String tableName, String level)
+    /*
+     * Currently being used by InitServlet.initGroupFilter.
+     */
+    public MetaObject findUniqueByLevel(String metadataTypeName, String level)
     {
-        return (ServerMetadata) find(tableName, level).get(0);
+        MetaObject metadata = null;
+        List<MetaObject> metadataList = findByLevel(metadataTypeName, level);
+        if (metadataList != null && metadataList.size() > 0) {
+            metadata = metadataList.get(0);
+        }
+        return metadata;
     }
 
-    public void addRecursive(ServerMetadata metadata)
+    public void addRecursive(MetaObject metadata)
     {
         add(metadata);
-        List children = metadata.getChildren();
-        for (int i = 0; i < children.size(); i++)
-        {
-            ServerMetadata[] child = (ServerMetadata[]) children.get(i);
-            for (int j = 0; j < child.length; j++)
+        MetadataType[] childMetadataTypes = metadata.getChildTypes();
+        for (MetadataType childMetadataType : childMetadataTypes) {
+            Collection<? extends MetaObject> children = metadata.getChildren(childMetadataType);
+            for (MetaObject childMetadata : children)
             {
-                ServerMetadata childMetadata = child[j];
                 addRecursive(childMetadata);
             }
         }
     }
 
-    public ServerMetadata findByPath(String tableName, String path)
+    public MetaObject findByPath(String metadataTypeName, String path)
     {
-        ServerMetadata metadata = null;
-        Map table = (Map) mTablesByPath.get(tableName);
+        MetaObject metadata = null;
+        Map<String, MetaObject> table = mMetadataByPath.get(metadataTypeName);
         if (table != null)
         {
-            metadata = (ServerMetadata) table.get(path);
+            metadata = table.get(path);
         }
 
         return metadata;
     }
 
-    public Map findByPattern(String tableName, String pattern)
+    /*
+     * TODO: Determine whether this should be removed. This is currently being
+     * used only by unit tests.
+     */
+    Map<String, List<MetaObject>> findByPattern(String metadataTypeName, String pattern)
     {
-        String[] patternElements = StringUtils.split(pattern, ":");
-        return findByPattern(tableName, patternElements);
+        String[] patterns = StringUtils.split(pattern, ":");
+        Map<String, List<MetaObject>> table = findByPattern(metadataTypeName, patterns);
+        return table;
     }
 
-    public Map findByPattern(String tableName, String[] patternElements)
+    private Map<String, List<MetaObject>> findByPattern(String metadataTypeName, String[] patterns)
     {
-        Map found = new ListOrderedMap();
+        Map<String, List<MetaObject>> found = new LinkedHashMap<String, List<MetaObject>>();
 
-        Map table = (Map) mTablesByLevel.get(tableName);
+        Map<String, List<MetaObject>> table = mMetadataByLevel.get(metadataTypeName);
         if (table != null)
         {
-            Set levels = table.keySet();
-            for (Iterator i = levels.iterator(); i.hasNext();)
+            Set<String> levels = table.keySet();
+            for (String level : levels)
             {
-                String level = (String) i.next();
-                if (levelsMatch(level, patternElements))
+                if (levelsMatch(level, patterns))
                 {
-                    found.put(level, table.get(level));
+                    List<MetaObject> metadataList = table.get(level);
+                    found.put(level, metadataList);
                 }
             }
         }
@@ -161,29 +173,31 @@ public class MetadataManager
      * @param pattern pattern to match against
      * @return true if level matches the pattern
      */
-    public static boolean levelsMatch(String level, String pattern)
+    /*
+     * Only used by unit tests.
+     */
+    static boolean levelsMatch(String level, String pattern)
     {
-        String[] patternElements = StringUtils.split(pattern, ":");
-        return levelsMatch(level, patternElements);
+        String[] patterns = StringUtils.split(pattern, ":");
+        return levelsMatch(level, patterns);
     }
 
-    private static boolean levelsMatch(String level, String[] patternElements)
+    private static boolean levelsMatch(String level, String[] patterns)
     {
-        String[] levelElements = StringUtils.split(level, ":");
-        int levelLength = levelElements.length;
-        if (levelLength < patternElements.length)
+        String[] levels = StringUtils.split(level, ":");
+        int levelLength = levels.length;
+        int patternLength = patterns.length;
+        if (levelLength < patternLength)
         {
             return false;
         }
 
         boolean match = true;
-        for (int i = 0; i < levelLength && i < patternElements.length;
-             i++)
+        for (int i = 0; i < levelLength && i < patternLength; i++)
         {
-            String levelElement = levelElements[i];
-            String patternElement = patternElements[i];
-            if (!patternElement.equals("*") &&
-                !patternElement.equals(levelElement))
+            String lvl = levels[i];
+            String pattern = patterns[i];
+            if (!pattern.equals("*") && !pattern.equals(lvl))
             {
                 match = false;
                 break;
@@ -193,16 +207,69 @@ public class MetadataManager
         return match;
     }
 
+    public List<MetadataSegment> fetchMetadata(String type, String[] patterns)
+    {
+        MSystem system = findSystem(this);
+        int version = system.getVersion();
+        String systemVersion = Util.getVersionString(version);
+        Date systemDate = system.getDate();
+
+        List<MetadataSegment> metadataSegments = new ArrayList<MetadataSegment>();
+        Map<String, List<MetaObject>> table = findByPattern(type, patterns);
+        Set<String> levels = table.keySet();
+        for (String level : levels)
+        {
+            List<MetaObject> metadataList = table.get(level);
+            String[] levelArray = StringUtils.split(level, ":");
+            MetadataSegment metadataSegment = new MetadataSegment(metadataList, levelArray, systemVersion, systemDate);
+            metadataSegments.add(metadataSegment);
+        }
+        return metadataSegments;
+    }
+
+    public String getSystemVersion()
+    {
+        MSystem system = findSystem(this);
+        int version = system.getVersion();
+        String systemVersion = Util.getVersionString(version);
+        return systemVersion;
+    }
+
+    public Date getSystemDate()
+    {
+        MSystem system = findSystem(this);
+        Date systemDate = system.getDate();
+        return systemDate;
+    }
+
+    private MSystem findSystem(MetadataManager manager)
+    {
+        List<?> systems = manager.findByLevel(MetadataType.SYSTEM.name(), "");
+        MSystem system = (MSystem)systems.get(0);
+        return system;
+    }
+
     /**
-     * A map of maps to lists:
+     * A map of maps to lists of MetaObject:
      *
-     * +------------+
-     * | Table name | -> +-------+
-     * +------------+    | Level | -> Data, data, ...
-     * |    ...     |    +-------+
-     * +------------+    |  ...  |
-     *                   +-------+
+     * +--------------------+
+     * | Metadata Type Name | -> +-------+
+     * +--------------------+    | Level | -> MetaObject, MetaObject, ...
+     * |    ...             |    +-------+
+     * +--------------------+    |  ...  |
+     *                           +-------+
      */
-    private Map mTablesByLevel;
-    private Map mTablesByPath;
+    private Map<String, Map<String, List<MetaObject>>> mMetadataByLevel;
+    
+    /**
+     * A map of maps to MetaObject:
+     *
+     * +--------------------+
+     * | Metadata Type Name | -> +-------+
+     * +--------------------+    | path  | -> MetaObject
+     * |    ...             |    +-------+
+     * +--------------------+    |  ...  |
+     *                           +-------+
+     */
+    private Map<String, Map<String, MetaObject>> mMetadataByPath;
 }

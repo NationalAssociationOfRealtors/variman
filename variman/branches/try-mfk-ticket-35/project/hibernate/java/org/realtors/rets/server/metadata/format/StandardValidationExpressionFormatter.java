@@ -15,13 +15,14 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationExpression;
 
 public class StandardValidationExpressionFormatter extends BaseStandardFormatter
 {
     public void format(FormatterContext context,
-                       Collection validationExpressions, String[] levels)
+                       Collection<MetaObject> validationExpressions, String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
         PrintWriter out = context.getWriter();
@@ -32,10 +33,10 @@ public class StandardValidationExpressionFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = validationExpressions.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationExpressions.iterator(); i.hasNext();)
         {
-            ValidationExpression validationExpression =
-                (ValidationExpression) i.next();
+            MValidationExpression validationExpression =
+                (MValidationExpression) i.next();
             TagBuilder tag = new TagBuilder(out, "ValidationExpression")
                 .beginContentOnNewLine();
 
@@ -43,7 +44,7 @@ public class StandardValidationExpressionFormatter extends BaseStandardFormatter
             {
                 // Added 1.7 DTD
                 TagBuilder.simpleTag(out, "MetadataEntryID", 
-            				validationExpression.getMetadataEntryID());
+                            validationExpression.getMetadataEntryID());
             }
             TagBuilder.simpleTag(
                 out, "ValidationExpressionID",

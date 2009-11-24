@@ -5,18 +5,18 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.MObject;
+import org.realtors.rets.common.metadata.types.MObject;
 import org.realtors.rets.server.metadata.ObjectTypeEnum;
 
 public class ObjectFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MObject> getData()
     {
-        List objects = new ArrayList();
+        List<MObject> objects = new ArrayList<MObject>();
         MObject object = new MObject();
         object.setMetadataEntryID("Thumbnail");
-        object.setObjectType(ObjectTypeEnum.THUMBNAIL);
-        object.setMimeType("image/jpeg");
+        object.setObjectType(ObjectTypeEnum.THUMBNAIL.toString());
+        object.setMIMEType("image/jpeg");
         object.setVisibleName("Small Photos");
         object.setDescription("A lower-resolution image");
         object.setObjectTimeStamp("ThumbTimeStamp");

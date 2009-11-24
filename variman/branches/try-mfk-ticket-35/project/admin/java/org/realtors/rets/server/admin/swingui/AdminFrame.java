@@ -41,7 +41,7 @@ import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.admin.swingui.metadata.MetadataModel;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.RetsConfigDao;
-import org.realtors.rets.server.config.XmlRetsConfigDao;
+import org.realtors.rets.server.metadata.MetadataDao;
 
 public class AdminFrame extends JFrame
 {
@@ -195,12 +195,10 @@ public class AdminFrame extends JFrame
             retsConfig.setObjectSetPattern(
                 mConfigurationPanel.getObjectSetPattern());
 
-            RetsConfigDao configDao = new XmlRetsConfigDao(Admin.getConfigFile());
+            RetsConfigDao configDao = Admin.getRetsConfigDao();
             configDao.saveRetsConfig(retsConfig);
-            if (retsConfig.saveMetadata() == false)
-            {
-                LOG.error("Unable to save metadata!");
-            }
+            MetadataDao metadataDao = Admin.getMetadataDao();
+            metadataDao.saveMetadata(null);
             Admin.setRetsConfigChanged(false);
         }
         catch (RetsServerException e)

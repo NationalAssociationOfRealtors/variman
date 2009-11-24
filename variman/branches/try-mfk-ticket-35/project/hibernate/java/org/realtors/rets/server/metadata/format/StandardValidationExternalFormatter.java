@@ -14,13 +14,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.apache.commons.lang.StringUtils;
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationExternal;
 
 public class StandardValidationExternalFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection validationExternals,
+    public void format(FormatterContext context, Collection<MetaObject> validationExternals,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -32,10 +35,10 @@ public class StandardValidationExternalFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = validationExternals.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationExternals.iterator(); i.hasNext();)
         {
-            ValidationExternal validationExternal =
-                (ValidationExternal) i.next();
+            MValidationExternal validationExternal =
+                (MValidationExternal) i.next();
             TagBuilder tag = new TagBuilder(out, "ValidationExternalType")
                 .beginContentOnNewLine();
 
@@ -52,12 +55,14 @@ public class StandardValidationExternalFormatter extends BaseStandardFormatter
                                  validationExternal.getSearchResource());
             TagBuilder.simpleTag(out, "SearchClass",
                                  validationExternal.getSearchClass());
+            // TODO: Check if these are suppose to be Version and Date or
+            // ValidationExternalTypeVersion and ValidationExternalTypeDate.
             formatVersionDateTags(context, VERSION_DATE_TAGS);
 
             if (context.isRecursive())
             {
-                context.format(validationExternal.getValidationExternalTypes(),
-                               validationExternal.getPathAsArray());
+                String[] path = StringUtils.split(validationExternal.getPath(), ":");
+                context.format(validationExternal.getChildren(MetadataType.VALIDATION_EXTERNAL_TYPE), path);
             }
 
             tag.close();

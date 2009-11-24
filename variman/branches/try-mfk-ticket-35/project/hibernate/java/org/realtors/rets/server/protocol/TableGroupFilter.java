@@ -1,53 +1,53 @@
 package org.realtors.rets.server.protocol;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.Iterator;
-import java.util.HashSet;
-
 import org.apache.log4j.Logger;
 
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.FilterRule;
 import org.realtors.rets.server.Group;
-import org.realtors.rets.server.metadata.Table;
 
 public class TableGroupFilter
 {
     public TableGroupFilter()
     {
-        mAllTables = new HashMap();
-        mRules = new HashMap();
+        mAllTables = new LinkedHashMap<String, Set<MTable>>();
+        mRules = new LinkedHashMap<String, Set<MTable>>();
     }
 
-    public Set /* Table */ findTables(Group group, String resource,
+    public Set<MTable> findTables(Group group, String resource,
                                       String retsClass)
     {
         String tableKey = resource + ":" + retsClass;
         String ruleKey = group.getName() + ":" + tableKey;
-        Set filteredTables = (Set) mRules.get(ruleKey);
+        Set<MTable> filteredTables = mRules.get(ruleKey);
         if (filteredTables != null)
         {
             return filteredTables;
         }
-        return (Set) mAllTables.get(tableKey);
+        return mAllTables.get(tableKey);
     }
 
-    public Set /* Table */ findTables(Set /* Group */ groups, String resource,
+    public Set<MTable> findTables(Set<Group> groups, String resource,
                                       String retsClass)
     {
         if (groups.isEmpty())
         {
-            return (Set) mAllTables.get(resource + ":" + retsClass);
+            return mAllTables.get(resource + ":" + retsClass);
         }
 
-        Set unionOfTables = new HashSet();
-        for (Iterator iterator = groups.iterator(); iterator.hasNext();)
+        Set<MTable> unionOfTables = new LinkedHashSet<MTable>();
+        for (Iterator<Group> iterator = groups.iterator(); iterator.hasNext();)
         {
-            Group group =  (Group) iterator.next();
-            unionOfTables.addAll(findTables(group, resource, retsClass));
+            Group group =  iterator.next();
+            Set<MTable> tables = findTables(group, resource, retsClass);
+            unionOfTables.addAll(tables);
         }
         return unionOfTables;
     }
@@ -62,17 +62,17 @@ public class TableGroupFilter
             String tableKey = filterRule.getResource() + ":" +
                               filterRule.getRetsClass();
             String rulesKey = groupName + ":" + tableKey;
-            Set tables = (Set) mAllTables.get(tableKey);
+            Set<MTable> tables = mAllTables.get(tableKey);
             if (tables == null)
             {
                 LOG.warn("No tables found for " + tableKey +
                          ".  Skipping rule " + filterRule);
                 continue;
             }
-            Set filteredTables = new HashSet();
-            for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+            Set<MTable> filteredTables = new LinkedHashSet<MTable>();
+            for (Iterator<MTable> iterator = tables.iterator(); iterator.hasNext();)
             {
-                Table table = (Table) iterator.next();
+                MTable table = iterator.next();
                 if (filterRule.includeSystemName(table.getSystemName()))
                 {
                     filteredTables.add(table);
@@ -83,7 +83,7 @@ public class TableGroupFilter
     }
 
     public void setTables(String resource, String retsClass,
-                          Set /* Table */ tables)
+                          Set<MTable> tables)
     {
         String key = resource + ":" + retsClass;
         mAllTables.put(key, tables);
@@ -93,11 +93,11 @@ public class TableGroupFilter
         Logger.getLogger(TableGroupFilter.class);
 
     /** Contains all tables for a given resource and class. */
-    private Map /* String, Set <Table> */ mAllTables;
+    private Map<String, Set<MTable>> mAllTables;
 
     /**
      * Contains a filterd list of tables for a given resource, class, and
      * group.
      */
-    private Map /* String, Set <Table> */ mRules;
+    private Map<String, Set<MTable>> mRules;
 }

@@ -15,12 +15,13 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.UpdateHelp;
 
 public class StandardUpdateHelpFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection updateHelps,
+    public void format(FormatterContext context, Collection<MetaObject> updateHelps,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -31,9 +32,9 @@ public class StandardUpdateHelpFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = updateHelps.iterator(); i.hasNext();)
+        for (Iterator<?> i = updateHelps.iterator(); i.hasNext();)
         {
-            UpdateHelp updateHelp = (UpdateHelp) i.next();
+            MUpdateHelp updateHelp = (MUpdateHelp) i.next();
             TagBuilder tag = new TagBuilder(out, "UpdateHelp")
                 .beginContentOnNewLine();
 

@@ -12,9 +12,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -25,22 +25,24 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.Dialect;
+import org.realtors.rets.common.metadata.Metadata;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.metadata.InterpretationEnum;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataLoader;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.MetadataDao;
+import org.realtors.rets.server.metadata.MetadataUtils;
 
 public class CreateDataSchemaCommand
 {
     public CreateDataSchemaCommand(RetsConfig config)
     {
-        mClasses = new HashMap();
-        mTables = new HashMap();
+        mClasses = new LinkedHashMap<String, MClass>();
+        mTables = new LinkedHashMap<String, MTable>();
         mLs = System.getProperty("line.separator");
         mSessions = RetsServer.getSessions();
         mRetsConfig = config;
@@ -63,22 +65,17 @@ public class CreateDataSchemaCommand
     private void loadMetadata()
         throws RetsServerException
     {
-        MetadataLoader loader = new MetadataLoader(mRetsConfig);
-        MSystem system = loader.parseMetadataDirectory();
+        MetadataDao metadataDao = Admin.getMetadataDao();
+        Metadata metadata = metadataDao.getMetadata();
+        MSystem system = metadata.getSystem();
         System.out.println("Got system" + system.getId());
-        Iterator j = system.getResources().iterator();
-        while (j.hasNext())
-        {
-            Resource res = (Resource) j.next();
-            Iterator k = res.getClasses().iterator();
-            while (k.hasNext())
-            {
-                MClass clazz = (MClass) k.next();
+        MResource[] resources = system.getMResources();
+        for (MResource resource : resources) {
+            MClass[] classes = resource.getMClasses();
+            for (MClass clazz : classes) {
                 mClasses.put(clazz.getPath(), clazz);
-                Iterator l = clazz.getTables().iterator();
-                while (l.hasNext())
-                {
-                    Table table = (Table) l.next();
+                MTable[] tables = clazz.getMTables();
+                for (MTable table : tables) {
                     mTables.put(table.getPath(), table);
                 }
             }
@@ -91,13 +88,13 @@ public class CreateDataSchemaCommand
         Properties properties =
             Admin.getHibernateConfiguration().getProperties();
         Dialect dialect = Dialect.getDialect(properties);
-        Iterator i = mClasses.values().iterator();
+        Iterator<MClass> i = mClasses.values().iterator();
         StringBuffer sb = new StringBuffer();
         while (i.hasNext())
         {
-            MClass clazz = (MClass) i.next();
+            MClass clazz = i.next();
 
-            String sqlTableName = clazz.getDbTable();
+            String sqlTableName = clazz.getXDBName();
 
             sb.append("CREATE TABLE ").append(sqlTableName);
             sb.append(" (").append(mLs);
@@ -105,18 +102,16 @@ public class CreateDataSchemaCommand
             sb.append("\tid ").append(dialect.getTypeName(Types.BIGINT));
             sb.append(" NOT NULL,").append(mLs);
 
-            boolean needsLookupMultiTable = false;
             boolean firstDone = false;
+            int needsLookupMultiTableCount = 0;
 
-            Set needsIndex = new HashSet();
-            Iterator j = clazz.getTables().iterator();
-            while (j.hasNext())
-            {
-                Table table = (Table) j.next();
-                if (table.getInterpretation() ==
+            Set<MTable> needsIndex = new HashSet<MTable>();
+            MTable[] tables = clazz.getMTables();
+            for (MTable table : tables) {
+                if (MetadataUtils.getInterpretationEnum(table) ==
                     InterpretationEnum.LOOKUPMULTI)
                 {
-                    needsLookupMultiTable = true;
+                    ++needsLookupMultiTableCount;
                 }
                 else
                 {
@@ -128,8 +123,8 @@ public class CreateDataSchemaCommand
                     {
                         firstDone = true;
                     }
-                    sb.append("\t").append(table.getDbName()).append(" ");
-                    switch (table.getDataType().toInt())
+                    sb.append("\t").append(table.getDBName()).append(" ");
+                    switch (MetadataUtils.getDataTypeEnum(table).toInt())
                     {
                         case 0:
                             sb.append(dialect.getTypeName(Types.BIT));
@@ -170,7 +165,7 @@ public class CreateDataSchemaCommand
                             break;
                     }
 
-                    if (table.isUnique() && dialect.supportsUnique())
+                    if (table.getUnique() && dialect.supportsUnique())
                     {
                         sb.append(" unique");
                     }
@@ -188,17 +183,14 @@ public class CreateDataSchemaCommand
                 sqlTableName + "_pk_id"));
             sb.append("(id);").append(mLs);
 
-            j = needsIndex.iterator();
-            while (j.hasNext())
-            {
-                Table table = (Table) j.next();
-                String dbName = table.getDbName();
+            for (MTable table : needsIndex) {
+                String dbName = table.getDBName();
                 sb.append("create index ").append(sqlTableName).append("_");
                 sb.append(dbName).append("_index on ").append(sqlTableName);
                 sb.append("(").append(dbName).append(");").append(mLs);
             }
 
-            if (needsLookupMultiTable)
+            if (needsLookupMultiTableCount > 0)
             {
                 String bigint = dialect.getTypeName(Types.BIGINT);
                 String lmTable = sqlTableName + "_lm";
@@ -284,8 +276,8 @@ public class CreateDataSchemaCommand
 
     private static final Logger LOG =
         Logger.getLogger(CreateDataSchemaCommand.class);
-    private Map mClasses;
-    private Map mTables;
+    private Map<String, MClass> mClasses;
+    private Map<String, MTable> mTables;
     private String mLs;
     private SessionFactory mSessions;
     private RetsConfig mRetsConfig;

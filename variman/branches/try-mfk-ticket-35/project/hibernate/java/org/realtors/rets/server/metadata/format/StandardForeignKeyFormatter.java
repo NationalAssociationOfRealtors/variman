@@ -14,31 +14,34 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MForeignKey;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ForeignKey;
-import org.realtors.rets.server.metadata.Table;
 
 public class StandardForeignKeyFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection foreignKeys,
+    public void format(FormatterContext context, Collection<MetaObject> foreignKeys,
             String[] levels)
-	{
-		if (foreignKeys.size() == 0)
-		{
-			return;
-		}
-		
-		RetsVersion retsVersion = context.getRetsVersion();
-	    PrintWriter out = context.getWriter();
-	    TagBuilder metadata;
-	    
+    {
+        if (foreignKeys.size() == 0)
+        {
+            return;
+        }
+        
+        RetsVersion retsVersion = context.getRetsVersion();
+        PrintWriter out = context.getWriter();
+        TagBuilder metadata;
+        
         // 1.7.2 DTD makes changes.
         if (retsVersion.equals(RetsVersion.RETS_1_0) || retsVersion.equals(RetsVersion.RETS_1_5) ||
                 retsVersion.equals(RetsVersion.RETS_1_7))
         {
+            /*
+             * RETS 1.5 spec indicates that Version and Date should be
+             * attributes of the METADATA-FOREIGN_KEY tag. However, the 1.5 DTD
+             * does not list these in the attribute list.
+             */
             metadata = new TagBuilder(context.getWriter(),
                                 "METADATA-FOREIGN_KEY")
                                 .beginContentOnNewLine();
@@ -46,60 +49,39 @@ public class StandardForeignKeyFormatter extends BaseStandardFormatter
         else
         {
             metadata = new TagBuilder(context.getWriter(),
-		                             "METADATA-FOREIGN_KEYS")
-                    				 .appendAttribute("Version", context.getVersion())
-                    				 .appendAttribute("Date", context.getDate(), context.getRetsVersion())
-                    				 .beginContentOnNewLine();
+                                     "METADATA-FOREIGN_KEYS")
+                                     .appendAttribute("Version", context.getVersion())
+                                     .appendAttribute("Date", context.getDate(), context.getRetsVersion())
+                                     .beginContentOnNewLine();
         }
-		
-		for (Iterator iterator = foreignKeys.iterator(); iterator.hasNext();)
-		{
-	        ForeignKey foreignKey = (ForeignKey) iterator.next();
-	        
-	        TagBuilder tag = new TagBuilder(out, "ForeignKey")
-			 	.beginContentOnNewLine();
-	        
-			TagBuilder.simpleTag(out, "ForeignKeyID", foreignKey.getForeignKeyID());
-	        
-			Table table = foreignKey.getParentTable();
-	        String [] paths = new String[2];
-	        String name = null;
-	                
-	        if (table != null)
-	        {
-		        paths = StringUtils.split(table.getLevel(), ":");
-		        name = table.getSystemName();
-	        }
-		        
-	        TagBuilder.simpleTag(out, "ParentResourceID", paths[0]);
-			TagBuilder.simpleTag(out, "ParentClassID", paths[1]);
-			TagBuilder.simpleTag(out, "ParentSystemName", name);
+        
+        for (Iterator<?> iterator = foreignKeys.iterator(); iterator.hasNext();)
+        {
+            MForeignKey foreignKey = (MForeignKey) iterator.next();
+            
+            TagBuilder tag = new TagBuilder(out, "ForeignKey")
+                .beginContentOnNewLine();
+            
+            TagBuilder.simpleTag(out, "ForeignKeyID", foreignKey.getForeignKeyID());
+            
+            TagBuilder.simpleTag(out, "ParentResourceID", foreignKey.getParentResourceID());
+            TagBuilder.simpleTag(out, "ParentClassID", foreignKey.getParentClassID());
+            TagBuilder.simpleTag(out, "ParentSystemName", foreignKey.getParentSystemName());
 
-	        paths[0] = null;
-	        paths[1] = null;
-	        name = null;
-	        
-		    table = foreignKey.getChildTable();
-		    
-		    if (table != null)
-		    {
-		    	paths = StringUtils.split(table.getLevel(), ":");
-		    	name = table.getSystemName();
-		    }
-	    	TagBuilder.simpleTag(out, "ChildResourceID", paths[0]);
-			TagBuilder.simpleTag(out, "ChildClassID", paths[1]);
-			TagBuilder.simpleTag(out, "ChildSystemName", name);
+            TagBuilder.simpleTag(out, "ChildResourceID", foreignKey.getChildResourceID());
+            TagBuilder.simpleTag(out, "ChildClassID", foreignKey.getChildClassID());
+            TagBuilder.simpleTag(out, "ChildSystemName", foreignKey.getChildSystemName());
 
-	        if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
-	        {
-	            // Added in 1.7 DTD
-    			TagBuilder.simpleTag(out, "ConditionalParentField", foreignKey.getConditionalParentField());
-    			TagBuilder.simpleTag(out, "ConditionalParentValue", foreignKey.getConditionalParentValue());
-	        }
-	        
-			tag.close();
-		}
-		
-		metadata.close();
-	}
+            if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
+            {
+                // Added in 1.7 DTD
+                TagBuilder.simpleTag(out, "ConditionalParentField", foreignKey.getConditionalParentField());
+                TagBuilder.simpleTag(out, "ConditionalParentValue", foreignKey.getConditionalParentValue());
+            }
+            
+            tag.close();
+        }
+        
+        metadata.close();
+    }
 }

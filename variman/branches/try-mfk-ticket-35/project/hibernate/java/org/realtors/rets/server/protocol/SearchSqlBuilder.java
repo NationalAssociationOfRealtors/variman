@@ -3,9 +3,10 @@ package org.realtors.rets.server.protocol;
 import java.util.SortedSet;
 import java.util.List;
 
+import org.realtors.rets.common.metadata.types.MClass;
 import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.ServerDmqlMetadata;
+import org.realtors.rets.server.Group;
 import org.realtors.rets.server.RetsReplyException;
 
 /**
@@ -19,7 +20,7 @@ public interface SearchSqlBuilder
 {
     public void setParameters(SearchParameters parameters);
 
-    public void setGroups(SortedSet groups);
+    public void setGroups(SortedSet<Group> groups);
 
     public void prepareForQuery(MetadataManager manager)
         throws RetsReplyException;

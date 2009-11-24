@@ -11,16 +11,20 @@ package org.realtors.rets.server.metadata;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.log4j.Logger;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.dmql.DmqlFieldType;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
 
@@ -28,35 +32,33 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 {
     private ServerDmqlMetadata()
     {
-        mFields = new ListOrderedMap();
-        mFieldTypes = new ListOrderedMap();
-        mFieldToColumn = new ListOrderedMap();
-        mColumnToField = new ListOrderedMap();
-        mLookupsDbMap = new ListOrderedMap();
-        mLookupTypesMap = new ListOrderedMap();
-        mStrings = new ListOrderedSet();
-        mNumerics = new ListOrderedSet();
-        mColumns = new ArrayList();
+        mFields = new LinkedHashMap<String, MTable>();
+        mFieldTypes = new LinkedHashMap<String, DmqlFieldType>();
+        mFieldToColumn = new LinkedHashMap<String, String>();
+        mColumnToField = new LinkedHashMap<String, String>();
+        mLookupsDbMap = new LinkedHashMap<String, Map<String, String>>();
+        mLookupTypesMap = new LinkedHashMap<String, Map<String, MLookupType>>();
+        mColumns = new ArrayList<String>();
     }
 
     public ServerDmqlMetadata(MClass clazz, boolean standardNames)
     {
         this();
-        init(clazz.getTables(), standardNames);
+        init(clazz.getChildren(MetadataType.TABLE), standardNames);
     }
 
-    public ServerDmqlMetadata(Collection tables, boolean standardNames)
+    public ServerDmqlMetadata(Collection<? extends MetaObject> tables, boolean standardNames)
     {
         this();
         init(tables, standardNames);
     }
 
-    private void init(Collection tables, boolean standardNames)
+    private void init(Collection<? extends MetaObject> tables, boolean standardNames)
     {
         for (Iterator i = tables.iterator(); i.hasNext();)
         {
-            Table table = (Table) i.next();
-            String dbName = table.getDbName();
+            MTable table = (MTable) i.next();
+            String dbName = table.getDBName();
 
             String fieldName = getTableName(table,  standardNames);
             if (fieldName == null)
@@ -80,17 +82,16 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
             if (isLookup(table))
             {
-                addLookups(fieldName, standardNames, table.getLookup());
+                addLookups(fieldName, standardNames, table.getMLookup());
                 mFieldTypes.put(fieldName, DmqlFieldType.LOOKUP);
             }
             else if (isLookupMulti(table))
             {
-                addLookups(fieldName, standardNames, table.getLookup());
+                addLookups(fieldName, standardNames, table.getMLookup());
                 mFieldTypes.put(fieldName, DmqlFieldType.LOOKUP_MULTI);
             }
             else if (isNumeric(table))
             {
-                mNumerics.add(fieldName);
                 mFieldTypes.put(fieldName, DmqlFieldType.NUMERIC);
             }
             else if (isTemporal(table))
@@ -99,7 +100,6 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
             }
             else
             {
-                mStrings.add(fieldName);
                 mFieldTypes.put(fieldName, DmqlFieldType.CHARACTER);
             }
         }
@@ -107,32 +107,32 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         Collections.sort(mColumns);
     }
 
-    private boolean isLookup(Table table)
+    private boolean isLookup(MTable table)
     {
-        InterpretationEnum interpretation = table.getInterpretation();
+        InterpretationEnum interpretation = MetadataUtils.getInterpretationEnum(table);
         return ((interpretation != null) &&
                 (interpretation.equals(InterpretationEnum.LOOKUP)));
     }
 
-    private boolean isLookupMulti(Table table)
+    private boolean isLookupMulti(MTable table)
     {
-        InterpretationEnum interpretation = table.getInterpretation();
+        InterpretationEnum interpretation = MetadataUtils.getInterpretationEnum(table);
         if ((interpretation != null) &&
                 (interpretation.equals(InterpretationEnum.LOOKUPMULTI)))
         {
-            if (table.getLookup() == null)
+            if (table.getMLookup() == null)
             {
                 LOG.error("Lookup is null for table: " + table.getPath());
                 return false;
             }
             return true;
-        };
+        }
         return false;
     }
 
-    private boolean isNumeric(Table table)
+    private boolean isNumeric(MTable table)
     {
-        DataTypeEnum type = table.getDataType();
+        DataTypeEnum type = MetadataUtils.getDataTypeEnum(table);
         if (type.equals(DataTypeEnum.TINY) ||
             type.equals(DataTypeEnum.SMALL) ||
             type.equals(DataTypeEnum.INT) ||
@@ -147,9 +147,9 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
     }
 
-    private boolean isTemporal(Table table)
+    private boolean isTemporal(MTable table)
     {
-        DataTypeEnum type = table.getDataType();
+        DataTypeEnum type = MetadataUtils.getDataTypeEnum(table);
         if (type.equals(DataTypeEnum.DATE) ||
             type.equals(DataTypeEnum.DATETIME) ||
             type.equals(DataTypeEnum.TIME))
@@ -162,28 +162,22 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
     }
 
-    private String getTableName(Table table, boolean standardNames)
+    private String getTableName(MTable table, boolean standardNames)
     {
+        String tableName;
         if (standardNames)
         {
-            TableStandardName standardName = table.getStandardName();
-            if (standardName != null)
-            {
-                return standardName.getName();
-            }
-            else
-            {
-                return null;
-            }
+            tableName = table.getStandardName();
         }
         else
         {
-            return table.getSystemName();
+            tableName = table.getSystemName();
         }
+        return tableName;
     }
 
     private void addLookups(String fieldName, boolean standardNames,
-                            Lookup lookup)
+                            MLookup lookup)
     {
         if (lookup == null)
         {
@@ -192,7 +186,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
 
         boolean generateDbValues;
-        Map dbValues;
+        Map<String, String> dbValues;
         if (fieldName.equals("ListingStatus") && standardNames)
         {
             dbValues = LISTING_STATUS_VALUES;
@@ -200,21 +194,22 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         }
         else
         {
-            dbValues = new ListOrderedMap();
+            dbValues = new LinkedHashMap<String, String>();
             generateDbValues = true;
         }
 
-        Map lookupTypesMap = new ListOrderedMap();
-        Set lookupTypes = lookup.getLookupTypes();
-        Long saveId = new Long(-1);
+        Map<String, MLookupType> lookupTypesMap = new LinkedHashMap<String, MLookupType>();
+        MLookupType[] lookupTypes = lookup.getMLookupTypes();
+        Long saveId = Long.valueOf(-1);
         String saveLevel = null;
-        for (Iterator iterator = lookupTypes.iterator(); iterator.hasNext();)
+        for (MLookupType lookupType : lookupTypes)
         {
-            LookupType lookupType = (LookupType) iterator.next();
-            if (lookupType.getId() > saveId)
-                saveId = lookupType.getId();
-            if (saveLevel == null)
+            if (lookupType.getUniqueId().longValue() > saveId.longValue()) {
+                saveId = lookupType.getUniqueId();
+            }
+            if (saveLevel == null) {
                 saveLevel = lookupType.getLevel();
+            }
             String lookupValue = lookupType.getValue();
             lookupTypesMap.put(lookupValue, lookupType);
             if (generateDbValues)
@@ -227,11 +222,11 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         /*
          * Dummy up an entry to handle .ANY.
          */
-        LookupType lookupType = new LookupType();
-        lookupType.setId(saveId + 1);
-        lookupType.setLevel(saveLevel);
+        MLookupType lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(saveId.longValue() + 1));
+        lookupType.setParent(lookup);
         lookupType.setLongValue(".ANY.");
-        lookupType.setMetadataEntryID(".ANY.");
+        lookupType.setMetadataEntryID("ANY");
         lookupType.setShortValue(".ANY.");
         lookupType.setValue(".ANY.");
         dbValues.put(".ANY.", ".ANY.");
@@ -240,10 +235,11 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         /*
          * Dummy up an entry to handle .EMPTY.
          */
-        lookupType.setId(saveId + 2);
-        lookupType.setLevel(saveLevel);
+        lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(saveId.longValue() + 2));
+        lookupType.setParent(lookup);
         lookupType.setLongValue(".EMPTY.");
-        lookupType.setMetadataEntryID(".EMPTY.");
+        lookupType.setMetadataEntryID("EMPTY");
         lookupType.setShortValue(".EMPTY.");
         lookupType.setValue(".EMPTY.");
         dbValues.put(".EMPTY.", ".EMPTY.");
@@ -260,51 +256,51 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public DmqlFieldType getFieldType(String fieldName)
     {
-        return (DmqlFieldType) mFieldTypes.get(fieldName);
+        return mFieldTypes.get(fieldName);
     }
 
     public boolean isValidLookupValue(String lookupName, String lookupValue)
     {
-        Map values = (Map) mLookupsDbMap.get(lookupName);
+        Map<String, String> values = mLookupsDbMap.get(lookupName);
         return values.containsKey(lookupValue);
     }
 
     public String fieldToColumn(String fieldName)
     {
-        return (String) mFieldToColumn.get(fieldName);
+        return mFieldToColumn.get(fieldName);
     }
 
     public String columnToField(String columnName)
     {
-        return (String) mColumnToField.get(columnName);
+        return mColumnToField.get(columnName);
     }
 
-    public List getAllColumns()
+    public List<String> getAllColumns()
     {
         return mColumns;
     }
 
     public String getLookupDbValue(String lookupName, String lookupValue)
     {
-        Map values = (Map) mLookupsDbMap.get(lookupName);
+        Map<String, String> values = mLookupsDbMap.get(lookupName);
         if (values == null)
         {
             return null;
         }
         else
         {
-            return (String) values.get(lookupValue);
+            return values.get(lookupValue);
         }
     }
 
-    public Table getTable(String fieldName)
+    public MTable getTable(String fieldName)
     {
-        return (Table) mFields.get(fieldName);
+        return mFields.get(fieldName);
     }
 
     public String getLookupShortValue(String lookupName, String value)
     {
-        LookupType lookupType = findLookupType(lookupName, value);
+        MLookupType lookupType = findLookupType(lookupName, value);
         if (lookupType == null)
         {
             return null;
@@ -314,7 +310,7 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public String getLookupLongValue(String lookupName, String value)
     {
-        LookupType lookupType = findLookupType(lookupName, value);
+        MLookupType lookupType = findLookupType(lookupName, value);
         if (lookupType == null)
         {
             return null;
@@ -322,14 +318,14 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
         return lookupType.getLongValue();
     }
 
-    private LookupType findLookupType(String lookupName, String value)
+    private MLookupType findLookupType(String lookupName, String value)
     {
-        Map lookupTypes = (Map) mLookupTypesMap.get(lookupName);
+        Map<String, MLookupType> lookupTypes = mLookupTypesMap.get(lookupName);
         if (lookupTypes == null)
         {
             return null;
         }
-        return (LookupType) lookupTypes.get(value);
+        return lookupTypes.get(value);
     }
 
     private static final Logger LOG =
@@ -337,20 +333,18 @@ public class ServerDmqlMetadata implements DmqlParserMetadata
 
     public static final boolean STANDARD = true;
     public static final boolean SYSTEM = false;
-    private Map mFields;
-    private Map mFieldTypes;
-    private Map mFieldToColumn;
-    private Map mColumnToField;
-    private Map mLookupsDbMap;
-    private Map mLookupTypesMap;
-    private Set mStrings;
-    private static final Map LISTING_STATUS_VALUES;
-    private Set mNumerics;
-    private List mColumns;
+    private Map<String, MTable> mFields;
+    private Map<String, DmqlFieldType> mFieldTypes;
+    private Map<String, String> mFieldToColumn;
+    private Map<String, String> mColumnToField;
+    private Map<String, Map<String, String>> mLookupsDbMap;
+    private Map<String, Map<String, MLookupType>> mLookupTypesMap;
+    private static final Map<String, String> LISTING_STATUS_VALUES;
+    private List<String> mColumns;
 
     static
     {
-        LISTING_STATUS_VALUES = new HashMap();
+        LISTING_STATUS_VALUES = new HashMap<String, String>();
         LISTING_STATUS_VALUES.put("Active", "A");
         LISTING_STATUS_VALUES.put("Closed", "C");
         LISTING_STATUS_VALUES.put("Expired", "X");

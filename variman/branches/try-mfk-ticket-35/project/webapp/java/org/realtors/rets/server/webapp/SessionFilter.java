@@ -35,7 +35,7 @@ public class SessionFilter implements Filter
 {
     public void init(FilterConfig filterConfig) throws ServletException
     {
-        mLoginPaths = new HashSet();
+        mLoginPaths = new HashSet<String>();
         mLoginPaths.add(Paths.LOGIN);
         mLoginPaths.add(Paths.CCT_LOGIN);
         mLoginPaths.add(Paths.CCT_ALT_LOGIN);
@@ -91,7 +91,7 @@ public class SessionFilter implements Filter
 
     private boolean isLoginPath(String path)
     {
-        return mLoginPaths.contains(path);
+        return mLoginPaths.contains(path) || WebApp.isHPMALoginPath(path);
     }
 
     private void sendAdditionalLoginNotPermitted(HttpServletResponse response)
@@ -141,5 +141,5 @@ public class SessionFilter implements Filter
     private static final Logger LOG =
         Logger.getLogger(SessionFilter.class);
     public static final String SESSION_VALID_KEY = "is_session_valid";
-    private Set mLoginPaths;
+    private Set<String> mLoginPaths;
 }

@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import org.realtors.rets.client.RetsVersion;
 
+import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.metadata.MetadataSegment;
 import org.realtors.rets.server.metadata.format.ClassFormatterLookup;
 import org.realtors.rets.server.metadata.format.FormatterLookup;
@@ -30,12 +31,12 @@ public class GetMetadataTransaction
 {
     public GetMetadataTransaction(PrintWriter out,
                                   GetMetadataParameters parameters,
-                                  MetadataFetcher fetcher,
+                                  MetadataManager metadataManager,
                                   RetsVersion retsVersion)
     {
         mOut = out;
         mParameters = parameters;
-        mFetcher = fetcher;
+        mMetadataManager = metadataManager;
         mRetsVersion = retsVersion;
     }
 
@@ -44,8 +45,9 @@ public class GetMetadataTransaction
     {
         // Fetch metadata before starting to print, so any exceptions can be
         // handled and reported to the user better.
-        List segments = mFetcher.fetchMetadata(mParameters.getType(),
-                                               mParameters.getIds());
+        String type = mParameters.getType();
+        String[] ids = mParameters.getIds();
+        List<MetadataSegment> segments = mMetadataManager.fetchMetadata(type, ids);
 
         printHeaders();
         printMetadata(segments);
@@ -62,7 +64,7 @@ public class GetMetadataTransaction
         }
     }
 
-    private void printMetadata(List segments) throws RetsServerException
+    private void printMetadata(List<MetadataSegment> segments) throws RetsServerException
     {
         try
         {
@@ -81,7 +83,7 @@ public class GetMetadataTransaction
                                    groups);
             for (int i = 0; i < segments.size(); i++)
             {
-                MetadataSegment segment = (MetadataSegment) segments.get(i);
+                MetadataSegment segment = segments.get(i);
                 context.setVersion(segment.getVersion());
                 context.setRetsVersion(mRetsVersion);
                 context.setDate(segment.getDate());
@@ -109,6 +111,6 @@ public class GetMetadataTransaction
         Logger.getLogger(GetMetadataTransaction.class);
     private PrintWriter mOut;
     private GetMetadataParameters mParameters;
-    private MetadataFetcher mFetcher;
+    private MetadataManager mMetadataManager;
     private RetsVersion mRetsVersion;
 }

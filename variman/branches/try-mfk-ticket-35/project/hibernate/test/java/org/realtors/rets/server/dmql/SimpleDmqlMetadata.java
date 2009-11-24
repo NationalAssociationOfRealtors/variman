@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.common.metadata.types.MTable;
 
 public class SimpleDmqlMetadata implements DmqlParserMetadata
 {
@@ -110,7 +110,7 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         mColumnsToFields.put(columnName,  fieldName);
     }
 
-    public void addTable(String fieldName, Table table)
+    public void addTable(String fieldName, MTable table)
     {
         mTables.put(fieldName, table);
     }
@@ -152,9 +152,9 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
         return new ArrayList(mFieldsToColumns.keySet());
     }
 
-    public Table getTable(String fieldName)
+    public MTable getTable(String fieldName)
     {
-        return (Table) mTables.get(fieldName);
+        return mTables.get(fieldName);
     }
 
     public String getLookupLongValue(String lookupName, String value)
@@ -174,6 +174,6 @@ public class SimpleDmqlMetadata implements DmqlParserMetadata
     private Map mLookupLongValues;
     private Map mFieldsToColumns;
     private Map mColumnsToFields;
-    private Map mTables;
+    private Map<String, MTable> mTables;
     private Map mFieldTypes;
 }
