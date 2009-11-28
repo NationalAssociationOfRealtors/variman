@@ -7,9 +7,9 @@ import java.io.StringWriter;
 import java.util.Arrays;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.LinesEqualTestCase;
 import org.realtors.rets.server.RetsServerException;
-import org.realtors.rets.server.metadata.Table;
 import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.dmql.SimpleDmqlMetadata;
 
@@ -26,8 +26,9 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
         metadata.addString("StreetName", "r_STNAME");
         metadata.addString("PostalCode", "r_ZIP_CODE");
         metadata.addString("LivingArea", "r_SQFT");
-        Table table = new Table(1);
-        table.setUnits(UnitEnum.SQFT);
+        MTable table = new MTable();
+        table.setUniqueId(Long.valueOf(1));
+        table.setUnits(UnitEnum.SQFT.toString());
         metadata.addTable("LivingArea", table);
 
         StringWriter formatted = new StringWriter();
@@ -107,8 +108,9 @@ public class ResidentialPropertyFormatterTest extends LinesEqualTestCase
         metadata.addString("StreetName", "r_STNAME");
         metadata.addString("PostalCode", "r_ZIP_CODE");
         metadata.addString("LivingArea", "r_SQFT");
-        Table table = new Table(1);
-        table.setUnits(UnitEnum.SQFT);
+        MTable table = new MTable();
+        table.setUniqueId(Long.valueOf(1));
+        table.setUnits(UnitEnum.SQFT.toString());
         metadata.addTable("LivingArea", table);
 
         StringWriter formatted = new StringWriter();

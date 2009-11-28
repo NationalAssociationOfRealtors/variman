@@ -43,7 +43,7 @@ public class DatabaseConfigTest extends TestCase
         config.setMaxPsIdle(5);
         config.setShowSql(true);
 
-        Properties properties = config.createHibernateProperties();
+        Properties properties = HibernateUtils.createHibernateProperties(config);
         assertEquals("org.postgresql.Driver",
                      properties.getProperty(Environment.DRIVER));
         assertEquals("jdbc:postgresql://localhost/db_test",

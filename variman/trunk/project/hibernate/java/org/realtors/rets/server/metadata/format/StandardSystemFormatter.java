@@ -13,13 +13,18 @@ package org.realtors.rets.server.metadata.format;
 import java.io.PrintWriter;
 import java.util.Collection;
 
-import org.realtors.rets.client.RetsVersion;
-import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.MSystem;
+import org.apache.commons.lang.StringUtils;
 
-public class StandardSystemFormatter extends MetadataFormatter
+import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.util.TagBuilder;
+import org.realtors.rets.server.Util;
+
+public class StandardSystemFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection systems,
+    public void format(FormatterContext context, Collection<MetaObject> systems,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -28,7 +33,7 @@ public class StandardSystemFormatter extends MetadataFormatter
         // Get first element
         MSystem system = (MSystem) systems.iterator().next();
         TagBuilder metadata = new TagBuilder(out, "METADATA-SYSTEM")
-            .appendAttribute("Version", system.getVersionString())
+            .appendAttribute("Version", Util.getVersionString(system.getVersion()))
             .appendAttribute("Date", system.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
@@ -41,14 +46,14 @@ public class StandardSystemFormatter extends MetadataFormatter
             tag = new TagBuilder(out, "System").beginContentOnNewLine();
 
             TagBuilder.simpleTag(out, "SystemID", system.getSystemID());
-            TagBuilder.simpleTag(out, "SystemDescription", system.getDescription());
+            TagBuilder.simpleTag(out, "SystemDescription", system.getSystemDescription());
             TagBuilder.simpleTag(out, "Comments", system.getComments());
         }
         else
         {
             tag = new TagBuilder(out, "SYSTEM")
                         .appendAttribute("SystemID", system.getSystemID())
-                        .appendAttribute("SystemDescription", system.getDescription())
+                        .appendAttribute("SystemDescription", system.getSystemDescription())
                         .appendAttribute("TimeZoneOffset", system.getTimeZoneOffset())
                         .beginContentOnNewLine();
 
@@ -57,8 +62,9 @@ public class StandardSystemFormatter extends MetadataFormatter
 
         if (context.isRecursive())
         {
-            context.format(system.getResources(), system.getPathAsArray());
-            context.format(system.getForeignKeys(), system.getPathAsArray());
+            String[] path = StringUtils.split(system.getPath(), ":");
+            context.format(system.getChildren(MetadataType.RESOURCE), path);
+            context.format(system.getChildren(MetadataType.FOREIGN_KEYS), path);
         }
 
         tag.close();

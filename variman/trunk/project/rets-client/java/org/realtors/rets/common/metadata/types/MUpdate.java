@@ -2,8 +2,10 @@ package org.realtors.rets.common.metadata.types;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.metadata.AttrType;
@@ -13,7 +15,9 @@ import org.realtors.rets.common.metadata.MetadataType;
 
 public class MUpdate extends MetaObject {
 	private static final String METADATATYPENAME = "Update";
-	
+
+	private static final MUpdateType[] EMPTY_UPDATE_TYPE_ARRAY = {};
+
 	public static final String METADATAENTRYID = "MetadataEntryID";
 	public static final String UPDATENAME = "UpdateName";
 	public static final String DESCRIPTION = "Description";
@@ -21,17 +25,17 @@ public class MUpdate extends MetaObject {
 	public static final String UPDATETYPEVERSION = "UpdateTypeVersion";
 	public static final String UPDATETYPEDATE = "UpdateTypeDate";
 
-    private static final List<MetadataElement> sAttributes =
-    	new ArrayList<MetadataElement>()
-        {{
-    		add(new MetadataElement(METADATAENTRYID, sRETSID, sREQUIRED));
-    		add(new MetadataElement(UPDATENAME, sAlphanum24, sREQUIRED));
-    		add(new MetadataElement(DESCRIPTION, sPlaintext64));
-    		add(new MetadataElement(KEYFIELD, sRETSNAME, sREQUIRED));
-    		add(new MetadataElement(UPDATETYPEVERSION, sAttrVersion, sREQUIRED));
-    		add(new MetadataElement(UPDATETYPEDATE, sAttrDate, sREQUIRED));
+	private static final List<MetadataElement> sAttributes =
+		new ArrayList<MetadataElement>()
+		{{
+			add(new MetadataElement(METADATAENTRYID, sRETSID, RetsVersion.RETS_1_7, sREQUIRED));
+			add(new MetadataElement(UPDATENAME, sAlphanum24, sREQUIRED));
+			add(new MetadataElement(DESCRIPTION, sPlaintext64));
+			add(new MetadataElement(KEYFIELD, sRETSNAME, sREQUIRED));
+			add(new MetadataElement(UPDATETYPEVERSION, sAttrVersion, sREQUIRED));
+			add(new MetadataElement(UPDATETYPEDATE, sAttrDate, sREQUIRED));
 		}};
-	 
+
 	public MUpdate() {
 		this(DEFAULT_PARSING);
 	}
@@ -57,14 +61,14 @@ public class MUpdate extends MetaObject {
 	 * make sure static initialization properly takes place.
 	 */
 	@Override
-	protected void addAttributesToMap(Map attributeMap) 
+	protected void addAttributesToMap(Map<String, AttrType<?>> attributeMap) 
 	{
 		for (MetadataElement element : sAttributes)
 		{
 			attributeMap.put(element.getName(), element.getType());
 		}
 	}
-	
+
 	/**
 	 * Returns whether or not the attribute is required.
 	 * @param name Name of the attribute.
@@ -73,7 +77,7 @@ public class MUpdate extends MetaObject {
 	@Override
 	public boolean isAttributeRequired(String name)
 	{
-		for (MetadataElement element : this.sAttributes)
+		for (MetadataElement element : MUpdate.sAttributes)
 		{
 			if (element.getName().equals(name))
 				return element.isRequired();
@@ -81,7 +85,7 @@ public class MUpdate extends MetaObject {
 		
 		return false;
 	}
-	
+
 	/**
 	 * Update (or add) the attribute. This is intended for use where the 
 	 * metadata model is being changed or expanded.
@@ -92,7 +96,6 @@ public class MUpdate extends MetaObject {
 	public static void updateAttribute(String name, AttrType<?> type, boolean required)
 	{
 		boolean found = false;
-		int index = -1;
 		if (sAttributes == null)
 			return;
 		
@@ -118,33 +121,93 @@ public class MUpdate extends MetaObject {
 		return getStringAttribute(METADATAENTRYID);
 	}
 
+	public void setMetadataEntryID(String metadataEntryId) {
+		String metadataEntryIdStr = sRETSID.render(metadataEntryId);
+		setAttribute(METADATAENTRYID, metadataEntryIdStr);
+	}
+
 	public String getUpdateName() {
 		return getStringAttribute(UPDATENAME);
+	}
+
+	public void setUpdateName(String updateName) {
+		String updateNameStr = sAlphanum24.render(updateName);
+		setAttribute(UPDATENAME, updateNameStr);
 	}
 
 	public String getDescription() {
 		return getStringAttribute(DESCRIPTION);
 	}
 
+	public void setDescription(String description) {
+		String descriptionStr = sPlaintext64.render(description);
+		setAttribute(DESCRIPTION, descriptionStr);
+	}
+
 	public String getKeyField() {
 		return getStringAttribute(KEYFIELD);
+	}
+
+	public void setKeyField(String keyField) {
+		String keyFieldStr = sRETSNAME.render(keyField);
+		setAttribute(KEYFIELD, keyFieldStr);
 	}
 
 	public int getUpdateTypeVersion() {
 		return getIntAttribute(UPDATETYPEVERSION);
 	}
 
+	public void setUpdateTypeVersion(int updateTypeVersion) {
+		String updateTypeVersionStr = sAttrVersion.render(Integer.valueOf(updateTypeVersion));
+		setAttribute(UPDATETYPEVERSION, updateTypeVersionStr);
+	}
+
 	public Date getUpdateTypeDate() {
 		return getDateAttribute(UPDATETYPEDATE);
+	}
+
+	public void setUpdateTypeDate(Date updateTypeDate) {
+		String updateTypeDateStr = sAttrDate.render(updateTypeDate);
+		setAttribute(UPDATETYPEDATE, updateTypeDateStr);
 	}
 
 	public MUpdateType getMUpdateType(String systemName) {
 		return (MUpdateType) getChild(MetadataType.UPDATE_TYPE, systemName);
 	}
 
+	public Set<MUpdateType> getUpdateTypes() {
+		MUpdateType[] mUpdateTypes = getMUpdateTypes();
+		int numUpdateTypes = mUpdateTypes.length;
+		Set<MUpdateType> updatetypes = new LinkedHashSet<MUpdateType>(numUpdateTypes);
+		for (MUpdateType mUpdateType : mUpdateTypes) {
+			updatetypes.add(mUpdateType);
+		}
+		return updatetypes;
+	}
+
+	public void setUpdateTypes(Set<MUpdateType> updatetypes) {
+		MUpdateType[] mUpdateTypes = updatetypes.toArray(EMPTY_UPDATE_TYPE_ARRAY);
+		setMUpdateTypes(mUpdateTypes);
+	}
+
 	public MUpdateType[] getMUpdateTypes() {
-		MUpdateType[] tmpl = new MUpdateType[0];
-		return (MUpdateType[]) getChildren(MetadataType.UPDATE_TYPE).toArray(tmpl);
+		return getChildren(MetadataType.UPDATE_TYPE).toArray(EMPTY_UPDATE_TYPE_ARRAY);
+	}
+
+	public void setMUpdateTypes(MUpdateType[] updateTypes) {
+		deleteAllChildren(MetadataType.UPDATE_TYPE);
+		if (updateTypes != null) {
+			addChildren(MetadataType.UPDATE_TYPE, updateTypes);
+		}
+	}
+
+	public MClass getMClass() {
+		MClass clazz = (MClass)getParent();
+		return clazz;
+	}
+
+	public void setMClass(MClass clazz) {
+		setParent(clazz);
 	}
 
 	@Override
@@ -161,11 +224,11 @@ public class MUpdate extends MetaObject {
 	public final String getMetadataTypeName() {
 		return METADATATYPENAME;
 	}
-	
+
 	@Override
 	public final MetadataType getMetadataType() {
 		return MetadataType.UPDATE;
 	}
-	
+
 	private static final MetadataType[] sTypes = { MetadataType.UPDATE_TYPE };
 }

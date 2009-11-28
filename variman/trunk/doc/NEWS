@@ -1,5 +1,6 @@
 Version 3.2.0 - xx xxx 2009
  
+  * Remove duplicate metadata classes. Ticket #35.
   * RestrictedIndicator allows special characters. Ticket #61.
   * Add $basedir to build.xml. Ticket #63.
   * Migrate to Hibernate3. Ticket #65.
@@ -12,6 +13,9 @@ Version 3.2.0 - xx xxx 2009
   * Allow DefaultSearchTransaction with different
     SearchSqlBuilders. Ticket #72.
   * MaximumLength in Table metadata must be > 0. Ticket #74.
+  * RETS Character Type not properly handling .EMPTY. Ticket #75.
+  * DMQL Lexer incorrectly tokenizes stings beginning with
+    numbers. Ticket #76.
   * Failure to find an image in an object-set does not
     properly close the multi-part response. Ticket #77.
 

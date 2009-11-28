@@ -5,19 +5,19 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.ValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
 import org.realtors.rets.server.metadata.ValidationExpressionTypeEnum;
 
 public class ValidationExpressionFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MValidationExpression> getData()
     {
-        List validationExpressions = new ArrayList();
-        ValidationExpression validationExpression = new ValidationExpression();
+        List<MValidationExpression> validationExpressions = new ArrayList<MValidationExpression>();
+        MValidationExpression validationExpression = new MValidationExpression();
         validationExpression.setMetadataEntryID("ListingDate");
         validationExpression.setValidationExpressionID("LD_DATE");
         validationExpression.setValidationExpressionType(
-            ValidationExpressionTypeEnum.SET);
+            ValidationExpressionTypeEnum.SET.toString());
         validationExpression.setValue("LD=.TODAY.");
         validationExpressions.add(validationExpression);
         return validationExpressions;

@@ -10,22 +10,18 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.io.PrintWriter;
 
-import org.apache.commons.lang.StringUtils;
 import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MTable;
 
 public class StandardTableFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection tables,
+    public void format(FormatterContext context, Collection<MetaObject> tables,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -40,9 +36,9 @@ public class StandardTableFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = tables.iterator(); i.hasNext();)
+        for (Iterator<?> i = tables.iterator(); i.hasNext();)
         {
-            Table table = (Table) i.next();
+            MTable table = (MTable) i.next();
             if (!context.isAccessibleTable(table, resource, retsClass))
             {
                 continue;
@@ -58,33 +54,21 @@ public class StandardTableFormatter extends BaseStandardFormatter
             TagBuilder.simpleTag(out, "SystemName", table.getSystemName());
             TagBuilder.simpleTag(out, "StandardName", table.getStandardName());
             TagBuilder.simpleTag(out, "LongName", table.getLongName());
-            TagBuilder.simpleTag(out, "DBName", table.getDbName());
+            TagBuilder.simpleTag(out, "DBName", table.getDBName());
             TagBuilder.simpleTag(out, "ShortName", table.getShortName());
             TagBuilder.simpleTag(out, "MaximumLength",
                                  table.getMaximumLength());
             TagBuilder.simpleTag(out, "DataType", table.getDataType());
             TagBuilder.simpleTag(out, "Precision", table.getPrecision());
-            TagBuilder.simpleTag(out, "Searchable", table.isSearchable());
+            TagBuilder.simpleTag(out, "Searchable", table.getSearchable());
             TagBuilder.simpleTag(out, "Interpretation",
                                  table.getInterpretation());
             TagBuilder.simpleTag(out, "Alignment", table.getAlignment());
-            TagBuilder.simpleTag(out, "UseSeparator", table.isUseSeparator());
+            TagBuilder.simpleTag(out, "UseSeparator", table.getUseSeparator());
 
-        	String editMasks = "";
-            if (table.getEditMasks() != null)
-            {
-                List strings = FormatUtil.toSortedStringList(table.getEditMasks());
-
-            	editMasks = StringUtils.join(strings.iterator(), ",");
-            }
-            TagBuilder.simpleTag(out, "EditMaskID", editMasks);
+            TagBuilder.simpleTag(out, "EditMaskID", table.getEditMaskID());
  
-            String lookupName = null;
-            if (table.getLookup() != null)
-            {
-                lookupName = table.getLookup().getLookupName();
-            }
-            TagBuilder.simpleTag(out, "LookupName", lookupName);
+            TagBuilder.simpleTag(out, "LookupName", table.getLookupName());
 
             TagBuilder.simpleTag(out, "MaxSelect", table.getMaxSelect());
             TagBuilder.simpleTag(out, "Units", table.getUnits());
@@ -93,8 +77,8 @@ public class StandardTableFormatter extends BaseStandardFormatter
             TagBuilder.simpleTag(out, "Maximum", table.getMaximum());
             TagBuilder.simpleTag(out, "Default", table.getDefault());
             TagBuilder.simpleTag(out, "Required", table.getRequired());
-            TagBuilder.simpleTag(out, "SearchHelpID", table.getSearchHelp());
-            TagBuilder.simpleTag(out, "Unique", table.isUnique());
+            TagBuilder.simpleTag(out, "SearchHelpID", table.getSearchHelpID());
+            TagBuilder.simpleTag(out, "Unique", table.getUnique());
             
             if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
             {
@@ -107,7 +91,7 @@ public class StandardTableFormatter extends BaseStandardFormatter
                 if (!retsVersion.equals(RetsVersion.RETS_1_7))
                 {
                     // Added in 1.7.2 DTD
-                    TagBuilder.simpleTag(out, "InKeyIndex", table.getInKeyIndex());        
+                    TagBuilder.simpleTag(out, "InKeyIndex", table.getInKeyIndex());
                 }
             }
             

@@ -5,20 +5,25 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 public class ValidationLookupFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MValidationLookup> getData()
     {
-        List validationLookups = new ArrayList();
-        ValidationLookup validationLookup = new ValidationLookup();
+        List<MValidationLookup> validationLookups = new ArrayList<MValidationLookup>();
+        MValidationLookup validationLookup = new MValidationLookup();
         validationLookup.setMetadataEntryID("SchoolLookup");
         validationLookup.setValidationLookupName("School");
         validationLookup.setParent1Field("Area");
         validationLookup.setParent2Field("Subarea");
-        validationLookup.addValidationLookupType(new ValidationLookupType(1));
+        MValidationLookupType[] validationLookupTypes = new MValidationLookupType[1];
+        MValidationLookupType validationLookupType = new MValidationLookupType();
+        validationLookupType.setUniqueId(Long.valueOf(1));
+        validationLookupTypes[0] = validationLookupType;
+        validationLookup.setMValidationLookupTypes(validationLookupTypes);
         validationLookups.add(validationLookup);
         return validationLookups;
     }
@@ -65,7 +70,7 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
 
             "</METADATA-VALIDATION_LOOKUP>\n" +
 
-            ValidationLookupType.TABLE + "\n";
+            MetadataType.VALIDATION_LOOKUP_TYPE.name() + "\n";
     }
 
     protected String getExpectedStandard()
@@ -100,7 +105,7 @@ public class ValidationLookupFormatterTest extends FormatterTestCase
             "</ValidationLookupTypeVersion>" + EOL +
             "<ValidationLookupTypeDate>" + DATE +
             "</ValidationLookupTypeDate>" + EOL +
-            ValidationLookupType.TABLE + EOL +
+            MetadataType.VALIDATION_LOOKUP_TYPE.name() + EOL +
             "</ValidationLookupType>" + EOL +
             "</METADATA-VALIDATION_LOOKUP>" + EOL;
     }

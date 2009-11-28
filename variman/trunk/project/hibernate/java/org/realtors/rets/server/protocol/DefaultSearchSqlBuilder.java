@@ -16,17 +16,19 @@ import java.util.SortedSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.server.Group;
 import org.realtors.rets.server.ReplyCode;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.dmql.DmqlCompiler;
 import org.realtors.rets.server.dmql.SqlConverter;
 import org.realtors.rets.server.dmql.DmqlCompiler.ParserResults;
-import org.realtors.rets.server.metadata.MClass;
 import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.metadata.ServerDmqlMetadata;
-import org.realtors.rets.server.metadata.ServerMetadata;
 import org.realtors.rets.server.protocol.SqlStatements.Query;
 import org.realtors.rets.server.protocol.SqlStatements.SearchQuery;
 
@@ -43,7 +45,7 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         this.mLimit = limit;
     }
 
-    public void setGroups(SortedSet groups)
+    public void setGroups(SortedSet<Group> groups)
     {
         mGroups = groups;
     }
@@ -51,18 +53,17 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
     public void prepareForQuery(MetadataManager manager)
         throws RetsReplyException
     {
-        String resourceName = mParameters.getResourceId();
-        ServerMetadata resource =
-            manager.findByPath(Resource.TABLE, resourceName);
+        String resourceId = mParameters.getResourceId();
+        MetaObject resource = manager.findByPath(MetadataType.RESOURCE.name(), resourceId);
         if (resource == null)
         {
             throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
-                                        "Invalid resource: " + resourceName);
+                                        "Invalid resource: " + resourceId);
         }
 
         String className = mParameters.getClassName();
         mClass = (MClass) manager.findByPath(
-            MClass.TABLE, resourceName + ":" + className);
+                MetadataType.CLASS.name(), resourceId + ":" + className);
         if (mClass == null)
         {
             throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
@@ -70,13 +71,13 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         }
 
         TableGroupFilter groupFilter = RetsServer.getTableGroupFilter();
-        mTables = groupFilter.findTables(mGroups, resourceName, className);
+        mTables = groupFilter.findTables(mGroups, resourceId, className);
         mMetadata = new ServerDmqlMetadata(mTables,
                                            mParameters.isStandardNames());
 
         ConditionRuleSet conditionRuleSet = RetsServer.getConditionRuleSet();
         mSqlConstraint =
-            conditionRuleSet.findSqlConstraint(mGroups, resourceName,
+            conditionRuleSet.findSqlConstraint(mGroups, resourceId,
                                                className);
     }
 
@@ -214,16 +215,16 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
 
     protected String getFromClause()
     {
-        return mClass.getDbTable();
+        return mClass.getXDBName();
     }
 
     private static final Logger LOG =
         Logger.getLogger(DefaultSearchSqlBuilder.class);
     private MClass mClass;
-    private Collection mTables;
+    private Collection<MTable> mTables;
     private ServerDmqlMetadata mMetadata;
     private SearchParameters mParameters;
-    private SortedSet mGroups;
+    private SortedSet<Group> mGroups;
     private Integer mLimit;
     private String mSqlConstraint;
 }

@@ -37,9 +37,9 @@ boolean_element
 
 field_value [AST name]
     : {isLookupField(name.getText())}? lookup_list[name]
-    | {isCharacterField(name.getText())}? string_list[name]
     | DOT_ANY {#field_value = #([DOT_ANY], name, #field_value);}
     | DOT_EMPTY {#field_value = #([DOT_EMPTY], name, #field_value);}
+    | {isCharacterField(name.getText())}? string_list[name]
     | {isCharacterField(name.getText())}? string_literal[name]
     | number {#field_value = #([NUMBER], name, #field_value);}
     | period {#field_value = #([PERIOD], name, #field_value);}

@@ -15,12 +15,13 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MLookupType;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.LookupType;
 
 public class StandardLookupTypeFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection lookupTypes,
+    public void format(FormatterContext context, Collection<MetaObject> lookupTypes,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -33,9 +34,9 @@ public class StandardLookupTypeFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), retsVersion)
             .beginContentOnNewLine();
 
-        for (Iterator i = lookupTypes.iterator(); i.hasNext();)
+        for (Iterator<?> i = lookupTypes.iterator(); i.hasNext();)
         {
-            LookupType lookupType = (LookupType) i.next();
+            MLookupType lookupType = (MLookupType) i.next();
             TagBuilder tag;
             
             // This is ugly: Lookup and LookupType were switched between 1.5, 1.7 and the 1.7.2 DTDs
@@ -48,7 +49,7 @@ public class StandardLookupTypeFormatter extends BaseStandardFormatter
             else
             {
                 tag = new TagBuilder(out, "LookupType")
-                            .beginContentOnNewLine();                
+                            .beginContentOnNewLine();
             }
 
             if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))

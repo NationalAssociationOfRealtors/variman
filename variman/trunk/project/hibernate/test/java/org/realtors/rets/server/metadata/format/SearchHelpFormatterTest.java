@@ -5,14 +5,14 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.SearchHelp;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
 
 public class SearchHelpFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MSearchHelp> getData()
     {
-        List searchHelps = new ArrayList();
-        SearchHelp searchHelp = new SearchHelp();
+        List<MSearchHelp> searchHelps = new ArrayList<MSearchHelp>();
+        MSearchHelp searchHelp = new MSearchHelp();
         searchHelp.setMetadataEntryID("LNSearchHelp");
         searchHelp.setSearchHelpID("LN_SEARCH_HELP");
         searchHelp.setValue("Listing Number (all numbers)");

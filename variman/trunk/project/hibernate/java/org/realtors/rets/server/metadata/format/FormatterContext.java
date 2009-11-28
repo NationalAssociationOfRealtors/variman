@@ -16,8 +16,10 @@ import java.util.Date;
 import java.util.Set;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MTable;
 
-import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.Group;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 
 public class FormatterContext
@@ -52,14 +54,14 @@ public class FormatterContext
 
     public RetsVersion getRetsVersion()
     {
-    	return mRetsVersion;
+        return mRetsVersion;
     }
-    
+
     protected void setRetsVersion(RetsVersion retsVersion)
     {
-    	mRetsVersion = retsVersion;
+        mRetsVersion = retsVersion;
     }
-    
+
     public Date getDate()
     {
         return mDate;
@@ -90,7 +92,7 @@ public class FormatterContext
         mWriter = writer;
     }
 
-    public void format(Collection data, String[] levels)
+    public void format(Collection<MetaObject> data, String[] levels)
     {
         MetadataFormatter formatter = mLookup.lookupFormatter(data);
         formatter.format(this, data, levels);
@@ -109,14 +111,15 @@ public class FormatterContext
      * @param retsClass a RETS class name
      * @return <code>true</code> if table is valid
      */
-    public boolean isAccessibleTable(Table table, String resource,
+    public boolean isAccessibleTable(MTable table, String resource,
                                      String retsClass)
     {
-        Set tables = mGroupFilter.findTables(mGroups, resource, retsClass);
-        return tables.contains(table);
+        Set<MTable> tables = mGroupFilter.findTables(mGroups, resource, retsClass);
+        boolean isAccessibleTable = tables.contains(table);
+        return isAccessibleTable;
     }
 
-    protected void setTableFilter(TableGroupFilter groupFilter, Set groups)
+    protected void setTableFilter(TableGroupFilter groupFilter, Set<Group> groups)
     {
         mGroupFilter = groupFilter;
         mGroups = groups;
@@ -131,6 +134,6 @@ public class FormatterContext
     private PrintWriter mWriter;
     private FormatterLookup mLookup;
     private TableGroupFilter mGroupFilter;
-    private Set mGroups;
+    private Set<Group> mGroups;
     private RetsVersion mRetsVersion;
 }

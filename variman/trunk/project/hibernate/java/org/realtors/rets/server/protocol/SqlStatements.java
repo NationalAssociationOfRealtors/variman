@@ -26,7 +26,7 @@ public interface SqlStatements
 
     public interface SearchQuery extends Query
     {
-        public List/*String*/ getSelectedColumnNames();
+        public List<String> getSelectedColumnNames();
         public DmqlParserMetadata getDmqlParserMetadata();
     }
 

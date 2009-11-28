@@ -13,14 +13,18 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MUpdate;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.Util;
-import org.realtors.rets.server.metadata.Update;
 
 public class CompactUpdateFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection updates,
+    public void format(FormatterContext context, Collection<MetaObject> updates,
                        String[] levels)
     {
         if (updates.size() == 0)
@@ -34,25 +38,25 @@ public class CompactUpdateFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator iterator = updates.iterator(); iterator.hasNext();)
+        for (Iterator<?> iterator = updates.iterator(); iterator.hasNext();)
         {
-            Update update = (Update) iterator.next();
+            MUpdate update = (MUpdate) iterator.next();
             appendDataRow(context, update);
         }
         tag.close();
 
         if (context.isRecursive())
         {
-            for (Iterator iterator = updates.iterator(); iterator.hasNext();)
+            for (Iterator<?> iterator = updates.iterator(); iterator.hasNext();)
             {
-                Update update = (Update) iterator.next();
-                context.format(update.getUpdateTypes(),
-                               update.getPathAsArray());
+                MUpdate update = (MUpdate) iterator.next();
+                String[] path = StringUtils.split(update.getPath(), ":");
+                context.format(update.getChildren(MetadataType.UPDATE_TYPE), path);
             }
         }
     }
 
-    private void appendDataRow(FormatterContext context, Update update)
+    private void appendDataRow(FormatterContext context, MUpdate update)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -65,8 +69,10 @@ public class CompactUpdateFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
-    	"MetadataEntryID",
+        "MetadataEntryID",
         "UpdateName", "Description", "KeyField", "UpdateTypeVersion", "UpdateTypeDate",
     };
 }

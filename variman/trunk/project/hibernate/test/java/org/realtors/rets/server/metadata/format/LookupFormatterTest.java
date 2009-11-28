@@ -5,19 +5,23 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
 
 public class LookupFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MLookup> getData()
     {
-        List lookups = new ArrayList();
-        Lookup lookup = new Lookup();
+        List<MLookup> lookups = new ArrayList<MLookup>();
+        MLookup lookup = new MLookup();
         lookup.setMetadataEntryID("ElementarySchoolDistrict");
         lookup.setLookupName("E_SCHOOL");
         lookup.setVisibleName("Elementary School District");
-        lookup.addLookupType(new LookupType(1));
+        MLookupType lookupType = new MLookupType();
+        lookupType.setUniqueId(Long.valueOf(1));
+        lookupType.setValue("PoudreVally");
+        lookup.addChild(MetadataType.LOOKUP_TYPE, lookupType);
         lookups.add(lookup);
         return lookups;
     }
@@ -64,7 +68,7 @@ public class LookupFormatterTest extends FormatterTestCase
 
             "</METADATA-LOOKUP>\n" +
 
-            LookupType.TABLE + "\n";
+            MetadataType.LOOKUP_TYPE.name() + "\n";
     }
 
     protected String getExpectedStandard()
@@ -93,7 +97,7 @@ public class LookupFormatterTest extends FormatterTestCase
             "<VisibleName>Elementary School District</VisibleName>" + EOL +
             "<LookupTypeVersion>" + VERSION + "</LookupTypeVersion>" + EOL +
             "<LookupTypeDate>" + DATE + "</LookupTypeDate>" + EOL +
-            LookupType.TABLE + EOL +
+            MetadataType.LOOKUP_TYPE.name() + EOL +
             "</Lookup>" + EOL +
             "</METADATA-LOOKUP>" + EOL;
     }

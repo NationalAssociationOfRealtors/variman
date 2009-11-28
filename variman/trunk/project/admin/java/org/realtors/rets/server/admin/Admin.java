@@ -15,8 +15,10 @@ import java.util.Properties;
 import org.hibernate.cfg.Configuration;
 
 import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.metadata.MetadataLoader;
-//import org.realtors.rets.server.metadata.MSystem;
+import org.realtors.rets.server.config.RetsConfigDao;
+import org.realtors.rets.server.config.XmlRetsConfigDao;
+import org.realtors.rets.server.metadata.MetadataDao;
+import org.realtors.rets.server.metadata.XmlMetadataDao;
 
 public class Admin
 {
@@ -145,12 +147,14 @@ public class Admin
         return sLogConfigFile;
     }
     
-    public static MetadataLoader getMetadataLoader()
-    {
-        if (sMetadataLoader == null)
-            sMetadataLoader = new MetadataLoader(sRetsConfig);
-        
-        return sMetadataLoader;
+    public static RetsConfigDao getRetsConfigDao() {
+        RetsConfigDao retsConfigDao = new XmlRetsConfigDao(Admin.getConfigFile());
+        return retsConfigDao;
+    }
+    
+    public static MetadataDao getMetadataDao() {
+        MetadataDao metadataDao = new XmlMetadataDao();
+        return metadataDao;
     }
     
     public static final String PROJECT_NAME = "variman";
@@ -166,6 +170,5 @@ public class Admin
     private static String sVersion;
     private static String sBuildDate;
     private static String sLogConfigFile;
-    private static MetadataLoader sMetadataLoader = null;
 
 }

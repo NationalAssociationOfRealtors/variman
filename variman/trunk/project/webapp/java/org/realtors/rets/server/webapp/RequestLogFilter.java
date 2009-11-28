@@ -37,6 +37,10 @@ import org.realtors.rets.server.webapp.auth.AuthenticationFilter;
 /**
  * A Servlet {@link Filter} which creates a new {@link RequestLogEntry} and
  * makes it available down the filter chain.
+ * <p>
+ * NOTE: This filter should be configured to execute after the
+ * {@link AuthenticationFilter}. This filter attempts to find user information
+ * supplied by the {@link AuthenticationFilter}.
  * 
  * @author Danny
  */

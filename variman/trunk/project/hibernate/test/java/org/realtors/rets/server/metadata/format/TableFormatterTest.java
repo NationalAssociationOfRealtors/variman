@@ -4,16 +4,16 @@ package org.realtors.rets.server.metadata.format;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.realtors.rets.common.metadata.types.MEditMask;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.metadata.AlignmentEnum;
 import org.realtors.rets.server.metadata.DataTypeEnum;
-import org.realtors.rets.server.metadata.EditMask;
 import org.realtors.rets.server.metadata.InterpretationEnum;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.TableStandardName;
 import org.realtors.rets.server.metadata.UnitEnum;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.protocol.TableGroupFilter;
@@ -24,38 +24,42 @@ public class TableFormatterTest extends FormatterTestCase
 {
     public TableFormatterTest()
     {
-        HashSet allTables = new HashSet();
+        Set<MTable> allTables = new HashSet<MTable>();
 
-        mSchool = new Table(1);
+        mSchool = new MTable();
+        mSchool.setUniqueId(Long.valueOf(1));
         mSchool.setSystemName("E_SCHOOL");
-        mSchool.setStandardName(new TableStandardName("ElementarySchool"));
+        mSchool.setStandardName("ElementarySchool");
         mSchool.setLongName("Elementary School");
         mSchool.setShortName("ElemSchool");
-        mSchool.setDbName("E_SCHOOL");
+        mSchool.setDBName("E_SCHOOL");
         mSchool.setMaximumLength(4);
-        mSchool.setDataType(DataTypeEnum.INT);
+        mSchool.setDataType(DataTypeEnum.INT.toString());
         mSchool.setPrecision(0);
         mSchool.setSearchable(true);
-        mSchool.setInterpretation(InterpretationEnum.LOOKUP);
-        mSchool.setAlignment(AlignmentEnum.LEFT);
+        mSchool.setInterpretation(InterpretationEnum.LOOKUP.toString());
+        mSchool.setAlignment(AlignmentEnum.LEFT.toString());
         mSchool.setMetadataEntryID("ElementarySchool");
 
-        EditMask em1 = new EditMask(1);
+        MEditMask em1 = new MEditMask();
+        em1.setUniqueId(Long.valueOf(1));
         em1.setEditMaskID("EM1");
-        EditMask em2 = new EditMask(2);
+        MEditMask em2 = new MEditMask();
+        em2.setUniqueId(Long.valueOf(2));
         em2.setEditMaskID("EM2");
-        Set editMasks = new HashSet();
+        Set<MEditMask> editMasks = new LinkedHashSet<MEditMask>();
         editMasks.add(em1);
         editMasks.add(em2);
-        mSchool.setEditMasks(editMasks);
+        String editMaskId = MTable.toEditMaskId(editMasks);
+        mSchool.setEditMaskID(editMaskId);
 
         mSchool.setUseSeparator(false);
-        Lookup lookup = new Lookup();
+        MLookup lookup = new MLookup();
         lookup.setLookupName("E_SCHOOL");
-        mSchool.setLookup(lookup);
+        mSchool.setMLookup(lookup);
 
         mSchool.setMaxSelect(1);
-        mSchool.setUnits(UnitEnum.FEET);
+        mSchool.setUnits(UnitEnum.FEET.toString());
         mSchool.setIndex(true);
         mSchool.setMinimum(3);
         mSchool.setMaximum(4);
@@ -64,17 +68,18 @@ public class TableFormatterTest extends FormatterTestCase
         mSchool.setUnique(false);
         allTables.add(mSchool);
 
-        mAgent = new Table(2);
+        mAgent = new MTable();
+        mAgent.setUniqueId(Long.valueOf(2));
         mAgent.setSystemName("AGENT_ID");
-        mAgent.setStandardName(new TableStandardName("ListAgentAgentID"));
+        mAgent.setStandardName("ListAgentAgentID");
         mAgent.setLongName("Listing Agent ID");
         mAgent.setShortName("AgentID");
-        mAgent.setDbName("AGENT_ID");
+        mAgent.setDBName("AGENT_ID");
         mAgent.setMaximum(6);
-        mAgent.setDataType(DataTypeEnum.CHARACTER);
+        mAgent.setDataType(DataTypeEnum.CHARACTER.toString());
         mAgent.setPrecision(0);
         mAgent.setSearchable(true);
-        mAgent.setAlignment(AlignmentEnum.LEFT);
+        mAgent.setAlignment(AlignmentEnum.LEFT.toString());
         mAgent.setMaxSelect(0);
         mAgent.setIndex(false);
         mAgent.setMinimum(0);
@@ -85,17 +90,18 @@ public class TableFormatterTest extends FormatterTestCase
         mAgent.setMetadataEntryID("ListAgentAgentID");
         allTables.add(mAgent);
 
-        mListingPrice = new Table(3);
+        mListingPrice = new MTable();
+        mListingPrice.setUniqueId(Long.valueOf(3));
         mListingPrice.setSystemName("LISTING_PRICE");
-        mListingPrice.setStandardName(new TableStandardName("ListingPrice"));
+        mListingPrice.setStandardName("ListingPrice");
         mListingPrice.setLongName("Listing Price");
         mListingPrice.setShortName("ListingPrice");
-        mListingPrice.setDbName("LP");
+        mListingPrice.setDBName("LP");
         mListingPrice.setMaximum(6);
-        mListingPrice.setDataType(DataTypeEnum.INT);
+        mListingPrice.setDataType(DataTypeEnum.INT.toString());
         mListingPrice.setPrecision(0);
         mListingPrice.setSearchable(true);
-        mListingPrice.setAlignment(AlignmentEnum.LEFT);
+        mListingPrice.setAlignment(AlignmentEnum.LEFT.toString());
         mListingPrice.setMaxSelect(0);
         mListingPrice.setIndex(false);
         mListingPrice.setMinimum(0);
@@ -110,11 +116,10 @@ public class TableFormatterTest extends FormatterTestCase
         mGroupFilter.setTables("Property", "MOB", allTables);
 
         mNewspapers = new Group("Newspapers");
-        mGroups = new HashSet();
+        mGroups = new HashSet<Group>();
         mGroups.add(mNewspapers);
 
-        FilterRule filterRule = new FilterRule(
-            FilterRule.EXCLUDE);
+        FilterRule filterRule = new FilterRule(FilterRule.EXCLUDE);
         filterRule.setResource("Property");
         filterRule.setRetsClass("MOB");
         filterRule.addSystemName("LISTING_PRICE");
@@ -123,9 +128,9 @@ public class TableFormatterTest extends FormatterTestCase
         mGroupFilter.addRules(rules);
     }
 
-    protected List getData()
+    protected List<MTable> getData()
     {
-        List tables = new ArrayList();
+        List<MTable> tables = new ArrayList<MTable>();
         tables.add(mSchool);
         tables.add(mAgent);
         tables.add(mListingPrice);
@@ -137,7 +142,7 @@ public class TableFormatterTest extends FormatterTestCase
         return mGroupFilter;
     }
 
-    protected Set getGroups()
+    protected Set<Group> getGroups()
     {
         return mGroups;
     }
@@ -280,17 +285,17 @@ public class TableFormatterTest extends FormatterTestCase
 
     public void testCompactFormatIsEmptyIfAllTablesFiltered()
     {
-        ArrayList data = new ArrayList();
+        List<MTable> data = new ArrayList<MTable>();
         data.add(mListingPrice);
         String formatted = format(getCompactFormatter(), data, 
                                   getLevels(), FormatterContext.NOT_RECURSIVE);
         assertLinesEqual("", formatted);
     }
 
-    private Table mSchool;
-    private Table mAgent;
-    private Table mListingPrice;
+    private MTable mSchool;
+    private MTable mAgent;
+    private MTable mListingPrice;
     private Group mNewspapers;
-    private HashSet mGroups;
+    private Set<Group> mGroups;
     private TableGroupFilter mGroupFilter;
 }

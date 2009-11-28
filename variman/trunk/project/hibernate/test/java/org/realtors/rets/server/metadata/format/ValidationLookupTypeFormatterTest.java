@@ -5,14 +5,14 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 public class ValidationLookupTypeFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MValidationLookupType> getData()
     {
-        List validationLookupTypes = new ArrayList();
-        ValidationLookupType validationLookupType = new ValidationLookupType();
+        List<MValidationLookupType> validationLookupTypes = new ArrayList<MValidationLookupType>();
+        MValidationLookupType validationLookupType = new MValidationLookupType();
         validationLookupType.setMetadataEntryID("Area135");
         validationLookupType.setValidText("135");
         validationLookupType.setParent1Value("AREA2");

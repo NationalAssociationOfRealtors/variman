@@ -9,7 +9,6 @@
 package org.realtors.rets.server.admin.swingui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -34,14 +33,10 @@ import javax.swing.text.Document;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.log4j.Logger;
-import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.RetsConfig;
-import org.realtors.rets.server.metadata.MSystem;
 
 public class ConfigurationPanel extends AdminTab
 {

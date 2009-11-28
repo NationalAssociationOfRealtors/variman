@@ -4,6 +4,26 @@ package org.realtors.rets.server.metadata;
 
 import java.util.Date;
 
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MEditMask;
+import org.realtors.rets.common.metadata.types.MForeignKey;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
+import org.realtors.rets.common.metadata.types.MObject;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdate;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
+import org.realtors.rets.common.metadata.types.MUpdateType;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
+
 /**
  * Utilize ObjectMother test pattern.
  */
@@ -16,151 +36,152 @@ public class ObjectMother
         return system;
     }
 
-    public static Resource createResource()
+    public static MResource createResource()
     {
-        Resource resource = new Resource();
+        MResource resource = new MResource();
         MSystem system = createSystem();
-        resource.setSystem(system);
         resource.setResourceID("Property");
-        resource.setStandardName(ResourceStandardNameEnum.PROPERTY);
-        resource.updateLevel();
-        system.addResource(resource);
+        resource.setStandardName(ResourceStandardNameEnum.PROPERTY.toString());
+        system.addChild(MetadataType.RESOURCE, resource);
         return resource;
     }
 
     public static MClass createClass()
     {
-        MClass clazz = new MClass("RES");
-        clazz.setStandardName(ClassStandardNameEnum.RESIDENTIAL);
-        Resource resource = createResource();
-        resource.addClass(clazz);
+        MClass clazz = new MClass();
+        MResource resource = createResource();
+        clazz.setClassName("RES");
+        clazz.setStandardName(ClassStandardNameEnum.RESIDENTIAL.toString());
+        resource.addChild(MetadataType.CLASS, clazz);
         return clazz;
     }
 
-    public static Table createTable()
+    public static MTable createTable()
     {
-        Table table = new Table("E_SCHOOL");
+        MTable table = new MTable();
         MClass clazz = createClass();
-        clazz.addTable(table);
+        table.setSystemName("E_SCHOOL");
+        clazz.addChild(MetadataType.TABLE, table);
         return table;
     }
 
-    public static Update createUpdate()
+    public static MUpdate createUpdate()
     {
-        Update update = new Update();
-        update.setMClass(createClass());
+        MUpdate update = new MUpdate();
+        MClass clazz = createClass();
         update.setUpdateName("Change");
-        update.updateLevel();
+        clazz.addChild(MetadataType.UPDATE, update);
         return update;
     }
 
-    public static UpdateHelp createUpdateHelp()
+    public static MUpdateHelp createUpdateHelp()
     {
-        UpdateHelp updateHelp = new UpdateHelp();
+        MUpdateHelp updateHelp = new MUpdateHelp();
+        MResource resource = createResource();
         updateHelp.setUpdateHelpID("1");
         updateHelp.setValue("Enter the number in the following format");
-        Resource resource = createResource();
-        resource.addUpdateHelp(updateHelp);
+        resource.addChild(MetadataType.UPDATE_HELP, updateHelp);
         return updateHelp;
     }
 
-    public static UpdateType createUpdateType()
+    public static MUpdateType createUpdateType()
     {
-        UpdateType updateType = new UpdateType();
-        updateType.setUpdate(createUpdate());
-        updateType.updateLevel();
+        MUpdateType updateType = new MUpdateType();
+        MUpdate update = createUpdate();
+        update.addChild(MetadataType.UPDATE_TYPE, updateType);
         return updateType;
     }
 
     public static MObject createMObject()
     {
         MObject object = new MObject();
-        object.setResource(createResource());
+        MResource resource = createResource();
+        resource.addChild(MetadataType.OBJECT, object);
         return object;
     }
 
-    public static SearchHelp createSearchHelp()
+    public static MSearchHelp createSearchHelp()
     {
-        SearchHelp searchHelp = new SearchHelp();
-        searchHelp.setResource(createResource());
-        searchHelp.updateLevel();
+        MSearchHelp searchHelp = new MSearchHelp();
+        MResource resource = createResource();
+        resource.addChild(MetadataType.SEARCH_HELP, searchHelp);
         return searchHelp;
     }
 
-    public static EditMask createEditMask()
+    public static MEditMask createEditMask()
     {
-        EditMask editMask = new EditMask();
-        editMask.setResource(createResource());
-        editMask.updateLevel();
+        MEditMask editMask = new MEditMask();
+        MResource resource = createResource();
+        resource.addChild(MetadataType.EDITMASK, editMask);
         return editMask;
     }
 
-    public static Lookup createLookup()
+    public static MLookup createLookup()
     {
-        Resource resource = createResource();
-        Lookup lookup = new Lookup();
+        MLookup lookup = new MLookup();
+        MResource resource = createResource();
         lookup.setLookupName("E_SCHOOL");
-        resource.addLookup(lookup);
+        resource.addChild(MetadataType.LOOKUP, lookup);
         return lookup;
     }
 
-    public static LookupType createLookupType()
+    public static MLookupType createLookupType()
     {
-        Lookup lookup = createLookup();
-        LookupType lookupType = new LookupType();
+        MLookupType lookupType = new MLookupType();
+        MLookup lookup = createLookup();
         lookupType.setValue("303");
-        lookup.addLookupType(lookupType);
+        lookup.addChild(MetadataType.LOOKUP_TYPE, lookupType);
         return lookupType;
     }
 
-    public static ValidationLookup createValidationLookup()
+    public static MValidationLookup createValidationLookup()
     {
-        ValidationLookup validationLookup = new ValidationLookup();
-        validationLookup.setResource(createResource());
+        MValidationLookup validationLookup = new MValidationLookup();
+        MResource resource = createResource();
         validationLookup.setValidationLookupName("School");
-        validationLookup.updateLevel();
+        resource.addChild(MetadataType.VALIDATION_LOOKUP, validationLookup);
         return validationLookup;
     }
 
-    public static ValidationLookupType createValidationLookupType()
+    public static MValidationLookupType createValidationLookupType()
     {
-        ValidationLookupType validationLookupType = new ValidationLookupType();
-        validationLookupType.setValidationLookup(createValidationLookup());
-        validationLookupType.updateLevel();
+        MValidationLookupType validationLookupType = new MValidationLookupType();
+        MValidationLookup validationLookup = createValidationLookup();
+        validationLookup.addChild(MetadataType.VALIDATION_LOOKUP_TYPE, validationLookupType);
         return validationLookupType;
     }
 
-    public static ValidationExternal createValidationExternal()
+    public static MValidationExternal createValidationExternal()
     {
-        ValidationExternal validationExternal = new ValidationExternal();
-        validationExternal.setResource(createResource());
+        MValidationExternal validationExternal = new MValidationExternal();
+        MResource resource = createResource();
         validationExternal.setValidationExternalName("VET1");
-        validationExternal.updateLevel();
+        resource.addChild(MetadataType.VALIDATION_EXTERNAL, validationExternal);
         return validationExternal;
     }
 
-    public static ValidationExternalType createValidationExternalType()
+    public static MValidationExternalType createValidationExternalType()
     {
-        ValidationExternalType validationExternalType =
-            new ValidationExternalType();
-        validationExternalType.setValidationExternal(
-            createValidationExternal());
-        validationExternalType.updateLevel();
+        MValidationExternalType validationExternalType =
+            new MValidationExternalType();
+        MValidationExternal validationExternal = createValidationExternal();
+        validationExternal.addChild(MetadataType.VALIDATION_EXTERNAL_TYPE, validationExternalType);
         return validationExternalType;
     }
 
-    public static ValidationExpression createValidationExpression()
+    public static MValidationExpression createValidationExpression()
     {
-        ValidationExpression validationExpression = new ValidationExpression();
-        validationExpression.setResource(createResource());
-        validationExpression.updateLevel();
+        MValidationExpression validationExpression = new MValidationExpression();
+        MResource resource = createResource();
+        resource.addChild(MetadataType.VALIDATION_EXPRESSION, validationExpression);
         return validationExpression;
     }
 
-    public static ForeignKey createForeignKey()
+    public static MForeignKey createForeignKey()
     {
-        ForeignKey foreignKey = new ForeignKey();
-        foreignKey.setSystem(createSystem());
+        MForeignKey foreignKey = new MForeignKey();
+        MSystem system = createSystem();
+        system.addChild(MetadataType.FOREIGN_KEYS, foreignKey);
         return foreignKey;
     }
 }

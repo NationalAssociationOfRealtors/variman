@@ -15,10 +15,11 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.common.util.TagBuilder;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.dmql.DmqlParserMetadata;
-import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.server.metadata.MetadataUtils;
 import org.realtors.rets.server.metadata.UnitEnum;
 
 public class ResidentialPropertyFormatter implements SearchResultsFormatter
@@ -68,7 +69,7 @@ public class ResidentialPropertyFormatter implements SearchResultsFormatter
         TagBuilder livingArea = new TagBuilder(out, "LivingArea")
             .beginContentOnNewLine();
         TagBuilder area = new TagBuilder(out, "Area");
-        Table livingAreaTable = metadata.getTable("LivingArea");
+        MTable livingAreaTable = metadata.getTable("LivingArea");
         String units = getUnits(livingAreaTable);
         if (units != null)
         {
@@ -81,20 +82,21 @@ public class ResidentialPropertyFormatter implements SearchResultsFormatter
         residentialProperty.close();
     }
 
-    private String getUnits(Table table)
+    private String getUnits(MTable table)
     {
         if (table == null)
         {
             return null;
         }
-        return (String) UNITS_MAP.get(table.getUnits());
+        UnitEnum units = MetadataUtils.getUnitEnum(table);
+        return UNITS_MAP.get(units);
     }
 
-    private static final Map UNITS_MAP;
+    private static final Map<UnitEnum, String> UNITS_MAP;
 
     static
     {
-        UNITS_MAP = new HashMap();
+        UNITS_MAP = new HashMap<UnitEnum, String>();
         UNITS_MAP.put(UnitEnum.SQFT, "SqFeet");
         UNITS_MAP.put(UnitEnum.SQMETERS, "SqMeters");
         UNITS_MAP.put(UnitEnum.ACRES, "Acres");

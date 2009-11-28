@@ -26,7 +26,6 @@ import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.RetsConfigDao;
 import org.realtors.rets.server.config.XmlRetsConfigDao;
-import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.webapp.auth.NonceReaper;
 import org.realtors.rets.server.webapp.auth.NonceTable;
 
@@ -44,20 +43,11 @@ public class WebApp
     public static ServletContext getServletContext()
     {
         synchronized (sLock) {
+            if (sServletContext == null) {
+                throw new IllegalStateException("Must set the servlet context via the load method before calling.");
+            }
             return sServletContext;
         }
-    }
-
-    public static MetadataManager getMetadataManager()
-    {
-        synchronized (sLock) {
-            return sMetadataManager;
-        }
-    }
-
-    public static String getLog4jFile()
-    {
-        return sLog4jFile;
     }
 
     public static void setLog4jFile(String log4jFile)
@@ -76,50 +66,11 @@ public class WebApp
             PropertyConfigurator.configure(sLog4jFile);
         }
     }
-
-//    public static SessionHelper createHelper()
-//    {
-//        return RetsServer.createSessionHelper();
-//    }
-
-    public static String getGetObjectRoot()
-    {
-        return RetsServer.getRetsConfiguration().getGetObjectRoot();
-    }
-
-    public static void setPhotoPattern(String photoPattern)
-    {
-        RetsServer.getRetsConfiguration().setPhotoPattern(photoPattern);
-    }
-
-    public static String getPhotoPattern()
-    {
-        return RetsServer.getRetsConfiguration().getPhotoPattern();
-    }
-
-    public static String getObjectSetPattern()
-    {
-        return RetsServer.getRetsConfiguration().getObjectSetPattern();
-    }
-
-    public static void setNonceTable(NonceTable nonceTable)
-    {
-    	synchronized (sLock) {
-	        sNonceTable = nonceTable;
-	    }
-    }
-
+    
     public static NonceTable getNonceTable()
     {
         synchronized (sLock) {
             return sNonceTable;
-        }
-    }
-
-    public static void setNonceReaper(NonceReaper reaper)
-    {
-        synchronized (sLock) {
-            sReaper = reaper;
         }
     }
 
@@ -130,7 +81,7 @@ public class WebApp
         }
     }
 
-    public static void initProperties() throws IOException
+    public static void initReleaseProperties() throws IOException
     {
         ClassLoader classLoader =
             Thread.currentThread().getContextClassLoader();
@@ -154,7 +105,7 @@ public class WebApp
             return sBuildDate;
         }
     }
-    
+
     // This mode added by RealGo to allow a certain non-compliant client to log on,
     // namely HP Real Estate Marketing Assistant (HPMA or HP REMA)
     private static boolean sHPMAMode = false;
@@ -162,6 +113,7 @@ public class WebApp
     {
         sHPMAMode = mode;
     }
+
     public static boolean getHPMAMode()
     {
         return sHPMAMode;
@@ -195,7 +147,7 @@ public class WebApp
     {
         sHPMALoginPath = path;
     }
-
+    
     public static boolean isHPMALoginPath(String path)
     {
         return sHPMAMode && sHPMALoginPath.equals(path);
@@ -207,10 +159,9 @@ public class WebApp
         {
             try
             {
-                initProperties();
+                initReleaseProperties();
                 RetsConfig retsConfig = initRetsConfiguration();
                 RetsServer.setRetsConfiguration(retsConfig);
-                sMetadataManager = RetsServer.getMetadataManager();
             }
             catch (IOException e)
             {
@@ -255,13 +206,7 @@ public class WebApp
         return config;
     }
 
-    public static RetsConfig getRetsConfiguration()
-    {
-        return RetsServer.getRetsConfiguration();
-    }
-
-    private static String getContextInitParameter(String param, String defaultValue)
-    {
+    private static String getContextInitParameter(String param, String defaultValue) {
         String value = getServletContext().getInitParameter(param);
         return (value == null) ? defaultValue : value;
     }
@@ -270,7 +215,6 @@ public class WebApp
     public static final String SERVER_NAME = "Variman";
 
     private static ServletContext sServletContext;
-    private static MetadataManager sMetadataManager;
     private static String sLog4jFile;
     private static NonceTable sNonceTable;
     private static NonceReaper sReaper;
@@ -278,5 +222,5 @@ public class WebApp
     private static String sBuildDate;
     private static String sHPMALoginPath = "/server/login";
     private static Log LOG = LogFactory.getLog(WebApp.class);
-    private static final WebApp sLock = new WebApp();
+    private static final Object sLock = new Object();
 }

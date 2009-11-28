@@ -17,20 +17,21 @@ import java.util.List;
 
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.Table;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MTable;
 
 public class CompactTableFormatter extends MetadataFormatter
 {
     private Collection filterInaccessibleTables(FormatterContext context,
-                                                Collection tables,
+                                                Collection<MetaObject> tables,
                                                 String[] levels)
     {
         String resource = levels[RESOURCE_LEVEL];
         String retsClass = levels[CLASS_LEVEL];
-        List filteredTables = new ArrayList();
-        for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+        List<MTable> filteredTables = new ArrayList<MTable>();
+        for (Iterator<?> iterator = tables.iterator(); iterator.hasNext();)
         {
-            Table table = (Table) iterator.next();
+            MTable table = (MTable) iterator.next();
             if (context.isAccessibleTable(table, resource, retsClass))
             {
                 filteredTables.add(table);
@@ -54,15 +55,17 @@ public class CompactTableFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+        for (Iterator<?> iterator = tables.iterator(); iterator.hasNext();)
         {
-            Table table = (Table) iterator.next();
+            MTable table = (MTable) iterator.next();
             appendDataRow(context, table);
         }
         tag.close();
     }
 
-    private void appendDataRow(FormatterContext context, Table table)
+    // TODO: May be able to replace with a method similar to
+    // org.realtors.rets.common.metadata.formatDataRow(MetaObject).
+    private void appendDataRow(FormatterContext context, MTable table)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -70,24 +73,19 @@ public class CompactTableFormatter extends MetadataFormatter
         row.append(table.getSystemName());
         row.append(table.getStandardName());
         row.append(table.getLongName());
-        row.append(table.getDbName());
+        row.append(table.getDBName());
         row.append(table.getShortName());
         row.append(table.getMaximumLength());
         row.append(table.getDataType());
         row.append(table.getPrecision());
-        row.append(table.isSearchable());
+        row.append(table.getSearchable());
         row.append(table.getInterpretation());
         row.append(table.getAlignment());
-        row.append(table.isUseSeparator());
-        row.append(table.getEditMasks());
-
-        String lookupName = null;
-        if (table.getLookup() != null)
-        {
-            lookupName = table.getLookup().getLookupName();
-        }
-        row.append(lookupName);
-
+        row.append(table.getUseSeparator());
+        row.append(table.getEditMaskID());
+        
+        row.append(table.getLookupName());
+        
         row.append(table.getMaxSelect());
         row.append(table.getUnits());
         row.append(table.getIndex());
@@ -95,8 +93,8 @@ public class CompactTableFormatter extends MetadataFormatter
         row.append(table.getMaximum());
         row.append(table.getDefault());
         row.append(table.getRequired());
-        row.append(table.getSearchHelp());
-        row.append(table.isUnique());
+        row.append(table.getSearchHelpID());
+        row.append(table.getUnique());
         
         // 1.7.2
         row.append(table.getModTimeStamp());
@@ -109,15 +107,17 @@ public class CompactTableFormatter extends MetadataFormatter
         row.end();
     }
 
+    // TODO: Replace with static constants from org.realtors.rets.common.metadata.types.MTable
+    // or use MTable.getAttributeNames() instead.
     private static final String[] COLUMNS = new String[] {
-    	"MetadataEntryID",
+        "MetadataEntryID",
         "SystemName", "StandardName", "LongName", "DBName", "ShortName",
         "MaximumLength", "DataType", "Precision", "Searchable",
         "Interpretation", "Alignment", "UseSeparator", "EditMaskID",
         "LookupName", "MaxSelect", "Units", "Index", "Minimum", "Maximum",
         "Default", "Required", "SearchHelpID", "Unique",
         // 1.7.2
-        "ModTimeStamp","ForeignKeyName","ForeignField", 
+        "ModTimeStamp","ForeignKeyName","ForeignField",
         "KeyQuery","KeySelect","InKeyIndex",
     };
 }

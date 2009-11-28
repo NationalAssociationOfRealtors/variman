@@ -1,66 +1,23 @@
 package org.realtors.rets.server.admin.swingui.metadata;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.JTextField;
-import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-
 import org.realtors.rets.common.metadata.AttrType;
-import org.realtors.rets.common.metadata.MetaParseException;
 import org.realtors.rets.common.metadata.Metadata;
 import org.realtors.rets.common.metadata.MetaObject;
-import org.realtors.rets.common.metadata.JDomCompactBuilder;
 import org.realtors.rets.common.metadata.attrib.AttrAlphanum;
-import org.realtors.rets.common.metadata.attrib.AttrBoolean;
-import org.realtors.rets.common.metadata.attrib.AttrEnum;
 import org.realtors.rets.common.metadata.types.MClass;
 import org.realtors.rets.common.metadata.types.MEditMask;
 import org.realtors.rets.common.metadata.types.MForeignKey;
@@ -80,16 +37,11 @@ import org.realtors.rets.common.metadata.types.MValidationExternalType;
 import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
-import org.realtors.rets.server.IOUtils;
-import org.realtors.rets.server.JdomUtils;
 import org.realtors.rets.server.admin.Admin;
-import org.realtors.rets.server.admin.AdminUtils;
 import org.realtors.rets.server.admin.swingui.AdminFrame;
-import org.realtors.rets.server.admin.swingui.MetadataPanel;
 import org.realtors.rets.server.admin.swingui.SwingUtils;
 import org.realtors.rets.server.admin.swingui.SwingWorker;
-import org.realtors.rets.server.admin.swingui.TextValuePanel;
-import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.metadata.MetadataDao;
 
 public class MetadataConversionDialog extends MetadataDialog
 {
@@ -131,19 +83,19 @@ public class MetadataConversionDialog extends MetadataDialog
 
                 try
                 {
-                    RetsConfig config = Admin.getRetsConfig();
-                    mSystem = config.getMetadata().getSystem();
+                    MetadataDao metadataDao = Admin.getMetadataDao();
+                    mSystem = metadataDao.getMetadata().getSystem();
                     updateStatus("Converting System");
 
                     if (mSystem.getTimeZoneOffset() == null || mSystem.getTimeZoneOffset().length() < 1)
-                        mSystem.setAttribute(mSystem.TIMEZONEOFFSET, "-00:00");
+                        mSystem.setAttribute(MSystem.TIMEZONEOFFSET, "-00:00");
                     
                     /*
                      * The NAR sample metadata used the tag "Comment" and if anyone used that as a starting
                      * point, the Comment tag needs to be converted to COMMENT.
                      */
                     if (mSystem.getAttributeAsString("Comments") != null)
-                        mSystem.setAttribute(mSystem.COMMENTS, mSystem.getAttributeAsString("Comments"));
+                        mSystem.setAttribute(MSystem.COMMENTS, mSystem.getAttributeAsString("Comments"));
                     
                     cleanupUnderscores(mSystem);
                     
@@ -178,7 +130,7 @@ public class MetadataConversionDialog extends MetadataDialog
                             updateStatus("Converting Class " + clazz.getId());
                             if (clazz.getAttributeAsString("DBname") != null)
                             {
-                                clazz.setAttribute("X-DBName", clazz.getAttributeAsString("DBName"));
+                                clazz.setAttribute(MClass.X_DBNAME, clazz.getAttributeAsString("DBName"));
                                 clazz.removeAttribute("DBName");
                             }
                             cleanupUnderscores(clazz);
@@ -190,7 +142,7 @@ public class MetadataConversionDialog extends MetadataDialog
                             {
                                 updateStatus("Converting Table " + table.getId());
                                 if (table.getSystemName() != null)
-                                    table.setAttribute(table.METADATAENTRYID, table.getSystemName());
+                                    table.setAttribute(MTable.METADATAENTRYID, table.getSystemName());
                                 cleanupUnderscores(table);
                                 cleanupKeyFields(table);
                             }
@@ -201,18 +153,18 @@ public class MetadataConversionDialog extends MetadataDialog
                             {
                                 updateStatus("Converting Update " + update.getId());
                                 if (update.getUpdateName() != null)
-                                    update.setAttribute(update.METADATAENTRYID, update.getUpdateName());
+                                    update.setAttribute(MUpdate.METADATAENTRYID, update.getUpdateName());
                                 /*
                                  * "Date" and "Version" must be converted to "UpdateTypeDate" and "UpdateTypeVersion".
                                  */
                                    if (update.getAttributeAsString("Date") != null)
                                    {
-                                	   update.setAttribute(update.UPDATETYPEDATE, update.getAttributeAsString("Date"));
+                                	   update.setAttribute(MUpdate.UPDATETYPEDATE, update.getAttributeAsString("Date"));
                                 	   update.removeAttribute("Date");
                                    }
                                    if (update.getAttributeAsString("Version") != null)
                                    {
-                                	   update.setAttribute(update.UPDATETYPEVERSION, update.getAttributeAsString("Version"));
+                                	   update.setAttribute(MUpdate.UPDATETYPEVERSION, update.getAttributeAsString("Version"));
                                 	   update.removeAttribute("Version");
                                    }
                                 cleanupUnderscores(update);
@@ -224,7 +176,7 @@ public class MetadataConversionDialog extends MetadataDialog
                                 {
                                     updateStatus("Converting UpdateType " + updateType.getId());
                                     if (updateType.getSystemName() != null)
-                                        updateType.setAttribute(updateType.METADATAENTRYID, updateType.getSystemName());
+                                        updateType.setAttribute(MUpdateType.METADATAENTRYID, updateType.getSystemName());
                                     cleanupUnderscores(updateType);
                                     cleanupKeyFields(updateType);
                                 }
@@ -237,14 +189,14 @@ public class MetadataConversionDialog extends MetadataDialog
                         {
                             updateStatus("Converting Lookup " + lookup.getId());
                             if (lookup.getLookupName() != null)
-                                lookup.setAttribute(lookup.METADATAENTRYID, lookup.getLookupName());
+                                lookup.setAttribute(MLookup.METADATAENTRYID, lookup.getLookupName());
                             cleanupUnderscores(lookup);
                             
                             for (MLookupType lookupType : lookup.getMLookupTypes())
                             {
                                 updateStatus("Converting LookupType " + lookupType.getId());
                                 if (lookupType.getShortValue() != null)
-                                    lookupType.setAttribute(lookupType.METADATAENTRYID, lookupType.getShortValue());
+                                    lookupType.setAttribute(MLookupType.METADATAENTRYID, lookupType.getShortValue());
                                 cleanupUnderscores(lookupType);
                             }
                         }
@@ -259,7 +211,7 @@ public class MetadataConversionDialog extends MetadataDialog
                             {
                                 if (length > 32)
                                     length = 32;
-                                obj.setAttribute(obj.METADATAENTRYID, obj.getVisibleName().substring(0, length - 1));
+                                obj.setAttribute(MObject.METADATAENTRYID, obj.getVisibleName().substring(0, length - 1));
                             }
                             obj.removeAttribute("StandardName");
                             cleanupUnderscores(obj);
@@ -271,7 +223,7 @@ public class MetadataConversionDialog extends MetadataDialog
                         {
                             updateStatus("Converting EditMask " + editMask.getId());
                             if (editMask.getEditMaskID() != null)
-                                editMask.setAttribute(editMask.METADATAENTRYID, editMask.getEditMaskID());
+                                editMask.setAttribute(MEditMask.METADATAENTRYID, editMask.getEditMaskID());
                             cleanupUnderscores(editMask);
                         }
                         /*
@@ -281,7 +233,7 @@ public class MetadataConversionDialog extends MetadataDialog
                         {
                             updateStatus("Converting SearchHelp " + searchHelp.getId());
                             if (searchHelp.getSearchHelpID() != null)
-                                searchHelp.setAttribute(searchHelp.METADATAENTRYID, searchHelp.getSearchHelpID());
+                                searchHelp.setAttribute(MSearchHelp.METADATAENTRYID, searchHelp.getSearchHelpID());
                             cleanupUnderscores(searchHelp);
                         }
                         /*
@@ -291,7 +243,7 @@ public class MetadataConversionDialog extends MetadataDialog
                         {
                             updateStatus("Converting UpdateHelp " + updateHelp.getId());
                             if (updateHelp.getUpdateHelpID() != null)
-                                updateHelp.setAttribute(updateHelp.METADATAENTRYID, updateHelp.getUpdateHelpID());
+                                updateHelp.setAttribute(MUpdateHelp.METADATAENTRYID, updateHelp.getUpdateHelpID());
                             cleanupUnderscores(updateHelp);
                         }
                         /*
@@ -301,7 +253,7 @@ public class MetadataConversionDialog extends MetadataDialog
                         {
                             updateStatus("Converting ValidationLookup " + lookup.getId());
                             if (lookup.getValidationLookupName() != null)
-                                lookup.setAttribute(lookup.METADATAENTRYID, lookup.getValidationLookupName());
+                                lookup.setAttribute(MValidationLookup.METADATAENTRYID, lookup.getValidationLookupName());
                             cleanupUnderscores(lookup);
                             /*
                              * Enumerate the validation lookup types.
@@ -310,18 +262,18 @@ public class MetadataConversionDialog extends MetadataDialog
                             {
                                 updateStatus("Converting ValidationLookupType " + lookupType.getId());
                                 if (lookupType.getValidText() != null)
-                                    lookupType.setAttribute(lookupType.METADATAENTRYID, lookupType.getValidText());
+                                    lookupType.setAttribute(MValidationLookupType.METADATAENTRYID, lookupType.getValidText());
                                 cleanupUnderscores(lookupType);
                             }
                         }
                         /*
                          * Enumerate the validation externals.
                          */
-                        for (MValidationExternal validation : resource.getMValidationExternal())
+                        for (MValidationExternal validation : resource.getMValidationExternals())
                         {
                             updateStatus("Converting ValidationExternal " + validation.getId());
                             if (validation.getValidationExternalName() != null)
-                                validation.setAttribute(validation.METADATAENTRYID, validation.getValidationExternalName());
+                                validation.setAttribute(MValidationExternal.METADATAENTRYID, validation.getValidationExternalName());
                             cleanupUnderscores(validation);
                             /*
                              * Enumerate the validation external types.
@@ -334,7 +286,7 @@ public class MetadataConversionDialog extends MetadataDialog
                                 {
                                     if (length > 32)
                                         length = 32;
-                                    externalType.setAttribute(externalType.METADATAENTRYID, 
+                                    externalType.setAttribute(MValidationExternalType.METADATAENTRYID, 
                                                                 externalType.getSearchField().substring(0, length - 1));
                                 }
                                 cleanupUnderscores(externalType);
@@ -347,7 +299,7 @@ public class MetadataConversionDialog extends MetadataDialog
                         {
                             updateStatus("Converting ValidationExpression " + validationExpression.getId());
                             if (validationExpression.getValidationExpressionID() != null)
-                                validationExpression.setAttribute(validationExpression.METADATAENTRYID, 
+                                validationExpression.setAttribute(MValidationExpression.METADATAENTRYID, 
                                                                 validationExpression.getValidationExpressionID());
                             cleanupUnderscores(validationExpression);
                         }

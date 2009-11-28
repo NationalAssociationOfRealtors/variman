@@ -29,6 +29,8 @@ import org.realtors.rets.server.LogPropertiesUtils;
 import org.realtors.rets.server.PasswordMethod;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.config.DatabaseConfig;
+import org.realtors.rets.server.config.HibernateUtils;
 import org.realtors.rets.server.config.RetsConfig;
 
 /**
@@ -119,14 +121,14 @@ public class InitServlet extends RetsServlet
                 logHome = System.getProperty(prefix + ".home");
                 if (logHome == null)
                 {
-                	logHome = System.getProperty("catalina.home");
-                	if (logHome == null)
-                	{
-                		logHome = System.getProperty("user.dir");
-                	}
+                    logHome = System.getProperty("catalina.home");
+                    if (logHome == null)
+                    {
+                        logHome = System.getProperty("user.dir");
+                    }
                     else
                     {
-	                    logHome = logHome + File.separator + "logs";
+                        logHome = logHome + File.separator + "logs";
                     }
                 }
                 else 
@@ -173,18 +175,21 @@ public class InitServlet extends RetsServlet
     }
 
     private void initHibernate() throws ServletException {
-        RetsConfig retsConfig = WebApp.getRetsConfiguration();
+        RetsConfig retsConfig = RetsServer.getRetsConfiguration();
         try {
-            if (retsConfig.getDatabase() != null) {
-                // TODO - The database setup and hibernate initialization
+            DatabaseConfig databaseConfig = retsConfig.getDatabase();
+            if (databaseConfig != null)
+            {
+                // TODO - The database setup and hibernate initialization 
                 // should really be done in spring config outside of rets config
                 LOG.debug("Initializing hibernate");
                 Configuration cfg = new Configuration();
                 File hbmXmlFile = new File(resolveFromContextRoot("WEB-INF/classes/" + WebApp.PROJECT_NAME + "-hbm-xml.jar"));
                 LOG.debug("HBM file: " + hbmXmlFile);
                 cfg.addJar(hbmXmlFile);
-                LOG.info("JDBC URL: " + retsConfig.getDatabase().getUrl());
-                cfg.setProperties(retsConfig.createHibernateProperties());
+                LOG.info("JDBC URL: " + databaseConfig.getUrl());
+                Properties hibernateProperties = HibernateUtils.createHibernateProperties(databaseConfig);
+                cfg.setProperties(hibernateProperties);
                 RetsServer.setSessions(cfg.buildSessionFactory());
                 logDatabaseInfo();
             }

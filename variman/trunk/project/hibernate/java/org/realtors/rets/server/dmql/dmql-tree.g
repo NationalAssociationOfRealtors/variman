@@ -35,7 +35,7 @@ options
      *
      * @return the set of fields found during the parse.
      */
-    public Set/*String*/ getFoundFields() {
+    public Set<String> getFoundFields() {
         return mFields;
     }
 
@@ -102,23 +102,24 @@ options
         return new EqualClause(column, sql);
     }
 
-	private AnyClause newAnyClause(String field) {
-		String column = mMetadata.fieldToColumn(field);
-		return new AnyClause(column);
-	}
-	
-	private EmptyClause newEmptyClause(String field) {
-		String column = mMetadata.fieldToColumn(field);
-		return new EmptyClause(column);
-	}
-	
+    private AnyClause newAnyClause(String field) {
+        String column = mMetadata.fieldToColumn(field);
+        return new AnyClause(column);
+    }
+
+    private EmptyClause newEmptyClause(String field) {
+        String column = mMetadata.fieldToColumn(field);
+        DmqlFieldType dmqlFieldType = mMetadata.getFieldType(field);
+        return new EmptyClause(column, dmqlFieldType);
+    }
+
     private String fieldToColumn(String field) {
         return mMetadata.fieldToColumn(field);
     }
 
     private boolean mTrace = false;
     private DmqlParserMetadata mMetadata;
-    private Set/*String*/ mFields = new HashSet/*String*/();
+    private Set<String> mFields = new HashSet<String>();
 }
 
 query returns [SqlConverter sql]
@@ -244,6 +245,5 @@ dotany_value returns [SqlConverter sql]
 
 dotempty_value returns [SqlConverter sql]
     { String f;}
-    : #(DOT_EMPTY f=field) { sql = newEmptyClause(f);}
+    : #(DOT_EMPTY f=field) { sql = newEmptyClause(f); }
     ;
-       

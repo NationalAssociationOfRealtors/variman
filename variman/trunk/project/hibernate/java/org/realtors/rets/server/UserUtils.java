@@ -42,6 +42,11 @@ public class UserUtils
             " FROM User user " +
             "WHERE user.username = :username");
         query.setString("username", username);
+        
+        // Added by RealGo - cache RETS users
+        query.setCacheable(true);
+        query.setCacheRegion("org.realtors.rets.server.User.query");
+        
         return (User) query.uniqueResult();
     }
 
@@ -60,6 +65,7 @@ public class UserUtils
 
     public static List findAll(SessionHelper helper) throws HibernateException
     {
+        // Does not need caching - only used by Admin
         Query query = helper.createQuery(
             "  FROM User user " +
             "ORDER BY user.lastName, user.firstName");

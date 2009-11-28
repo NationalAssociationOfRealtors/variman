@@ -14,12 +14,16 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MResource;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.Resource;
 
 public class StandardResourceFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection resources,
+    public void format(FormatterContext context, Collection<MetaObject> resources,
                        String[] levels)
     {
         PrintWriter out = context.getWriter();
@@ -29,9 +33,9 @@ public class StandardResourceFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = resources.iterator(); i.hasNext();)
+        for (Iterator<?> i = resources.iterator(); i.hasNext();)
         {
-            Resource resource = (Resource) i.next();
+            MResource resource = (MResource) i.next();
             TagBuilder tag = new TagBuilder(out, "Resource")
                 .beginContentOnNewLine();
 
@@ -41,22 +45,24 @@ public class StandardResourceFormatter extends BaseStandardFormatter
             TagBuilder.simpleTag(out, "VisibleName", resource.getVisibleName());
             TagBuilder.simpleTag(out, "Description", resource.getDescription());
             TagBuilder.simpleTag(out, "KeyField", resource.getKeyField());
-            TagBuilder.simpleTag(out, "ClassCount",
-                                 resource.getClasses().size());
+            TagBuilder.simpleTag(out, "ClassCount", resource.getClassCount());
+            // FIXME: The actual version/date pairs are available in the common
+            // MResource class. Consider using those instead of the context's
+            // version and date.
             formatVersionDateTags(context, VERSION_DATE_TAGS);
 
             if (context.isRecursive())
             {
-                String[] path = resource.getPathAsArray();
-                context.format(resource.getClasses(), path);
-                context.format(resource.getObjects(), path);
-                context.format(resource.getSearchHelps(), path);
-                context.format(resource.getEditMasks(), path);
-                context.format(resource.getLookups(), path);
-                context.format(resource.getUpdateHelps(), path);
-                context.format(resource.getValidationLookups(), path);
-                context.format(resource.getValidationExpressions(), path);
-                context.format(resource.getValidationExternals(), path);
+                String[] path = StringUtils.split(resource.getPath(), ":");
+                context.format(resource.getChildren(MetadataType.CLASS), path);
+                context.format(resource.getChildren(MetadataType.OBJECT), path);
+                context.format(resource.getChildren(MetadataType.SEARCH_HELP), path);
+                context.format(resource.getChildren(MetadataType.EDITMASK), path);
+                context.format(resource.getChildren(MetadataType.LOOKUP), path);
+                context.format(resource.getChildren(MetadataType.UPDATE_HELP), path);
+                context.format(resource.getChildren(MetadataType.VALIDATION_LOOKUP), path);
+                context.format(resource.getChildren(MetadataType.VALIDATION_EXPRESSION), path);
+                context.format(resource.getChildren(MetadataType.VALIDATION_EXTERNAL), path);
             }
 
             tag.close();

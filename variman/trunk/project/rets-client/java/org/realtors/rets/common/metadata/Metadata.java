@@ -18,7 +18,6 @@ import org.realtors.rets.common.metadata.types.MSearchHelp;
 public class Metadata implements Serializable {
 
 	protected MSystem system;
-	private String mDocType;
 
 	public Metadata(MetaCollector collector) throws MetadataException {
 		MetaObject[] sys = collector.getMetadata(MetadataType.SYSTEM, null);
@@ -152,14 +151,5 @@ public class Metadata implements Serializable {
 	public MResource getResource(MClass clazz) {
 		return getResource(getResourceId(clazz));
 	}
-	
-	public String getDocType()
-	{
-		return mDocType;
-	}
-	
-	public void setDocType(String docType)
-	{
-		mDocType = docType;
-	}
+
 }

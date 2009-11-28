@@ -13,13 +13,17 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationExternal;
 
 public class CompactValidationExternalFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection validationExternals,
+    public void format(FormatterContext context, Collection<MetaObject> validationExternals,
                        String[] levels)
     {
         if (validationExternals.size() == 0)
@@ -33,28 +37,28 @@ public class CompactValidationExternalFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator i = validationExternals.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationExternals.iterator(); i.hasNext();)
         {
-            ValidationExternal validationExternal =
-                (ValidationExternal) i.next();
+            MValidationExternal validationExternal =
+                (MValidationExternal) i.next();
             appendDataRow(context, validationExternal);
         }
         tag.close();
 
         if (context.isRecursive())
         {
-            for (Iterator i = validationExternals.iterator(); i.hasNext();)
+            for (Iterator<?> i = validationExternals.iterator(); i.hasNext();)
             {
-                ValidationExternal validationExternal =
-                    (ValidationExternal) i.next();
-                context.format(validationExternal.getValidationExternalTypes(),
-                               validationExternal.getPathAsArray());
+                MValidationExternal validationExternal =
+                    (MValidationExternal) i.next();
+                String[] path = StringUtils.split(validationExternal.getPath(), ":");
+                context.format(validationExternal.getChildren(MetadataType.VALIDATION_EXTERNAL_TYPE), path);
             }
         }
     }
 
     private void appendDataRow(FormatterContext context,
-                               ValidationExternal validationExternal)
+            MValidationExternal validationExternal)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -67,8 +71,10 @@ public class CompactValidationExternalFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
-    	"MetadataEntryID",
+        "MetadataEntryID",
         "ValidationExternalName", "SearchResource", "SearchClass", "Version",
         "Date",
     };

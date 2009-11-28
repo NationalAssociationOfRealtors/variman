@@ -5,22 +5,26 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateType;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MUpdate;
+import org.realtors.rets.common.metadata.types.MUpdateType;
 
 public class UpdateFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MUpdate> getData()
     {
-        List updates = new ArrayList();
-        Update update = new Update();
+        List<MUpdate> updates = new ArrayList<MUpdate>();
+        MUpdate update = new MUpdate();
+        update.setMetadataEntryID("Add");
         update.setUpdateName("Add");
         update.setDescription("Add a new Residential Listing");
         update.setKeyField("key");
         update.setUpdateTypeVersion(10000001);
         update.setUpdateTypeDate(getDate());
-        update.addUpdateType(new UpdateType(1));
-        update.setMetadataEntryID("Add");
+        MUpdateType updateType = new MUpdateType();
+        updateType.setUniqueId(Long.valueOf(1));
+        updateType.setSystemName("key");
+        update.addChild(MetadataType.UPDATE_TYPE, updateType);
         updates.add(update);
         return updates;
     }
@@ -70,7 +74,7 @@ public class UpdateFormatterTest extends FormatterTestCase
             "\t</DATA>\n" +
 
             "</METADATA-UPDATE>\n" +
-            UpdateType.TABLE + "\n";
+            MetadataType.UPDATE_TYPE.name() + "\n";
     }
 
     protected String getExpectedStandard()
@@ -101,7 +105,7 @@ public class UpdateFormatterTest extends FormatterTestCase
             "<KeyField>key</KeyField>" + EOL +
             "<UpdateTypeVersion>" + VERSION + "</UpdateTypeVersion>" + EOL +
             "<UpdateTypeDate>" + DATE + "</UpdateTypeDate>" + EOL +
-            UpdateType.TABLE + EOL +
+            MetadataType.UPDATE_TYPE.name() + EOL +
             "</UpdateType>" + EOL +
             "</METADATA-UPDATE>" + EOL;
     }

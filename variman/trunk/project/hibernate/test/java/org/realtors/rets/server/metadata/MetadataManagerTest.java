@@ -5,6 +5,12 @@ package org.realtors.rets.server.metadata;
 import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
+
 import junit.framework.TestCase;
 
 public class MetadataManagerTest extends TestCase
@@ -12,7 +18,7 @@ public class MetadataManagerTest extends TestCase
     public void testFindUnknownTable()
     {
         MetadataManager manager = new MetadataManager();
-        List found = manager.find("unknown_table", "");
+        List found = manager.findByLevel("unknown_table", "");
         assertEquals(0, found.size());
     }
 
@@ -20,37 +26,37 @@ public class MetadataManagerTest extends TestCase
     {
         MetadataManager manager = new MetadataManager();
         manager.add(ObjectMother.createSystem());
-        List found = manager.find(MSystem.TABLE, "unknown_level");
+        List found = manager.findByLevel(MetadataType.SYSTEM.name(), "unknown_level");
         assertEquals(0, found.size());
     }
 
     public void testAdd()
     {
-        Table table = ObjectMother.createTable();
+        MTable table = ObjectMother.createTable();
         MetadataManager manager = new MetadataManager();
         manager.add(table);
-        List found = manager.find(Table.TABLE, "Property:RES");
+        List found = manager.findByLevel(MetadataType.TABLE.name(), "Property:RES");
         assertEquals(1, found.size());
         assertSame(table, found.get(0));
     }
 
     public void testAddRecursive()
     {
-        Table table = ObjectMother.createTable();
-        MSystem system = table.getMClass().getResource().getSystem();
+        MTable table = ObjectMother.createTable();
+        MSystem system = table.getMClass().getMResource().getMSystem();
         MetadataManager manager = new MetadataManager();
         manager.addRecursive(system);
-        List found = manager.find(Table.TABLE, "Property:RES");
+        List<MetaObject> found = manager.findByLevel(MetadataType.TABLE.name(), "Property:RES");
         assertEquals(1, found.size());
         assertSame(table, found.get(0));
 
         MClass aClass = table.getMClass();
-        ServerMetadata metadata = manager.findByPath(MClass.TABLE,
+        MetaObject metadata = manager.findByPath(MetadataType.CLASS.name(),
                                                      "Property:RES");
         assertNotNull(metadata);
         assertSame(aClass, metadata);
 
-        metadata = manager.findByPath(MSystem.TABLE, "");
+        metadata = manager.findByPath(MetadataType.SYSTEM.name(), "");
         assertNull(metadata);
     }
 
@@ -73,26 +79,26 @@ public class MetadataManagerTest extends TestCase
 
     public void testFindByPattern()
     {
-        Table table = ObjectMother.createTable();
-        MSystem system = table.getMClass().getResource().getSystem();
+        MTable table = ObjectMother.createTable();
+        MSystem system = table.getMClass().getMResource().getMSystem();
         MetadataManager manager = new MetadataManager();
         manager.addRecursive(system);
 
-        Map found = manager.findByPattern(Table.TABLE, "*");
+        Map<String, List<MetaObject>> found = manager.findByPattern(MetadataType.TABLE.name(), "*");
         assertEquals(1, found.size());
-        List atLevel = (List) found.get("Property:RES");
+        List<MetaObject> atLevel = found.get("Property:RES");
         assertNotNull(atLevel);
         assertEquals(1, atLevel.size());
         assertSame(table, atLevel.get(0));
 
-        found = manager.findByPattern(Table.TABLE, "Property:RES");
+        found = manager.findByPattern(MetadataType.TABLE.name(), "Property:RES");
         assertEquals(1, found.size());
-        atLevel = (List) found.get("Property:RES");
+        atLevel = found.get("Property:RES");
         assertNotNull(atLevel);
         assertEquals(1, atLevel.size());
         assertSame(table, atLevel.get(0));
 
-        found = manager.findByPattern(Table.TABLE, "foo");
+        found = manager.findByPattern(MetadataType.TABLE.name(), "foo");
         assertEquals(0, found.size());
     }
 }

@@ -12,6 +12,8 @@ package org.realtors.rets.server.metadata.format;
 
 import java.util.Collection;
 
+import org.realtors.rets.common.metadata.MetaObject;
+
 public abstract class MetadataFormatter
 {
     public static final int COMPACT = 0;
@@ -27,7 +29,8 @@ public abstract class MetadataFormatter
         return sDefaultFormat;
     }
 
-    public abstract void format(FormatterContext context, Collection data,
+    public abstract void format(FormatterContext context,
+                                Collection<MetaObject> data,
                                 String[] levels);
 
     public static final int RESOURCE_LEVEL = 0;

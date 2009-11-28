@@ -27,6 +27,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import org.realtors.rets.server.Group;
 import org.realtors.rets.server.QueryCount;
 import org.realtors.rets.server.QueryCountTable;
 import org.realtors.rets.server.ReplyCode;
@@ -299,7 +300,7 @@ public class DefaultSearchTransaction implements SearchTransaction
 
         SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(ReplyCode.SUCCESSFUL.getValue(), ReplyCode.SUCCESSFUL.getName(), mCount, context.getRowCount());
         return statistics;
-	}
+    }
 
     private SearchResultsFormatter getFormatter() throws RetsServerException
     {
@@ -412,7 +413,7 @@ public class DefaultSearchTransaction implements SearchTransaction
     private static final Logger SQL_LOG = Logger.getLogger(SQL_LOG_NAME);
 
     private SearchParameters mParameters;
-    private SortedSet mGroups;
+    private SortedSet<Group> mGroups;
     private SearchSqlBuilder mSearchSqlBuilder;
     private boolean mExecuteQuery;
     private int mCount;

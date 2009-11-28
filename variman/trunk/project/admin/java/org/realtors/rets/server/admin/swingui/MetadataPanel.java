@@ -66,6 +66,7 @@ import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 import org.realtors.rets.server.config.RetsConfig;
+import org.realtors.rets.server.metadata.MetadataDao;
 
 public class MetadataPanel extends AdminTab
 {
@@ -355,7 +356,7 @@ public class MetadataPanel extends AdminTab
                 /*
                  * Enumerate the validation externals.
                  */
-                MValidationExternal [] validationExternals = resource.getMValidationExternal();
+                MValidationExternal [] validationExternals = resource.getMValidationExternals();
                 Arrays.sort(validationExternals, MetaObjectComparator);
                 
                 for (MValidationExternal validation : validationExternals)
@@ -416,8 +417,8 @@ public class MetadataPanel extends AdminTab
 
                 try
                 {
-                    RetsConfig retsConfig = Admin.getRetsConfig();
-                    mMetadata = retsConfig.getMetadata();
+                    MetadataDao metadataDao = Admin.getMetadataDao();
+                    mMetadata = metadataDao.getMetadata();
                     mSystem = mMetadata.getSystem();
                 }
                 catch (Throwable t)
@@ -469,8 +470,8 @@ public class MetadataPanel extends AdminTab
                     Object o;
                     try
                     {
-                        RetsConfig retsConfig = Admin.getRetsConfig();
-                        o = retsConfig.reloadMetadata();
+                        MetadataDao metadataDao = Admin.getMetadataDao();
+                        o = metadataDao.getMetadata();
                     }
                     catch  (Throwable e)
                     {
@@ -1212,7 +1213,7 @@ public class MetadataPanel extends AdminTab
                                 mSystem.deleteChild(MetadataType.RESOURCE, (MetaObject) mMetaObject);
                             else
                             if (parentObject.equals(sFOREIGNKEY))
-                                mSystem.deleteChild(MetadataType.FOREIGNKEYS, (MetaObject) mMetaObject);
+                                mSystem.deleteChild(MetadataType.FOREIGN_KEYS, (MetaObject) mMetaObject);
                             else
                             {
                                 DefaultMutableTreeNode parentsParentNode = (DefaultMutableTreeNode) parentNode.getParent();
@@ -1396,7 +1397,7 @@ public class MetadataPanel extends AdminTab
                                 MetadataTreeNode newNode = mTreePanel.addObject(mForeignKeyNode, resource);
                                 mTree.getSelectionModel().setSelectionPath(new TreePath(newNode.getPath()));
                                 
-                                mSystem.addChild(MetadataType.FOREIGNKEYS, resource);
+                                mSystem.addChild(MetadataType.FOREIGN_KEYS, resource);
                                 
                                 Admin.setRetsConfigChanged(true);
                                 refreshMainPanel(resource);
@@ -1428,7 +1429,7 @@ public class MetadataPanel extends AdminTab
                                  * We have to go to the mSystem object to properly delete the children.
                                  */
                                 Admin.setRetsConfigChanged(true);
-                                mSystem.deleteAllChildren(MetadataType.FOREIGNKEYS);
+                                mSystem.deleteAllChildren(MetadataType.FOREIGN_KEYS);
                                 mTreePanel.removeCurrentNode();
                                 mForeignKeyNode = mTreePanel.addObject(null, sFOREIGNKEY);
                                 mMainPanel.removeAll();

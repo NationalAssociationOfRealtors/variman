@@ -3,17 +3,18 @@
 package org.realtors.rets.server.metadata.format;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.UpdateType;
+import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
+import org.realtors.rets.common.metadata.types.MUpdateType;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.server.metadata.UpdateTypeAttributeEnum;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationLookup;
 import org.realtors.rets.server.protocol.TableGroupFilter;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.config.FilterRule;
@@ -23,70 +24,79 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 {
     public UpdateTypeFormatterTest()
     {
-        HashSet allTables = new HashSet();
+        Set<MTable> allTables = new LinkedHashSet<MTable>();
 
-        Table table = new Table(1);
+        MTable table = new MTable();
+        table.setUniqueId(Long.valueOf(1));
         table.setSystemName("STATUS");
         allTables.add(table);
 
-        mStatusType = new UpdateType(1);
+        mStatusType = new MUpdateType();
+        mStatusType.setUniqueId(Long.valueOf(1));
         mStatusType.setMetadataEntryID("Status");
-        mStatusType.setTable(table);
+        mStatusType.setMTable(table);
         mStatusType.setSequence(12);
 
-        Set attributes = new HashSet();
-        attributes.add(UpdateTypeAttributeEnum.INTERACTIVEVALIDATE);
-        attributes.add(UpdateTypeAttributeEnum.REQUIRED);
-        mStatusType.setAttributes(attributes);
+        List<String> attributes = new ArrayList<String>();
+        attributes.add(UpdateTypeAttributeEnum.REQUIRED.toString());
+        attributes.add(UpdateTypeAttributeEnum.INTERACTIVEVALIDATE.toString());
+        String attributesStr = StringUtils.join(attributes, ",");
+        mStatusType.setAttributes(attributesStr);
 
         mStatusType.setDefault("0");
 
-        Set validationExpressions = new HashSet();
-        ValidationExpression ve = new ValidationExpression(1);
+        Set<MValidationExpression> validationExpressions = new LinkedHashSet<MValidationExpression>();
+        MValidationExpression ve = new MValidationExpression();
+        ve.setUniqueId(Long.valueOf(1));
         ve.setValidationExpressionID("VE1");
         validationExpressions.add(ve);
-        ve = new ValidationExpression(2);
+        ve = new MValidationExpression();
+        ve.setUniqueId(Long.valueOf(2));
         ve.setValidationExpressionID("VE2");
         validationExpressions.add(ve);
-        mStatusType.setValidationExpressions(validationExpressions);
+        mStatusType.setMValidationExpressions(validationExpressions);
 
-        UpdateHelp updateHelp = new UpdateHelp(1);
+        MUpdateHelp updateHelp = new MUpdateHelp();
+        updateHelp.setUniqueId(Long.valueOf(1));
         updateHelp.setUpdateHelpID("UH1");
-        mStatusType.setUpdateHelp(updateHelp);
+        mStatusType.setMUpdateHelp(updateHelp);
 
-        ValidationLookup validationLookup = new ValidationLookup(1);
+        MValidationLookup validationLookup = new MValidationLookup();
+        validationLookup.setUniqueId(Long.valueOf(1));
         validationLookup.setValidationLookupName("VL_NAME");
-        mStatusType.setValidationLookup(validationLookup);
+        mStatusType.setMValidationLookup(validationLookup);
 
-        ValidationExternal validationExternal = new ValidationExternal(1);
+        MValidationExternal validationExternal = new MValidationExternal();
+        validationExternal.setUniqueId(Long.valueOf(1));
         validationExternal.setValidationExternalName("VE_NAME");
-        mStatusType.setValidationExternal(validationExternal);
+        mStatusType.setMValidationExternal(validationExternal);
         mStatusType.setMaxUpdate(1);
 
-        table = new Table(2);
+        table = new MTable();
+        table.setUniqueId(Long.valueOf(2));
         table.setSystemName("LIST_PRICE");
-        
         allTables.add(table);
-        mListPriceType = new UpdateType(2);
-        mListPriceType.setTable(table);
+        
+        mListPriceType = new MUpdateType();
+        mListPriceType.setUniqueId(Long.valueOf(2));
+        mListPriceType.setMTable(table);
         mListPriceType.setSequence(13);
-        mListPriceType.setAttributes(attributes);
+        mListPriceType.setAttributes(attributesStr);
         mListPriceType.setDefault("0");
-        mListPriceType.setValidationExpressions(validationExpressions);
-        mListPriceType.setUpdateHelp(updateHelp);
-        mListPriceType.setValidationLookup(validationLookup);
-        mListPriceType.setValidationExternal(validationExternal);
+        mListPriceType.setMValidationExpressions(validationExpressions);
+        mListPriceType.setMUpdateHelp(updateHelp);
+        mListPriceType.setMValidationLookup(validationLookup);
+        mListPriceType.setMValidationExternal(validationExternal);
         mListPriceType.setMaxUpdate(0);
         
         mGroupFilter = new TableGroupFilter();
         mGroupFilter.setTables("Property", "RES", allTables);
 
         mNewspapers = new Group("Newspapers");
-        mGroups = new HashSet();
+        mGroups = new LinkedHashSet<Group>();
         mGroups.add(mNewspapers);
 
-        FilterRule filterRule = new FilterRule(
-            FilterRule.EXCLUDE);
+        FilterRule filterRule = new FilterRule(FilterRule.EXCLUDE);
         filterRule.setResource("Property");
         filterRule.setRetsClass("RES");
         filterRule.addSystemName("LIST_PRICE");
@@ -95,9 +105,9 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         mGroupFilter.addRules(rules);
     }
 
-    protected List getData()
+    protected List<MUpdateType> getData()
     {
-        List updateTypes = new ArrayList();
+        List<MUpdateType> updateTypes = new ArrayList<MUpdateType>();
         updateTypes.add(mStatusType);
         updateTypes.add(mListPriceType);
         return updateTypes;
@@ -108,7 +118,7 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
         return mGroupFilter;
     }
 
-    protected Set getGroups()
+    protected Set<Group> getGroups()
     {
         return mGroups;
     }
@@ -178,16 +188,16 @@ public class UpdateTypeFormatterTest extends FormatterTestCase
 
     public void testCompactFormatIsEmptyIfAllTablesFiltered()
     {
-        ArrayList data = new ArrayList();
+        List<MUpdateType> data = new ArrayList<MUpdateType>();
         data.add(mListPriceType);
         String formatted = format(getCompactFormatter(), data,
                                   getLevels(), FormatterContext.NOT_RECURSIVE);
         assertLinesEqual("", formatted);
     }
 
-    private UpdateType mStatusType;
-    private UpdateType mListPriceType;
+    private MUpdateType mStatusType;
+    private MUpdateType mListPriceType;
     private TableGroupFilter mGroupFilter;
     private Group mNewspapers;
-    private HashSet mGroups;
+    private Set<Group> mGroups;
 }

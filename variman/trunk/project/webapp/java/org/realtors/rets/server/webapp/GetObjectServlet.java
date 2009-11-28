@@ -15,7 +15,9 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
+import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.protocol.GetObjectParameters;
 import org.realtors.rets.server.protocol.GetObjectTransaction;
 import org.realtors.rets.server.protocol.GetObjectResponse;
@@ -34,9 +36,10 @@ public class GetObjectServlet extends RetsServlet
             new GetObjectParameters(request.getParameterMap());
         GetObjectTransaction transaction =
             new GetObjectTransaction(parameters);
-        transaction.setRootDirectory(WebApp.getGetObjectRoot());
-        transaction.setPhotoPattern(WebApp.getPhotoPattern());
-        transaction.setObjectSetPattern(WebApp.getObjectSetPattern());
+        RetsConfig retsConfig = RetsServer.getRetsConfiguration();
+        transaction.setRootDirectory(retsConfig.getGetObjectRoot());
+        transaction.setPhotoPattern(retsConfig.getPhotoPattern());
+        transaction.setObjectSetPattern(retsConfig.getObjectSetPattern());
         StringBuffer location = ServletUtils.getContextPath(request);
         location.append("/objects/");
         transaction.setBaseLocationUrl(location.toString());

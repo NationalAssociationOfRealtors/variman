@@ -8,6 +8,7 @@ package org.realtors.rets.server.protocol;
 
 import java.util.SortedSet;
 
+import org.realtors.rets.server.Group;
 import org.realtors.rets.server.RetsReplyException;
 import org.realtors.rets.server.metadata.MetadataManager;
 
@@ -17,7 +18,7 @@ public interface SearchSqlBuilder
     // and just pass all input into the createSqlStatements method as a request object
     public void setParameters(SearchParameters parameters);
 
-    public void setGroups(SortedSet groups);
+    public void setGroups(SortedSet<Group> groups);
 
     public void prepareForQuery(MetadataManager manager)
         throws RetsReplyException;

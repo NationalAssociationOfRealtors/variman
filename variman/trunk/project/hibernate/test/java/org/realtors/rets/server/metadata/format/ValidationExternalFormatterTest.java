@@ -5,29 +5,36 @@ package org.realtors.rets.server.metadata.format;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExternalType;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
 
 public class ValidationExternalFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MValidationExternal> getData()
     {
-        List validationExternals = new ArrayList();
-        ValidationExternal validationExternal = new ValidationExternal();
+        List<MValidationExternal> validationExternals = new ArrayList<MValidationExternal>();
+        MValidationExternal validationExternal = new MValidationExternal();
         validationExternal.setMetadataEntryID("Vet1");
         validationExternal.setValidationExternalName("VET1");
 
-        MClass res = new MClass(1);
+        MClass res = new MClass();
+        res.setUniqueId(Long.valueOf(1));
         res.setClassName("RES");
-        Resource property = new Resource(1);
+        MResource property = new MResource();
+        property.setUniqueId(Long.valueOf(1));
         property.setResourceID("Property");
-        res.setResource(property);
-        validationExternal.setSearchClass(res);
+        res.setMResource(property);
+        validationExternal.setMClass(res);
 
-        validationExternal.addValidationExternalType(
-            new ValidationExternalType(1));
+        MValidationExternalType[] validationExternalTypes = new MValidationExternalType[1];
+        MValidationExternalType validationExternalType = new MValidationExternalType();
+        validationExternalType.setUniqueId(Long.valueOf(1));
+        validationExternalTypes[0] = validationExternalType;
+        validationExternal.setMValidationExternalTypes(validationExternalTypes);
+
         validationExternals.add(validationExternal);
         return validationExternals;
     }
@@ -74,7 +81,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
 
             "</METADATA-VALIDATION_EXTERNAL>\n" +
 
-            ValidationExternalType.TABLE + "\n";
+            MetadataType.VALIDATION_EXTERNAL_TYPE.name() + "\n";
     }
 
     protected String getExpectedStandard()
@@ -109,7 +116,7 @@ public class ValidationExternalFormatterTest extends FormatterTestCase
             "</ValidationExternalTypeVersion>" + EOL +
             "<ValidationExternalTypeDate>" + DATE +
             "</ValidationExternalTypeDate>" + EOL +
-            ValidationExternalType.TABLE + EOL +
+            MetadataType.VALIDATION_EXTERNAL_TYPE.name() + EOL +
             "</ValidationExternalType>" + EOL +
             "</METADATA-VALIDATION_EXTERNAL>" + EOL;
     }

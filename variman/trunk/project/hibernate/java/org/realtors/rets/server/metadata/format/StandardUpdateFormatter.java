@@ -14,14 +14,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MUpdate;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.Util;
 
 public class StandardUpdateFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection updates,
+    public void format(FormatterContext context, Collection<MetaObject> updates,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -33,9 +36,9 @@ public class StandardUpdateFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = updates.iterator(); i.hasNext();)
+        for (Iterator<?> i = updates.iterator(); i.hasNext();)
         {
-            Update update = (Update) i.next();
+            MUpdate update = (MUpdate) i.next();
             TagBuilder tag = new TagBuilder(out, "UpdateType")
                 .beginContentOnNewLine();
  
@@ -52,8 +55,8 @@ public class StandardUpdateFormatter extends BaseStandardFormatter
 
             if (context.isRecursive())
             {
-                context.format(update.getUpdateTypes(),
-                               update.getPathAsArray());
+                String[] path = StringUtils.split(update.getPath(), ":");
+                context.format(update.getChildren(MetadataType.UPDATE_TYPE), path);
             }
 
             tag.close();

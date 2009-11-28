@@ -42,7 +42,7 @@ public class SearchServlet extends RetsServlet
         SearchTransaction search = RetsServer.createSearchTransaction();
         search.setParameters(parameters);
         SearchTransactionStatistics searchTransactionStatistics =
-            search.execute(out, WebApp.getMetadataManager(), RetsServer.getSessions());
+            search.execute(out, RetsServer.getMetadataManager(), RetsServer.getSessions());
         request.setAttribute(SEARCH_TRANSACTION_STATISTICS_KEY, searchTransactionStatistics);
     }
 

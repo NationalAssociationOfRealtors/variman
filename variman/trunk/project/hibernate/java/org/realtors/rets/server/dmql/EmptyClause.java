@@ -1,7 +1,7 @@
 /*
  * Variman RETS Server
  *
- * Author: Mark Klein
+ * Author: Mark Klein, RealGo
  * Copyright (c) 2009, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
@@ -19,19 +19,34 @@ public class EmptyClause implements SqlConverter
 {
     public EmptyClause(String field)
     {
+        this(field, null);
+    }
+
+    public EmptyClause(String field, DmqlFieldType dmqlFieldType)
+    {
         mField = field;
+        mDmqlFieldType = dmqlFieldType;
     }
 
     public void toSql(PrintWriter out)
     {
-        out.print(mField);
-        out.print(" is null ");
+        if (mDmqlFieldType == DmqlFieldType.CHARACTER) {
+            out.print("(");
+            out.print(mField);
+            out.print(" is null or ");
+            out.print(mField);
+            out.print(" = '') ");
+        } else {
+            out.print(mField);
+            out.print(" is null ");
+        }
     }
 
     public String toString()
     {
         return new ToStringBuilder(this, Util.SHORT_STYLE)
             .append(mField)
+            .append(mDmqlFieldType)
             .toString();
     }
 
@@ -44,8 +59,10 @@ public class EmptyClause implements SqlConverter
         EmptyClause rhs = (EmptyClause) obj;
         return new EqualsBuilder()
             .append(mField, rhs.mField)
+            .append(mDmqlFieldType, rhs.mDmqlFieldType)
             .isEquals();
     }
 
     private String mField;
+    private DmqlFieldType mDmqlFieldType;
 }

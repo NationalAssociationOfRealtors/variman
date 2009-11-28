@@ -5,16 +5,16 @@ package org.realtors.rets.server.metadata.format;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.realtors.rets.server.metadata.UpdateHelp;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
 
 public class UpdateHelpFormatterTest extends FormatterTestCase
 {
-    protected List getData()
+    protected List<MUpdateHelp> getData()
     {
-        UpdateHelp updateHelp = new UpdateHelp();
+        List<MUpdateHelp> updateHelps = new ArrayList<MUpdateHelp>();
+        MUpdateHelp updateHelp = new MUpdateHelp();
         updateHelp.setUpdateHelpID("1");
         updateHelp.setValue("Enter a number");
-        List updateHelps = new ArrayList();
         updateHelp.setMetadataEntryID("UpdateHelp");
         updateHelps.add(updateHelp);
         return updateHelps;

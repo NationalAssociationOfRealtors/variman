@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.realtors.rets.client.RetsVersion;
 import org.realtors.rets.common.metadata.AttrType;
 import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.common.metadata.MetadataElement;
@@ -19,19 +20,19 @@ public class MObject extends MetaObject {
 	public static final String DESCRIPTION = "Description";
 	public static final String OBJECTTIMESTAMP = "ObjectTimeStamp";
 	public static final String OBJECTCOUNT = "ObjectCount";
-	
-    private static final List<MetadataElement> sAttributes =
-    	new ArrayList<MetadataElement>()
-        {{
-    		add(new MetadataElement(METADATAENTRYID, sRETSNAME, sREQUIRED));
-    		add(new MetadataElement(OBJECTTYPE, sAlphanum24, sREQUIRED));
-    		add(new MetadataElement(MIMETYPE, sText64, sREQUIRED));
-    		add(new MetadataElement(VISIBLENAME, sPlaintext64, sREQUIRED));
-    		add(new MetadataElement(DESCRIPTION, sPlaintext128));
-    		add(new MetadataElement(OBJECTTIMESTAMP, sRETSNAME));
-    		add(new MetadataElement(OBJECTCOUNT, sRETSNAME));
-        }};
- 	
+
+	private static final List<MetadataElement> sAttributes =
+		new ArrayList<MetadataElement>()
+		{{
+			add(new MetadataElement(METADATAENTRYID, sRETSID, RetsVersion.RETS_1_7, sREQUIRED));
+			add(new MetadataElement(OBJECTTYPE, sAlphanum24, sREQUIRED));
+			add(new MetadataElement(MIMETYPE, sText64, sREQUIRED));
+			add(new MetadataElement(VISIBLENAME, sPlaintext64, sREQUIRED));
+			add(new MetadataElement(DESCRIPTION, sPlaintext128));
+			add(new MetadataElement(OBJECTTIMESTAMP, sRETSNAME, RetsVersion.RETS_1_7));
+			add(new MetadataElement(OBJECTCOUNT, sRETSNAME, RetsVersion.RETS_1_7));
+		}};
+
 	public MObject() {
 		this(DEFAULT_PARSING);
 	}
@@ -39,8 +40,6 @@ public class MObject extends MetaObject {
 	public MObject(boolean strictParsing) {
 		super(strictParsing);
 	}
-
-
 
 	/**
 	 * Add an attribute to the class static attributes.
@@ -59,14 +58,14 @@ public class MObject extends MetaObject {
 	 * make sure static initialization properly takes place.
 	 */
 	@Override
-	protected void addAttributesToMap(Map attributeMap) 
+	protected void addAttributesToMap(Map<String, AttrType<?>> attributeMap) 
 	{
 		for (MetadataElement element : sAttributes)
 		{
 			attributeMap.put(element.getName(), element.getType());
 		}
 	}
-	
+
 	/**
 	 * Returns whether or not the attribute is required.
 	 * @param name Name of the attribute.
@@ -75,7 +74,7 @@ public class MObject extends MetaObject {
 	@Override
 	public boolean isAttributeRequired(String name)
 	{
-		for (MetadataElement element : this.sAttributes)
+		for (MetadataElement element : MObject.sAttributes)
 		{
 			if (element.getName().equals(name))
 				return element.isRequired();
@@ -83,7 +82,7 @@ public class MObject extends MetaObject {
 		
 		return false;
 	}
-	
+
 	/**
 	 * Update (or add) the attribute. This is intended for use where the 
 	 * metadata model is being changed or expanded.
@@ -94,7 +93,6 @@ public class MObject extends MetaObject {
 	public static void updateAttribute(String name, AttrType<?> type, boolean required)
 	{
 		boolean found = false;
-		int index = -1;
 		if (sAttributes == null)
 			return;
 		
@@ -120,33 +118,77 @@ public class MObject extends MetaObject {
 		return getStringAttribute(METADATAENTRYID);
 	}
 
+	public void setMetadataEntryID(String metadataEntryId) {
+		String metadataEntryIdStr = sRETSID.render(metadataEntryId);
+		setAttribute(METADATAENTRYID, metadataEntryIdStr);
+	}
+
 	public String getObjectType() {
 		return getStringAttribute(OBJECTTYPE);
+	}
+
+	public void setObjectType(String objectType) {
+		String objectTypeStr = sAlphanum24.render(objectType);
+		setAttribute(OBJECTTYPE, objectTypeStr);
 	}
 
 	public String getMIMEType() {
 		return getStringAttribute(MIMETYPE);
 	}
 
+	public void setMIMEType(String mimeType) {
+		String mimeTypeStr = sText64.render(mimeType);
+		setAttribute(MIMETYPE, mimeTypeStr);
+	}
+
 	public String getVisibleName() {
 		return getStringAttribute(VISIBLENAME);
+	}
+
+	public void setVisibleName(String visibleName) {
+		String visibleNameStr = sPlaintext64.render(visibleName);
+		setAttribute(VISIBLENAME, visibleNameStr);
 	}
 
 	public String getDescription() {
 		return getStringAttribute(DESCRIPTION);
 	}
-	
+
+	public void setDescription(String description) {
+		String descriptionStr = sPlaintext128.render(description);
+		setAttribute(DESCRIPTION, descriptionStr);
+	}
+
 	public String getObjectTimeStamp() {
 		return getStringAttribute(OBJECTTIMESTAMP);
 	}
-	
+
+	public void setObjectTimeStamp(String objectTimeStamp) {
+		String objectTimeStampStr = sRETSNAME.render(objectTimeStamp);
+		setAttribute(OBJECTTIMESTAMP, objectTimeStampStr);
+	}
+
 	public String getObjectCount() {
 		return getStringAttribute(OBJECTCOUNT);
 	}
 
+	public void setObjectCount(String objectCount) {
+		String objectCountStr = sRETSNAME.render(objectCount);
+		setAttribute(OBJECTCOUNT, objectCountStr);
+	}
+
+	public MResource getMResource() {
+		MResource resource = (MResource)getParent();
+		return resource;
+	}
+
+	public void setMResource(MResource resource) {
+		setParent(resource);
+	}
+
 	@Override
 	public MetadataType[] getChildTypes() {
-		return sNoChildren;
+		return sNO_CHILDREN;
 	}
 
 	@Override
@@ -158,9 +200,9 @@ public class MObject extends MetaObject {
 	public final String getMetadataTypeName() {
 		return METADATATYPENAME;
 	}
-	
+
 	@Override
 	public final MetadataType getMetadataType() {
 		return MetadataType.OBJECT;
-	}	
+	}
 }

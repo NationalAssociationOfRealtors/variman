@@ -26,6 +26,19 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         return parse(dmql, false, false);
     }
 
+    public void testDotEmptyWithString() throws ANTLRException
+    {
+        ParserResults results;
+        
+        results = parse("(OWNER=.EMPTY.)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+        EmptyClause emptyClause = new EmptyClause("r_OWNER", DmqlFieldType.CHARACTER);
+        SqlConverter expectedSql = emptyClause;
+        assertEquals(expectedSql, sql);
+    }
+
     public void testStringLiteral() throws ANTLRException
     {
         ParserResults results;

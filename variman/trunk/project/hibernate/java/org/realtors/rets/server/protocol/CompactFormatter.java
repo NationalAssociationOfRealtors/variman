@@ -114,7 +114,7 @@ public class CompactFormatter implements SearchResultsFormatter
 	            	try
 	            	{
 	            	    String retsDateTime = RetsDateTime.render(RetsDateTime.parseSql(value),
-            									context.getRetsVersion());
+	            								context.getRetsVersion());
 	            	    value = retsDateTime;
 	            	}
 	            	catch (ParseException e)

@@ -8,21 +8,25 @@
 
 package org.realtors.rets.server;
 
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
+import org.realtors.rets.common.metadata.Metadata;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.config.GroupRules;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.RetsConfigDao;
 import org.realtors.rets.server.config.SecurityConstraints;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.MetadataLoader;
+import org.realtors.rets.server.metadata.MetadataDao;
 import org.realtors.rets.server.metadata.MetadataManager;
-import org.realtors.rets.server.metadata.Resource;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.ObjectSet;
 import org.realtors.rets.server.protocol.SearchTransaction;
@@ -62,16 +66,16 @@ public class RetsServer implements ApplicationContextAware
 
     public static RetsConfigDao getRetsConfigDao()
     {
-        RetsConfigDao retsConfig = null;
+        RetsConfigDao retsConfigDao = null;
         try
         {
-            retsConfig = (RetsConfigDao)sApplicationContext.getBean("retsConfigDao", RetsConfigDao.class);
+            retsConfigDao = (RetsConfigDao)sApplicationContext.getBean("retsConfigDao", RetsConfigDao.class);
         }
         catch (NoSuchBeanDefinitionException e)
         {
             LOG.warn("No rets config dao has been configured via spring config, defaulting to reading rets config xml file.");
         }
-        return retsConfig;
+        return retsConfigDao;
     }
 
     public static ConnectionHelper createHelper()
@@ -151,7 +155,7 @@ public class RetsServer implements ApplicationContextAware
     public static SearchTransaction createSearchTransaction()
     {
         return (SearchTransaction)
-            sApplicationContext.getBean("SearchTransaction");
+            sApplicationContext.getBean("searchTransaction");
     }
     
     public static ObjectSet createCustomObjectSet()
@@ -159,11 +163,11 @@ public class RetsServer implements ApplicationContextAware
         try
         {
             return (ObjectSet)
-                sApplicationContext.getBean("CustomObjectSet");
+                sApplicationContext.getBean("customObjectSet");
         }
         catch (NoSuchBeanDefinitionException e)
         {
-            LOG.debug("CustomObjectSet bean not found.");
+            LOG.debug("customObjectSet bean not found.");
             return null;
         }
     }
@@ -178,8 +182,8 @@ public class RetsServer implements ApplicationContextAware
             ConditionRuleSet ruleSet = getConditionRuleSet(retsConfig);
             setConditionRuleSet(ruleSet);
 
-            MetadataManager manager = getMetadataManager(retsConfig);
-            setMetadataManager(manager);
+            MetadataManager manager = createMetadataManager();
+            sMetadataManager = manager;
 
             TableGroupFilter groupFilter = getTableGroupFilter(retsConfig, manager);
             setTableGroupFilter(groupFilter);
@@ -194,14 +198,6 @@ public class RetsServer implements ApplicationContextAware
         }
     }
 
-    public static void setMetadataManager(MetadataManager manager)
-    {
-        synchronized (sLock)
-        {
-            sMetadataManager = manager;
-        }
-    }
-
     public static MetadataManager getMetadataManager()
     {
         synchronized (sLock)
@@ -210,13 +206,14 @@ public class RetsServer implements ApplicationContextAware
         }
     }
 
-    private static MetadataManager getMetadataManager(RetsConfig config) throws RetsServerException
+    private static MetadataManager createMetadataManager() throws RetsServerException
     {
         LOG.debug("Initializing metadata");
-        MetadataLoader loader = new MetadataLoader(config);
         LOG.debug("Creating metadata manager");
         MetadataManager manager = new MetadataManager();
-        MSystem system = loader.parseMetadataDirectory();
+        MetadataDao metadataDao = getMetadataDao();
+        Metadata metadata = metadataDao.getMetadata();
+        MSystem system = metadata.getSystem();
         manager.addRecursive(system);
         return manager;
     }
@@ -239,29 +236,40 @@ public class RetsServer implements ApplicationContextAware
     {
         LOG.debug("Initializing group filter");
         TableGroupFilter groupFilter = new TableGroupFilter();
-        MSystem system = (MSystem)manager.findUnique(MSystem.TABLE, "");
-        Set resources = system.getResources();
-        for (Iterator resIter = resources.iterator(); resIter.hasNext();)
-        {
-            Resource resource = (Resource)resIter.next();
+        MSystem system = (MSystem)manager.findUniqueByLevel(MetadataType.SYSTEM.name(), "");
+        MResource[] resources = system.getMResources();
+        for (MResource resource : resources) {
             String resourceID = resource.getResourceID();
-            Set classes = resource.getClasses();
-            for (Iterator clsIter = classes.iterator(); clsIter.hasNext();)
-            {
-                MClass aClass = (MClass)clsIter.next();
+            MClass[] classes = resource.getMClasses();
+            for (MClass aClass : classes) {
                 String className = aClass.getClassName();
                 LOG.debug("Setting tables for " + resourceID + ":" + className);
-                groupFilter.setTables(resourceID, className, aClass.getTables());
+                Set<MTable> tables = (Set<MTable>)aClass.getChildrenSet(MetadataType.TABLE);
+                groupFilter.setTables(resourceID, className, tables);
             }
         }
         List<GroupRules> groupRulesSet = config.getSecurityConstraints().getAllGroupRules();
-        for (GroupRules rules : groupRulesSet)
-        {
+        for (Iterator<GroupRules> iter = groupRulesSet.iterator(); iter.hasNext(); ) {
+            GroupRules rules = iter.next();
             LOG.debug("Adding rules for " + rules.getGroupName());
             groupFilter.addRules(rules);
         }
 
         return groupFilter;
+    }
+
+    public static MetadataDao getMetadataDao()
+    {
+        MetadataDao metadataDao = null;
+        try
+        {
+            metadataDao = (MetadataDao)sApplicationContext.getBean("metadataDao", MetadataDao.class);
+        }
+        catch (NoSuchBeanDefinitionException e)
+        {
+            throw new IllegalStateException("No MetadataDao bean named 'metadataDao' has been configured in spring application context.");
+        }
+        return metadataDao;
     }
 
     private static final Logger LOG =

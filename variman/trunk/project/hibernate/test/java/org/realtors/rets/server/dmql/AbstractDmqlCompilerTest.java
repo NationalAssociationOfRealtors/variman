@@ -345,9 +345,51 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         assertNotNull(results);
         SqlConverter sql = results.getSqlConverter();
         verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
-
         DmqlStringList list = new DmqlStringList("r_OWNER");
         list.add(new DmqlString("12345"));
+        assertEquals(list, sql);
+
+        results = parse("(OWNER=01234)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("01234"));
+        assertEquals(list, sql);
+    }
+
+    public void testStringBeginsWithDigits() throws ANTLRException
+    {
+        ParserResults results = parse("(OWNER=123ABC)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("123ABC"));
+        assertEquals(list, sql);
+
+        results = parse("(OWNER=01234)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("01234"));
+        assertEquals(list, sql);
+
+        results = parse("(OWNER=0ABCD)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("0ABCD"));
+        assertEquals(list, sql);
+
+        results = parse("(OWNER=123ABC456)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+        list = new DmqlStringList("r_OWNER");
+        list.add(new DmqlString("123ABC456"));
         assertEquals(list, sql);
     }
 
@@ -392,8 +434,7 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
         DmqlStringList list = new DmqlStringList("r_OWNER");
         DmqlString string = new DmqlString();
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
-        string.add("100");
-        string.add("th");
+        string.add("100th");
         string.add(DmqlString.MATCH_ZERO_OR_MORE);
         list.add(string);
         assertEquals(list, sql);
@@ -496,6 +537,42 @@ public abstract class AbstractDmqlCompilerTest extends TestCase
 
         string = new DmqlString();
         string.add("f");
+        string.add(DmqlString.MATCH_ZERO_OR_ONE);
+        string.add("o");
+        list.add(string);
+
+        string = new DmqlString();
+        string.add("50");
+        list.add(string);
+
+        assertEquals(list, sql);
+    }
+
+    public void testStringListWithDigits() throws ANTLRException
+    {
+        ParserResults results = parse("(OWNER=098foo,f*,*6foo5*,4f?o,50)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"OWNER"}, results );
+
+        DmqlStringList list = new DmqlStringList("r_OWNER");
+        DmqlString string = new DmqlString();
+        string.add("098foo");
+        list.add(string);
+
+        string = new DmqlString();
+        string.add("f");
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+
+        string = new DmqlString();
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        string.add("6foo5");
+        string.add(DmqlString.MATCH_ZERO_OR_MORE);
+        list.add(string);
+
+        string = new DmqlString();
+        string.add("4f");
         string.add(DmqlString.MATCH_ZERO_OR_ONE);
         string.add("o");
         list.add(string);

@@ -80,7 +80,7 @@ public class DmqlCompiler
         treeParser.setTrace(traceParser);
         treeParser.setMetadata(metadata);
         SqlConverter sqlConverter = treeParser.query(ast);
-        Set/*String*/ foundFields = treeParser.getFoundFields();
+        Set<String> foundFields = treeParser.getFoundFields();
         ParserResults parserResults = new ParserResults(sqlConverter, foundFields);
         return parserResults;
     }
@@ -88,9 +88,9 @@ public class DmqlCompiler
     public static class ParserResults
     {
         private SqlConverter mSqlConverter;
-        private Set/*String*/ mFields = Collections.EMPTY_SET;
+        private Set<String> mFields = Collections.emptySet();
         
-        public ParserResults(SqlConverter sqlConverter, Set/*String*/ foundFields)
+        public ParserResults(SqlConverter sqlConverter, Set<String> foundFields)
         {
             if (sqlConverter == null) {
                 throw new NullPointerException("sqlConverter is null.");
@@ -106,7 +106,7 @@ public class DmqlCompiler
          *         parse. Never returns <code>null</code>, however, may return
          *         an empty set.
          */
-        public Set/*String*/ getFoundFields() {
+        public Set<String> getFoundFields() {
             return mFields;
         }
 

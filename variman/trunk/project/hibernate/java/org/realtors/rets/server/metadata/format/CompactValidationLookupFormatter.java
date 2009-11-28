@@ -13,13 +13,16 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.ValidationLookup;
 
 public class CompactValidationLookupFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection validationLookups,
+    public void format(FormatterContext context, Collection<MetaObject> validationLookups,
                        String[] levels)
     {
         if (validationLookups.size() == 0)
@@ -33,26 +36,26 @@ public class CompactValidationLookupFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator i = validationLookups.iterator(); i.hasNext();)
+        for (Iterator<?> i = validationLookups.iterator(); i.hasNext();)
         {
-            ValidationLookup validationLookup = (ValidationLookup) i.next();
+            MValidationLookup validationLookup = (MValidationLookup) i.next();
             appendDataRow(context, validationLookup);
         }
         tag.close();
 
         if (context.isRecursive())
         {
-            for (Iterator i = validationLookups.iterator(); i.hasNext();)
+            for (Iterator<?> i = validationLookups.iterator(); i.hasNext();)
             {
-                ValidationLookup validationLookup = (ValidationLookup) i.next();
-                context.format(validationLookup.getValidationLookupTypes(),
-                               validationLookup.getPathAsArray());
+                MValidationLookup validationLookup = (MValidationLookup) i.next();
+                String[] path = StringUtils.split(validationLookup.getPath(), ":");
+                context.format(validationLookup.getChildren(MetadataType.VALIDATION_LOOKUP_TYPE), path);
             }
         }
     }
 
     private void appendDataRow(FormatterContext context,
-                               ValidationLookup validationLookup)
+            MValidationLookup validationLookup)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -65,6 +68,8 @@ public class CompactValidationLookupFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
         "MetadataEntryID", "ValidationLookupName", "Parent1Field", "Parent2Field", "Version",
         "Date",

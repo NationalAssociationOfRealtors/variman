@@ -2,24 +2,24 @@
  */
 package org.realtors.rets.server.metadata.format;
 
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.ForeignKey;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateHelp;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MEditMask;
+import org.realtors.rets.common.metadata.types.MForeignKey;
+import org.realtors.rets.common.metadata.types.MLookup;
+import org.realtors.rets.common.metadata.types.MLookupType;
+import org.realtors.rets.common.metadata.types.MObject;
+import org.realtors.rets.common.metadata.types.MResource;
+import org.realtors.rets.common.metadata.types.MSearchHelp;
+import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdate;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
+import org.realtors.rets.common.metadata.types.MUpdateType;
+import org.realtors.rets.common.metadata.types.MValidationExpression;
+import org.realtors.rets.common.metadata.types.MValidationExternal;
+import org.realtors.rets.common.metadata.types.MValidationExternalType;
+import org.realtors.rets.common.metadata.types.MValidationLookup;
+import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 import junit.framework.TestCase;
 
@@ -31,39 +31,39 @@ public class ClassFormatterLookupTest extends TestCase
             new ClassFormatterLookup(MetadataFormatter.COMPACT);
         assertTrue(lookup.lookupFormatter(MSystem.class) instanceof
                    CompactSystemFormatter);
-        assertTrue(lookup.lookupFormatter(Resource.class) instanceof
+        assertTrue(lookup.lookupFormatter(MResource.class) instanceof
                    CompactResourceFormatter);
         assertTrue(lookup.lookupFormatter(MClass.class) instanceof
                    CompactClassFormatter);
-        assertTrue(lookup.lookupFormatter(Table.class) instanceof
+        assertTrue(lookup.lookupFormatter(MTable.class) instanceof
                    CompactTableFormatter);
-        assertTrue(lookup.lookupFormatter(Update.class) instanceof
+        assertTrue(lookup.lookupFormatter(MUpdate.class) instanceof
                    CompactUpdateFormatter);
-        assertTrue(lookup.lookupFormatter(UpdateType.class) instanceof
+        assertTrue(lookup.lookupFormatter(MUpdateType.class) instanceof
                    CompactUpdateTypeFormatter);
         assertTrue(lookup.lookupFormatter(MObject.class) instanceof
                    CompactObjectFormatter);
-        assertTrue(lookup.lookupFormatter(SearchHelp.class) instanceof
+        assertTrue(lookup.lookupFormatter(MSearchHelp.class) instanceof
                    CompactSearchHelpFormatter);
-        assertTrue(lookup.lookupFormatter(EditMask.class) instanceof
+        assertTrue(lookup.lookupFormatter(MEditMask.class) instanceof
                    CompactEditMaskFormatter);
-        assertTrue(lookup.lookupFormatter(Lookup.class) instanceof
+        assertTrue(lookup.lookupFormatter(MLookup.class) instanceof
                    CompactLookupFormatter);
-        assertTrue(lookup.lookupFormatter(UpdateHelp.class) instanceof
+        assertTrue(lookup.lookupFormatter(MUpdateHelp.class) instanceof
                    CompactUpdateHelpFormatter);
-        assertTrue(lookup.lookupFormatter(LookupType.class) instanceof
+        assertTrue(lookup.lookupFormatter(MLookupType.class) instanceof
                    CompactLookupTypeFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationLookup.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationLookup.class) instanceof
                    CompactValidationLookupFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationLookupType.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationLookupType.class) instanceof
                    CompactValidationLookupTypeFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationExternal.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationExternal.class) instanceof
                    CompactValidationExternalFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationExternalType.class)
+        assertTrue(lookup.lookupFormatter(MValidationExternalType.class)
                    instanceof CompactValidationExternalTypeFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationExpression.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationExpression.class) instanceof
                    CompactValidationExpressionFormatter);
-        assertTrue(lookup.lookupFormatter(ForeignKey.class) instanceof
+        assertTrue(lookup.lookupFormatter(MForeignKey.class) instanceof
                    CompactForeignKeyFormatter);
     }
 
@@ -73,39 +73,39 @@ public class ClassFormatterLookupTest extends TestCase
             new ClassFormatterLookup(MetadataFormatter.STANDARD);
         assertTrue(lookup.lookupFormatter(MSystem.class) instanceof
                    StandardSystemFormatter);
-        assertTrue(lookup.lookupFormatter(Resource.class) instanceof
+        assertTrue(lookup.lookupFormatter(MResource.class) instanceof
                    StandardResourceFormatter);
         assertTrue(lookup.lookupFormatter(MClass.class) instanceof
                    StandardClassFormatter);
-        assertTrue(lookup.lookupFormatter(Table.class) instanceof
+        assertTrue(lookup.lookupFormatter(MTable.class) instanceof
                    StandardTableFormatter);
-        assertTrue(lookup.lookupFormatter(Update.class) instanceof
+        assertTrue(lookup.lookupFormatter(MUpdate.class) instanceof
                    StandardUpdateFormatter);
-        assertTrue(lookup.lookupFormatter(UpdateType.class) instanceof
+        assertTrue(lookup.lookupFormatter(MUpdateType.class) instanceof
                    StandardUpdateTypeFormatter);
         assertTrue(lookup.lookupFormatter(MObject.class) instanceof
                    StandardObjectFormatter);
-        assertTrue(lookup.lookupFormatter(SearchHelp.class) instanceof
+        assertTrue(lookup.lookupFormatter(MSearchHelp.class) instanceof
                    StandardSearchHelpFormatter);
-        assertTrue(lookup.lookupFormatter(EditMask.class) instanceof
+        assertTrue(lookup.lookupFormatter(MEditMask.class) instanceof
                    StandardEditMaskFormatter);
-        assertTrue(lookup.lookupFormatter(Lookup.class) instanceof
+        assertTrue(lookup.lookupFormatter(MLookup.class) instanceof
                    StandardLookupFormatter);
-        assertTrue(lookup.lookupFormatter(UpdateHelp.class) instanceof
+        assertTrue(lookup.lookupFormatter(MUpdateHelp.class) instanceof
                    StandardUpdateHelpFormatter);
-        assertTrue(lookup.lookupFormatter(LookupType.class) instanceof
+        assertTrue(lookup.lookupFormatter(MLookupType.class) instanceof
                    StandardLookupTypeFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationLookup.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationLookup.class) instanceof
                    StandardValidationLookupFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationLookupType.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationLookupType.class) instanceof
                    StandardValidationLookupTypeFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationExternal.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationExternal.class) instanceof
                    StandardValidationExternalFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationExternalType.class)
+        assertTrue(lookup.lookupFormatter(MValidationExternalType.class)
                    instanceof StandardValidationExternalTypeFormatter);
-        assertTrue(lookup.lookupFormatter(ValidationExpression.class) instanceof
+        assertTrue(lookup.lookupFormatter(MValidationExpression.class) instanceof
                    StandardValidationExpressionFormatter);
-//        assertTrue(lookup.lookupFormatter(ForeignKey.class) instanceof
-//                   StandardForeignKeyFormatter);
+        assertTrue(lookup.lookupFormatter(MForeignKey.class) instanceof
+                   StandardForeignKeyFormatter);
     }
 }

@@ -170,6 +170,22 @@ public class TagBuilder
         return this;
     }
 
+    public TagBuilder print(Boolean b)
+    {
+        if (b == null) {
+            mWriter.print("");
+        }
+        if (b.booleanValue())
+        {
+            mWriter.print("1");
+        }
+        else
+        {
+            mWriter.print("0");
+        }
+        return this;
+    }
+
     public TagBuilder print(Collection<String> collection)
     {
         if (collection != null)
@@ -223,6 +239,12 @@ public class TagBuilder
 
     public static void simpleTag(PrintWriter writer, String tagName,
                                  boolean value)
+    {
+        new TagBuilder(writer, tagName).beginContent().print(value).close();
+    }
+
+    public static void simpleTag(PrintWriter writer, String tagName,
+                                 Boolean value)
     {
         new TagBuilder(writer, tagName).beginContent().print(value).close();
     }

@@ -10,34 +10,24 @@
  */
 package org.realtors.rets.server.metadata;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.realtors.rets.common.metadata.MetaObject;
+
 public class MetadataSegment
 {
-    public MetadataSegment(ServerMetadata[] data, String[] levels,
-                           String version, Date date)
-    {
-        mData = data;
-        mDataList = Arrays.asList(data);
-        mLevels = levels;
-        mVersion = version;
-        mDate = date;
-    }
-
-    public MetadataSegment(List data, String[] levels, String version,
+    public MetadataSegment(List<MetaObject> data, String[] levels, String version,
                            Date date)
     {
-        mData = (ServerMetadata[])
-            data.toArray(new ServerMetadata[data.size()]);
+        mData = data.toArray(new MetaObject[data.size()]);
         mDataList = data;
         mLevels = levels;
         mVersion = version;
         mDate = date;
     }
 
-    public ServerMetadata[] getData()
+    public MetaObject[] getData()
     {
         return mData;
     }
@@ -62,8 +52,8 @@ public class MetadataSegment
         return mDate;
     }
 
-    private ServerMetadata[] mData;
-    private List mDataList;
+    private MetaObject[] mData;
+    private List<MetaObject> mDataList;
     private String[] mLevels;
     private String mVersion;
     private Date mDate;

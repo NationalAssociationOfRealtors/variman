@@ -13,14 +13,14 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MObject;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.ObjectTypeEnum;
 
 public class CompactObjectFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection objects,
+    public void format(FormatterContext context, Collection<MetaObject> objects,
                        String[] levels)
     {
         if (objects.size() == 0)
@@ -33,7 +33,7 @@ public class CompactObjectFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator iterator = objects.iterator(); iterator.hasNext();)
+        for (Iterator<?> iterator = objects.iterator(); iterator.hasNext();)
         {
             MObject object = (MObject) iterator.next();
             appendDataRow(context, object);
@@ -46,8 +46,8 @@ public class CompactObjectFormatter extends MetadataFormatter
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
         row.append(object.getMetadataEntryID());
-        row.append(ObjectTypeEnum.toString(object.getObjectType()));
-        row.append(object.getMimeType());
+        row.append(object.getObjectType());
+        row.append(object.getMIMEType());
         row.append(object.getVisibleName());
         row.append(object.getDescription());
         row.append(object.getObjectTimeStamp());
@@ -55,6 +55,8 @@ public class CompactObjectFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = new String[] {
         "MetadataEntryID", "ObjectType", "MimeType", "VisibleName", 
         "Description", "ObjectTimeStamp", "ObjectCount",

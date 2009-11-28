@@ -13,13 +13,14 @@ package org.realtors.rets.server.metadata.format;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MUpdateHelp;
 import org.realtors.rets.common.util.DataRowBuilder;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.UpdateHelp;
 
 public class CompactUpdateHelpFormatter extends MetadataFormatter
 {
-    public void format(FormatterContext context, Collection updateHelps,
+    public void format(FormatterContext context, Collection<MetaObject> updateHelps,
                        String[] levels)
     {
         if (updateHelps.size() == 0)
@@ -33,15 +34,15 @@ public class CompactUpdateHelpFormatter extends MetadataFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine()
             .appendColumns(COLUMNS);
-        for (Iterator i = updateHelps.iterator(); i.hasNext();)
+        for (Iterator<?> i = updateHelps.iterator(); i.hasNext();)
         {
-            UpdateHelp updateHelp = (UpdateHelp) i.next();
+            MUpdateHelp updateHelp = (MUpdateHelp) i.next();
             appendDataRow(context, updateHelp);
         }
         tag.close();
     }
 
-    private void appendDataRow(FormatterContext context, UpdateHelp updateHelp)
+    private void appendDataRow(FormatterContext context, MUpdateHelp updateHelp)
     {
         DataRowBuilder row = new DataRowBuilder(context.getWriter());
         row.begin();
@@ -51,6 +52,8 @@ public class CompactUpdateHelpFormatter extends MetadataFormatter
         row.end();
     }
 
+    // FIXME: MetaObject.getAttributeNames() but takes a RetsVersion so the
+    // correct attribute names are returned.
     private static final String[] COLUMNS = {
         "MetadataEntryID", "UpdateHelpID", "Value"
     };

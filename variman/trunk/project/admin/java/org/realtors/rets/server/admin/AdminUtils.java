@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
@@ -28,9 +29,10 @@ import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.SessionHelper;
 import org.realtors.rets.server.config.DatabaseConfig;
 import org.realtors.rets.server.config.DatabaseType;
+import org.realtors.rets.server.config.HibernateUtils;
 import org.realtors.rets.server.config.RetsConfig;
 import org.realtors.rets.server.config.RetsConfigDao;
-import org.realtors.rets.server.config.XmlRetsConfigDao;
+
 
 public class AdminUtils
 {
@@ -43,7 +45,7 @@ public class AdminUtils
         Admin.setConfigFile(configFile.getAbsolutePath());
         if (configFile.exists())
         {
-            RetsConfigDao configDao = new XmlRetsConfigDao(Admin.getConfigFile());
+            RetsConfigDao configDao = Admin.getRetsConfigDao();
             RetsConfig config = configDao.loadRetsConfig();
             Admin.setRetsConfig(config);
             Admin.setRetsConfigChanged(false);
@@ -101,9 +103,16 @@ public class AdminUtils
                                     "/admin/classes/" + 
                                     Admin.PROJECT_NAME + "-hbm-xml.jar";
  
+        DatabaseConfig databaseConfig = retsConfig.getDatabase();
+        Properties hibernateProperties;
+        if (databaseConfig != null) {
+            hibernateProperties = HibernateUtils.createHibernateProperties(databaseConfig);
+        } else {
+            hibernateProperties = new Properties();
+        }
         Configuration config = new Configuration()
             .addJar(new File(hibernateConfig))
-            .setProperties(retsConfig.createHibernateProperties());
+            .setProperties(hibernateProperties);
         SessionFactory sessionFactory =
             config.buildSessionFactory();
         PasswordMethod.setDefaultMethod(PasswordMethod.DIGEST_A1,

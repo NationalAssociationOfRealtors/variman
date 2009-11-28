@@ -14,23 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.realtors.rets.server.metadata.EditMask;
-import org.realtors.rets.server.metadata.ForeignKey;
-import org.realtors.rets.server.metadata.Lookup;
-import org.realtors.rets.server.metadata.LookupType;
-import org.realtors.rets.server.metadata.MClass;
-import org.realtors.rets.server.metadata.MObject;
-import org.realtors.rets.server.metadata.MSystem;
-import org.realtors.rets.server.metadata.Resource;
-import org.realtors.rets.server.metadata.SearchHelp;
-import org.realtors.rets.server.metadata.Table;
-import org.realtors.rets.server.metadata.Update;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.ValidationExpression;
-import org.realtors.rets.server.metadata.ValidationExternal;
-import org.realtors.rets.server.metadata.ValidationExternalType;
-import org.realtors.rets.server.metadata.ValidationLookup;
-import org.realtors.rets.server.metadata.ValidationLookupType;
+import org.realtors.rets.common.metadata.MetadataType;
 import org.realtors.rets.server.metadata.format.MetadataFormatter;
 import org.realtors.rets.server.protocol.TransactionParameters;
 
@@ -91,24 +75,24 @@ public class GetMetadataParameters extends TransactionParameters
 
     private static void initValidTypes()
     {
-        sValidTypes = new HashSet();
-        sValidTypes.add(MSystem.TABLE);
-        sValidTypes.add(Resource.TABLE);
-        sValidTypes.add(MClass.TABLE);
-        sValidTypes.add(Table.TABLE);
-        sValidTypes.add(Update.TABLE);
-        sValidTypes.add(UpdateType.TABLE);
-        sValidTypes.add(MObject.TABLE);
-        sValidTypes.add(SearchHelp.TABLE);
-        sValidTypes.add(EditMask.TABLE);
-        sValidTypes.add(Lookup.TABLE);
-        sValidTypes.add(LookupType.TABLE);
-        sValidTypes.add(ValidationLookup.TABLE);
-        sValidTypes.add(ValidationLookupType.TABLE);
-        sValidTypes.add(ValidationExternal.TABLE);
-        sValidTypes.add(ValidationExternalType.TABLE);
-        sValidTypes.add(ValidationExpression.TABLE);
-        sValidTypes.add(ForeignKey.TABLE);
+        sValidTypes = new HashSet<String>();
+        sValidTypes.add(MetadataType.SYSTEM.name());
+        sValidTypes.add(MetadataType.RESOURCE.name());
+        sValidTypes.add(MetadataType.CLASS.name());
+        sValidTypes.add(MetadataType.TABLE.name());
+        sValidTypes.add(MetadataType.UPDATE.name());
+        sValidTypes.add(MetadataType.UPDATE_TYPE.name());
+        sValidTypes.add(MetadataType.OBJECT.name());
+        sValidTypes.add(MetadataType.SEARCH_HELP.name());
+        sValidTypes.add(MetadataType.EDITMASK.name());
+        sValidTypes.add(MetadataType.LOOKUP.name());
+        sValidTypes.add(MetadataType.LOOKUP_TYPE.name());
+        sValidTypes.add(MetadataType.VALIDATION_LOOKUP.name());
+        sValidTypes.add(MetadataType.VALIDATION_LOOKUP_TYPE.name());
+        sValidTypes.add(MetadataType.VALIDATION_EXTERNAL.name());
+        sValidTypes.add(MetadataType.VALIDATION_EXTERNAL_TYPE.name());
+        sValidTypes.add(MetadataType.VALIDATION_EXPRESSION.name());
+        sValidTypes.add(MetadataType.FOREIGN_KEYS.name());
     }
 
     private String cleanUpType(String type) throws RetsReplyException
@@ -210,6 +194,6 @@ public class GetMetadataParameters extends TransactionParameters
     private String mType;
     private String[] mIds;
     private boolean mRecursive;
-    private static Set sValidTypes;
+    private static Set<String> sValidTypes;
     private User mUser;
 }

@@ -14,13 +14,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.io.PrintWriter;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.MetadataType;
+import org.realtors.rets.common.metadata.types.MLookup;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.Lookup;
 
 public class StandardLookupFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection lookups,
+    public void format(FormatterContext context, Collection<MetaObject> lookups,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -32,9 +36,9 @@ public class StandardLookupFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), retsVersion)
             .beginContentOnNewLine();
 
-        for (Iterator i = lookups.iterator(); i.hasNext();)
+        for (Iterator<?> i = lookups.iterator(); i.hasNext();)
         {
-            Lookup lookup = (Lookup) i.next();
+            MLookup lookup = (MLookup) i.next();
             
             TagBuilder tag;
             // This is ugly: Lookup and LookupType were switched between 1.5, 1.7 and the 1.7.2 DTDs
@@ -47,7 +51,7 @@ public class StandardLookupFormatter extends BaseStandardFormatter
             else
             {
                 tag = new TagBuilder(out, "Lookup")
-                            .beginContentOnNewLine();                
+                            .beginContentOnNewLine();
             }
             
             if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
@@ -58,12 +62,14 @@ public class StandardLookupFormatter extends BaseStandardFormatter
             TagBuilder.simpleTag(out, "LookupName", lookup.getLookupName());
             TagBuilder.simpleTag(out, "VisibleName", lookup.getVisibleName());
             
+            // FIXME: Prior to 1.7, the version/date names were Version and
+            // Date. Not LookupTypeVerion and LookupTypeDate.
             formatVersionDateTags(context, VERSION_DATE_TAGS);
 
             if (context.isRecursive())
             {
-                context.format(lookup.getLookupTypes(),
-                               lookup.getPathAsArray());
+                String[] path = StringUtils.split(lookup.getPath(), ":");
+                context.format(lookup.getChildren(MetadataType.LOOKUP_TYPE), path);
             }
 
             tag.close();

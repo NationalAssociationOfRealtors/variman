@@ -15,13 +15,14 @@ import java.util.Iterator;
 import java.io.PrintWriter;
 
 import org.realtors.rets.client.RetsVersion;
+import org.realtors.rets.common.metadata.MetaObject;
+import org.realtors.rets.common.metadata.types.MTable;
+import org.realtors.rets.common.metadata.types.MUpdateType;
 import org.realtors.rets.common.util.TagBuilder;
-import org.realtors.rets.server.metadata.UpdateType;
-import org.realtors.rets.server.metadata.Table;
 
 public class StandardUpdateTypeFormatter extends BaseStandardFormatter
 {
-    public void format(FormatterContext context, Collection updateTypes,
+    public void format(FormatterContext context, Collection<MetaObject> updateTypes,
                        String[] levels)
     {
         RetsVersion retsVersion = context.getRetsVersion();
@@ -36,10 +37,10 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
             .appendAttribute("Date", context.getDate(), context.getRetsVersion())
             .beginContentOnNewLine();
 
-        for (Iterator i = updateTypes.iterator(); i.hasNext();)
+        for (Iterator<?> i = updateTypes.iterator(); i.hasNext();)
         {
-            UpdateType updateType = (UpdateType) i.next();
-            Table table = updateType.getTable();
+            MUpdateType updateType = (MUpdateType) i.next();
+            MTable table = updateType.getMTable();
             if (!context.isAccessibleTable(table, resource, retsClass))
             {
                 continue;
@@ -53,19 +54,18 @@ public class StandardUpdateTypeFormatter extends BaseStandardFormatter
                 // Added 1.7 DTD
                 TagBuilder.simpleTag(out, "MetadataEntryID", updateType.getMetadataEntryID());
             }
-            TagBuilder.simpleTag(out, "SystemName",
-                                 table.getSystemName());
+            TagBuilder.simpleTag(out, "SystemName", updateType.getSystemName());
             TagBuilder.simpleTag(out, "Sequence", updateType.getSequence());
             TagBuilder.simpleTag(out, "Attributes", updateType.getAttributes());
             TagBuilder.simpleTag(out, "Default", updateType.getDefault());
             TagBuilder.simpleTag(out, "ValidationExpressionID",
-                                 updateType.getValidationExpressions());
+                                 updateType.getValidationExpressionID());
             TagBuilder.simpleTag(out, "UpdateHelpID",
-                                 updateType.getUpdateHelp());
+                                 updateType.getUpdateHelpID());
             TagBuilder.simpleTag(out, "ValidationLookupName",
-                                 updateType.getValidationLookup());
+                                 updateType.getValidationLookupName());
             TagBuilder.simpleTag(out, "ValidationExternalName",
-                                 updateType.getValidationExternal());
+                                 updateType.getValidationExternalName());
             if (!retsVersion.equals(RetsVersion.RETS_1_0) && !retsVersion.equals(RetsVersion.RETS_1_5))
             {
                 // Added 1.7 DTD

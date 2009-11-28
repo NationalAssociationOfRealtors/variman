@@ -14,7 +14,7 @@ import org.realtors.rets.common.util.TagBuilder;
 
 public abstract class BaseStandardFormatter extends MetadataFormatter
 {
-    protected void formatVersionDateTags(FormatterContext context,
+    protected static void formatVersionDateTags(FormatterContext context,
                                        String[] versionDateTags)
     {
         for (int i = 0; i < versionDateTags.length; i++)
