@@ -18,9 +18,12 @@ LicenseFile=@BASEDIR@\LICENSE.TXT
 UninstallFilesDir={app}\uninstall
 MinVersion=0,4
 Compression=@COMPRESSION@
+ArchitecturesInstallIn64BitMode=x64 ia64
 
 [Files]
-Source: "*"; Excludes: "\variman\WEB-INF\rets\rets-config.xml,\variman\WEB-INF\rets\rets-logging.properties,\logs\%"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Check: StopVarimanService
+Source: "*"; Excludes: "variman.exe,variman64.exe,\variman\WEB-INF\rets\rets-config.xml,\variman\WEB-INF\rets\rets-logging.properties,\logs\%"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs; Check: StopVarimanService
+Source: "variman.exe"; DestDir: "{app}"; DestName: "variman.exe"; Check: IsX86
+Source: "variman64.exe"; DestDir: "{app}";  DestName: "variman.exe"; Check: IsX64
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
@@ -70,18 +73,50 @@ var
   JreVersionKey: String;
   MajorVersion: String;
   MinorVersion: String;
+  Success : Boolean;
 begin
   JavaFound := False;
   JreKey := 'SOFTWARE\JavaSoft\Java Runtime Environment';
-  if not RegQueryStringValue(HKLM, JreKey, 'CurrentVersion', JavaVersion) then
-    Exit;
-  //JavaVersion := '1.3';
+  Success := RegQueryStringValue(HKLM32, JreKey, 'CurrentVersion', JavaVersion);
+  if Success then
+    begin
+      //MsgBox('Found 32 bit Java Version: ' + JavaVersion, mbInformation, MB_OK)
+      if not RegQueryStringValue(HKLM32, JreKey, 'CurrentVersion', JavaVersion) then
+        Exit;
+
+      JreVersionKey := JreKey + '\' + JavaVersion;
+      if not RegQueryStringValue(HKLM32, JreVersionKey, 'JavaHome', JavaHome) then
+        Exit;
+      if not RegQueryStringValue(HKLM32, JreVersionKey, 'RuntimeLib', JavaJvmDll) then
+        Exit;
+    end
+  else
+    begin
+      // Could be on a 64 bit machine. See if we can find 64 bit Java.
+      //MsgBox('32 bit Java Not Found ', mbInformation, MB_OK)
+      try
+        Success := RegQueryStringValue(HKLM64, JreKey, 'CurrentVersion', JavaVersion);
+        if (Success) then
+          begin
+            //MsgBox('Found 64 bit Java Version: ' + JavaVersion, mbInformation, MB_OK)
+            if not RegQueryStringValue(HKLM64, JreKey, 'CurrentVersion', JavaVersion) then
+              Exit;
   
-  JreVersionKey := JreKey + '\' + JavaVersion;
-  if not RegQueryStringValue(HKLM, JreVersionKey, 'JavaHome', JavaHome) then
-    Exit;
-  if not RegQueryStringValue(HKLM, JreVersionKey, 'RuntimeLib', JavaJvmDll) then
-    Exit;
+            JreVersionKey := JreKey + '\' + JavaVersion;
+            if not RegQueryStringValue(HKLM64, JreVersionKey, 'JavaHome', JavaHome) then
+              Exit;
+            if not RegQueryStringValue(HKLM64, JreVersionKey, 'RuntimeLib', JavaJvmDll) then
+              Exit;
+          end
+        else
+          begin
+            //MsgBox('64 bit Java Not Found ', mbInformation, MB_OK);
+            Exit;
+          end
+      except
+        Exit;
+      end;
+    end;
 
   JavaFound := True;
   // JavaVersion is of the format "major.minor"
@@ -90,9 +125,9 @@ begin
   MinorVersion := Copy(JavaVersion, 3, 1);
   JavaMinorVersion := StrToInt(MinorVersion);
 
-//  MsgBox('JavaVersion: ' + JavaVersion + #13
-//          'JavaHome: ' + JavaHome + #13
-//          'JavaJvmDll: ' + JavaJvmDll, mbInformation, MB_OK);
+  //MsgBox('JavaVersion: ' + JavaVersion + #13
+  //         'JavaHome: ' + JavaHome + #13
+  //         'JavaJvmDll: ' + JavaJvmDll, mbInformation, MB_OK);
 end;
 
 function InitializeSetup(): Boolean;
@@ -114,7 +149,7 @@ begin
       Exit;
     end
     if JavaMinorVersion < 5 then begin
-      MsgBox('Java version 1.5 is required, detected: ' + JavaVersion + #13#13
+      MsgBox('Java version 1.5 at a minimum is required, detected: ' + JavaVersion + #13#13
         'Cancel the installation and upgrade Java.', mbCriticalError, MB_OK);
       Result := False;
       Exit;
@@ -133,20 +168,20 @@ begin
     '-out "{app}\logs\stdout.log" -err "{app}\logs\stderr.log" ' +
     '-current "{app}"';
   Result := ExpandConstant(Result);
-//  MsgBox('Install service: ' + Result, mbInformation, MB_OK);
+  //MsgBox('Install service: ' + Result, mbInformation, MB_OK);
 end;
 
 function UninstallServiceParams(Default: String): String;
 begin
   Result := '-uninstall "' + ServiceName + '"';
-//  MsgBox('Uninstall service: ' + Result, mbInformation, MB_OK);
+  //MsgBox('Uninstall service: ' + Result, mbInformation, MB_OK);
 end;
 
 function StopVarimanService() : Boolean;
 var rslt : integer;
 begin
   if not ServiceStopped then begin
-//    MsgBox('Removing Variman Service', mbInformation, MB_OK);
+    MsgBox('Removing Variman Service', mbInformation, MB_OK);
     Exec(GetSystemDir() + '\net.exe', 'stop Variman', GetSystemDir(), SW_HIDE, ewWaitUntilTerminated, rslt);
     ServiceStopped := True;
   end
@@ -164,3 +199,14 @@ begin
     DelTree(classes, True, True, True);
   end;
 end;
+
+function IsX64: Boolean;
+begin
+  Result := Is64BitInstallMode and (ProcessorArchitecture = pax64);
+end;
+
+function IsX86: Boolean;
+begin
+  Result := not IsX64;
+end;
+

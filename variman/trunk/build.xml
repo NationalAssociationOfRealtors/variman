@@ -869,6 +869,7 @@
       </filterset>
     </copy>
     <copy file="${javaservice.exe}" tofile="build/rets-server/${project.name}.exe"/>
+    <copy file="${javaservice64.exe}" tofile="build/rets-server/${project.name}64.exe"/>
     <echo message="Running Inno Setup compiler"/>
     <exec executable="${inno_setup.iscc}"
           output="build/iss.log"
