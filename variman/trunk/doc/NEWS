@@ -3,6 +3,7 @@ Version 3.2.0 - xx xxx 2009
   * Remove duplicate metadata classes. Ticket #35.
   * RestrictedIndicator allows special characters. Ticket #61.
   * Add $basedir to build.xml. Ticket #63.
+  * Variman fails to install on 64 bit Windows. Ticket #64.
   * Migrate to Hibernate3. Ticket #65.
   * Change RetsConfig to allow for changeable persistence
     mechanisms. Ticket #66.

@@ -181,7 +181,7 @@ function StopVarimanService() : Boolean;
 var rslt : integer;
 begin
   if not ServiceStopped then begin
-    MsgBox('Removing Variman Service', mbInformation, MB_OK);
+    //MsgBox('Removing Variman Service', mbInformation, MB_OK);
     Exec(GetSystemDir() + '\net.exe', 'stop Variman', GetSystemDir(), SW_HIDE, ewWaitUntilTerminated, rslt);
     ServiceStopped := True;
   end
