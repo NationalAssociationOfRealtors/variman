@@ -16,8 +16,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.realtors.rets.server.IOUtils;
@@ -210,7 +209,9 @@ public class WebApp
         String value = getServletContext().getInitParameter(param);
         return (value == null) ? defaultValue : value;
     }
-    
+
+    private static final Logger LOG =
+        Logger.getLogger(WebApp.class);
     public static final String PROJECT_NAME = "variman";
     public static final String SERVER_NAME = "Variman";
 
@@ -221,6 +222,6 @@ public class WebApp
     private static String sVersion;
     private static String sBuildDate;
     private static String sHPMALoginPath = "/server/login";
-    private static Log LOG = LogFactory.getLog(WebApp.class);
+    
     private static final Object sLock = new Object();
 }

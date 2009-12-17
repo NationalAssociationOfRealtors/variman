@@ -7,8 +7,7 @@
  */
 package org.realtors.rets.server.webapp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfigChangedListener;
 
@@ -19,7 +18,7 @@ import org.realtors.rets.server.config.RetsConfigChangedListener;
  * @author timbo
  */
 public class WebAppRetsConfigChangedListener implements RetsConfigChangedListener {
-    private Log LOGGER = LogFactory.getLog(WebAppRetsConfigChangedListener.class);
+    private Logger LOG = Logger.getLogger(WebAppRetsConfigChangedListener.class);
 
     /*- (non-Javadoc)
      * @see org.realtors.rets.server.config.RetsConfigChangedListener#retsConfigChanged()
@@ -28,7 +27,7 @@ public class WebAppRetsConfigChangedListener implements RetsConfigChangedListene
         try {
             WebApp.loadConfiguration();
         } catch (RetsServerException e) {
-            LOGGER.warn("Unable to reset RETS configuration in the application.");
+            LOG.warn("Unable to reset RETS configuration in the application.");
         }
     }
 

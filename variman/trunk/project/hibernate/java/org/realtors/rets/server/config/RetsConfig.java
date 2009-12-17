@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.Util;
 
 public class RetsConfig
@@ -260,7 +259,7 @@ public class RetsConfig
         getExtendableProperties().put(name, value);
     }
 
-    private static final Log LOG = LogFactory.getLog(RetsConfig.class);
+    private static final Logger LOG = Logger.getLogger(RetsConfig.class);
 
     private String mAddress;
     private int mPort;

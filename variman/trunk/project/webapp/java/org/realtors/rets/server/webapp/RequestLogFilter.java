@@ -24,8 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.RequestLogEntry;
 import org.realtors.rets.server.RequestLogLogger;
 import org.realtors.rets.server.User;
@@ -52,7 +51,7 @@ public class RequestLogFilter implements Filter {
      */
     public static final String REQUESTLOGENTRY_KEY = "org.realtors.rets.server.webapp.RequestLogFilter.RequestLogEntry";
 
-    private static final Log LOGGER = LogFactory.getLog(RequestLogFilter.class);
+    private static final Logger LOG = Logger.getLogger(RequestLogFilter.class);
 
     // Configuration Variables -----------------------------------------------
     private RequestLogLogger requestLogLogger;
@@ -175,9 +174,7 @@ public class RequestLogFilter implements Filter {
                 InetAddress localHost = InetAddress.getLocalHost();
                 this.localHostName = localHost.getHostName();
             } catch (UnknownHostException e) {
-                if (LOGGER.isWarnEnabled()) {
-                    LOGGER.warn(e);
-                }
+                LOG.warn(e);
             }
         }
         return this.localHostName;

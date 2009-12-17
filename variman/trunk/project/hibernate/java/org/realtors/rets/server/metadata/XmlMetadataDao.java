@@ -16,8 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -39,7 +38,7 @@ import org.realtors.rets.server.config.RetsConfig;
  */
 public class XmlMetadataDao implements MetadataDao {
 
-    private static final Log LOG = LogFactory.getLog(XmlMetadataDao.class);
+    private static final Logger LOG = Logger.getLogger(XmlMetadataDao.class);
 
     private static Metadata metadata;
 
@@ -76,9 +75,7 @@ public class XmlMetadataDao implements MetadataDao {
             {
                 metadata = new Metadata(new MSystem());
                 XmlMetadataDao.metadata = metadata;
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Unable to locate metadata.xml: " + e);
-                }
+                LOG.warn("Unable to locate metadata.xml: " + e);
                 return metadata;
             }
             /*
@@ -101,9 +98,7 @@ public class XmlMetadataDao implements MetadataDao {
                 {
                     metadata = new Metadata(new MSystem());
                     XmlMetadataDao.metadata = metadata;
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Unable to locate metadata: " + e);
-                    }
+                    LOG.warn("Unable to locate metadata: " + e);
                     return metadata;
                 }
             }
@@ -129,9 +124,7 @@ public class XmlMetadataDao implements MetadataDao {
             {
                 metadata = new Metadata(new MSystem());
                 XmlMetadataDao.metadata = metadata;
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to merge metadata: " + e);
-                }
+                LOG.error("Unable to merge metadata: " + e);
                 return metadata;
             }
         }
@@ -224,9 +217,7 @@ public class XmlMetadataDao implements MetadataDao {
             }
             catch (Exception e)
             {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Unable to save metadata: " + e);
-                }
+                LOG.error("Unable to save metadata: " + e);
             }
         }
     }

@@ -27,7 +27,6 @@ import org.apache.catalina.InstanceListener;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.realm.MemoryRealm;
 import org.apache.catalina.startup.Embedded;
-//import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -5,8 +5,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 public class CapabilityUrls {
 	public static final String ACTION_URL = "Action";
@@ -18,7 +17,7 @@ public class CapabilityUrls {
 	public static final String SEARCH_URL = "Search";
 	public static final String GET_METADATA_URL = "GetMetadata";
 	public static final String UPDATE_URL = "Update";
-	private static final Log LOG = LogFactory.getLog(CapabilityUrls.class);
+	private static final Logger LOG = Logger.getLogger(CapabilityUrls.class);
 
 	private final Map mCapabilityUrls;
 	private URL mUrl;

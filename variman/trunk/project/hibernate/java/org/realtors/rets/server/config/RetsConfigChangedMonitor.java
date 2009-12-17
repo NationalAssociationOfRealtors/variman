@@ -12,9 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.NullArgumentException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.apache.log4j.Logger;
 /**
  * A Runnable monitor that periodically checks if the RetsConfig for the server
  * has changed and fires an event to registered RetsConfigListeners.
@@ -22,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  * @author timbo
  */
 public class RetsConfigChangedMonitor implements Runnable {
-    private static final Log LOGGER = LogFactory.getLog(RetsConfigChangedMonitor.class);
+    private static final Logger LOG = Logger.getLogger(RetsConfigChangedMonitor.class);
     private RetsConfigDao configDao;
 
     private List<RetsConfigChangedListener> retsConfigChangedListenerList = new ArrayList<RetsConfigChangedListener>();

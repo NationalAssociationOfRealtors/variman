@@ -8,8 +8,7 @@
 
 package org.realtors.rets.server.webapp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.metadata.MetadataChangedListener;
 
@@ -18,7 +17,7 @@ import org.realtors.rets.server.metadata.MetadataChangedListener;
  */
 public class WebAppMetadataChangedListener implements MetadataChangedListener {
 
-    private static final Log LOGGER = LogFactory.getLog(WebAppMetadataChangedListener.class);
+    private static final Logger LOG = Logger.getLogger(WebAppMetadataChangedListener.class);
 
     /*- (non-Javadoc)
      * @see org.realtors.rets.server.metadata.MetadataChangedListener#metadataChanged()
@@ -27,9 +26,7 @@ public class WebAppMetadataChangedListener implements MetadataChangedListener {
         try {
             WebApp.loadConfiguration();
         } catch (RetsServerException e) {
-            if (LOGGER.isFatalEnabled()) {
-                LOGGER.fatal("An error occurred while loading the metadata.", e);
-            }
+            LOG.fatal("An error occurred while loading the metadata.", e);
         }
     }
 
