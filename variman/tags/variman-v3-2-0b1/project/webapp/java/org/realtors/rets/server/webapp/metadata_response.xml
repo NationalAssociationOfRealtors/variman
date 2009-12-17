@@ -1,0 +1,569 @@
+<RETS ReplyCode="0" ReplyText="Operation Successful">
+<METADATA-SYSTEM Version="01.00.001" Date="Tue, 03 Jun 2003 12:00:00 CDT">
+<SYSTEM SystemID="CRT_RETS" SystemDescription="Center for REALTOR Technology"/>
+<COMMENTS>The reference implementation of a RETS Server</COMMENTS>
+</METADATA-SYSTEM>
+<METADATA-FOREIGN_KEYS Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ForeignKeyID	ParentResourceID	ParentClassID	ParentSystemName	ChildResourceID	ChildClassID	ChildSystemName	</COLUMNS>
+<DATA>	Agent_Office	Agent	AGT	OFFICE_ID			OFFICE_ID	</DATA>
+<DATA>	Property_ActiveAgent	Property	RES	AGENT_ID			AGENT_ID	</DATA>
+<DATA>	Property_Agent	Property	RES	AGENT_ID			AGENT_ID	</DATA>
+<DATA>	ActiveAgent_Agent	ActiveAgent	ACTAGT	AGENT_ID			AGENT_ID	</DATA>
+<DATA>	ActiveAgent_Office	ActiveAgent	ACTAGT	OFFICE_ID			OFFICE_ID	</DATA>
+</METADATA-FOREIGN_KEYS>
+<METADATA-RESOURCE Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ResourceID	StandardName	VisibleName	Description	KeyField	ClassCount	ClassVersion	ClassDate	ObjectVersion	ObjectDate	SearchHelpVersion	SearchHelpDate	EditMaskVersion	EditMaskDate	LookupVersion	LookupDate	UpdateHelpVersion	UpdateHelpDate	ValidationExpressionVersion	ValidationExpressionDate	ValidationLookupVersion	ValidationLookupDate	ValidationExternalVersion	ValidationExternalDate	</COLUMNS>
+<DATA>	Property	Property	Property	Property Database	LN,PTYP,AR,LP,STATUS	5	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	ActiveAgent	ActiveAgent	ActiveAgent	Active Agent Database	AGENT_ID	1	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	Office	Office	Office	Office Database	OFFICE_ID	1	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	Agent	Agent	Agent	Agent Database	AGENT_ID	1	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-RESOURCE>
+<METADATA-CLASS Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ClassName	StandardName	VisibleName	DBName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	</COLUMNS>
+<DATA>	MOB	MobileHomes	Mobile Home		Mobile Homes	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	LND	LotsAndLand	Lots and Land		Lots and Land	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	RES	ResidentialProperty	Single Family		Single Family Residential	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	CON	CommonInterest	Condos		Condominiums	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	MUL	MultiFamily	Multi-Family		Multi-Family Residential	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-CLASS>
+<METADATA-CLASS Resource="ActiveAgent" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ClassName	StandardName	VisibleName	DBName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	</COLUMNS>
+<DATA>	ACTAGT	ACTAGT	ActiveAgent		Active Agent	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-CLASS>
+<METADATA-CLASS Resource="Office" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ClassName	StandardName	VisibleName	DBName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	</COLUMNS>
+<DATA>	OFFICE	REOffice	Office		Broker Office	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-CLASS>
+<METADATA-CLASS Resource="Agent" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ClassName	StandardName	VisibleName	DBName	Description	TableVersion	TableDate	UpdateVersion	UpdateDate	</COLUMNS>
+<DATA>	AGT	REAgent	Agent		Agent	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-CLASS>
+<METADATA-TABLE Resource="Property" Class="MOB" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	EF	ExteriorFeatures	Exterior Features	EF	Ext Feat	100	Character	0	1	LookupMulti	Left	0		EFT	0		0	0	0	0	0	EXTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	OWNER	TaxOwnersName	Owner Name	OWNER	Owner Name	20	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	H_SCHOOL	HighSchool	High School	H_SCHOOL	HighSchool	4	Int	0	1	Lookup	Left	0		H_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	M_SCHOOL	MiddleSchool	Middle School	M_SCHOOL	MiddleSchool	4	Int	0	1	Lookup	Left	0		M_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	E_SCHOOL	ElementarySchool	Elementary School	E_SCHOOL	ElemSchool	4	Int	0	1	Lookup	Left	0		E_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	LD	ListingDate	Listing Date	LD	Lst Dt	12	Date	0	1		Left	0	DATE_EDITMASK		0		0	0	0	0	0	DATE_SEARCH_HELP	0	</DATA>
+<DATA>	AR	ListingArea	Location	AR	Area	5	Character	0	1	Lookup	Left	0		AR	0		30	0	0	4	1		0	</DATA>
+<DATA>	LTYP	ListingType	Listing Type	LTYP	Lst Type	4	Character	0	1	Lookup	Left	0		LISTING_TYPE	0		0	0	0	0	0		0	</DATA>
+<DATA>	ZIP_CODE	PostalCode	Zip Code	ZIP_CODE	Zip	10	Long	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	IF	InteriorFeatures	Interior Features	IF	Int Feat	100	Character	0	1	LookupMulti	Left	0		IFT	0		0	0	0	0	0	INTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	URL	ListAgentWWW	Listing URL	URL	URL	40	Character	0	0		Left	0			0		0	0	0	6	0		0	</DATA>
+<DATA>	AGENT_ID	ListAgentAgentID	Listing Agent ID	AGENT_ID	AgentID	6	Character	0	1		Left	0			0		0	0	0	5	0		0	</DATA>
+<DATA>	LN	ListingID	Listing ID	LN	ListID	40	Character	0	1	Number	Left	0	LN_EDITMASK		0		0	1	0	1	1	LN_SEARCH_HELP	1	</DATA>
+<DATA>	VEW	View	View	VEW	View	10	Long	0	1	LookupBitmask	Left	0		VEW	1		0	0	0	0	0	VIEW_SEARCH_HELP	0	</DATA>
+<DATA>	SQFT	LivingArea	Square Footage	SQFT	Sq Ft	8	Character	0	0		Left	0	SQFT_EDITMASK		0	SqFt	0	0	0	0	0	SQFT_SEARCH_HELP	0	</DATA>
+<DATA>	STNAME	StreetName	Street Name	STNAME	St Nam	20	Character	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	STATUS	ListingStatus	Status	STATUS	Status	1	Character	0	1	Lookup	Left	0		LISTING_STATUS	0		0	0	0	2	1	LISTING_STATUS_SEARCH_HELP	0	</DATA>
+<DATA>	LP	ListPrice	Listing Price	LP	Lst Pr	8	Int	0	1	Currency	Right	1			0		0	14	0	3	0		0	</DATA>
+<DATA>	STNUM	StreetNumber	Street Number	STNUM	St Num	10	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	BROKER	ListAgentListingServiceName	Brokerage	BROKER	Broker	40	Character	0	1		Left	0			0		0	0	0	7	0		0	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Resource="Property" Class="LND" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	EF	ExteriorFeatures	Exterior Features	EF	Ext Feat	100	Character	0	1	LookupMulti	Left	0		EFT	0		0	0	0	0	0	EXTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	OWNER	TaxOwnersName	Owner Name	OWNER	Owner Name	20	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	H_SCHOOL	HighSchool	High School	H_SCHOOL	HighSchool	4	Int	0	1	Lookup	Left	0		H_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	M_SCHOOL	MiddleSchool	Middle School	M_SCHOOL	MiddleSchool	4	Int	0	1	Lookup	Left	0		M_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	E_SCHOOL	ElementarySchool	Elementary School	E_SCHOOL	ElemSchool	4	Int	0	1	Lookup	Left	0		E_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	LD	ListingDate	Listing Date	LD	Lst Dt	12	Date	0	1		Left	0	DATE_EDITMASK		0		0	0	0	0	0	DATE_SEARCH_HELP	0	</DATA>
+<DATA>	AR	ListingArea	Location	AR	Area	5	Character	0	1	Lookup	Left	0		AR	0		30	0	0	4	1		0	</DATA>
+<DATA>	LTYP	ListingType	Listing Type	LTYP	Lst Type	4	Character	0	1	Lookup	Left	0		LISTING_TYPE	0		0	0	0	0	0		0	</DATA>
+<DATA>	ZIP_CODE	PostalCode	Zip Code	ZIP_CODE	Zip	10	Long	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	IF	InteriorFeatures	Interior Features	IF	Int Feat	100	Character	0	1	LookupMulti	Left	0		IFT	0		0	0	0	0	0	INTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	URL	ListAgentWWW	Listing URL	URL	URL	40	Character	0	0		Left	0			0		0	0	0	6	0		0	</DATA>
+<DATA>	AGENT_ID	ListAgentAgentID	Listing Agent ID	AGENT_ID	AgentID	6	Character	0	1		Left	0			0		0	0	0	5	0		0	</DATA>
+<DATA>	LN	ListingID	Listing ID	LN	ListID	40	Character	0	1	Number	Left	0	LN_EDITMASK		0		0	1	0	1	1	LN_SEARCH_HELP	1	</DATA>
+<DATA>	VEW	View	View	VEW	View	10	Long	0	1	LookupBitmask	Left	0		VEW	1		0	0	0	0	0	VIEW_SEARCH_HELP	0	</DATA>
+<DATA>	SQFT	LivingArea	Square Footage	SQFT	Sq Ft	8	Character	0	0		Left	0	SQFT_EDITMASK		0	SqFt	0	0	0	0	0	SQFT_SEARCH_HELP	0	</DATA>
+<DATA>	STNAME	StreetName	Street Name	STNAME	St Nam	20	Character	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	STATUS	ListingStatus	Status	STATUS	Status	1	Character	0	1	Lookup	Left	0		LISTING_STATUS	0		0	0	0	2	1	LISTING_STATUS_SEARCH_HELP	0	</DATA>
+<DATA>	LP	ListPrice	Listing Price	LP	Lst Pr	8	Int	0	1	Currency	Right	1			0		0	14	0	3	0		0	</DATA>
+<DATA>	STNUM	StreetNumber	Street Number	STNUM	St Num	10	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	BROKER	ListAgentListingServiceName	Brokerage	BROKER	Broker	40	Character	0	1		Left	0			0		0	0	0	7	0		0	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Resource="Property" Class="RES" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	EF	ExteriorFeatures	Exterior Features	EF	Ext Feat	100	Character	0	1	LookupMulti	Left	0		EFT	0		0	0	0	0	0	EXTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	OWNER	TaxOwnersName	Owner Name	OWNER	Owner Name	20	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	H_SCHOOL	HighSchool	High School	H_SCHOOL	HighSchool	4	Int	0	1	Lookup	Left	0		H_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	M_SCHOOL	MiddleSchool	Middle School	M_SCHOOL	MiddleSchool	4	Int	0	1	Lookup	Left	0		M_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	E_SCHOOL	ElementarySchool	Elementary School	E_SCHOOL	ElemSchool	4	Int	0	1	Lookup	Left	0		E_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	LD	ListingDate	Listing Date	LD	Lst Dt	12	Date	0	1		Left	0	DATE_EDITMASK		0		0	0	0	0	0	DATE_SEARCH_HELP	0	</DATA>
+<DATA>	AR	ListingArea	Location	AR	Area	5	Character	0	1	Lookup	Left	0		AR	0		30	0	0	4	1		0	</DATA>
+<DATA>	LTYP	ListingType	Listing Type	LTYP	Lst Type	4	Character	0	1	Lookup	Left	0		LISTING_TYPE	0		0	0	0	0	0		0	</DATA>
+<DATA>	ZIP_CODE	PostalCode	Zip Code	ZIP_CODE	Zip	10	Long	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	IF	InteriorFeatures	Interior Features	IF	Int Feat	100	Character	0	1	LookupMulti	Left	0		IFT	0		0	0	0	0	0	INTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	URL	ListAgentWWW	Listing URL	URL	URL	40	Character	0	0		Left	0			0		0	0	0	6	0		0	</DATA>
+<DATA>	AGENT_ID	ListAgentAgentID	Listing Agent ID	AGENT_ID	AgentID	6	Character	0	1		Left	0			0		0	0	0	5	0		0	</DATA>
+<DATA>	LN	ListingID	Listing ID	LN	ListID	40	Character	0	1	Number	Left	0	LN_EDITMASK		0		0	1	0	1	1	LN_SEARCH_HELP	1	</DATA>
+<DATA>	VEW	View	View	VEW	View	10	Long	0	1	LookupBitmask	Left	0		VEW	1		0	0	0	0	0	VIEW_SEARCH_HELP	0	</DATA>
+<DATA>	SQFT	LivingArea	Square Footage	SQFT	Sq Ft	8	Character	0	0		Left	0	SQFT_EDITMASK		0	SqFt	0	0	0	0	0	SQFT_SEARCH_HELP	0	</DATA>
+<DATA>	STNAME	StreetName	Street Name	STNAME	St Nam	20	Character	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	STATUS	ListingStatus	Status	STATUS	Status	1	Character	0	1	Lookup	Left	0		LISTING_STATUS	0		0	0	0	2	1	LISTING_STATUS_SEARCH_HELP	0	</DATA>
+<DATA>	LP	ListPrice	Listing Price	LP	Lst Pr	8	Int	0	1	Currency	Right	1			0		0	14	0	3	0		0	</DATA>
+<DATA>	STNUM	StreetNumber	Street Number	STNUM	St Num	10	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	BROKER	ListAgentListingServiceName	Brokerage	BROKER	Broker	40	Character	0	1		Left	0			0		0	0	0	7	0		0	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Resource="Property" Class="CON" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	VEW	View	View	VEW	View	10	Long	0	1	LookupBitmask	Left	0		VEW	1		0	0	0	0	0	VIEW_SEARCH_HELP	0	</DATA>
+<DATA>	SQFT	LivingArea	Square Footage	SQFT	Sq Ft	8	Character	0	0		Left	0	SQFT_EDITMASK		0	SqFt	0	0	0	0	0	SQFT_SEARCH_HELP	0	</DATA>
+<DATA>	STNAME	StreetName	Street Name	STNAME	St Nam	20	Character	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	STATUS	ListingStatus	Status	STATUS	Status	1	Character	0	1	Lookup	Left	0		LISTING_STATUS	0		0	0	0	2	1	LISTING_STATUS_SEARCH_HELP	0	</DATA>
+<DATA>	LP	ListPrice	Listing Price	LP	Lst Pr	8	Int	0	1	Currency	Right	1			0		0	14	0	3	0		0	</DATA>
+<DATA>	STNUM	StreetNumber	Street Number	STNUM	St Num	10	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	BROKER	ListAgentListingServiceName	Brokerage	BROKER	Broker	40	Character	0	1		Left	0			0		0	0	0	7	0		0	</DATA>
+<DATA>	EF	ExteriorFeatures	Exterior Features	EF	Ext Feat	100	Character	0	1	LookupMulti	Left	0		EFT	0		0	0	0	0	0	EXTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	OWNER	TaxOwnersName	Owner Name	OWNER	Owner Name	20	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	H_SCHOOL	HighSchool	High School	H_SCHOOL	HighSchool	4	Int	0	1	Lookup	Left	0		H_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	M_SCHOOL	MiddleSchool	Middle School	M_SCHOOL	MiddleSchool	4	Int	0	1	Lookup	Left	0		M_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	E_SCHOOL	ElementarySchool	Elementary School	E_SCHOOL	ElemSchool	4	Int	0	1	Lookup	Left	0		E_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	LD	ListingDate	Listing Date	LD	Lst Dt	12	Date	0	1		Left	0	DATE_EDITMASK		0		0	0	0	0	0	DATE_SEARCH_HELP	0	</DATA>
+<DATA>	AR	ListingArea	Location	AR	Area	5	Character	0	1	Lookup	Left	0		AR	0		30	0	0	4	1		0	</DATA>
+<DATA>	LTYP	ListingType	Listing Type	LTYP	Lst Type	4	Character	0	1	Lookup	Left	0		LISTING_TYPE	0		0	0	0	0	0		0	</DATA>
+<DATA>	ZIP_CODE	PostalCode	Zip Code	ZIP_CODE	Zip	10	Long	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	IF	InteriorFeatures	Interior Features	IF	Int Feat	100	Character	0	1	LookupMulti	Left	0		IFT	0		0	0	0	0	0	INTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	URL	ListAgentWWW	Listing URL	URL	URL	40	Character	0	0		Left	0			0		0	0	0	6	0		0	</DATA>
+<DATA>	AGENT_ID	ListAgentAgentID	Listing Agent ID	AGENT_ID	AgentID	6	Character	0	1		Left	0			0		0	0	0	5	0		0	</DATA>
+<DATA>	LN	ListingID	Listing ID	LN	ListID	40	Character	0	1	Number	Left	0	LN_EDITMASK		0		0	1	0	1	1	LN_SEARCH_HELP	1	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Resource="Property" Class="MUL" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	EF	ExteriorFeatures	Exterior Features	EF	Ext Feat	100	Character	0	1	LookupMulti	Left	0		EFT	0		0	0	0	0	0	EXTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	OWNER	TaxOwnersName	Owner Name	OWNER	Owner Name	20	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	H_SCHOOL	HighSchool	High School	H_SCHOOL	HighSchool	4	Int	0	1	Lookup	Left	0		H_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	M_SCHOOL	MiddleSchool	Middle School	M_SCHOOL	MiddleSchool	4	Int	0	1	Lookup	Left	0		M_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	E_SCHOOL	ElementarySchool	Elementary School	E_SCHOOL	ElemSchool	4	Int	0	1	Lookup	Left	0		E_SCHOOL	0		0	0	0	0	0		0	</DATA>
+<DATA>	LD	ListingDate	Listing Date	LD	Lst Dt	12	Date	0	1		Left	0	DATE_EDITMASK		0		0	0	0	0	0	DATE_SEARCH_HELP	0	</DATA>
+<DATA>	AR	ListingArea	Location	AR	Area	5	Character	0	1	Lookup	Left	0		AR	0		30	0	0	4	1		0	</DATA>
+<DATA>	LTYP	ListingType	Listing Type	LTYP	Lst Type	4	Character	0	1	Lookup	Left	0		LISTING_TYPE	0		0	0	0	0	0		0	</DATA>
+<DATA>	ZIP_CODE	PostalCode	Zip Code	ZIP_CODE	Zip	10	Long	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	IF	InteriorFeatures	Interior Features	IF	Int Feat	100	Character	0	1	LookupMulti	Left	0		IFT	0		0	0	0	0	0	INTERIOR_FEATURE_SEARCH_HELP	0	</DATA>
+<DATA>	URL	ListAgentWWW	Listing URL	URL	URL	40	Character	0	0		Left	0			0		0	0	0	6	0		0	</DATA>
+<DATA>	AGENT_ID	ListAgentAgentID	Listing Agent ID	AGENT_ID	AgentID	6	Character	0	1		Left	0			0		0	0	0	5	0		0	</DATA>
+<DATA>	LN	ListingID	Listing ID	LN	ListID	40	Character	0	1	Number	Left	0	LN_EDITMASK		0		0	1	0	1	1	LN_SEARCH_HELP	1	</DATA>
+<DATA>	VEW	View	View	VEW	View	10	Long	0	1	LookupBitmask	Left	0		VEW	1		0	0	0	0	0	VIEW_SEARCH_HELP	0	</DATA>
+<DATA>	SQFT	LivingArea	Square Footage	SQFT	Sq Ft	8	Character	0	0		Left	0	SQFT_EDITMASK		0	SqFt	0	0	0	0	0	SQFT_SEARCH_HELP	0	</DATA>
+<DATA>	STNAME	StreetName	Street Name	STNAME	St Nam	20	Character	0	0		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	STATUS	ListingStatus	Status	STATUS	Status	1	Character	0	1	Lookup	Left	0		LISTING_STATUS	0		0	0	0	2	1	LISTING_STATUS_SEARCH_HELP	0	</DATA>
+<DATA>	LP	ListPrice	Listing Price	LP	Lst Pr	8	Int	0	1	Currency	Right	1			0		0	14	0	3	0		0	</DATA>
+<DATA>	STNUM	StreetNumber	Street Number	STNUM	St Num	10	Character	0	0		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	BROKER	ListAgentListingServiceName	Brokerage	BROKER	Broker	40	Character	0	1		Left	0			0		0	0	0	7	0		0	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Resource="ActiveAgent" Class="ACTAGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	OFFICE_ID	ListOfficeOfficeID	Office ID	OFFICE_ID	OFFICE_ID	7	Character	0	1		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	AGENT_ID	ListAgentAgentID	Agent ID	AGENT_ID	AGENT	6	Character	0	1		Left	0			0		0	0	0	1	1		1	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Resource="Office" Class="OFFICE" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	NAME		Broker Name	NAME	BROKER	20	Character	0	1		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	BROKER_ID	ListOfficeBrokerID	Broker ID	BROKER_ID	BROKER_ID	6	Character	0	1		Left	0			0		0	0	0	2	1		0	</DATA>
+<DATA>	OFFICE_ID	ListOfficeOfficeID	Office ID	OFFICE_ID	OFFICE_ID	7	Character	0	1		Left	0			0		0	0	0	1	0		1	</DATA>
+<DATA>	URL	ListOfficeWWW	Broker URL	URL	BROKER_URL	40	Character	0	1		Left	0			0		0	0	0	3	0		0	</DATA>
+</METADATA-TABLE>
+<METADATA-TABLE Resource="Agent" Class="AGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	StandardName	LongName	DBName	ShortName	MaximumLength	DataType	Precision	Searchable	Interpretation	Alignment	UseSeparator	EditMaskID	LookupName	MaxSelect	Units	Index	Minimum	Maximum	Default	Required	SearchHelpID	Unique	</COLUMNS>
+<DATA>	OFFICE_ID		Office ID	OFFICE_ID	OFFICE_ID	7	Character	0	1		Left	0			0		1	0	0	0	0		0	</DATA>
+<DATA>	DESIGNATIONS		Designations	DESIGNATIONS	DESIGNATIONS	20	Character	0	1		Left	0		DESIGNATIONS	0		0	0	0	0	0		0	</DATA>
+<DATA>	FIRST_NAME	ListAgentFirstName	First Name	FIRST_NAME	FIRST_NAME	12	Character	0	1		Left	0			0		0	0	0	2	0		0	</DATA>
+<DATA>	PASSWORD		Password	PASSWORD	PASSWORD	12	Character	0	1		Left	0			0		0	0	0	-1	0		0	</DATA>
+<DATA>	OFFICE_PHONE	ListAgentOfficePhone	Agent Office Phone	OFFICE_PHONE	OFFICE_PHONE	11	Character	0	1		Left	0			0		0	0	0	0	0		0	</DATA>
+<DATA>	LAST_NAME	ListAgentLastName	Last Name	LAST_NAME	LAST_NAME	18	Character	0	1		Left	0			0		3	0	0	3	0		0	</DATA>
+<DATA>	AGENT_ID	ListAgentAgentID	Agent ID	AGENT_ID	AGENT	7	Character	0	1		Left	0			0		0	1	0	1	1		1	</DATA>
+<DATA>	URL	ListAgentWWW	Agent Website	URL	URL	40	Character	0	1		Left	0			0		0	0	0	4	0		0	</DATA>
+<DATA>	CELL_PHONE	ListAgentCellPhone	Agent Cell Phone	CELL_PHONE	CELL_PHONE	11	Character	0	1		Left	0			0		0	0	0	0	0		0	</DATA>
+</METADATA-TABLE>
+<METADATA-UPDATE Resource="Property" Class="RES" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	UpdateName	Description	KeyField	Version	Date	</COLUMNS>
+<DATA>	Change	Change a Residential Listing	LN	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	Add	Add a new Residential Listing		1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	BOM	Put a Residential Listing Back on Market	LN	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-UPDATE>
+<METADATA-UPDATE Resource="ActiveAgent" Class="ACTAGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	UpdateName	Description	KeyField	Version	Date	</COLUMNS>
+<DATA>	Change_ACTAGT	Change an Agent	AGENT_ID	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	Add_ACTAGT	Add a new Agent		1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-UPDATE>
+<METADATA-UPDATE Resource="Agent" Class="AGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	UpdateName	Description	KeyField	Version	Date	</COLUMNS>
+<DATA>	Change_AGT	Change an Agent	AGENT_ID	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	Add_AGT	Add a new Agent		1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-UPDATE>
+<METADATA-UPDATE_TYPE Resource="Property" Class="RES" Update="Change" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	Sequence	Attributes	Default	ValidationExpressionID	UpdateHelpID	ValidationLookupName	ValidationExternalName	</COLUMNS>
+<DATA>	EF	6	4,2	0					</DATA>
+<DATA>	VEW	5	4,2	0					</DATA>
+<DATA>	STNUM	2	2	0		ST_NUM_UPDATE_HELP			</DATA>
+<DATA>	AR	8	4,2	0					</DATA>
+<DATA>	AGENT_ID	11	1	0		AGENT_UPDATE_HELP			</DATA>
+<DATA>	URL	12	2	0					</DATA>
+<DATA>	LD	10	1	0		DATE_UPDATE_HELP			</DATA>
+<DATA>	IF	7	4,2	0					</DATA>
+<DATA>	STATUS	9	4,2	0					</DATA>
+<DATA>	STNAME	3	2	0		ST_NAME_UPDATE_HELP			</DATA>
+<DATA>	LN	1	1	0					</DATA>
+<DATA>	LP	4	4,2	100000					</DATA>
+<DATA>	BROKER	13	2	0					</DATA>
+</METADATA-UPDATE_TYPE>
+<METADATA-UPDATE_TYPE Resource="Property" Class="RES" Update="Add" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	Sequence	Attributes	Default	ValidationExpressionID	UpdateHelpID	ValidationLookupName	ValidationExternalName	</COLUMNS>
+<DATA>	IF	9	4,2	0					</DATA>
+<DATA>	STATUS	12	4,2	0					</DATA>
+<DATA>	STNAME	3	2	0		ST_NAME_UPDATE_HELP			</DATA>
+<DATA>	LN	1	3	0					</DATA>
+<DATA>	LP	6	4,2	100000					</DATA>
+<DATA>	BROKER	14	4,2	0					</DATA>
+<DATA>	EF	8	4,2	0					</DATA>
+<DATA>	SQFT	11	4,2	0					</DATA>
+<DATA>	VEW	7	4,2	0					</DATA>
+<DATA>	STNUM	2	2	0		ST_NUM_UPDATE_HELP			</DATA>
+<DATA>	AR	10	4,2	0					</DATA>
+<DATA>	AGENT_ID	5	3	0	LISTING_AGENT				</DATA>
+<DATA>	URL	13	2	0					</DATA>
+<DATA>	LD	4	3	0	LD_DATE				</DATA>
+</METADATA-UPDATE_TYPE>
+<METADATA-UPDATE_TYPE Resource="Property" Class="RES" Update="BOM" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	Sequence	Attributes	Default	ValidationExpressionID	UpdateHelpID	ValidationLookupName	ValidationExternalName	</COLUMNS>
+<DATA>	EF	6	1	0					</DATA>
+<DATA>	VEW	5	1	0					</DATA>
+<DATA>	STNUM	2	1	0		ST_NUM_UPDATE_HELP			</DATA>
+<DATA>	AR	8	1	0					</DATA>
+<DATA>	AGENT_ID	10	1	0		AGENT_UPDATE_HELP			</DATA>
+<DATA>	LD	9	1	0		DATE_UPDATE_HELP			</DATA>
+<DATA>	IF	7	1	0					</DATA>
+<DATA>	STNAME	3	1	0		ST_NAME_UPDATE_HELP			</DATA>
+<DATA>	LN	1	1	0	STATUS_BOM				</DATA>
+<DATA>	LP	4	2	0					</DATA>
+</METADATA-UPDATE_TYPE>
+<METADATA-UPDATE_TYPE Resource="ActiveAgent" Class="ACTAGT" Update="Change_ACTAGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	Sequence	Attributes	Default	ValidationExpressionID	UpdateHelpID	ValidationLookupName	ValidationExternalName	</COLUMNS>
+<DATA>	OFFICE_ID	2	2	0					</DATA>
+<DATA>	AGENT_ID	1	1	0					</DATA>
+</METADATA-UPDATE_TYPE>
+<METADATA-UPDATE_TYPE Resource="ActiveAgent" Class="ACTAGT" Update="Add_ACTAGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	Sequence	Attributes	Default	ValidationExpressionID	UpdateHelpID	ValidationLookupName	ValidationExternalName	</COLUMNS>
+<DATA>	OFFICE_ID	4	2	0					</DATA>
+<DATA>	AGENT_ID	1	3	0					</DATA>
+</METADATA-UPDATE_TYPE>
+<METADATA-UPDATE_TYPE Resource="Agent" Class="AGT" Update="Change_AGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	Sequence	Attributes	Default	ValidationExpressionID	UpdateHelpID	ValidationLookupName	ValidationExternalName	</COLUMNS>
+<DATA>	AGENT_NAME	2	2	0					</DATA>
+<DATA>	AGENT_ID	1	1	0					</DATA>
+<DATA>	OFFICE_ID	4	2	0					</DATA>
+<DATA>	AGENT_PHONE	3	2	0					</DATA>
+</METADATA-UPDATE_TYPE>
+<METADATA-UPDATE_TYPE Resource="Agent" Class="AGT" Update="Add_AGT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SystemName	Sequence	Attributes	Default	ValidationExpressionID	UpdateHelpID	ValidationLookupName	ValidationExternalName	</COLUMNS>
+<DATA>	DESIGNATIONS	5	2	0					</DATA>
+<DATA>	LAST_NAME	3	2	0					</DATA>
+<DATA>	OFFICE_PHONE	4	2	0					</DATA>
+<DATA>	OFFICE_ID	5	2	0					</DATA>
+<DATA>	FIRST_NAME	2	2	0					</DATA>
+<DATA>	AGENT_ID	1	3	0					</DATA>
+<DATA>	URL	6	2	0					</DATA>
+</METADATA-UPDATE_TYPE>
+<METADATA-OBJECT Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ObjectType	MimeType	VisibleName	Description	</COLUMNS>
+<DATA>	Thumbnail	image/jpeg	Small Photos	A lower-resolution image related to the element defined by the resource KeyField	</DATA>
+<DATA>	Photo	image/jpeg	Full Photos	A representation image related to the element defined by the resource KeyField	</DATA>
+<DATA>	Enlarged	image/jpeg	Enlarged  Photos	An enlarged image (Not covered by the RETS Specification)	</DATA>
+<DATA>	Branded_Enlarged	image/jpeg	Enlarged, Branded Photos	A branded and enlarged image (Not covered by the RETS Specification)	</DATA>
+<DATA>	Branded_Thumbnail	image/jpeg	Small, Branded Photos	A branded lower-resolution image (Not covered by the RETS Specification)	</DATA>
+<DATA>	Branded_Photo	image/jpeg	Full, Branded Photos	A branded image image (Not covered by the RETS Specification)	</DATA>
+</METADATA-OBJECT>
+<METADATA-LOOKUP Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LookupName	VisibleName	Version	Date	</COLUMNS>
+<DATA>	EFT	Exerior Features	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	VEW	View	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	LISTING_TYPE	Listing Type	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	IFT	Interior Features	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	AR	Area	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	M_SCHOOL	Middle School District	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	H_SCHOOL	High School District	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	E_SCHOOL	Elementary School District	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	LISTING_STATUS	Listing Status	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-LOOKUP>
+<METADATA-LOOKUP Resource="Agent" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LookupName	VisibleName	Version	Date	</COLUMNS>
+<DATA>	DESIGNATIONS	DESIGNATIONS	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-LOOKUP>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="EFT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	STORM WINDOWS	SW	SW	</DATA>
+<DATA>	AGENT OWNER	AO	AO	</DATA>
+<DATA>	ARENA	AR	AR	</DATA>
+<DATA>	ANTENNA	AT	AT	</DATA>
+<DATA>	TENNIS COURT	TC	TC	</DATA>
+<DATA>	HANDICAP FEATURE	HC	HC	</DATA>
+<DATA>	NEW HOME	NH	NH	</DATA>
+<DATA>	HUD OWNED	HD	HD	</DATA>
+<DATA>	BURGLAR ALARM	BA	BA	</DATA>
+<DATA>	WOOD STOVE	WS	WS	</DATA>
+<DATA>	QUICK POSSESSION	QP	QP	</DATA>
+<DATA>	BACKS TO GREENBT	BG	BG	</DATA>
+<DATA>	NEW PAINT	NP	NP	</DATA>
+<DATA>	WALL/WALL CARPET	WW	WW	</DATA>
+<DATA>	QUARRY TILE	QT	QT	</DATA>
+<DATA>	BALCONY	BL	BL	</DATA>
+<DATA>	1031 EXCHANGE	TX	TX	</DATA>
+<DATA>	BACKS TO OPEN SP	BO	BO	</DATA>
+<DATA>	HOT TUB	HT	HT	</DATA>
+<DATA>	BARN	BR	BR	</DATA>
+<DATA>	BUYER&apos;S WARRANTY	BW	BW	</DATA>
+<DATA>	UPDATED	UD	UD	</DATA>
+<DATA>	ON GOLF COURSE	OG	OG	</DATA>
+<DATA>	LENDER OWNED	LE	LE	</DATA>
+<DATA>	CABLE AVAILABLE	CA	CA	</DATA>
+<DATA>	FENCE	FE	FE	</DATA>
+<DATA>	CARRIAGE HOUSE	CH	CH	</DATA>
+<DATA>	UTILITY SHED	UT	UT	</DATA>
+<DATA>	CABLE INSTALLED	CI	CI	</DATA>
+<DATA>	LANDSCAPED PROF	LP	LP	</DATA>
+<DATA>	CORNER	CL	CL	</DATA>
+<DATA>	RV PARKING	RV	RV	</DATA>
+<DATA>	NO COVENANTS	CN	CN	</DATA>
+<DATA>	COVERED PATIO	CP	CP	</DATA>
+<DATA>	CORP OWNED	CR	CR	</DATA>
+<DATA>	CUL-DE-SAC	CU	CU	</DATA>
+<DATA>	FIX-UP	FX	FX	</DATA>
+<DATA>	VIEW CITY	VC	VC	</DATA>
+<DATA>	PARK ADDL OFF ST	PA	PA	</DATA>
+<DATA>	SATELLITE ANT	SD	SD	</DATA>
+<DATA>	MAIN/ASSOC FEE	MA	MA	</DATA>
+<DATA>	POOL COMMUNITY	PC	PC	</DATA>
+<DATA>	SECURITY ENTR	SE	SE	</DATA>
+<DATA>	PET FREE	PF	PF	</DATA>
+<DATA>	GARDEN AREA	GA	GA	</DATA>
+<DATA>	GOLF COMMUNITY	GC	GC	</DATA>
+<DATA>	SKYLIGHTS	SK	SK	</DATA>
+<DATA>	VIEW MOUNTAINS	VM	VM	</DATA>
+<DATA>	DBL PANE WINDOWS	DB	DB	</DATA>
+<DATA>	SOLAR/ACTIVE	SL	SL	</DATA>
+<DATA>	POOL	PL	PL	</DATA>
+<DATA>	SAUNA	SN	SN	</DATA>
+<DATA>	GAS GRILL	GG	GG	</DATA>
+<DATA>	DECK	DE	DE	</DATA>
+<DATA>	SOLAR/PASSIVE	SO	SO	</DATA>
+<DATA>	SPRINKLER	SP	SP	</DATA>
+<DATA>	DOG RUN	DG	DG	</DATA>
+<DATA>	PET RESTRICTIONS	PR	PR	</DATA>
+<DATA>	SUMP PUMP	SU	SU	</DATA>
+<DATA>	PATIO	PT	PT	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="VEW" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	Ocean	OC	128	</DATA>
+<DATA>	Creek	CR	2	</DATA>
+<DATA>	Desert	DS	4	</DATA>
+<DATA>	Woods	WD	4096	</DATA>
+<DATA>	Hills	HL	16	</DATA>
+<DATA>	Farm	FM	8	</DATA>
+<DATA>	Ravine	RA	512	</DATA>
+<DATA>	Lake	LK	32	</DATA>
+<DATA>	Open Lot	OL	256	</DATA>
+<DATA>	River	RV	1024	</DATA>
+<DATA>	Mountain	MT	64	</DATA>
+<DATA>	Alley	AL	1	</DATA>
+<DATA>	Urban	UB	2048	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="LISTING_TYPE" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	INCOME	INC	INC	</DATA>
+<DATA>	LAND	LND	LND	</DATA>
+<DATA>	RESIDENTIAL	RES	RES	</DATA>
+<DATA>	RENT	RENT	RENT	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="IFT" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	WALK-IN CLOSETS	WI	WI	</DATA>
+<DATA>	WORK SHOP	WK	WK	</DATA>
+<DATA>	HANDICAP FEATURE	HC	HC	</DATA>
+<DATA>	NEW HOME	NH	NH	</DATA>
+<DATA>	EVAP COOLER	EC	EC	</DATA>
+<DATA>	BURGLAR ALARM	BA	BA	</DATA>
+<DATA>	TWO MASTER BDRM	TM	TM	</DATA>
+<DATA>	WATER PURIFIER	WP	WP	</DATA>
+<DATA>	TENANT OCCUPIED	TO	TO	</DATA>
+<DATA>	ELEC AIR FILTER	EF	EF	</DATA>
+<DATA>	WATER SOFTENER	WR	WR	</DATA>
+<DATA>	WOOD STOVE	WS	WS	</DATA>
+<DATA>	NEW PAINT	NP	NP	</DATA>
+<DATA>	WALL/WALL CARPET	WW	WW	</DATA>
+<DATA>	QUARRY TILE	QT	QT	</DATA>
+<DATA>	1031 EXCHANGE	TX	TX	</DATA>
+<DATA>	EATING SPACE/KIT	ES	ES	</DATA>
+<DATA>	UPDATED	UD	UD	</DATA>
+<DATA>	REFRIGERATOR	RF	RF	</DATA>
+<DATA>	INTERCOM	IC	IC	</DATA>
+<DATA>	FORMAL DINING	FD	FD	</DATA>
+<DATA>	REMODELED	RM	RM	</DATA>
+<DATA>	CEILING FAN	CF	CF	</DATA>
+<DATA>	FIREPLACE INSERT	FI	FI	</DATA>
+<DATA>	CARRIAGE HOUSE	CH	CH	</DATA>
+<DATA>	LOFT	LO	LO	</DATA>
+<DATA>	COMPACTOR	CO	CO	</DATA>
+<DATA>	FREEZER	FR	FR	</DATA>
+<DATA>	FIX-UP	FX	FX	</DATA>
+<DATA>	CENTRAL VACUUM	CV	CV	</DATA>
+<DATA>	SMOKE ALARM	SA	SA	</DATA>
+<DATA>	SELF-CLEANING OV	SC	SC	</DATA>
+<DATA>	MASTER BATHROOM	MB	MB	</DATA>
+<DATA>	SMOKE FREE	SF	SF	</DATA>
+<DATA>	JET ACTION TUB	JA	JA	</DATA>
+<DATA>	PET FREE	PF	PF	</DATA>
+<DATA>	SOLAR/HOT WTR HT	SH	SH	</DATA>
+<DATA>	VAULTED CEILING	VL	VL	</DATA>
+<DATA>	SKYLIGHTS	SK	SK	</DATA>
+<DATA>	GARAGE DR OPENER	GD	GD	</DATA>
+<DATA>	SOLAR/ACTIVE	SL	SL	</DATA>
+<DATA>	POOL	PL	PL	</DATA>
+<DATA>	SAUNA	SN	SN	</DATA>
+<DATA>	AIR COND-CENTRAL	AC	AC	</DATA>
+<DATA>	SOLAR/PASSIVE	SO	SO	</DATA>
+<DATA>	MOTHER-INLAW APT	ML	ML	</DATA>
+<DATA>	JACK &amp; JILL BATH	JJ	JJ	</DATA>
+<DATA>	ATTIC FAN	AF	AF	</DATA>
+<DATA>	MICROWAVE OVEN	MO	MO	</DATA>
+<DATA>	SUN ROOM	SS	SS	</DATA>
+<DATA>	GAS LOGS	GL	GL	</DATA>
+<DATA>	PET RESTRICTIONS	PR	PR	</DATA>
+<DATA>	STOVE	ST	ST	</DATA>
+<DATA>	PELLET STOVE	PS	PS	</DATA>
+<DATA>	SUMP PUMP	SU	SU	</DATA>
+<DATA>	MEDIA ROOM	MR	MR	</DATA>
+<DATA>	MASTER SUITE	MS	MS	</DATA>
+<DATA>	STORM WINDOWS	SW	SW	</DATA>
+<DATA>	GREAT ROOM	GR	GR	</DATA>
+<DATA>	DRYER	DR	DR	</DATA>
+<DATA>	DISPOSAL	DS	DS	</DATA>
+<DATA>	WASHER	WA	WA	</DATA>
+<DATA>	WET BAR	WB	WB	</DATA>
+<DATA>	WINDOW COVERINGS	WC	WC	</DATA>
+<DATA>	DISHWASHER	DW	DW	</DATA>
+<DATA>	WOOD FLOORS	WD	WD	</DATA>
+<DATA>	FIVE PIECE BATH	5P	5P	</DATA>
+<DATA>	NEWER CARPET	NC	NC	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="AR" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	Aurora	Aurora	AUR	</DATA>
+<DATA>	Batavia	Batavia	BATV	</DATA>
+<DATA>	St. Charles	St Charls	STC	</DATA>
+<DATA>	Elburn	Elburn	ELBRN	</DATA>
+<DATA>	Wayne	Wayne	WYNE	</DATA>
+<DATA>	Elgin	Elgin	ELGN	</DATA>
+<DATA>	West Chicago	W Chic	WCHIC	</DATA>
+<DATA>	South Elgin	S Elgin	SELGN	</DATA>
+<DATA>	Geneva	Geneva	GENVA	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="M_SCHOOL" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	Elgin 42	42	42	</DATA>
+<DATA>	Batavia 300	300	300	</DATA>
+<DATA>	St. Charles 303	303	303	</DATA>
+<DATA>	Geneva 304	304	304	</DATA>
+<DATA>	Aurora 306	306	306	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="H_SCHOOL" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	Elgin 42	42	42	</DATA>
+<DATA>	Batavia 300	300	300	</DATA>
+<DATA>	St. Charles 303	303	303	</DATA>
+<DATA>	Geneva 304	304	304	</DATA>
+<DATA>	Aurora 306	306	306	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="E_SCHOOL" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	Batavia 306	300	300	</DATA>
+<DATA>	St. Charles 303	303	303	</DATA>
+<DATA>	Geneva 304	304	304	</DATA>
+<DATA>	Aurora 306	306	306	</DATA>
+<DATA>	Elgin 42	42	42	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Property" Lookup="LISTING_STATUS" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	Leased	L	L	</DATA>
+<DATA>	Off Market	0	O	</DATA>
+<DATA>	Pending	P	P	</DATA>
+<DATA>	Sold	S	S	</DATA>
+<DATA>	Temp Off Market	T	T	</DATA>
+<DATA>	Under Contract	U	U	</DATA>
+<DATA>	Withdrawn	W	W	</DATA>
+<DATA>	Active	A	A	</DATA>
+<DATA>	Expired	X	X	</DATA>
+<DATA>	Closed	C	C	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-LOOKUP_TYPE Resource="Agent" Lookup="DESIGNATIONS" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	LongValue	ShortValue	Value	</COLUMNS>
+<DATA>	GAA	GAA	GAA	</DATA>
+<DATA>	CIPS	CIPS	CIPS	</DATA>
+<DATA>	AMO	AMO	AMO	</DATA>
+<DATA>	ALC	ALC	ALC	</DATA>
+<DATA>	GRI	GRI	GRI	</DATA>
+<DATA>	ABR	ABR	ABR	</DATA>
+<DATA>	ABRM	ABRM	ABRM	</DATA>
+<DATA>	RCE	RCE	RCE	</DATA>
+<DATA>	CRS	CRS	CRS	</DATA>
+<DATA>	CPM	CPM	CPM	</DATA>
+<DATA>	RAA	RAA	RAA	</DATA>
+<DATA>	CCIM	CCIM	CCIM	</DATA>
+<DATA>	LTG	LTG	LTG	</DATA>
+<DATA>	CRB	CRB	CRB	</DATA>
+<DATA>	SIOR	SIOR	SIOR	</DATA>
+<DATA>	CRE	CRE	CRE	</DATA>
+</METADATA-LOOKUP_TYPE>
+<METADATA-SEARCH_HELP Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SearchHelpID	Value	</COLUMNS>
+<DATA>	LISTING_STATUS_SEARCH_HELP	Status of the Listing	</DATA>
+<DATA>	LN_SEARCH_HELP	Listing Number (all numbers)	</DATA>
+<DATA>	DATE_SEARCH_HELP	Date (YYYY-MM-DD)	</DATA>
+<DATA>	EXTERIOR_FEATURE_SEARCH_HELP	Exterior Features (multiple)	</DATA>
+<DATA>	INTERIOR_FEATURE_SEARCH_HELP	Interior Features (multiple)	</DATA>
+<DATA>	VIEW_SEARCH_HELP	Views (multiple)	</DATA>
+<DATA>	SQFT_SEARCH_HELP	Square Footage (dddxddd)	</DATA>
+</METADATA-SEARCH_HELP>
+<METADATA-EDITMASK Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	EditMaskID	Value	</COLUMNS>
+<DATA>	LN_EDITMASK	[0-9]{4,8}	</DATA>
+<DATA>	SQFT_EDITMASK	[0-9]{1,3}[x][0-9]{1,3}	</DATA>
+<DATA>	DATE_EDITMASK	[0-9]{4}-[0-9]{2}-[0-9]{2}	</DATA>
+</METADATA-EDITMASK>
+<METADATA-UPDATE_HELP Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	UpdateHelpID	Value	</COLUMNS>
+<DATA>	DATE_UPDATE_HELP	Original listing date (YYYY-MM-DD)	</DATA>
+<DATA>	ST_NUM_UPDATE_HELP	Enter the Street Number	</DATA>
+<DATA>	ST_NAME_UPDATE_HELP	Enter the Street Name	</DATA>
+<DATA>	AGENT_UPDATE_HELP	Original listing Agent	</DATA>
+</METADATA-UPDATE_HELP>
+<METADATA-VALIDATION_LOOKUP Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ValidationLookupName	Parent1Field	Parent2Field	Version	Date	</COLUMNS>
+<DATA>	School	Area	Subarea	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-VALIDATION_LOOKUP>
+<METADATA-VALIDATION_LOOKUP_TYPE Resource="Property" ValidationLookup="School" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ValidText	Parent1Value	Parent2Value	</COLUMNS>
+<DATA>	135	AREA2		</DATA>
+<DATA>	133	AREA1	SUBAREA1	</DATA>
+<DATA>	134	AREA1	SUBAREA2	</DATA>
+</METADATA-VALIDATION_LOOKUP_TYPE>
+<METADATA-VALIDATION_EXPRESSION Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ValidationExpressionID	ValidationExpressionType	Value	Version	Date	</COLUMNS>
+<DATA>	STATUS_BOM	SET	STATUS=A	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	Agent1	ACCEPT	(LAG= .AGENTCODE.) .OR. (SAG= .AGENTCODE.)	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	LISTING_AGENT	SET	AGENT_ID=.AGENT.	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	LD_UPDATE_EXPRESSION	ACCEPT	LD &gt; .TODAY. - 3 .AND. LD &lt; .TODAY. +3	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	Office1	ACCEPT	LAG= .AGENTCODE. .OR. (LO= .BROKERCODE. .AND. .ENTRY.=OFFICE)	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+<DATA>	LD_DATE	SET	LD=.TODAY.	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-VALIDATION_EXPRESSION>
+<METADATA-VALIDATION_EXTERNAL Resource="Property" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	ValidationExternalName	SearchResource	SearchClass	Version	Date	</COLUMNS>
+<DATA>	VET1	Property	RES	1.00.000	Sat, 20 Mar 2002 12:03:38 GMT	</DATA>
+</METADATA-VALIDATION_EXTERNAL>
+<METADATA-VALIDATION_EXTERNAL_TYPE Resource="Property" ValidationExternal="VET1" Version="1.00.000" Date="Sat, 20 Mar 2002 12:03:38 GMT">
+<COLUMNS>	SearchField	DisplayField	ResultFields	</COLUMNS>
+<DATA>	AgentID, AgentCode	AgentName, OfficeName	SaleAgentID=AgentID, SaleAgentName=AgentName, SaleOfficeID=OfficeID, SaleOfficeName=OfficeName	</DATA>
+</METADATA-VALIDATION_EXTERNAL_TYPE>
+</RETS>
