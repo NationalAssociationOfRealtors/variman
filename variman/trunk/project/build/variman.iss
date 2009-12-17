@@ -35,7 +35,7 @@ Name: "{app}\logs"
 Name: "{group}\Uninstall CRT Variman RETS Server"; Filename: "{uninstallexe}"
 Name: "{group}\View README"; Filename: "{app}\doc\readme.txt"
 Name: "{group}\View Manual"; Filename: "{app}\doc\manual\index.html"
-Name: "{group}\Variman Administration"; Filename: "javaw.exe"; Parameters: "-jar variman-admin.jar"; WorkingDir: "{app}";
+Name: "{group}\Variman Administration"; Filename: "{code:GetJavaHome}\bin\javaw.exe"; Parameters: "-jar variman-admin.jar"; WorkingDir: "{app}";
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\server\work"
