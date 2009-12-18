@@ -1,0 +1,31 @@
+<?xml version='1.0' ?>
+<rets-config>
+  <port>6103</port>
+  <!--
+  <address>127.0.0.1</address>
+  -->
+
+  <metadata-dir>WEB-INF/rex/metadata</metadata-dir>
+  <!--
+  <get-object-root>/tmp/pictures</get-object-root>
+  <photo-pattern>%k-%i.jpg</photo-pattern>
+  <object-set-pattern>%k.xml</object-set-pattern>
+  <nonce-initial-timeout>1</nonce-initial-timeout>
+  <nonce-success-timeout>1</nonce-success-timeout>
+  <strict-parsing>true</strict-parsing>
+  -->
+
+  <database>
+    <type>postgresql</type>
+    <host>localhost</host>
+    <name>rex_test</name>
+    <username>dave</username>
+    <password/>
+    <max-active>100</max-active>
+    <max-wait>120000</max-wait>
+    <max-idle>10</max-idle>
+    <max-ps-active>100</max-ps-active>
+    <max-ps-wait>120000</max-ps-wait>
+    <max-ps-idle>10</max-ps-idle>
+  </database>
+</rets-config>
