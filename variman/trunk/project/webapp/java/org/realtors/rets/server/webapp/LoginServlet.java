@@ -24,6 +24,7 @@ import org.realtors.rets.server.User;
 import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.metadata.MetadataManager;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -58,8 +59,8 @@ public class LoginServlet extends RetsServlet
             RetsUtils.printOpenRetsResponse(out);
         }
 
-        out.println("Broker = " + user.getBrokerCode());
-        out.println("MemberName = " + user.getName());
+        out.println("Broker = " + StringEscapeUtils.escapeXml(user.getBrokerCode()));
+        out.println("MemberName = " + StringEscapeUtils.escapeXml(user.getName()));
         out.println("MetadataVersion = " + version);
         out.println("MinMetadataVersion = " + version);
         if (!retsVersion.equals(RetsVersion.RETS_1_0) && 
@@ -76,7 +77,7 @@ public class LoginServlet extends RetsServlet
             out.println("MetadataTimestamp = " + formatter.format(date));
             out.println("MinMetadataTimestamp = " + formatter.format(date));
         }
-        out.println("User = " + user.getUsername() + ",NULL,NULL,NULL");
+        out.println("User = " + StringEscapeUtils.escapeXml(user.getUsername()) + ",NULL,NULL,NULL");
         String loginPath = request.getServletPath();
         if (WebApp.isHPMALoginPath(loginPath)) {
             // HPMA needs relative URLs
