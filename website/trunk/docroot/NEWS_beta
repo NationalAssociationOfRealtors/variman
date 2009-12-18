@@ -1,3 +1,39 @@
+Version 3.2.0 - 17 Dec 2009
+ 
+  * Remove duplicate metadata classes. Ticket #35.
+  * RestrictedIndicator allows special characters. Ticket #61.
+  * Add $basedir to build.xml. Ticket #63.
+  * Variman fails to install on 64 bit Windows. Ticket #64.
+  * Migrate to Hibernate3. Ticket #65.
+  * Change RetsConfig to allow for changeable persistence
+    mechanisms. Ticket #66.
+  * Detect RetsConfig changes and dynamically reload.
+    Ticket #69.
+  * .EMPTY. fails on Booleans. Ticket #70.
+  * Add Request Logging and Search Statistics. Ticket #71.
+  * Allow DefaultSearchTransaction with different
+    SearchSqlBuilders. Ticket #72.
+  * MaximumLength in Table metadata must be > 0. Ticket #74.
+  * RETS Character Type not properly handling .EMPTY. Ticket #75.
+  * DMQL Lexer incorrectly tokenizes stings beginning with
+    numbers. Ticket #76.
+  * Failure to find an image in an object-set does not
+    properly close the multi-part response. Ticket #77.
+
+Version 3.1.1 - 30 Sep 2009
+
+  * Strict Parsing flag not properly passed to
+    JDomCompactBuilder in admin tool. Ticket #59.
+  * getMetadata in STANDARD-XML fails compliance check.
+    Ticket #60.
+
+Version 3.1.0 - 23 Sep 2009
+
+  * Object ID of * misreported in error response. Ticket #26.
+  * .EMPTY. is failing on Lookups. Ticket #55.
+  * Format=STANDARD-XML Metadata fails DTD check. Ticket #56.
+  * Search using various forms of 1.7.2 DATETIME fails. Ticket#57.
+
 Version 3.0.0b5 - 31 Jul 2009
 
   * Add cut/paste to all text components. Ticket #53.
