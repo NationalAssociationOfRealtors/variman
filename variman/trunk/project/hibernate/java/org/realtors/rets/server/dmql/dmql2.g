@@ -41,22 +41,16 @@ field_value [AST name]
     | DOT_EMPTY {#field_value = #([DOT_EMPTY], name, #field_value);}
     | {isCharacterField(name.getText())}? string_list[name]
     | {isCharacterField(name.getText())}? string_literal[name]
+    | (range_list[name]) => range_list[name]
     | number {#field_value = #([NUMBER], name, #field_value);}
     | period {#field_value = #([PERIOD], name, #field_value);}
-    | range_list[name]
     ;
     
-//lookup_dotany [AST name]
-//    : DOT_ANY! l:lookups[name]
-//        {#lookup_dotany = #([DOT_ANY], name, l);}
-//    ;
-    
-//lookup_list [AST name]
-//    : o:lookup_or[name]
-//    | a:lookup_and[name]
-//    | n:lookup_not[name]
-//    | d:lookup_dotany[name]
-//    ;
+number
+      {boolean isUnaryMinus = false; }
+    : (MINUS! {isUnaryMinus = true;})? 
+        n:NUMBER {if (isUnaryMinus) n_AST.setText("-" + n_AST.getText());}
+    ;
 
 string_literal [AST name]
     : s:STRING_LITERAL {#string_literal =  #([STRING_LITERAL], name, s); }
@@ -71,11 +65,17 @@ between [AST name]
 between_text
     : text m:MINUS^ {#m.setType(BETWEEN);} text
     ;
+    
+range [AST name]
+    : (less[name]) => less[name]
+    | (greater[name]) => greater[name]
+    | (between[name]) => between[name]
+    ;
 
 less [AST name]
-    : {isNumericField(name.getText())}? less_number
+    : {isNumericField(name.getText())}? (number MINUS RPAREN) => less_number
     | (period) => less_period
-    | less_text
+    | (less_text) => less_text
     ;
 
 less_text

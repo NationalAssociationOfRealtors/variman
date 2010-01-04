@@ -1,4 +1,7 @@
-Version 3.2.0 - 17 Dec 2009
+Version 3.2.1 - xx xxx 2010
+  * Query grammar in 1.7.2 supports negative numbers. Ticket #79.
+
+Version 3.2.0b1 - 17 Dec 2009
  
   * Remove duplicate metadata classes. Ticket #35.
   * RestrictedIndicator allows special characters. Ticket #61.

@@ -85,6 +85,14 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         EqualClause equal =
             new EqualClause("r_LP", new StringSqlConverter("5"));
         assertEquals(equal, sql);
+        
+        results = parse("(LP=-5)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
+        equal =
+            new EqualClause("r_LP", new StringSqlConverter("-5"));
+        assertEquals(equal, sql);
 
         results = parse("(LP=5.)");
         assertNotNull(results);
@@ -108,6 +116,28 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         StringSqlConverter right = new StringSqlConverter("10");
         BetweenClause between = new BetweenClause("r_LP", left, right);
         OrClause or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
+        
+        results = parse("(LP=-5-10)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
+        left = new StringSqlConverter("-5");
+        right = new StringSqlConverter("10");
+        between = new BetweenClause("r_LP", left, right);
+        or = new OrClause();
+        or.add(between);
+        assertEquals(or, sql);
+        
+        results = parse("(LP=-5--10)");
+        assertNotNull(results);
+        sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
+        left = new StringSqlConverter("-5");
+        right = new StringSqlConverter("-10");
+        between = new BetweenClause("r_LP", left, right);
+        or = new OrClause();
         or.add(between);
         assertEquals(or, sql);
     }
@@ -193,6 +223,19 @@ public class Dmql2CompilerTest extends AbstractDmqlCompilerTest
         OrClause or = new OrClause();
         or.add(lessThan);
         assertEquals(or, sql);
+    }
+    
+    public void testLessThanNumber() throws ANTLRException
+    {
+        ParserResults results = parse("(LP=-5-)");
+        assertNotNull(results);
+        SqlConverter sql = results.getSqlConverter();
+        verifyFoundFieldsMatches( new String[] {"LP"}, results );
+        LessThanClause lessThan =
+            new LessThanClause("r_LP", new StringSqlConverter("-5"));
+        OrClause or = new OrClause();
+        or.add(lessThan);
+        assertEquals(or, sql);       
     }
 
     public void testGreaterThanString() throws ANTLRException
