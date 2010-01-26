@@ -35,6 +35,12 @@ The web application version of Variman requires a JRE or JDK, version
 WebLogic.  Configure the "variman" directory as a web application
 inside your servlet container.
 
+Activation
+==========
+Variman must be activated in order to run beyond an hour. Please visit
+http://www.crt.realtors.org/projects/rets/variman/support/activation.php
+to get an activation code.
+
 Administration
 ==============
 
