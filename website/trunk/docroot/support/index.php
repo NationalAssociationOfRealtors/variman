@@ -12,6 +12,9 @@
       the <a href="digest.php">digest calculator</a>.
     </p>
     <p>
+      In order to activate Variman, go <a href="activation.php">here</a>.
+    </p>
+    <p>
     For more information about the Center for REALTOR &reg; Technology
     or Variman, please send email to <a
     href="mailto:info@crt.realtors.org">info@crt.realtors.org</a>.
