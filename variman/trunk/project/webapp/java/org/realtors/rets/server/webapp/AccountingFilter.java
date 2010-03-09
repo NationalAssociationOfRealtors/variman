@@ -66,7 +66,7 @@ public class AccountingFilter implements Filter, Constants
         long responseDuration = System.currentTimeMillis() - startTime;
         statistics.addSessionTime(responseDuration);
         LOG.debug("Response duration: " + responseDuration);
-        LOG.debug("Accumalated time: " + statistics.getSessionTime());
+        LOG.debug("Accumulated time: " + statistics.getSessionTime());
         saveStatistics(statistics);
         MDC.remove("uri");
     }
@@ -82,7 +82,7 @@ public class AccountingFilter implements Filter, Constants
         if (statistics == null)
         {
             User user = (User)
-                session.getAttribute(AuthenticationFilter.AUTHORIZED_USER_KEY);
+            session.getAttribute(AuthenticationFilter.AUTHORIZED_USER_KEY);
             statistics = findOrCreateStatistics(user);
             session.setAttribute(ACCOUNTING_KEY, statistics);
         }

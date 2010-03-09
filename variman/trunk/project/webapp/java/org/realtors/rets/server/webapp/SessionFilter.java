@@ -104,11 +104,11 @@ public class SessionFilter implements Filter
     }
 
     private void sendInvalidSession(HttpServletResponse response)
+        throws IOException
     {
         response.setContentType("text/xml");
-//        PrintWriter out = response.getWriter();
-//        out.println("<?xml version=\"1.0\"?>");
-//        out.println("<!-- Session is invalid -->");
+        PrintWriter out = response.getWriter();
+        out.println("<RETS ReplyCode=\"20701\" ReplyText=\"Not logged in\"/>");
     }
 
     private String getContextUrl(HttpServletRequest request)

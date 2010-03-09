@@ -63,6 +63,10 @@ public class AccountingStatistics implements Serializable
     {
         mSessionTime += time;
         mTotalTime += time;
+        // Detect Overflow (number becomes negative) and reset to zero 
+        // if it happens.
+        if (mSessionTime < 0) mSessionTime = 0;
+        if (mTotalTime < 0) mTotalTime = 0;
     }
 
     public long getSessionTime()
