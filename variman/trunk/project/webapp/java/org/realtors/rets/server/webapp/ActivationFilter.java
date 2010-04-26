@@ -28,7 +28,7 @@ public class ActivationFilter implements Filter  {
     private long starttime = 0;
     private ActivationManager activationManager;
 
-    static final String ACTIVATE_MESSAGE = "This Variman Server has not been activated.  As a result it will" +
+    static final String ACTIVATE_MESSAGE = "This Variman Server has not been activated.  As a result it will " +
             "only run for an hour at a time.";
 
 

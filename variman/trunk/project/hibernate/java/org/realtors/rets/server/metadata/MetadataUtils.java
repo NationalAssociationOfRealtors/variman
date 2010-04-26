@@ -62,6 +62,8 @@ public class MetadataUtils {
             return null;
         }
         String units = table.getUnits();
+        if (units == null)
+            return null;
         UnitEnum unitEnum = UnitEnum.fromString(units);
         return unitEnum;
     }

@@ -6,9 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -78,6 +80,7 @@ import org.realtors.rets.common.metadata.types.MValidationLookupType;
 
 import org.realtors.rets.server.IOUtils;
 import org.realtors.rets.server.JdomUtils;
+import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.swingui.AdminFrame;
 import org.realtors.rets.server.admin.swingui.SwingUtils;
 import org.realtors.rets.server.admin.swingui.TextValuePanel;
@@ -90,26 +93,27 @@ public class MetadataTableDialog extends MetadataDialog
         super(SwingUtils.getAdminFrame());
         
         mStrictParsing = strictParsing;
+        mResource = resource;
         mTable = table;
         
         setModal(true);
         setTitle(mTable.getMetadataTypeName());
 
-        JPanel panel = new JPanel(new SpringLayout());
-        int rows = 0;
+        mMainPanel = new JPanel(new SpringLayout());
         int empty = 0;
         
-        mEditMaskKeys.add("");
-         for (MEditMask editMask : resource.getMEditMasks())
-        {
-            mEditMaskKeys.add(editMask.getEditMaskID());
-        }
+        mEditMaskDialog = new EditMaskDialog(mStrictParsing, metadata, resource, table);
+        String editMaskCsv = MTable.toEditMaskId(mTable.getEditMasks());
+        mEditMaskDialog.setEditMask(editMaskCsv);
+        EditMaskButtonAction buttonAction = new EditMaskButtonAction();
+        buttonAction.putValue(AbstractAction.NAME, editMaskCsv);
+        mEditMaskButton = new JButton(buttonAction);
          
-         mForeignKeyKeys.add("");
-         for (MForeignKey foreignKey : metadata.getSystem().getMForeignKeys())
-         {
-             mForeignKeyKeys.add(foreignKey.getForeignKeyID());
-         }
+        mForeignKeyKeys.add("");
+        for (MForeignKey foreignKey : metadata.getSystem().getMForeignKeys())
+        {
+            mForeignKeyKeys.add(foreignKey.getForeignKeyID());
+        }
         
         mLookupKeys.add("");
         mLookupValues.add("");
@@ -129,10 +133,10 @@ public class MetadataTableDialog extends MetadataDialog
         
         for (String attribute : mTable.getAttributeNames())
         {
-            AttrType<?>    attrType     = mTable.getAttributeType(attribute);
-            JComponent    component;
-               JLabel        label         = new JLabel(attribute + ":", JLabel.TRAILING);
-            String        value         = mTable.getAttributeAsString(attribute);
+            AttrType<?> attrType    = mTable.getAttributeType(attribute);
+            JComponent  component;
+            JLabel      label       = new JLabel(attribute + ":", JLabel.TRAILING);
+            String      value       = mTable.getAttributeAsString(attribute);
             
             if (value == null)
             {
@@ -185,19 +189,9 @@ public class MetadataTableDialog extends MetadataDialog
             else
             if (attribute.equals("EditMaskID"))
             {
-                int index = 0;
-                component = new JComboBox(mEditMaskKeys.toArray());
-                for (int i = 0; i < mEditMaskKeys.size(); i++)
-                {
-                    if (mEditMaskKeys.get(i).equals(value))
-                    {
-                        index = i;
-                        break;
-                    }
-                }
-                ((JComboBox)component).setSelectedIndex(index);
+                component = mEditMaskButton;
             }
-               else
+            else
             if (attribute.equals("ForeignKeyName"))
             {
                 int index = 0;
@@ -223,7 +217,7 @@ public class MetadataTableDialog extends MetadataDialog
                     }
                 });
                 component = mForeignKeyBox;
-                   for (int i = 0; i < mForeignKeyKeys.size(); i++)
+                for (int i = 0; i < mForeignKeyKeys.size(); i++)
                 {
                     if (mForeignKeyKeys.get(i).equals(value))
                     {
@@ -234,10 +228,10 @@ public class MetadataTableDialog extends MetadataDialog
                 ((JComboBox)component).setSelectedIndex(index);
             }
             else
-               if (attribute.equals("ForeignField"))
+            if (attribute.equals("ForeignField"))
             {
                 String ForeignKey = mTable.getAttributeAsString(attribute);
-                   mForeignFieldBox = new JTextField(TEXT_WIDTH);
+                mForeignFieldBox = new JTextField(TEXT_WIDTH);
                 component = mForeignFieldBox;
                 if (ForeignKey == null || ForeignKey.length() == 0)
                     mForeignFieldBox.setEnabled(false);
@@ -257,7 +251,7 @@ public class MetadataTableDialog extends MetadataDialog
                 }
                 ((JComboBox)component).setSelectedIndex(index);
             }
-               else
+            else
             if (attribute.equals("Units"))
             {
                 mUnitsBox = new JComboBox(sUnits);
@@ -276,7 +270,7 @@ public class MetadataTableDialog extends MetadataDialog
                 else
                 if (value != null)
                 {
-                       int index = 0;
+                    int index = 0;
                     for (int i = 0; i < mLookupValues.size(); i++)
                     {
                         if (mLookupKeys.get(i).equals(value))
@@ -310,17 +304,17 @@ public class MetadataTableDialog extends MetadataDialog
 
             mComponents.add(component);
             label.setLabelFor(component);
-            panel.add(label);
-            panel.add(component);
-            rows++;
+            mMainPanel.add(label);
+            mMainPanel.add(component);
+            mRows++;
         }
         mTextFieldColor = mComponents.get(0).getBackground();
-        SwingUtils.SpringLayoutGrid(panel, rows, 2, 6, 6, 6, 6);
+        SwingUtils.SpringLayoutGrid(mMainPanel, mRows, 2, 6, 6, 6, 6);
         
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 
-        content.add(panel);
+        content.add(mMainPanel);
 
         Box buttonBox = Box.createHorizontalBox();
         buttonBox.add(Box.createHorizontalGlue());
@@ -372,7 +366,7 @@ public class MetadataTableDialog extends MetadataDialog
                 else
                 if (mComponents.get(row) instanceof JComboBox)
                 {
-                       AttrType<?>    attrType = mTable.getAttributeType(attribute);
+                    AttrType<?>    attrType = mTable.getAttributeType(attribute);
                     value = (String)((JComboBox)mComponents.get(row)).getSelectedItem();
                     
                     if (attribute.equals("LookupName"))
@@ -390,7 +384,7 @@ public class MetadataTableDialog extends MetadataDialog
                             /*
                              * Translate the displayable value to the key.
                              */
-                               int index = 0;
+                            int index = 0;
                             for (int i = 0; i < mLookupValues.size(); i++)
                             {
                                 if (mLookupValues.get(i).equals(value))
@@ -412,8 +406,13 @@ public class MetadataTableDialog extends MetadataDialog
                             value = "0";
                     }
                 }
+                else
+                if (mComponents.get(row) instanceof JButton)
+                {
+                    value = ((JButton)mComponents.get(row)).getText();
+                }
       
-                  if ((value == null || value.length() < 1) && 
+                if ((value == null || value.length() < 1) && 
                         mTable.isAttributeRequired(attribute))
                 {
                     mComponents.get(row).setBackground(Color.pink);
@@ -421,7 +420,7 @@ public class MetadataTableDialog extends MetadataDialog
                 }
                 else
                     /*
-                     * Good to go. Clear the old value if it is not a rqeuired field.
+                     * Good to go. Clear the old value if it is not a required field.
                      */
                     try 
                     { 
@@ -436,6 +435,25 @@ public class MetadataTableDialog extends MetadataDialog
                     try
                     {
                         mTable.setAttribute(attribute, value, mStrictParsing);
+                        /*
+                         * Kludge to handle fact that RealGo added code to track the set of editMasks without
+                         * using the underlying attribute logic.
+                         */
+                        if (attribute.equals("EditMaskID"))
+                        {
+                            Set<MEditMask> editMasks = new LinkedHashSet<MEditMask>();
+                            Set<String> editMaskIds = MTable.toEditMaskIds(value);
+                            for (String editMaskId : editMaskIds)
+                            {
+                                String path = mResource.getPath() + ":" + editMaskId;
+                                for (MEditMask editMask : mResource.getEditMasks())
+                                {
+                                    if (editMask.getEditMaskID().equals(editMaskId))
+                                        editMasks.add(editMask);
+                                }
+                            }
+                            mTable.setEditMasks(editMasks);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -486,6 +504,25 @@ public class MetadataTableDialog extends MetadataDialog
             setVisible(false);
         }
     }
+    
+    private class EditMaskButtonAction extends AbstractAction
+    {
+        public EditMaskButtonAction()
+        {
+            super("");
+        }
+        
+        public void actionPerformed(ActionEvent event)
+        {
+            mEditMaskDialog.setVisible(true);
+            if (mEditMaskDialog.getResponse() == JOptionPane.OK_OPTION)
+            {
+                putValue(NAME, mEditMaskDialog.getEditMask());
+                // Resize
+                SwingUtils.SpringLayoutGrid(mMainPanel, mRows, 2, 6, 6, 6, 6);
+            }
+        }
+    }
 
     private static final String sAlignment [] = {    "Left",
                                                     "Right",
@@ -526,18 +563,21 @@ public class MetadataTableDialog extends MetadataDialog
     
     private Color            mTextFieldColor;
     private List<JComponent> mComponents;
+    private MResource        mResource;
+    private int              mRows = 0;
     private MTable           mTable;
     
     private JComboBox        mAlignmentBox = null;
     private JComboBox        mDataTypeBox = null;
+    private JButton          mEditMaskButton = null;
+    private EditMaskDialog   mEditMaskDialog = null;
     private JComboBox        mForeignKeyBox = null;
     private JTextField       mForeignFieldBox = null;
     private JComboBox        mInterpretationBox = null;
     private JComboBox        mLookupNameBox = null;
-    private JComboBox        mSearchHelpIDBox = null;
+    private JPanel           mMainPanel = null;
     private JComboBox        mUnitsBox = null;
     
-    private List<String>     mEditMaskKeys = new ArrayList<String>();
     private List<String>     mForeignKeyKeys = new ArrayList<String>();
     private List<String>     mLookupKeys = new ArrayList<String>();
     private List<String>     mLookupValues = new ArrayList<String>();
