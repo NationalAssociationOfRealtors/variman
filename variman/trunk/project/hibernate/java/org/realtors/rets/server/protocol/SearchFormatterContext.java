@@ -83,6 +83,34 @@ public class SearchFormatterContext
     }
 
     /**
+     * Return the standard name for the RETS class used in this search.
+     * @return StandardName
+     */
+    public String getClassStandardName()
+    {
+        return mClassStandardName;
+    }
+    
+    public void setClassStandardName(String standardName)
+    {
+        mClassStandardName = standardName;
+    }
+    
+    /**
+     * Return the standard name for the RETS resource used in this search.
+     * @return StandardName
+     */
+    public String getResourceStandardName()
+    {
+        return mResourceStandardName;
+    }
+    
+    public void setResourceStandardName(String standardName)
+    {
+        mResourceStandardName = standardName;
+    }
+    
+    /**
      * Return the column name at the column index.
      *
      * @param columnIndex  column index
@@ -132,6 +160,24 @@ public class SearchFormatterContext
         mLimit = limit;
     }
 
+    /**
+     * Get whether or not Standard Names are being used.
+     * @return A boolean indicating if Standard Names are enabled.
+     */
+    public boolean isStandardNames()
+    {
+        return mStandardNames;
+    }
+    
+    /**
+     * Set the Standard Names flag.
+     * @param standardName A boolean indicating whether or not Standard Names are to be used.
+     */
+    public void setStandardNames (boolean standardNames)
+    {
+        mStandardNames = standardNames;
+    }
+    
     /**
      * Checks if there are more results in the ResultSet, bounded by either the
      * end of the ResultSet or the supplied limit, and advances to the next row.
@@ -365,5 +411,10 @@ public class SearchFormatterContext
     private int mLimit;
     /** The RETS protocol version */
     private RetsVersion mRetsVersion;
-
+    /** The StandardName for the RETS class in this search. */
+    private String mClassStandardName;
+    /** The StandardName for the RETS resource in this search. */
+    private String mResourceStandardName;
+    /** The Search Format. */
+    private boolean mStandardNames;
 }

@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.realtors.rets.server.IOUtils;
+import org.realtors.rets.server.RetsDTD;
 import org.realtors.rets.server.RetsServer;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.config.RetsConfig;
@@ -202,6 +203,8 @@ public class WebApp
         LOG.info("HPMA mode path: " + sHPMALoginPath);
 
         initNonceTable(config);
+        RetsDTD.setBasePath(getServletContext().getRealPath("/"));
+        
         return config;
     }
 

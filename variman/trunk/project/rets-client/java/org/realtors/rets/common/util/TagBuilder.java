@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2004-2010, The National Association of REALTORS
+ * Distributed under a BSD-style license.  See LICENSE.TXT for details.
+ */
 package org.realtors.rets.common.util;
 
 import java.io.PrintWriter;
@@ -289,6 +293,11 @@ public class TagBuilder
             retsDate = formatter.format(date);
         }
         new TagBuilder(writer, tagName).beginContent().print(retsDate).close();
+    }
+    
+    public PrintWriter getWriter()
+    {
+        return mWriter;
     }
     
     private String mTagName;

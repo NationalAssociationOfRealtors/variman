@@ -26,4 +26,8 @@ public interface SearchSqlBuilder
     public void setLimit(Integer limit);
 
     public SqlStatements createSqlStatements() throws RetsReplyException;
+    
+    public String getClassStandardName();
+    
+    public String getResourceStandardName();
 }

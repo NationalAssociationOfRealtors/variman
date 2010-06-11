@@ -1,6 +1,10 @@
 Version 3.2.1 - xx xxx 2010
+  * Move Row Count to SQL Log. Ticket #18.
+  * Multiple comma separated EditMasks are allowed in the
+    TABLE EditMask field. Ticket #41.
   * Handle the case where accounting stats get too
     large. Ticket #58.
+  * Standard-XML format was non-functional. Ticket #67.
   * Login Response not properly XML encoded. Ticket #78.
   * Query grammar in 1.7.2 supports negative numbers. Ticket #79.
   * An invalid or missing session cookie causes invalid

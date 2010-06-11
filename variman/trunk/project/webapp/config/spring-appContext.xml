@@ -23,15 +23,18 @@
       <property name="requestLogLogger" ref="requestLogLogger"/>
   </bean>
 
-  <bean id="metadataDao" class="org.realtors.rets.server.metadata.XmlMetadataDao">
-  </bean>
+  <bean id="metadataDao" class="org.realtors.rets.server.metadata.XmlMetadataDao"/>
+
+  <bean id="standardNameDao" class="org.realtors.rets.server.metadata.XmlStandardNameDao"/>
 
     <!-- bean id="webAppMetadataChangedListener" class="org.realtors.rets.server.webapp.WebAppMetadataChangedListener" />
+    <bean id="RetsDTDMetadataChangedListener" class="org.realtors.rets.server.RetsDTDMetadataChangedListener" />
 
     <bean id="metadataChangedMonitor" class="org.realtors.rets.server.metadata.MetadataChangedMonitor">
         <property name="metadataChangedListeners">
             <list>
                 <ref local="webAppMetadataChangedListener" />
+                <ref local="RetsDTDMetadataChangedListener" />
             </list>
         </property>
         <property name="metadataDao" ref="metadataDao" />

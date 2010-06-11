@@ -1,7 +1,7 @@
 /*
  * Variman RETS Server
  *
- * Copyright (c) 2009, The National Association of REALTORS
+ * Copyright (c) 2004-2010, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 package org.realtors.rets.server.protocol;
@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.common.metadata.MetadataType;
 import org.realtors.rets.common.metadata.types.MClass;
+import org.realtors.rets.common.metadata.types.MResource;
 import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.Group;
 import org.realtors.rets.server.ReplyCode;
@@ -54,8 +55,8 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         throws RetsReplyException
     {
         String resourceId = mParameters.getResourceId();
-        MetaObject resource = manager.findByPath(MetadataType.RESOURCE.name(), resourceId);
-        if (resource == null)
+        mResource = (MResource) manager.findByPath(MetadataType.RESOURCE.name(), resourceId);
+        if (mResource == null)
         {
             throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR,
                                         "Invalid resource: " + resourceId);
@@ -89,6 +90,13 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         SqlStatements sqlStatements = new DefaultSqlStatements(countQuery, searchQuery);
         return sqlStatements;
     }
+    
+    public String getClassStandardName()
+    {
+        if (mClass != null)
+            return mClass.getStandardName();
+        return "";
+    }
 
     protected Query getCountQuery() throws RetsReplyException
     {
@@ -101,6 +109,13 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         String countQuerySql = buffer.toString();
         Query countQuery = new DefaultQuery(countQuerySql);
         return countQuery;
+    }
+
+    public String getResourceStandardName()
+    {
+        if (mResource != null)
+            return mResource.getStandardName();
+        return "";
     }
 
     protected SearchQuery getSearchQuery() throws RetsReplyException
@@ -221,6 +236,7 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
     private static final Logger LOG =
         Logger.getLogger(DefaultSearchSqlBuilder.class);
     private MClass mClass;
+    private MResource mResource;
     private Collection<MTable> mTables;
     private ServerDmqlMetadata mMetadata;
     private SearchParameters mParameters;

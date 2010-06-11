@@ -12,7 +12,7 @@ public class GlobalTestSetup
             return;
 
         ClassPathXmlApplicationContext applicationContext =
-            new ClassPathXmlApplicationContext("/spring-*.xml");
+            new ClassPathXmlApplicationContext("classpath*:/spring-appContext.xml");
 
         RetsServer retsServer = new RetsServer();
         retsServer.setApplicationContext(applicationContext);

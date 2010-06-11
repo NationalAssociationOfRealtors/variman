@@ -2,7 +2,7 @@
  * Variman RETS Server
  *
  * Author: Dave Dribin
- * Copyright (c) 2009, The National Association of REALTORS
+ * Copyright (c) 2004-2010, The National Association of REALTORS
  * Distributed under a BSD-style license.  See LICENSE.TXT for details.
  */
 
@@ -41,6 +41,7 @@ import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.metadata.MetadataManager;
 import org.realtors.rets.server.protocol.SqlStatements.Query;
 import org.realtors.rets.server.protocol.SqlStatements.SearchQuery;
+import org.realtors.rets.server.protocol.StandardXMLFormatter;
 
 public class DefaultSearchTransaction implements SearchTransaction
 {
@@ -288,6 +289,9 @@ public class DefaultSearchTransaction implements SearchTransaction
                                        searchQuery.getDmqlParserMetadata(),
                                        mParameters.getRetsVersion());
         context.setLimit(getLimit());
+        context.setClassStandardName(mSearchSqlBuilder.getClassStandardName());
+        context.setResourceStandardName(mSearchSqlBuilder.getResourceStandardName());
+        context.setStandardNames(mParameters.isStandardNames());
         mCount = Math.min(mCount, mLimit);
         SearchResultsFormatter formatter = getFormatter();
 
@@ -296,6 +300,7 @@ public class DefaultSearchTransaction implements SearchTransaction
         printCount(out);
         formatter.formatResults(context);
         LOG.debug("Row count: " + context.getRowCount());
+        SQL_LOG.info("Row Count: " + context.getRowCount());
         RetsUtils.printCloseRets(out);
 
         SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(ReplyCode.SUCCESSFUL.getValue(), ReplyCode.SUCCESSFUL.getName(), mCount, context.getRowCount());
@@ -309,7 +314,7 @@ public class DefaultSearchTransaction implements SearchTransaction
             SearchFormat.getEnum(mParameters.getFormat());
         if (searchFormat == SearchFormat.STANDARD_XML)
         {
-            formatter = new ResidentialPropertyFormatter();
+            formatter = new StandardXMLFormatter();
         }
         else if (searchFormat == SearchFormat.COMPACT_DECODED)
         {

@@ -4,6 +4,13 @@
 <beans>   
   <bean name="beanFactory" 
         class="org.realtors.rets.server.RetsServer" />
+        
+  <bean id="conditionRuleSetFactory"
+        class="org.realtors.rets.server.DefaultConditionRuleSetFactory" />
+
+  <bean id="metadataDao" class="org.realtors.rets.server.metadata.DummyMetadataDao"/>
+
+  <bean id="standardNameDao" class="org.realtors.rets.server.metadata.XmlStandardNameDao"/>
 
   <bean name="searchTransaction" singleton="false"
         class="org.realtors.rets.server.protocol.DefaultSearchTransaction">

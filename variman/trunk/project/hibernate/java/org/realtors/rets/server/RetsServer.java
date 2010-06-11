@@ -27,6 +27,7 @@ import org.realtors.rets.server.config.RetsConfigDao;
 import org.realtors.rets.server.config.SecurityConstraints;
 import org.realtors.rets.server.metadata.MetadataDao;
 import org.realtors.rets.server.metadata.MetadataManager;
+import org.realtors.rets.server.metadata.StandardNameDao;
 import org.realtors.rets.server.protocol.ConditionRuleSet;
 import org.realtors.rets.server.protocol.ObjectSet;
 import org.realtors.rets.server.protocol.SearchTransaction;
@@ -270,6 +271,20 @@ public class RetsServer implements ApplicationContextAware
             throw new IllegalStateException("No MetadataDao bean named 'metadataDao' has been configured in spring application context.");
         }
         return metadataDao;
+    }
+    
+    public static StandardNameDao getStandardNameDao()
+    {
+        StandardNameDao standardNameDao = null;
+        try
+        {
+            standardNameDao = (StandardNameDao)sApplicationContext.getBean("standardNameDao", StandardNameDao.class);
+        }
+        catch (NoSuchBeanDefinitionException e)
+        {
+            throw new IllegalStateException("No StandardNameDao bean named 'standardNameDao' has been configured in spring application context.");
+        }
+        return standardNameDao;        
     }
 
     private static final Logger LOG =

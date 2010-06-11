@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.common.metadata.MetadataType;
 import org.realtors.rets.common.metadata.types.MSystem;
+import org.realtors.rets.common.metadata.types.MTable;
 import org.realtors.rets.server.Util;
 
 public class MetadataManager
@@ -134,7 +135,51 @@ public class MetadataManager
 
         return metadata;
     }
+    
+    /**
+     * Find the Standard Name from the metadata for the given RETS table.
+     * @param pathName A String containing the <code>resource:class:table</code> metadata path components
+     * @return The metadata based Standard Name for the table.
+     */
+    public String findStandardNameByPath(String pathName)
+    {
+        if (pathName == null)
+            return null;
+        
+        String standardName = null;
+        String [] pathNames = pathName.split(":");
 
+        if (pathNames.length > 2 && pathNames[2] != null)
+        {
+            MTable table = (MTable) findByPath(MetadataType.TABLE.name(), pathName);
+            if (table != null)
+                standardName = table.getStandardName();
+        }
+        return standardName;
+    }
+    
+    /**
+     * Find the System Name from the metadata for the given RETS table.
+     * @param pathName A String containing the <code>resource:class:table</code> metadata path components
+     * @return The metadata based System Name for the table.
+     */
+    public String findSystemdNameByPath(String pathName)
+    {
+        if (pathName == null)
+            return null;
+        
+        String systemName = null;
+        String [] pathNames = pathName.split(":");
+
+        if (pathNames.length > 2 && pathNames[2] != null)
+        {
+            MTable table = (MTable) findByPath(MetadataType.TABLE.name(), pathName);
+            if (table != null)
+                systemName = table.getSystemName();
+        }
+        return systemName;
+    }
+    
     /*
      * TODO: Determine whether this should be removed. This is currently being
      * used only by unit tests.
@@ -247,6 +292,11 @@ public class MetadataManager
         List<?> systems = manager.findByLevel(MetadataType.SYSTEM.name(), "");
         MSystem system = (MSystem)systems.get(0);
         return system;
+    }
+    
+    public MSystem getSystem()
+    {
+        return findSystem(this);
     }
 
     /**

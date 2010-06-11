@@ -33,6 +33,7 @@
     <pathelement path="${commons-codec.jar}"/>
     <pathelement path="${commons-collections.jar}"/>
     <pathelement path="${commons-logging.jar}"/>
+    <pathelement path="${dtdparser.jar}"/>
     <!-- Spring 3
     <pathelement path="${spring.aop.jar}"/>
     <pathelement path="${spring.aspects.jar}"/>
@@ -70,6 +71,7 @@
     <pathelement path="${jdom.jar}"/>
     <pathelement path="${log4j.jar}"/>
     <pathelement path="${slf4j-log4j12.jar}"/>
+  	<pathelement path="${dtdparser.jar}"/>
   </path>
 
   <path id="embedded.path">
@@ -650,7 +652,9 @@
           file="${commons-codec.jar}"/>
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${commons-collections.jar}"/>
-
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+           file="${dtdparser.jar}"/>
+  	
     <!-- Spring 3
     <copy todir="build/rets-server/variman/WEB-INF/lib"
           file="${spring.aop.jar}"/>
@@ -704,6 +708,11 @@
           file="project/webapp/config/rets-logging.properties.dist"/>
     <copy todir="build/rets-server/variman/WEB-INF"
           file="project/webapp/config/spring-appContext.xml"/>
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
+          file="project/webapp/config/standardnames.xml"/>
+    <copy todir="build/rets-server/variman/WEB-INF/rets">
+          <fileset dir="project/webapp/config" includes="*.dtd"/>
+    </copy>
   </target>
 
   <target name="build-admin" depends="build-hibernate"
