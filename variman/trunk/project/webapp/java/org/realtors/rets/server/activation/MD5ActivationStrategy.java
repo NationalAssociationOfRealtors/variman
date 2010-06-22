@@ -19,6 +19,7 @@ public class MD5ActivationStrategy implements ActivationStrategy {
             String nameAndEmail = host + email;
             md5.update(nameAndEmail.getBytes());
             String result = new BigInteger(1,md5.digest()).toString(16);
+            while (result.length() < 32) result = "0" + result;
             return code.equals(result);
         } catch (NoSuchAlgorithmException e) {
             LOG.error("Error hashing code", e);

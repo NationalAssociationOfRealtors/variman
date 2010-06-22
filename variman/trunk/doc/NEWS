@@ -9,6 +9,8 @@ Version 3.2.1 - xx xxx 2010
   * Query grammar in 1.7.2 supports negative numbers. Ticket #79.
   * An invalid or missing session cookie causes invalid
     response. Ticket #81.
+  * Activation mishandles leading zero in activation code.
+    Ticket #99.
 
 Version 3.2.0b1 - 17 Dec 2009
  
