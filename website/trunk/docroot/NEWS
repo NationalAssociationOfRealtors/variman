@@ -1,3 +1,39 @@
+Version 3.2.1 - 30 Jun 2010
+  * Move Row Count to SQL Log. Ticket #18.
+  * Multiple comma separated EditMasks are allowed in the
+    TABLE EditMask field. Ticket #41.
+  * Handle the case where accounting stats get too
+    large. Ticket #58.
+  * Standard-XML format was non-functional. Ticket #67.
+  * Login Response not properly XML encoded. Ticket #78.
+  * Query grammar in 1.7.2 supports negative numbers. Ticket #79.
+  * An invalid or missing session cookie causes invalid
+    response. Ticket #81.
+  * Activation mishandles leading zero in activation code.
+    Ticket #99.
+
+Version 3.2.0b1 - 17 Dec 2009
+ 
+  * Remove duplicate metadata classes. Ticket #35.
+  * RestrictedIndicator allows special characters. Ticket #61.
+  * Add $basedir to build.xml. Ticket #63.
+  * Variman fails to install on 64 bit Windows. Ticket #64.
+  * Migrate to Hibernate3. Ticket #65.
+  * Change RetsConfig to allow for changeable persistence
+    mechanisms. Ticket #66.
+  * Detect RetsConfig changes and dynamically reload.
+    Ticket #69.
+  * .EMPTY. fails on Booleans. Ticket #70.
+  * Add Request Logging and Search Statistics. Ticket #71.
+  * Allow DefaultSearchTransaction with different
+    SearchSqlBuilders. Ticket #72.
+  * MaximumLength in Table metadata must be > 0. Ticket #74.
+  * RETS Character Type not properly handling .EMPTY. Ticket #75.
+  * DMQL Lexer incorrectly tokenizes strings beginning with
+    numbers. Ticket #76.
+  * Failure to find an image in an object-set does not
+    properly close the multi-part response. Ticket #77.
+
 Version 3.1.1 - 30 Sep 2009
 
   * Strict Parsing flag not properly passed to
