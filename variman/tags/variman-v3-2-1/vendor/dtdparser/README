@@ -1,0 +1,17 @@
+This is a rewrite of the DTD parser from the JOX library. It should parse
+most DTD's fine. It only understands comments, <!ELEMENT, <!ATTLIST,
+<!ENTITY, <!NOTATION, <![ INCLUDE/IGNORE and anything between <? ?>,
+although comments and <? ?> items are ignored.
+
+If there are other items that belong in a DTD, I'll try to include them
+in here.
+
+To use the parser, just create a DTDParser object with a Reader that is
+reading the DTD (i.e. if you need to read a DTD from a URL, you need to
+create the URLConnection yourself and slap a Reader around it).
+
+The Tokenize.java program reads a DTD and spits out a lot of the
+information returned if you need to see how to navigate through the
+DTD object.
+
+

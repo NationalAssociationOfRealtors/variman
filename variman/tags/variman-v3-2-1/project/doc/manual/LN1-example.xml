@@ -1,0 +1,37 @@
+<![CDATA[<?xml version="1.0" ?>
+<object-set
+   xmlns="http://www.crt.realtors.org/xml/variman/object-set/1"
+   resource-key="LN1"
+   base="http://media.example.com/pictures/"
+   remote-locations="true">
+  <object-group type="Photo">
+    <object src="LN1-1.jpg"
+            description="Beautiful frontal view of home." />
+    <object src="LN1-2.jpg" description="">
+    </object>
+    <object default="true" src="LN1-5.jpg" />
+    <object src="LN1-6.jpg"
+            description="Large wooded lot in backyard." />
+    <object src="LN1-9.jpg" />
+    <object src="LN1-13.jpg" />
+    <object src="LN1-14.jpg"
+            description="Large screened in back porch." />
+    <object src="LN1-17.jpg" />
+    <object src="LN1-22.jpg" />
+    <object src="LN1-24.jpg" />
+  </object-group>
+
+  <object-group type="Documents" base="documents/">
+    <object src="somedocument.pdf"
+            description="Some basic document." />
+    <object default="true" src="disclosures.pdf"
+            description="Disclosure statement from current owners." />
+    <object src="2002 tax records.rtf"
+            description="County tax records for 2002." />
+  </object-group>
+
+  <object-group type="Video" base="other/">
+    <object src="LN1_virtual_tour.mov"
+            description="Take a virtual tour of this house." />
+  </object-group>
+</object-set>]]>

@@ -1,0 +1,4 @@
+variman/WEB-INF/rets/rets-config.xml
+variman/WEB-INF/rets/rets-logging.properties
+**/*.so
+**/*.dll
