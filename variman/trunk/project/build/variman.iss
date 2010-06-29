@@ -53,15 +53,33 @@ Filename: "{app}\variman.exe"; Parameters: "{code:UninstallServiceParams}"; Flag
 
 [Code]
 var
-  JavaFound: Boolean;
-  JavaVersion: String;
-  JavaMajorVersion: Integer;
-  JavaMinorVersion: Integer;
-  JavaHome: String;
-  JavaJvmDll: String;
-  ServiceName: String;
-  ServiceStopped: Boolean;
+  Java32Found       : Boolean;
+  Java32Home        : String;
+  Java32JvmDll      : String;
+  Java32Version     : String;
+  Java64Found       : Boolean;
+  Java64Home        : String;
+  Java64JvmDll      : String;
+  Java64Version     : String;
+  JavaFound         : Boolean;
+  JavaHome          : String;
+  JavaJvmDll        : String;
+  JavaMajorVersion  : Integer;
+  JavaMinorVersion  : Integer;
+  JavaVersion       : String;
+  ServiceName       : String;
+  ServiceStopped    : Boolean;
   
+function IsX64: Boolean;
+begin
+  Result := Java64Found and Is64BitInstallMode and (ProcessorArchitecture = pax64);
+end;
+
+function IsX86: Boolean;
+begin
+  Result := not IsX64;
+end;
+
 function GetJavaHome(Default: String): String;
 begin
   Result:= JavaHome;
@@ -76,58 +94,77 @@ var
   Success : Boolean;
 begin
   JavaFound := False;
+  Java32Found := False;
+  Java64Found := False;
   JreKey := 'SOFTWARE\JavaSoft\Java Runtime Environment';
-  Success := RegQueryStringValue(HKLM32, JreKey, 'CurrentVersion', JavaVersion);
+  Success := RegQueryStringValue(HKLM32, JreKey, 'CurrentVersion', Java32Version);
   if Success then
     begin
-      //MsgBox('Found 32 bit Java Version: ' + JavaVersion, mbInformation, MB_OK)
-      if not RegQueryStringValue(HKLM32, JreKey, 'CurrentVersion', JavaVersion) then
+      // MsgBox('Found 32 bit Java Version: ' + Java32Version, mbInformation, MB_OK)
+      if not RegQueryStringValue(HKLM32, JreKey, 'CurrentVersion', Java32Version) then
         Exit;
 
-      JreVersionKey := JreKey + '\' + JavaVersion;
-      if not RegQueryStringValue(HKLM32, JreVersionKey, 'JavaHome', JavaHome) then
+      JreVersionKey := JreKey + '\' + Java32Version;
+      if not RegQueryStringValue(HKLM32, JreVersionKey, 'JavaHome', Java32Home) then
         Exit;
-      if not RegQueryStringValue(HKLM32, JreVersionKey, 'RuntimeLib', JavaJvmDll) then
+      if not RegQueryStringValue(HKLM32, JreVersionKey, 'RuntimeLib', Java32JvmDll) then
         Exit;
+      Java32Found := True;
+    end;
+  // See if we can find 64 bit Java.
+  try
+    Success := RegQueryStringValue(HKLM64, JreKey, 'CurrentVersion', Java64Version);
+    if Success then
+      begin
+        // MsgBox('Found 64 bit Java Version: ' + Java64Version, mbInformation, MB_OK)
+        if not RegQueryStringValue(HKLM64, JreKey, 'CurrentVersion', Java64Version) then
+          Exit;
+
+        JreVersionKey := JreKey + '\' + Java64Version;
+        if not RegQueryStringValue(HKLM64, JreVersionKey, 'JavaHome', Java64Home) then
+          Exit;
+        if not RegQueryStringValue(HKLM64, JreVersionKey, 'RuntimeLib', Java64JvmDll) then
+          Exit;
+        Java64Found := True;
+      end
+    else
+      begin
+        //MsgBox('64 bit Java Not Found ', mbInformation, MB_OK);
+      end
+  except
+  end;
+
+  // Figure out if we're running 64 bit mode and 64 bit Java has been found. Use it
+  // if we can, otherwise, use the 32 bit version.
+  if IsX64 then
+    begin
+      // JavaVersion is of the format "major.minor"
+      MajorVersion  := Copy(Java64Version, 1, 1);
+      MinorVersion  := Copy(Java64Version, 3, 1);
+      JavaVersion   := Java64Version;
+      JavaHome      := Java64Home;
+      JavaJvmDll    := Java64JvmDll;
     end
   else
+  if Java32Found then
     begin
-      // Could be on a 64 bit machine. See if we can find 64 bit Java.
-      //MsgBox('32 bit Java Not Found ', mbInformation, MB_OK)
-      try
-        Success := RegQueryStringValue(HKLM64, JreKey, 'CurrentVersion', JavaVersion);
-        if (Success) then
-          begin
-            //MsgBox('Found 64 bit Java Version: ' + JavaVersion, mbInformation, MB_OK)
-            if not RegQueryStringValue(HKLM64, JreKey, 'CurrentVersion', JavaVersion) then
-              Exit;
-  
-            JreVersionKey := JreKey + '\' + JavaVersion;
-            if not RegQueryStringValue(HKLM64, JreVersionKey, 'JavaHome', JavaHome) then
-              Exit;
-            if not RegQueryStringValue(HKLM64, JreVersionKey, 'RuntimeLib', JavaJvmDll) then
-              Exit;
-          end
-        else
-          begin
-            //MsgBox('64 bit Java Not Found ', mbInformation, MB_OK);
-            Exit;
-          end
-      except
-        Exit;
-      end;
-    end;
+      // JavaVersion is of the format "major.minor"
+      MajorVersion  := Copy(Java32Version, 1, 1);
+      MinorVersion  := Copy(Java32Version, 3, 1);
+      JavaVersion   := Java32Version;
+      JavaHome      := Java32Home;
+      JavaJvmDll    := Java32JvmDll;
+    end
+  else
+    Exit;
 
-  JavaFound := True;
-  // JavaVersion is of the format "major.minor"
-  MajorVersion := Copy(JavaVersion, 1, 1);
+  JavaFound := true;
   JavaMajorVersion := StrToInt(MajorVersion);
-  MinorVersion := Copy(JavaVersion, 3, 1);
   JavaMinorVersion := StrToInt(MinorVersion);
+//  MsgBox('JavaVersion: ' + JavaVersion + #13
+//           'JavaHome: ' + JavaHome + #13
+//           'JavaJvmDll: ' + JavaJvmDll, mbInformation, MB_OK);
 
-  //MsgBox('JavaVersion: ' + JavaVersion + #13
-  //         'JavaHome: ' + JavaHome + #13
-  //         'JavaJvmDll: ' + JavaJvmDll, mbInformation, MB_OK);
 end;
 
 function InitializeSetup(): Boolean;
