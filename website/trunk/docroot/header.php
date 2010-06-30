@@ -13,8 +13,11 @@ function setup_globals()
 #  echo "file: $file\n";
 
   $doc_root =  ereg_replace(dirname($self) . "$", "", dirname($script));
+  $doc_root = '/projects/rets/variman';
+
   $GLOBALS["DOCUMENT_ROOT"] = $doc_root;
   $GLOBALS["ROOT"] = str_replace($doc_root, "", dirname($file));
+  $GLOBALS["ROOT"] = $doc_root; 
 }
 
 setup_globals();
@@ -48,7 +51,7 @@ function enav($name)
 
 function ver()
 {
-1   return "3.2.1";
+   return "3.2.1";
 }
 
 function print_ver()
