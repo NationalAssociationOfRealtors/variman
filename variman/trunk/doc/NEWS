@@ -1,6 +1,10 @@
 Version 3.2.2 - xx xxx 2010
 
+  * Added ability to extract image data from the database in
+    addition to using pattern and XML file. Ticket #19.
+
 Version 3.2.1 - 30 Jun 2010
+
   * Move Row Count to SQL Log. Ticket #18.
   * Multiple comma separated EditMasks are allowed in the
     TABLE EditMask field. Ticket #41.

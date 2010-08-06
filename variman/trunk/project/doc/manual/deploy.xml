@@ -244,11 +244,14 @@
     <para>
       GetObject configuration in &name; is done by the Get Object
       Root, Photo Pattern, and Object Set Pattern parameters in <xref
-      linkend="fig-config"/>.  There two ways to map multimedia
+      linkend="fig-config"/>.  There are three ways to map multimedia
       objects to a listing ID> The first is using photo patterns,
       described in <xref linkend="deploy-getobject-photo-patterns"/>
-      and the second is using object sets, described in <xref
-      linkend="deploy-getobject-object-sets"/>.  Object sets are far
+      the second is using object sets, described in <xref
+      linkend="deploy-getobject-object-sets"/>, and the third is to use a
+      combination of the Get Object Root and the contents of a database table
+      to determine the location of the object. This is described in more
+      detail by <xref linkend="deploy-getobject-database"/>. Object sets are far
       more customizable, but require more work to implement.
     </para>
 
@@ -566,7 +569,7 @@
                   against the previous <literal>base</literal>
                   attributes.  This works in a very similar way to
                   the <literal>src</literal> attribute of the
-                  HTML <literal>&gt;img&lt;</literal> tag.
+                  HTML <literal>&lt;img&gt;</literal> tag.
                 </entry>
                 <entry>Required.</entry>
               </row>
@@ -591,6 +594,110 @@
           </tgroup>
         </table>
       </section>
+     </section>
+      
+      <section id="deploy-getobject-database">
+        <title>Using A Database Table</title>
+        <para>
+          The third way to manage the multimedia object uses a combination
+          of the Get Object Root and a path that will be extracted from a
+          database table. The path that is extracted will be appended to the
+          Get Object Root and the resulting path will be used to access the
+          object. This method is disabled by default and requires a manual
+          change by you to the <literal>variman/WEB-INF/spring-appContext.xml
+          </literal> file.
+        </para>
+        <para>
+          In order to enable this feature, locate this line in the
+          <literal>spring-appContext.xml</literal> file in your deployment
+          directory:
+          <programlisting>
+          
+&lt;!--bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet"/--&gt;</programlisting>
+          and change it to read:
+          <programlisting>
+          
+&lt;bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet"/&gt;</programlisting>
+        </para>
+        <para>
+          When you initialize the database as described in <xref
+          linkend="schema"/>, a table called <literal>rets_media</literal> is
+          created. This database table consists of the following columns:
+          <table frame="all" id="tab-rets-media">
+          <title><literal>rets_media</literal> Database Columns</title>
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Column Name</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><literal>resource_key</literal></entry>
+                <entry>
+                  The resource key for a group of objects. Typeically, this
+                  should be the same as the <literal>ListingID</literal> for
+                  your listings.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>object_id</literal></entry>
+                <entry>
+                  This is a numeric field that is used to determine the
+                  unique object by Listing.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>media_type</literal></entry>
+                <entry>
+                  This is the well known name for the media type as identified
+                  by <xref linkend="tab-object-types"/>. This is used as part
+                  of the index into the table and must not be <literal>null</literal>.
+                  If you only use one media type, you can alter the column in
+                  the database to set it's default value (e.g. &quot;Photo&quot;).
+                </entry>
+              </row>
+              <row>
+                <entry><literal>description</literal></entry>
+                <entry>
+                  This is a description of the media (e.g. &quot;Bedroom 1&quot;).
+                </entry>
+              </row>
+              <row>
+                <entry><literal>resource_file_path</literal></entry>
+                <entry>
+                  The path to the file containing the object. This path will
+                  be appended to the Get Object Root path to create the final
+                  path to the object.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>modification_timestamp</literal></entry>
+                <entry>
+                  This is a timestamp that should be changed only when the
+                  underlying object or description has changed.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>id</literal></entry>
+                <entry>
+                  This is an integer field that can be used to uniquely
+                  identify an object. It must be unique within all objects
+                  in this table.
+                </entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+        </para>
+        <para>
+          This table has a composite key as it's primary key. This key is
+          made up of the <literal>resource_id</literal>, 
+          <literal>object_id</literal> and <literal>media_type</literal>
+          columns. The combination of the three columns must be unique for
+          each object in the database.
+        </para>
     </section>
   </section>
 
