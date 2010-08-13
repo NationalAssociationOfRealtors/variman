@@ -236,14 +236,3 @@ begin
     DelTree(classes, True, True, True);
   end;
 end;
-
-function IsX64: Boolean;
-begin
-  Result := Is64BitInstallMode and (ProcessorArchitecture = pax64);
-end;
-
-function IsX86: Boolean;
-begin
-  Result := not IsX64;
-end;
-
