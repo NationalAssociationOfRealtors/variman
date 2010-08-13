@@ -40,8 +40,6 @@ public class XmlMetadataDao implements MetadataDao {
 
     private static final Logger LOG = Logger.getLogger(XmlMetadataDao.class);
 
-    private static Metadata metadata;
-
     /*- (non-Javadoc)
      * @see org.realtors.rets.common.metadata.MetadataDao#getMetadata()
      */
@@ -74,7 +72,6 @@ public class XmlMetadataDao implements MetadataDao {
             catch (Exception e)
             {
                 metadata = new Metadata(new MSystem());
-                XmlMetadataDao.metadata = metadata;
                 LOG.warn("Unable to locate metadata.xml: " + e);
                 return metadata;
             }
@@ -97,7 +94,6 @@ public class XmlMetadataDao implements MetadataDao {
                 catch (Exception e)
                 {
                     metadata = new Metadata(new MSystem());
-                    XmlMetadataDao.metadata = metadata;
                     LOG.warn("Unable to locate metadata: " + e);
                     return metadata;
                 }
@@ -118,12 +114,10 @@ public class XmlMetadataDao implements MetadataDao {
                 JDomCompactBuilder builder = new JDomCompactBuilder();
                 builder.setStrict(strictParsing);
                 metadata = builder.build(merged);
-                XmlMetadataDao.metadata = metadata;
             }
             catch (Exception e)
             {
                 metadata = new Metadata(new MSystem());
-                XmlMetadataDao.metadata = metadata;
                 LOG.error("Unable to merge metadata: " + e);
                 return metadata;
             }
@@ -131,7 +125,6 @@ public class XmlMetadataDao implements MetadataDao {
         else
         {
             metadata = new Metadata(new MSystem());
-            XmlMetadataDao.metadata = metadata;
         }
         return metadata;
     }
@@ -140,9 +133,6 @@ public class XmlMetadataDao implements MetadataDao {
      * @see org.realtors.rets.common.metadata.MetadataDao#saveMetadata(org.realtors.rets.common.metadata.Metadata)
      */
     public void saveMetadata(Metadata metadata) {
-        // The following is a temporary hack which will save the singleton
-        // instance of metadata. This was done to mimick existing code.
-        _saveMetadata(XmlMetadataDao.metadata);
         _saveMetadata(metadata);
     }
 

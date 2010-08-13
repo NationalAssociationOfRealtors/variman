@@ -2,6 +2,8 @@ Version 3.2.2 - xx xxx 2010
 
   * Added ability to extract image data from the database in
     addition to using pattern and XML file. Ticket #19.
+  * XmlMetadataDAO fails to properly write metadata.
+    Ticket #100.
 
 Version 3.2.1 - 30 Jun 2010
 

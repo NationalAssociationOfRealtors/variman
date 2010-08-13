@@ -103,8 +103,10 @@ public class MetadataPanel extends AdminTab
                 MetadataConversionDialog dialog = new MetadataConversionDialog(mMetadataMenu);
                 if (dialog.getResponse() == JOptionPane.OK_OPTION)
                 {
-                       Admin.setRetsConfigChanged(true);
-                       refreshTab();
+                    mMetadata = dialog.getMetadata();
+                    mSystem = mMetadata.getSystem();
+                    Admin.setRetsConfigChanged(true);
+                    refreshTab();
                 }
             }
         });
@@ -118,6 +120,16 @@ public class MetadataPanel extends AdminTab
          *  can't be null.
          */
         mMainPanel = new JPanel(new BorderLayout());
+    }
+    
+    /**
+     * Since the metadata is no longer stored as a singleton, return it to the
+     * caller if needed.
+     * @return The current Metadata
+     */
+    public Metadata getMetadata()
+    {
+        return mMetadata;
     }
     
     /**
@@ -412,19 +424,22 @@ public class MetadataPanel extends AdminTab
             
             public Object construct()
             {
-                AdminFrame.getInstance().setStatusText("Loading Metadata ...");
-                AdminFrame.getInstance().setWaitCursor();
+                if (mMetadata == null)
+                {
+                    AdminFrame.getInstance().setStatusText("Loading Metadata ...");
+                    AdminFrame.getInstance().setWaitCursor();
 
-                try
-                {
-                    MetadataDao metadataDao = Admin.getMetadataDao();
-                    mMetadata = metadataDao.getMetadata();
-                    mSystem = mMetadata.getSystem();
-                }
-                catch (Throwable t)
-                {
-                    LOG.error("Caught exception", t);
-                    // Todo: MetadataPanel.construct show error dialog
+                    try
+                    {
+                        MetadataDao metadataDao = Admin.getMetadataDao();
+                        mMetadata = metadataDao.getMetadata();
+                        mSystem = mMetadata.getSystem();
+                    }
+                    catch (Throwable t)
+                    {
+                        LOG.error("Caught exception", t);
+                        // Todo: MetadataPanel.construct show error dialog
+                    }
                 }
                 return mSystem;
             }
@@ -492,6 +507,10 @@ public class MetadataPanel extends AdminTab
                     }
                     else
                     {
+                        Metadata m = (Metadata) o;
+                        mMetadata = m;
+                        mSystem = m.getSystem();
+                        
                         refreshTab();
                         frame.setStatusText("Metadata successfully reloaded.");
                     }

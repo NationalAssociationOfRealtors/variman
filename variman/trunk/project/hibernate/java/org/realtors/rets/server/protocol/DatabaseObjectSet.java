@@ -149,6 +149,7 @@ public class DatabaseObjectSet implements ObjectSet
         }
         catch (Exception e)
         {
+            LOG.debug(e);
             throw new RetsServerException(e);
         }
     }
@@ -161,9 +162,17 @@ public class DatabaseObjectSet implements ObjectSet
     public List<ObjectDescriptor> findAllObjects(String mediaType) throws RetsServerException
     {
         List<ObjectDescriptor> objects = new ArrayList<ObjectDescriptor>();
+        List<Media> photos;
         
-        List<Media> photos = MediaUtils.findByResourceKey(mediaType, mResourceEntity);
-        
+        try
+        {
+            photos = MediaUtils.findByResourceKey(mediaType, mResourceEntity);
+        }
+        catch (Exception e)
+        {
+            LOG.debug(e);
+            throw new RetsServerException(e);
+        }
         for (Media photo : photos)
         {
             StringBuffer fileBuffer = new StringBuffer();

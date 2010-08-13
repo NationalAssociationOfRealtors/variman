@@ -84,7 +84,8 @@ public class MetadataConversionDialog extends MetadataDialog
                 try
                 {
                     MetadataDao metadataDao = Admin.getMetadataDao();
-                    mSystem = metadataDao.getMetadata().getSystem();
+                    mMetadata = metadataDao.getMetadata();
+                    mSystem = mMetadata.getSystem();
                     updateStatus("Converting System");
 
                     if (mSystem.getTimeZoneOffset() == null || mSystem.getTimeZoneOffset().length() < 1)
@@ -388,6 +389,11 @@ public class MetadataConversionDialog extends MetadataDialog
                 } 
             }
         }
+    }
+    
+    public Metadata getMetadata()
+    {
+        return mMetadata;
     }
     
     private void updateStatus(final String msg)

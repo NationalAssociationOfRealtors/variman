@@ -35,6 +35,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
+import org.realtors.rets.common.metadata.Metadata;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.admin.Admin;
 import org.realtors.rets.server.admin.AdminUtils;
@@ -197,8 +198,16 @@ public class AdminFrame extends JFrame
 
             RetsConfigDao configDao = Admin.getRetsConfigDao();
             configDao.saveRetsConfig(retsConfig);
-            MetadataDao metadataDao = Admin.getMetadataDao();
-            metadataDao.saveMetadata(null);
+            /*
+             * Metadata is no longer stored as a singleton. Fetch the current metadata 
+             * from the Metadata Panel. If it exists, use it.
+             */
+            Metadata metadata = mMetadataPanel.getMetadata();
+            if (metadata != null)
+            {
+                MetadataDao metadataDao = Admin.getMetadataDao();
+                metadataDao.saveMetadata(metadata);
+            }
             Admin.setRetsConfigChanged(false);
         }
         catch (RetsServerException e)
