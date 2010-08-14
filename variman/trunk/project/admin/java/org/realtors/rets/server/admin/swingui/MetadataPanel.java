@@ -77,10 +77,10 @@ public class MetadataPanel extends AdminTab
         mMetadataMenu = metadataMenu;
         mMetadataMenu.add(new MetadataReloadAction());
         mStrictParsingMenuItem = new JCheckBoxMenuItem("Strict");
-        mStrictParsingMenuItem.setSelected(true);
-        mStrictParsingMenuItem.setToolTipText("Enable or disable strict adherence to the RETS 1.7.2 spec when parsing.");
+        mStrictParsingMenuItem.setToolTipText("Enable or disable strict adherence to the RETS 1.7.2 spec when parsing metadata.");
         RetsConfig retsConfig = Admin.getRetsConfig();
         mStrictParsing = retsConfig.getStrictParsing();
+        mStrictParsingMenuItem.setSelected(mStrictParsing);
         mStrictParsingMenuItem.addItemListener(new ItemListener()
         {
             public void itemStateChanged(ItemEvent e)

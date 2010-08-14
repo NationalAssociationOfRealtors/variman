@@ -4,6 +4,8 @@ Version 3.2.2 - xx xxx 2010
     addition to using pattern and XML file. Ticket #19.
   * XmlMetadataDAO fails to properly write metadata.
     Ticket #100.
+  * Admin GUI not recognizing the "strict-parsing" setting
+    from configuration files. Ticket #101.
 
 Version 3.2.1 - 30 Jun 2010
 
