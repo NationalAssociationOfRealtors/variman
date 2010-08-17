@@ -124,10 +124,13 @@
       URL</i>.
     </p><p>
       GetObject configuration in Variman is done by the Get Object
-      Root, Photo Pattern, and Object Set Pattern parameters in <a href="deploy.html#fig-config" title="Figure&nbsp;2.&nbsp;Configuration Tab">Figure&nbsp;2, &ldquo;Configuration Tab&rdquo;</a>.  There two ways to map multimedia
+      Root, Photo Pattern, and Object Set Pattern parameters in <a href="deploy.html#fig-config" title="Figure&nbsp;2.&nbsp;Configuration Tab">Figure&nbsp;2, &ldquo;Configuration Tab&rdquo;</a>.  There are three ways to map multimedia
       objects to a listing ID&gt; The first is using photo patterns,
       described in <a href="deploy.html#deploy-getobject-photo-patterns" title="3.3.1.&nbsp;Using Photo Patterns">Section&nbsp;3.3.1, &ldquo;Using Photo Patterns&rdquo;</a>
-      and the second is using object sets, described in <a href="deploy.html#deploy-getobject-object-sets" title="3.3.2.&nbsp;Using Object Sets">Section&nbsp;3.3.2, &ldquo;Using Object Sets&rdquo;</a>.  Object sets are far
+      the second is using object sets, described in <a href="deploy.html#deploy-getobject-object-sets" title="3.3.2.&nbsp;Using Object Sets">Section&nbsp;3.3.2, &ldquo;Using Object Sets&rdquo;</a>, and the third is to use a
+      combination of the Get Object Root and the contents of a database table
+      to determine the location of the object. This is described in more
+      detail by <a href="deploy.html#deploy-getobject-database" title="3.3.3.&nbsp;Using A Database Table">Section&nbsp;3.3.3, &ldquo;Using A Database Table&rdquo;</a>. Object sets are far
       more customizable, but require more work to implement.
     </p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="deploy-getobject-photo-patterns"></a>3.3.1.&nbsp;Using Photo Patterns</h4></div></div><div></div></div><p>
         Photo patterns use pattern substitutions to locate files on
@@ -323,7 +326,7 @@
                   against the previous <tt class="literal">base</tt>
                   attributes.  This works in a very similar way to
                   the <tt class="literal">src</tt> attribute of the
-                  HTML <tt class="literal">&gt;img&lt;</tt> tag.
+                  HTML <tt class="literal">&lt;img&gt;</tt> tag.
                 </td><td>Required.</td></tr><tr><td>description</td><td>
                   A text description of this object.
                 </td><td>No description.</td></tr><tr><td>default</td><td>
@@ -331,7 +334,62 @@
                   default object.  Only one object may be marked as
                   default.  If more than one is marked as default, the
                   first one marked will be used.
-                </td><td><tt class="literal">false</tt>.</td></tr></tbody></table></div></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="users"></a>3.4.&nbsp;Users</h3></div></div><div></div></div><p>
+                </td><td><tt class="literal">false</tt>.</td></tr></tbody></table></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="deploy-getobject-database"></a>3.3.3.&nbsp;Using A Database Table</h4></div></div><div></div></div><p>
+          The third way to manage the multimedia object uses a combination
+          of the Get Object Root and a path that will be extracted from a
+          database table. The path that is extracted will be appended to the
+          Get Object Root and the resulting path will be used to access the
+          object. This method is disabled by default and requires a manual
+          change by you to the <tt class="literal">variman/WEB-INF/spring-appContext.xml
+          </tt> file.
+        </p><p>
+          In order to enable this feature, locate this line in the
+          <tt class="literal">spring-appContext.xml</tt> file in your deployment
+          directory:
+          <table xmlns="http://www.w3.org/TR/xhtml1/transitional" width="90%" bgcolor="#E0E0E0" border="0"><tr><td><pre class="programlisting">
+          
+&lt;!--bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet"/--&gt;</pre></td></tr></table>
+          and change it to read:
+          <table xmlns="http://www.w3.org/TR/xhtml1/transitional" width="90%" bgcolor="#E0E0E0" border="0"><tr><td><pre class="programlisting">
+          
+&lt;bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet"/&gt;</pre></td></tr></table>
+        </p><p>
+          When you initialize the database as described in <a href="deploy.html#schema" title="3.1.6.&nbsp;Creating the Schema">Section&nbsp;3.1.6, &ldquo;Creating the Schema&rdquo;</a>, a table called <tt class="literal">rets_media</tt> is
+          created. This database table consists of the following columns:
+          <div class="table"><a name="tab-rets-media"></a><p class="title"><b>Table&nbsp;6.&nbsp;<tt class="literal">rets_media</tt> Database Columns</b></p><table summary="rets_media Database Columns" border="1"><colgroup><col><col></colgroup><thead><tr><th>Column Name</th><th>Description</th></tr></thead><tbody><tr><td><tt class="literal">resource_key</tt></td><td>
+                  The resource key for a group of objects. Typeically, this
+                  should be the same as the <tt class="literal">ListingID</tt> for
+                  your listings.
+                </td></tr><tr><td><tt class="literal">object_id</tt></td><td>
+                  This is a numeric field that is used to determine the
+                  unique object by Listing.
+                </td></tr><tr><td><tt class="literal">media_type</tt></td><td>
+                  This is the well known name for the media type as identified
+                  by <a href="deploy.html#tab-object-types" title="Table&nbsp;1.&nbsp;Well-Known Object Types">Table&nbsp;1, &ldquo;Well-Known Object Types&rdquo;</a>. This is used as part
+                  of the index into the table and must not be <tt class="literal">null</tt>.
+                  If you only use one media type, you can alter the column in
+                  the database to set it's default value (e.g. "Photo").
+                </td></tr><tr><td><tt class="literal">description</tt></td><td>
+                  This is a description of the media (e.g. "Bedroom 1").
+                </td></tr><tr><td><tt class="literal">resource_file_path</tt></td><td>
+                  The path to the file containing the object. This path will
+                  be appended to the Get Object Root path to create the final
+                  path to the object.
+                </td></tr><tr><td><tt class="literal">modification_timestamp</tt></td><td>
+                  This is a timestamp that should be changed only when the
+                  underlying object or description has changed.
+                </td></tr><tr><td><tt class="literal">id</tt></td><td>
+                  This is an integer field that can be used to uniquely
+                  identify an object. It must be unique within all objects
+                  in this table.
+                </td></tr></tbody></table></div>
+        </p><p>
+          This table has a composite key as it's primary key. This key is
+          made up of the <tt class="literal">resource_id</tt>, 
+          <tt class="literal">object_id</tt> and <tt class="literal">media_type</tt>
+          columns. The combination of the three columns must be unique for
+          each object in the database.
+        </p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="users"></a>3.4.&nbsp;Users</h3></div></div><div></div></div><p>
       Users are managed through the Users Tab as seen in <a href="deploy.html#fig-users" title="Figure&nbsp;3.&nbsp;Users Tab">Figure&nbsp;3, &ldquo;Users Tab&rdquo;</a>.  Users may be created, removed, and
       edited from the User menu or contextual menu.  Users may also be
       added and removed from groups.
