@@ -1,4 +1,4 @@
-Version 3.2.2 - xx xxx 2010
+Version 3.2.2 - 17 Aug 2010
 
   * Added ability to extract image data from the database in
     addition to using pattern and XML file. Ticket #19.
