@@ -1,0 +1,8 @@
+#summary MIgrating from Vraiman 2.x to Variman 3.x
+#labels Phase-Deploy
+
+Variman has undergone a major revision with the 3.x line. It is now RETS 1.5, 1.7 and 1.7.2 compliant. But, compliancy also involves specific metadata implementations, so as part of the process of migrating to Variman 3.x, you will need to take some specific steps to migrate your metadata. The GUI Admin tool that is provided with each Variman release can assist, and it does have a feature to help attempt to migrate and normalize your metadata in a compliant form.
+
+The first thing to note is that earlier releases had Variman rooted under a directory called '''`webapp`'''. That has changed to '''`variman`''' to allow for consistency between the standalone and web-server versions of Variman and to allow the GUI Admin tool to work with both versions. That means that when you finally install it, you will need to move your configuration files from their old location to the new. In other words, the new version of Variman will not install over the top of the old seamlessly.
+
+The GUI Admin tool now has the ability to edit your Metadata. Please see the [http://www.crt.realtors.org/projects/rets/variman/documentation/manual/ Variman Manual] for further details and example usage.
