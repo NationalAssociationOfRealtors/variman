@@ -4,7 +4,7 @@
 = Variman User's Manual =
 
 '''Table of Contents'''
-[#1. Introduction]
+[# 3. Configuration ]
 
 == 1. Introduction ==
 
