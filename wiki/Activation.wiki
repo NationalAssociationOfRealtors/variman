@@ -1,0 +1,14 @@
+#summary How to Activate Variman
+#labels Phase-Deploy,Deprecated
+
+= Activation =
+
+With the Variman 3.x version, we have added code that requires the software to be activated. Activation is simple and quick.  Prior to activation, the service will shut itself down after an hour of start-up and signal this in the log files.
+
+Activation Steps:
+ * Install Variman
+ * Once installed, visit http://www.crt.realtors.org/projects/rets/variman/support/activation.php and enter your Variman Host Name (e.g. demo.crt.realtors.org) and your email address. If you are in doubt about the canonical name, check the Variman log files and it will be displayed there.
+ * The Activation Server will send you an activation file with instructions where to place the file.
+
+Why are we requiring activation:
+Variman is still FREE to download and use. The support mailing list does not identify how extensively Variman is used, and it is difficult for us to get feedback from the users. Because of this, we created a simple process for activating in an attempt to understand the usage patterns of Variman.   The process only logs the Host URL and email address, and does not communicate with the live server in an manner. The overall goal is to create a mechanism to provide better support for the product without adding inconvenience for the end user.  As with all the code of Variman, it is completely open source, so you are able to disable the activation at any time - just keep in mind, this is our window in continued support and increased understanding of Variman in the wild.
