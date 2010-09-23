@@ -73,7 +73,7 @@ From the Configuration tab of the Administration Tool, the current database prop
 
 '''Figure 1. Database Properties Window'''
 
-db.png
+[http://variman.googlecode.com/svn/wiki/db.png]
 
 ==== 3.1.6. Creating the Schema ====
 
@@ -85,7 +85,7 @@ From the main Configuration panel, as seen in [[#fig-config|Figure 2, “Config
 
 '''Figure 2. Configuration Tab'''
 
-config.png
+[http://variman.googlecode.com/svn/wiki/config.png]
 
 The Listening Port is the TCP port number that the Variman server listens on. 6103 is the standard, well-known port number for RETS. The Metadata Directory points to the root directory of the metadata hierarchy. Configuring metadata is explained in [[#deploy-metadata|Section 4.1, “Configuring Metadata”]].
 
@@ -258,7 +258,7 @@ Users are managed through the Users Tab as seen in [[#fig-users|Figure 3, “Us
 
 '''Figure 3. Users Tab'''
 
-[http://variman.googlecode.com/svn/wiki/agentclass.png]
+[http://variman.googlecode.com/svn/wiki/[http://variman.googlecode.com/svn/wiki/agentclass.png]]
 
 === 3.5. Groups ===
 
@@ -266,11 +266,11 @@ Groups are managed through the Groups Tab as seen in [[#fig-groups|Figure 4, �
 
 '''Figure 4. Groups Tab'''
 
-groups.png
+[http://variman.googlecode.com/svn/wiki/groups.png]
 
 '''Figure 5. Group Dialog'''
 
-group-dialog.png
+[http://variman.googlecode.com/svn/wiki/group-dialog.png]
 
 ==== 3.5.1. Record Limits ====
 
@@ -290,7 +290,7 @@ Filter rules allow RETS system names to be filtered out. If none of a users' gro
 
 '''Figure 6. Filter Rule Dialog'''
 
-filter_rule.png
+[http://variman.googlecode.com/svn/wiki/filter_rule.png]
 
 ==== 3.5.5. Condition Rules ====
 
@@ -298,7 +298,7 @@ Condition rules allows the generated SQL to be modified and given extra conditio
 
 '''Figure 7. Condition Rule Dialog'''
 
-condition_rule.png
+[http://variman.googlecode.com/svn/wiki/condition_rule.png]
 
 == 4. Metadata ==
 
@@ -356,7 +356,7 @@ The first step (after configuring and testing data base access as described earl
 
 '''Figure 8. Metadata Tab'''
 
-editor.png
+[http://variman.googlecode.com/svn/wiki/editor.png]
 
 Since metadata is usually represented as a tree hierarchy, the editor will do the same. The left panel in this case shows an empty tree since nothing has yet been added to it. The right panel shows the the current value for the node selected. In this case, it is also empty.
 
@@ -388,7 +388,7 @@ Select the Resource node in the tree and press the Add button.This will bring up
 
 '''Figure 9. Add Resource Dialog'''
 
-agentdialog.png
+[http://variman.googlecode.com/svn/wiki/agentdialog.png]
 
 Now that the Agent resource is created, we need to create the RETS Classes associated with that resource. The Class can be thought of as a SQL table and in fact, using a RETS extension, that's how we will tell Variman where to find the Agent data. From this point on, there will be confusion as to what "table" means because within a database it refers to a collection of like elements, whereas in RETS, it refers to a single data element. We'll use "Table" with a capital "T" to mean a RETS "Table", and "table" with a lowercase "t" to represent a relational database "table".
 
@@ -412,13 +412,13 @@ Let's use the following details for the Agent Class:
 
 '''Figure 10. Agent Class Entered'''
 
-agentclass.png
+[http://variman.googlecode.com/svn/wiki/agentclass.png]
 
 With the Class in place, it is time to enter the RETS Table information in order to relate the RETS data to the corresponding elements in the database. Select the AGT node in the tree and press Add. This will pop up a dialog box that will allow you to specify whether or not you want to add Table or Update information. Select Table and press OK in order to launch the dialog for adding the RETS Table data. Here is the example for entering `AgentID`:
 
 '''Figure 11. Agent ID Dialog'''
 
-agentiddialog.png
+[http://variman.googlecode.com/svn/wiki/agentiddialog.png]
 
 You can fill in the details for the other elements the same way. But first, we would like to create an `EditMask` for the `Phone` element and a `Lookup` for the `Status` element. We do this the same way we enter the RETS Class, but select either EditMask or Lookup. Select the Agent node and then press Add to begin.
 
@@ -452,7 +452,7 @@ Let's use the following for the Phone Number EditMask:
 
 '''Figure 12. Agent Metadata Entered'''
 
-agententered.png
+[http://variman.googlecode.com/svn/wiki/agententered.png]
 
 ==== 4.4.2. Create Property Resource and Classes ====
 
@@ -460,7 +460,7 @@ As with the `Agent` resource, to enter the `Property` resource, begin by selecti
 
 '''Figure 13. Property Dialog'''
 
-propertydialog.png
+[http://variman.googlecode.com/svn/wiki/propertydialog.png]
 
 For the Property classes, we will have `ResidentialProperty` and `Commercial`. Let's use the following details for these Classes:
 
@@ -486,7 +486,7 @@ We also know that we are going to use a Lookup and EditMask as we did above. We 
 
 '''Figure 14. Property Classes, EditMask and Lookup Entered'''
 
-propertyentered.png
+[http://variman.googlecode.com/svn/wiki/propertyentered.png]
 
 The last step is to enter the Table data for both Property Classes. Let's use the following details for Residential (only non-default values shown below):
 
@@ -750,19 +750,19 @@ After entering all the details above using the Table dialog as we did above, you
 
 '''Figure 15. Agent Class Entered'''
 
-fullypopulated.png
+[http://variman.googlecode.com/svn/wiki/fullypopulated.png]
 
 We have one more element to add to each Class: the AgentID. This references a foreign key what we'll create first. Here's the Agent/ResidentialProperty foreign key:
 
 '''Figure 16. Foreign Key'''
 
-foreignkey.png
+[http://variman.googlecode.com/svn/wiki/foreignkey.png]
 
 Do the same for the Agent/Commercial foreign key and then we can add the AgentID element to both Classes:
 
 '''Figure 17. Agent ID'''
 
-agentid.png
+[http://variman.googlecode.com/svn/wiki/agentid.png]
 
 Finally, use the File->Save menu item to save the data. The resulting file will be called `metadata.xml` in the directory you selected for the location for your Metadata in [[#rets|Section 3.2, “Configuring RETS Parameters”]].
 
