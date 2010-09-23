@@ -1,5 +1,7 @@
-#summary MIgrating from Vraiman 2.x to Variman 3.x
+#summary Notes on Migrating from Variman 2.x
 #labels Phase-Deploy
+
+= Migrating from Variman 2.x to Variman 3.x =
 
 Variman has undergone a major revision with the 3.x line. It is now RETS 1.5, 1.7 and 1.7.2 compliant. But, compliancy also involves specific metadata implementations, so as part of the process of migrating to Variman 3.x, you will need to take some specific steps to migrate your metadata. The GUI Admin tool that is provided with each Variman release can assist, and it does have a feature to help attempt to migrate and normalize your metadata in a compliant form.
 
