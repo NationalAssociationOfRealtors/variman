@@ -258,7 +258,7 @@ Users are managed through the Users Tab as seen in [[#fig-users|Figure 3, “Us
 
 '''Figure 3. Users Tab'''
 
-users.png
+[users.png]
 
 === 3.5. Groups ===
 
