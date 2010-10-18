@@ -1,0 +1,36 @@
+<j:jelly xmlns:j="jelly:core">
+
+  <!-- Filter order is important! -->
+
+  <filter-mapping>
+    <filter-name>default-filter</filter-name>
+    <url-pattern>/</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>authentication-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>session-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>accounting-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
+  
+<!-- No longer using activation code
+  <filter-mapping>
+    <filter-name>activation-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
+-->
+
+  <filter-mapping>
+    <filter-name>request-log-filter</filter-name>
+    <url-pattern>/rets/*</url-pattern>
+  </filter-mapping>
+</j:jelly>

@@ -1,0 +1,875 @@
+<section id="deploy">
+  <title>Configuration</title>
+  <para>
+    This chapter describes how to configure and run &name;.
+  </para>
+
+  <section id="first-time">
+    <title>First Time Configuration</title>
+    <para>
+      Before running &name; for the first time, there are a few steps
+      you need to take.  &name; requires access to a database.
+      Currently, &name; supports PostgreSQL <xref
+      linkend="bib-postgres"/> and Microsoft SQL Server.  This database
+      is where RETS data is stored, as well as &name; specific
+      information.  &name; requires read/write access to the database,
+      as well as the ability to create new tables.
+    </para>
+
+    <section id="variman-setup">
+      <title>Variman Setup</title>
+      <para>
+        Beneath the WEB-INF/rets directory you will find two files:
+        rets-config.xml.dist and rets-logging.properties.dist. You
+        will need to either rename or copy these to rets-config.xml and
+        rets-logging.properties in the same directory before you can even 
+        run the admin tool.
+        You may want to do some hand initiailization with your favorite
+        editor of the rets-logging.properties file to set up a higher
+        logging level until you get the server functional. Once it is
+        functional, set the level back to INFO or the log data will
+        get large quite fast.
+      </para>
+    </section>
+
+    <section id="postgres">
+      <title>PostgreSQL Setup</title>
+      <para>
+        PostgreSQL must be configured to accept TCP/IP connections, as
+        this is how the JDBC driver connects.  This is done adding the
+        following setting in <filename>postgresql.conf</filename>:
+      </para>
+      <programlisting>tcpip_socket = true
+</programlisting>
+      <para>
+        You may also have to edit <filename>pg_hba.conf</filename> to
+        make network connections permissible.  See the documentation
+        in that file for details.
+      </para>
+      <para>
+        It is probably a good idea to create a user other than the
+        default <literal>postgres</literal> superuser.  This user must
+        have read and write access, and permissions to create new
+        tables in the database used by &name;.
+      </para>
+      <para>
+        The JDBC driver for Postgres version 8.3.x is included with
+        the distribution.
+      </para>
+    </section>
+      
+    <section id="ms-sql-server">
+      <title>Microsoft SQL Server Setup</title>
+      <para>
+        First, either choose an existing database, or create a new
+        database for use with &name;.  Then, create a new user that
+        has the following role memberships:
+      </para>
+      <itemizedlist>
+        <listitem><literal>public</literal></listitem>
+        <listitem><literal>db_owner</literal></listitem>
+        <listitem><literal>db_datareader</literal></listitem>
+        <listitem><literal>db_datawriter</literal></listitem>
+      </itemizedlist>
+      <para>
+        The Open Source jTDS <xref linkend="bib-jtds"/> driver is
+        included with &name;.  The only other supported driver is the
+        commercial JSQLConnect driver from JNetDirect <xref
+        linkend="bib-jnetdirect"/>.  The driver that Microsoft offers
+        is buggy and does not work with &name;.
+      </para>
+    </section>
+
+    <section id="jdbc">
+      <title>Installing a JDBC Driver</title>
+      <para>
+        The easiest way to install your JDBC driver is to use the
+        Administration Tool.  Choose the Install Jar command from the
+        File menu.  You must then restart the Administration Tool
+        and/or &name; to use the new JDBC driver.
+      </para>
+    </section>
+
+    <section id="db-properties">
+      <title>Configuring Database Properties</title>
+      <para>
+        From the Configuration tab of the Administration Tool, the
+        current database properties are listed.  You will have change
+        these to suit your environment.  Click on the Edit button, to
+        bring up the Database Properties dialog, as in <xref
+        linkend="fig-db"/>.  You should use the Test Connection button
+        to make sure that the properties are entered correctly.  If
+        the test fails, then neither the Administration Tool nor
+        &name; will be able to access your database.
+      </para>
+      <figure id="fig-db">
+        <title>Database Properties Window</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="db.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
+    <section id="schema">
+      <title>Creating the Schema</title>
+      <para>
+        &name; needs tables for it's own use, such as user
+        information.  Before you create users and groups, you need to
+        create these tables by choosing the Create Schema command from
+        the Database menu.
+      </para>
+    </section>
+  </section> <!-- First Time -->
+
+  <section id="rets">
+    <title>Configuring RETS Parameters</title>
+    <para>
+      From the main Configuration panel, as seen in <xref
+      linkend="fig-config"/>, you can configure various RETS
+      parameters.
+    </para>
+    <figure id="fig-config">
+      <title>Configuration Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="config.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    <para>
+      The Listening Port is the TCP port number that the &name; server
+      listens on.  6103 is the standard, well-known port number for
+      RETS.  The Metadata Directory points to the root directory of
+      the metadata hierarchy.  Configuring metadata is explained in
+      <xref linkend="deploy-metadata"/>.
+    </para>
+  </section>
+      
+  <section id="deploy-getobject">
+    <title>Configuring GetObject for Multimedia Objects</title>
+    <para>
+      The RETS GetObject transaction allows you to associate
+      multimedia objects with a property listing.  These multimedia
+      objects, called <firstterm>objects</firstterm> from now on, are
+      grouped into <firstterm>types</firstterm>.  The most common type
+      of object is a photograph.  However, you are not limited to only
+      photos for RETS object types.  RETS provides some well-known
+      object types, as described in <xref linkend="tab-object-types"
+      />, but this list is only a starting point.  If you have objects
+      that do not fall into any of these well-known types, you may use
+      your own type.  You should always one of the well-known types,
+      if possible, so that RETS clients can properly access the
+      objects automatically.
+    </para>
+
+    <para>
+      A RETS client may only retrieve objects of the same type in a
+      single transaction.  Each transaction must also include at least
+      one listing ID, called the <firstterm>resource key</firstterm>
+      in RETS terminology.  For each resource key, there may be zero
+      or more objects within a type, all numbered sequentially
+      beginning with 1.  The object number is called
+      the <firstterm>object ID</firstterm>.  A RETS client may request
+      a specific object by ID, a range of objects by ID, or all of the
+      objects for a given resource key.  Each object may also include
+      a text description which a RETS client should provide to the
+      user.  The object ID 0 is special and designates
+      the <firstterm>default object</firstterm>.  For example, some
+      RETS clients may only present the user with a single photo, and
+      the default object allows you to configure which photo is used
+      in these circumstances.
+    </para>
+
+    <table frame="all" id="tab-object-types">
+      <title>Well-Known Object Types</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Object Type</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><literal>Photo</literal></entry>
+            <entry>
+              An image, usually a photograph for the object key.
+            </entry>
+          </row>
+          <row>
+            <entry><literal>Thumbnail</literal></entry>
+            <entry>A lower-resolution image.</entry>
+          </row>
+          <row>
+            <entry><literal>Plat</literal></entry>
+            <entry>
+              An image of the property boundaries.
+            </entry>
+          </row>
+          <row>
+            <entry><literal>Video</literal></entry>
+            <entry>A short video or movie.</entry>
+          </row>
+          <row>
+            <entry><literal>Audio</literal></entry>
+            <entry>A sound clip.</entry>
+          </row>
+          <row>
+            <entry><literal>Map</literal></entry>
+            <entry>An image showing a map of the property.</entry>
+          </row>
+          <row>
+            <entry><literal>VRImage</literal></entry>
+            <entry>
+              A multiple-view, possibly interactive image related
+              to the property.
+            </entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+    
+    <para>
+      The usual behavior is for all objects matching the RETS client's
+      criteria to be sent back to the client in a single GetObject
+      response.  For a request that returns a large number of objects,
+      however, this may be impractical.  The RETS specification allows
+      the RETS server to return only a URL, instead of the object
+      itself.  This URL is called a <firstterm>location
+      URL</firstterm>.
+    </para>
+    
+    <para>
+      GetObject configuration in &name; is done by the Get Object
+      Root, Photo Pattern, and Object Set Pattern parameters in <xref
+      linkend="fig-config"/>.  There are three ways to map multimedia
+      objects to a listing ID> The first is using photo patterns,
+      described in <xref linkend="deploy-getobject-photo-patterns"/>
+      the second is using object sets, described in <xref
+      linkend="deploy-getobject-object-sets"/>, and the third is to use a
+      combination of the Get Object Root and the contents of a database table
+      to determine the location of the object. This is described in more
+      detail by <xref linkend="deploy-getobject-database"/>. Object sets are far
+      more customizable, but require more work to implement.
+    </para>
+
+    <section id="deploy-getobject-photo-patterns">
+      <title>Using Photo Patterns</title>
+
+      <para>
+        Photo patterns use pattern substitutions to locate files on
+        the local files system.  It uses only the the Get Object Root
+        and Photo Pattern parameters.  The Get Object Root is a
+        directory where the photos are located.  The Photo Pattern is
+        a percent substitution pattern that describes the format of
+        the actual file names.  The possible patterns and their
+        substitutions are listed in <xref
+        linkend="tab-photo-pattern"/>.
+      </para>
+      
+      <table frame="all" id="tab-photo-pattern">
+        <title>Photo Patterns</title>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Pattern</entry>
+              <entry>Substitution</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>%k</entry>
+              <entry>Resource Key</entry>
+            </row>
+            <row>
+              <entry>%i</entry>
+              <entry>Object ID</entry>
+            </row>
+            <row>
+              <entry>%I</entry>
+              <entry>Object ID, or empty if the ID is 0</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>
+        For example, if you have pictures
+        in <filename>/home/variman/pictures/</filename>.  The key is
+        used as the base file name, with each photo given a number.
+        Say there are three pictures for the property
+        ID <literal>LN1001</literal>, the full paths for these
+        pictures are:
+        <itemizedlist>
+          <listitem>
+            <literal>/home/variman/pictures/LN1001_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/LN1001_2.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/LN1001_3.jpg</literal>
+          </listitem>
+        </itemizedlist>
+        The, you could set the Get Object Root
+        to <filename>/home/variman/pictures</filename> and the Photo
+        Pattern to <literal>%k_%i.jpg</literal>.
+        The <literal>%k</literal> gets replaced with the object ID,
+        and the <literal>%i</literal> gets replaced with the photo
+        number.
+      </para>
+      <para>
+        The <literal>%k</literal> percent pattern may be proceeded by
+        a number modifier that truncates the number of characters used
+        during substitution.  This allows files to be split up into
+        multiple directories for large installations.  If the number
+        is positive, the characters are taken from the front, where if
+        the number is negative, the characters are taken from the
+        end. So, with a pattern of <literal>%-2k/%k_%i.jpg</literal>,
+        the first picture
+        for <literal>LN1001</literal>, <literal>LN1002</literal>,
+        <literal>LN1101</literal> would be at the following paths:
+        <itemizedlist>
+          <listitem>
+            <literal>/home/variman/pictures/01/LN1001_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/02/LN1002_1.jpg</literal>
+          </listitem>
+          <listitem>
+            <literal>/home/variman/pictures/01/LN1101_1.jpg</literal>
+          </listitem>
+        </itemizedlist>
+      </para>
+      <para>
+        Location URLs given for objects that match a photo pattern
+        always point back to &name;.  These are specially coded URLs
+        that &name; uses to decode which object to provide to the
+        client.
+      </para>
+    </section>
+    
+    <section id="deploy-getobject-object-sets">
+      <title>Using Object Sets</title>
+      <para>
+        Instead of using a pattern to map to the photos themselves, an
+        object set pattern may be used to locate an object set file,
+        which is just an XML file describing all the multimedia files.
+        This approach is more flexible for the following reasons:
+        <itemizedlist>
+          <listitem>
+            Object file names do not need to match any pattern.  This
+            is useful where object IDs embedded in file names may not
+            be sequential.  This often happens when an object is
+            deleted, but the other objects are not renumbered.
+          </listitem>
+          <listitem>
+            The default object is configurable.  It need not be the
+            first object ID.
+          </listitem>
+          <listitem>
+            Types of objects other than photos, such as documents and
+            video can be provided.
+          </listitem>
+          <listitem>
+            Text descriptions may be supplied with objects.
+          </listitem>
+          <listitem>
+            Objects need not be stored on the local filesystem.  An
+            external media server could be used, and &name; will
+            access these objects using HTTP.  Location URLs may
+            optionally point directly to the media server.
+          </listitem>
+        </itemizedlist>
+        As described above, there must be one oject set file per
+        listing ID.  The Object Set Pattern field in <xref
+        linkend="fig-config"/> is used to locate object sets.  Only
+        the <literal>%k</literal> pattern listed in <xref
+        linkend="tab-photo-pattern"/> is available, and the Get Object
+        Root is still used as the root directory.  For example, if the
+        Get Object Root is set
+        to <literal>/home/variman/objects</literal>, and the Object
+        Set Pattern is <literal>%k.xml</literal>, then the file for
+        listing ID <literal>LN1</literal> would
+        be <literal>/home/variman/objects/LN1.xml</literal>.
+      </para>
+      <para>
+        The default behavior for &name; is to provide location URLs
+        that point back to the RETS server.  However, if an external
+        media server exists, &name; may provide URLs directly to the
+        media server.  These location URLs to an external media server
+        are called <firstterm>remote URLs</firstterm>, since the URLs
+        point to a remote server, not locally to &name;.  This remote
+        URL behavior is optional, though.  You can have a media
+        server, and not use remote URLs.  In this case, &name; acts as
+        a proxy between the RETS client and the media server.  Also
+        note that if location URLs are not requested by the RETS
+        client, &name; also acts as a proxy.  There is no way to tell
+        a RETS client to use location URLs exclusively, so there is no
+        way to disable this proxying.
+      </para>
+      <para>
+        Before getting into the details, here is an example object set
+        file for a hypothetical <literal>LN1</literal>
+        property, <literal>LN1.xml</literal>:
+      </para>
+      <programlisting>&object-set-example;</programlisting>
+      <para>
+        The main tag is <literal>&lt;object-set&gt;</literal>.
+        The <literal>resource-key</literal> attribute is required and
+        must match the listing ID.  Following
+        the <literal>&lt;object-set&gt;</literal> tag must be one or
+        more <literal>&lt;object-group&gt;</literal> tags.  There
+        should be one object group for each type of multimedia object.
+        The <literal>type</literal> attribute must match
+        the <literal>Type</literal> parameter used by the RETS client.
+        Well known types must be used where appropriate.  See Section
+        11.4.1 of the RETS specification for a list of well known
+        types.
+      </para>
+      <section id="deploy-getobject-objectset-object-set">
+        <title>The &lt;object-set&gt; Tag</title>
+        <para>
+          The <literal>&lt;object-set&gt;</literal> tag is the top
+          level tag.  It has the following attributes:
+        </para>
+        <table frame="all" id="tab-object-set">
+          <title>&lt;object-set&gt; Attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Description</entry>
+                <entry>Default</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>xmlns</entry>
+                <entry>
+                  The XML namespace URL. It must be set
+                  to <literal>http://www.crt.realtors.org/xml/variman/object-set/1</literal>
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>resource-key</entry>
+                <entry>
+                  The resource key, which is usually the listing ID for
+                  properties.  This must match the listing ID in the
+                  file name.
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>base</entry>
+                <entry>
+                  The base URL to use for resolving subsequent relative
+                  URLs.
+                </entry>
+                <entry>
+                  A <literal>file://</literal> URL to the location of
+                  this object set file.
+                </entry>
+              </row>
+              <row>
+                <entry>remote-locations</entry>
+                <entry>
+                  If set to <literal>true</literal>, then &name; will
+                  provide a URL directly to the multimedia server, if
+                  requested by the client.  If set
+                  to <literal>false</literal>, all location URLs
+                  provided will point back to &name;.  If the object
+                  does not point to an external media server (i.e. it
+                  is a local URL), then a local location URL is used.
+                </entry>
+                <entry> <literal>false</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <section id="deploy-getobject-objectset-object-group">
+        <title>The &lt;object-group&gt; Tag</title>
+        <para>
+          The <literal>&lt;object-group&gt;</literal> tag represents a
+          group of multimedia objects of the same type.  A RETS client
+          specifies an object type during the GetObject transaction,
+          and object groups map one-to-one to these object types.
+        </para>
+        <table frame="all" id="tab-object-group">
+          <title>&lt;object-group&gt; Attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Description</entry>
+                <entry>Default</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>type</entry>
+                <entry>
+                  The type of multimedia object in this group.  A
+                  well-known object type must be used, if appropriate.
+                  RETS well-known types
+                  are: <literal>Photo</literal>, <literal>Plat</literal>,
+                  <literal>Video</literal>, <literal>Audio</literal>,
+                  <literal>Thumbnail</literal>, <literal>Map</literal>,
+                  <literal>VRImage</literal>.
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>base</entry>
+                <entry>
+                  The base URL to use for resolving relative URLs in
+                  child <literal>&lt;object&gt;</literal> tags.
+                </entry>
+                <entry>
+                  The base URL of
+                  the <literal>&lt;object-set&gt;</literal>
+                  tag.
+                </entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <section id="deploy-getobject-objectset-object">
+        <title>The &lt;object&gt; Tag</title>
+        <para>
+          The <literal>&lt;object&gt;</literal> tag represents a
+          single multimedia object.  In terms of RETS, every
+          multimedia type has zero or more individual objects.  These
+          objects are numbered sequentially, starting from 1.  RETS
+          also has the concept of a default object.
+        </para>
+        <table frame="all" id="tab-object">
+          <title>&lt;object&gt; Attributes</title>
+          <tgroup cols="3">
+            <thead>
+              <row>
+                <entry>Attribute</entry>
+                <entry>Description</entry>
+                <entry>Default</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry>src</entry>
+                <entry>
+                  The URL to the actual object.  This may be, and
+                  usually is, a relative URL, which is resolved
+                  against the previous <literal>base</literal>
+                  attributes.  This works in a very similar way to
+                  the <literal>src</literal> attribute of the
+                  HTML <literal>&lt;img&gt;</literal> tag.
+                </entry>
+                <entry>Required.</entry>
+              </row>
+              <row>
+                <entry>description</entry>
+                <entry>
+                  A text description of this object.
+                </entry>
+                <entry>No description.</entry>
+              </row>
+              <row>
+                <entry>default</entry>
+                <entry>
+                  If set to <literal>true</literal>, use this as the
+                  default object.  Only one object may be marked as
+                  default.  If more than one is marked as default, the
+                  first one marked will be used.
+                </entry>
+                <entry><literal>false</literal>.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+     </section>
+      
+      <section id="deploy-getobject-database">
+        <title>Using A Database Table</title>
+        <para>
+          The third way to manage the multimedia object uses a combination
+          of the Get Object Root and a path that will be extracted from a
+          database table. The path that is extracted will be appended to the
+          Get Object Root and the resulting path will be used to access the
+          object. This method is disabled by default and requires a manual
+          change by you to the <literal>variman/WEB-INF/spring-appContext.xml
+          </literal> file.
+        </para>
+        <para>
+          In order to enable this feature, locate this line in the
+          <literal>spring-appContext.xml</literal> file in your deployment
+          directory:
+          <programlisting>
+          
+&lt;!--bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet"/--&gt;</programlisting>
+          and change it to read:
+          <programlisting>
+          
+&lt;bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet"/&gt;</programlisting>
+        </para>
+        <para>
+          When you initialize the database as described in <xref
+          linkend="schema"/>, a table called <literal>rets_media</literal> is
+          created. This database table consists of the following columns:
+          <table frame="all" id="tab-rets-media">
+          <title><literal>rets_media</literal> Database Columns</title>
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Column Name</entry>
+                <entry>Description</entry>
+              </row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><literal>resource_key</literal></entry>
+                <entry>
+                  The resource key for a group of objects. Typeically, this
+                  should be the same as the <literal>ListingID</literal> for
+                  your listings.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>object_id</literal></entry>
+                <entry>
+                  This is a numeric field that is used to determine the
+                  unique object by Listing.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>media_type</literal></entry>
+                <entry>
+                  This is the well known name for the media type as identified
+                  by <xref linkend="tab-object-types"/>. This is used as part
+                  of the index into the table and must not be <literal>null</literal>.
+                  If you only use one media type, you can alter the column in
+                  the database to set it's default value (e.g. &quot;Photo&quot;).
+                </entry>
+              </row>
+              <row>
+                <entry><literal>description</literal></entry>
+                <entry>
+                  This is a description of the media (e.g. &quot;Bedroom 1&quot;).
+                </entry>
+              </row>
+              <row>
+                <entry><literal>resource_file_path</literal></entry>
+                <entry>
+                  The path to the file containing the object. This path will
+                  be appended to the Get Object Root path to create the final
+                  path to the object.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>modification_timestamp</literal></entry>
+                <entry>
+                  This is a timestamp that should be changed only when the
+                  underlying object or description has changed.
+                </entry>
+              </row>
+              <row>
+                <entry><literal>id</literal></entry>
+                <entry>
+                  This is an integer field that can be used to uniquely
+                  identify an object. It must be unique within all objects
+                  in this table.
+                </entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+        </para>
+        <para>
+          This table has a composite key as it's primary key. This key is
+          made up of the <literal>resource_id</literal>, 
+          <literal>object_id</literal> and <literal>media_type</literal>
+          columns. The combination of the three columns must be unique for
+          each object in the database.
+        </para>
+    </section>
+  </section>
+
+  <section id="users">
+    <title>Users</title>
+    <para>
+      Users are managed through the Users Tab as seen in <xref
+      linkend="fig-users"/>.  Users may be created, removed, and
+      edited from the User menu or contextual menu.  Users may also be
+      added and removed from groups.
+    </para>
+
+    <figure id="fig-users">
+      <title>Users Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="users.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section id="groups">
+    <title>Groups</title>
+    <para>
+      Groups are managed through the Groups Tab as seen in <xref
+      linkend="fig-groups"/> and the Group Dialog, as seen in <xref
+      linkend="fig-group-dialog"/>. Groups may be created, edited, and removed
+      from the Group menu or contextual menu. The main purpose of groups is to
+      restrict data in a number of ways, described below.
+    </para>
+
+    <figure id="fig-groups">
+      <title>Groups Tab</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="groups.png"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <figure id="fig-group-dialog">
+      <title>Group Dialog</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="group-dialog.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>
+    </para>
+
+    <section id="record-limits">
+      <title>Record Limits</title>
+
+      <para>
+        If a record limit is enabled for a group, members of this group will
+        only be able to retrieve that many records per query, even if more
+        records match the search criteria. This limit always overrides any
+        user supplied limit. If a user is a member of multiple groups with
+        record limits, the lowest limit is taken.
+      </para>
+    </section>
+    
+    <section id="time-restrictions">
+      <title>Time Restrictions</title>
+      
+      <para>
+        If a time restriction is enabled for a group, then members of this
+        group are only allowed during the specified time periods. Any access
+        outside the allowed time periods results in an authentication failure.
+        Time restrictions may be setup as inclusive or exclusive. Inclusive
+        restrictions means the user is only allowed to access the server in
+        this time period. They will be denied access outside this period. For
+        example, "Allow between 9:00AM and 5:00PM" means the user is allowed
+        access between 9AM and 5PM and denied access before 9AM and after 5PM.
+        Exclusive restrictions means the user is only allowed to access
+        outside this time period. They will be denied access within this
+        period. For example, "Deny between 9:00AM and 5:00PM" means the user
+        is allowed before 9AM and after 5PM and denied access between 9AM and
+        5PM. If a user is a member of multiple groups, the restrictions
+        applied to that user is a union of all allowed time periods of all the
+        time restrictions.
+      </para>
+    </section>
+    
+    <section id="query-count-limits">
+      <title>Query Count Limits</title>
+      
+      <para>
+        If a query count limit is enabled for a group, then members of this
+        group are only allowed a certain number of search queries in a given
+        time period. A user exceeding their query count limit will receive a
+        RETS error on all subsequent searches until the time period has
+        elapsed. The possible time periods are: per day, per hour, and per
+        minute. For example, "5 queries per minute" means that more than 5
+        queries per minute result in an error until one minute has elapsed.
+        Then, the user will be allowed at most 5 more queries. If a user is a
+        member of multiple groups, the most restrictive query count is applied
+      </para>
+    </section>
+
+    <section id="filter-rules">
+      <title>Filter Rules</title>
+
+      <para>
+        Filter rules allow RETS system names to be filtered out.  If
+        none of a users' groups contain any rules, then they have
+        access to all system names provided in the metadata.  Rules
+        are written for a particular resource and class.  There two
+        types of filter rules: include and exclude.  Include rules
+        includes only the fields listed.  Exclude rules includes all
+        fields except the ones listed.  An example rule is shown in
+        <xref linkend="fig-filter-rule"/>.  The individual fields are
+        listed with spaces between them.  If a user is a member of
+        multiple groups, then the fields allowed to be seen are a
+        union of the fields of each group's set of fields.
+      </para>
+
+      <figure id="fig-filter-rule">
+        <title>Filter Rule Dialog</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="filter_rule.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section> <!-- Filter Rules -->
+
+    <section id="condition-rules">
+      <title>Condition Rules</title>
+
+      <para>
+        Condition rules allows the generated SQL to be modified and
+        given extra conditions.  For example, there may be a column in
+        the database called <code>idx_viewable</code> with values
+        of <code>Y</code> or <code>N</code>, which determines whether
+        or not this row should be visible to IDX users.  To make only
+        the rows which are viewable for IDX available, you would use
+        the SQL constraint <code>idx_viewable = 'Y'</code>, as shown
+        in <xref linkend="fig-condition-rule"/>.  This gets appended
+        on to the <code>WHERE</code> clause of the generated SQL using
+        an <code>AND</code> statement.  If a user is a member of
+        multiple groups that have condition rules, each SQL constraint
+        is appended to the <code>WHERE</code> clause in a
+        separate <code>AND</code> statement.  So one group could
+        restrict access to rows that are IDX viewable, while another
+        could restrict based on price.  Condition rules are also tied
+        to a specific resource and class.  The SQL constraint must use
+        the SQL column names, not RETS system names.  This allows some
+        powerful behavior, because it could use columns in the
+        database that are not mapped to RETS system names.
+      </para>
+
+      <figure id="fig-condition-rule">
+        <title>Condition Rule Dialog</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="condition_rule.png"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section> <!-- Condition Rules -->
+
+  </section> <!-- Groups -->
+
+</section> <!-- deploy -->
+
+<!--
+Local Variables:
+mode: xml
+sgml-parent-document: ("manual.xml" "" "section")
+End:
+-->

@@ -1,0 +1,204 @@
+Version 3.2.3 - 17 Oct 2010
+
+  * Remove activation filter.
+
+Version 3.2.2 - 17 Aug 2010
+
+  * Added ability to extract image data from the database in
+    addition to using pattern and XML file. Ticket #19.
+  * XmlMetadataDAO fails to properly write metadata.
+    Ticket #100.
+  * Admin GUI not recognizing the "strict-parsing" setting
+    from configuration files. Ticket #101.
+
+Version 3.2.1 - 30 Jun 2010
+
+  * Move Row Count to SQL Log. Ticket #18.
+  * Multiple comma separated EditMasks are allowed in the
+    TABLE EditMask field. Ticket #41.
+  * Handle the case where accounting stats get too
+    large. Ticket #58.
+  * Standard-XML format was non-functional. Ticket #67.
+  * Login Response not properly XML encoded. Ticket #78.
+  * Query grammar in 1.7.2 supports negative numbers. Ticket #79.
+  * An invalid or missing session cookie causes invalid
+    response. Ticket #81.
+  * Activation mishandles leading zero in activation code.
+    Ticket #99.
+
+Version 3.2.0b1 - 17 Dec 2009
+ 
+  * Remove duplicate metadata classes. Ticket #35.
+  * RestrictedIndicator allows special characters. Ticket #61.
+  * Add $basedir to build.xml. Ticket #63.
+  * Variman fails to install on 64 bit Windows. Ticket #64.
+  * Migrate to Hibernate3. Ticket #65.
+  * Change RetsConfig to allow for changeable persistence
+    mechanisms. Ticket #66.
+  * Detect RetsConfig changes and dynamically reload.
+    Ticket #69.
+  * .EMPTY. fails on Booleans. Ticket #70.
+  * Add Request Logging and Search Statistics. Ticket #71.
+  * Allow DefaultSearchTransaction with different
+    SearchSqlBuilders. Ticket #72.
+  * MaximumLength in Table metadata must be > 0. Ticket #74.
+  * RETS Character Type not properly handling .EMPTY. Ticket #75.
+  * DMQL Lexer incorrectly tokenizes strings beginning with
+    numbers. Ticket #76.
+  * Failure to find an image in an object-set does not
+    properly close the multi-part response. Ticket #77.
+
+Version 3.1.1 - 30 Sep 2009
+
+  * Strict Parsing flag not properly passed to
+    JDomCompactBuilder in admin tool. Ticket #59.
+  * getMetadata in STANDARD-XML fails compliance check.
+    Ticket #60.
+
+Version 3.1.0 - 23 Sep 2009
+
+  * Object ID of * misreported in error response. Ticket #26.
+  * .EMPTY. is failing on Lookups. Ticket #55.
+  * Format=STANDARD-XML Metadata fails DTD check. Ticket #56.
+  * Search using various forms of 1.7.2 DATETIME fails. Ticket#57.
+
+Version 3.0.0b5 - 31 Jul 2009
+
+  * Add cut/paste to all text components. Ticket #53.
+  * Log additional information if activation fails. Ticket #54.
+
+Version 3.0.0b4 - 15 Jul 2009
+
+  * Update User Documentation. Ticket #22.
+  * EditMask in Table Data Attribute wrong. Ticket #40.
+  * Include the Admin Tool in the WebApp dist. Ticket #42.
+    Note that the directory that used to be called "webapp"
+    is now called "variman" and can be copied to your
+    application server.
+  * Add Button Context wrong after adding Class. Ticket #43.
+  * Add MySQL support. Ticket #44.
+  * Switch to XDoclet2. Ticket #45.
+  * Make junit.jar an explicit dependency. Ticket #46.
+  * IOUtilsTest fails on Windows. Ticket #47.
+  * Metadata Editor should render tree in Alpha order.
+    Ticket #48.
+  * Added Activation. Ticket #49.
+  * COMPACT Fomat Delimiter found in data stream breaks
+    response. Ticket #51.
+  * .ANY. is failing on Lookup. Ticket #52.
+
+Version 3.0.0b3 - 29 Apr 2009
+
+  * Update Windows installation to use current Java-Service. 
+    Ticket #25.
+  * Update embedded Tommcat server to 6.0. Ticket #28.
+  * Refresh third party support libraries. Ticket #29.
+  * Update NullResultSet for JDBC 4.0. Ticket #34.
+  * Create Metadata and Image directory if don't exist. Ticket #36.
+  * Admin tool fails to delete Lookups. Ticket #37.
+  * COMPACT date rendering for pre 1.7.2 is wrong. Ticket #38.
+
+Version 3.0.0b2 - 13 Apr 2009
+
+  * Make Variman more tolerant of out of spec 1.5 metadata.
+  * Add Metadata Migration tool. Ticket #33.
+
+Version 3.0.0b1 - 06 Apr 2009
+
+  * Merged rets-client into Variman base.
+  * Add ability to listen on specific IP address. Ticket #15.
+  * Metadata Loader warns on DBName for METADATA-CLASS. Ticket #16.
+  * Metadata Loader warns on StandardName for METADATA-OBJECT. Ticket #17.
+  * Support X- extensions to metadata. Ticket #23.
+  * RETS 1.7.2 enhancements. Ticket #24.
+  * Added Metadata Editor to Admin tool. This is still experimental. Ticket #31.
+  
+Version 2.1.11 - 20 June 2007
+
+  * On queries with Count=2 return total count, ignoring offset and limit.
+  * <MAXROWS/> now returned at the end of COMPACT and COMPACT-DECODED format
+    if the row limit was exceeded
+  * Windows binary service version will now use my memory.  It was limited
+    to default of 512MB of heap, this has been increased to 1.5GB
+  * When running standalone, can now bind to specific IPs
+  * Developers can override default behaviour in some instances by
+    swapping interfaces using Swing.
+
+Version 2.1.10 - 05 July 2006
+
+  * Query count limit added to group preferences.
+  * Added "Cache-Control: private" header to all transactions.
+
+Version 2.1.9 - 21 March 2006
+
+  * Spaces are now allowed in wildcard searchs by URL encoding them.
+  * Fix a bug in the DMQL parser when using wildcards, numbers, and letters.
+  * Fields with a lookup interpration but no valid lookup are logged.
+  * The Windows setup program removes old code before installation to avoid
+    out of date files when upgrading.
+  * Unit tests now run and complete on Windows.
+
+Version 2.1.8 - 25 January 2006
+
+  * The 'Default' attribute in Table metadata is ignored.
+  * The SQL log file follows log policy setup in Admin tool.
+  * Daily logging now actually rolls over every day, instead of weekly.
+  * Null alignments are skipped.
+  * Change Password is removed from capability URLs.
+  * All CCT code has been removed and the index page now shows the login URL.
+
+Version 2.1.7 - 27 September 2005
+
+  * Update rets-client to warn on metadata parse errors.
+  * Report proper SYSTEM metadata version in Login transaction.
+  * Decode to long values, then short values for COMPACT-DECODED.
+  * Add option to roll log file over every week, instead of by size.
+  * Make logging options configurable via administration GUI.
+  * Add an optional separate log file just for logging DMQL and SQL only.
+  * Add per-group time restrictions.
+
+Version 2.1.6 - 28 June 2005
+
+  * Fixed digest authorization for URIs with query strings.
+  * Added scroll bars to various lists in the admin tool.
+  * Fixed SQL generation for string literals.
+  * Honor default ordering.
+  * Implemented SQL generation for lookup multi fields.
+  * Add object set feature for flexible GetObject file naming using an
+    XML mapping file.
+  * Fixed null pointer when webapp is not installed as default (root) webapp.
+  * Add infinite loop detection to photo patterns.
+  * Add more error checking on GetObject root directory.
+
+Version 2.1.5 - 1 February 2005
+
+  * Fixed SQL generation for date fields.
+
+Version 2.1.4 - 21 January 2005
+
+  * COMPACT-DECODED decodes lookups to short value.
+  * Add per-group record limits.
+
+Version 2.1.3 - 14 January 2005
+
+  * Metadata gets filtered according to group filtering rules.
+  * Added condition rules to filter based on arbitry SQL conditions.
+
+Version 2.1.2 - 20 December 2004
+
+  * Renamed to Variman.
+
+Version 2.1.1 - 12 November 2004
+
+  * Location support in GetObject.
+  * Update multipart GetObject behavior to reflect 1.7.
+  * Fix DMQL parsing error for numbers.
+
+Version 2.1.0 - 12 October 2004
+
+  * Groups support.
+  * Support for larger data sets on  SQLServer.
+  * Full GetObject support (including multipart).
+  * Improved stability.
+  * New reference manual.
+  * Improved administration tool.

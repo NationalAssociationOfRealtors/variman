@@ -1,0 +1,923 @@
+<?xml version="1.0"?>
+<project default = "build" basedir="." name="variman">
+
+  <!-- set global properties for this build -->
+  <property file="${basedir}/project/project.properties" />
+  <property name="project.string" value="${project.name}-${project.version}"/>
+
+  <!-- This must be done before any other propertes -->
+  <property file="${basedir}/build.properties" />
+  <property file="${user.home}/.build.properties" />
+  <property file="${basedir}/project/build.properties" />
+
+  <property name="rets-client.jar" value="${basedir}/build/rets-client/rets-client.jar" />
+
+  <fileset id="hibernate.mapping.files" dir="project/hibernate/mappings">
+    <include name="**/*.hbm.xml" />
+  </fileset>
+
+  <!-- The following properties may be overriden by the user -->
+  <property name="compile.optimize" value="off"/>
+  <property name="compile.debug" value="on"/>
+  <property name="compile.deprecation" value="off"/>
+  <property name="hibernate.schema.text.only" value="yes"/>
+  <property name="hibernate.schema.quiet" value="yes"/>
+
+  <path id="hibernate.path">
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${log4j.jar}"/>
+    <pathelement path="${antlr.jar}"/>
+    <pathelement path="${jdom.jar}"/>
+    <pathelement path="${rets-client.jar}"/>
+    <pathelement path="${commons-codec.jar}"/>
+    <pathelement path="${commons-collections.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
+    <pathelement path="${dtdparser.jar}"/>
+    <!-- Spring 3
+    <pathelement path="${spring.aop.jar}"/>
+    <pathelement path="${spring.aspects.jar}"/>
+    <pathelement path="${spring.beans.jar}"/>
+    <pathelement path="${spring.context.jar}"/>
+    <pathelement path="${spring.context.support.jar}"/>
+    <pathelement path="${spring.core.jar}"/>
+    <pathelement path="${spring.expression.jar}"/>
+    <pathelement path="${spring.instrument.jar}"/>
+    <pathelement path="${spring.instrument.classloading.jar}"/>
+    <pathelement path="${spring.integration.tests.jar}"/>
+    <pathelement path="${spring.jdbc.jar}"/>
+    <pathelement path="${spring.jms.jar}"/>
+    <pathelement path="${spring.orm.jar}"/>
+    <pathelement path="${spring.oxm.jar}"/>
+    <pathelement path="${spring.test.jar}"/>
+    <pathelement path="${spring.transaction.jar}"/>
+    <pathelement path="${spring.web.jar}"/>
+    <pathelement path="${spring.web.portlet.jar}"/>
+    <pathelement path="${spring.web.servlet.jar}"/>
+    -->
+    <pathelement path="${spring.jar}"/>
+  </path>
+
+  <path id="lib.path">
+    <pathelement path="${ant.jar}"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <!--pathelement path="${dom4j.jar}"/-->
+    <pathelement path="${hibernate.jar}"/>
+    <fileset dir="${vendor.path}/xml" includes="*.jar"/>
+    <pathelement path="${hibernate-ext.tools.jar}"/>
+    <pathelement path="${mysql.jdbc.jar}"/>
+    <pathelement path="${postgres.jdbc.jar}"/>
+    <pathelement path="${jtds.jdbc.jar}"/>
+    <pathelement path="${jdom.jar}"/>
+    <pathelement path="${log4j.jar}"/>
+    <pathelement path="${slf4j-log4j12.jar}"/>
+  	<pathelement path="${dtdparser.jar}"/>
+  </path>
+
+  <path id="embedded.path">
+    <fileset dir="${tomcat.lib}" includes="*.jar"/>
+    <pathelement path="${tomcat.bootstrap.jar}"/>
+  </path>
+
+  <path id="webapp.path">
+    <pathelement path="${servlet.jar}"/>
+    <pathelement path="${log4j.jar}"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
+    <pathelement path="${rets-client.jar}"/>
+    <pathelement location="build/embedded/classes"/>
+    <pathelement path="${hibernate.jar}"/>
+    <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
+    <pathelement path="${jdom.jar}"/>
+    <pathelement path="${httpunit.jar}"/>
+    <pathelement path="${js.jar}"/>
+    <pathelement path="${nekohtml.jar}"/>
+    <pathelement path="${antlr.jar}"/>
+    <pathelement path="${commons-codec.jar}"/>
+    <pathelement path="${spring.jar}"/>
+  </path>
+
+  <path id="webapp.test.path">
+    <path refid="webapp.path"/>
+    <fileset dir="${hamcrest.lib}" includes="*.jar"/>
+    <fileset dir="${jmock.lib}" includes="*.jar"/>
+    <pathelement location="build/hibernate/test/classes"/>
+    <pathelement location="build/rets-server/variman/WEB-INF/classes"/>
+  </path>
+
+  <path id="admin.path">
+    <pathelement path="${jdom.jar}"/>
+    <pathelement path="${hibernate.jar}"/>
+    <pathelement path="${log4j.jar}"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
+    <pathelement path="${rets-client.jar}"/>
+    <pathelement path="${apple-java-ext.jar}"/>
+    <pathelement path="build/hibernate/jar/${project.name}-hibernate.jar"/>
+  </path>
+
+  <path id="rets-client.path">
+    <pathelement path="${jdom.jar}"/> 
+    <pathelement path="${commons-codec.jar}"/>
+    <pathelement path="${commons-httpclient.jar}"/>
+    <pathelement path="${commons-lang.jar}"/>
+    <pathelement path="${commons-logging.jar}"/>
+    <pathelement path="${apple-java-ext.jar}"/> 
+    <pathelement path="${log4j.jar}"/>
+  </path>
+
+  <path id="xdoclet.path">
+    <pathelement path="${ant.home}/lib/ant.jar" />
+    <fileset dir="${xdoclet.lib}" includes="*.jar"/>
+  </path>
+
+  <target name="test-jvm-version" description="Determine the JVM version">
+    <condition property="isJDK1.5">
+      <and>
+        <equals arg1="${ant.java.version}" arg2="1.5"/>
+      </and>
+    </condition>
+  </target>
+
+  <target name="setup-java-sql1.5" if="isJDK1.5">
+    <copy overwrite="yes"
+          file="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java1.5"
+        tofile="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java"
+    />
+  </target>
+
+  <target name="setup-java-sql1.6" unless="isJDK1.5">
+    <copy overwrite="yes"
+          file="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java1.6"
+        tofile="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java"
+    />
+  </target>
+
+  <target name="prepare" depends="test-jvm-version,setup-java-sql1.5,setup-java-sql1.6">
+    <mkdir dir="build/hibernate/final/classes"/>
+    <mkdir dir="build/hibernate/generated"/>
+    <mkdir dir="build/hibernate/generated/org/realtors/rets/server/dmql"/>
+    <mkdir dir="build/hibernate/schema"/>
+    <mkdir dir="build/hibernate/jar"/>
+    <mkdir dir="build/hibernate/classes"/>
+    <mkdir dir="build/hibernate/test/classes"/>
+    <mkdir dir="build/hibernate/doc"/>
+    <mkdir dir="build/hibernate/xdoclet"/>
+    <mkdir dir="build/embedded/classes"/>
+    <mkdir dir="build/rets-server/server/lib"/>
+    <mkdir dir="build/rets-server/variman/WEB-INF/classes"/>
+    <mkdir dir="build/rets-server/variman/WEB-INF/lib"/>
+    <mkdir dir="build/rets-server/variman/WEB-INF/rets"/>
+    <mkdir dir="build/rets-server/admin/lib"/>
+    <mkdir dir="build/rets-server/admin/classes"/>
+    <mkdir dir="build/rets-server/logs"/>
+    <mkdir dir="build/webapp/test/classes"/>
+    <mkdir dir="build/admin/classes"/>
+    <mkdir dir="build/admin/bin"/>
+    <mkdir dir="build/admin/test/classes"/>
+    <mkdir dir="build/rets-client/classes"/>
+    <mkdir dir="build/rets-client/tests/classes"/>
+    <mkdir dir="build/tests"/>
+    <mkdir dir="dist" />
+  </target>
+
+  <target name="build" description="Build all"
+          depends="build-hibernate,build-webapp,build-admin" />
+
+  <target name="build-hibernate" depends="build-hibernate-xdoclet,build-rets-client">
+    <property name="src.antlr.dir"
+              value="${basedir}/project/hibernate/java/org/realtors/rets/server/dmql"/>
+    <property name="build.antlr.dir"
+              value="${basedir}/build/hibernate/generated/org/realtors/rets/server/dmql"/>
+    <antlr dir="${src.antlr.dir}"
+           target="${src.antlr.dir}/dmql.g"
+           outputdirectory="${build.antlr.dir}"
+           trace="yes">
+      <classpath>
+        <pathelement location="${antlr.jar}"/>
+      </classpath>
+    </antlr>
+    <antlr dir="${src.antlr.dir}"
+           target="${src.antlr.dir}/dmql2.g"
+           glib="${src.antlr.dir}/dmql.g"
+           outputdirectory="${build.antlr.dir}"
+    >
+      <classpath>
+        <pathelement location="${antlr.jar}"/>
+      </classpath>
+    </antlr>
+    <antlr dir="${src.antlr.dir}"
+           target="${src.antlr.dir}/dmql-tree.g"
+           glib="${src.antlr.dir}/dmql.g"
+           outputdirectory="${build.antlr.dir}"
+    >
+      <classpath>
+        <pathelement location="${antlr.jar}"/>
+      </classpath>
+    </antlr>
+    <javac destdir="build/hibernate/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <src path="project/hibernate/java"/>
+      <src path="build/hibernate/generated"/>
+      <classpath>
+        <path refid="hibernate.path" />
+      </classpath>
+    </javac>
+    <javac srcdir="project/hibernate/test/java"
+           destdir="build/hibernate/test/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="hibernate.path" />
+        <pathelement location="build/hibernate/classes"/>
+        <pathelement path="${junit.jar}"/>
+      </classpath>
+    </javac>
+    <copy todir="build/hibernate/test/classes">
+      <fileset dir="project/hibernate/test/java" includes="**/*"
+               excludes="**/*.java"/>
+    </copy>
+
+    <jar destfile="build/hibernate/jar/${project.name}-hibernate.jar"
+         basedir="build/hibernate/classes"
+         excludes="hibernate.properties" index="true"/>
+  </target>
+
+  <target name="build-hibernate-xdoclet" depends="prepare"
+          description="Run xdoclet on the hibernate classes">
+    <taskdef name="hibernatedoclet"
+             classname="org.xdoclet.ant.XDocletTask">
+      <classpath>
+        <path refid="xdoclet.path"/>
+        <path location="${xdoclet.hibernate.jar}"/>
+      </classpath>
+    </taskdef>
+
+    <hibernatedoclet>
+      <fileset dir="project/hibernate/java" includes="**/*.java"/>
+      <component
+                classname="org.xdoclet.plugin.hibernate.HibernateMappingPlugin"
+                destdir="${basedir}/build/hibernate/xdoclet"
+                mergedir="project/hibernate/java"
+                version="3.0"
+        />
+    </hibernatedoclet>
+    <jar destfile="build/hibernate/jar/${project.name}-hbm-xml.jar"
+         basedir="build/hibernate/xdoclet" index="true"
+         excludes="**/metadata/*"/>
+    <copy todir="build/rets-server/variman/WEB-INF/classes"
+          file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
+  </target>
+
+  <target name="build-hibernate-xschema" depends="build-hibernate"
+          description="creates the schema">
+    <taskdef name="schemaexport"
+             classname="org.hibernate.tool.hbm2ddl.SchemaExportTask">
+      <classpath>
+        <path refid="lib.path"/>
+        <fileset dir="${hibernate.lib}" includes="*.jar"/>
+        <pathelement path="build/hibernate/classes"/>
+      </classpath>
+    </taskdef>
+
+    <schemaexport properties="project/hibernate/config/hibernate.properties"
+                  quiet="${hibernate.schema.quiet}"
+                  text="${hibernate.schema.text.only}"
+                  drop="no" delimiter=";"
+                  output="build/hibernate/schema/xschema-export.sql">
+      <fileset dir="build/hibernate/xdoclet">
+        <include name="**/*.hbm.xml"/>
+      </fileset>
+    </schemaexport>
+  </target>
+
+  <target name="hibernate-run">
+    <copy todir="build/hibernate/jar"
+          file="project/hibernate/config/hibernate.properties"/>
+    <copy todir="build/hibernate/jar"
+          file="project/hibernate/config/cache.ccf"/>
+    <java classname="org.realtors.rets.server.Admin"
+          fork="true">
+<!--       <jvmarg line="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"/> -->
+      <classpath>
+        <path refid="hibernate.path" />
+        <pathelement location="build/hibernate/jar/${project.name}-hibernate.jar"/>
+        <pathelement location="build/hibernate/jar"/>
+        <fileset dir="${hibernate.lib}" includes="*.jar"/>
+        <pathelement location="${mysql.jdbc.jar}"/>
+        <pathelement location="${postgres.jdbc.jar}"/>
+        <pathelement location="${jtds.jdbc.jar}"/>
+      </classpath>
+      <arg line="${admin.args}"/>
+    </java>
+  </target>
+
+  <target name="doc-api" depends="prepare" description="build the api docs">
+    <javadoc packagenames="org.realtors.rets.*"
+             destdir="build/doc/api"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Retzilla API"
+             private="${javadoc.private}"
+             doctitle="Variman API">
+      <link offline="true"
+            href="http://java.sun.com/j2se/1.3/docs/api/"
+            packageListLoc="${javadoc.1.3.local}"/>
+      <sourcepath>
+        <pathelement location="project/embedded/java"/>
+        <pathelement location="project/hibernate/java"/>
+        <pathelement location="project/webapp/java"/>
+      </sourcepath>
+      <classpath>
+        <path refid="hibernate.path"/>
+        <path refid="lib.path"/>
+        <path refid="embedded.path"/>
+        <path refid="webapp.path"/>
+      </classpath>
+      <tag name="hibernate.class" scope="all" description="Hibernate Class"/>
+      <tag name="hibernate.id" scope="all" description="Hibernate ID"/>
+      <tag name="hibernate.many-to-one" scope="all"
+           description="Hibernate Many-To-One"/>
+      <tag name="hibernate.property" scope="all"
+           description="Hibernate Property"/>
+      <tag name="hibernate.column" scope="all"
+           description="Hibernate Column"/>
+      <tag name="hibernate.collection-key" scope="all"
+           description="Hibernate Collection-Key"/>
+      <tag name="hibernate.collection-many-to-many" scope="all"
+           description="Hibernate Collection-Many-To-Many"/>
+      <tag name="hibernate.collection-element" scope="all"
+           description="Hibernate Collection-Element"/>
+      <tag name="hibernate.set" scope="all" description="Hibernate Set"/>
+      <tag name="hibernate.collection-one-to-many" scope="all"
+           description="Hibernate Collection-One-To-Many"/>
+      <tag name="hibernate.map" scope="all" description="Hibernate Map"/>
+      <tag name="hibernate.collection-index" scope="all"
+           description="Hibernate Collection-Index"/>
+      <tag name="hibernate.jcs-cache" scope="all"
+          description="Hibernate JCD Cache"/>
+      <tag name="hibernate.collection-jcs-cache" scope="all"
+          description="Hibernate Collection JCD Cache"/>
+      <tag name="web.servlet-mapping" scope="all"
+           description="Servlet Mapping"/>
+      <tag name="web.servlet" scope="all" description="Servlet"/>
+      <tag name="web.filter" scope="all" description="Filter"/>
+      <tag name="web.filter-init-param" scope="all"
+           description="Filter Init-Param"/>
+    </javadoc>
+  </target>
+
+  <target name="doc-manual" description="Builds DocBook manual">
+    <property name="dest-dir" value="build/rets-server/doc/manual" />
+    <copy todir="build/doc/xsl" overwrite="true">
+      <fileset dir="project/doc/xsl"/>
+      <filterset>
+        <filter token="DOCBOOK_XSL_HOME" value="${docbook-xsl.home}"/>
+      </filterset>
+    </copy>
+    <delete dir="${dest-dir}"/>
+    <xslt basedir="project/doc/manual" destdir="${dest-dir}"
+          style="build/doc/xsl/ldp-html-chunk.xsl" includes="manual.xml">
+      <param name="base.dir" expression="${basedir}/${dest-dir}/"/>
+      <xmlcatalog>
+        <catalogpath>
+          <pathelement location="${docbookx-4.1.2.catalog}" />
+          <pathelement location="${docbook-4.2.catalog}" />
+        </catalogpath>
+      </xmlcatalog>
+    </xslt>
+    <copy todir="${dest-dir}">
+      <fileset dir="project/doc/manual" excludes="*.xml"/>
+    </copy>
+
+    <!-- Not sure why this file gets generated, but it's empty, so get
+    rid of it -->
+    <delete file="${dest-dir}/manual.html"/>
+  </target>
+
+  <target name="doc" depends="doc-api"
+          description="Build generated documentation"/>
+
+  <target name="build-embedded" depends="prepare,build-rets-client">
+    <depend srcDir="project/embedded/java"
+            destDir="build/embedded/classes"
+            cache="build/embedded/depcache" closure="yes">
+      <classpath>
+        <path refid="embedded.path" />
+      </classpath>
+    </depend>
+    <javac srcdir="project/embedded/java"
+           destdir="build/embedded/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="embedded.path" />
+      </classpath>
+    </javac>
+
+    <copy todir="build/rets-server/server/conf">
+      <fileset dir="project/embedded/config" includes="*"/>
+    </copy>
+    <copy file="project/webapp/config/tomcat-users.xml"
+          todir="build/rets-server/server/conf"/>
+    <copy file="project/webapp/config/tomcat.logging.properties"
+          todir="build/rets-server/server/conf"/>
+    <copy todir="build/rets-server/server/lib">
+        <fileset dir="${tomcat.lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </copy>
+    <copy todir="build/rets-server/server/lib">
+       <fileset dir="${tomcat.bin}">
+          <include name="*.jar"/>
+       </fileset>
+   </copy>
+
+    <copy todir="build/rets-server/doc">
+      <fileset dir="doc" includes="**/*"/>
+    </copy>
+    <copy todir="build/rets-server" file="LICENSE.TXT"/>
+    <copy tofile="build/rets-server/server/lib/log4j.jar" file="${log4j.jar}"/>
+
+    <taskdef name="jar-manifest"
+             classname="org.realtors.rets.server.JarManifestTask"
+             classpath="build/hibernate/classes"/>
+    <jar-manifest main="org.realtors.rets.server.tomcat.EmbeddedTomcat"
+                  destfile="build/embedded/${project.name}-server.manifest">
+      <classpath dir="build/rets-server" includes="server/lib/*.jar"/>
+    </jar-manifest>
+    <jar jarfile="build/rets-server/${project.name}.jar"
+         basedir="build/embedded/classes"
+         manifest="build/embedded/${project.name}-server.manifest"/>
+  </target>
+
+  <target name="build-rets-client" depends="prepare">
+      <depend srcDir="project/rets-client/java"
+              destDir="build/rets-client/classes"
+              cache="build/rets-client/depcache" closure="yes">
+          <classpath>
+              <path refid="rets-client.path" />
+          </classpath>
+      </depend>
+      <javac srcdir="project/rets-client/java"
+             destdir="build/rets-client/classes"
+             target="${compile.vmtarget}" source="${compile.vmsource}"
+             optimize="${compile.optimize}"
+             debug="${compile.debug}"
+             deprecation="${compile.deprecation}">
+          <classpath>
+            <path refid="rets-client.path" />
+          </classpath>
+      </javac>
+
+      <copy todir="build/rets-server/server/conf">
+          <fileset dir="project/rets-client/conf" includes="*"/>
+      </copy>
+
+      <jar jarfile="${rets-client.jar}"
+           basedir="build/rets-client/classes"/>
+  </target>
+      
+  <target name="test-rets-client" depends="build-rets-client">
+      <depend srcDir="project/rets-client/junit"
+              destDir="build/rets-client/tests/classes"
+              cache="build/rets-client/tests/depcache" closure="yes">
+              <classpath>
+                  <pathelement path="${rets-client.jar}"/>
+              <path refid="rets-client.path" />
+              </classpath>
+      </depend>
+      <javac srcdir="project/rets-client/junit"
+              destdir="build/rets-client/tests/classes"
+              target="${compile.vmtarget}" source="${compile.vmsource}"
+              optimize="${compile.optimize}"
+              debug="${compile.debug}"
+              deprecation="${compile.deprecation}">
+              <classpath>
+                  <path refid="rets-client.path" />
+                  <pathelement path="${rets-client.jar}"/>
+                  <pathelement path="${junit.jar}"/>
+              </classpath>
+      </javac>
+      <copy todir="build/rets-client/tests/classes">
+              <fileset dir="project/rets-client/junit" 
+                      includes="**/*"
+                      excludes="**/*.java"
+              />
+      </copy>
+      
+      <junit printsummary="yes" haltonfailure="yes">
+              <classpath>
+                    <pathelement location="build/rets-client/tests/classes"/>
+                    <pathelement location="build/rets-client/classes"/>
+                    <path refid="rets-client.path"/>
+                    <pathelement path="${java.class.path}"/>
+                    <pathelement path="${junit.jar}"/>
+              </classpath>
+              <formatter type="brief"/>
+              
+              <test name="org.realtors.rets.common.metadata.AllTests"
+                      outfile="build/tests/metadata"
+              />
+              <test name="org.realtors.rets.client.AllTests"
+                      outfile="build/tests/results"
+              />
+      </junit>
+</target>
+
+  <target name="build-webapp-webdoclet">
+    <taskdef name="webdoclet" classname="org.xdoclet.ant.XDocletTask">
+      <classpath>
+        <path refid="xdoclet.path"/>
+        <path location="${xdoclet.web.jar}"/>
+        <pathelement location="${servlet.jar}"/>
+      </classpath>
+    </taskdef>
+
+    <webdoclet>
+        <fileset dir="project/webapp/java" includes="**/*.java"/>
+
+        <component
+            classname="org.xdoclet.plugin.web.WebPlugin"
+            destdir="${basedir}/build/rets-server/variman/WEB-INF"
+            mergedir="file:${basedir}/project/webapp/config/web-merge/"
+            servletversion="2.3"
+        />
+        <component
+            classname="org.xdoclet.plugin.web.TaglibPlugin"
+            jspversion="1.2"
+            destdir="${basedir}/build/rets-server/variman/WEB-INF"
+            filereplace="cct.tld"
+            shortname="cct"
+            validate="false"
+        />
+    </webdoclet>
+  </target>
+
+  <target name="build-webapp" depends="build-hibernate,build-embedded,build-rets-client"
+          description="Build webapp">
+    <depend srcDir="project/webapp/java"
+            destDir="build/rets-server/variman/WEB-INF/classes"
+            cache="build/depcache" closure="yes">
+      <classpath>
+        <path refid="webapp.path"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/webapp/java"
+           destdir="build/rets-server/variman/WEB-INF/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="webapp.path"/>
+      </classpath>
+    </javac>
+
+    <depend srcDir="project/webapp/test/java"
+            destDir="build/webapp/test/classes"
+            cache="build/depcache" closure="yes">
+      <classpath>
+        <path refid="webapp.test.path"/>
+        <pathelement path="${junit.jar}"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/webapp/test/java"
+           destDir="build/webapp/test/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="webapp.test.path"/>
+        <pathelement path="${junit.jar}"/>
+      </classpath>
+    </javac>
+
+    <copy todir="build/rets-server/webapp">
+      <fileset dir="project/webapp/content" includes="**/*"/>
+    </copy>
+
+    <copy todir="build/rets-server/variman/WEB-INF/classes">
+      <fileset dir="project/webapp/java" includes="**/*" excludes="**/*.java"/>
+    </copy>
+    <copy todir="build/webapp/test/classes">
+      <fileset dir="project/webapp/test/java" includes="**/*"
+               excludes="**/*.java"/>
+    </copy>
+    <propertyfile file="build/rets-server/variman/WEB-INF/classes/${project.name}-webapp.properties">
+      <entry key="version" value="${project.version}" />
+      <entry key="build-date" type="date" value="now" />
+    </propertyfile>
+
+    <antcall target="build-webapp-webdoclet"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="build/hibernate/jar/${project.name}-hibernate.jar"/>
+    <copy todir="build/rets-server/variman/WEB-INF/classes"
+          file="build/hibernate/jar/${project.name}-hbm-xml.jar"/>
+    <copy todir="build/rets-server/variman/WEB-INF/classes"
+          file="project/hibernate/config/cache.ccf"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${rets-client.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${commons-lang.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${commons-logging.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${log4j.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${slf4j-log4j12.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${hibernate.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib">
+      <fileset dir="${hibernate.lib}" includes="*.jar" excludes="commons-collections*.jar" />
+    </copy>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${mysql.jdbc.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${postgres.jdbc.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${jtds.jdbc.jar}"/>
+    <!-- Antlr Jar is provided by "hibernate.lib".
+    <copy todir="build/rets-server/variman/WEB-INF/lib" file="${antlr.jar}"/>
+    -->
+    <copy todir="build/rets-server/variman/WEB-INF/lib" file="${jdom.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${commons-codec.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${commons-collections.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+           file="${dtdparser.jar}"/>
+  	
+    <!-- Spring 3
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.aop.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.aspects.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.beans.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.context.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.context.support.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.core.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.expression.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.instrument.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.instrument.classloading.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.integration.tests.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.jdbc.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.jms.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.orm.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.oxm.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.test.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.transaction.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.web.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.web.portlet.jar}"/>
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.web.servlet.jar}"/>
+    -->
+    <copy todir="build/rets-server/variman/WEB-INF/lib"
+          file="${spring.jar}"/>
+
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
+          file="project/webapp/config/rets-config.xml"/>
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
+          file="project/webapp/config/rets-config.xml.dist"/>
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
+          file="project/webapp/config/rets-logging.properties"/>
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
+          file="project/webapp/config/rets-logging.properties.dist"/>
+    <copy todir="build/rets-server/variman/WEB-INF"
+          file="project/webapp/config/spring-appContext.xml"/>
+    <copy todir="build/rets-server/variman/WEB-INF/rets"
+          file="project/webapp/config/standardnames.xml"/>
+    <copy todir="build/rets-server/variman/WEB-INF/rets">
+          <fileset dir="project/webapp/config" includes="*.dtd"/>
+    </copy>
+  </target>
+
+  <target name="build-admin" depends="build-hibernate"
+          description="Builds the admin tool">
+    <depend srcDir="project/admin/java"
+            destDir="build/admin/classes"
+            cache="build/admin/depcache" closure="yes">
+      <classpath>
+        <path refid="admin.path"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/admin/java"
+           destdir="build/admin/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="admin.path"/>
+      </classpath>
+    </javac>
+    <copy todir="build/rets-server/admin/classes">
+      <fileset dir="project/admin/java" includes="**/*" excludes="**/*.java"/>
+    </copy>
+    <propertyfile file="build/rets-server/admin/classes/${project.name}-admin.properties">
+      <entry key="version" value="${project.version}" />
+      <entry key="build-date" type="date" value="now" />
+    </propertyfile>
+    <copy file="build/hibernate/jar/${project.name}-hbm-xml.jar"
+          todir="build/rets-server/admin/classes"/>
+    <!-- Put Bootstrap class in its own jar.  This is necessary for
+         the classloader games -->
+    <jar destfile="build/rets-server/admin/lib/${project.name}-admin-core.jar"
+         basedir="build/admin/classes"
+         excludes="org/realtors/rets/server/admin/Bootstrap*.class"/>
+    <jar destfile="build/rets-server/${project.name}-admin.jar"
+         basedir="build/admin/classes"
+         includes="org/realtors/rets/server/admin/Bootstrap*.class">
+      <manifest>
+        <attribute name="Main-Class"
+                   value="org.realtors.rets.server.admin.Bootstrap"/>
+      </manifest>
+    </jar>
+    <copy file="${commons-logging.jar}" todir="build/rets-server/admin/lib"/>
+
+    <!-- build the test code -->
+    <depend srcDir="project/admin/test/java"
+            destDir="build/admin/test/classes"
+            cache="build/admin/test/depcache" closure="yes">
+      <classpath>
+        <path refid="admin.path"/>
+        <pathelement location="build/admin/classes"/>
+      </classpath>
+    </depend>
+    <javac srcdir="project/admin/test/java"
+           destdir="build/admin/test/classes"
+           target="${compile.vmtarget}" source="${compile.vmsource}"
+           optimize="${compile.optimize}" debug="${compile.debug}"
+           deprecation="${compile.deprecation}">
+      <classpath>
+        <path refid="admin.path"/>
+        <pathelement location="build/admin/classes"/>
+        <pathelement path="${junit.jar}"/>
+      </classpath>
+    </javac>
+
+    <copy file="project/admin/shell/${project.name}" todir="build/admin/bin"/>
+    <chmod file="build/admin/bin/${project.name}" perm="ugo+rx"/>
+  </target>
+
+  <target name="test" description="Run all unit tests" depends="build, test-rets-client">
+    <junit printsummary="no" haltonfailure="no" fork="yes" forkmode="perBatch"
+      failureProperty="test.failure">
+      <classpath>
+        <pathelement path="${java.class.path}"/>
+        <pathelement location="build/hibernate/test/classes"/>
+        <pathelement location="build/webapp/test/classes"/>
+        <pathelement location="build/admin/test/classes"/>
+        <path refid="hibernate.path"/>
+        <path refid="webapp.path"/>
+        <path refid="webapp.test.path"/>
+        <path refid="lib.path"/>
+        <path refid="embedded.path"/>
+        <pathelement path="${servlet.jar}"/>
+        <pathelement path="${log4j.jar}"/>
+        <pathelement path="${commons-lang.jar}"/>
+        <pathelement path="${antlr.runtime.jar}"/>
+        <pathelement path="${junit.jar}"/>
+        <pathelement location="build/hibernate/classes"/>
+        <pathelement location="build/rets-server/variman/WEB-INF/classes"/>
+        <pathelement location="build/admin/classes"/>
+      </classpath>
+      <formatter type="brief" />
+      <jvmarg value="-Dtest.basedir=${basedir}"/>
+      <jvmarg value="-Dlog4j.configuration=${project.name}-test-log4j.xml"/>
+      <batchtest todir="build/tests">
+          <fileset dir="build/hibernate/test/classes"
+            includes="**/*Test.class" excludes="**/Abstract*.class" />
+          <fileset dir="build/webapp/test/classes"
+            includes="**/*Test.class" excludes="**/Abstract*.class" />
+          <fileset dir="build/admin/test/classes"
+            includes="**/*Test.class" excludes="**/Abstract*.class" />
+      </batchtest>
+    </junit>
+    <fail message="Tests failed" if="test.failure" />
+  </target>
+
+  <target name="dist" depends="dist-src,dist-bin"
+          description="Builds source and distribution"/>
+
+  <target name="dist-src" depends="prepare">
+    <tar destfile="dist/${project.string}-src.tar.gz" compression="gzip"
+         longfile="gnu">
+      <tarfileset dir="${basedir}"
+                  prefix="${project.string}">
+        <excludesfile name="project/build/dist-src-excludes"/>
+      </tarfileset>
+    </tar>
+    <zip destfile="dist/${project.string}-src.zip">
+      <zipfileset dir="${basedir}"
+                  prefix="${project.string}">
+        <excludesfile name="project/build/dist-src-excludes"/>
+      </zipfileset>
+    </zip>
+  </target>
+
+  <target name="dist-bin" depends="build, doc-manual">
+    <!-- Embedded -->
+    <tar destfile="dist/${project.string}.tar.gz" compression="gzip"
+         longfile="gnu">
+      <tarfileset dir="build/rets-server" prefix="${project.string}">
+        <excludesfile name="project/build/dist-bin-excludes"/>
+      </tarfileset>
+    </tar>
+    <!-- Web applications -->
+    <tar destfile="dist/${project.name}-webapp-${project.version}.tar.gz"
+         compression="gzip" longfile="gnu">
+      <tarfileset dir="build/rets-server"
+                  prefix="${project.name}-webapp-${project.version}"
+                  includes="admin/**,variman-admin.jar,variman/**,doc/**">
+        <excludesfile name="project/build/dist-bin-excludes"/>
+      </tarfileset>
+    </tar>
+    <zip destfile="dist/${project.name}-webapp-${project.version}.zip">
+      <zipfileset dir="build/rets-server"
+                  prefix="${project.name}-webapp-${project.version}"
+                  includes="admin/**,variman-admin.jar,variman/**,doc/**">
+        <excludesfile name="project/build/dist-bin-excludes"/>
+      </zipfileset>
+    </zip>
+  </target>
+
+  <target name="dist-win" description="Builds a Windows binary distribution"
+          depends="build, doc-manual">
+    <antcall target="dist-win-iss" />
+  </target>
+
+  <target name="dist-win-iss">
+    <copy file="project/build/${project.name}.iss" todir="build"
+          overwrite="true">
+      <filterset>
+        <filter token="VERSION" value="${project.version}"/>
+        <filter token="BASEDIR" value="${basedir}"/>
+        <filter token="COMPRESSION" value="${inno_setup.compression}"/>
+      </filterset>
+    </copy>
+    <copy file="${javaservice.exe}" tofile="build/rets-server/${project.name}.exe"/>
+    <copy file="${javaservice64.exe}" tofile="build/rets-server/${project.name}64.exe"/>
+    <echo message="Running Inno Setup compiler"/>
+    <exec executable="${inno_setup.iscc}"
+          output="build/iss.log"
+          failonerror="yes">
+      <arg value="${basedir}/build/${project.name}.iss"/>
+    </exec>
+  </target>
+
+
+  <target name="clean" description="Cleans all ant targets">
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>
+
+  <target name="full-classpath" description="string of full classpath">
+    <path id="full-classpath">
+      <path refid="hibernate.path"/>
+      <path refid="lib.path"/>
+      <path refid="embedded.path"/>
+      <path refid="webapp.path"/>
+    </path>
+    <property name="cp" refid="full-classpath"/>
+    <echo message="${cp}"/>
+  </target>
+
+  <target name="checkstyle" description="Runs checkstyle">
+    <taskdef resource="checkstyletask.properties"
+             classpath="${checkstyle.jar}"/>
+
+    <checkstyle config="project/build/default_checks.xml">
+      <fileset dir="project/admin/java" includes="**/*.java"/>
+      <fileset dir="project/embedded/java" includes="**/*.java"/>
+      <fileset dir="project/hibernate/java" includes="**/*.java"/>
+      <fileset dir="project/webapp/java" includes="**/*.java"/>
+      <property key="checkstyle.cache.file" file="build/client/cs-cache"/>
+    </checkstyle>
+    <echo message="All checks passed"/>
+  </target>
+  <target name="cs" depends="checkstyle" description="Runs checkstyle"/>
+
+</project>
