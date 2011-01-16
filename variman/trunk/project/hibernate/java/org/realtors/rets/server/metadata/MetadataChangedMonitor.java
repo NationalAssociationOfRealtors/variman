@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.NullArgumentException;
+import org.apache.log4j.Logger;
 
 /**
  * Monitors whether the RETS metadata has changed. If it has, then all the
@@ -20,13 +21,15 @@ import org.apache.commons.lang.NullArgumentException;
  */
 public class MetadataChangedMonitor implements Runnable {
 
+    private static final Logger LOG = Logger.getLogger(MetadataChangedMonitor.class);
+
     // Configuration Variables -----------------------------------------------
     private MetadataDao metadataDao;
     private List<MetadataChangedListener> metadataChangedListenerList;
 
     // State Variables -------------------------------------------------------
     private Date lastCheckDate = new Date(System.currentTimeMillis() - (1000L * 10));
-    private Object metadataChangedListenerListLock = new Object();
+    private final Object metadataChangedListenerListLock = new Object();
 
     /**
      * @return The metadata DAO to use to determine whether the metadata has
@@ -129,12 +132,16 @@ public class MetadataChangedMonitor implements Runnable {
      * @see java.lang.Runnable#run()
      */
     public void run() {
-        Date newLastCheckDate = new Date();
-        boolean hasChanged = hasChanged();
-        if (hasChanged) {
-            notifyListeners();
+        try {
+            Date newLastCheckDate = new Date();
+            boolean hasChanged = hasChanged();
+            if (hasChanged) {
+                notifyListeners();
+            }
+            setLastCheckDate(newLastCheckDate);
+        } catch (Exception e) {
+            LOG.fatal("Fatal error occurred in " + MetadataChangedMonitor.class.getName() + ". Timer Thread is probably dead.", e);
         }
-        setLastCheckDate(newLastCheckDate);
     }
 
     /**

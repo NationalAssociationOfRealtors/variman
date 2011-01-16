@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.log4j.Logger;
+
 /**
  * A Runnable monitor that periodically checks if the RetsConfig for the server
  * has changed and fires an event to registered RetsConfigListeners.
@@ -25,7 +26,7 @@ public class RetsConfigChangedMonitor implements Runnable {
 
     private List<RetsConfigChangedListener> retsConfigChangedListenerList = new ArrayList<RetsConfigChangedListener>();
     private Date lastCheckDate;
-    private Object retsConfigChangedListenerListLock = new Object();
+    private final Object retsConfigChangedListenerListLock = new Object();
 
     public void addRetsConfigChangedListener(RetsConfigChangedListener retsConfigChangedListener) {
         if (retsConfigChangedListener == null) {
@@ -37,7 +38,7 @@ public class RetsConfigChangedMonitor implements Runnable {
             }
         }
     }
-    
+
     public void removeRetsConfigChangedListener(RetsConfigChangedListener retsConfigChangedListener) {
         if (retsConfigChangedListener == null) {
             return;
@@ -46,7 +47,7 @@ public class RetsConfigChangedMonitor implements Runnable {
             this.retsConfigChangedListenerList.remove(retsConfigChangedListener);
         }
     }
-    
+
     public void setRetsConfigChangedListeners(List<RetsConfigChangedListener> retsConfigChangedListenerList) {
         synchronized (this.retsConfigChangedListenerListLock) {
             if (retsConfigChangedListenerList != null) {
@@ -60,13 +61,13 @@ public class RetsConfigChangedMonitor implements Runnable {
             this.retsConfigChangedListenerList = retsConfigChangedListenerList;
         }
     }
-    
+
     public List getRetsConfigChangedListeners() {
         synchronized (this.retsConfigChangedListenerListLock) {
             return this.retsConfigChangedListenerList;
         }
     }
-    
+
     protected void fireRetsConfigChangedEvent() {
         // Snag a copy of the current list so we can release the lock sooner
         RetsConfigChangedListener[] listeners = new RetsConfigChangedListener[1];
@@ -76,33 +77,36 @@ public class RetsConfigChangedMonitor implements Runnable {
         if (listeners == null) {
             return;
         }
-        
+
         for (int i = 0; i < listeners.length; i++) {
-                listeners[i].retsConfigChanged();
+            listeners[i].retsConfigChanged();
         }
     }
-    
+
     public void setRetsConfigDao(RetsConfigDao dao) {
         this.configDao = dao;
     }
-    
+
     public RetsConfigDao getRetsConfigDao() {
         return this.configDao;
     }
-    
+
     /*- (non-Javadoc)
      * @see java.lang.Runnable#run()
      */
     public void run() {
-        Date configChanged = this.configDao.getConfigChangedDate();
-        
-        // Simply grab the date on first load for later comparison
-        if (this.lastCheckDate == null) {
-            this.lastCheckDate = configChanged;
-        }
-        else if (configChanged.after(this.lastCheckDate)) {
-            this.lastCheckDate = configChanged;
-            fireRetsConfigChangedEvent();
+        try {
+            Date configChanged = this.configDao.getConfigChangedDate();
+
+            // Simply grab the date on first load for later comparison
+            if (this.lastCheckDate == null) {
+                this.lastCheckDate = configChanged;
+            } else if (configChanged.after(this.lastCheckDate)) {
+                this.lastCheckDate = configChanged;
+                fireRetsConfigChangedEvent();
+            }
+        } catch (Exception e) {
+            LOG.fatal("Fatal error occurred in " + RetsConfigChangedMonitor.class.getName() + ". Timer Thread is probably dead.", e);
         }
     }
 }
