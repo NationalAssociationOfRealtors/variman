@@ -11,6 +11,7 @@
 package org.realtors.rets.server.webapp.auth;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.SortedSet;
 import java.util.Iterator;
 
@@ -25,6 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.realtors.rets.server.PasswordMethod;
+import org.realtors.rets.server.ReplyCode;
+import org.realtors.rets.server.RetsReplyException;
+import org.realtors.rets.server.RetsUtils;
 import org.realtors.rets.server.User;
 import org.realtors.rets.server.RetsServerException;
 import org.realtors.rets.server.UserUtils;
@@ -99,6 +103,23 @@ public class AuthenticationFilter implements Filter, UserMap
         {
             doAuthentication(filterChain, request, response);
         }
+        catch (RetsReplyException e)
+        {
+            if (response.isCommitted())
+            {
+                // Nothing we can report to the client, so make sure to log
+                // this
+                LOG.error("Caught", e);
+            }
+            else
+            {
+                response.reset();
+                LOG.debug("Caught", e);
+                response.setContentType("text/xml");
+                PrintWriter out = response.getWriter();
+                RetsUtils.printEmptyRets(out, e.getReplyCode(), e.getMeaning());
+            }
+        }
         catch (ServletException e)
         {
             LOG.error("Caught", e);
@@ -113,6 +134,7 @@ public class AuthenticationFilter implements Filter, UserMap
         {
             MDC.remove("addr");
             MDC.remove("user");
+            MDC.remove("user-agent");
         }
     }
 
@@ -123,6 +145,9 @@ public class AuthenticationFilter implements Filter, UserMap
     {
         MDC.put("addr", request.getRemoteAddr());
         String userAgent = request.getHeader("User-Agent");
+        if (userAgent == null || userAgent.length() == 0) {
+            throw new RetsReplyException(ReplyCode.MISC_ERROR, "Missing required User-Agent request header. See the 'Required Client Request Header Fields' section in the RETS specification.");
+        }
         MDC.put("user-agent", userAgent);
         String uri = request.getRequestURI();
         String query = request.getQueryString();

@@ -3,6 +3,9 @@ Version 3.2.4 - xx xx 2011
   * The RetsConfigChangedMonitor and MetadataChangedMonitor Threads 
     Silently Die. Issue:2.
 
+  * NullPointerException Occurs When Required User-Agent Request 
+    Header is Missing. Issue:3.
+
 Version 3.2.3 - 17 Oct 2010
 
   * Remove activation filter.
