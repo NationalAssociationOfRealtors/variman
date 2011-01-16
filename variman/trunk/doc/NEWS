@@ -2,12 +2,12 @@ Version 3.2.4 - xx xx 2011
 
   * The RetsConfigChangedMonitor and MetadataChangedMonitor Threads 
     Silently Die. Issue:2.
-
   * NullPointerException Occurs When Required User-Agent Request 
     Header is Missing. Issue:3.
-
   * Internal Server Error occurs When User Requests Resource/Class 
     Combo with no Accessible Fields. Issue:4.
+  * GetObject Transaction Replies with Misc Error When Object Unavailable.
+    Issue:5.
 
 Version 3.2.3 - 17 Oct 2010
 

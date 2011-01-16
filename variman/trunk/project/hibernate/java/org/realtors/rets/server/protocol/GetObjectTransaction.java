@@ -12,6 +12,7 @@ package org.realtors.rets.server.protocol;
 
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,6 +97,10 @@ public class GetObjectTransaction
             {
                 executeMultipart(response, allObjects);
             }
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new RetsReplyException(ReplyCode.OBJECT_UNAVAILABLE);
         }
         catch (IOException e)
         {

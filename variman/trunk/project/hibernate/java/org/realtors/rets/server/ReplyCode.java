@@ -30,6 +30,8 @@ public class ReplyCode extends ValuedEnum
 
     public static final ReplyCode NO_OBJECT_FOUND =
         new ReplyCode("No Object Found", 20403);
+    public static final ReplyCode OBJECT_UNAVAILABLE = 
+        new ReplyCode("Object Unavailable", 20409);
 
     public static final ReplyCode INVALID_TYPE =
         new ReplyCode("Invalid Type", 20501);
