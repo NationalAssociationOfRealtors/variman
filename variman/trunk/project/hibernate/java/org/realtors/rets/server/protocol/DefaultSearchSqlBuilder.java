@@ -16,7 +16,6 @@ import java.util.SortedSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.realtors.rets.common.metadata.MetaObject;
 import org.realtors.rets.common.metadata.MetadataType;
 import org.realtors.rets.common.metadata.types.MClass;
 import org.realtors.rets.common.metadata.types.MResource;
@@ -218,6 +217,9 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
                                                  fields[i]);
                 }
                 columns.add(column);
+            }
+            if (columns.isEmpty()) {
+                throw new RetsReplyException(ReplyCode.MISC_SEARCH_ERROR, "No fields accessible from " + mParameters.getResourceId() + ":" + mParameters.getClassName());
             }
             return columns;
         }

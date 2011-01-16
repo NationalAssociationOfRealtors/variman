@@ -6,6 +6,9 @@ Version 3.2.4 - xx xx 2011
   * NullPointerException Occurs When Required User-Agent Request 
     Header is Missing. Issue:3.
 
+  * Internal Server Error occurs When User Requests Resource/Class 
+    Combo with no Accessible Fields. Issue:4.
+
 Version 3.2.3 - 17 Oct 2010
 
   * Remove activation filter.
