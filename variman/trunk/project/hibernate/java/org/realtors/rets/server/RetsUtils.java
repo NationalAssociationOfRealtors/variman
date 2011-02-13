@@ -43,6 +43,18 @@ public class RetsUtils
         printEmptyRets(out, replyCode.getValue(), replyCode.getName());
     }
 
+    public static void printRetsStatus(PrintWriter out, ReplyCode replyCode)
+    {
+        printRetsStatus(out, replyCode.getValue(), replyCode.getName());
+    }
+
+    public static void printRetsStatus(PrintWriter out, int replyCode,
+                                       String replyText)
+    {
+        out.println("<RETS-STATUS ReplyCode=\"" + replyCode + "\" " +
+                  "ReplyText=\"" + replyText + "\"/>");
+    }
+
     public static void printCloseRets(PrintWriter out)
     {
         out.println("</RETS>");

@@ -254,11 +254,16 @@ public class DefaultSearchTransaction implements SearchTransaction
 
     private SearchTransactionStatistics printCountOnly(PrintWriter out)
     {
+        ReplyCode replyCode = ReplyCode.SUCCESSFUL;
         RetsUtils.printOpenRetsSuccess(out);
         printCount(out);
+        if (mCount == 0) {
+            replyCode = ReplyCode.NO_RECORDS_FOUND;
+            RetsUtils.printRetsStatus(out, replyCode);
+        }
         RetsUtils.printCloseRets(out);
 
-        SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(ReplyCode.SUCCESSFUL.getValue(), ReplyCode.SUCCESSFUL.getName(), mCount, null);
+        SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(replyCode.getValue(), replyCode.getName(), mCount, null);
         return statistics;
     }
 
@@ -295,15 +300,21 @@ public class DefaultSearchTransaction implements SearchTransaction
         mCount = Math.min(mCount, mLimit);
         SearchResultsFormatter formatter = getFormatter();
 
+        ReplyCode replyCode = ReplyCode.SUCCESSFUL;
         RetsUtils.printXmlHeader(out);
         RetsUtils.printOpenRetsSuccess(out);
         printCount(out);
         formatter.formatResults(context);
-        LOG.debug("Row count: " + context.getRowCount());
-        SQL_LOG.info("Row Count: " + context.getRowCount());
+        int rowCount = context.getRowCount();
+        LOG.debug("Row count: " + rowCount);
+        SQL_LOG.info("Row Count: " + rowCount);
+        if (rowCount == 0) {
+            replyCode = ReplyCode.NO_RECORDS_FOUND;
+            RetsUtils.printRetsStatus(out, replyCode);
+        }
         RetsUtils.printCloseRets(out);
 
-        SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(ReplyCode.SUCCESSFUL.getValue(), ReplyCode.SUCCESSFUL.getName(), mCount, context.getRowCount());
+        SearchTransactionStatistics statistics = new ImmutableSearchTransactionStatistics(replyCode.getValue(), replyCode.getName(), mCount, rowCount);
         return statistics;
     }
 
