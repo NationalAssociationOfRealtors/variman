@@ -297,7 +297,6 @@ public class DefaultSearchTransaction implements SearchTransaction
         context.setClassStandardName(mSearchSqlBuilder.getClassStandardName());
         context.setResourceStandardName(mSearchSqlBuilder.getResourceStandardName());
         context.setStandardNames(mParameters.isStandardNames());
-        mCount = Math.min(mCount, mLimit);
         SearchResultsFormatter formatter = getFormatter();
 
         ReplyCode replyCode = ReplyCode.SUCCESSFUL;
