@@ -67,7 +67,11 @@ public class SearchParameters
 
     private void initOffset(String offset)
     {
-        mOffset = NumberUtils.toInt(offset, 1);
+        try {
+            mOffset = NumberUtils.createInteger(offset);
+        } catch (NumberFormatException e) {
+            mOffset = null;
+        }
     }
 
     private void initLimit(String limit)
@@ -237,7 +241,7 @@ public class SearchParameters
         return mLimit;
     }
 
-    public int getOffset()
+    public Integer getOffset()
     {
         return mOffset;
     }
@@ -321,7 +325,7 @@ public class SearchParameters
     private boolean mStandardNames;
     private String[] mSelect;
     private int mLimit;
-    private int mOffset;
+    private Integer mOffset;
     private Count mCount;
     private User mUser;
     private RetsVersion mRetsVersion;

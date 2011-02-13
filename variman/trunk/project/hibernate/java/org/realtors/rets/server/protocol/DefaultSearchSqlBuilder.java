@@ -79,6 +79,10 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         mSqlConstraint =
             conditionRuleSet.findSqlConstraint(mGroups, resourceId,
                                                className);
+        Integer offset = mParameters.getOffset();
+        if (offset != null) {
+            this.mOrderByKeyField = true;
+        }
     }
 
     public SqlStatements createSqlStatements() throws RetsReplyException
@@ -130,6 +134,9 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         buffer.append(getFromClause());
         buffer.append(" WHERE ");
         buffer.append(getWhereClause());
+        if (this.mOrderByKeyField) {
+            buffer.append(" ORDER BY " + getOrderByClause());
+        }
         String searchQuerySql = buffer.toString();
         SearchQuery searchQuery = new DefaultSearchQuery(searchQuerySql, selectedColumnNames, mMetadata);
         return searchQuery;
@@ -156,7 +163,7 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
     {
         if (!StringUtils.isBlank(whereClauseSegment)) {
             if (whereClause.length() > 0) {
-                whereClause.insert(0, "(").append(") AND ");    
+                whereClause.insert(0, "(").append(") AND ");
             }
             whereClause.append(whereClauseSegment);
         }
@@ -235,6 +242,14 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
         return mClass.getXDBName();
     }
 
+    protected String getOrderByClause()
+    {
+        String keyFieldName = mResource.getKeyField();
+        String column = mMetadata.fieldToColumn(keyFieldName);
+        String orderByClause = column;
+        return orderByClause;
+    }
+
     private static final Logger LOG =
         Logger.getLogger(DefaultSearchSqlBuilder.class);
     private MClass mClass;
@@ -244,5 +259,6 @@ public class DefaultSearchSqlBuilder implements SearchSqlBuilder
     private SearchParameters mParameters;
     private SortedSet<Group> mGroups;
     private Integer mLimit;
+    private boolean mOrderByKeyField;
     private String mSqlConstraint;
 }

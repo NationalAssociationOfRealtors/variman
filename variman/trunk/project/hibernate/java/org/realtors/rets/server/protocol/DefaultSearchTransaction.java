@@ -356,16 +356,14 @@ public class DefaultSearchTransaction implements SearchTransaction
 
     private void advance(ResultSet resultSet) throws SQLException
     {
-        int offset = mParameters.getOffset();
+        Integer offset = mParameters.getOffset();
         LOG.debug("Advancing using offset: " + offset);
         // TODO: Add scrollable ResultSet support
-        for (int i = 1; i < offset; i++)
-        {
-            resultSet.next();
-        }
-        if (mParameters.getCount() == SearchParameters.COUNT_AND_DATA)
-        {
-            mCount -= offset - 1;
+        if (offset != null) {
+            for (int i = 1; i < offset.intValue(); i++)
+            {
+                resultSet.next();
+            }
         }
     }
 
