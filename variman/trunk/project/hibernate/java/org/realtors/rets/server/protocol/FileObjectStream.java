@@ -32,13 +32,21 @@ public class FileObjectStream implements ObjectStream
     
     public String getContentType(String file)
     {
-        if (file.endsWith(".gif"))
+        if (file.endsWith(".gif") || file.endsWith(".GIF"))
         {
             return "image/gif";
         }
-        else if (file.endsWith(".jpg"))
+        else if (file.endsWith(".jpg") || file.endsWith(".JPG"))
         {
             return "image/jpeg";
+        }
+        else if (file.endsWith(".tif") || file.endsWith(".TIF"))
+        {
+            return "image/tiff";
+        }
+        else if (file.endsWith(".png") || file.endsWith(".PNG"))
+        {
+            return "image/png";
         }
         else if (file.endsWith(".xml"))
         {
