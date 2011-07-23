@@ -8,6 +8,9 @@ Version 3.2.4 - xx xx 2011
     Combo with no Accessible Fields. Issue:4.
   * GetObject Transaction Replies with Misc Error When Object Unavailable.
     Issue:5.
+  * Recognize upper as well as lower case image extensions and add .png.
+    Issue:10.
+  * DatabaseObjectSet returns wrong Content-ID. Issue:11.
 
 Version 3.2.3 - 17 Oct 2010
 
