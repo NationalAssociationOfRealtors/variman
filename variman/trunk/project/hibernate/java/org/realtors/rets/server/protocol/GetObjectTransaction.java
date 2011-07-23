@@ -149,7 +149,8 @@ public class GetObjectTransaction
         {
             ObjectDescriptor objectDescriptor =
                 (ObjectDescriptor) allObjects.get(i);
-            LOG.info("GetObject (mulitpart) URL: " + objectDescriptor.getUrl());
+            LOG.info("GetObject (mulitpart) URL: " + objectDescriptor.getUrl() + 
+                ", objectKey: " + objectDescriptor.getObjectKey());
             out.writeBytes(CRLF + "--" + boundary + CRLF);
             out.writeBytes("Content-ID: " + objectDescriptor.getObjectKey() +
                            CRLF);

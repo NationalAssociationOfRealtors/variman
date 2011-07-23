@@ -27,7 +27,7 @@
 
   <bean id="standardNameDao" class="org.realtors.rets.server.metadata.XmlStandardNameDao"/>
 
-  <!--bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet"/-->
+  <!--bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet" singleton="false"/-->
 
     <!-- bean id="webAppMetadataChangedListener" class="org.realtors.rets.server.webapp.WebAppMetadataChangedListener" />
     <bean id="RetsDTDMetadataChangedListener" class="org.realtors.rets.server.RetsDTDMetadataChangedListener" />

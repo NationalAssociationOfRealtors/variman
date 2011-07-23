@@ -93,7 +93,8 @@ public class DatabaseObjectSet implements ObjectSet
         {
             if (file.exists() && file.isFile())
             {
-                LOG.debug("File " + file.getCanonicalPath() + " exists");
+                LOG.debug("File " + file.getCanonicalPath() + " exists for Listing " + 
+                        mResourceEntity + ", objectId: " + objectId);
                 return new ObjectDescriptor(mResourceEntity, objectId,
                                             file.toURI().toURL());
             }
@@ -166,6 +167,7 @@ public class DatabaseObjectSet implements ObjectSet
         
         try
         {
+            LOG.debug("FindAllObjects by Resource Key: " + mResourceEntity);
             photos = MediaUtils.findByResourceKey(mediaType, mResourceEntity);
         }
         catch (Exception e)
@@ -189,6 +191,9 @@ public class DatabaseObjectSet implements ObjectSet
 
             String filePath = fileBuffer.toString();
             File file = new File(filePath);
+            LOG.debug("buildObjectDescriptor for photo.getObjectID(): " + photo.getObjectID() + 
+                                ", Resource Key: " + mResourceEntity + ", photo ResourceKey: " + 
+                                photo.getMediaKey().getResourceKey());
             ObjectDescriptor objectDescriptor = buildObjectDescriptor(file, photo.getObjectID());
             if (objectDescriptor != null)
                 objects.add(objectDescriptor);
