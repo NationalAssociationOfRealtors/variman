@@ -9,6 +9,10 @@ import java.util.Map;
 
 import org.realtors.rets.server.QueryCount;
 
+/**
+ * Represents all security constraints associated with a single group. 
+ * It can include both @see{FilterRule} and @see{ConditionRule}
+ */
 public class GroupRules
 {
     public GroupRules() {

@@ -9,6 +9,10 @@ import java.util.Iterator;
 
 import org.realtors.rets.server.Group;
 
+/**
+ * Represents the entire security constraint configuration.  
+ * This includes the filter and condition rules for all known groups.
+ */
 public class SecurityConstraints
 {
     public SecurityConstraints()
