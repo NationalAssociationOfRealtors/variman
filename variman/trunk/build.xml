@@ -132,28 +132,28 @@
   </path>
 
   <target name="test-jvm-version" description="Determine the JVM version">
-    <condition property="isJDK1.5">
+    <condition property="isJDK1.6">
       <and>
-        <equals arg1="${ant.java.version}" arg2="1.5"/>
+        <equals arg1="${ant.java.version}" arg2="1.6"/>
       </and>
     </condition>
   </target>
 
-  <target name="setup-java-sql1.5" if="isJDK1.5">
-    <copy overwrite="yes"
-          file="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java1.5"
-        tofile="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java"
-    />
-  </target>
-
-  <target name="setup-java-sql1.6" unless="isJDK1.5">
+  <target name="setup-java-sql1.6" if="isJDK1.6">
     <copy overwrite="yes"
           file="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java1.6"
         tofile="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java"
     />
   </target>
 
-  <target name="prepare" depends="test-jvm-version,setup-java-sql1.5,setup-java-sql1.6">
+  <target name="setup-java-sql1.7" unless="isJDK1.6">
+    <copy overwrite="yes"
+          file="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java1.7"
+        tofile="project/hibernate/test/java/org/realtors/rets/server/protocol/NullResultSet.java"
+    />
+  </target>
+
+  <target name="prepare" depends="test-jvm-version,setup-java-sql1.6,setup-java-sql1.7">
     <mkdir dir="build/hibernate/final/classes"/>
     <mkdir dir="build/hibernate/generated"/>
     <mkdir dir="build/hibernate/generated/org/realtors/rets/server/dmql"/>
