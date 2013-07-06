@@ -3,7 +3,8 @@ package org.realtors.rets.server.protocol;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.net.MalformedURLException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -109,46 +110,62 @@ public class PatternObjectSet implements ObjectSet
                 return new ObjectDescriptor(mResourceKey, objectId,
                                             file.toURI().toURL());
             }
-            else
+            else if (filePath.startsWith("http:"))
             {
-                LOG.debug("File " + filePath + " does not exist");
-                /*
-                 * In case this is a multipart response, we need to create an object of text/xml
-                 * that contains the RETS ReplyCode message. 
-                 */
-                try
+                URL imageURL = new URL(filePath);
+                HttpURLConnection connection =  (HttpURLConnection)  imageURL.openConnection(); 
+                connection.setRequestMethod("GET"); 
+                connection.setDoOutput(true);
+                connection.connect(); 
+                int code = connection.getResponseCode();
+                connection.disconnect();
+                if (code == 200)
                 {
-                	StringBuffer notFoundName = new StringBuffer(mRootDirectory);
-                	notFoundName.append(File.separator + "notfound.xml");
-
-                	/*
-                	 * Not the best way, but this is the exceptional case, 
-                	 * so brute force should work.
-                	 */
-                	File notFound = new File(notFoundName.toString());
-
-                	synchronized (this)
-                	{
-	                	if (notFound.length() == 0)
-	                	{
-	                		BufferedWriter out = new BufferedWriter(new FileWriter(notFound));
-	                		out.write("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>\r\n");
-	                		out.close();
-	                		notFound.deleteOnExit();
-	                	}
-                	}
-                	ObjectDescriptor objectDescriptor = new ObjectDescriptor(mResourceKey, objectId,
-                													notFound.toURI().toURL(), null);
-                	objectDescriptor.setRetsReplyCode(ReplyCode.NO_OBJECT_FOUND);
-                	return objectDescriptor;
+                    LOG.debug("File " + filePath + " exists");
+                    ObjectDescriptor objectDescriptor = new ObjectDescriptor(mResourceKey, objectId,
+                                                                            imageURL);
+                    objectDescriptor.setRemoteLocationAllowable(true);
+                    return objectDescriptor;
                 }
-                catch (Exception e)
-                {
-                }
-                return null;
             }
+
+            LOG.debug("File " + filePath + " does not exist");
+            /*
+             * In case this is a multipart response, we need to create an object of text/xml
+             * that contains the RETS ReplyCode message. 
+             */
+            try
+            {
+            	StringBuffer notFoundName = new StringBuffer(mRootDirectory);
+            	notFoundName.append(File.separator + "notfound.xml");
+
+            	/*
+            	 * Not the best way, but this is the exceptional case, 
+            	 * so brute force should work.
+            	 */
+            	File notFound = new File(notFoundName.toString());
+
+            	synchronized (this)
+            	{
+                	if (notFound.length() == 0)
+                	{
+                		BufferedWriter out = new BufferedWriter(new FileWriter(notFound));
+                		out.write("<RETS ReplyCode=\"20403\" ReplyText=\"No Object Found\"/>\r\n");
+                		out.close();
+                		notFound.deleteOnExit();
+                	}
+            	}
+            	ObjectDescriptor objectDescriptor = new ObjectDescriptor(mResourceKey, objectId,
+            													notFound.toURI().toURL(), null);
+            	objectDescriptor.setRetsReplyCode(ReplyCode.NO_OBJECT_FOUND);
+            	return objectDescriptor;
+            }
+            catch (Exception e)
+            {
+            }
+            return null;
         }
-        catch (MalformedURLException e)
+        catch (Exception e)
         {
             throw new RetsServerException(e);
         }

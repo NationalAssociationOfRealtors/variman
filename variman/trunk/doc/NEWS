@@ -12,8 +12,10 @@ Version 3.2.4 - xx xx 2013
   * Recognize upper as well as lower case image extensions and add .png.
     Issue:10.
   * DatabaseObjectSet returns wrong Content-ID. Issue:11.
+  * Recognize Java 7. Issue:12.
   * Update TableGroupFilter to prevent excluded fields from being returned
     under certain conditions. Patch provided by Joe Kerby. Issue:13.
+  * Allow GetObjectRoot to be a link to an http server. Issue:16.
 
 Version 3.2.3 - 17 Oct 2010
 
