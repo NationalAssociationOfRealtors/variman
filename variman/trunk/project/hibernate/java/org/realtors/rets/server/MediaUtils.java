@@ -210,6 +210,7 @@ public class MediaUtils
             "order by aMedia.mediaKey.objectID");
         query.setString("resourceKey", resourceKey);
         query.setString("mediaType", mediaType);
+        LOG.debug("Query: " + query.toString() + ", resourceKey: " + resourceKey + ", SessionHelper: " + helper.toString());
         return query.list();
     }
 

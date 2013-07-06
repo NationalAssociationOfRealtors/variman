@@ -57,6 +57,7 @@ public class DatabaseObjectSet implements ObjectSet
     public void setResource(String resource)
     {
         mResource = resource;
+        LOG.debug("mResource: " + mResource);
     }
     
     /**
@@ -75,6 +76,7 @@ public class DatabaseObjectSet implements ObjectSet
     public void setResourceEntity(String resourceEntity)
     {
         mResourceEntity = resourceEntity;
+        LOG.debug("mResourceEntity: " + mResourceEntity);
     }
     
     /**
@@ -234,6 +236,9 @@ public class DatabaseObjectSet implements ObjectSet
 
         String filePath = fileBuffer.toString();
         File file = new File(filePath);
+        LOG.debug("buildObjectDescriptor for media.getObjectID(): " + media.getObjectID() + 
+                        ", Resource Key: " + mResourceEntity + 
+                        ", media ResourceKey: " + media.getMediaKey().getResourceKey());
         return buildObjectDescriptor(file, objectId);
     }
 }
