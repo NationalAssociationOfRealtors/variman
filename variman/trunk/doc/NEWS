@@ -1,4 +1,4 @@
-Version 3.2.4 - xx xx 2013
+Version 3.2.4 - 07 14 2013
 
   * The RetsConfigChangedMonitor and MetadataChangedMonitor Threads 
     Silently Die. Issue:2.
