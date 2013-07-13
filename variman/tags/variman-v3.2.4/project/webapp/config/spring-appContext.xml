@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean name="beanFactory" 
+        class="org.realtors.rets.server.RetsServer" />
+
+  <bean name="searchTransaction" singleton="false"
+        class="org.realtors.rets.server.protocol.DefaultSearchTransaction">
+    <property name="searchSqlBuilder"><ref bean="searchSqlBuilder" /></property>
+  </bean>
+
+  <bean name="searchSqlBuilder" singleton="false"
+        class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder" />
+
+  <bean id="conditionRuleSetFactory" class="org.realtors.rets.server.DefaultConditionRuleSetFactory"/>
+
+  <bean id="requestLogLogger" class="org.realtors.rets.server.Log4jRequestLogLogger">
+      <property name="logLevel" value="INFO"/>
+  </bean>
+
+  <bean id="requestLogFilter" class="org.realtors.rets.server.webapp.RequestLogFilter">
+      <property name="requestLogLogger" ref="requestLogLogger"/>
+  </bean>
+
+  <bean id="metadataDao" class="org.realtors.rets.server.metadata.XmlMetadataDao"/>
+
+  <bean id="standardNameDao" class="org.realtors.rets.server.metadata.XmlStandardNameDao"/>
+
+  <!--bean id="customObjectSet" class="org.realtors.rets.server.protocol.DatabaseObjectSet" singleton="false"/-->
+
+    <!-- bean id="webAppMetadataChangedListener" class="org.realtors.rets.server.webapp.WebAppMetadataChangedListener" />
+    <bean id="RetsDTDMetadataChangedListener" class="org.realtors.rets.server.RetsDTDMetadataChangedListener" />
+
+    <bean id="metadataChangedMonitor" class="org.realtors.rets.server.metadata.MetadataChangedMonitor">
+        <property name="metadataChangedListeners">
+            <list>
+                <ref local="webAppMetadataChangedListener" />
+                <ref local="RetsDTDMetadataChangedListener" />
+            </list>
+        </property>
+        <property name="metadataDao" ref="metadataDao" />
+    </bean>
+
+    <bean id="metadataMonitorTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <property name="delay" value="0" />
+        <property name="period" value="300000" />
+        <property name="runnable" ref="metadataChangedMonitor" />
+    </bean-->
+
+  <!-- The config below will enable a RetsConfigChangedMonitor to look for
+       changes to the rets-config.xml file and reload the configuration. This
+       requires the path to rets-config.xml to be specified in this file,
+       so the feature cannot be enabled without this additional step. --> 
+
+  <!-- bean id="retsConfigDao" class="org.realtors.rets.server.config.XmlRetsConfigDao">
+      <description>
+          Loads the RETS configuration from an XML file.
+      </description>
+      <property name="filePath" value="build\rets-server\variman\WEB-INF\rets\rets-config.xml"/>
+  </bean>
+
+  <bean id="webAppRetsConfigChangedListener" class="org.realtors.rets.server.webapp.WebAppRetsConfigChangedListener" />
+
+  <bean id="retsConfigChangedMonitor" class="org.realtors.rets.server.config.RetsConfigChangedMonitor">
+      <property name="retsConfigDao" ref="retsConfigDao" />
+      <property name="retsConfigChangedListeners">
+          <list>
+              <ref local="webAppRetsConfigChangedListener" />
+          </list>
+      </property>
+  </bean>
+
+  <bean id="retsConfigMonitorTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+      <property name="delay" value="0" />
+      <property name="period" value="30000" />
+      <property name="runnable" ref="retsConfigChangedMonitor" />
+  </bean>
+
+  <bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+      <property name="scheduledTimerTasks">
+          <list>
+              <ref local="metadataMonitorTask" />
+              <ref local="retsConfigMonitorTask" />
+          </list>
+      </property>
+  </bean-->
+</beans>

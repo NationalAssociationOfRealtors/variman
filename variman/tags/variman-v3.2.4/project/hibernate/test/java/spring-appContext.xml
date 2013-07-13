@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>   
+  <bean name="beanFactory" 
+        class="org.realtors.rets.server.RetsServer" />
+        
+  <bean id="conditionRuleSetFactory"
+        class="org.realtors.rets.server.DefaultConditionRuleSetFactory" />
+
+  <bean id="metadataDao" class="org.realtors.rets.server.metadata.DummyMetadataDao"/>
+
+  <bean id="standardNameDao" class="org.realtors.rets.server.metadata.XmlStandardNameDao"/>
+
+  <bean name="searchTransaction" singleton="false"
+        class="org.realtors.rets.server.protocol.DefaultSearchTransaction">
+    <property name="searchSqlBuilder"><ref bean="searchSqlBuilder" /></property>
+  </bean>
+
+  <bean name="searchSqlBuilder" singleton="false"
+        class="org.realtors.rets.server.protocol.DefaultSearchSqlBuilder" />
+</beans>

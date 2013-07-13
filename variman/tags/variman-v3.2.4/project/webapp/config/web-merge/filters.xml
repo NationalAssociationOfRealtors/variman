@@ -1,0 +1,13 @@
+<j:jelly xmlns:j="jelly:core">
+
+  <!--  web.filter annotations won't play nice with Spring injection -->
+  <filter>
+      <filter-name>request-log-filter</filter-name>
+      <description>Logs RETS requests and stores information about the connection.</description>
+      <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+      <init-param>
+          <param-name>targetBeanName</param-name>
+          <param-value>requestLogFilter</param-value>
+      </init-param>
+  </filter>
+</j:jelly>

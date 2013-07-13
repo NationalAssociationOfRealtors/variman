@@ -1,0 +1,525 @@
+<standardnames>
+<standardname>YearBuilt</standardname>
+<standardname>CloseDate</standardname>
+<standardname>ExpirationDate</standardname>
+<standardname>ListDate</standardname>
+<standardname>ContractDate</standardname>
+<standardname>StatusChangeDate</standardname>
+<standardname element="ModificationTimestamp">ModificationTimeStamp</standardname>
+<standardname element="AssessedValuation">TaxAssessedValuation</standardname>
+<standardname>AssociationFee</standardname>
+<standardname>ClosePrice</standardname>
+<standardname>Expenses</standardname>
+<standardname>GrossIncome</standardname>
+<standardname>ListPrice</standardname>
+<standardname>NetIncome</standardname>
+<standardname>OriginalListPrice</standardname>
+<standardname>RentIncome</standardname>
+<standardname element="BathsTotal" container="Baths">Baths</standardname>
+<standardname container="Baths">BathsHalf</standardname>
+<standardname container="Baths">BathsFull</standardname>
+<standardname container="Baths">BathsThreeQuarter</standardname>
+<standardname element="Bedrooms">Beds</standardname>
+<standardname>CarPort</standardname>
+<standardname>Commission</standardname>
+<standardname>CoveredParking</standardname>
+<standardname>DaysOnMarket</standardname>
+<standardname>Fireplaces</standardname>
+<standardname>Garage</standardname>
+<standardname>Latitude</standardname>
+<standardname element="Length" container="LotSize">LotSizeLength</standardname>
+<standardname element="Length" container="DiningRoom">DiningRoomLength</standardname>
+<standardname element="Length" container="LivingRoom">LivingRoomLength</standardname>
+<standardname element="Length" container="FamilyRoom">FamilyRoomLength</standardname>
+<standardname element="Length" container="Basement">BasementLength</standardname>
+<standardname>Longitude</standardname>
+<standardname>OpenParking</standardname>
+<standardname>Stories</standardname>
+<standardname>TotalRooms</standardname>
+<standardname>TotalUnits</standardname>
+<standardname>VacancyFactor</standardname>
+<standardname element="Width" container="LotSize">LotSizeWidth</standardname>
+<standardname element="Width" container="DiningRoom">DiningRoomWidth</standardname>
+<standardname element="Width" container="LivingRoom">LivingRoomWidth</standardname>
+<standardname element="Width" container="FamilyRoom">FamilyRoomWidth</standardname>
+<standardname element="Width" container="Basement">BasementWidth</standardname>
+<standardname element="Area" container="LivingArea">LivingArea</standardname>
+<standardname element="Area" container="LotSize">LotSizeArea</standardname>
+<standardname element="Area" container="DiningRoom">DiningRoomArea</standardname>
+<standardname element="Area" container="LivingRoom">LivingRoomArea</standardname>
+<standardname element="Area" container="FamilyRoom">FamilyRoomArea</standardname>
+<standardname element="Area" container="Basement">BasementArea</standardname>
+<standardname element="Dimensions" container="LotSize">LotSizeDim</standardname>
+<standardname element="Dimensions" container="DiningRoom">DiningRoomDim</standardname>
+<standardname element="Dimensions" container="LivingRoom">LivingRoomDim</standardname>
+<standardname element="Dimensions" container="FamilyRoom">FamilyRoomDim</standardname>
+<standardname element="Dimensions" container="Basement">BasementDim</standardname>
+<standardname>Basement</standardname>
+<standardname>DiningRoom</standardname>
+<standardname>FamilyRoom</standardname>
+<standardname>LivingRoom</standardname>
+<standardname>Cooling</standardname>
+<standardname>Heating</standardname>
+<standardname>Laundry</standardname>
+<standardname>Pool</standardname>
+<standardname>Utilities</standardname>
+<standardname>View</standardname>
+<standardname>WaterFront</standardname>
+<standardname>AgentID</standardname>
+<standardname container="Listing:StreetAddress">BoxNumber</standardname>
+<standardname element="BoxNumber" container="ListingData:REAgent:StreetAddress">ListAgentBoxNumber</standardname>
+<standardname element="BoxNumber" container="ListingData:REOffice:StreetAddress">ListOfficeBoxNumber</standardname>
+<standardname element="BoxNumber" container="SalesData:REAgent:StreetAddress">SaleAgentBoxNumber</standardname>
+<standardname element="BoxNumber" container="SalesData:REOffice:StreetAddress">SaleOfficeBoxNumber</standardname>
+<standardname element="BoxNumber" container="Listing:TaxData:StreetAddress">TaxBoxNumber</standardname>
+<standardname element="BoxNumber" container="Listing:TaxData:MailingAddress:StreetAddress">TaxMailBoxNumber</standardname>
+<standardname element="BoxNumber" container="REAgent:StreetAddress">AgentBoxNumber</standardname>
+<standardname element="BoxNumber" container="REOffice:StreetAddress">OfficeBoxNumber</standardname>
+<standardname element="BoxNumber" container="EntryAgent:REAgent:StreetAddress">EntryAgentBoxNumber</standardname>
+<standardname element="BoxNumber" container="EntryOffice:REOffice:StreetAddress">EntryOfficeBoxNumber</standardname>
+<standardname element="BoxNumber" container="Listing:TaxData:StreetAddress">TaxOwnerBoxNumber</standardname>
+<standardname>BrokerID</standardname>
+<standardname>BuildingName</standardname>
+<standardname>BuildingType</standardname>
+<standardname container="Listing:StreetAddress">CarrierRoute</standardname>
+<standardname element="CarrierRoute" container="ListingData:REAgent:StreetAddress">ListAgentCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="ListingData:REOffice:StreetAddress">ListOfficeCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="SalesData:REAgent:StreetAddress">SaleAgentCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="SalesData:REOffice:StreetAddress">SaleOfficeCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="Listing:TaxData:StreetAddress">TaxCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="Listing:TaxData:StreetAddress">TaxMailCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="REAgent:StreetAddress">AgentCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="REOffice:StreetAddress">OfficeCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="Person:StreetAddress">ParticipantCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="EntryAgent:REAgent:StreetAddress">EntryAgentCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="EntryOffice:REOffice:StreetAddress">EntryOfficeCarrierRoute</standardname>
+<standardname element="CarrierRoute" container="Listing:TaxData:StreetAddress">TaxOwnerCarrierRoute</standardname>
+<standardname element="CellPhone" container="ListingData:REAgent:ContactInformation">ListingAgentCellPhone</standardname>
+<standardname element="CellPhone" container="ListingData:REOffice:ContactInformation">ListOfficeCellPhone</standardname>
+<standardname element="CellPhone" container="SalesData:REAgent:ContactInformation">SaleAgentCellPhone</standardname>
+<standardname element="CellPhone" container="SalesData:REOffice:ContactInformation">SaleOfficeCell Phone</standardname>
+<standardname element="CellPhone" container="Occupant:ContactInformation">OccupantCellPhone</standardname>
+<standardname element="CellPhone" container="REAgent:ContactInformation">AgentCellPhone</standardname>
+<standardname element="CellPhone" container="REOffice:ContactInformation">OfficeCellPhone</standardname>
+<standardname element="CellPhone" container="Person:ContactInformation">ParticipantCellPhone</standardname>
+<standardname element="CellPhone" container="EntryAgent:REAgent:ContactInformation">EntryAgentCellPhone</standardname>
+<standardname element="CellPhone" container="EntryOffice:REOffice:ContactInformation">EntryOfficeCellPhone</standardname>
+<standardname element="CellPhone" container="Listing:TaxData:ContactInformation">TaxOwnerCellPhone</standardname>
+<standardname container="Listing:StreetAddress">City</standardname>
+<standardname element="City" container="ListingData:REAgent:StreetAddress">ListAgentCity</standardname>
+<standardname element="City" container="ListingData:REOffice:StreetAddress">ListOfficeCity</standardname>
+<standardname element="City" container="SalesData:REAgent:StreetAddress">SaleAgentCity</standardname>
+<standardname element="City" container="SalesData:REOffice:StreetAddress">SaleOfficeCity</standardname>
+<standardname element="City" container="Listing:TaxData:StreetAddress">TaxCity</standardname>
+<standardname element="City" container="Listing:TaxData:StreetAddress">TaxMailCity</standardname>
+<standardname element="City" container="REAgent:StreetAddress">AgentCity</standardname>
+<standardname element="City" container="REOffice:StreetAddress">OfficeCity</standardname>
+<standardname element="City" container="Person:StreetAddress">ParticipantCity</standardname>
+<standardname element="City" container="EntryAgent:REAgent:StreetAddress">EntryAgentCity</standardname>
+<standardname element="City" container="EntryOffice:REOffice:StreetAddress">EntryOfficeCity</standardname>
+<standardname element="City" container="Listing:TaxData:StreetAddress">TaxOwnerCity</standardname>
+<standardname>ComplexFeatures</standardname>
+<standardname element="CopyrightNotice">PropertyCopyrightNotice</standardname>
+<standardname>Country</standardname>
+<standardname element="Country" container="ListingData:REAgent:StreetAddress">ListAgentCountry</standardname>
+<standardname element="Country" container="ListingData:REOffice:StreetAddress">ListOfficeCountry</standardname>
+<standardname element="Country" container="SalesData:REAgent:StreetAddress">SaleAgentCountry</standardname>
+<standardname element="Country" container="SalesData:REOffice:StreetAddress">SaleOfficeCountry</standardname>
+<standardname element="Country" container="Listing:TaxData:StreetAddress">TaxCountry</standardname>
+<standardname element="Country" container="Listing:TaxData:StreetAddress">TaxMailCountry</standardname>
+<standardname element="Country" container="REAgent:StreetAddress">AgentCountry</standardname>
+<standardname element="Country" container="REOffice:StreetAddress">OfficeCountry</standardname>
+<standardname element="Country" container="Participants:Person:StreetAddress">ParticpantCountry</standardname>
+<standardname element="Country" container="EntryAgent:REAgent:StreetAddress">EntryAgentCountry</standardname>
+<standardname element="Country" container="EntryOffice:REOffice:StreetAddress">EntryOfficeCountry</standardname>
+<standardname element="Country" container="Listing:TaxData:StreetAddress">TaxOwnerCountry</standardname>
+<standardname>County</standardname>
+<standardname element="County" container="Listing:TaxData">TaxCounty</standardname>
+<standardname>DevelopmentStatus</standardname>
+<standardname>Directions</standardname>
+<standardname>Disclaimer</standardname>
+<standardname>ElementarySchool</standardname>
+<standardname element="Email" container="ListingData:REAgent:ConntactInformation">ListAgentEmail</standardname>
+<standardname element="Email" container="ListingData:REOffice:ConntactInformation">ListOfficeEmail</standardname>
+<standardname element="Email" container="SalesData:REAgent:ConntactInformation">SaleAgentEmail</standardname>
+<standardname element="Email" container="SalesData:REOffice:ConntactInformation">SaleOfficeEmail</standardname>
+<standardname element="Email" container="Occupant:ConntactInformation">OccupantEmail</standardname>
+<standardname element="Email" container="REAgent:ConntactInformation">AgentEmail</standardname>
+<standardname element="Email" container="REOffice:ConntactInformation">OfficeEmail</standardname>
+<standardname element="Email" container="Person:ConntactInformation">PartipantEmail</standardname>
+<standardname element="Email" container="EntryAgent:REAgent:ConntactInformation">EntryAgentEmail</standardname>
+<standardname element="Email" container="EntryOffice:REOffice:ConntactInformation">EntryOfficeEmail</standardname>
+<standardname element="Email" container="Listing:TaxData:ConntactInformation">TaxOwnerEmail</standardname>
+<standardname>ExistingStructures</standardname>
+<standardname>Exterior</standardname>
+<standardname>ExteriorFeatures</standardname>
+<standardname element="Fax" container="ListingData:REAgent:CantactInformation">ListAgentFax</standardname>
+<standardname element="Fax" container="ListingData:REOffice:CantactInformation">ListOfficeFax</standardname>
+<standardname element="Fax" container="SalesData:REAgent:CantactInformation">SaleAgentFax</standardname>
+<standardname element="Fax" container="SalesData:REOffice:CantactInformation">SaleOfficeFax</standardname>
+<standardname element="Fax" container="Occupant:CantactInformation">OccupantFax</standardname>
+<standardname element="Fax" container="REAgent:CantactInformation">AgentFax</standardname>
+<standardname element="Fax" container="REOffice:CantactInformation">OfficeFax</standardname>
+<standardname element="Fax" container="Person:CantactInformation">ParticpantFax</standardname>
+<standardname element="Fax" container="EntryAgent:REAgent:CantactInformation">EntryAgentFax</standardname>
+<standardname element="Fax" container="EntryOffice:REOffice:CantactInformation">EntryOfficeFax</standardname>
+<standardname element="Fax" container="Listing:TaxData:CantactInformation">TaxOwnerFax</standardname>
+<standardname element="FirstName" container="ListingData:REAgent">ListAgentFirstName</standardname>
+<standardname element="FirstName" container="SalesData:REAgent">SaleAgentFirstName</standardname>
+<standardname element="FirstName" container="REAgent">AgentFirstName</standardname>
+<standardname element="FirstName" container="Person">PartipantFirstName</standardname>
+<standardname element="FirstName" container="EntryAgent:REAgent">EntryAgentFirstName</standardname>
+<standardname element="FirstName" container="Listing:TaxData:Person">TaxOwnerFirstName</standardname>
+<standardname>HighSchool</standardname>
+<standardname element="HomePhone" container="ListingData:REAgent:ContactInformation">ListAgentHomePhone</standardname>
+<standardname element="HomePhone" container="ListingData:REOffice:ContactInformation">ListOfficeHomePhone</standardname>
+<standardname element="HomePhone" container="SalesData:REAgent:ContactInformation">SaleAgentHomePhone</standardname>
+<standardname element="HomePhone" container="SalesData:REOffice:ContactInformation">SaleOfficeHomePhone</standardname>
+<standardname element="HomePhone" container="Occupant:ContactInformation">OccupantHomePhone</standardname>
+<standardname element="HomePhone" container="REAgent:ContactInformation">AgentHomePhone</standardname>
+<standardname element="HomePhone" container="REOffice:ContactInformation">OfficeHomePhone</standardname>
+<standardname element="HomePhone" container="Person:ContactInformation">PartipantHomePhone</standardname>
+<standardname element="HomePhone" container="EntryAgent:REAgent:ContactInformation">EntryAgentHomePhone</standardname>
+<standardname element="HomePhone" container="EntryOffice:REOffice:ContactInformation">EntryOfficeHomePhone</standardname>
+<standardname element="HomePhone" container="RETax:ParcelOwner:Person:ContactInformation">TawOnwerHomePhone</standardname>
+<standardname>InteriorFeatures</standardname>
+<standardname element="LastName" container="ListingData:REAgent">ListAgentLastName</standardname>
+<standardname element="LastName" container="SalesData:REAgent">SaleAgentLastName</standardname>
+<standardname element="LastName" container="REAgent">AgentLastName</standardname>
+<standardname element="LastName" container="Person">ParticpantLastName</standardname>
+<standardname element="LastName" container="EntryAgent:REAgent">EntryAgentLastName</standardname>
+<standardname element="LastName" container="RETax:ParcelOwner:Person">TaxOwnerLastName</standardname>
+<standardname element="LegalDescription" container="Listing:TaxData">TaxLegalDescription</standardname>
+<standardname>ListingArea</standardname>
+<standardname>ListingID</standardname>
+<standardname>ListingType</standardname>
+<standardname>MapCoordinate</standardname>
+<standardname>MiddleSchool</standardname>
+<standardname>NRDSMemberID</standardname>
+<standardname>NRDSOfficeID</standardname>
+<standardname>OfficeID</standardname>
+<standardname element="OfficePhone" container="ListingData:REAgent:ContactInformation">ListAgentOfficePhone</standardname>
+<standardname element="OfficePhone" container="ListingData:REOffice:ContactInformation">ListOfficeOfficePhone</standardname>
+<standardname element="OfficePhone" container="SalesData:REAgent:ContactInformation">SaleAgentOfficePhone</standardname>
+<standardname element="OfficePhone" container="SalesData:REOffice:ContactInformation">SaleOfficeOfficePhone</standardname>
+<standardname element="OfficePhone" container="Occupant:ContactInformation">OccupantOfficePhone</standardname>
+<standardname element="OfficePhone" container="REAgent:ContactInformation">AgentOfficePhone</standardname>
+<standardname element="OfficePhone" container="REOffice:ContactInformation">OfficeOfficePhone</standardname>
+<standardname element="OfficePhone" container="Participants:Person:ContactInformation">ParticipantOfficePhone</standardname>
+<standardname element="OfficePhone" container="EntryAgent:REAgent:ContactInformation">EntryAgentOfficePhone</standardname>
+<standardname element="OfficePhone" container="EntryOffice:REOffice:ContactInformation">EntryOfficeOfficePhone</standardname>
+<standardname element="OfficePhone" container="Listing:TaxData:ContactInformation">TaxOwnerOfficePhone</standardname>
+<standardname>OwnerPays</standardname>
+<standardname element="OwnersName" container="Listing:TaxData">TaxOwnersName</standardname>
+<standardname element="Pager" container="ListingData:REAgent:ContactInformation">ListAgentPager</standardname>
+<standardname element="Pager" container="ListingData:REOffice:ContactInformation">ListOfficePager</standardname>
+<standardname element="Pager" container="SalesData:REAgent:ContactInformation">SaleAgentPager</standardname>
+<standardname element="Pager" container="SalesData:REOffice:ContactInformation">SaleOfficePager</standardname>
+<standardname element="Pager" container="Occupant:ContactInformation">OccupantPager</standardname>
+<standardname element="Pager" container="REAgent:ContactInformation">AgentPager</standardname>
+<standardname element="Pager" container="REOffice:ContactInformation">OfficePager</standardname>
+<standardname element="Pager" container="Participants:Person:ContactInformation">ParticipantPager</standardname>
+<standardname element="Pager" container="EntryAgent:REAgent:ContactInformation">EntryAgentPager</standardname>
+<standardname element="Pager" container="EntryOffice:REOffice:ContactInformation">EntryOfficePager</standardname>
+<standardname element="Pager" container="Listing:TaxData:ContactInformation">TaxOwnerPager</standardname>
+<standardname>ParcelAccess</standardname>
+<standardname element="ParcelMapURL" container="Listing:TaxData">TaxParcelMapURL</standardname>
+<standardname>ParcelNumber</standardname>
+<standardname>PostalCode</standardname>
+<standardname>PresentUse</standardname>
+<standardname element="PropertyZoning" container="Listing:TaxData">TaxPropertyZoning</standardname>
+<standardname>PublicRemarks</standardname>
+<standardname>Remarks</standardname>
+<standardname>Roof</standardname>
+<standardname>SchoolDistrict</standardname>
+<standardname>ShowingInstructions</standardname>
+<standardname element="StateOrProvince" container="ListingData:REAgent:StreetAddress">ListAgentState</standardname>
+<standardname element="StateOrProvince" container="ListingData:REOffice:StreetAddress">ListOfficeState</standardname>
+<standardname element="StateOrProvince" container="SalesData:REAgent:StreetAddress">SaleAgentState</standardname>
+<standardname element="StateOrProvince" container="SalesData:REOffice:StreetAddress">SaleOfficeState</standardname>
+<standardname element="StateOrProvince" container="Listing:TaxData:StreetAddress">TaxState</standardname>
+<standardname element="StateOrProvince" container="Listing:TaxData:StreetAddress">TaxMailState</standardname>
+<standardname element="StateOrProvince" container="REAgent:StreetAddress">AgentState</standardname>
+<standardname element="StateOrProvince" container="REOffice:StreetAddress">OfficeState</standardname>
+<standardname element="StateOrProvince" container="Participants:Person:StreetAddress">ParticipantState</standardname>
+<standardname element="StateOrProvince" container="EntryAgent:REAgent:StreetAddress">EntryAgentState</standardname>
+<standardname element="StateOrProvince" container="EntryOffice:REOffice:StreetAddress">EntryOfficeState</standardname>
+<standardname element="StateOrProvince" container="Listing:TaxData:StreetAddress">TaxOwnerState</standardname>
+<standardname container="Listing:StreetAddress">StreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="ListingData:REAgent:StreetAddress">ListingAgentStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="ListingData:REOffice:StreetAddress">ListOfficeStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="SalesData:REAgent:StreetAddress">SaleAgentStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="SalesData:REOffice:StreetAddress">SaleOfficeStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="Listing:TaxData:StreetAddress">TaxStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="Listing:TaxData:StreetAddress">TaxMailStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="REAgent:StreetAddress">AgentStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="REOffice:StreetAddress">OfficeStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="Participants:Person:StreetAddress">ParticipantStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="EntryAgent:REAgent:StreetAddress">EntryAgentStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="EntryOffice:REOffice:StreetAddress">EntryOfficeStreetAdditionalInfo</standardname>
+<standardname element="StreetAdditionalInfo" container="Listing:TaxData:StreetAddress">TaxOwnerStreeetAdditionalInfo</standardname>
+<standardname container="Listing:StreetAddress">StreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="ListingData:REAgent:StreetAddress">ListingAgentStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="ListingData:REOffice:StreetAddress">ListOfficeStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="SalesData:REAgent:StreetAddress">SaleAgentStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="SalesData:REOffice:StreetAddress">SaleOfficeStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="Listing:TaxData:StreetAddress">TaxStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="Listing:TaxData:StreetAddress">TaxMailStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="REAgent:StreetAddress">AgentStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="REOffice:StreetAddress">OfficeStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="Participants:Person:StreetAddress">ParticipantStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="EntryAgent:REAgent:StreetAddress">EntryAgentStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="EntryOffice:REOffice:StreetAddress">EntryOfficeStreetDirPrefix</standardname>
+<standardname element="StreetDirPrefix" container="Listing:TaxData:StreetAddress">TaxOwnerStreetDirPrefix</standardname>
+<standardname container="Listing:StreetAddress">StreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="ListingData:REAgent:StreetAddress">ListingAgentStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="ListingData:REOffice:StreetAddress">ListOfficeStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="SalesData:REAgent:StreetAddress">SaleAgentStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="SalesData:REOffice:StreetAddress">SaleOfficeStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="Listing:TaxData:StreetAddress">TaxStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="Listing:TaxData:StreetAddress">TaxMailStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="REAgent:StreetAddress">AgentStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="REOffice:StreetAddress">OfficeStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="Participants:Person:StreetAddress">ParticipantStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="EntryAgent:REAgent:StreetAddress">EntryAgentStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="EntryOffice:REOffice:StreetAddress">EntryOfficeStreetDirSuffix</standardname>
+<standardname element="StreetDirSuffix" container="Listing:TaxData:StreetAddress">TaxOwnerStreetDirSuffix</standardname>
+<standardname container="Listing:StreetAddress">StreetName</standardname>
+<standardname element="StreetName" container="ListingData:REAgent:StreetAddress">ListingAgentStreetName</standardname>
+<standardname element="StreetName" container="ListingData:REOffice:StreetAddress">ListOfficeStreetName</standardname>
+<standardname element="StreetName" container="SalesData:REAgent:StreetAddress">SaleAgentStreetName</standardname>
+<standardname element="StreetName" container="SalesData:REOffice:StreetAddress">SaleOfficeStreetName</standardname>
+<standardname element="StreetName" container="Listing:TaxData:StreetAddress">TaxStreetName</standardname>
+<standardname element="StreetName" container="Listing:TaxData:StreetAddress">TaxMailStreetName</standardname>
+<standardname element="StreetName" container="REAgent:StreetAddress">AgentStreetName</standardname>
+<standardname element="StreetName" container="REOffice:StreetAddress">OfficeStreetName</standardname>
+<standardname element="StreetName" container="Participants:Person:StreetAddress">ParticipantStreetName</standardname>
+<standardname element="StreetName" container="EntryAgent:REAgent:StreetAddress">EntryAgentStreetName</standardname>
+<standardname element="StreetName" container="EntryOffice:REOffice:StreetAddress">EntryOfficeStreetName</standardname>
+<standardname element="StreetName" container="Listing:TaxData:StreetAddress">TaxOwnerStreetName</standardname>
+<standardname container="Listing:StreetAddress">StreetNumber</standardname>
+<standardname element="StreetNumber" container="ListingData:REAgent:StreetAddress">ListingAgentStreetNumber</standardname>
+<standardname element="StreetNumber" container="ListingData:REOffice:StreetAddress">ListOfficeStreetNumber</standardname>
+<standardname element="StreetNumber" container="SalesData:REAgent:StreetAddress">SaleAgentStreetNumber</standardname>
+<standardname element="StreetNumber" container="SalesData:REOffice:StreetAddress">SaleOfficeStreetNumber</standardname>
+<standardname element="StreetNumber" container="Listing:TaxData:StreetAddress">TaxStreetStreetNumber</standardname>
+<standardname element="StreetNumber" container="Listing:TaxData:StreetAddress">TaxMailStreetNumber</standardname>
+<standardname element="StreetNumber" container="REAgent:StreetAddress">AgentStreetNumber</standardname>
+<standardname element="StreetNumber" container="REOffice:StreetAddress">OfficeStreetNumber</standardname>
+<standardname element="StreetNumber" container="Participants:Person:StreetAddress">ParticipantStreetNumber</standardname>
+<standardname element="StreetNumber" container="EntryAgent:REAgent:StreetAddress">EntryAgentStreetNumber</standardname>
+<standardname element="StreetNumber" container="EntryOffice:REOffice:StreetAddress">EntryOfficeStreetNumber</standardname>
+<standardname element="StreetNumber" container="Listing:TaxData:StreetAddress">TaxOwnerStreetNumber</standardname>
+<standardname container="Listing:StreetAddress">StreetSuffix</standardname>
+<standardname element="StreetSuffix" container="ListingData:REAgent:StreetAddress">ListingAgentStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="ListingData:REOffice:StreetAddress">ListOfficeStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="SalesData:REAgent:StreetAddress">SaleAgentStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="SalesData:REOffice:StreetAddress">SaleOfficeStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="Listing:TaxData:StreetAddress">TaxStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="Listing:TaxData:StreetAddress">TaxMailStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="REAgent:StreetAddress">AgentStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="REOffice:StreetAddress">OfficeStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="Participants:Person:StreetAddress">ParticipantStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="EntryAgent:REAgent:StreetAddress">EntryAgentStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="EntryOffice:REOffice:StreetAddress">EntryOfficeStreetSuffix</standardname>
+<standardname element="StreetSuffix" container="Listing:TaxData:StreetAddress">TaxOwnerStreetSuffix</standardname>
+<standardname>Unstructured</standardname>
+<standardname>Zoning</standardname>
+<standardname>PictureData</standardname>
+<standardname>ListingStatus</standardname>
+<standardname element="ProspectModificationTimestamp">ProspectModificationTimeStamp</standardname>
+<standardname>ProspectID</standardname>
+<standardname element="ProspectUsedTimestamp">ProspectUsedTimeStamp</standardname>
+<standardname>ProspectPropertyClass</standardname>
+<standardname>ProspectPropertyQuery</standardname>
+<standardname>ProspectPublicName</standardname>
+<standardname>EndDateTime</standardname>
+<standardname>StartDateTime</standardname>
+<standardname>ActivityClassification</standardname>
+<standardname>ActivityComments</standardname>
+<standardname>ActivityID</standardname>
+<standardname>ActivityStatus</standardname>
+<standardname element="Board">ProfBoard</standardname>
+<standardname>ProfDirections</standardname>
+<standardname>ProfComments</standardname>
+<standardname>ProfOptions</standardname>
+<standardname>Regarding</standardname>
+<standardname element="ChangeType">History.ChangeType</standardname>
+<standardname>EntryID</standardname>
+<standardname element="DocumentDate" container="TaxTransactionData">TaxDocumentDate</standardname>
+<standardname element="MortgageAmount" container="TaxTransactionData">TaxMortgageAmount</standardname>
+<standardname element="DocumentID" container="TaxTransactionData">TaxDocumentID</standardname>
+<standardname element="DocumentType" container="TaxTransactionData">TaxDocumentType</standardname>
+<standardname element="TransactionType" container="TaxTransactionData">TaxTransactionType</standardname>
+<standardname element="VestmentType" container="TaxTransactionData">TaxVestmentType</standardname>
+<standardname container="ParcelOwner">OwnershipType</standardname>
+<standardname>REProperties</standardname>
+<standardname container="REProperties">CopyrightNotice</standardname>
+<standardname container="REProperties">ResidentialProperty</standardname>
+<standardname container="REProperties:ResidentialProperty">Listing</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">StreetAddress</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:StreetAddress">UnitNumber</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:StreetAddress">StateOrProvince</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">ListingData</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData">REAgent</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent">FirstName</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent">LastName</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent">ContactInformation</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent:ContactInformation">OfficePhone</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent:ContactInformation">CellPhone</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent:ContactInformation">HomePhone</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent:ContactInformation">Fax</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent:ContactInformation">Pager</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent:ContactInformation">Email</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent:ContactInformation">URL</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent">ListingServiceName</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REAgent">ModificationTimestamp</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData">REOffice</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:REOffice">Name</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData">ListPriceLow</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData">ListPriceHigh</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData">FinancialData</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:FinancialData">LeaseTerms</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:FinancialData:LeaseTerms">LeaseOption</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:FinancialData">TradeTerms</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:FinancialData:TradeTerms">TradeOption</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:FinancialData">RentalTerms</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:FinancialData:RentalTerms">RentalOption</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:FinancialData:RentalTerms:RentalOption">RentalAmount</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData">DisplayData</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:DisplayData">DisplayFlagListing</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:ListingData:DisplayData">DisplayFlagAddress</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">MLSInformation</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">GeographicData</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">SalesData</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">SchoolData</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:SchoolData">PrimarySchool</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:SchoolData">JuniorHighSchool</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">TaxData</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:TaxData">MailingAddress</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:TaxData">TaxID</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:TaxData">LegalDescription</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:TaxData">OwnersName</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:TaxData">AssessedValuation</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:TaxData">PropertyZoning</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:TaxData">ParcelMapURL</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">Community</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">CommunityName</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">ClubHouse</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">ExerciseArea</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">Golf</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">Tennis</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">RecreationalFacilities</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">SecurityFacilities</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">SeniorCommunity</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">HotTub</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">BoatFacilities</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">HorseFacilities</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:Community">CommunityPark</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:PictureData">PictureID</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:PictureData">PictureCaption</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing">PropertyType</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:PropertyType">Rental</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:PropertyType">Farm</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:PropertyType">Condominium</standardname>
+<standardname container="REProperties:ResidentialProperty:Listing:PropertyType">TownHouse</standardname>
+<standardname container="REProperties:ResidentialProperty">Bedrooms</standardname>
+<standardname container="REProperties:ResidentialProperty">BathsTotal</standardname>
+<standardname container="REProperties:ResidentialProperty">Subdivision</standardname>
+<standardname container="REProperties:ResidentialProperty">Area</standardname>
+<standardname container="REProperties:ResidentialProperty">LotSize</standardname>
+<standardname container="REProperties:ResidentialProperty:LotSize">Dimensions</standardname>
+<standardname container="REProperties:ResidentialProperty:LotSize">Length</standardname>
+<standardname container="REProperties:ResidentialProperty:LotSize">Width</standardname>
+<standardname container="REProperties:ResidentialProperty">LotSizeRange</standardname>
+<standardname container="REProperties:ResidentialProperty">Parking</standardname>
+<standardname container="REProperties:ResidentialProperty:Parking">TotalParking</standardname>
+<standardname container="REProperties:ResidentialProperty">Type</standardname>
+<standardname container="REProperties:ResidentialProperty">Style</standardname>
+<standardname container="REProperties:ResidentialProperty">Rooms</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms">BedroomDetail</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms:BedroomDetail">Bedroom</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms">BathroomDetail</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms:BathroomDetail">Bathroom</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms">Den</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms">OfficeRoom</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms">Kitchen</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms">GameRoom</standardname>
+<standardname container="REProperties:ResidentialProperty:Rooms">LaundryRoom</standardname>
+<standardname container="REProperties:ResidentialProperty">Occupant</standardname>
+<standardname container="REProperties:ResidentialProperty">FirePlace</standardname>
+<standardname container="REProperties:ResidentialProperty:FirePlace">FirePlaceFuelType</standardname>
+<standardname container="REProperties:ResidentialProperty:FirePlace">FirePlaceDetails</standardname>
+<standardname container="REProperties:ResidentialProperty">Age</standardname>
+<standardname container="REProperties:ResidentialProperty">TennisCourt</standardname>
+<standardname container="REProperties:ResidentialProperty">Inclusions</standardname>
+<standardname container="REProperties:ResidentialProperty">Floors</standardname>
+<standardname container="REProperties:ResidentialProperty:Floors">HardwoodFloors</standardname>
+<standardname container="REProperties:ResidentialProperty">EnergyInformation</standardname>
+<standardname container="REProperties:ResidentialProperty">ConstructionMaterials</standardname>
+<standardname container="REProperties:ResidentialProperty">DisabilityFeatures</standardname>
+<standardname container="REProperties:ResidentialProperty">SecurityFeatures</standardname>
+<standardname container="REProperties:ResidentialProperty">AnimalPolicy</standardname>
+<standardname container="REProperties:ResidentialProperty:AnimalPolicy">AnimalsPermitted</standardname>
+<standardname container="REProperties:ResidentialProperty:AnimalPolicy">PermittedTypes</standardname>
+<standardname container="REProperties:ResidentialProperty:AnimalPolicy">WeightLimit</standardname>
+<standardname container="REProperties:ResidentialProperty">LotData</standardname>
+<standardname container="REProperties:ResidentialProperty:LotData">CornerLot</standardname>
+<standardname container="REProperties:ResidentialProperty:LotData">CuldeSac</standardname>
+<standardname container="REProperties:ResidentialProperty:LotData">GolfCourseLot</standardname>
+<standardname container="REProperties:ResidentialProperty">ViewData</standardname>
+<standardname container="REProperties:ResidentialProperty:ViewData">CityLights</standardname>
+<standardname container="REProperties:ResidentialProperty:ViewData">Mountain</standardname>
+<standardname container="REProperties:ResidentialProperty:ViewData">Ocean</standardname>
+<standardname container="REProperties:ResidentialProperty:ViewData">River</standardname>
+<standardname container="REProperties:ResidentialProperty:ViewData">Lake</standardname>
+<standardname container="REProperties:ResidentialProperty:ViewData">GolfCourse</standardname>
+<standardname container="REProperties:ResidentialProperty:ViewData">Water</standardname>
+<standardname container="REProperties">CommonInterest</standardname>
+<standardname container="REProperties:CommonInterest">Complex</standardname>
+<standardname container="REProperties">LotsAndLand</standardname>
+<standardname container="REProperties:LotsAndLand">Topography</standardname>
+<standardname container="REProperties">MultiFamily</standardname>
+<standardname container="REProperties:MultiFamily">TenantPays</standardname>
+<standardname container="REProperties:MultiFamily">Unit</standardname>
+<standardname>REOffices</standardname>
+<standardname>REAgents</standardname>
+<standardname>REOfficeRosters</standardname>
+<standardname container="REOfficeRosters">REOfficeRoster</standardname>
+<standardname>REProspects</standardname>
+<standardname container="REProspects">REProspect</standardname>
+<standardname container="REProspects:REProspect">ProspectAgent</standardname>
+<standardname container="REProspects:REProspect">ProspectOffice</standardname>
+<standardname container="REProspects:REProspect">ProspectModificationTimestamp</standardname>
+<standardname container="REProspects:REProspect">ProspectUsedTimestamp</standardname>
+<standardname>REActivities</standardname>
+<standardname container="REActivities">REActivity</standardname>
+<standardname container="REActivities:REActivity">Event</standardname>
+<standardname container="REActivities:REActivity:Event">ActivityAgent</standardname>
+<standardname container="REActivities:REActivity:Event">ActivityOffice</standardname>
+<standardname container="REActivities:REActivity">Place</standardname>
+<standardname container="REActivities:REActivity">Participants</standardname>
+<standardname container="REActivities:REActivity:Participants">Person</standardname>
+<standardname container="REActivities:REActivity">ProfDetails</standardname>
+<standardname container="REActivities:REActivity:ProfDetails">Board</standardname>
+<standardname container="REActivities:REActivity:ProfDetails">ProfSequence</standardname>
+<standardname>REHistories</standardname>
+<standardname container="REHistories">REPropHistory</standardname>
+<standardname container="REHistories:REPropHistory">REPropEntry</standardname>
+<standardname container="REHistories:REPropHistory:REPropEntry">EntryAgent</standardname>
+<standardname container="REHistories:REPropHistory:REPropEntry">EntryOffice</standardname>
+<standardname container="REHistories:REPropHistory:REPropEntry">ChangeType</standardname>
+<standardname container="REHistories:REPropHistory:REPropEntry">PropertyRecord</standardname>
+<standardname>REPublicRecords</standardname>
+<standardname container="REPublicRecords">RETax</standardname>
+<standardname container="REPublicRecords:RETax">TaxKey</standardname>
+<standardname container="REPublicRecords:RETax">ParcelLocation</standardname>
+<standardname container="REPublicRecords:RETax">ParcelOwner</standardname>
+<standardname container="REPublicRecords:RETax">TaxTransactionData</standardname>
+<standardname container="REPublicRecords:RETax:TaxTransactionData">DocumentID</standardname>
+<standardname container="REPublicRecords:RETax:TaxTransactionData">DocumentDate</standardname>
+<standardname container="REPublicRecords:RETax:TaxTransactionData">DocumentType</standardname>
+<standardname container="REPublicRecords:RETax:TaxTransactionData">TransactionType</standardname>
+<standardname container="REPublicRecords:RETax:TaxTransactionData">VestmentType</standardname>
+<standardname container="REPublicRecords:RETax:TaxTransactionData">MortgageAmount</standardname>
+</standardnames>
